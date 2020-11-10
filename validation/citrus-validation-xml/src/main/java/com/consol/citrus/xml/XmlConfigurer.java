@@ -19,11 +19,11 @@ package com.consol.citrus.xml;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.w3c.dom.DOMImplementationList;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
@@ -40,10 +40,10 @@ import org.w3c.dom.ls.LSSerializer;
  * @author Christoph Deppisch
  * @since 2.6.2
  */
-public class XmlConfigurer implements InitializingBean {
+public class XmlConfigurer implements InitializingPhase {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XmlConfigurer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XmlConfigurer.class);
 
     /** DOM implementation */
     private final DOMImplementationRegistry registry;
@@ -65,17 +65,17 @@ public class XmlConfigurer implements InitializingBean {
         try {
             registry = DOMImplementationRegistry.newInstance();
 
-            if (log.isDebugEnabled()) {
+            if (LOG.isDebugEnabled()) {
                 DOMImplementationList domImplList = registry.getDOMImplementationList("LS");
                 for (int i = 0; i < domImplList.getLength(); i++) {
-                    log.debug("Found DOMImplementationLS: " + domImplList.item(i));
+                    LOG.debug("Found DOMImplementationLS: " + domImplList.item(i));
                 }
             }
 
             domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
 
-            if (log.isDebugEnabled()) {
-                log.debug("Using DOMImplementationLS: " + domImpl.getClass().getName());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Using DOMImplementationLS: " + domImpl.getClass().getName());
             }
         } catch (Exception e) {
             throw new CitrusRuntimeException(e);
@@ -233,7 +233,7 @@ public class XmlConfigurer implements InitializingBean {
      * @param parameterName
      */
     private void logParameterNotSet(String parameterName, String componentName) {
-        log.warn("Unable to set '" + parameterName + "' parameter on " + componentName);
+        LOG.warn("Unable to set '" + parameterName + "' parameter on " + componentName);
     }
 
     /**
@@ -255,7 +255,7 @@ public class XmlConfigurer implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         setDefaultParseSettings();
         setDefaultSerializeSettings();
 

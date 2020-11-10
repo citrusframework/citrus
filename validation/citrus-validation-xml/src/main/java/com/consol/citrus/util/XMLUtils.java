@@ -21,14 +21,13 @@ import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.StringTokenizer;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.xml.XmlConfigurer;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Attr;
@@ -50,7 +49,12 @@ import org.w3c.dom.ls.LSSerializer;
 public final class XMLUtils {
 
     /** Configurer instance */
-    private static XmlConfigurer configurer = new XmlConfigurer();
+    private static XmlConfigurer configurer;
+
+    static {
+        configurer = new XmlConfigurer();
+        configurer.initialize();
+    }
 
     /**
      * Prevent instantiation.
@@ -327,7 +331,8 @@ public final class XMLUtils {
      * @return
      */
     public static Charset getTargetCharset(Document doc) {
-        String defaultEncoding = System.getProperty(CitrusSettings.CITRUS_FILE_ENCODING_PROPERTY, System.getenv(CitrusSettings.CITRUS_FILE_ENCODING_ENV));
+        String defaultEncoding = System.getProperty(CitrusSettings.CITRUS_FILE_ENCODING_PROPERTY,
+                System.getenv(CitrusSettings.CITRUS_FILE_ENCODING_ENV));
         if (StringUtils.hasText(defaultEncoding)) {
             return Charset.forName(defaultEncoding);
         }
@@ -337,7 +342,7 @@ public final class XMLUtils {
         }
 
         // return as encoding the default UTF-8
-        return Charset.forName("UTF-8");
+        return StandardCharsets.UTF_8;
     }
 
     /**
@@ -387,7 +392,7 @@ public final class XMLUtils {
         }
 
         // return as encoding the default UTF-8
-        return Charset.forName("UTF-8");
+        return StandardCharsets.UTF_8;
     }
 
     /**
@@ -401,21 +406,5 @@ public final class XMLUtils {
         }
 
         return xml;
-    }
-
-    /**
-     * Checks if given message payload is of type XML. An empty payload is considered to be a valid Json payload.
-     * @param message to check.
-     * @return true if message payload is XML, false otherwise.
-     */
-    public static boolean hasXmlPayload(Message message) {
-        if (!(message.getPayload() instanceof String)) {
-            return false;
-        }
-
-        return Optional.ofNullable(message.getPayload(String.class))
-                .map(String::trim)
-                .map(payload -> payload.length() == 0 || payload.startsWith("<"))
-                .orElse(true);
     }
 }

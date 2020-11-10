@@ -26,7 +26,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public abstract class TypeConversionUtils {
 
     /** Type converter delegate used to convert target objects to required type */
-    private static TypeConverter typeConverter = new DefaultTypeConverter();
+    private static TypeConverter typeConverter = TypeConverter.lookupDefault();
 
     /**
      * Prevent instantiation.
@@ -96,13 +96,5 @@ public abstract class TypeConversionUtils {
 
             throw new CitrusRuntimeException(String.format("Unable to convert '%s' to required type '%s' - also no bean of required type available in application context", value, type.getName()), e.getCause());
         }
-    }
-
-    /**
-     * Sets the type converter delegate used in this utility class.
-     * @param typeConverter
-     */
-    static void registerTypeConverter(TypeConverter typeConverter) {
-        TypeConversionUtils.typeConverter = typeConverter;
     }
 }

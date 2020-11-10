@@ -104,7 +104,7 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
 
         // 1st sftp client
         Assert.assertEquals(sftpClient1.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(sftpClient1.getEndpointConfiguration().getPort(), new Integer(22221));
+        Assert.assertEquals(sftpClient1.getEndpointConfiguration().getPort(), 22221);
         Assert.assertEquals(sftpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(sftpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(sftpClient1.getEndpointConfiguration().getTimeout(), 5000L);
@@ -119,7 +119,7 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
 
         // 2nd sftp client
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(sftpClient2.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(sftpClient2.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getPassword(), "consol");
@@ -136,7 +136,7 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
 
         // 3rd sftp client
         Assert.assertEquals(sftpClient3.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(sftpClient3.getEndpointConfiguration().getPort(), new Integer(22223));
+        Assert.assertEquals(sftpClient3.getEndpointConfiguration().getPort(), 22223);
         Assert.assertNotNull(sftpClient3.getEndpointConfiguration().getCorrelator());
         Assert.assertEquals(sftpClient3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
         Assert.assertEquals(sftpClient3.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
@@ -144,7 +144,7 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
         // 4th sftp client
         Assert.assertNotNull(sftpClient4.getActor());
         Assert.assertEquals(sftpClient4.getActor(), testActor);
-        Assert.assertEquals(sftpClient4.getEndpointConfiguration().getPort(), new Integer(22224));
+        Assert.assertEquals(sftpClient4.getEndpointConfiguration().getPort(), 22224);
         Assert.assertEquals(sftpClient4.getEndpointConfiguration().getPollingInterval(), 250L);
     }
 

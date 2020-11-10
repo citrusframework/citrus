@@ -41,7 +41,7 @@ public interface TestAction {
      * Name of test action injected as Spring bean name
      * @return name as String
      */
-    TestAction setName(String name);
+    void setName(String name);
 
     /**
      * Description of this test action

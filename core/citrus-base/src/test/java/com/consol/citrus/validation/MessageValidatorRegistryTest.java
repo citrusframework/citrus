@@ -21,11 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.json.JsonUtils;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -76,15 +75,15 @@ public class MessageValidatorRegistryTest {
         MockitoAnnotations.initMocks(this);
 
         when(plainTextMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.PLAINTEXT.name()));
-        when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()) && XMLUtils.hasXmlPayload(invocation.getArgument(1)));
-        when(xhtmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XHTML.name()) && XMLUtils.hasXmlPayload(invocation.getArgument(1)));
-        when(jsonTextMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.JSON.name()) && JsonUtils.hasJsonPayload(invocation.getArgument(1)));
-        when(jsonPathMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.JSON.name()) && JsonUtils.hasJsonPayload(invocation.getArgument(1)));
+        when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()) && MessageUtils.hasXmlPayload(invocation.getArgument(1)));
+        when(xhtmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XHTML.name()) && MessageUtils.hasXmlPayload(invocation.getArgument(1)));
+        when(jsonTextMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.JSON.name()) && MessageUtils.hasJsonPayload(invocation.getArgument(1)));
+        when(jsonPathMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.JSON.name()) && MessageUtils.hasJsonPayload(invocation.getArgument(1)));
         when(groovyScriptMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.PLAINTEXT.name()));
-        when(groovyJsonMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.JSON.name()) && JsonUtils.hasJsonPayload(invocation.getArgument(1)));
-        when(groovyXmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()) && XMLUtils.hasXmlPayload(invocation.getArgument(1)));
-        when(xPathMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()) && XMLUtils.hasXmlPayload(invocation.getArgument(1)));
-        when(xhtmlXpathMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XHTML.name()) && XMLUtils.hasXmlPayload(invocation.getArgument(1)));
+        when(groovyJsonMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.JSON.name()) && MessageUtils.hasJsonPayload(invocation.getArgument(1)));
+        when(groovyXmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()) && MessageUtils.hasXmlPayload(invocation.getArgument(1)));
+        when(xPathMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()) && MessageUtils.hasXmlPayload(invocation.getArgument(1)));
+        when(xhtmlXpathMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XHTML.name()) && MessageUtils.hasXmlPayload(invocation.getArgument(1)));
         when(binaryMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.BINARY.name()));
         when(binaryBase64MessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.BINARY_BASE64.name()));
         when(gzipBinaryBase64MessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.GZIP_BASE64.name()));

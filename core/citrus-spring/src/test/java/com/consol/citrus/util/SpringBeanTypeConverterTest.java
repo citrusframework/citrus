@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  */
 public class SpringBeanTypeConverterTest {
 
-    private SpringBeanTypeConverter converter = SpringBeanTypeConverter.INSTANCE;
+    private final SpringBeanTypeConverter converter = SpringBeanTypeConverter.INSTANCE;
 
     @Test
     public void testConverter() {

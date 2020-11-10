@@ -23,7 +23,7 @@ import java.util.List;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -74,7 +74,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
             }
         }
 
-        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement, builder);
+        DefaultMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement, builder);
         parseHeaderElements(element, messageBuilder, Collections.emptyList());
 
         if (messageBuilder != null) {

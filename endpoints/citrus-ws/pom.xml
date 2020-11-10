@@ -73,6 +73,11 @@
   	</dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-xml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-spring</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
@@ -181,12 +186,6 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-testng</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-validation-xml</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

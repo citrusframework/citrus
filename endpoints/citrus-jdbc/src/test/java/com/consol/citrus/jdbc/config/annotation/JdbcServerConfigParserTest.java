@@ -100,7 +100,6 @@ public class JdbcServerConfigParserTest extends AbstractTestNGUnitTest {
     public void testAnnotations(){
         CitrusAnnotations.injectEndpoints(this, context);
 
-
         assertEquals(
                 testServer.getEndpointConfiguration().getServerConfiguration().getHost(),
                 "foo.bar.test.io");

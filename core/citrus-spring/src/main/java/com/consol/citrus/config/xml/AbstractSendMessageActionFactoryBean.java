@@ -5,7 +5,7 @@ import java.util.List;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageProcessor;
-import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.message.MessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 

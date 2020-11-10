@@ -137,7 +137,6 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public void name(String name) {
-        testCase.setBeanName(name);
         testCase.setName(name);
     }
 

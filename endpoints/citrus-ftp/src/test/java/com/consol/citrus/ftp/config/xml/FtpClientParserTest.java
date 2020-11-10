@@ -16,6 +16,8 @@
 
 package com.consol.citrus.ftp.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.ftp.client.FtpClient;
 import com.consol.citrus.message.DefaultMessageCorrelator;
@@ -23,8 +25,6 @@ import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -41,7 +41,7 @@ public class FtpClientParserTest extends AbstractBeanDefinitionParserTest {
         // 1st ftp client
         FtpClient ftpClient = clients.get("ftpClient1");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertTrue(ftpClient.getEndpointConfiguration().isAutoReadFiles());
         Assert.assertTrue(ftpClient.getEndpointConfiguration().isLocalPassiveMode());
@@ -51,7 +51,7 @@ public class FtpClientParserTest extends AbstractBeanDefinitionParserTest {
         // 2nd ftp client
         ftpClient = clients.get("ftpClient2");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getPassword(), "consol");
@@ -63,7 +63,7 @@ public class FtpClientParserTest extends AbstractBeanDefinitionParserTest {
         // 3rd ftp client
         ftpClient = clients.get("ftpClient3");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), 22222);
         Assert.assertNotNull(ftpClient.getEndpointConfiguration().getCorrelator());
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
 

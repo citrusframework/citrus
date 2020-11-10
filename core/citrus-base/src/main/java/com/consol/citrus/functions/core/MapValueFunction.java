@@ -16,19 +16,19 @@
 
 package com.consol.citrus.functions.core;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.functions.Function;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-
 import java.util.List;
 import java.util.Map;
 
+import com.consol.citrus.common.InitializingPhase;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.functions.Function;
+
 /**
- * Function to map the function's argument to a corresponding value configured using a map. 
+ * Function to map the function's argument to a corresponding value configured using a map.
  * <p>Example of the function definition and its usage:</p>
- * 
+ *
  * <code>
  * <pre>
  * &lt;bean id="myCustomFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary"&gt;
@@ -58,38 +58,36 @@ import java.util.Map;
  * &lt;variable name="httpStatusCodeMessage" value="custom:mapHttpStatusCodeToMessage('500')" /&gt;
  * </pre>
  * </code>
- * 
+ *
  * @author Dimo Velev (dimo.velev@gmail.com)
  *
  */
-public class MapValueFunction implements Function, InitializingBean {
-    
+public class MapValueFunction implements Function, InitializingPhase {
+
     /** Mappings for key value logic in this function */
-	private Map<String, String> map = null;
-	
-	/**
-	 * @see Function#execute(java.util.List, com.consol.citrus.context.TestContext)
-	 */
+	private Map<String, String> map;
+
+	@Override
 	public String execute(List<String> params, TestContext context) {
 		if (params.size() != 1) {
 			throw new InvalidFunctionUsageException("Expected exactly one argument but got " + params.size());
 		}
-		
+
 		final String key = params.get(0);
 		final String result = map.get(key);
-		
+
 		if (result == null) {
 			throw new InvalidFunctionUsageException("No mapping found for \"" + key + "\"");
 		}
-		
+
 		return result;
 	}
 
-	/**
-	 * Check that map is set correctly after initialization
-	 */
-	public void afterPropertiesSet() {
-		Assert.notEmpty(map);
+	@Override
+	public void initialize() {
+		if (map == null) {
+			throw new CitrusRuntimeException("MapValueFunction must not use an empty value map");
+		}
 	}
 
 	/**

@@ -30,7 +30,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.util.ValidateMessageParserUtil;
 import com.consol.citrus.config.util.VariableExtractorParserUtil;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.SchemaValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -90,7 +90,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         List<ValidationContext> validationContexts = parseValidationContexts(messageElement, builder);
 
-        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement, builder);
+        DefaultMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement, builder);
         parseHeaderElements(element, messageBuilder, validationContexts);
 
         builder.addPropertyValue("messageBuilder", messageBuilder);

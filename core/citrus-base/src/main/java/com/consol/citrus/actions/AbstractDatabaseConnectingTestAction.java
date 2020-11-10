@@ -156,12 +156,9 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         return name;
     }
 
-    /**
-     * Sets this test action's name.
-     */
-    public AbstractDatabaseConnectingTestAction setName(String name) {
+    @Override
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     /**

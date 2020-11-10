@@ -46,6 +46,7 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.message.DefaultMessageStore;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.message.MessageStore;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestActionListener;
@@ -57,12 +58,10 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import org.javatuples.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -77,7 +76,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(TestContext.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestContext.class);
 
     /**
      * Local variables
@@ -277,8 +276,8 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
             throw new VariableNullValueException("Trying to set variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + ", but variable value is null");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Setting variable: %s with value: '%s'", VariableUtils.cutOffVariablesPrefix(variableName), value));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Setting variable: %s with value: '%s'", VariableUtils.cutOffVariablesPrefix(variableName), value));
         }
 
         variables.put(VariableUtils.cutOffVariablesPrefix(variableName), value);
@@ -332,25 +331,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         Map<String, T> target = new LinkedHashMap<>(map.size());
 
         for (Entry<String, T> entry : map.entrySet()) {
-            final KeyValue<String, T> adaptedEntry = resolveDynamicContent(entry.getKey(), entry.getValue());
-            target.put(adaptedEntry.getKey(), adaptedEntry.getValue());
+            final String adaptedKey = resolveDynamicContentIfRequired(entry.getKey());
+            final T adaptedValue = resolveDynamicContentIfRequired(entry.getValue());
+            target.put(adaptedKey, adaptedValue);
         }
         return target;
-    }
-
-    /**
-     * Resolves any dynamic content in the supplied key, value pair
-     *
-     * @param key   a key, optionally containing dynamic content
-     * @param value a value, optionally containing dynamic content
-     * @param <K>
-     * @param <V>
-     * @return a tuple containing a copy of the {@code key} and {@code value} with dynamic content replaced
-     */
-    private <K, V> KeyValue<K, V> resolveDynamicContent(K key, V value) {
-        final K adaptedKey = resolveDynamicContentIfRequired(key);
-        final V adaptedValue = resolveDynamicContentIfRequired(value);
-        return KeyValue.with(adaptedKey, adaptedValue);
     }
 
     /**
@@ -516,9 +501,10 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     public void setGlobalVariables(GlobalVariables globalVariables) {
         this.globalVariables = new GlobalVariables();
         for (Entry<String, Object> entry : globalVariables.getVariables().entrySet()) {
-            final KeyValue<String, Object> adaptedEntry = resolveDynamicContent(entry.getKey(), entry.getValue());
-            variables.put(adaptedEntry.getKey(), adaptedEntry.getValue());
-            this.globalVariables.getVariables().put(adaptedEntry.getKey(), adaptedEntry.getValue());
+            final String adaptedKey = resolveDynamicContentIfRequired(entry.getKey());
+            final Object adaptedValue = resolveDynamicContentIfRequired(entry.getValue());
+            variables.put(adaptedKey, adaptedValue);
+            this.globalVariables.getVariables().put(adaptedKey, adaptedValue);
         }
     }
 
@@ -806,8 +792,8 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
             } else if (MessageDirection.INBOUND.equals(direction)) {
                 messageListeners.onInboundMessage(message, this);
             }
-        } else if (log.isDebugEnabled()) {
-            log.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
         }
     }
 
@@ -961,11 +947,6 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         @Override
-        public TestAction setName(String name) {
-            return this;
-        }
-
-        @Override
         public String getDescription() {
             return "Empty test";
         }
@@ -988,6 +969,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         @Override
         public TestAction setActor(TestActor actor) {
             return this;
+        }
+
+        @Override
+        public void setName(String name) {
+            // do nothing
         }
 
         @Override

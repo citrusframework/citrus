@@ -16,15 +16,15 @@
 
 package com.consol.citrus.report;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.message.RawMessage;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -58,7 +58,6 @@ public class MessageTracingTestListenerTest {
         RawMessage inboundMessageMock = setupRawMessageMock(inboundPayload);
         RawMessage outboundMessageMock = setupRawMessageMock(outboundPayload);
 
-        testling.afterPropertiesSet();
         testling.onTestStart(testCaseMock);
         testling.onInboundMessage(inboundMessageMock, null);
         testling.onOutboundMessage(outboundMessageMock, null);

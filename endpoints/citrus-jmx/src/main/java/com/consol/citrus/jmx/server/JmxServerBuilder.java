@@ -16,20 +16,26 @@
 
 package com.consol.citrus.jmx.server;
 
-import com.consol.citrus.endpoint.AbstractEndpointBuilder;
-import com.consol.citrus.jmx.message.JmxMessageConverter;
-import com.consol.citrus.jmx.model.ManagedBeanDefinition;
+import javax.management.NotificationFilter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
-import java.util.*;
+import com.consol.citrus.jmx.message.JmxMessageConverter;
+import com.consol.citrus.jmx.model.JmxMarshaller;
+import com.consol.citrus.jmx.model.ManagedBeanDefinition;
+import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.server.AbstractServerBuilder;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxServerBuilder extends AbstractEndpointBuilder<JmxServer> {
+public class JmxServerBuilder extends AbstractServerBuilder<JmxServer, JmxServerBuilder> {
 
     /** Endpoint target */
-    private JmxServer endpoint = new JmxServer();
+    private final JmxServer endpoint = new JmxServer();
 
     @Override
     protected JmxServer getEndpoint() {
@@ -63,6 +69,86 @@ public class JmxServerBuilder extends AbstractEndpointBuilder<JmxServer> {
      */
     public JmxServerBuilder port(int port) {
         endpoint.getEndpointConfiguration().setPort(port);
+        return this;
+    }
+
+    /**
+     * Sets the user property.
+     * @param user
+     * @return
+     */
+    public JmxServerBuilder username(String user) {
+        endpoint.getEndpointConfiguration().setUsername(user);
+        return this;
+    }
+
+    /**
+     * Sets the password property.
+     * @param password
+     * @return
+     */
+    public JmxServerBuilder password(String password) {
+        endpoint.getEndpointConfiguration().setPassword(password);
+        return this;
+    }
+
+    /**
+     * Sets the autoReconnect property.
+     * @param autoReconnect
+     * @return
+     */
+    public JmxServerBuilder autoReconnect(boolean autoReconnect) {
+        endpoint.getEndpointConfiguration().setAutoReconnect(autoReconnect);
+        return this;
+    }
+
+    /**
+     * Sets the delayOnReconnect property.
+     * @param delayOnReconnect
+     * @return
+     */
+    public JmxServerBuilder delayOnReconnect(long delayOnReconnect) {
+        endpoint.getEndpointConfiguration().setDelayOnReconnect(delayOnReconnect);
+        return this;
+    }
+
+    /**
+     * Sets the notificationFilter property.
+     * @param notificationFilter
+     * @return
+     */
+    public JmxServerBuilder notificationFilter(NotificationFilter notificationFilter) {
+        endpoint.getEndpointConfiguration().setNotificationFilter(notificationFilter);
+        return this;
+    }
+
+    /**
+     * Sets the notificationHandback property.
+     * @param notificationHandback
+     * @return
+     */
+    public JmxServerBuilder notificationHandback(Object notificationHandback) {
+        endpoint.getEndpointConfiguration().setNotificationHandback(notificationHandback);
+        return this;
+    }
+
+    /**
+     * Sets the marshaller property.
+     * @param marshaller
+     * @return
+     */
+    public JmxServerBuilder marshaller(JmxMarshaller marshaller) {
+        endpoint.getEndpointConfiguration().setMarshaller(marshaller);
+        return this;
+    }
+
+    /**
+     * Sets the correlator property.
+     * @param correlator
+     * @return
+     */
+    public JmxServerBuilder correlator(MessageCorrelator correlator) {
+        endpoint.getEndpointConfiguration().setCorrelator(correlator);
         return this;
     }
 
@@ -101,6 +187,16 @@ public class JmxServerBuilder extends AbstractEndpointBuilder<JmxServer> {
      * @param environmentProperties
      * @return
      */
+    public JmxServerBuilder environmentProperties(Map<String, Object> environmentProperties) {
+        endpoint.getEndpointConfiguration().setEnvironmentProperties(environmentProperties);
+        return this;
+    }
+
+    /**
+     * Sets the environment properties.
+     * @param environmentProperties
+     * @return
+     */
     public JmxServerBuilder environmentProperties(Properties environmentProperties) {
         HashMap<String, Object> properties = new HashMap<>(environmentProperties.size());
         for (Map.Entry<Object, Object> entry : environmentProperties.entrySet()) {
@@ -122,33 +218,12 @@ public class JmxServerBuilder extends AbstractEndpointBuilder<JmxServer> {
     }
 
     /**
-     * Sets the autoStart property.
-     * @param autoStart
-     * @return
-     */
-    public JmxServerBuilder autoStart(boolean autoStart) {
-        endpoint.setAutoStart(autoStart);
-        return this;
-    }
-
-    /**
      * Sets the message converter.
      * @param messageConverter
      * @return
      */
     public JmxServerBuilder messageConverter(JmxMessageConverter messageConverter) {
         endpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
-        return this;
-    }
-
-    /**
-     * Sets the default timeout.
-     * @param timeout
-     * @return
-     */
-    public JmxServerBuilder timeout(long timeout) {
-        endpoint.setDefaultTimeout(timeout);
-        endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
     }
 }

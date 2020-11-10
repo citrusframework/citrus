@@ -61,6 +61,11 @@
       <artifactId>spring-context</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+    </dependency>
+
     <!-- Optional dependencies -->
     <dependency>
       <groupId>org.apache.ant</groupId>
@@ -73,6 +78,16 @@
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-test-support</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-jsr223</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-xml</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

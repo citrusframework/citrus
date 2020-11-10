@@ -78,7 +78,7 @@ public class SendSoapFaultTestDesignerTest extends UnitTestSupport {
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
         Assert.assertEquals(action.getFaultActor(), "faultActor");
         Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
         Assert.assertEquals(action.getFaultString(), FAULT_STRING);
@@ -117,7 +117,7 @@ public class SendSoapFaultTestDesignerTest extends UnitTestSupport {
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
         Assert.assertNull(action.getFaultActor());
         Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
         Assert.assertEquals(action.getFaultString(), FAULT_STRING);
@@ -152,7 +152,7 @@ public class SendSoapFaultTestDesignerTest extends UnitTestSupport {
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
         Assert.assertEquals(action.getFaultDetails().get(0), "someDetailData");
         Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
@@ -186,7 +186,7 @@ public class SendSoapFaultTestDesignerTest extends UnitTestSupport {
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
         Assert.assertEquals(action.getFaultDetails().get(0), "DETAIL");
         Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
@@ -220,7 +220,7 @@ public class SendSoapFaultTestDesignerTest extends UnitTestSupport {
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
         Assert.assertEquals(action.getFaultDetails().size(), 0L);
         Assert.assertEquals(action.getFaultDetailResourcePaths().size(), 1L);
         Assert.assertEquals(action.getFaultDetailResourcePaths().get(0), "com/consol/citrus/soap/fault.xml");
@@ -256,7 +256,7 @@ public class SendSoapFaultTestDesignerTest extends UnitTestSupport {
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
         Assert.assertEquals(action.getFaultDetails().size(), 2L);
         Assert.assertEquals(action.getFaultDetails().get(0), "DETAIL1");
         Assert.assertEquals(action.getFaultDetails().get(1), "DETAIL2");

@@ -16,6 +16,10 @@
 
 package com.consol.citrus.rmi.endpoint;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
@@ -25,10 +29,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
-
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 /**
  * @author Christoph Deppisch

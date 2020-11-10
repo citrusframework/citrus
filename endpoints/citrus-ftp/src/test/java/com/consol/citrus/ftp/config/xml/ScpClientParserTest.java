@@ -16,6 +16,8 @@
 
 package com.consol.citrus.ftp.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.ftp.client.ScpClient;
 import com.consol.citrus.message.DefaultMessageCorrelator;
@@ -23,8 +25,6 @@ import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -42,7 +42,7 @@ public class ScpClientParserTest extends AbstractBeanDefinitionParserTest {
         ScpClient scpClient = clients.get("scpClient1");
         Assert.assertEquals(scpClient.getEndpointConfiguration().getHost(), "localhost");
         Assert.assertEquals(scpClient.getEndpointConfiguration().getPortOption(), "-P");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(scpClient.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(scpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertTrue(scpClient.getEndpointConfiguration().isAutoReadFiles());
         Assert.assertNull(scpClient.getEndpointConfiguration().getPrivateKeyPath());
@@ -56,7 +56,7 @@ public class ScpClientParserTest extends AbstractBeanDefinitionParserTest {
         scpClient = clients.get("scpClient2");
         Assert.assertEquals(scpClient.getEndpointConfiguration().getHost(), "localhost");
         Assert.assertEquals(scpClient.getEndpointConfiguration().getPortOption(), "-p");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(scpClient.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(scpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(scpClient.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(scpClient.getEndpointConfiguration().getPassword(), "consol");
@@ -68,7 +68,7 @@ public class ScpClientParserTest extends AbstractBeanDefinitionParserTest {
         // 3rd scp client
         scpClient = clients.get("scpClient3");
         Assert.assertEquals(scpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(scpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(scpClient.getEndpointConfiguration().getPort(), 22222);
         Assert.assertNotNull(scpClient.getEndpointConfiguration().getCorrelator());
         Assert.assertEquals(scpClient.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
 

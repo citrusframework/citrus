@@ -37,6 +37,13 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>compile</scope>
     </dependency>
+
+    <!-- Test scoped dependencies -->
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-jsr223</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

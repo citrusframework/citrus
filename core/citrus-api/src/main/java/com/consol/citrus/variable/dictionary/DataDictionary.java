@@ -17,6 +17,7 @@
 package com.consol.citrus.variable.dictionary;
 
 import com.consol.citrus.Scoped;
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageProcessor;
@@ -30,7 +31,7 @@ import com.consol.citrus.message.MessageProcessor;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface DataDictionary<T> extends MessageProcessor, MessageDirectionAware, Scoped {
+public interface DataDictionary<T> extends MessageProcessor, MessageDirectionAware, Scoped, InitializingPhase {
 
     /**
      * Translate value with given path in message content.

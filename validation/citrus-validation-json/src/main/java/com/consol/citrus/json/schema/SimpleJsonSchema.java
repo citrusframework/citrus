@@ -16,12 +16,15 @@
 
 package com.consol.citrus.json.schema;
 
+import java.io.IOException;
 import java.util.Objects;
 
+import com.consol.citrus.common.InitializingPhase;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
 /**
@@ -29,7 +32,7 @@ import org.springframework.core.io.Resource;
  * usable SimpleJsonSchema for validation.
  * @since 2.7.3
  */
-public class SimpleJsonSchema implements InitializingBean {
+public class SimpleJsonSchema implements InitializingPhase {
 
     /** Default json schema factory */
     private JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.byDefault();
@@ -49,8 +52,12 @@ public class SimpleJsonSchema implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        schema = jsonSchemaFactory.getJsonSchema(JsonLoader.fromFile(json.getFile()));
+    public void initialize() {
+        try {
+            schema = jsonSchemaFactory.getJsonSchema(JsonLoader.fromFile(json.getFile()));
+        } catch (ProcessingException | IOException e) {
+            throw new CitrusRuntimeException("Failed to load Json schema", e);
+        }
     }
 
     public Resource getJson() {

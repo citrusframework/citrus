@@ -20,8 +20,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
@@ -35,7 +33,7 @@ import org.testng.annotations.BeforeSuite;
  *
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = AbstractTestNGUnitTest.UnitTestConfig.class)
+@ContextConfiguration(classes = UnitTestConfig.class)
 public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContextTests {
 
     /** Logger */
@@ -81,10 +79,5 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContext
      */
     protected TestContextFactory createTestContextFactory() {
         return TestContextFactory.newInstance();
-    }
-
-    @Configuration
-    @ImportResource(locations = "classpath:com/consol/citrus/context/citrus-unit-context.xml")
-    public static class UnitTestConfig {
     }
 }

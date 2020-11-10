@@ -48,12 +48,13 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
     @JdbcServerConfig(
             databaseName = "testdb",
             autoStart = true,
+            timeout = 1000L,
             port = 4567,
             autoConnect = false)
     private JdbcServer jdbcServer;
 
-    private JdbcDriver jdbcDriver = new JdbcDriver();
-    private String serverUrl = "jdbc:citrus:localhost:4567?database=testdb";
+    private final JdbcDriver jdbcDriver = new JdbcDriver();
+    private final String serverUrl = "jdbc:citrus:localhost:4567?database=testdb";
 
     @AfterMethod
     public void teardown(){
@@ -74,7 +75,7 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
         //THEN
                         Assert.assertNotNull(connection);
                     } catch (SQLException e) {
-                        throw new CitrusRuntimeException("Failed to connect");
+                        throw new CitrusRuntimeException("Failed to connect", e);
                     }
                 }
             }
@@ -97,7 +98,7 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
                         Connection connection = jdbcDriver.connect(serverUrl, new Properties());
                         Assert.assertNotNull(connection);
                     } catch (SQLException e) {
-                        throw new CitrusRuntimeException("Failed to connect");
+                        throw new CitrusRuntimeException("Failed to connect", e);
                     }
                 }
             }
@@ -135,7 +136,7 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
                         Connection connection = jdbcDriver.connect(serverUrl, properties);
                         Assert.assertNotNull(connection);
                     } catch (SQLException e) {
-                        throw new CitrusRuntimeException("Failed to connect");
+                        throw new CitrusRuntimeException("Failed to connect", e);
                     }
                 }
             }
@@ -155,7 +156,7 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
         database.setName("database");
         database.setValue("testdb");
 
-        async().actions(
+        given(async().actions(
             new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
@@ -165,17 +166,17 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
         //WHEN
                         connection.close();
                     } catch (SQLException e) {
-                        throw new CitrusRuntimeException("Failed to connect");
+                        throw new CitrusRuntimeException("Failed to connect", e);
                     }
                 }
             }
-        );
+        ));
 
-        receive(jdbcServer)
-                .message(JdbcMessage.openConnection(database));
+        when(receive(jdbcServer)
+                .message(JdbcMessage.openConnection(database)));
 
         //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.closeConnection());
+        then(receive(jdbcServer)
+                .message(JdbcMessage.closeConnection()));
     }
 }

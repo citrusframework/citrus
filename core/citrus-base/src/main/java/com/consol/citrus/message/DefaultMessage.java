@@ -25,9 +25,8 @@ import java.util.UUID;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.json.JsonUtils;
+import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.util.TypeConversionUtils;
-import com.consol.citrus.util.XMLUtils;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -208,9 +207,9 @@ public class DefaultMessage implements Message {
     @Override
     public String getType() {
         if (type == null) {
-            if (JsonUtils.hasJsonPayload(this)) {
+            if (MessageUtils.hasJsonPayload(this)) {
                 type = MessageType.JSON.name();
-            } else if (XMLUtils.hasXmlPayload(this)) {
+            } else if (MessageUtils.hasXmlPayload(this)) {
                 type = MessageType.XML.name();
             } else if (getPayload() instanceof String) {
                 type = MessageType.PLAINTEXT.name();

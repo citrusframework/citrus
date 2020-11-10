@@ -14,12 +14,16 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.builder.MarshallingHeaderDataBuilder;
+import com.consol.citrus.message.builder.MarshallingPayloadBuilder;
+import com.consol.citrus.message.builder.ObjectMappingHeaderDataBuilder;
+import com.consol.citrus.message.builder.ObjectMappingPayloadBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -103,7 +107,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @param messageBuilder
      * @return
      */
-    public B messageBuilder(AbstractMessageContentBuilder messageBuilder) {
+    public B messageBuilder(DefaultMessageContentBuilder messageBuilder) {
         delegate.message(messageBuilder);
         return self;
     }
@@ -172,7 +176,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B payload(final Object payload, final Marshaller marshaller) {
-        delegate.payload(payload, marshaller);
+        delegate.payload(new MarshallingPayloadBuilder(payload, marshaller));
         return self;
     }
 
@@ -185,7 +189,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B payload(final Object payload, final ObjectMapper objectMapper) {
-        delegate.payload(payload, objectMapper);
+        delegate.payload(new ObjectMappingPayloadBuilder(payload, objectMapper));
         return self;
     }
 
@@ -197,7 +201,11 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B payloadModel(final Object payload) {
-        delegate.payloadModel(payload);
+        if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+            delegate.payload(new ObjectMappingPayloadBuilder(payload));
+        } else {
+            delegate.payload(new MarshallingPayloadBuilder(payload));
+        }
         return self;
     }
 
@@ -206,11 +214,15 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * is accessed by its bean name in Spring bean application context.
      *
      * @param payload
-     * @param mapperName
+     * @param mapperOrMarshallerName
      * @return
      */
-    public B payload(final Object payload, final String mapperName) {
-        delegate.payload(payload, mapperName);
+    public B payload(final Object payload, final String mapperOrMarshallerName) {
+        if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+            delegate.payload(new ObjectMappingPayloadBuilder(payload, mapperOrMarshallerName));
+        } else {
+            delegate.payload(new MarshallingPayloadBuilder(payload, mapperOrMarshallerName));
+        }
         return self;
     }
 
@@ -257,7 +269,11 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B headerFragment(final Object model) {
-        delegate.headerFragment(model);
+        if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+            delegate.header(new ObjectMappingHeaderDataBuilder(model));
+        } else {
+            delegate.header(new MarshallingHeaderDataBuilder(model));
+        }
         return self;
     }
 
@@ -266,11 +282,15 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * is accessed by its bean name in Spring bean application context.
      *
      * @param model
-     * @param mapperName
+     * @param mapperOrMarshallerName
      * @return
      */
-    public B headerFragment(final Object model, final String mapperName) {
-        delegate.headerFragment(model, mapperName);
+    public B headerFragment(final Object model, final String mapperOrMarshallerName) {
+        if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+            delegate.header(new ObjectMappingHeaderDataBuilder(model, mapperOrMarshallerName));
+        } else {
+            delegate.header(new MarshallingHeaderDataBuilder(model, mapperOrMarshallerName));
+        }
         return self;
     }
 
@@ -283,7 +303,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B headerFragment(final Object model, final Marshaller marshaller) {
-        delegate.headerFragment(model, marshaller);
+        delegate.header(new MarshallingHeaderDataBuilder(model, marshaller));
         return self;
     }
 
@@ -296,7 +316,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B headerFragment(final Object model, final ObjectMapper objectMapper) {
-        delegate.headerFragment(model, objectMapper);
+        delegate.header(new ObjectMappingHeaderDataBuilder(model, objectMapper));
         return self;
     }
 
@@ -599,6 +619,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B namespace(final String prefix, final String namespaceUri) {
+        getXmlMessageValidationContext().namespaceContext(prefix, namespaceUri);
         namespaces.put(prefix, namespaceUri);
         return self;
     }
@@ -610,6 +631,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B namespaces(final Map<String, String> namespaceMappings) {
+        getXmlMessageValidationContext().namespaceContext(namespaceMappings);
         namespaces.putAll(namespaceMappings);
         return self;
     }
@@ -809,11 +831,6 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
 
     @Override
     public final ReceiveMessageAction build() {
-        delegate.getValidationContextBuilders().stream()
-                .filter(context -> context instanceof XmlNamespaceAware)
-                .map(XmlNamespaceAware.class::cast)
-                .forEach(context -> context.setNamespaces(namespaces));
-
         return delegate.build();
     }
 

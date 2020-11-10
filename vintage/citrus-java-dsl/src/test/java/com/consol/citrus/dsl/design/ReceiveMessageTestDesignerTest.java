@@ -34,7 +34,7 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -134,7 +134,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "Foo");
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "Foo");
         Assert.assertNotNull(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
     }
 
@@ -172,8 +172,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
     }
 
@@ -203,8 +203,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
     }
 
     @Test
@@ -214,7 +214,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         MockTestDesigner builder = new MockTestDesigner(context) {
@@ -241,8 +241,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
     }
 
@@ -272,8 +272,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
     }
 
     @Test
@@ -304,8 +304,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "somePayload");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "somePayload");
 
     }
 
@@ -394,11 +394,11 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("some"));
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("some"));
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("foo"));
 
         action = (ReceiveMessageAction) test.getActions().get(1);
         Assert.assertEquals(action.getName(), "receive");
@@ -406,11 +406,11 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("some"));
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("some"));
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("foo"));
     }
 
     @Test
@@ -441,11 +441,10 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderResources().size(), 0L);
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
 
         action = (ReceiveMessageAction) test.getActions().get(1);
         Assert.assertEquals(action.getName(), "receive");
@@ -454,10 +453,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderResources().size(), 0L);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
     }
 
     @Test
@@ -490,12 +488,11 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 2L);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderResources().size(), 0L);
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 2L);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
 
         action = (ReceiveMessageAction) test.getActions().get(1);
         Assert.assertEquals(action.getName(), "receive");
@@ -504,11 +501,10 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().size(), 2L);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderResources().size(), 0L);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 2L);
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
     }
 
     @Test
@@ -545,9 +541,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
     }
 
@@ -577,9 +573,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
     }
 
     @Test
@@ -589,7 +585,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         MockTestDesigner builder = new MockTestDesigner(context) {
@@ -616,9 +612,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
     }
 
@@ -653,10 +649,10 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(0), "someHeaderData");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "someHeaderData");
 
         action = (ReceiveMessageAction) test.getActions().get(1);
         Assert.assertEquals(action.getName(), "receive");
@@ -665,9 +661,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(0), "otherHeaderData");
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "otherHeaderData");
 
     }
 
@@ -704,11 +700,11 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 2L);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(1), "someHeaderData");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 2L);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "someHeaderData");
 
         action = (ReceiveMessageAction) test.getActions().get(1);
         Assert.assertEquals(action.getName(), "receive");
@@ -717,10 +713,10 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().size(), 2L);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(1), "otherHeaderData");
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 2L);
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(1), "otherHeaderData");
 
     }
 
@@ -753,9 +749,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "TestMessage");
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
     }
 
     @Test
@@ -795,9 +791,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "TestMessage");
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
     }
 
     @Test
@@ -835,9 +831,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getDataDictionary(), dictionary);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "TestMessage");
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
     }
 
     @Test
@@ -876,9 +872,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getDataDictionary(), dictionary);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "TestMessage");
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
     }
 
     @Test
@@ -1121,9 +1117,9 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getValidationCallback(), callback);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "TestMessage");
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
     }
 
     @Test
@@ -1332,10 +1328,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(validationContext.getValidationScript(), "assert true");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData());
-        Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadResourcePath());
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
 
     }
 
@@ -1370,8 +1364,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
                 .map(XmlMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(),
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()),
                 "<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(validationContext.getControlNamespaces().get("pfx"), "http://www.consol.de/schemas/test");
     }
@@ -1408,7 +1402,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
                 .map(XpathMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
         Assert.assertEquals(validationContext.getXpathExpressions().size(), 2L);
         Assert.assertEquals(validationContext.getXpathExpressions().get("Foo.operation"), "foo");
         Assert.assertEquals(validationContext.getXpathExpressions().get("Foo.message"), "control");
@@ -1451,7 +1445,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
                 .map(JsonPathMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
         Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 5L);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "foo");
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.active"), true);
@@ -1506,8 +1500,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
                 .map(XmlMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>?</Message></TestRequest>");
         Assert.assertEquals(validationContext.getIgnoreExpressions().size(), 1L);
         Assert.assertEquals(validationContext.getIgnoreExpressions().iterator().next(), "TestRequest.Message");
     }
@@ -1545,8 +1539,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
                 .map(JsonMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "{\"text\":\"Hello World!\", \"person\": {\"name\": \"Penny\", age: 25}}");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "{\"text\":\"Hello World!\", \"person\": {\"name\": \"Penny\", age: 25}}");
         Assert.assertEquals(validationContext.getIgnoreExpressions().size(), 2L);
         Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$..text"));
         Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$.person.age"));
@@ -1583,8 +1577,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
                 .map(XmlMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>?</Message></TestRequest>");
         Assert.assertEquals(validationContext.getSchema(), "testSchema");
     }
 
@@ -1619,8 +1613,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
                 .map(XmlMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>?</Message></TestRequest>");
         Assert.assertEquals(validationContext.getSchemaRepository(), "testSchemaRepository");
     }
 }

@@ -31,7 +31,7 @@ public class FtpServerTest extends AbstractTestNGUnitTest {
         FtpEndpointConfiguration endpointConfiguration = new FtpEndpointConfiguration();
         FtpServer server = new FtpServer(endpointConfiguration);
 
-        server.afterPropertiesSet();
+        server.initialize();
 
         server.startup();
         server.shutdown();

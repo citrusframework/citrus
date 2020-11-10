@@ -100,4 +100,9 @@ public class CitrusSpringConfig {
     public FailureStackTestListener failureStackTestListener() {
         return new FailureStackTestListener();
     }
+
+    @Bean
+    public ComponentLifecycleProcessor componentInitializer() {
+        return new ComponentLifecycleProcessor();
+    }
 }

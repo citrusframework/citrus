@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestResult;
+import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.context.TestContext;
@@ -96,6 +97,8 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
 
         CitrusDslAnnotations.injectTestDesigner(extensionContext.getRequiredTestInstance(), getTestDesigner(extensionContext));
         CitrusDslAnnotations.injectTestRunner(extensionContext.getRequiredTestInstance(), getTestRunner(extensionContext));
+        CitrusAnnotations.injectTestContext(extensionContext.getRequiredTestInstance(), getTestContext(extensionContext));
+        CitrusAnnotations.injectEndpoints(extensionContext.getRequiredTestInstance(), getTestContext(extensionContext));
     }
 
     @Override

@@ -16,13 +16,16 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 /**
  * Test the {@link MapValueFunction} function.
@@ -30,40 +33,37 @@ import java.util.*;
  *
  */
 public class MapValueFunctionTest extends AbstractTestNGUnitTest {
-	private Map<String, String> map = null;
-	
-	@BeforeTest
+	private final Map<String, String> map = new HashMap<>();
+
+	@BeforeClass
 	public void init() {
-		map = new HashMap<String, String>();
-		
 		map.put("401", "Unauthorized");
 		map.put("200", "OK");
 		map.put("500", "Internal Server Error");
 	}
-	
-	@Test(expectedExceptions = {IllegalArgumentException.class})
+
+	@Test(expectedExceptions = {CitrusRuntimeException.class},
+			expectedExceptionsMessageRegExp = "MapValueFunction must not use an empty value map")
 	public void testNoMapping() {
 		MapValueFunction testee = new MapValueFunction();
-		testee.afterPropertiesSet();
+		testee.initialize();
 	}
-	
+
 	@Test
 	public void testMapping() {
 		MapValueFunction testee = new MapValueFunction();
 		testee.setMap(map);
-		testee.afterPropertiesSet();
 		for (String key : map.keySet()) {
-			String result = testee.execute(Arrays.asList(key), context);
+			String result = testee.execute(Collections.singletonList(key), context);
 			Assert.assertEquals(result, map.get(key));
 		}
 	}
-	
+
 	@Test(expectedExceptions = {InvalidFunctionUsageException.class})
 	public void testMissingMapping() {
 		MapValueFunction testee = new MapValueFunction();
 		testee.setMap(map);
-		testee.afterPropertiesSet();
 		Assert.assertFalse(map.containsKey("303"));
-		testee.execute(Arrays.asList("303"), context);
+		testee.execute(Collections.singletonList("303"), context);
 	}
 }

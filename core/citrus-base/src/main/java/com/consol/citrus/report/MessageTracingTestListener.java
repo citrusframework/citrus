@@ -33,7 +33,6 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.RawMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * Test listener collects all messages sent and received by Citrus during test execution. Listener
@@ -45,7 +44,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @author Christoph Deppisch
  * @since 1.2
  */
-public class MessageTracingTestListener extends AbstractTestListener implements InitializingBean, MessageListener {
+public class MessageTracingTestListener extends AbstractTestListener implements MessageListener {
 
     /** File ending for all message trace files */
     private static final String TRACE_FILE_ENDING = ".msgs";
@@ -84,7 +83,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
             return; // do not write empty message trace file
         }
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(getTraceFile(test.getName())))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(getTraceFile(test.getName())))) {
             writer.write(separator() + newLine() + newLine());
 
             synchronized (lockObject) {
@@ -135,18 +134,6 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public void afterPropertiesSet() throws Exception {
-        File targetDirectory = new File(outputDirectory);
-        if (!targetDirectory.exists()) {
-            if (!targetDirectory.mkdirs()) {
-                throw new CitrusRuntimeException("Unable to create message tracing output directory: " + outputDirectory);
-            }
-        }
-    }
-
-    /**
      * Returns the trace file for message tracing. The file name should be unique per test execution run; the test name
      * and a execution id (the test execution start time) is embedded within the filename. Normally this should suffice
      * to ensure that the trace filename is unique per test/test-execution.
@@ -155,10 +142,15 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
      * @return the trace file to use for message tracing
      */
     protected File getTraceFile(String testName) {
+        File targetDirectory = new File(outputDirectory);
+        if (!targetDirectory.exists() && !targetDirectory.mkdirs()) {
+            throw new CitrusRuntimeException("Unable to create message tracing output directory: " + outputDirectory);
+        }
+
         String testExecutionStartTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(TEST_EXECUTION_DATE);
         String filename = String.format("%s_%s%s", testName, testExecutionStartTime, TRACE_FILE_ENDING);
 
-        File traceFile = new File(outputDirectory, filename);
+        File traceFile = new File(targetDirectory, filename);
         if (traceFile.exists()) {
             LOG.warn(String.format("Trace file '%s' already exists. Normally a new file is created on each test execution ", traceFile.getName()));
         }

@@ -71,8 +71,9 @@ public class SendHttpMessageTestDesignerTest extends UnitTestSupport {
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "additionalValue");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 2L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "additionalValue");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
 
         Assert.assertFalse(action.isForkMode());
 

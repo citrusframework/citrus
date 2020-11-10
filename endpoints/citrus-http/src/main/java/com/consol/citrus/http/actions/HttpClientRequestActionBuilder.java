@@ -23,7 +23,6 @@ import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
 
@@ -40,14 +39,13 @@ public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessag
      * Default constructor initializes http message.
      */
     public HttpClientRequestActionBuilder() {
-        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
-        staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
-        message(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        message(new HttpMessageContentBuilder(httpMessage));
     }
 
     @Override
-    protected void setPayload(String payload) {
+    public HttpClientRequestActionBuilder payload(String payload) {
         httpMessage.setPayload(payload);
+        return this;
     }
 
     /**

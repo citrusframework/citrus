@@ -17,6 +17,7 @@
 package com.consol.citrus.endpoint;
 
 import com.consol.citrus.TestActor;
+import com.consol.citrus.common.Named;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
 
@@ -25,7 +26,7 @@ import com.consol.citrus.messaging.Producer;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface Endpoint {
+public interface Endpoint extends Named {
 
     /**
      * Creates a message producer for this endpoint for sending messages
@@ -64,10 +65,4 @@ public interface Endpoint {
      * @return
      */
     String getName();
-
-    /**
-     * Sets the endpoint name.
-     * @param name
-     */
-    void setName(String name);
 }

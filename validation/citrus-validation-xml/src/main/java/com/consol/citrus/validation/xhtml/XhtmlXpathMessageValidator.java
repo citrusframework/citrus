@@ -16,21 +16,21 @@
 
 package com.consol.citrus.validation.xhtml;
 
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidator;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class XhtmlXpathMessageValidator extends XpathMessageValidator implements InitializingBean {
+public class XhtmlXpathMessageValidator extends XpathMessageValidator implements InitializingPhase {
 
     /** Message converter for XHTML content */
     private XhtmlMessageConverter messageConverter = new XhtmlMessageConverter();
@@ -47,11 +47,11 @@ public class XhtmlXpathMessageValidator extends XpathMessageValidator implements
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return messageType.equalsIgnoreCase(MessageType.XHTML.name()) && XMLUtils.hasXmlPayload(message);
+        return messageType.equalsIgnoreCase(MessageType.XHTML.name()) && MessageUtils.hasXmlPayload(message);
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         messageConverter.initialize();
     }
 

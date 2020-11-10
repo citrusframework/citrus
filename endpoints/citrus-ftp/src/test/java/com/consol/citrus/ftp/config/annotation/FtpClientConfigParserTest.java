@@ -103,7 +103,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
 
         // 1st ftp client
         Assert.assertEquals(ftpClient1.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient1.getEndpointConfiguration().getPort(), new Integer(22221));
+        Assert.assertEquals(ftpClient1.getEndpointConfiguration().getPort(), 22221);
         Assert.assertEquals(ftpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(ftpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(ftpClient1.getEndpointConfiguration().getTimeout(), 5000L);
@@ -112,7 +112,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
 
         // 2nd ftp client
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient2.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(ftpClient2.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getPassword(), "consol");
@@ -122,7 +122,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
 
         // 3rd ftp client
         Assert.assertEquals(ftpClient3.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient3.getEndpointConfiguration().getPort(), new Integer(22223));
+        Assert.assertEquals(ftpClient3.getEndpointConfiguration().getPort(), 22223);
         Assert.assertNotNull(ftpClient3.getEndpointConfiguration().getCorrelator());
         Assert.assertEquals(ftpClient3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
         Assert.assertEquals(ftpClient3.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
@@ -130,7 +130,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
         // 4th ftp client
         Assert.assertNotNull(ftpClient4.getActor());
         Assert.assertEquals(ftpClient4.getActor(), testActor);
-        Assert.assertEquals(ftpClient4.getEndpointConfiguration().getPort(), new Integer(22224));
+        Assert.assertEquals(ftpClient4.getEndpointConfiguration().getPort(), 22224);
         Assert.assertEquals(ftpClient4.getEndpointConfiguration().getPollingInterval(), 250L);
     }
 

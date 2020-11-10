@@ -54,12 +54,12 @@ public class JsonSchemaFilterTest {
         //GIVEN
         //Setup Schema repositories
         JsonSchemaRepository firstJsonSchemaRepository = new JsonSchemaRepository();
-        firstJsonSchemaRepository.setBeanName("schemaRepository1");
+        firstJsonSchemaRepository.setName("schemaRepository1");
         SimpleJsonSchema firstSimpleJsonSchema = mock(SimpleJsonSchema.class);
         firstJsonSchemaRepository.getSchemas().add(firstSimpleJsonSchema);
 
         JsonSchemaRepository secondJsonSchemaRepository = new JsonSchemaRepository();
-        secondJsonSchemaRepository.setBeanName("schemaRepository2");
+        secondJsonSchemaRepository.setName("schemaRepository2");
         SimpleJsonSchema secondSimpleJsonSchema = mock(SimpleJsonSchema.class);
         secondJsonSchemaRepository.getSchemas().add(secondSimpleJsonSchema);
         SimpleJsonSchema thirdSimpleJsonSchema = mock(SimpleJsonSchema.class);
@@ -90,7 +90,7 @@ public class JsonSchemaFilterTest {
         //GIVEN
         //Setup Schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-        jsonSchemaRepository.setBeanName("schemaRepository");
+        jsonSchemaRepository.setName("schemaRepository");
         SimpleJsonSchema jsonSchema = mock(SimpleJsonSchema.class);
         jsonSchemaRepository.getSchemas().add(jsonSchema);
 
@@ -119,7 +119,7 @@ public class JsonSchemaFilterTest {
         //GIVEN
         //Setup Schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-        jsonSchemaRepository.setBeanName("schemaRepository");
+        jsonSchemaRepository.setName("schemaRepository");
         SimpleJsonSchema jsonSchema = mock(SimpleJsonSchema.class);
         jsonSchemaRepository.getSchemas().add(jsonSchema);
 
@@ -153,7 +153,7 @@ public class JsonSchemaFilterTest {
         //GIVEN
         //Setup Schema repositories
         JsonSchemaRepository firstJsonSchemaRepository = new JsonSchemaRepository();
-        firstJsonSchemaRepository.setBeanName("schemaRepository1");
+        firstJsonSchemaRepository.setName("schemaRepository1");
         SimpleJsonSchema firstSimpleJsonSchema = mock(SimpleJsonSchema.class);
         firstJsonSchemaRepository.getSchemas().add(firstSimpleJsonSchema);
 
@@ -178,7 +178,7 @@ public class JsonSchemaFilterTest {
         //GIVEN
         //Setup Schema repositories
         JsonSchemaRepository firstJsonSchemaRepository = new JsonSchemaRepository();
-        firstJsonSchemaRepository.setBeanName("schemaRepository1");
+        firstJsonSchemaRepository.setName("schemaRepository1");
         SimpleJsonSchema firstSimpleJsonSchema = mock(SimpleJsonSchema.class);
         firstJsonSchemaRepository.getSchemas().add(firstSimpleJsonSchema);
 
@@ -208,12 +208,12 @@ public class JsonSchemaFilterTest {
         //GIVEN
         //Setup Schema repositories
         JsonSchemaRepository firstJsonSchemaRepository = new JsonSchemaRepository();
-        firstJsonSchemaRepository.setBeanName("schemaRepository1");
+        firstJsonSchemaRepository.setName("schemaRepository1");
         SimpleJsonSchema firstSimpleJsonSchema = mock(SimpleJsonSchema.class);
         firstJsonSchemaRepository.getSchemas().add(firstSimpleJsonSchema);
 
         JsonSchemaRepository secondJsonSchemaRepository = new JsonSchemaRepository();
-        secondJsonSchemaRepository.setBeanName("schemaRepository2");
+        secondJsonSchemaRepository.setName("schemaRepository2");
         SimpleJsonSchema secondSimpleJsonSchema = mock(SimpleJsonSchema.class);
         secondJsonSchemaRepository.getSchemas().add(secondSimpleJsonSchema);
         SimpleJsonSchema thirdSimpleJsonSchema = mock(SimpleJsonSchema.class);

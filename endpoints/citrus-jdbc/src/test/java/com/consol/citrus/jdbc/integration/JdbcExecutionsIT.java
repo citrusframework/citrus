@@ -49,12 +49,13 @@ public class JdbcExecutionsIT extends TestNGCitrusSupport {
     @CitrusEndpoint
     @JdbcServerConfig(
             databaseName = "testdb",
+            timeout = 1000L,
             autoStart = true,
             port = 4570)
     private JdbcServer jdbcServer;
 
-    private JdbcDriver jdbcDriver = new JdbcDriver();
-    private String serverUrl = "jdbc:citrus:localhost:4570?database=testdb";
+    private final JdbcDriver jdbcDriver = new JdbcDriver();
+    private final String serverUrl = "jdbc:citrus:localhost:4570?database=testdb";
 
     @AfterMethod
     public void teardown(){

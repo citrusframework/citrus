@@ -16,25 +16,33 @@
 
 package com.consol.citrus.mail.server;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.mail.client.MailEndpointConfiguration;
-import com.consol.citrus.mail.message.*;
-import com.consol.citrus.mail.model.*;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.server.AbstractServer;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.mail.javamail.MimeMailMessage;
-import org.subethamail.smtp.RejectException;
-import org.subethamail.smtp.helper.SimpleMessageListener;
-import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
-import org.subethamail.smtp.server.SMTPServer;
-
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.xml.transform.Source;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Stack;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.mail.client.MailEndpointConfiguration;
+import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
+import com.consol.citrus.mail.message.MailMessage;
+import com.consol.citrus.mail.message.MailMessageConverter;
+import com.consol.citrus.mail.model.AcceptResponse;
+import com.consol.citrus.mail.model.AttachmentPart;
+import com.consol.citrus.mail.model.BodyPart;
+import com.consol.citrus.mail.model.MailMarshaller;
+import com.consol.citrus.mail.model.MailRequest;
+import com.consol.citrus.mail.model.MailResponse;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.server.AbstractServer;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.subethamail.smtp.RejectException;
+import org.subethamail.smtp.helper.SimpleMessageListener;
+import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
+import org.subethamail.smtp.server.SMTPServer;
 
 /**
  * Mail server implementation starts new SMTP server instance and listens for incoming mail messages. Incoming mail messages
@@ -50,7 +58,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MailServer extends AbstractServer implements SimpleMessageListener, InitializingBean {
+public class MailServer extends AbstractServer implements SimpleMessageListener {
 
     /** Server port */
     private int port = 25;

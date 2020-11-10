@@ -17,17 +17,12 @@
 package com.consol.citrus.jdbc.server;
 
 import com.consol.citrus.server.AbstractServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.3
  */
 public class JdbcServer extends AbstractServer {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JdbcServer.class);
 
     /** Endpoint configuration */
     private final JdbcEndpointConfiguration endpointConfiguration;

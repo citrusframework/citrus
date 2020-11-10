@@ -99,6 +99,7 @@ public class XsdJavaTestGenerator extends MessagingJavaTestGenerator<XsdJavaTest
         }
 
         XmlConfigurer configurer = new XmlConfigurer();
+        configurer.initialize();
         configurer.setSerializeSettings(Collections.singletonMap(XmlConfigurer.XML_DECLARATION, false));
         XMLUtils.initialize(configurer);
 
@@ -256,11 +257,7 @@ public class XsdJavaTestGenerator extends MessagingJavaTestGenerator<XsdJavaTest
      */
     public XsdJavaTestGenerator withInboundMappingFile(String mappingFile) {
         this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
-        try {
-            this.inboundDataDictionary.afterPropertiesSet();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to read mapping file", e);
-        }
+        this.inboundDataDictionary.initialize();
         return this;
     }
 
@@ -271,11 +268,7 @@ public class XsdJavaTestGenerator extends MessagingJavaTestGenerator<XsdJavaTest
      */
     public XsdJavaTestGenerator withOutboundMappingFile(String mappingFile) {
         this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
-        try {
-            this.outboundDataDictionary.afterPropertiesSet();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to read mapping file", e);
-        }
+        this.outboundDataDictionary.initialize();
         return this;
     }
 

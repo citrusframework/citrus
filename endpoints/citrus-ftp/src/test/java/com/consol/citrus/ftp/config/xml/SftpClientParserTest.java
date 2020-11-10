@@ -16,6 +16,8 @@
 
 package com.consol.citrus.ftp.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.ftp.client.SftpClient;
 import com.consol.citrus.message.DefaultMessageCorrelator;
@@ -23,8 +25,6 @@ import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -41,7 +41,7 @@ public class SftpClientParserTest extends AbstractBeanDefinitionParserTest {
         // 1st sftp client
         SftpClient sftpClient = clients.get("sftpClient1");
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertTrue(sftpClient.getEndpointConfiguration().isAutoReadFiles());
         Assert.assertTrue(sftpClient.getEndpointConfiguration().isLocalPassiveMode());
@@ -57,7 +57,7 @@ public class SftpClientParserTest extends AbstractBeanDefinitionParserTest {
         // 2nd sftp client
         sftpClient = clients.get("sftpClient2");
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getPassword(), "consol");
@@ -76,7 +76,7 @@ public class SftpClientParserTest extends AbstractBeanDefinitionParserTest {
         // 3rd sftp client
         sftpClient = clients.get("sftpClient3");
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), 22222);
         Assert.assertNotNull(sftpClient.getEndpointConfiguration().getCorrelator());
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
 

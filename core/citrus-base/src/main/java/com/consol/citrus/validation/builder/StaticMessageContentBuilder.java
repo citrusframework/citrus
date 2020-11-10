@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.builder;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,9 @@ import java.util.Map;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.builder.DefaultHeaderBuilder;
+import com.consol.citrus.message.builder.DefaultHeaderDataBuilder;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 
 /**
  * Message builder returning a static message every time the build mechanism is called. This
@@ -31,35 +35,42 @@ import com.consol.citrus.message.MessageHeaders;
  *
  * @author Christoph Deppisch
  */
-public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
+public class StaticMessageContentBuilder extends DefaultMessageContentBuilder {
+
+    protected static final List<String> FILTERED_HEADERS = Arrays.asList(
+            MessageHeaders.ID,
+            MessageHeaders.TIMESTAMP
+    );
 
     /** The static message to build here */
-    private Message message;
+    private final Message message;
 
     /**
      * Default constructor with static message to be built by this message builder.
      */
     public StaticMessageContentBuilder(final Message message) {
         this.message = message;
-        this.setMessageName(message.getName());
+        this.setName(message.getName());
     }
 
     @Override
     public Object buildMessagePayload(final TestContext context, final String messageType) {
-        if (message.getPayload() instanceof String) {
-            return context.replaceDynamicContentInString(message.getPayload(String.class));
-        } else {
-            return message.getPayload();
+        if (getPayloadBuilder() == null) {
+            this.setPayloadBuilder(new DefaultPayloadBuilder(message.getPayload()));
         }
+        return super.buildMessagePayload(context, messageType);
     }
 
     @Override
     public Map<String, Object> buildMessageHeaders(final TestContext context) {
         final Map<String, Object> headers = super.buildMessageHeaders(context);
-        headers.putAll(context.resolveDynamicValuesInMap(message.getHeaders().entrySet()
-                                    .stream()
-                                    .filter(entry -> !entry.getKey().equals(MessageHeaders.ID) && !entry.getKey().equals(MessageHeaders.TIMESTAMP))
-                                    .collect(HashMap::new, (map, value) -> map.put(value.getKey(), value.getValue()), HashMap::putAll)));
+
+        headers.putAll(new DefaultHeaderBuilder(
+                message.getHeaders().entrySet()
+                        .stream()
+                        .filter(entry -> !FILTERED_HEADERS.contains(entry.getKey()))
+                        .collect(HashMap::new, (map, value) -> map.put(value.getKey(), value.getValue()), HashMap::putAll))
+                .builderHeaders(context));
 
         return headers;
     }
@@ -67,7 +78,10 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     @Override
     public List<String> buildMessageHeaderData(final TestContext context) {
         final List<String> headerData = super.buildMessageHeaderData(context);
-        headerData.addAll(context.resolveDynamicValuesInList(message.getHeaderData()));
+
+        message.getHeaderData().stream()
+                .map(DefaultHeaderDataBuilder::new)
+                .forEach(builder -> headerData.add(builder.buildHeaderData(context)));
 
         return headerData;
     }

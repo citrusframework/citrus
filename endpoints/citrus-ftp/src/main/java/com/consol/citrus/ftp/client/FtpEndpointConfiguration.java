@@ -16,13 +16,15 @@
 
 package com.consol.citrus.ftp.client;
 
-import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
-import com.consol.citrus.ftp.message.FtpMarshaller;
-import com.consol.citrus.message.*;
-import org.apache.commons.net.ftp.FTPCmd;
-
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
+import com.consol.citrus.ftp.message.FtpMarshaller;
+import com.consol.citrus.message.DefaultMessageCorrelator;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.MessageCorrelator;
+import org.apache.commons.net.ftp.FTPCmd;
 
 /**
  * @author Christoph Deppisch
@@ -34,7 +36,7 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
     private String host = "localhost";
 
     /** Ftp server port */
-    private Integer port = 22222;
+    private int port = 22222;
 
     /** User name used for login */
     private String user;
@@ -87,7 +89,7 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
      * Sets the ftp server port.
      * @param port
      */
-    public void setPort(Integer port) {
+    public void setPort(int port) {
         this.port = port;
     }
 
@@ -95,7 +97,7 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
      * Gets the ftp server port.
      * @return
      */
-    public Integer getPort() {
+    public int getPort() {
         return port;
     }
 

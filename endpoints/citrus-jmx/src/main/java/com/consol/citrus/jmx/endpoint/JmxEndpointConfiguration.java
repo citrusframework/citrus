@@ -16,6 +16,11 @@
 
 package com.consol.citrus.jmx.endpoint;
 
+import javax.management.NotificationFilter;
+import java.rmi.registry.Registry;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.jmx.message.JmxMessageConverter;
 import com.consol.citrus.jmx.model.JmxMarshaller;
@@ -25,11 +30,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
-
-import javax.management.NotificationFilter;
-import java.rmi.registry.Registry;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch

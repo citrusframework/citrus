@@ -142,7 +142,6 @@
     <spring.restdocs.version>2.0.4.RELEASE</spring.restdocs.version>
     <kafka.version>2.6.0</kafka.version>
     <apache.camel.version>3.5.0</apache.camel.version>
-    <javatuples.version>1.2</javatuples.version>
     <activemq.version>5.16.0</activemq.version>
     <vertx.version>3.9.2</vertx.version>
     <groovy.version>2.5.13</groovy.version>
@@ -153,7 +152,7 @@
     <slf4j.version>1.7.30</slf4j.version>
     <log4j2.version>2.13.3</log4j2.version>
     <jaxb.version>2.3.0.1</jaxb.version>
-    <jackson.version>2.11.2</jackson.version>
+    <jackson.version>2.11.3</jackson.version>
     <arquillian.version>1.6.0.Final</arquillian.version>
     <cucumber.version>5.7.0</cucumber.version>
     <zookeeper.version>3.6.1</zookeeper.version>
@@ -1035,12 +1034,6 @@
         <groupId>org.xerial.snappy</groupId>
         <artifactId>snappy-java</artifactId>
         <version>1.1.7.7</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.javatuples</groupId>
-        <artifactId>javatuples</artifactId>
-        <version>${javatuples.version}</version>
       </dependency>
 
       <!-- Test scoped dependencies -->

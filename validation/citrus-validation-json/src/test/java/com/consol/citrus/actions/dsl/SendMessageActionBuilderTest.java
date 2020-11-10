@@ -13,11 +13,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.builder.ObjectMappingPayloadBuilder;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -68,7 +68,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payloadModel(new TestRequest("Hello Citrus!")));
+                .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -78,11 +78,11 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "{\"message\":\"Hello Citrus!\"}");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "{\"message\":\"Hello Citrus!\"}");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
 
     }
 
@@ -99,7 +99,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payload(new TestRequest("Hello Citrus!"), mapper));
+                .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -109,11 +109,11 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "{\"message\":\"Hello Citrus!\"}");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "{\"message\":\"Hello Citrus!\"}");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
 
     }
 
@@ -133,12 +133,12 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myObjectMapper")).thenReturn(true);
-        when(referenceResolver.resolve("myObjectMapper")).thenReturn(mapper);
+        when(referenceResolver.resolve("myObjectMapper", ObjectMapper.class)).thenReturn(mapper);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payload(new TestRequest("Hello Citrus!"), "myObjectMapper"));
+                .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -148,11 +148,11 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "{\"message\":\"Hello Citrus!\"}");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "{\"message\":\"Hello Citrus!\"}");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
 
     }
 
@@ -224,7 +224,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
         Assert.assertEquals(action.getMessageProcessors().size(), 1);
         Assert.assertTrue(action.getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
         Assert.assertEquals(((JsonPathMessageProcessor)action.getMessageProcessors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");

@@ -236,7 +236,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
         endpointConfiguration.setPassword("remote-password");
 
         SftpClient sftpClient = new SftpClient(endpointConfiguration);
-        sftpClient.afterPropertiesSet();
+        sftpClient.initialize();
         sftpClient.connectAndLogin();
         return sftpClient;
     }

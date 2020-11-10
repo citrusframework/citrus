@@ -65,7 +65,7 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
     private Resource wsdl;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(WsdlXsdSchema.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WsdlXsdSchema.class);
 
     /**
      * Default constructor
@@ -135,7 +135,7 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
                         }
                     }
                 } else {
-                    log.warn("Found unsupported schema type implementation " + schemaObject.getClass());
+                    LOG.warn("Found unsupported schema type implementation " + schemaObject.getClass());
                 }
             }
         }

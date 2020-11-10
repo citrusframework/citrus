@@ -17,12 +17,15 @@
 package com.consol.citrus.ws.config.xml;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractReceiveMessageActionFactoryBean;
 import com.consol.citrus.config.xml.ReceiveMessageActionParser;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.message.builder.DefaultHeaderBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.consol.citrus.ws.message.SoapAttachment;
@@ -61,19 +64,24 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
     }
 
     @Override
-    protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder messageBuilder, List<ValidationContext> validationContexts) {
+    protected void parseHeaderElements(Element actionElement, DefaultMessageContentBuilder messageBuilder, List<ValidationContext> validationContexts) {
         super.parseHeaderElements(actionElement, messageBuilder, validationContexts);
 
+        Map<String, Object> headers = new HashMap<>();
         if (actionElement.hasAttribute("soap-action")) {
-            messageBuilder.getMessageHeaders().put(SoapMessageHeaders.SOAP_ACTION, actionElement.getAttribute("soap-action"));
+            headers.put(SoapMessageHeaders.SOAP_ACTION, actionElement.getAttribute("soap-action"));
         }
 
         if (actionElement.hasAttribute("content-type")) {
-            messageBuilder.getMessageHeaders().put(SoapMessageHeaders.HTTP_CONTENT_TYPE, actionElement.getAttribute("content-type"));
+            headers.put(SoapMessageHeaders.HTTP_CONTENT_TYPE, actionElement.getAttribute("content-type"));
         }
 
         if (actionElement.hasAttribute("accept")) {
-            messageBuilder.getMessageHeaders().put(SoapMessageHeaders.HTTP_ACCEPT, actionElement.getAttribute("accept"));
+            headers.put(SoapMessageHeaders.HTTP_ACCEPT, actionElement.getAttribute("accept"));
+        }
+
+        if (!headers.isEmpty()) {
+            messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
         }
     }
 

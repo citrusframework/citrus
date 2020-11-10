@@ -133,6 +133,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
             withResponse(response);
 
             XmlConfigurer configurer = new XmlConfigurer();
+            configurer.initialize();
             configurer.setSerializeSettings(Collections.singletonMap(XmlConfigurer.XML_DECLARATION, false));
             XMLUtils.initialize(configurer);
 
@@ -414,11 +415,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
      */
     public WsdlJavaTestGenerator withInboundMappingFile(String mappingFile) {
         this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
-        try {
-            this.inboundDataDictionary.afterPropertiesSet();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to read mapping file", e);
-        }
+        this.inboundDataDictionary.initialize();
         return this;
     }
 
@@ -429,11 +426,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
      */
     public WsdlJavaTestGenerator withOutboundMappingFile(String mappingFile) {
         this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
-        try {
-            this.outboundDataDictionary.afterPropertiesSet();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to read mapping file", e);
-        }
+        this.outboundDataDictionary.initialize();
         return this;
     }
 

@@ -17,10 +17,10 @@
 package com.consol.citrus.endpoint;
 
 import com.consol.citrus.TestActor;
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * @author Christoph Deppisch
@@ -53,11 +53,11 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
      * @return
      */
     public AbstractEndpointBuilder<T> initialize() {
-        if (getEndpoint() instanceof InitializingBean) {
+        if (getEndpoint() instanceof InitializingPhase) {
             try {
-                ((InitializingBean) getEndpoint()).afterPropertiesSet();
+                ((InitializingPhase) getEndpoint()).initialize();
             } catch (Exception e) {
-                throw new CitrusRuntimeException("Failed to initialize endpoint", e);
+                throw new CitrusRuntimeException("Failed to initialize server", e);
             }
         }
 

@@ -18,12 +18,12 @@ package com.consol.citrus.variable.dictionary.xml;
 
 import java.util.Map;
 
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.w3c.dom.Node;
 
 /**
@@ -33,10 +33,10 @@ import org.w3c.dom.Node;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class NodeMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
+public class NodeMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingPhase {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(NodeMappingDataDictionary.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NodeMappingDataDictionary.class);
 
     @Override
     public <T> T translate(Node node, T value, TestContext context) {
@@ -44,16 +44,16 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
 
         if (getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.EXACT)) {
             if (mappings.containsKey(nodePath)) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));
                 }
                 return convertIfNecessary(mappings.get(nodePath), value, context);
             }
         } else if (getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.ENDS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (nodePath.endsWith(entry.getKey())) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }
@@ -61,8 +61,8 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
         } else if (getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.STARTS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (nodePath.startsWith(entry.getKey())) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }

@@ -42,11 +42,6 @@ public class MessageValidatorRegistryFactory implements FactoryBean<MessageValid
     }
 
     @Override
-    public boolean isSingleton() {
-        return true;
-    }
-
-    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }

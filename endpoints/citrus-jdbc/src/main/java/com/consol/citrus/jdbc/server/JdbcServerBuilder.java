@@ -16,32 +16,22 @@
 
 package com.consol.citrus.jdbc.server;
 
-import com.consol.citrus.endpoint.AbstractEndpointBuilder;
-import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.db.server.JdbcServerConfiguration;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.server.AbstractServerBuilder;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
+public class JdbcServerBuilder extends AbstractServerBuilder<JdbcServer, JdbcServerBuilder> {
 
     /** Endpoint target */
-    private JdbcServer endpoint = new JdbcServer();
+    private final JdbcServer endpoint = new JdbcServer();
 
     @Override
     protected JdbcServer getEndpoint() {
         return endpoint;
-    }
-
-    /**
-     * Sets the autoStart property.
-     * @param autoStart
-     * @return
-     */
-    public JdbcServerBuilder autoStart(boolean autoStart) {
-        endpoint.setAutoStart(autoStart);
-        return this;
     }
 
     /**
@@ -115,26 +105,6 @@ public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
     }
 
     /**
-     * Sets the endpoint adapter.
-     * @param endpointAdapter
-     * @return
-     */
-    public JdbcServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
-        endpoint.setEndpointAdapter(endpointAdapter);
-        return this;
-    }
-
-    /**
-     * Sets the debug logging enabled flag.
-     * @param enabled
-     * @return
-     */
-    public JdbcServerBuilder debugLogging(boolean enabled) {
-        endpoint.setDebugLogging(enabled);
-        return this;
-    }
-
-    /**
      * Sets the maxConnections.
      * @param maxConnections
      * @return
@@ -149,18 +119,8 @@ public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
      * @param pollingInterval
      * @return
      */
-    public JdbcServerBuilder pollingInterval(int pollingInterval) {
+    public JdbcServerBuilder pollingInterval(long pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
-        return this;
-    }
-
-    /**
-     * Sets the default timeout.
-     * @param timeout
-     * @return
-     */
-    public JdbcServerBuilder timeout(long timeout) {
-        endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
     }
 
@@ -171,6 +131,16 @@ public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
      */
     public JdbcServerBuilder autoTransactionHandling(final boolean autoTransactionHandling) {
         endpoint.getEndpointConfiguration().setAutoTransactionHandling(autoTransactionHandling);
+        return this;
+    }
+
+    /**
+     * Sets the serverConfiguration property.
+     * @param serverConfiguration to set
+     * @return The builder
+     */
+    public JdbcServerBuilder serverConfiguration(final JdbcServerConfiguration serverConfiguration) {
+        endpoint.getEndpointConfiguration().setServerConfiguration(serverConfiguration);
         return this;
     }
 

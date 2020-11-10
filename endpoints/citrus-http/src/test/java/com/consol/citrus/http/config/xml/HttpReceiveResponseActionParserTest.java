@@ -24,7 +24,6 @@ import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.DelegatingPayloadVariableExtractor;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -39,7 +38,6 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
         assertActionCount(4);
         assertActionClassAndName(ReceiveMessageAction.class, "http:receive-response");
 
-        PayloadTemplateMessageBuilder messageBuilder;
         HttpMessageContentBuilder httpMessageContentBuilder;
 
         ReceiveMessageAction action = getNextTestActionFromTest();
@@ -51,10 +49,8 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
 
         httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageContentBuilder);
-        Assert.assertEquals(httpMessageContentBuilder.getDelegate().getClass(), PayloadTemplateMessageBuilder.class);
-        messageBuilder = (PayloadTemplateMessageBuilder)httpMessageContentBuilder.getDelegate();
 
-        Assert.assertNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(httpMessageContentBuilder.buildMessagePayload(context, action.getMessageType()), "");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().size(), 2L);
         Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
@@ -70,9 +66,7 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
 
         httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageContentBuilder);
-        Assert.assertEquals(httpMessageContentBuilder.getDelegate().getClass(), PayloadTemplateMessageBuilder.class);
-        messageBuilder = (PayloadTemplateMessageBuilder)httpMessageContentBuilder.getDelegate();
-        Assert.assertNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(httpMessageContentBuilder.buildMessagePayload(context, action.getMessageType()), "");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().size(), 5L);
         Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
@@ -90,9 +84,7 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
 
         httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageContentBuilder);
-        Assert.assertEquals(httpMessageContentBuilder.getDelegate().getClass(), PayloadTemplateMessageBuilder.class);
-        messageBuilder = (PayloadTemplateMessageBuilder)httpMessageContentBuilder.getDelegate();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<user><id>1001</id><name>new_user</name></user>");
+        Assert.assertEquals(httpMessageContentBuilder.buildMessagePayload(context, action.getMessageType()), "<user><id>1001</id><name>new_user</name></user>");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get("userId"), "1001");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
         Assert.assertNull(action.getEndpointUri());
@@ -109,9 +101,7 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
 
         httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageContentBuilder);
-        Assert.assertEquals(httpMessageContentBuilder.getDelegate().getClass(), PayloadTemplateMessageBuilder.class);
-        messageBuilder = (PayloadTemplateMessageBuilder)httpMessageContentBuilder.getDelegate();
-        Assert.assertNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(httpMessageContentBuilder.buildMessagePayload(context, action.getMessageType()), "");
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "http://localhost:8080/test");
         Assert.assertEquals(action.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));

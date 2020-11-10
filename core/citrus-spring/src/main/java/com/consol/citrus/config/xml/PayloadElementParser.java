@@ -16,27 +16,35 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.XMLUtils;
-import org.w3c.dom.*;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
- * Bean definition parser for payload element used in message 
+ * Bean definition parser for payload element used in message
  * elements in send and receive action.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class PayloadElementParser {
-    
+
     /**
      * Prevent instantiation.
      */
     private PayloadElementParser() {
     }
-    
+
     /**
      * Static parse method taking care of payload element.
      * @param payloadElement
@@ -45,19 +53,30 @@ public abstract class PayloadElementParser {
         if (payloadElement == null) {
             return "";
         }
-        
+
         try {
             Document payload = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             payload.appendChild(payload.importNode(payloadElement, true));
 
-            String payloadData = XMLUtils.serialize(payload);
+            String payloadData = serialize(payload);
             // temporary quickfix for unwanted testcase namespace in target payload
             payloadData = payloadData.replaceAll(" xmlns=\\\"http://www.citrusframework.org/schema/testcase\\\"", "");
             return payloadData.trim();
-        } catch (DOMException e) {
-            throw new CitrusRuntimeException("Error while constructing message payload", e);
-        } catch (ParserConfigurationException e) {
+        } catch (DOMException | ParserConfigurationException | TransformerException e) {
             throw new CitrusRuntimeException("Error while constructing message payload", e);
         }
+    }
+
+    private static String serialize(Document doc) throws TransformerException {
+        DOMSource domSource = new DOMSource(doc);
+        StringWriter writer = new StringWriter();
+        StreamResult result = new StreamResult(writer);
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        transformer.transform(domSource, result);
+        return writer.toString();
     }
 }

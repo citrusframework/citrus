@@ -31,6 +31,7 @@ import com.consol.citrus.server.AbstractServer;
 import com.consol.citrus.ssh.SshCommand;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.message.SshMessageConverter;
+import com.consol.citrus.ssh.model.SshMarshaller;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
@@ -333,6 +334,14 @@ public class SshServer extends AbstractServer {
      */
     public SshMessageConverter getMessageConverter() {
         return messageConverter;
+    }
+
+    /**
+     * Sets the marshaller.
+     * @param marshaller
+     */
+    public void setMarshaller(SshMarshaller marshaller) {
+        this.endpointConfiguration.setSshMarshaller(marshaller);
     }
 
     /**

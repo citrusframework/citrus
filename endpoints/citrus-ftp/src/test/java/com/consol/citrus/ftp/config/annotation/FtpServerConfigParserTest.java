@@ -109,7 +109,7 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
 
         // 1st message sender
         Assert.assertEquals(ftpServer1.getName(), "ftpServer1");
-        Assert.assertEquals(ftpServer1.getEndpointConfiguration().getPort(), new Integer(22221));
+        Assert.assertEquals(ftpServer1.getEndpointConfiguration().getPort(), 22221);
         Assert.assertFalse(ftpServer1.isAutoStart());
         Assert.assertTrue(ftpServer1.getEndpointConfiguration().isAutoConnect());
         Assert.assertTrue(ftpServer1.getEndpointConfiguration().isAutoLogin());
@@ -117,7 +117,7 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
 
         // 2nd message sender
         Assert.assertEquals(ftpServer2.getName(), "ftpServer2");
-        Assert.assertEquals(ftpServer2.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(ftpServer2.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(ftpServer2.getFtpServer(), apacheFtpServer);
         Assert.assertFalse(ftpServer2.isAutoStart());
         Assert.assertFalse(ftpServer2.getEndpointConfiguration().isAutoConnect());
@@ -126,13 +126,13 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
 
         // 3rd message sender
         Assert.assertEquals(ftpServer3.getName(), "ftpServer3");
-        Assert.assertEquals(ftpServer3.getEndpointConfiguration().getPort(), new Integer(22223));
+        Assert.assertEquals(ftpServer3.getEndpointConfiguration().getPort(), 22223);
         Assert.assertEquals(ftpServer3.getUserManager(), userManager);
         Assert.assertFalse(ftpServer3.isAutoStart());
 
         // 4th message sender
         Assert.assertEquals(ftpServer4.getName(), "ftpServer4");
-        Assert.assertEquals(ftpServer4.getEndpointConfiguration().getPort(), new Integer(22224));
+        Assert.assertEquals(ftpServer4.getEndpointConfiguration().getPort(), 22224);
         Assert.assertNotNull(ftpServer4.getUserManagerProperties().getFile());
         Assert.assertFalse(ftpServer4.isAutoStart());
         Assert.assertNotNull(ftpServer4.getInterceptors());
@@ -140,7 +140,7 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
 
         // 5th message sender
         Assert.assertEquals(ftpServer5.getName(), "ftpServer5");
-        Assert.assertEquals(ftpServer5.getEndpointConfiguration().getPort(), new Integer(22225));
+        Assert.assertEquals(ftpServer5.getEndpointConfiguration().getPort(), 22225);
         Assert.assertNotNull(ftpServer5.getEndpointAdapter());
         Assert.assertEquals(ftpServer5.getEndpointAdapter(), endpointAdapter);
     }

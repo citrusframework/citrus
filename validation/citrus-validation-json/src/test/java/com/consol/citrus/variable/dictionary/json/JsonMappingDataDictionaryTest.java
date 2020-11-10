@@ -133,7 +133,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
 
         JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
         dictionary.setMappingFile(new ClassPathResource("jsonmapping.properties", DataDictionary.class));
-        dictionary.afterPropertiesSet();
+        dictionary.initialize();
 
         dictionary.processMessage(message, context);
         Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\"}}");

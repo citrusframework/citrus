@@ -22,9 +22,10 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
@@ -55,8 +56,8 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContent("TestAttachment!");
@@ -96,8 +97,8 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapMessageWithAttachmentDataTest() throws Exception {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("myAttachment");
@@ -141,8 +142,8 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapMessageWithMultipleAttachmentDataTest() throws Exception {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("1stAttachment");
@@ -201,8 +202,8 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapMessageWithEmptyAttachmentContentTest() throws Exception {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("myAttachment");
@@ -245,8 +246,8 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapMessageWithNoAttachmentExpected() throws Exception {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -271,8 +272,8 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapMessageWithAttachmentResourceTest() throws Exception {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("myAttachment");
@@ -316,8 +317,8 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapMessageWithAttachmentResourceVariablesSupportTest() throws Exception {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         context.setVariable("myText", "Hello World!");
 
@@ -363,8 +364,8 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapMessageWithAttachmentDataVariablesSupportTest() throws Exception {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         context.setVariable("myText", "Hello World!");
 

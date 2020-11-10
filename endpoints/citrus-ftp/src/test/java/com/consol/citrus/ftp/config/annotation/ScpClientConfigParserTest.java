@@ -96,7 +96,7 @@ public class ScpClientConfigParserTest extends AbstractTestNGUnitTest {
         // 1st scp client
         Assert.assertEquals(scpClient1.getEndpointConfiguration().getHost(), "localhost");
         Assert.assertEquals(scpClient1.getEndpointConfiguration().getPortOption(), "-P");
-        Assert.assertEquals(scpClient1.getEndpointConfiguration().getPort(), new Integer(22221));
+        Assert.assertEquals(scpClient1.getEndpointConfiguration().getPort(), 22221);
         Assert.assertEquals(scpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(scpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(scpClient1.getEndpointConfiguration().getTimeout(), 5000L);
@@ -109,7 +109,7 @@ public class ScpClientConfigParserTest extends AbstractTestNGUnitTest {
         // 2nd scp client
         Assert.assertEquals(scpClient2.getEndpointConfiguration().getHost(), "localhost");
         Assert.assertEquals(scpClient2.getEndpointConfiguration().getPortOption(), "-p");
-        Assert.assertEquals(scpClient2.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(scpClient2.getEndpointConfiguration().getPort(), 22222);
         Assert.assertEquals(scpClient2.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(scpClient2.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(scpClient2.getEndpointConfiguration().getPassword(), "consol");
@@ -119,7 +119,7 @@ public class ScpClientConfigParserTest extends AbstractTestNGUnitTest {
 
         // 3rd scp client
         Assert.assertEquals(scpClient3.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(scpClient3.getEndpointConfiguration().getPort(), new Integer(22223));
+        Assert.assertEquals(scpClient3.getEndpointConfiguration().getPort(), 22223);
         Assert.assertNotNull(scpClient3.getEndpointConfiguration().getCorrelator());
         Assert.assertEquals(scpClient3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
         Assert.assertEquals(scpClient3.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
@@ -127,7 +127,7 @@ public class ScpClientConfigParserTest extends AbstractTestNGUnitTest {
         // 4th scp client
         Assert.assertNotNull(scpClient4.getActor());
         Assert.assertEquals(scpClient4.getActor(), testActor);
-        Assert.assertEquals(scpClient4.getEndpointConfiguration().getPort(), new Integer(22224));
+        Assert.assertEquals(scpClient4.getEndpointConfiguration().getPort(), 22224);
         Assert.assertEquals(scpClient4.getEndpointConfiguration().getPollingInterval(), 250L);
     }
 

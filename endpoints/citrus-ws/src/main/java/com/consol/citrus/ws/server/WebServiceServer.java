@@ -18,6 +18,7 @@ package com.consol.citrus.ws.server;
 
 import java.util.Arrays;
 
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.server.AbstractServer;
@@ -37,7 +38,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.ServletMapping;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
@@ -48,7 +48,7 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
  *
  * @author Christoph Deppisch
  */
-public class WebServiceServer extends AbstractServer implements ApplicationContextAware {
+public class WebServiceServer extends AbstractServer {
 
     /** Server port */
     private int port = 8080;
@@ -143,9 +143,9 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
             contextHandler.setResourceBase(resourceBase);
 
             //add the root application context as parent to the constructed WebApplicationContext
-            if (useRootContextAsParent) {
+            if (useRootContextAsParent && getReferenceResolver() instanceof SpringBeanReferenceResolver) {
                 contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-                        new ParentDelegatingWebApplicationContext(getApplicationContext()));
+                        new ParentDelegatingWebApplicationContext(((SpringBeanReferenceResolver) getReferenceResolver()).getApplicationContext()));
             }
 
             if (servletHandler == null) {
@@ -177,11 +177,11 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
+    public void initialize() {
+        super.initialize();
 
-        if (getApplicationContext() != null && getApplicationContext().getBeansOfType(MessageListeners.class).size() == 1) {
-            MessageListeners messageListeners = getApplicationContext().getBean(MessageListeners.class);
+        if (getReferenceResolver() != null && getReferenceResolver().resolveAll(MessageListeners.class).size() == 1) {
+            MessageListeners messageListeners = getReferenceResolver().resolve(MessageListeners.class);
 
             getInterceptors().stream()
                     .filter(LoggingEndpointInterceptor.class::isInstance)

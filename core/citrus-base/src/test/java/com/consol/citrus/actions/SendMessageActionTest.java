@@ -36,13 +36,17 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.message.builder.DefaultHeaderBuilder;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
+import com.consol.citrus.message.builder.FileResourcePayloadBuilder;
+import com.consol.citrus.message.builder.script.GroovyFileResourcePayloadBuilder;
+import com.consol.citrus.message.builder.script.GroovyScriptPayloadBuilder;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
-import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.mockito.Mockito;
@@ -80,8 +84,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 		TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
 
-		PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-		messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+		DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+		messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
 		final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -108,8 +112,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResource() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload.xml"));
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
                 "<TestRequest>" + System.lineSeparator() +
@@ -143,8 +147,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 		sb.append("Message('Hello World!')\n");
 		sb.append("}");
 
-		GroovyScriptMessageBuilder scriptMessageBuidler = new GroovyScriptMessageBuilder();
-		scriptMessageBuidler.setScriptData(sb.toString());
+        DefaultMessageContentBuilder messageContentBuilder = new DefaultMessageContentBuilder();
+        messageContentBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(sb.toString()));
 
 		final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
                 "  <Message>Hello World!</Message>" + System.lineSeparator() +
@@ -163,7 +167,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .message(scriptMessageBuidler)
+                .message(messageContentBuilder)
                 .build();
 		sendAction.execute(context);
 
@@ -179,8 +183,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sb.append("Message('${text}')\n");
         sb.append("}");
 
-        GroovyScriptMessageBuilder scriptMessageBuidler = new GroovyScriptMessageBuilder();
-        scriptMessageBuidler.setScriptData(sb.toString());
+        DefaultMessageContentBuilder messageContentBuilder = new DefaultMessageContentBuilder();
+        messageContentBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(sb.toString()));
 
         final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
                 "  <Message>Hello World!</Message>" + System.lineSeparator() +
@@ -199,7 +203,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .message(scriptMessageBuidler)
+                .message(messageContentBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -208,8 +212,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessageBuilderScriptResource() {
-        GroovyScriptMessageBuilder scriptMessageBuidler = new GroovyScriptMessageBuilder();
-        scriptMessageBuidler.setScriptResourcePath("classpath:com/consol/citrus/actions/test-request-payload.groovy");
+        DefaultMessageContentBuilder messageContentBuilder = new DefaultMessageContentBuilder();
+        messageContentBuilder.setPayloadBuilder(
+                new GroovyFileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload.groovy"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
                 "  <Message>Hello World!</Message>" + System.lineSeparator() +
@@ -228,7 +233,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .message(scriptMessageBuidler)
+                .message(messageContentBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -237,8 +242,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadDataVariablesSupport() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
 
         context.setVariable("myText", "Hello World!");
 
@@ -266,8 +271,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResourceVariablesSupport() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-variables.xml");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload-with-variables.xml"));
 
         context.setVariable("myText", "Hello World!");
 
@@ -298,8 +303,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResourceFunctionsSupport() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml"));
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
                 "<TestRequest>" + System.lineSeparator() +
@@ -328,8 +333,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElements() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
 
         MessageProcessor processor = (message, context) -> {
             message.setPayload(message.getPayload(String.class).replaceAll("\\?", "Hello World!"));
@@ -360,8 +365,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessageHeaders() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -369,7 +374,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         final Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
-        messageBuilder.setMessageHeaders(headers);
+        messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -393,8 +398,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithHeaderValuesVariableSupport() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         context.setVariable("myOperation", "sayHello");
 
@@ -404,7 +409,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         final Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "${myOperation}");
-        messageBuilder.setMessageHeaders(headers);
+        messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -427,8 +432,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendMessageWithUnknownVariableInMessagePayload() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -451,12 +456,12 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendMessageWithUnknownVariableInHeaders() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "${myOperation}");
-        messageBuilder.setMessageHeaders(headers);
+        messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -480,8 +485,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithExtractHeaderValues() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -489,7 +494,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         final Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
-        messageBuilder.setMessageHeaders(headers);
+        messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
         Map<String, String> extractVars = new HashMap<String, String>();
         extractVars.put("Operation", "myOperation");
@@ -546,8 +551,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithUTF16Encoding() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<?xml version=\"1.0\" encoding=\"UTF-16\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<?xml version=\"1.0\" encoding=\"UTF-16\"?><TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-16\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -573,8 +578,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithISOEncoding() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -600,8 +605,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithUnsupportedEncoding() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<?xml version=\"1.0\" encoding=\"MyUnsupportedEncoding\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<?xml version=\"1.0\" encoding=\"MyUnsupportedEncoding\"?><TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -625,8 +630,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResourceISOEncoding() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-iso-encoding.xml");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-iso-encoding.xml"));
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" + System.lineSeparator() +
                 "<TestRequest>" + System.lineSeparator() +
@@ -659,8 +664,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);
 
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -684,8 +689,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);
 
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -703,8 +708,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWithExplicitDataDictionary() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
@@ -738,8 +743,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWithExplicitAndGlobalDataDictionary() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
@@ -784,8 +789,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWithGlobalDataDictionary() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 

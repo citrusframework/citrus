@@ -615,11 +615,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
      */
     public SwaggerJavaTestGenerator withInboundMappingFile(String mappingFile) {
         this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
-        try {
-            this.inboundDataDictionary.afterPropertiesSet();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to read mapping file", e);
-        }
+        this.inboundDataDictionary.initialize();
         return this;
     }
 
@@ -630,11 +626,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
      */
     public SwaggerJavaTestGenerator withOutboundMappingFile(String mappingFile) {
         this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
-        try {
-            this.outboundDataDictionary.afterPropertiesSet();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to read mapping file", e);
-        }
+        this.outboundDataDictionary.initialize();
         return this;
     }
 

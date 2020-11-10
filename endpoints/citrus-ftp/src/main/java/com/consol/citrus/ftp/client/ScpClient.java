@@ -150,10 +150,10 @@ public class ScpClient extends SftpClient {
     }
 
     @Override
-    public void afterPropertiesSet() {
+    public void initialize() {
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
     }
 }

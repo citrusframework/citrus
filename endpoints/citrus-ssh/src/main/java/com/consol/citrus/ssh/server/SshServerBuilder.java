@@ -16,18 +16,19 @@
 
 package com.consol.citrus.ssh.server;
 
-import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.server.AbstractServerBuilder;
 import com.consol.citrus.ssh.message.SshMessageConverter;
+import com.consol.citrus.ssh.model.SshMarshaller;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
+public class SshServerBuilder extends AbstractServerBuilder<SshServer, SshServerBuilder> {
 
     /** Endpoint target */
-    private SshServer endpoint = new SshServer();
+    private final SshServer endpoint = new SshServer();
 
     @Override
     protected SshServer getEndpoint() {
@@ -105,6 +106,16 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
     }
 
     /**
+     * Sets the marshaller.
+     * @param marshaller
+     * @return
+     */
+    public SshServerBuilder marshaller(SshMarshaller marshaller) {
+        endpoint.setMarshaller(marshaller);
+        return this;
+    }
+
+    /**
      * Sets the polling interval.
      * @param pollingInterval
      * @return
@@ -131,16 +142,6 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      */
     public SshServerBuilder debugLogging(boolean enabled) {
         endpoint.setDebugLogging(enabled);
-        return this;
-    }
-
-    /**
-     * Sets the default timeout.
-     * @param timeout
-     * @return
-     */
-    public SshServerBuilder timeout(long timeout) {
-        endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
     }
 

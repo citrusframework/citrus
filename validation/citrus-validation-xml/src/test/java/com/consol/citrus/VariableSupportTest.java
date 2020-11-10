@@ -25,8 +25,10 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.DefaultHeaderBuilder;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -72,7 +74,7 @@ public class VariableSupportTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "${variable}");
         validateMessageElements.put("//sub-elementB", "${variable}");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -111,7 +113,7 @@ public class VariableSupportTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "citrus:concat('text', '-', 'value')");
         validateMessageElements.put("//sub-elementB", "citrus:concat(${text}, '-', 'value')");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -148,7 +150,7 @@ public class VariableSupportTest extends UnitTestSupport {
         Map<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("${expression}", "text-value");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -186,7 +188,7 @@ public class VariableSupportTest extends UnitTestSupport {
         validateMessageElements.put("citrus:concat('//root/', 'element/sub-elementA')", "text-value");
         validateMessageElements.put("citrus:concat('//sub-element', ${variable})", "text-value");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -221,14 +223,14 @@ public class VariableSupportTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         context.getVariables().put("variableA", "A");
         context.getVariables().put("variableB", "B");
@@ -239,7 +241,7 @@ public class VariableSupportTest extends UnitTestSupport {
         validateHeaderValues.put("header-valueB", "${variableB}");
         validateHeaderValues.put("header-valueC", "${variableC}");
 
-        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -270,14 +272,14 @@ public class VariableSupportTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         context.getVariables().put("variableC", "c");
 
@@ -286,7 +288,7 @@ public class VariableSupportTest extends UnitTestSupport {
         validateHeaderValues.put("header-valueB", "citrus:upperCase('b')");
         validateHeaderValues.put("header-valueC", "citrus:upperCase(${variableC})");
 
-        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -317,14 +319,14 @@ public class VariableSupportTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         context.getVariables().put("variableA", "header-valueA");
         context.getVariables().put("variableB", "header-valueB");
@@ -335,7 +337,7 @@ public class VariableSupportTest extends UnitTestSupport {
         validateHeaderValues.put("${variableB}", "B");
         validateHeaderValues.put("${variableC}", "C");
 
-        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -366,21 +368,21 @@ public class VariableSupportTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("citrus:concat('header', '-', 'valueA')", "A");
         validateHeaderValues.put("citrus:concat('header', '-', 'valueB')", "B");
         validateHeaderValues.put("citrus:concat('header', '-', 'valueC')", "C");
 
-        controlMessageBuilder.setMessageHeaders(validateHeaderValues);
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(validateHeaderValues));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -411,14 +413,14 @@ public class VariableSupportTest extends UnitTestSupport {
         context.getVariables().put("variableA", "initial");
         context.getVariables().put("variableB", "initial");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-elementA", "${variableA}");
@@ -466,14 +468,14 @@ public class VariableSupportTest extends UnitTestSupport {
         context.getVariables().put("variableA", "initial");
         context.getVariables().put("variableB", "initial");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         HashMap<String, String> extractHeaderValues = new HashMap<String, String>();
         extractHeaderValues.put("header-valueA", "${variableA}");

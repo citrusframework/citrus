@@ -16,16 +16,15 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.common.InitializingPhase;
+import com.consol.citrus.common.ShutdownPhase;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.messaging.SelectiveConsumer;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.springframework.util.Assert;
 
 /**
@@ -35,13 +34,13 @@ import org.springframework.util.Assert;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsEndpoint extends AbstractEndpoint implements InitializingBean, DisposableBean, ApplicationContextAware {
+public class JmsEndpoint extends AbstractEndpoint implements InitializingPhase, ShutdownPhase, ReferenceResolverAware {
 
     /** Cached producer or consumer */
     private JmsProducer jmsProducer;
     private JmsConsumer jmsConsumer;
 
-    private ApplicationContext applicationContext;
+    private ReferenceResolver referenceResolver;
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -77,8 +76,8 @@ public class JmsEndpoint extends AbstractEndpoint implements InitializingBean, D
     }
 
     private TestContextFactory getTestContextFactory() {
-        if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactoryBean.class).isEmpty()) {
-            return applicationContext.getBean(TestContextFactoryBean.class);
+        if (referenceResolver != null && !referenceResolver.resolveAll(TestContextFactoryBean.class).isEmpty()) {
+            return referenceResolver.resolve(TestContextFactoryBean.class);
         }
         return TestContextFactory.newInstance();
     }
@@ -106,24 +105,25 @@ public class JmsEndpoint extends AbstractEndpoint implements InitializingBean, D
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (this.jmsConsumer instanceof JmsTopicSubscriber) {
             ((JmsTopicSubscriber) this.jmsConsumer).stop();
         }
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (getEndpointConfiguration().isAutoStart()) {
             Assert.isTrue(getEndpointConfiguration().isPubSubDomain(),
-                    "Invalid endpoint configuration - caching subscriber enabled but pubSubDomain is set to false - please enable pubSubDomain, too");
+                    "Invalid endpoint configuration - " +
+                            "caching subscriber enabled but pubSubDomain is set to false - please enable pubSubDomain");
 
             createConsumer();
         }
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }

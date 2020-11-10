@@ -80,7 +80,7 @@ public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (jmsSyncMessageProducer != null) {
             jmsSyncMessageProducer.destroy();
         }

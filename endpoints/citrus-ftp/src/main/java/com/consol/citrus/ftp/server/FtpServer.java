@@ -16,26 +16,27 @@
 
 package com.consol.citrus.ftp.server;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.server.AbstractServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.filesystem.nativefs.NativeFileSystemFactory;
-import org.apache.ftpserver.ftplet.*;
+import org.apache.ftpserver.ftplet.FtpException;
+import org.apache.ftpserver.ftplet.Ftplet;
+import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class FtpServer extends AbstractServer implements InitializingBean {
+public class FtpServer extends AbstractServer {
 
     /** Apache ftp server */
     private FtpServerFactory serverFactory;
@@ -123,7 +124,7 @@ public class FtpServer extends AbstractServer implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (ftpServer == null) {
             if (serverFactory == null) {
                 serverFactory = new FtpServerFactory();
@@ -134,7 +135,7 @@ public class FtpServer extends AbstractServer implements InitializingBean {
             }
         }
 
-        super.afterPropertiesSet();
+        super.initialize();
     }
 
     /**

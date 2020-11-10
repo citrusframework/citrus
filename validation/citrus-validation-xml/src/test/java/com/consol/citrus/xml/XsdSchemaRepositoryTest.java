@@ -33,7 +33,7 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.getLocations().add("classpath:com/consol/citrus/schema/citrus-config.xsd");
 
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         Assert.assertEquals(schemaRepository.getSchemas().size(), 1);
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
@@ -45,7 +45,7 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.getLocations().add("classpath:com/consol/citrus/unknown/unknown.xsd");
 
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
     }
 
     @Test
@@ -54,7 +54,7 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.getLocations().add("classpath:com/consol/citrus/schema/*.xsd");
 
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         Assert.assertEquals(schemaRepository.getSchemas().size(), 4);
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
@@ -69,7 +69,7 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.getLocations().add("classpath:com/consol/citrus/*.xsd");
 
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         Assert.assertEquals(schemaRepository.getSchemas().size(), 0);
     }
@@ -79,14 +79,14 @@ public class XsdSchemaRepositoryTest {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
         schemaRepository.getLocations().add("classpath:com/consol/citrus/validation/*");
 
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         Assert.assertEquals(schemaRepository.getSchemas().size(), 15);
 
         schemaRepository = new XsdSchemaRepository();
         schemaRepository.getLocations().add("classpath:com/consol/citrus/validation/*.xsd");
 
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         Assert.assertEquals(schemaRepository.getSchemas().size(), 6);
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
@@ -96,7 +96,7 @@ public class XsdSchemaRepositoryTest {
         schemaRepository = new XsdSchemaRepository();
         schemaRepository.getLocations().add("classpath:com/consol/citrus/validation/*.wsdl");
 
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         Assert.assertEquals(schemaRepository.getSchemas().size(), 9);
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), WsdlXsdSchema.class);
@@ -116,7 +116,7 @@ public class XsdSchemaRepositoryTest {
 
         schemaRepository.getLocations().add("classpath:com/consol/citrus/xml/BookStore.wsdl");
 
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         Assert.assertEquals(schemaRepository.getSchemas().size(), 1);
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), WsdlXsdSchema.class);
