@@ -38,6 +38,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageContentBuilder;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageDirectionAware;
+import com.consol.citrus.message.MessageHeaderDataBuilder;
 import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageSelectorBuilder;
@@ -67,14 +68,9 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import com.consol.citrus.xml.StringResult;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.XmlMappingException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -130,7 +126,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     private final String messageType;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ReceiveMessageAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ReceiveMessageAction.class);
 
     /**
      * Default constructor.
@@ -196,8 +192,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @return
      */
     private Message receiveSelected(TestContext context, String selectorString) {
-        if (log.isDebugEnabled()) {
-            log.debug("Setting message selector: '" + selectorString + "'");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Setting message selector: '" + selectorString + "'");
         }
 
         Endpoint messageEndpoint = getOrCreateEndpoint(context);
@@ -213,7 +209,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                         context, messageEndpoint.getEndpointConfiguration().getTimeout());
             }
         } else {
-            log.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));
+            LOG.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));
             return receive(context);
         }
     }
@@ -270,7 +266,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                             || ScriptValidationContext.class.isAssignableFrom(item.getClass()))) {
                         throw new CitrusRuntimeException(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
                     } else {
-                        log.warn(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
+                        LOG.warn(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
                     }
                 }
 
@@ -517,8 +513,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private HeaderValidationContext headerValidationContext;
 
         private final List<String> validatorNames = new ArrayList<>();
-        private final Map<String, List<Object>> headerFragmentMappers = new HashMap<>();
-        private final Map<String, List<Object>> payloadMappers = new HashMap<>();
 
         /**
          * Basic bean reference resolver.
@@ -587,20 +581,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Sets the payload data on the message builder implementation.
-         *
-         * @param payload
-         * @return
-         */
-        protected void setPayload(final String payload) {
-            if (messageBuilder instanceof WithPayloadBuilder) {
-                ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(new DefaultPayloadBuilder(payload));
-            } else {
-                throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageBuilder.getClass());
-            }
-        }
-
-        /**
          * Sets the message name.
          *
          * @param name
@@ -618,11 +598,26 @@ public class ReceiveMessageAction extends AbstractTestAction {
         /**
          * Expect this message payload data in received message.
          *
+         * @param payloadBuilder
+         * @return
+         */
+        public B payload(final MessagePayloadBuilder payloadBuilder) {
+            if (messageBuilder instanceof WithPayloadBuilder) {
+                ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(payloadBuilder);
+            } else {
+                throw new CitrusRuntimeException("Unable to set payload builder on message builder type: " + messageBuilder.getClass());
+            }
+            return self;
+        }
+
+        /**
+         * Expect this message payload data in received message.
+         *
          * @param payload
          * @return
          */
         public B payload(final String payload) {
-            setPayload(payload);
+            payload(new DefaultPayloadBuilder(payload));
             return self;
         }
 
@@ -645,78 +640,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public B payload(final Resource payloadResource, final Charset charset) {
             try {
-                setPayload(FileUtils.readToString(payloadResource, charset));
+                payload(FileUtils.readToString(payloadResource, charset));
             } catch (final IOException e) {
                 throw new CitrusRuntimeException("Failed to read payload resource", e);
             }
 
-            return self;
-        }
-
-        /**
-         * Expect this message payload as model object which is marshalled to a character sequence
-         * using the default object to xml mapper before validation is performed.
-         *
-         * @param payload
-         * @param marshaller
-         * @return
-         */
-        public B payload(final Object payload, final Marshaller marshaller) {
-            final StringResult result = new StringResult();
-
-            try {
-                marshaller.marshal(payload, result);
-            } catch (final XmlMappingException | IOException e) {
-                throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
-            }
-
-            setPayload(result.toString());
-
-            return self;
-        }
-
-        /**
-         * Expect this message payload as model object which is mapped to a character sequence
-         * using the default object to json mapper before validation is performed.
-         *
-         * @param payload
-         * @param objectMapper
-         * @return
-         */
-        public B payload(final Object payload, final ObjectMapper objectMapper) {
-            try {
-                setPayload(objectMapper.writer().writeValueAsString(payload));
-            } catch (final JsonProcessingException e) {
-                throw new CitrusRuntimeException("Failed to map object graph for message payload", e);
-            }
-
-            return self;
-        }
-
-        /**
-         * Expect this message payload as model object which is marshalled to a character sequence using the default object to xml mapper that
-         * is available in Spring bean application context.
-         *
-         * @param payload
-         * @return
-         */
-        public B payloadModel(final Object payload) {
-            this.payloadMappers.putIfAbsent("", new ArrayList<>());
-            this.payloadMappers.get("").add(payload);
-            return self;
-        }
-
-        /**
-         * Expect this message payload as model object which is marshalled to a character sequence using the given object to xml mapper that
-         * is accessed by its bean name in Spring bean application context.
-         *
-         * @param payload
-         * @param mapperName
-         * @return
-         */
-        public B payload(final Object payload, final String mapperName) {
-            this.payloadMappers.putIfAbsent(mapperName, new ArrayList<>());
-            this.payloadMappers.get(mapperName).add(payload);
             return self;
         }
 
@@ -759,74 +687,24 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B header(final String data) {
+            header(new DefaultHeaderDataBuilder(data));
+            return self;
+        }
+
+        /**
+         * Expect this message header data in received message. Message header data is used in
+         * SOAP messages as XML fragment for instance.
+         *
+         * @param headerDataBuilder
+         * @return
+         */
+        public B header(final MessageHeaderDataBuilder headerDataBuilder) {
             if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderDataBuilder(data));
+                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(headerDataBuilder);
             } else {
                 throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
             }
             return self;
-        }
-
-        /**
-         * Expect this message header data as model object which is marshalled to a character sequence using the default object to xml mapper that
-         * is available in Spring bean application context.
-         *
-         * @param model
-         * @return
-         */
-        public B headerFragment(final Object model) {
-            this.headerFragmentMappers.putIfAbsent("", new ArrayList<>());
-            this.headerFragmentMappers.get("").add(model);
-            return self;
-        }
-
-        /**
-         * Expect this message header data as model object which is marshalled to a character sequence using the given object to xml mapper that
-         * is accessed by its bean name in Spring bean application context.
-         *
-         * @param model
-         * @param mapperName
-         * @return
-         */
-        public B headerFragment(final Object model, final String mapperName) {
-            this.headerFragmentMappers.putIfAbsent(mapperName, new ArrayList<>());
-            this.headerFragmentMappers.get(mapperName).add(model);
-            return self;
-        }
-
-        /**
-         * Expect this message header data as model object which is marshalled to a character sequence
-         * using the default object to xml mapper before validation is performed.
-         *
-         * @param model
-         * @param marshaller
-         * @return
-         */
-        public B headerFragment(final Object model, final Marshaller marshaller) {
-            final StringResult result = new StringResult();
-            try {
-                marshaller.marshal(model, result);
-            } catch (final XmlMappingException | IOException e) {
-                throw new CitrusRuntimeException("Failed to marshal object graph for message header data", e);
-            }
-
-            return header(result.toString());
-        }
-
-        /**
-         * Expect this message header data as model object which is mapped to a character sequence
-         * using the default object to json mapper before validation is performed.
-         *
-         * @param model
-         * @param objectMapper
-         * @return
-         */
-        public B headerFragment(final Object model, final ObjectMapper objectMapper) {
-            try {
-                return header(objectMapper.writer().writeValueAsString(model));
-            } catch (final JsonProcessingException e) {
-                throw new CitrusRuntimeException("Failed to map object graph for message header data", e);
-            }
         }
 
         /**
@@ -1113,62 +991,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 if (dataDictionaryName != null) {
                     this.dataDictionary = referenceResolver.resolve(dataDictionaryName, DataDictionary.class);
                 }
-
-                for (Map.Entry<String, List<Object>> mapperEntry : headerFragmentMappers.entrySet()) {
-                    String mapperName = mapperEntry.getKey();
-                    final Object mapper = findMapperOrMarshaller(mapperName);
-
-                    for (Object model : mapperEntry.getValue()) {
-                        if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
-                            headerFragment(model, (Marshaller) mapper);
-                        } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
-                            headerFragment(model, (ObjectMapper) mapper);
-                        } else {
-                            throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
-                        }
-                    }
-                }
-                headerFragmentMappers.clear();
-
-                for (Map.Entry<String, List<Object>> mapperEntry : payloadMappers.entrySet()) {
-                    String mapperName = mapperEntry.getKey();
-                    final Object mapper = findMapperOrMarshaller(mapperName);
-
-                    for (Object model : mapperEntry.getValue()) {
-                        if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
-                            payload(model, (Marshaller) mapper);
-                        } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
-                            payload(model, (ObjectMapper) mapper);
-                        } else {
-                            throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
-                        }
-                    }
-                }
-                payloadMappers.clear();
             }
 
             return doBuild();
-        }
-
-        /**
-         * Find mapper or marshaller for given name using the reference resolver in this builder.
-         * @param mapperName
-         * @return
-         */
-        private Object findMapperOrMarshaller(String mapperName) {
-            if (mapperName.equals("")) {
-                if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(Marshaller.class))) {
-                    return referenceResolver.resolve(Marshaller.class);
-                } else if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(ObjectMapper.class))) {
-                    return referenceResolver.resolve(ObjectMapper.class);
-                } else {
-                    throw createUnableToFindMapperException();
-                }
-            } else if (referenceResolver.isResolvable(mapperName)) {
-                return referenceResolver.resolve(mapperName);
-            } else {
-                throw createUnableToFindMapperException();
-            }
         }
 
         /**
@@ -1188,10 +1013,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
             }
 
             return headerValidationContext;
-        }
-
-        private CitrusRuntimeException createUnableToFindMapperException() {
-            return new CitrusRuntimeException("Unable to resolve default object mapper or marshaller");
         }
 
         /**

@@ -35,6 +35,8 @@ import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.builder.ObjectMappingHeaderDataBuilder;
+import com.consol.citrus.message.builder.ObjectMappingPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -102,7 +104,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payloadModel(new TestRequest("Hello Citrus!")));
+                        .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -135,7 +137,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload(new TestRequest("Hello Citrus!"), mapper));
+                        .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -172,12 +174,12 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myObjectMapper")).thenReturn(true);
-        when(referenceResolver.resolve("myObjectMapper")).thenReturn(mapper);
+        when(referenceResolver.resolve("myObjectMapper", ObjectMapper.class)).thenReturn(mapper);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload(new TestRequest("Hello Citrus!"), "myObjectMapper"));
+                        .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -220,7 +222,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .headerFragment(new TestRequest("Hello Citrus!")));
+                        .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -256,7 +258,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .headerFragment(new TestRequest("Hello Citrus!"), mapper));
+                        .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), mapper)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -295,12 +297,12 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myObjectMapper")).thenReturn(true);
-        when(referenceResolver.resolve("myObjectMapper")).thenReturn(mapper);
+        when(referenceResolver.resolve("myObjectMapper", ObjectMapper.class)).thenReturn(mapper);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .headerFragment(new TestRequest("Hello Citrus!"), "myObjectMapper"));
+                        .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

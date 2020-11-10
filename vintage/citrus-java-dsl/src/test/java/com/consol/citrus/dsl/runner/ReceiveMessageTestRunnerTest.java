@@ -272,7 +272,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
@@ -722,7 +722,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {

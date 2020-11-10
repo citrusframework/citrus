@@ -4,13 +4,18 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 import com.consol.citrus.AbstractTestActionBuilder;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageContentBuilder;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.builder.MarshallingHeaderDataBuilder;
+import com.consol.citrus.message.builder.MarshallingPayloadBuilder;
+import com.consol.citrus.message.builder.ObjectMappingHeaderDataBuilder;
+import com.consol.citrus.message.builder.ObjectMappingPayloadBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.message.MessageContentBuilder;
 import com.consol.citrus.validation.interceptor.BinaryMessageProcessor;
 import com.consol.citrus.validation.interceptor.GzipMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathMessageProcessor;
@@ -34,6 +39,8 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
     protected final B self;
 
     private final SendMessageAction.SendMessageActionBuilder<?, ?> delegate;
+
+    private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
     private final GzipMessageProcessor gzipMessageProcessor = new GzipMessageProcessor();
     private final BinaryMessageProcessor binaryMessageProcessor = new BinaryMessageProcessor();
@@ -148,7 +155,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B payload(Object payload, Marshaller marshaller) {
-        delegate.payload(payload, marshaller);
+        delegate.payload(new MarshallingPayloadBuilder(payload, marshaller));
         return self;
     }
 
@@ -159,7 +166,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B payload(Object payload, ObjectMapper objectMapper) {
-        delegate.payload(payload, objectMapper);
+        delegate.payload(new ObjectMappingPayloadBuilder(payload, objectMapper));
         return self;
     }
 
@@ -171,7 +178,11 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B payloadModel(Object payload) {
-        delegate.payloadModel(payload);
+        if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+            delegate.payload(new ObjectMappingPayloadBuilder(payload));
+        } else {
+            delegate.payload(new MarshallingPayloadBuilder(payload));
+        }
         return self;
     }
 
@@ -180,11 +191,15 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * is accessed by its bean name in Spring bean application context.
      *
      * @param payload
-     * @param mapperName
+     * @param mapperOrMarshallerName
      * @return
      */
-    public B payload(Object payload, String mapperName) {
-        delegate.payload(payload, mapperName);
+    public B payload(Object payload, String mapperOrMarshallerName) {
+        if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+            delegate.payload(new ObjectMappingPayloadBuilder(payload, mapperOrMarshallerName));
+        } else {
+            delegate.payload(new MarshallingPayloadBuilder(payload, mapperOrMarshallerName));
+        }
         return self;
     }
 
@@ -244,7 +259,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B headerFragment(Object model, Marshaller marshaller) {
-        delegate.headerFragment(model, marshaller);
+        delegate.header(new MarshallingHeaderDataBuilder(model, marshaller));
         return self;
     }
 
@@ -255,7 +270,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B headerFragment(Object model, ObjectMapper objectMapper) {
-        delegate.headerFragment(model, objectMapper);
+        delegate.header(new ObjectMappingHeaderDataBuilder(model, objectMapper));
         return self;
     }
 
@@ -267,7 +282,11 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B headerFragment(Object model) {
-        delegate.headerFragment(model);
+        if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+            delegate.header(new ObjectMappingHeaderDataBuilder(model));
+        } else {
+            delegate.header(new MarshallingHeaderDataBuilder(model));
+        }
         return self;
     }
 
@@ -276,11 +295,15 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * is accessed by its bean name in Spring bean application context.
      *
      * @param model
-     * @param mapperName
+     * @param mapperOrMarshallerName
      * @return
      */
-    public B headerFragment(Object model, String mapperName) {
-        delegate.headerFragment(model, mapperName);
+    public B headerFragment(Object model, String mapperOrMarshallerName) {
+        if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+            delegate.header(new ObjectMappingHeaderDataBuilder(model, mapperOrMarshallerName));
+        } else {
+            delegate.header(new MarshallingHeaderDataBuilder(model, mapperOrMarshallerName));
+        }
         return self;
     }
 
@@ -300,6 +323,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return The modified send message
      */
     public B messageType(String messageType) {
+        this.messageType = messageType;
         delegate.messageType(messageType);
 
         if (MessageType.BINARY.name().equalsIgnoreCase(messageType)) {

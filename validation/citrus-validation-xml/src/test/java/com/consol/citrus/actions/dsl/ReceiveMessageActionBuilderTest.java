@@ -36,6 +36,8 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.builder.MarshallingHeaderDataBuilder;
+import com.consol.citrus.message.builder.MarshallingPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
@@ -173,7 +175,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payloadModel(new TestRequest("Hello Citrus!")));
+                        .payload(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -206,7 +208,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload(new TestRequest("Hello Citrus!"), marshaller));
+                        .payload(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), marshaller)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -243,12 +245,12 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload(new TestRequest("Hello Citrus!"), "myMarshaller"));
+                        .payload(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), "myMarshaller")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -576,7 +578,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .headerFragment(new TestRequest("Hello Citrus!")));
+                        .header(new MarshallingHeaderDataBuilder(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -612,7 +614,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .headerFragment(new TestRequest("Hello Citrus!"), marshaller));
+                        .header(new MarshallingHeaderDataBuilder(new TestRequest("Hello Citrus!"), marshaller)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -651,12 +653,12 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .headerFragment(new TestRequest("Hello Citrus!"), "myMarshaller"));
+                        .header(new MarshallingHeaderDataBuilder(new TestRequest("Hello Citrus!"), "myMarshaller")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

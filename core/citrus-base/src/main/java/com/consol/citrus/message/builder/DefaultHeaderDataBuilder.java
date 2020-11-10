@@ -21,19 +21,20 @@ package com.consol.citrus.message.builder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.MessageHeaderDataBuilder;
+import com.consol.citrus.util.TypeConversionUtils;
 
 /**
  * @author Christoph Deppisch
  */
 public class DefaultHeaderDataBuilder implements MessageHeaderDataBuilder {
 
-    private final String headerData;
+    private final Object headerData;
 
     /**
      * Default constructor using header fragment data.
      * @param headerData
      */
-    public DefaultHeaderDataBuilder(String headerData) {
+    public DefaultHeaderDataBuilder(Object headerData) {
         this.headerData = headerData;
     }
 
@@ -43,6 +44,14 @@ public class DefaultHeaderDataBuilder implements MessageHeaderDataBuilder {
             return "";
         }
 
-        return context.replaceDynamicContentInString(headerData);
+        if (headerData instanceof String) {
+            return context.replaceDynamicContentInString(headerData.toString());
+        } else {
+            return context.replaceDynamicContentInString(TypeConversionUtils.convertIfNecessary(headerData, String.class));
+        }
+    }
+
+    public Object getHeaderData() {
+        return headerData;
     }
 }

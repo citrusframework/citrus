@@ -46,8 +46,9 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
     }
 
     @Override
-    protected void setPayload(String payload) {
+    public HttpServerRequestActionBuilder payload(String payload) {
         httpMessage.setPayload(payload);
+        return this;
     }
 
     @Override

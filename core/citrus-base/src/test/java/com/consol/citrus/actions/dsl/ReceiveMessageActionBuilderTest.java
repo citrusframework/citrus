@@ -16,8 +16,6 @@
 
 package com.consol.citrus.actions.dsl;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
@@ -35,6 +33,8 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaderDataBuilder;
+import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
@@ -53,9 +53,7 @@ import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
-import org.springframework.oxm.Marshaller;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -65,7 +63,6 @@ import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -81,22 +78,6 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
     private EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
     private Resource resource = Mockito.mock(Resource.class);
     private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
-
-    private Marshaller marshaller = Mockito.mock(Marshaller.class);
-    private Object payloadModel = new Object();
-
-    @BeforeClass
-    public void prepareMarshaller() throws IOException {
-        reset(marshaller);
-        when(marshaller.supports(any(Class.class))).thenReturn(true);
-        doAnswer(invocationOnMock -> {
-            Result result = invocationOnMock.getArgument(1);
-            if (result instanceof StreamResult) {
-                ((StreamResult) result).getWriter().write("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-            }
-            return null;
-        }).when(marshaller).marshal(eq(payloadModel), any(Result.class));
-    }
 
     @BeforeMethod
     public void prepareTestContext() {
@@ -162,7 +143,9 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderWithPayloadModel() {
+    public void testReceiveBuilderWithPayloadBuilder() {
+        MessagePayloadBuilder payloadBuilder = context -> "<TestRequest><Message>Hello Citrus!</Message></TestRequest>";
+
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -176,13 +159,11 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
-        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payloadModel(payloadModel));
+                        .payload(payloadBuilder));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -201,81 +182,6 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
         Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()),
                 "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-    }
-
-    @Test
-    public void testReceiveBuilderWithPayloadModelExplicitMarshaller() {
-        reset(messageEndpoint, messageConsumer, configuration);
-        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
-        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
-        when(configuration.getTimeout()).thenReturn(100L);
-        when(messageEndpoint.getActor()).thenReturn(null);
-        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
-                new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
-                        .setHeader("operation", "foo"));
-        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(receive(messageEndpoint)
-                        .payload(payloadModel, marshaller));
-
-        TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
-
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
-
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-
-    }
-
-    @Test
-    public void testReceiveBuilderWithPayloadModelExplicitMarshallerName() {
-        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
-        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
-        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
-        when(configuration.getTimeout()).thenReturn(100L);
-        when(messageEndpoint.getActor()).thenReturn(null);
-        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
-                new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
-                        .setHeader("operation", "foo"));
-
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
-        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
-
-        context.setReferenceResolver(referenceResolver);
-        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(receive(messageEndpoint)
-                        .payload(payloadModel, "myMarshaller"));
-
-        TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
-
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
-
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-
     }
 
     @Test
@@ -562,7 +468,9 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderWithHeaderFragment() {
+    public void testReceiveBuilderWithHeaderDataBuilder() {
+        MessageHeaderDataBuilder headerDataBuilder = context -> "<TestRequest><Message>Hello Citrus!</Message></TestRequest>";
+
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -577,13 +485,11 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
-        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .headerFragment(payloadModel));
+                        .header(headerDataBuilder));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -603,83 +509,6 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
         Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0),
                 "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-    }
-
-    @Test
-    public void testReceiveBuilderWithHeaderFragmentExplicitMarshaller() {
-        reset(messageEndpoint, messageConsumer, configuration);
-        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
-        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
-        when(configuration.getTimeout()).thenReturn(100L);
-        when(messageEndpoint.getActor()).thenReturn(null);
-        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
-                new DefaultMessage()
-                        .addHeaderData("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
-                        .setHeader("operation", "foo"));
-        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(receive(messageEndpoint)
-                        .headerFragment(payloadModel, marshaller));
-
-        TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
-
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
-
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-    }
-
-    @Test
-    public void testReceiveBuilderWithHeaderFragmentExplicitMarshallerName() {
-        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
-        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
-        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
-        when(configuration.getTimeout()).thenReturn(100L);
-        when(messageEndpoint.getActor()).thenReturn(null);
-        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
-                new DefaultMessage()
-                        .addHeaderData("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
-                        .setHeader("operation", "foo"));
-
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
-        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
-
-        context.setReferenceResolver(referenceResolver);
-        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(receive(messageEndpoint)
-                        .headerFragment(payloadModel, "myMarshaller"));
-
-        TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-
-        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
-
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
-
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
-        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
     }
 
     @Test

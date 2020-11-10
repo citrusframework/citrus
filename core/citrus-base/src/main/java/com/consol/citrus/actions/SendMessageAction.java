@@ -37,6 +37,8 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageContentBuilder;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageDirectionAware;
+import com.consol.citrus.message.MessageHeaderDataBuilder;
+import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.WithHeaderBuilder;
@@ -51,16 +53,10 @@ import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import com.consol.citrus.xml.StringResult;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 
@@ -103,7 +99,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     private CompletableFuture<Void> finished;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SendMessageAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SendMessageAction.class);
 
     /**
      * Default constructor.
@@ -144,7 +140,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         if (forkMode) {
-            log.debug("Forking message sending action ...");
+            LOG.debug("Forking message sending action ...");
 
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
             taskExecutor.execute(() -> {
@@ -433,19 +429,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Sets the payload data on the message builder implementation.
-         * @param payload
-         * @return
-         */
-        protected void setPayload(String payload) {
-            if (messageBuilder instanceof WithPayloadBuilder) {
-                ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(new DefaultPayloadBuilder(payload));
-            } else {
-                throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageBuilder.getClass());
-            }
-        }
-
-        /**
          * Sets the message name.
          * @param name
          * @return
@@ -460,12 +443,26 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
+         * Sets the payload data on the message builder implementation.
+         * @param payloadBuilder
+         * @return
+         */
+        public B payload(final MessagePayloadBuilder payloadBuilder) {
+            if (messageBuilder instanceof WithPayloadBuilder) {
+                ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(payloadBuilder);
+            } else {
+                throw new CitrusRuntimeException("Unable to set payload builder on message builder type: " + messageBuilder.getClass());
+            }
+            return self;
+        }
+
+        /**
          * Adds message payload data to this builder.
          * @param payload
          * @return
          */
         public B payload(String payload) {
-            setPayload(payload);
+            payload(new DefaultPayloadBuilder(payload));
             return self;
         }
 
@@ -486,72 +483,10 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          */
         public B payload(Resource payloadResource, Charset charset) {
             try {
-                setPayload(FileUtils.readToString(payloadResource, charset));
+                payload(FileUtils.readToString(payloadResource, charset));
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read payload resource", e);
             }
-            return self;
-        }
-
-        /**
-         * Sets payload POJO object which is marshalled to a character sequence using the given object to xml mapper.
-         * @param payload
-         * @param marshaller
-         * @return
-         */
-        public B payload(Object payload, Marshaller marshaller) {
-            StringResult result = new StringResult();
-
-            try {
-                marshaller.marshal(payload, result);
-            } catch (XmlMappingException | IOException e) {
-                throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
-            }
-
-            setPayload(result.toString());
-            return self;
-        }
-
-        /**
-         * Sets payload POJO object which is mapped to a character sequence using the given object to json mapper.
-         * @param payload
-         * @param objectMapper
-         * @return
-         */
-        public B payload(Object payload, ObjectMapper objectMapper) {
-            try {
-                setPayload(objectMapper.writer().writeValueAsString(payload));
-            } catch (JsonProcessingException e) {
-                throw new CitrusRuntimeException("Failed to map object graph for message payload", e);
-            }
-
-            return self;
-        }
-
-        /**
-         * Sets payload POJO object which is marshalled to a character sequence using the default object to xml or object
-         * to json mapper that is available in Spring bean application context.
-         *
-         * @param payload
-         * @return
-         */
-        public B payloadModel(Object payload) {
-            this.payloadMappers.putIfAbsent("", new ArrayList<>());
-            this.payloadMappers.get("").add(payload);
-            return self;
-        }
-
-        /**
-         * Sets payload POJO object which is marshalled to a character sequence using the given object to xml mapper that
-         * is accessed by its bean name in Spring bean application context.
-         *
-         * @param payload
-         * @param mapperName
-         * @return
-         */
-        public B payload(Object payload, String mapperName) {
-            this.payloadMappers.putIfAbsent(mapperName, new ArrayList<>());
-            this.payloadMappers.get(mapperName).add(payload);
             return self;
         }
 
@@ -625,61 +560,18 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Sets header data POJO object which is marshalled to a character sequence using the given object to xml mapper.
-         * @param model
-         * @param marshaller
-         * @return
-         */
-        public B headerFragment(Object model, Marshaller marshaller) {
-            StringResult result = new StringResult();
-
-            try {
-                marshaller.marshal(model, result);
-            } catch (XmlMappingException | IOException e) {
-                throw new CitrusRuntimeException("Failed to marshal object graph for message header data", e);
-            }
-
-            return header(result.toString());
-        }
-
-        /**
-         * Sets header data POJO object which is mapped to a character sequence using the given object to json mapper.
-         * @param model
-         * @param objectMapper
-         * @return
-         */
-        public B headerFragment(Object model, ObjectMapper objectMapper) {
-            try {
-                return header(objectMapper.writer().writeValueAsString(model));
-            } catch (JsonProcessingException e) {
-                throw new CitrusRuntimeException("Failed to map object graph for message header data", e);
-            }
-        }
-
-        /**
-         * Sets header data POJO object which is marshalled to a character sequence using the default object to xml or object
-         * to json mapper that is available in Spring bean application context.
+         * Adds message header data builder to this builder's message sending action. Message header data is used in
+         * SOAP messages as XML fragment for instance.
          *
-         * @param model
+         * @param headerDataBuilder
          * @return
          */
-        public B headerFragment(Object model) {
-            this.headerFragmentMappers.putIfAbsent("", new ArrayList<>());
-            this.headerFragmentMappers.get("").add(model);
-            return self;
-        }
-
-        /**
-         * Sets header data POJO object which is marshalled to a character sequence using the given object to xml mapper that
-         * is accessed by its bean name in Spring bean application context.
-         *
-         * @param model
-         * @param mapperName
-         * @return
-         */
-        public B headerFragment(Object model, String mapperName) {
-            this.headerFragmentMappers.putIfAbsent(mapperName, new ArrayList<>());
-            this.headerFragmentMappers.get(mapperName).add(model);
+        public B header(final MessageHeaderDataBuilder headerDataBuilder) {
+            if (messageBuilder instanceof WithHeaderBuilder) {
+                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(headerDataBuilder);
+            } else {
+                throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
+            }
             return self;
         }
 
@@ -761,31 +653,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Find mapper or marshaller for given name using the reference resolver in this builder.
-         * @param mapperName
-         * @return
-         */
-        private Object findMapperOrMarshaller(String mapperName) {
-            if (mapperName.equals("")) {
-                if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(Marshaller.class))) {
-                    return referenceResolver.resolve(Marshaller.class);
-                } else if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(ObjectMapper.class))) {
-                    return referenceResolver.resolve(ObjectMapper.class);
-                } else {
-                    throw createUnableToFindMapperException();
-                }
-            } else if (referenceResolver.isResolvable(mapperName)) {
-                return referenceResolver.resolve(mapperName);
-            } else {
-                throw createUnableToFindMapperException();
-            }
-        }
-
-        private CitrusRuntimeException createUnableToFindMapperException() {
-            return new CitrusRuntimeException("Unable to resolve default object mapper or marshaller");
-        }
-
-        /**
          * Build method implemented by subclasses.
          * @return
          */
@@ -797,38 +664,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                 if (dataDictionaryName != null) {
                     this.dataDictionary = referenceResolver.resolve(dataDictionaryName, DataDictionary.class);
                 }
-
-                for (Map.Entry<String, List<Object>> mapperEntry : headerFragmentMappers.entrySet()) {
-                    String mapperName = mapperEntry.getKey();
-                    final Object mapper = findMapperOrMarshaller(mapperName);
-
-                    for (Object model : mapperEntry.getValue()) {
-                        if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
-                            headerFragment(model, (Marshaller) mapper);
-                        } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
-                            headerFragment(model, (ObjectMapper) mapper);
-                        } else {
-                            throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
-                        }
-                    }
-                }
-                headerFragmentMappers.clear();
-
-                for (Map.Entry<String, List<Object>> mapperEntry : payloadMappers.entrySet()) {
-                    String mapperName = mapperEntry.getKey();
-                    final Object mapper = findMapperOrMarshaller(mapperName);
-
-                    for (Object model : mapperEntry.getValue()) {
-                        if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
-                            payload(model, (Marshaller) mapper);
-                        } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
-                            payload(model, (ObjectMapper) mapper);
-                        } else {
-                            throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
-                        }
-                    }
-                }
-                payloadMappers.clear();
             }
 
             return doBuild();

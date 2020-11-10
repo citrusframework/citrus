@@ -16,8 +16,6 @@
 
 package com.consol.citrus.actions.dsl;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
@@ -34,6 +32,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.report.TestActionListeners;
@@ -46,15 +45,12 @@ import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
-import org.springframework.oxm.Marshaller;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
@@ -69,22 +65,6 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private Producer messageProducer = Mockito.mock(Producer.class);
     private Resource resource = Mockito.mock(Resource.class);
-
-    private Marshaller marshaller = Mockito.mock(Marshaller.class);
-    private Object payloadModel = new Object();
-
-    @BeforeClass
-    public void prepareMarshaller() throws IOException {
-        reset(marshaller);
-        when(marshaller.supports(any(Class.class))).thenReturn(true);
-        doAnswer(invocationOnMock -> {
-            Result result = invocationOnMock.getArgument(1);
-            if (result instanceof StreamResult) {
-                ((StreamResult) result).getWriter().write("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-            }
-            return null;
-        }).when(marshaller).marshal(eq(payloadModel), any(Result.class));
-    }
 
     @Test
     public void testSendBuilderWithMessageInstance() {
@@ -207,7 +187,9 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSendBuilderWithPayloadModel() {
+    public void testSendBuilderWithPayloadBuilder() {
+        MessagePayloadBuilder payloadBuilder = context -> "<TestRequest><Message>Hello Citrus!</Message></TestRequest>";
+
         reset(referenceResolver, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);
@@ -221,83 +203,11 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.singletonMap("marshaller", marshaller));
-        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .payloadModel(payloadModel));
-
-        final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
-
-        final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
-
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
-
-        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-
-    }
-
-    @Test
-    public void testSendBuilderWithPayloadModelExplicitMarshaller() {
-        reset(messageEndpoint, messageProducer);
-        when(messageEndpoint.createProducer()).thenReturn(messageProducer);
-        when(messageEndpoint.getActor()).thenReturn(null);
-        doAnswer(invocation -> {
-            Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-            return null;
-        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-
-        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(send(messageEndpoint)
-                        .payload(payloadModel, marshaller));
-
-        final TestCase test = runner.getTestCase();
-        Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
-
-        final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
-
-        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
-
-        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
-
-    }
-
-    @Test
-    public void testSendBuilderWithPayloadModelExplicitMarshallerName() {
-        reset(referenceResolver, messageEndpoint, messageProducer);
-        when(messageEndpoint.createProducer()).thenReturn(messageProducer);
-        when(messageEndpoint.getActor()).thenReturn(null);
-        doAnswer(invocation -> {
-            Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-            return null;
-        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
-        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
-
-        context.setReferenceResolver(referenceResolver);
-        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(send(messageEndpoint)
-                        .payload(payloadModel, "myMarshaller"));
+                        .payload(payloadBuilder));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

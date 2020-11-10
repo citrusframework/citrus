@@ -33,7 +33,7 @@ import org.springframework.http.HttpStatus;
 public class HttpClientResponseActionBuilder extends ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder> {
 
     /** Http message to send or receive */
-    private HttpMessage httpMessage = new HttpMessage();
+    private final HttpMessage httpMessage = new HttpMessage();
 
     /**
      * Default constructor.
@@ -44,8 +44,9 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
     }
 
     @Override
-    protected void setPayload(String payload) {
+    public HttpClientResponseActionBuilder payload(String payload) {
         httpMessage.setPayload(payload);
+        return this;
     }
 
     @Override

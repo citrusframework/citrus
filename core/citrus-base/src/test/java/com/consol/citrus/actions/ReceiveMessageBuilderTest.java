@@ -16,7 +16,6 @@
 
 package com.consol.citrus.actions;
 
-import javax.xml.transform.Result;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -45,18 +44,12 @@ import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import com.consol.citrus.xml.StringResult;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.Resource;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.XmlMappingException;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.consol.citrus.validation.json.JsonMessageValidationContext.Builder.json;
@@ -67,13 +60,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -266,190 +254,6 @@ class ReceiveMessageBuilderTest {
     }
 
 	@Test
-	void payload_asObjectWithMarshaller() throws IOException {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object payload = "<hello/>";
-		final Marshaller marshaller = mock(Marshaller.class);
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.payload(payload, marshaller);
-
-		//THEN
-		verify(marshaller).marshal(eq(payload), any(StringResult.class));
-		assertSame(copy, builder);
-		assertNotNull(getPayloadData(builder));
-	}
-
-	@Test
-	void testSetPayloadWithIoExceptionIsWrapped() throws IOException {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Marshaller marshaller = mock(Marshaller.class);
-		doThrow(IOException.class).when(marshaller).marshal(any(), any(Result.class));
-
-		//WHEN
-		final Executable setPayload = () -> builder.payload("", marshaller);
-
-		//THEN
-		assertThrows(CitrusRuntimeException.class, setPayload, "Failed to marshal object graph for message payload");
-	}
-
-	@Test
-	void testSetPayloadWithXmlMappingExceptionIsWrapped() throws IOException {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		class myXmlMappingException extends XmlMappingException {
-			public myXmlMappingException(final String msg) {
-				super(msg);
-			}
-		}
-
-		final Marshaller marshaller = mock(Marshaller.class);
-		doThrow(myXmlMappingException.class).when(marshaller).marshal(any(), any(Result.class));
-
-		//WHEN
-		final Executable setPayload = () -> builder.payload("", marshaller);
-
-		//THEN
-		assertThrows(CitrusRuntimeException.class, setPayload, "Failed to marshal object graph for message payload");
-	}
-
-	@Test
-	void payload_asObjectWithMapper() throws Exception {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object payload = "{hello}";
-		final ObjectMapper mapper = mock(ObjectMapper.class);
-		final ObjectWriter writer = mock(ObjectWriter.class);
-		when(mapper.writer()).thenReturn(writer);
-		when(writer.writeValueAsString(payload)).thenReturn("hello");
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.payload(payload, mapper);
-
-		//THEN
-		assertSame(copy, builder);
-		assertEquals("hello", getPayloadData(builder));
-	}
-
-	@Test
-	void testSetPayloadWithJsonProcessingExceptionIsWrapped() throws JsonProcessingException {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final ObjectMapper mapper = mock(ObjectMapper.class);
-		final ObjectWriter writer = mock(ObjectWriter.class);
-		when(mapper.writer()).thenReturn(writer);
-		when(writer.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
-
-		//THEN
-		//WHEN
-		final Executable setPayload = () -> builder.payload("", mapper);
-
-		//THEN
-		assertThrows(CitrusRuntimeException.class, setPayload, "Failed to map object graph for message payload");
-	}
-
-	@Test
-	void payload_asObjectWithString_toObjectMarshaller() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object payload = "{hello}";
-		final String mapperName = "mapper";
-
-		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
-		when(referenceResolver.isResolvable(mapperName)).thenReturn(true);
-		final Marshaller marshaller = mock(Marshaller.class);
-		when(referenceResolver.resolve(mapperName)).thenReturn(marshaller);
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.payload(payload, mapperName);
-
-		//THEN
-		assertSame(copy, builder);
-		assertNotNull(getPayloadData(builder));
-	}
-
-	@Test
-	void payload_asObjectWithString_toObjectMapper() throws Exception {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object payload = "{hello}";
-		final String mapperName = "mapper";
-
-		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
-		when(referenceResolver.isResolvable(mapperName)).thenReturn(true);
-		final ObjectMapper mapper = mock(ObjectMapper.class);
-		final ObjectWriter writer = mock(ObjectWriter.class);
-		when(referenceResolver.resolve(mapperName)).thenReturn(mapper);
-		when(mapper.writer()).thenReturn(writer);
-		when(writer.writeValueAsString(payload)).thenReturn("hello");
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.payload(payload, mapperName);
-
-		//THEN
-		assertSame(copy, builder);
-		assertNotNull(getPayloadData(builder));
-		assertEquals("hello", getPayloadData(builder));
-	}
-
-	@Test
-	void payloadModel_withMarshaller() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object payload = "<hello/>";
-		final Marshaller marshaller = mock(Marshaller.class);
-		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
-		final Map<String, Marshaller> map = Collections.singletonMap("marshaller", marshaller);
-		when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(map);
-		when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.payloadModel(payload);
-
-		//THEN
-		assertSame(copy, builder);
-		assertNotNull(getPayloadData(builder));
-	}
-
-	@Test
-	void payloadModel_withObjectMapper() throws JsonProcessingException {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object payload = "{hello}";
-		final ObjectMapper mapper = mock(ObjectMapper.class);
-		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
-		final Map<String, ObjectMapper> map = Collections.singletonMap("mapper", mapper);
-		doReturn(Collections.emptyMap()).when(referenceResolver).resolveAll(Marshaller.class);
-		doReturn(map).when(referenceResolver).resolveAll(ObjectMapper.class);
-		when(referenceResolver.resolve(ObjectMapper.class)).thenReturn(mapper);
-		final ObjectWriter writerMock = mock(ObjectWriter.class);
-		when(mapper.writer()).thenReturn(writerMock);
-		when(writerMock.writeValueAsString(payload)).thenReturn("hello");
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.payloadModel(payload);
-
-		//THEN
-		assertSame(copy, builder);
-		assertEquals("hello", getPayloadData(builder));
-	}
-
-	@Test
 	void header_withStringObject() {
 
 		//GIVEN
@@ -497,158 +301,6 @@ class ReceiveMessageBuilderTest {
 		assertSame(copy, builder);
 		assertEquals(Collections.singletonList(data),
 				((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
-	}
-
-	@Test
-	void headerFragment_withObjectAndMarshaller() throws IOException {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object model = "hello";
-		final Marshaller marshaller = mock(Marshaller.class);
-		doAnswer(invocation -> {
-			((StringResult) invocation.getArgument(1)).getWriter().write("hello");
-			return null;
-		}).when(marshaller).marshal(eq("hello"), any(StringResult.class));
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headerFragment(model, marshaller);
-
-		//THEN
-		assertSame(copy, builder);
-		assertEquals(Collections.singletonList("hello"),
-				((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
-	}
-
-	@Test
-	void headerFragment_withObjectAndObjectMapper() throws Exception {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object model = "15";
-		final ObjectMapper mapper = mock(ObjectMapper.class);
-		final ObjectWriter writer = mock(ObjectWriter.class);
-		when(mapper.writer()).thenReturn(writer);
-		when(writer.writeValueAsString(model)).thenReturn("15");
-
-		final List<String> expectedHeaderData = Collections.singletonList("15");
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headerFragment(model, mapper);
-
-		//THEN
-		assertSame(copy, builder);
-		assertEquals(expectedHeaderData, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
-	}
-
-	@Test
-	void headerFragment_withObjectAndMapperName_toMarshaller() throws IOException {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object model = "hello";
-		final Marshaller marshaller = mock(Marshaller.class);
-		doAnswer(invocation -> {
-			((StringResult) invocation.getArgument(1)).getWriter().write("hello");
-			return null;
-		}).when(marshaller).marshal(eq("hello"), any(StringResult.class));
-
-		final String mapperName = "marshaller";
-		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		when(referenceResolver.isResolvable(mapperName)).thenReturn(true);
-		when(referenceResolver.resolve(mapperName)).thenReturn(marshaller);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
-		final List<String> expected = Collections.singletonList("hello");
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headerFragment(model, mapperName);
-
-		//THEN
-		assertSame(copy, builder);
-		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
-	}
-
-	@Test
-	void headerFragment_withObjectAndMapperName_toObjectMapper() throws Exception {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object model = "hello";
-		final ObjectMapper objectMapper = mock(ObjectMapper.class);
-		final ObjectWriter objectWriter = mock(ObjectWriter.class);
-		when(objectMapper.writer()).thenReturn(objectWriter);
-		when(objectWriter.writeValueAsString(model)).thenReturn("hello");
-		final String mapperName = "object";
-		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		when(referenceResolver.isResolvable(mapperName)).thenReturn(true);
-		when(referenceResolver.resolve(mapperName)).thenReturn(objectMapper);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
-		final List<String> expected = Collections.singletonList("hello");
-
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headerFragment(model, mapperName);
-
-		//THEN
-		assertSame(copy, builder);
-		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
-	}
-
-	@Test
-	void headerFragment_withObjectOfMarshaller() throws IOException {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object model = "hello";
-		final Marshaller marshaller = mock(Marshaller.class);
-		doAnswer(invocation -> {
-			((StringResult) invocation.getArgument(1)).getWriter().write("hello");
-			return null;
-		}).when(marshaller).marshal(eq("hello"), any(StringResult.class));
-
-		final String mapperName = "marshaller";
-		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		final Map<String, Marshaller> beans = Collections.singletonMap(mapperName, marshaller);
-		when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(beans);
-		when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
-		final List<String> expected = Collections.singletonList("hello");
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headerFragment(model);
-
-		//THEN
-		assertSame(copy, builder);
-		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
-	}
-
-	@Test
-	void headerFragment_withObjectOfObjectMapper() throws JsonProcessingException {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final Object model = "hello";
-		final ObjectMapper mapper = mock(ObjectMapper.class);
-		final ObjectWriter writer = mock(ObjectWriter.class);
-		when(writer.writeValueAsString(model)).thenReturn("hello");
-		when(mapper.writer()).thenReturn(writer);
-		final String mapperName = "object";
-		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		final Map<String, Marshaller> empty = new HashMap<>();
-		final Map<String, ObjectMapper> beans = new HashMap<>();
-		beans.put(mapperName, mapper);
-		doReturn(empty).when(referenceResolver).resolveAll(Marshaller.class);
-		doReturn(beans).when(referenceResolver).resolveAll(ObjectMapper.class);
-		when(referenceResolver.resolve(ObjectMapper.class)).thenReturn(mapper);
-		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
-		final List<String> expected = Collections.singletonList("hello");
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headerFragment(model);
-
-		//THEN
-		assertSame(copy, builder);
-		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
