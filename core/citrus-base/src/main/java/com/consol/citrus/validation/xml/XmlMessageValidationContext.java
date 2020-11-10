@@ -152,6 +152,18 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
         /**
          * Add namespaces as context to the expression evaluation. Keys are prefixes and values are namespace URIs.
          *
+         * @param prefix
+         * @param namespaceUri
+         * @return
+         */
+        public S namespaceContext(final String prefix, final String namespaceUri) {
+            this.namespaces.put(prefix, namespaceUri);
+            return self;
+        }
+
+        /**
+         * Add namespaces as context to the expression evaluation. Keys are prefixes and values are namespace URIs.
+         *
          * @param namespaces
          * @return
          */

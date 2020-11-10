@@ -599,6 +599,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B namespace(final String prefix, final String namespaceUri) {
+        getXmlMessageValidationContext().namespaceContext(prefix, namespaceUri);
         namespaces.put(prefix, namespaceUri);
         return self;
     }
@@ -610,6 +611,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B namespaces(final Map<String, String> namespaceMappings) {
+        getXmlMessageValidationContext().namespaceContext(namespaceMappings);
         namespaces.putAll(namespaceMappings);
         return self;
     }
@@ -809,11 +811,6 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
 
     @Override
     public final ReceiveMessageAction build() {
-        delegate.getValidationContextBuilders().stream()
-                .filter(context -> context instanceof XmlNamespaceAware)
-                .map(XmlNamespaceAware.class::cast)
-                .forEach(context -> context.setNamespaces(namespaces));
-
         return delegate.build();
     }
 
