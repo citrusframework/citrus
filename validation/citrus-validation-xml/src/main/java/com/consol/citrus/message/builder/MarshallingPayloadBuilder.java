@@ -78,13 +78,13 @@ public class MarshallingPayloadBuilder extends DefaultPayloadBuilder {
         }
 
         if (marshaller != null) {
-            return buildPayload(marshaller, getPayload());
+            return buildPayload(marshaller, getPayload(), context);
         }
 
         if (marshallerName != null) {
             if (context.getReferenceResolver().isResolvable(marshallerName)) {
                 Marshaller objectMapper = context.getReferenceResolver().resolve(marshallerName, Marshaller.class);
-                return buildPayload(objectMapper, getPayload());
+                return buildPayload(objectMapper, getPayload(), context);
             } else {
                 throw new CitrusRuntimeException(String.format("Unable to find proper object marshaller for name '%s'", marshallerName));
             }
@@ -92,14 +92,14 @@ public class MarshallingPayloadBuilder extends DefaultPayloadBuilder {
 
         Map<String, Marshaller> marshallerMap = context.getReferenceResolver().resolveAll(Marshaller.class);
         if (marshallerMap.size() == 1) {
-            return buildPayload(marshallerMap.values().iterator().next(), getPayload());
+            return buildPayload(marshallerMap.values().iterator().next(), getPayload(), context);
         } else {
             throw new CitrusRuntimeException(String.format("Unable to auto detect object marshaller - " +
                     "found %d matching marshaller instances in reference resolver", marshallerMap.size()));
         }
     }
 
-    private Object buildPayload(Marshaller marshaller, Object model) {
+    private Object buildPayload(Marshaller marshaller, Object model, TestContext context) {
         final StringResult result = new StringResult();
 
         try {
@@ -108,7 +108,7 @@ public class MarshallingPayloadBuilder extends DefaultPayloadBuilder {
             throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
         }
 
-        return result.toString();
+        return context.replaceDynamicContentInString(result.toString());
     }
 
 

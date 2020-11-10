@@ -76,13 +76,13 @@ public class ObjectMappingPayloadBuilder extends DefaultPayloadBuilder {
         }
 
         if (mapper != null) {
-            return buildPayload(mapper, getPayload());
+            return buildPayload(mapper, getPayload(), context);
         }
 
         if (mapperName != null) {
             if (context.getReferenceResolver().isResolvable(mapperName)) {
                 ObjectMapper objectMapper = context.getReferenceResolver().resolve(mapperName, ObjectMapper.class);
-                return buildPayload(objectMapper, getPayload());
+                return buildPayload(objectMapper, getPayload(), context);
             } else {
                 throw new CitrusRuntimeException(String.format("Unable to find proper object mapper for name '%s'", mapperName));
             }
@@ -90,16 +90,16 @@ public class ObjectMappingPayloadBuilder extends DefaultPayloadBuilder {
 
         Map<String, ObjectMapper> mappers = context.getReferenceResolver().resolveAll(ObjectMapper.class);
         if (mappers.size() == 1) {
-            return buildPayload(mappers.values().iterator().next(), getPayload());
+            return buildPayload(mappers.values().iterator().next(), getPayload(), context);
         } else {
             throw new CitrusRuntimeException(String.format("Unable to auto detect object mapper - " +
                     "found %d matching mapper instances in reference resolver", mappers.size()));
         }
     }
 
-    private Object buildPayload(ObjectMapper mapper, Object model) {
+    private Object buildPayload(ObjectMapper mapper, Object model, TestContext context) {
         try {
-            return mapper.writer().writeValueAsString(model);
+            return context.replaceDynamicContentInString(mapper.writer().writeValueAsString(model));
         } catch (final JsonProcessingException e) {
             throw new CitrusRuntimeException("Failed to map object graph for message payload", e);
         }

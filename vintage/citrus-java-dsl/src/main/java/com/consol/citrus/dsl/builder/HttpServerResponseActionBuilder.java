@@ -21,6 +21,12 @@ public class HttpServerResponseActionBuilder extends SendMessageActionBuilder<Ht
     }
 
     @Override
+    public HttpServerResponseActionBuilder payload(String payload) {
+        delegate.payload(payload);
+        return this;
+    }
+
+    @Override
     public HttpServerResponseActionBuilder messageName(String name) {
         delegate.messageName(name);
         return this;

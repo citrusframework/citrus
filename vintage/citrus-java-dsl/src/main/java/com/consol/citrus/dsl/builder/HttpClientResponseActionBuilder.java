@@ -21,6 +21,12 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageActionBuilder
     }
 
     @Override
+    public HttpClientResponseActionBuilder payload(String payload) {
+        delegate.payload(payload);
+        return this;
+    }
+
+    @Override
     public HttpClientResponseActionBuilder messageName(String name) {
         delegate.messageName(name);
         return this;
