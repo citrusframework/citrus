@@ -78,13 +78,13 @@ public class MarshallingHeaderDataBuilder extends DefaultHeaderDataBuilder {
         }
 
         if (marshaller != null) {
-            return buildHeaderData(marshaller, getHeaderData());
+            return buildHeaderData(marshaller, getHeaderData(), context);
         }
 
         if (marshallerName != null) {
             if (context.getReferenceResolver().isResolvable(marshallerName)) {
                 Marshaller objectMapper = context.getReferenceResolver().resolve(marshallerName, Marshaller.class);
-                return buildHeaderData(objectMapper, getHeaderData());
+                return buildHeaderData(objectMapper, getHeaderData(), context);
             } else {
                 throw new CitrusRuntimeException(String.format("Unable to find proper object marshaller for name '%s'", marshallerName));
             }
@@ -92,14 +92,14 @@ public class MarshallingHeaderDataBuilder extends DefaultHeaderDataBuilder {
 
         Map<String, Marshaller> marshallerMap = context.getReferenceResolver().resolveAll(Marshaller.class);
         if (marshallerMap.size() == 1) {
-            return buildHeaderData(marshallerMap.values().iterator().next(), getHeaderData());
+            return buildHeaderData(marshallerMap.values().iterator().next(), getHeaderData(), context);
         } else {
             throw new CitrusRuntimeException(String.format("Unable to auto detect object marshaller - " +
                     "found %d matching marshaller instances in reference resolver", marshallerMap.size()));
         }
     }
 
-    private String buildHeaderData(Marshaller marshaller, Object model) {
+    private String buildHeaderData(Marshaller marshaller, Object model, TestContext context) {
         final StringResult result = new StringResult();
 
         try {
@@ -108,7 +108,7 @@ public class MarshallingHeaderDataBuilder extends DefaultHeaderDataBuilder {
             throw new CitrusRuntimeException("Failed to marshal object graph for message header data", e);
         }
 
-        return result.toString();
+        return context.replaceDynamicContentInString(result.toString());
     }
 
 

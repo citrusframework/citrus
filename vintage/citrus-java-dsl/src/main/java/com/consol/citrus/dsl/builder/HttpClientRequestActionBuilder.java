@@ -21,6 +21,12 @@ public class HttpClientRequestActionBuilder extends SendMessageActionBuilder<Htt
         this.delegate = builder;
     }
 
+    @Override
+    public HttpClientRequestActionBuilder payload(String payload) {
+        delegate.payload(payload);
+        return this;
+    }
+
     /**
      * Adds message payload multi value map data to this builder. This is used when using multipart file upload via
      * Spring RestTemplate.

@@ -76,13 +76,13 @@ public class ObjectMappingHeaderDataBuilder extends DefaultHeaderDataBuilder {
         }
 
         if (mapper != null) {
-            return buildHeaderData(mapper, getHeaderData());
+            return buildHeaderData(mapper, getHeaderData(), context);
         }
 
         if (mapperName != null) {
             if (context.getReferenceResolver().isResolvable(mapperName)) {
                 ObjectMapper objectMapper = context.getReferenceResolver().resolve(mapperName, ObjectMapper.class);
-                return buildHeaderData(objectMapper, getHeaderData());
+                return buildHeaderData(objectMapper, getHeaderData(), context);
             } else {
                 throw new CitrusRuntimeException(String.format("Unable to find proper object mapper for name '%s'", mapperName));
             }
@@ -90,16 +90,16 @@ public class ObjectMappingHeaderDataBuilder extends DefaultHeaderDataBuilder {
 
         Map<String, ObjectMapper> mappers = context.getReferenceResolver().resolveAll(ObjectMapper.class);
         if (mappers.size() == 1) {
-            return buildHeaderData(mappers.values().iterator().next(), getHeaderData());
+            return buildHeaderData(mappers.values().iterator().next(), getHeaderData(), context);
         } else {
             throw new CitrusRuntimeException(String.format("Unable to auto detect object mapper - " +
                     "found %d matching mapper instances in reference resolver", mappers.size()));
         }
     }
 
-    private String buildHeaderData(ObjectMapper mapper, Object model) {
+    private String buildHeaderData(ObjectMapper mapper, Object model, TestContext context) {
         try {
-            return mapper.writer().writeValueAsString(model);
+            return context.replaceDynamicContentInString(mapper.writer().writeValueAsString(model));
         } catch (final JsonProcessingException e) {
             throw new CitrusRuntimeException("Failed to map object graph for message header data", e);
         }

@@ -21,6 +21,12 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageActionBuilder<
     }
 
     @Override
+    public HttpServerRequestActionBuilder payload(String payload) {
+        delegate.payload(payload);
+        return this;
+    }
+
+    @Override
     public HttpServerRequestActionBuilder messageName(String name) {
         delegate.messageName(name);
         return this;
