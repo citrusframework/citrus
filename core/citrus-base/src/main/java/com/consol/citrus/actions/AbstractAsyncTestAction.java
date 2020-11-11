@@ -16,15 +16,16 @@
 
 package com.consol.citrus.actions;
 
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+
 import com.consol.citrus.Completable;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-
-import java.util.Optional;
-import java.util.concurrent.*;
 
 /**
  * Test action that performs in a separate thread. Action execution is not blocking the test execution chain. After
@@ -49,7 +50,7 @@ public abstract class AbstractAsyncTestAction extends AbstractTestAction impleme
             try {
                 doExecuteAsync(context);
                 result.complete(null);
-            } catch (Exception e) {
+            } catch (Exception | Error e) {
                 log.warn("Async test action execution raised error", e);
 
                 if (e instanceof CitrusRuntimeException) {
