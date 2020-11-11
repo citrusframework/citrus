@@ -23,7 +23,7 @@ help:
 	./scripts/citrus -h
 
 release:
-	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --release-version $(VERSION)
+	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --release-version $(VERSION) --skip-tests
 
 release-snapshot:
 	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --snapshot-release
