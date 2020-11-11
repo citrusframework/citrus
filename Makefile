@@ -33,3 +33,6 @@ release-local:
 
 release-major:
 	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --major-release --release-version $(VERSION)
+
+release-dry-run:
+	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --release-version $(VERSION) --skip-tests --dry-run --no-git-push --keep-staging-repo
