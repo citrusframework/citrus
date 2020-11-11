@@ -108,7 +108,7 @@ release::run() {
     fi
 
     # Build and stage artifacts
-    build_and_stage_artifacts "$working_dir" "$maven_opts"
+    build_and_stage_artifacts "$working_dir" "$release_version" "$maven_opts"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
@@ -166,7 +166,8 @@ clean() {
 
 build_and_stage_artifacts() {
     local working_dir="$1"
-    local maven_opts="$2"
+    local release_version="$2"
+    local maven_opts="$3"
 
     cd $working_dir
     if [ $(hasflag --local-release) ]; then
@@ -176,9 +177,7 @@ build_and_stage_artifacts() {
         echo "==== Release to consol.labs repository"
         ./mvnw ${maven_opts} install deploy -Prelease-labs
     else
-        echo "==== Release to Maven central and stage Maven artifacts to Sonatype"
-
-        local release_version = $(get_release_version "$working_dir")
+        echo "==== Release to Maven central and stage artifacts to Sonatype"
         ./mvnw ${maven_opts} install deploy -Prelease-central -DstagingDescription="Staging Syndesis for $release_version"
     fi
 }
