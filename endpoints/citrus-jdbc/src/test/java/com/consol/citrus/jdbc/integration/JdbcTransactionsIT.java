@@ -35,6 +35,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.container.Async.Builder.async;
 
 @Test
@@ -79,6 +80,8 @@ public class JdbcTransactionsIT extends TestNGCitrusSupport {
         //THEN
         then(receive(jdbcServer)
                 .message(JdbcMessage.startTransaction()));
+
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 
     @CitrusTest
@@ -109,6 +112,8 @@ public class JdbcTransactionsIT extends TestNGCitrusSupport {
 
         then(receive(jdbcServer)
                 .message(JdbcMessage.startTransaction()));
+
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 
     @CitrusTest
@@ -133,6 +138,8 @@ public class JdbcTransactionsIT extends TestNGCitrusSupport {
         //THEN
         then(receive(jdbcServer)
                 .message(JdbcMessage.commitTransaction()));
+
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 
     @CitrusTest
@@ -157,5 +164,7 @@ public class JdbcTransactionsIT extends TestNGCitrusSupport {
         //THEN
         then(receive(jdbcServer)
                 .message(JdbcMessage.rollbackTransaction()));
+
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 }

@@ -80,7 +80,7 @@ public class JdbcExecutionsIT extends TestNGCitrusSupport {
                         Assert.assertTrue(resultSet.next());
                         Assert.assertEquals(resultSet.getString("foo"), "bar");
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        throw new CitrusRuntimeException(e);
                     }
                 }
             }

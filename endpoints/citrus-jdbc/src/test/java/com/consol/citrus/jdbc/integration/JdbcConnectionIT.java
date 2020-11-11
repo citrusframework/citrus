@@ -37,6 +37,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.container.Assert.Builder.assertException;
 import static com.consol.citrus.container.Async.Builder.async;
 
@@ -66,8 +67,7 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
         //GIVEN
 
         //WHEN
-        when(async().actions(
-            new AbstractTestAction() {
+        when(new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     try {
@@ -79,7 +79,7 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
                     }
                 }
             }
-        ));
+        );
     }
 
     @CitrusTest
@@ -106,6 +106,7 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
 
         //THEN
         then(receive(jdbcServer).message(JdbcMessage.openConnection(database)));
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 
     @CitrusTest
@@ -133,11 +134,13 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
                 @Override
                 public void doExecute(TestContext context) {
                     try {
-                        Connection connection = jdbcDriver.connect(serverUrl, properties);
-                        Assert.assertNotNull(connection);
+                        jdbcDriver.connect(serverUrl, properties);
                     } catch (SQLException e) {
-                        throw new CitrusRuntimeException("Failed to connect", e);
+                        Assert.assertTrue(e.getMessage().contains("java.sql.SQLException: Failed to connect to server"));
+                        return;
                     }
+
+                    throw new CitrusRuntimeException("Missing exception for failed connection");
                 }
             }
         ));
@@ -147,6 +150,8 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
                 .exception(ValidationException.class)
                 .when(receive(jdbcServer)
                                 .message(JdbcMessage.openConnection(username, password, database))));
+
+        and(send(jdbcServer).message(JdbcMessage.error()));
     }
 
     @CitrusTest
@@ -175,8 +180,12 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
         when(receive(jdbcServer)
                 .message(JdbcMessage.openConnection(database)));
 
+        and(send(jdbcServer).message(JdbcMessage.success()));
+
         //THEN
         then(receive(jdbcServer)
                 .message(JdbcMessage.closeConnection()));
+
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 }

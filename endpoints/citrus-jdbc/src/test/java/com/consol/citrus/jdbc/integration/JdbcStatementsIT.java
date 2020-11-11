@@ -38,6 +38,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.container.Async.Builder.async;
 
 @Test
@@ -84,6 +85,8 @@ public class JdbcStatementsIT extends TestNGCitrusSupport {
         //THEN
         then(receive(jdbcServer)
                 .message(JdbcMessage.createPreparedStatement(sql)));
+
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 
     @CitrusTest
@@ -108,6 +111,8 @@ public class JdbcStatementsIT extends TestNGCitrusSupport {
         //THEN
         then(receive(jdbcServer)
                 .message(JdbcMessage.createStatement()));
+
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 
     @CitrusTest
@@ -133,9 +138,13 @@ public class JdbcStatementsIT extends TestNGCitrusSupport {
         then(receive(jdbcServer)
                 .message(JdbcMessage.createStatement()));
 
+        and(send(jdbcServer).message(JdbcMessage.success()));
+
         //THEN
         then(receive(jdbcServer)
                 .message(JdbcMessage.closeStatement()));
+
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 
     @CitrusTest
@@ -162,5 +171,7 @@ public class JdbcStatementsIT extends TestNGCitrusSupport {
         //THEN
         then(receive(jdbcServer)
                 .message(JdbcMessage.createCallableStatement(sql)));
+
+        and(send(jdbcServer).message(JdbcMessage.success()));
     }
 }
