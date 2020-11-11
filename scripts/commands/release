@@ -271,23 +271,23 @@ update_spring_schemas() {
     local version="$2"
     local snapshot_version="$3"
 
-    local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/")
+    local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/" "/test-output/")
 
-    for f in $(find ${working_dir} -type f -name "spring.schemas");
-    do
+    find ${working_dir} -type f -name "spring.schemas" -print0 |
+    while IFS= read -r -d '' file; do
       file_check=true
       for b in ${exclude[*]}; do
-        if [[ "$f" == *"$b"* ]]; then
-          #echo "exclude $f"
+        if [[ "$file" == *"$b"* ]]; then
+          #echo "exclude $file"
           file_check=false
           break
         fi
       done
 
       if [ "$file_check" = true ]; then
-          #echo "update $f"
-          sed -n "/$version/s/$version/$snapshot_version/gp" $f >> $f
-          sort -o $f $f
+          #echo "update $file"
+          sed -n "/$version/s/$version/$snapshot_version/gp" $file >> $file
+          sort -o $file $file
       fi
     done
 }

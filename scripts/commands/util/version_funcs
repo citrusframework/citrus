@@ -86,12 +86,12 @@ set_version() {
   local include=(".java" ".xml" ".properties" ".xsd" "spring.schemas" ".adoc")
 
   # Update all sources
-  for f in $(find ${working_dir} -type f);
-  do
+  find ${working_dir} -type f -print0 |
+  while IFS= read -r -d '' file; do
     check=false
     for b in ${include[*]}; do
       # check file includes
-      if [[ "$f" == *"$b" ]]; then
+      if [[ "$file" == *"$b" ]]; then
         check=true
         break
       fi
@@ -100,8 +100,8 @@ set_version() {
     if [ "$check" = true ]; then
         # double check for explicit directory excludes
         for b in ${exclude[*]}; do
-          if [[ "$f" == *"$b"* ]]; then
-            #echo "exclude $f"
+          if [[ "$file" == *"$b"* ]]; then
+            #echo "exclude $file"
             check=false
             break
           fi
@@ -109,12 +109,12 @@ set_version() {
     fi
 
     if [ "$check" = true ]; then
-      #echo "update $f"
+      #echo "update $file"
       if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        sed -i "s/$snapshot_version/$version/g" $f
+        sed -i "s/$snapshot_version/$version/g" $file
       elif [[ "$OSTYPE" == "darwin"* ]]; then
         # Mac OSX
-        sed -i '' "s/$snapshot_version/$version/g" $f
+        sed -i '' "s/$snapshot_version/$version/g" $file
       fi
     fi
   done
@@ -148,37 +148,37 @@ unsnapshot_sources() {
 
     local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/" "/test-output/")
 
-    for d in $(find ${working_dir} -type d -name "*-SNAPSHOT*");
-    do
+    find ${working_dir} -type d -name "*-SNAPSHOT*" -print0 |
+    while IFS= read -r -d '' dir; do
       dir_check=true
       for b in ${exclude[*]}; do
-        if [[ "$d" == *"$b"* ]]; then
-          #echo "exclude $d"
+        if [[ "$dir" == *"$b"* ]]; then
+          #echo "exclude $dir"
           dir_check=false
           break
         fi
       done
 
       if [ "$dir_check" = true ]; then
-          #echo "update $d"
-          mv ${d} ${d//"$snapshot_version"/"$version"}
+          #echo "update $dir"
+          mv ${dir} ${dir//"$snapshot_version"/"$version"}
       fi
     done
 
-    for f in $(find ${working_dir} -type f -name "*-SNAPSHOT*");
-    do
+    find ${working_dir} -type f -name "*-SNAPSHOT*" -print0 |
+    while IFS= read -r -d '' file; do
       file_check=true
       for b in ${exclude[*]}; do
-        if [[ "$f" == *"$b"* ]]; then
-          #echo "exclude $f"
+        if [[ "$file" == *"$b"* ]]; then
+          #echo "exclude $file"
           file_check=false
           break
         fi
       done
 
       if [ "$file_check" = true ]; then
-          #echo "update $f"
-          mv ${f} ${f//$snapshot_version/"$version"}
+          #echo "update $file"
+          mv ${file} ${file//$snapshot_version/"$version"}
       fi
     done
 }
