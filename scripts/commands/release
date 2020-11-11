@@ -178,7 +178,7 @@ build_and_stage_artifacts() {
     else
         echo "==== Release to Maven central and stage Maven artifacts to Sonatype"
 
-        local release_version = $(get_release_version "$workindgir")
+        local release_version = $(get_release_version "$working_dir")
         ./mvnw ${maven_opts} install deploy -Prelease-central -DstagingDescription="Staging Syndesis for $release_version"
     fi
 }
