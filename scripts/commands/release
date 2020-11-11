@@ -44,6 +44,7 @@ release::usage() {
                               Works only when on a branch, not when checked out directly.
     --log <log-file>          Write full log to <log-file>, only print progress to screen
     --skip-tests              Do not run tests
+    --keep-staging-repo       Do not drop the staging repo (for manual review of what has been uploaded on a dry run)
     --no-strict-checksums     Do not insist on strict checksum policy for downloaded Maven artifacts
 -q  --quiet                   Adds quiet option to Maven options - only show errors
 EOT
@@ -111,7 +112,7 @@ release::run() {
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
-        if [ ! $(hasflag --snapshot-release) ] && [ ! $(hasflag --local-release) ]; then
+        if [ ! $(hasflag --snapshot-release) ] && [ ! $(hasflag --local-release) ] && [ ! $(hasflag --keep-staging-repo) ]; then
             drop_staging_repo "$working_dir" "$maven_opts"
         fi
 
