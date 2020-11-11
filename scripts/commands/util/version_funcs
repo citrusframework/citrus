@@ -82,7 +82,7 @@ set_version() {
       return
   fi
 
-  local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/")
+  local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/" "/test-output/")
   local include=(".java" ".xml" ".properties" ".xsd" "spring.schemas" ".adoc")
 
   # Update all sources
@@ -146,7 +146,7 @@ unsnapshot_sources() {
         return
     fi
 
-    local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/")
+    local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/" "/test-output/")
 
     for d in $(find ${working_dir} -type d -name "*-SNAPSHOT*");
     do
