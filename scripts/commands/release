@@ -88,7 +88,7 @@ release::run() {
 
     # Temporary local repository to guarantee a clean build
     local local_maven_repo=$(readopt --local-maven-repo)
-    if [ -z "$local_maven_repo" ]; then
+    if [ $(hasflag --local-maven-repo) ] && [ -z "$local_maven_repo" ]; then
         local_maven_repo=$(mktemp -d 2>/dev/null || mktemp -d -t 'maven_repo')
         trap "echo 'Removing temp maven repo $local_maven_repo' && rm -rf $local_maven_repo" "EXIT"
     fi
