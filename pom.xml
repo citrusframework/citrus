@@ -136,13 +136,18 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
     <spring.version>5.2.8.RELEASE</spring.version>
     <spring.ws.version>3.0.9.RELEASE</spring.ws.version>
     <spring.integration.version>5.2.8.RELEASE</spring.integration.version>
     <spring.restdocs.version>2.0.4.RELEASE</spring.restdocs.version>
     <kafka.version>2.6.0</kafka.version>
     <apache.camel.version>3.5.0</apache.camel.version>
+    <apache.ant.version>1.10.8</apache.ant.version>
     <activemq.version>5.16.0</activemq.version>
+    <ftpserver.version>1.1.1</ftpserver.version>
+    <mockftpserver.version>2.7.1</mockftpserver.version>
     <vertx.version>3.9.2</vertx.version>
     <groovy.version>2.5.13</groovy.version>
     <jetty.version>9.4.34.v20201102</jetty.version>
@@ -154,11 +159,19 @@
     <jaxb.version>2.3.0.1</jaxb.version>
     <jackson.version>2.11.3</jackson.version>
     <arquillian.version>1.6.0.Final</arquillian.version>
+    <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
+    <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
     <cucumber.version>5.7.0</cucumber.version>
     <zookeeper.version>3.6.1</zookeeper.version>
+    <dropwizard.metrics.version>3.2.5</dropwizard.metrics.version>
+    <snappy.version>1.1.7.7</snappy.version>
     <sshd.version>2.5.1</sshd.version>
+    <bouncycastle.version>1.59</bouncycastle.version>
+    <jsch.version>0.1.54</jsch.version>
     <json.schema.validator.version>2.2.14</json.schema.validator.version>
+    <hamcrest.version>1.3</hamcrest.version>
     <citrus.db.version>0.1.4</citrus.db.version>
+    <httpclient.version>4.5.12</httpclient.version>
     <selenium.version>3.141.59</selenium.version>
     <htmlunit.version>2.38.0</htmlunit.version>
     <byte.buddy.version>1.10.14</byte.buddy.version>
@@ -166,6 +179,7 @@
     <surefire.version>2.22.2</surefire.version>
     <mockito.version>3.5.10</mockito.version>
     <k8s.client.version>1.4.34</k8s.client.version>
+    <k8s.model.version>1.0.65</k8s.model.version>
     <docker-java.version>3.0.14</docker-java.version>
     <glassfish.jersey.version>2.23.1</glassfish.jersey.version>
     <jakarta.mail.version>1.6.5</jakarta.mail.version>
@@ -177,6 +191,19 @@
     <jakarta.ws.rs-api.version>2.1.6</jakarta.ws.rs-api.version>
     <jakarta.websocket-api.version>1.1.2</jakarta.websocket-api.version>
     <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
+    <junixsocket.version>2.0.4</junixsocket.version>
+    <jdom.version>2.0.2</jdom.version>
+    <json-smart.version>2.3</json-smart.version>
+    <json-path.version>2.4.0</json-path.version>
+    <hsqldb.version>2.5.1</hsqldb.version>
+    <commons.dbcp2.version>2.8.0</commons.dbcp2.version>
+    <subethasmtp.version>3.1.7</subethasmtp.version>
+    <saaj.version>1.5.2</saaj.version>
+    <wsdl4j.version>1.6.3</wsdl4j.version>
+    <xbean-spring.version>4.18</xbean-spring.version>
+    <xstream.version>1.4.14</xstream.version>
+    <xalan.version>2.7.2</xalan.version>
+    <xerces.version>2.12.0</xerces.version>
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
     <skip.gpg>false</skip.gpg>
@@ -187,17 +214,17 @@
       <dependency>
         <groupId>org.jdom</groupId>
         <artifactId>jdom</artifactId>
-        <version>2.0.2</version>
+        <version>${jdom.version}</version>
       </dependency>
       <dependency>
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
-        <version>2.12.0</version>
+        <version>${xerces.version}</version>
       </dependency>
       <dependency>
         <groupId>xalan</groupId>
         <artifactId>xalan</artifactId>
-        <version>2.7.2</version>
+        <version>${xalan.version}</version>
       </dependency>
 
       <!-- JMS -->
@@ -220,7 +247,7 @@
       <dependency>
         <groupId>com.sun.xml.messaging.saaj</groupId>
         <artifactId>saaj-impl</artifactId>
-        <version>1.5.2</version>
+        <version>${saaj.version}</version>
       </dependency>
 
       <!-- Groovy -->
@@ -282,17 +309,17 @@
       <dependency>
         <groupId>org.bouncycastle</groupId>
         <artifactId>bcprov-jdk15on</artifactId>
-        <version>1.59</version>
+        <version>${bouncycastle.version}</version>
       </dependency>
       <dependency>
         <groupId>org.bouncycastle</groupId>
         <artifactId>bcpkix-jdk15on</artifactId>
-        <version>1.59</version>
+        <version>${bouncycastle.version}</version>
       </dependency>
       <dependency>
         <groupId>com.jcraft</groupId>
         <artifactId>jsch</artifactId>
-        <version>0.1.54</version>
+        <version>${jsch.version}</version>
       </dependency>
 
       <dependency>
@@ -305,12 +332,12 @@
       <dependency>
         <groupId>org.hamcrest</groupId>
         <artifactId>hamcrest-core</artifactId>
-        <version>1.3</version>
+        <version>${hamcrest.version}</version>
       </dependency>
       <dependency>
         <groupId>org.hamcrest</groupId>
         <artifactId>hamcrest-library</artifactId>
-        <version>1.3</version>
+        <version>${hamcrest.version}</version>
       </dependency>
 
       <!-- Spring Framework -->
@@ -414,7 +441,7 @@
       <dependency>
         <groupId>wsdl4j</groupId>
         <artifactId>wsdl4j</artifactId>
-        <version>1.6.3</version>
+        <version>${wsdl4j.version}</version>
       </dependency>
 
       <dependency>
@@ -564,18 +591,18 @@
       <dependency>
         <groupId>net.minidev</groupId>
         <artifactId>json-smart</artifactId>
-        <version>2.3</version>
+        <version>${json-smart.version}</version>
       </dependency>
       <dependency>
         <groupId>com.jayway.jsonpath</groupId>
         <artifactId>json-path</artifactId>
-        <version>2.4.0</version>
+        <version>${json-path.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.apache.ant</groupId>
         <artifactId>ant</artifactId>
-        <version>1.10.8</version>
+        <version>${apache.ant.version}</version>
         <scope>provided</scope>
       </dependency>
 
@@ -617,7 +644,7 @@
       <dependency>
         <groupId>org.subethamail</groupId>
         <artifactId>subethasmtp</artifactId>
-        <version>3.1.7</version>
+        <version>${subethasmtp.version}</version>
         <exclusions>
           <exclusion>
             <groupId>javax.activation</groupId>
@@ -669,7 +696,7 @@
       <dependency>
         <groupId>org.apache.ftpserver</groupId>
         <artifactId>ftpserver-core</artifactId>
-        <version>1.1.1</version>
+        <version>${ftpserver.version}</version>
       </dependency>
       <dependency>
         <groupId>commons-net</groupId>
@@ -680,7 +707,7 @@
       <dependency>
         <groupId>org.mockftpserver</groupId>
         <artifactId>MockFtpServer</artifactId>
-        <version>2.7.1</version>
+        <version>${mockftpserver.version}</version>
         <scope>test</scope>
       </dependency>
 
@@ -703,12 +730,12 @@
       <dependency>
         <groupId>org.jboss.shrinkwrap.resolver</groupId>
         <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-        <version>3.1.4</version>
+        <version>${shrinkwrap.resolver.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.shrinkwrap</groupId>
         <artifactId>shrinkwrap-impl-base</artifactId>
-        <version>1.2.6</version>
+        <version>${shrinkwrap.impl.version}</version>
       </dependency>
 
       <!-- Citrus JDBC dependencies -->
@@ -730,7 +757,7 @@
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.5.12</version>
+        <version>${httpclient.version}</version>
       </dependency>
 
       <!-- Cucumber -->
@@ -968,7 +995,7 @@
       <dependency>
         <groupId>com.kohlschutter.junixsocket</groupId>
         <artifactId>junixsocket-common</artifactId>
-        <version>2.0.4</version>
+        <version>${junixsocket.version}</version>
         <exclusions>
           <exclusion>
             <groupId>log4j</groupId>
@@ -979,7 +1006,7 @@
       <dependency>
         <groupId>com.kohlschutter.junixsocket</groupId>
         <artifactId>junixsocket-native-common</artifactId>
-        <version>2.0.4</version>
+        <version>${junixsocket.version}</version>
         <exclusions>
           <exclusion>
             <groupId>log4j</groupId>
@@ -996,7 +1023,7 @@
       <dependency>
         <groupId>io.fabric8</groupId>
         <artifactId>kubernetes-model</artifactId>
-        <version>1.0.65</version>
+        <version>${k8s.model.version}</version>
         <exclusions>
           <exclusion>
             <groupId>javax.validation</groupId>
@@ -1028,12 +1055,12 @@
       <dependency>
         <groupId>io.dropwizard.metrics</groupId>
         <artifactId>metrics-core</artifactId>
-        <version>3.2.5</version>
+        <version>${dropwizard.metrics.version}</version>
       </dependency>
       <dependency>
         <groupId>org.xerial.snappy</groupId>
         <artifactId>snappy-java</artifactId>
-        <version>1.1.7.7</version>
+        <version>${snappy.version}</version>
       </dependency>
 
       <!-- Test scoped dependencies -->
@@ -1064,25 +1091,25 @@
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream</artifactId>
-        <version>1.4.11.1</version>
+        <version>${xstream.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.xbean</groupId>
         <artifactId>xbean-spring</artifactId>
-        <version>4.8</version>
+        <version>${xbean-spring.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
-        <version>2.4.1</version>
+        <version>${hsqldb.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>commons-dbcp</groupId>
-        <artifactId>commons-dbcp</artifactId>
-        <version>1.4</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>${commons.dbcp2.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -1181,11 +1208,11 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.8.1</version>
           <configuration>
             <encoding>${project.build.sourceEncoding}</encoding>
-            <source>1.8</source>
-            <target>1.8</target>
+            <source>${maven.compiler.source}</source>
+            <target>${maven.compiler.target}</target>
           </configuration>
         </plugin>
         <plugin>
