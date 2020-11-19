@@ -212,7 +212,7 @@
          actor="helloServer"/>
 
     <!-- JDBC data sources -->
-    <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="testDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName">
             <value>${jdbc.driver}</value>
         </property>
@@ -228,7 +228,7 @@
         <property name="initialSize">
             <value>1</value>
         </property>
-        <property name="maxActive">
+        <property name="maxTotal">
             <value>5</value>
         </property>
         <property name="maxIdle">
