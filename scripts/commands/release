@@ -214,36 +214,33 @@ extract_maven_opts() {
 
 git_push() {
     local working_dir="$1"
-    local release_version=${2:-}
+    local release_version="$2"
     local tag=v$release_version
     local staging_branch="staging-v$release_version"
     local original_branch=$(git rev-parse --abbrev-ref HEAD)
 
     cd $working_dir
-    echo "==== Pushing to GitHub"
-    if [ -n "$release_version" ]; then
-        echo "* Pushing $release_version"
-        local remote=$(get_git_remote)
+    echo "==== Pushing $release_version to GitHub"
+    local remote=$(get_git_remote)
 
-        echo "* Create staging branch $staging_branch"
-        # Create staging branch
-        git branch -D ${staging_branch} || true
-        git checkout -b ${staging_branch}
-        git add * || true
-        git commit -a -m "Release ${release_version}"
+    echo "* Create staging branch $staging_branch"
+    # Create staging branch
+    git branch -D ${staging_branch} || true
+    git checkout -b ${staging_branch}
+    git add * || true
+    git commit -a -m "Release ${release_version}"
 
-        if [ ! $(hasflag --no-git-push) ]; then
-            echo "* Using remote git repository '$remote'"
+    if [ ! $(hasflag --no-git-push) ]; then
+        echo "* Using remote git repository '$remote'"
 
-            # push tag to remote
-            git tag --force ${tag} ${staging_branch}
-            git push --force ${remote} ${tag}
-            echo "* Tag ${tag} pushed to ${remote}"
-        fi
-
-        # Check out original branch
-        git checkout ${original_branch}
+        # push tag to remote
+        git tag --force ${tag} ${staging_branch}
+        git push --force ${remote} ${tag}
+        echo "* Tag ${tag} pushed to ${remote}"
     fi
+
+    # Check out original branch
+    git checkout ${original_branch}
 }
 
 git_push_next_snapshot() {

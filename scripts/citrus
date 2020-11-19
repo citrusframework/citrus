@@ -25,7 +25,7 @@
 # Fail on a single failed command in a pipeline (if supported)
 set -o pipefail
 
-# Save global script args, use "build" as default
+# Save global script args, use "help" as default
 if [ -z "$1" ]; then
     ARGS=("help")
 else
