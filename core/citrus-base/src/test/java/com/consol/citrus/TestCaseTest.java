@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.consol.citrus.actions.AbstractAsyncTestAction;
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.context.TestContext;
@@ -35,6 +34,8 @@ import com.consol.citrus.util.TestUtils;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static com.consol.citrus.DefaultTestActionBuilder.action;
 
 public class TestCaseTest extends UnitTestSupport {
 
@@ -132,18 +133,15 @@ public class TestCaseTest extends UnitTestSupport {
         variables.put("welcome", "Welcome ${name}, today is citrus:currentDate()!");
         testcase.setVariableDefinitions(variables);
 
-        testcase.addTestAction(new AbstractTestAction() {
-            @Override
-            public void doExecute(final TestContext context) {
-                Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase");
-                Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
-                Assert.assertEquals(context.getVariable("${name}"), "Citrus");
-                Assert.assertEquals(context.getVariable("${framework}"), "Citrus");
-                Assert.assertEquals(context.getVariable("${hello}"), "Hello Citrus!");
-                Assert.assertEquals(context.getVariable("${goodbye}"), "Goodbye Citrus!");
-                Assert.assertEquals(context.getVariable("${welcome}"), "Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<>(), context) + "!");
-            }
-        });
+        testcase.addTestAction(action(context -> {
+            Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase");
+            Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
+            Assert.assertEquals(context.getVariable("${name}"), "Citrus");
+            Assert.assertEquals(context.getVariable("${framework}"), "Citrus");
+            Assert.assertEquals(context.getVariable("${hello}"), "Hello Citrus!");
+            Assert.assertEquals(context.getVariable("${goodbye}"), "Goodbye Citrus!");
+            Assert.assertEquals(context.getVariable("${welcome}"), "Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<>(), context) + "!");
+        }));
 
         testcase.execute(context);
     }
@@ -156,12 +154,7 @@ public class TestCaseTest extends UnitTestSupport {
         final String message = "Hello TestFramework!";
         testcase.setVariableDefinitions(Collections.singletonMap("text", message));
 
-        testcase.addTestAction(new AbstractTestAction() {
-            @Override
-            public void doExecute(final TestContext context) {
-                Assert.assertEquals(context.getVariable("${unknown}"), message);
-            }
-        });
+        testcase.addTestAction(action(context -> Assert.assertEquals(context.getVariable("${unknown}"), message)));
 
         testcase.execute(context);
     }
@@ -171,12 +164,9 @@ public class TestCaseTest extends UnitTestSupport {
         final TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
-        testcase.addTestAction(new AbstractTestAction() {
-            @Override
-            public void doExecute(final TestContext context) {
+        testcase.addTestAction(action(context -> {
                 context.addException(new CitrusRuntimeException("This failed in forked action"));
-            }
-        });
+        }).build());
 
         testcase.addTestAction(new EchoAction.Builder().message("Everything is fine!").build());
 
@@ -188,12 +178,7 @@ public class TestCaseTest extends UnitTestSupport {
         final TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
-        testcase.addTestAction(new AbstractTestAction() {
-            @Override
-            public void doExecute(final TestContext context) {
-                context.addException(new CitrusRuntimeException("This failed in forked action"));
-            }
-        });
+        testcase.addTestAction(action(context -> context.addException(new CitrusRuntimeException("This failed in forked action"))).build());
 
         testcase.execute(context);
     }

@@ -16,12 +16,11 @@
 
 package com.consol.citrus.integration.container;
 
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.DefaultTestActionBuilder.action;
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 import static com.consol.citrus.actions.SleepAction.Builder.sleep;
 import static com.consol.citrus.actions.StopTimeAction.Builder.stopTime;
@@ -44,19 +43,9 @@ public class SequentialJavaIT extends TestNGCitrusSupport {
 
         run(sequential().actions(
             echo("Hello Citrus"),
-            () -> new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    context.setVariable("anonymous", "anonymous");
-                }
-            },
+            action(context -> context.setVariable("anonymous", "anonymous")),
             sleep().milliseconds(500),
-            () -> new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    log.info(context.getVariable("anonymous"));
-                }
-            }
+            action(context -> log.info(context.getVariable("anonymous")))
         ));
 
         run(sequential().actions(
@@ -68,19 +57,9 @@ public class SequentialJavaIT extends TestNGCitrusSupport {
 
         run(sequential().actions(
             echo("Hello Citrus"),
-            () -> new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    context.setVariable("anonymous", "anonymous");
-                }
-            },
+            action(context -> context.setVariable("anonymous", "anonymous")),
             sleep().milliseconds(200),
-            () -> new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    log.info(context.getVariable("anonymous"));
-                }
-            }
+            action(context -> log.info(context.getVariable("anonymous")))
         ));
     }
 }

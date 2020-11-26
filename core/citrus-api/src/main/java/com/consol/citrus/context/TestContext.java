@@ -967,11 +967,6 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         @Override
-        public TestAction setActor(TestActor actor) {
-            return this;
-        }
-
-        @Override
         public void setName(String name) {
             // do nothing
         }

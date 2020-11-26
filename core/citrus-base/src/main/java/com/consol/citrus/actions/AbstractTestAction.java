@@ -21,13 +21,16 @@ import java.util.Optional;
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActor;
+import com.consol.citrus.TestActorAware;
+import com.consol.citrus.common.Described;
+import com.consol.citrus.common.Named;
 import com.consol.citrus.context.TestContext;
 
 /**
  * Abstract base class for test actions. Class provides a default name and description.
  * @author Christoph Deppisch
  */
-public abstract class AbstractTestAction implements TestAction {
+public abstract class AbstractTestAction implements TestAction, Named, Described, TestActorAware {
 
     /** Describing the test action */
     protected String description;
@@ -75,24 +78,18 @@ public abstract class AbstractTestAction implements TestAction {
      */
     public abstract void doExecute(TestContext context);
 
-    /**
-     * @return the description
-     */
+    @Override
     public String getDescription() {
         return description;
     }
 
-    /**
-     * @param description the description to set
-     */
+    @Override
     public AbstractTestAction setDescription(String description) {
         this.description = description;
         return this;
     }
 
-    /**
-     * @return the name
-     */
+    @Override
     public String getName() {
         return name;
     }

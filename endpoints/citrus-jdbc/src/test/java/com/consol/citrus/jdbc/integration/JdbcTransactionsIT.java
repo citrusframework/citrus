@@ -20,10 +20,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.db.driver.JdbcDriver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
@@ -34,6 +32,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.DefaultTestActionBuilder.action;
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.container.Async.Builder.async;
@@ -61,20 +60,17 @@ public class JdbcTransactionsIT extends TestNGCitrusSupport {
     @CitrusTest
     public void testStartTransaction() {
         //GIVEN
-        given(async().actions(new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
-                        Assert.assertNotNull(connection);
+        given(async().actions(action(context -> {
+                try {
+                    Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                    Assert.assertNotNull(connection);
 
-                        //WHEN
-                        connection.setAutoCommit(false);
-                    } catch (SQLException e) {
-                        throw new CitrusRuntimeException(e);
-                    }
+                    //WHEN
+                    connection.setAutoCommit(false);
+                } catch (SQLException e) {
+                    throw new CitrusRuntimeException(e);
                 }
-            }
+            })
         ));
 
         //THEN
@@ -87,27 +83,24 @@ public class JdbcTransactionsIT extends TestNGCitrusSupport {
     @CitrusTest
     public void testTransactionStateIsStored() {
         //GIVEN
-        given(async().actions(new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
-                        Assert.assertNotNull(connection);
+        given(async().actions(action(context -> {
+                try {
+                    Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                    Assert.assertNotNull(connection);
 
-                        //WHEN
-                        connection.setAutoCommit(false);
-                        boolean shouldBeFalse = connection.getAutoCommit();
-                        connection.setAutoCommit(true);
-                        boolean shouldBeTrue = connection.getAutoCommit();
+                    //WHEN
+                    connection.setAutoCommit(false);
+                    boolean shouldBeFalse = connection.getAutoCommit();
+                    connection.setAutoCommit(true);
+                    boolean shouldBeTrue = connection.getAutoCommit();
 
-                        //THEN
-                        Assert.assertFalse(shouldBeFalse);
-                        Assert.assertTrue(shouldBeTrue);
-                    } catch (SQLException e) {
-                        throw new CitrusRuntimeException(e);
-                    }
+                    //THEN
+                    Assert.assertFalse(shouldBeFalse);
+                    Assert.assertTrue(shouldBeTrue);
+                } catch (SQLException e) {
+                    throw new CitrusRuntimeException(e);
                 }
-            }
+            })
         ));
 
         then(receive(jdbcServer)
@@ -119,20 +112,17 @@ public class JdbcTransactionsIT extends TestNGCitrusSupport {
     @CitrusTest
     public void testCommitTransaction() {
         //GIVEN
-        given(async().actions(new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
-                        Assert.assertNotNull(connection);
+        given(async().actions(action(context -> {
+                try {
+                    Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                    Assert.assertNotNull(connection);
 
-                        //WHEN
-                        connection.commit();
-                    } catch (SQLException e) {
-                        throw new CitrusRuntimeException(e);
-                    }
+                    //WHEN
+                    connection.commit();
+                } catch (SQLException e) {
+                    throw new CitrusRuntimeException(e);
                 }
-            }
+            })
         ));
 
         //THEN
@@ -145,20 +135,17 @@ public class JdbcTransactionsIT extends TestNGCitrusSupport {
     @CitrusTest
     public void testRollbackTransaction() {
         //GIVEN
-        given(async().actions(new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
-                        Assert.assertNotNull(connection);
+        given(async().actions(action(context -> {
+                try {
+                    Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                    Assert.assertNotNull(connection);
 
-                        //WHEN
-                        connection.rollback();
-                    } catch (SQLException e) {
-                        throw new CitrusRuntimeException(e);
-                    }
+                    //WHEN
+                    connection.rollback();
+                } catch (SQLException e) {
+                    throw new CitrusRuntimeException(e);
                 }
-            }
+            })
         ));
 
         //THEN

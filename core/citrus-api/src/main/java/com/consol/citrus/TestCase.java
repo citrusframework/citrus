@@ -18,6 +18,8 @@ package com.consol.citrus;
 
 import java.util.Map;
 
+import com.consol.citrus.common.Described;
+import com.consol.citrus.common.Named;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
 
@@ -28,7 +30,7 @@ import com.consol.citrus.context.TestContext;
  * @since 2006
  */
 @SuppressWarnings({"unused", "JavaDoc"})
-public interface TestCase extends TestActionContainer {
+public interface TestCase extends TestActionContainer, Named, Described {
 
     /**
      * Starts the test case.
@@ -94,10 +96,7 @@ public interface TestCase extends TestActionContainer {
      */
     void setPackageName(final String packageName);
 
-    /**
-     * Get the test name.
-     * @return the test name.
-     */
+    @Override
     String getName();
 
     /**

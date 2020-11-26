@@ -22,9 +22,7 @@ import javax.xml.transform.TransformerFactory;
 import java.util.Locale;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.ws.UnitTestSupport;
@@ -42,6 +40,8 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.DefaultTestActionBuilder.action;
+
 /**
  * @author Christoph Deppisch
  */
@@ -55,22 +55,19 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testAssertSoapFault() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                fault.setFaultActorOrRole("SERVER");
+            fault.setFaultActorOrRole("SERVER");
 
-                throw new SoapFaultClientException(faultMessage);
-            }
-        };
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)
@@ -84,9 +81,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testAssertSoapFaultWithValidatorName() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
+        TestAction action = action(context -> {
                 SoapMessage faultMessage;
 
                 faultMessage = messageFactory.createWebServiceMessage();
@@ -98,8 +93,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
                 fault.setFaultActorOrRole("SERVER");
 
                 throw new SoapFaultClientException(faultMessage);
-            }
-        };
+        }).build();
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator("soapFaultValidator")
@@ -114,22 +108,19 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testAssertSoapFaultWithValidationMatchers() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                fault.setFaultActorOrRole("SERVER");
+            fault.setFaultActorOrRole("SERVER");
 
-                throw new SoapFaultClientException(faultMessage);
-            }
-        };
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)
@@ -143,20 +134,17 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testNoPrefix() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                throw new SoapFaultClientException(faultMessage);
-            }
-        };
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)
@@ -169,20 +157,17 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testWrongFaultCode() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-2002"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-2002"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                throw new SoapFaultClientException(faultMessage);
-            }
-        };
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)
@@ -202,22 +187,19 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testWrongFaultActor() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                fault.setFaultActorOrRole("CLIENT");
+            fault.setFaultActorOrRole("CLIENT");
 
-                throw new SoapFaultClientException(faultMessage);
-            }
-        };
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)
@@ -238,20 +220,17 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testWrongFaultString() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                throw new SoapFaultClientException(faultMessage);
-            }
-        };
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)
@@ -271,29 +250,26 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testAssertSoapFaultDetail() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                try {
-                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                    Transformer transformer = transformerFactory.newTransformer();
+            try {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
 
-                    transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), fault.addFaultDetail().getResult());
-                } catch (TransformerException e) {
-                    throw new CitrusRuntimeException(e);
-                }
-
-                throw new SoapFaultClientException(faultMessage);
+                transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), fault.addFaultDetail().getResult());
+            } catch (TransformerException e) {
+                throw new CitrusRuntimeException(e);
             }
-        };
+
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
@@ -308,29 +284,26 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testAssertSoapFaultDetailVariableSupport() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                try {
-                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                    Transformer transformer = transformerFactory.newTransformer();
+            try {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
 
-                    transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), fault.addFaultDetail().getResult());
-                } catch (TransformerException e) {
-                    throw new CitrusRuntimeException(e);
-                }
-
-                throw new SoapFaultClientException(faultMessage);
+                transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), fault.addFaultDetail().getResult());
+            } catch (TransformerException e) {
+                throw new CitrusRuntimeException(e);
             }
-        };
+
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         context.setVariable("faultReason", "Invalid request");
 
@@ -346,29 +319,26 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testAssertSoapFaultDetailResource() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                try {
-                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                    Transformer transformer = transformerFactory.newTransformer();
+            try {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
 
-                    transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), fault.addFaultDetail().getResult());
-                } catch (TransformerException e) {
-                    throw new CitrusRuntimeException(e);
-                }
-
-                throw new SoapFaultClientException(faultMessage);
+                transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), fault.addFaultDetail().getResult());
+            } catch (TransformerException e) {
+                throw new CitrusRuntimeException(e);
             }
-        };
+
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)
@@ -382,29 +352,26 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testAssertSoapFaultDetailResourceVariableSupport() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                try {
-                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                    Transformer transformer = transformerFactory.newTransformer();
+            try {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
 
-                    transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), fault.addFaultDetail().getResult());
-                } catch (TransformerException e) {
-                    throw new CitrusRuntimeException(e);
-                }
-
-                throw new SoapFaultClientException(faultMessage);
+                transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), fault.addFaultDetail().getResult());
+            } catch (TransformerException e) {
+                throw new CitrusRuntimeException(e);
             }
-        };
+
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         context.setVariable("faultReason", "Invalid request");
 
@@ -420,31 +387,28 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testAssertMultipleSoapFaultDetails() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                SoapFaultDetail faultDetail = fault.addFaultDetail();
-                try {
-                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                    Transformer transformer = transformerFactory.newTransformer();
+            SoapFaultDetail faultDetail = fault.addFaultDetail();
+            try {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
 
-                    transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), faultDetail.getResult());
-                    transformer.transform(new StringSource("<ErrorDetail><Code>1001</Code></ErrorDetail>"), faultDetail.getResult());
-                } catch (TransformerException e) {
-                    throw new CitrusRuntimeException(e);
-                }
-
-                throw new SoapFaultClientException(faultMessage);
+                transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), faultDetail.getResult());
+                transformer.transform(new StringSource("<ErrorDetail><Code>1001</Code></ErrorDetail>"), faultDetail.getResult());
+            } catch (TransformerException e) {
+                throw new CitrusRuntimeException(e);
             }
-        };
+
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
@@ -460,31 +424,28 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Test
     public void testAssertMultipleSoapFaultDetailsWithResource() throws Exception {
-        TestAction action = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                SoapMessage faultMessage;
+        TestAction action = action(context -> {
+            SoapMessage faultMessage;
 
-                faultMessage = messageFactory.createWebServiceMessage();
+            faultMessage = messageFactory.createWebServiceMessage();
 
-                SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
-                        "Internal server error",
-                        Locale.GERMANY);
+            SoapFault fault =((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                    "Internal server error",
+                    Locale.GERMANY);
 
-                SoapFaultDetail faultDetail = fault.addFaultDetail();
-                try {
-                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                    Transformer transformer = transformerFactory.newTransformer();
+            SoapFaultDetail faultDetail = fault.addFaultDetail();
+            try {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
 
-                    transformer.transform(new StringSource("<ErrorDetail><Code>1001</Code></ErrorDetail>"), faultDetail.getResult());
-                    transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), faultDetail.getResult());
-                } catch (TransformerException e) {
-                    throw new CitrusRuntimeException(e);
-                }
-
-                throw new SoapFaultClientException(faultMessage);
+                transformer.transform(new StringSource("<ErrorDetail><Code>1001</Code></ErrorDetail>"), faultDetail.getResult());
+                transformer.transform(new StringSource("<FaultDetail><Reason>Invalid request</Reason></FaultDetail>"), faultDetail.getResult());
+            } catch (TransformerException e) {
+                throw new CitrusRuntimeException(e);
             }
-        };
+
+            throw new SoapFaultClientException(faultMessage);
+        }).build();
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)

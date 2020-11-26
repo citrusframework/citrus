@@ -24,6 +24,9 @@ import java.util.Optional;
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActor;
+import com.consol.citrus.TestActorAware;
+import com.consol.citrus.common.Described;
+import com.consol.citrus.common.Named;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.SqlUtils;
 import org.slf4j.Logger;
@@ -41,7 +44,7 @@ import org.springframework.transaction.TransactionDefinition;
  *
  * @author Christoph Deppisch
  */
-public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSupport implements TestAction {
+public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSupport implements TestAction, Named, Described, TestActorAware {
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -131,27 +134,18 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
                 .getResource(context.replaceDynamicContentInString(sqlResourcePath)), lineDecorator);
     }
 
-    /**
-     * Gets this action's description.
-     * @return the description
-     */
+    @Override
     public String getDescription() {
         return description;
     }
 
-    /**
-     * Sets this test action's description.
-     * @param description the description to set
-     */
+    @Override
     public AbstractDatabaseConnectingTestAction setDescription(String description) {
         this.description = description;
         return this;
     }
 
-    /**
-     * Gets the name of the test action.
-     * @return the test action name.
-     */
+    @Override
     public String getName() {
         return name;
     }
@@ -204,10 +198,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         return transactionIsolationLevel;
     }
 
-    /**
-     * Gets the actor.
-     * @return the actor the actor to get.
-     */
+    @Override
     public TestActor getActor() {
         return actor;
     }

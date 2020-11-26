@@ -1,7 +1,6 @@
 package com.consol.citrus.actions;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
 
 /**
@@ -21,35 +20,5 @@ public class NoopTestAction implements TestAction {
     @Override
     public String getName() {
         return "noop";
-    }
-
-    @Override
-    public void setName(String name) {
-        // do nothing
-    }
-
-    @Override
-    public String getDescription() {
-        return "";
-    }
-
-    @Override
-    public TestAction setDescription(String description) {
-        return null;
-    }
-
-    @Override
-    public boolean isDisabled(TestContext context) {
-        return false;
-    }
-
-    @Override
-    public TestActor getActor() {
-        return null;
-    }
-
-    @Override
-    public TestAction setActor(TestActor actor) {
-        return null;
     }
 }

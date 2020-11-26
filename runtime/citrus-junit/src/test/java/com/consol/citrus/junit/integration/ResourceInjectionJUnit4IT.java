@@ -19,7 +19,6 @@ package com.consol.citrus.junit.integration;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestActionRunner;
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
@@ -32,6 +31,7 @@ import com.consol.citrus.junit.JUnit4CitrusSupport;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static com.consol.citrus.DefaultTestActionBuilder.action;
 import static com.consol.citrus.actions.CreateVariablesAction.Builder.createVariable;
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
@@ -59,13 +59,10 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusSupport {
         runner.run(echo("${message}"));
         runner.run(createVariable("random", number));
 
-        runner.run(new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                Assert.assertEquals(globalContext, context);
-                Assert.assertEquals(context.getVariable("random"), number);
-            }
-        });
+        runner.run(action(tc -> {
+            Assert.assertEquals(globalContext, tc);
+            Assert.assertEquals(tc.getVariable("random"), number);
+        }));
 
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(directEndpoint);
@@ -82,13 +79,10 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusSupport {
         runner.run(echo("${message}"));
         runner.run(createVariable("random", number));
 
-        runner.run(new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                Assert.assertEquals(globalContext, context);
-                Assert.assertEquals(context.getVariable("random"), number);
-            }
-        });
+        runner.run(action(tc -> {
+            Assert.assertEquals(globalContext, tc);
+            Assert.assertEquals(tc.getVariable("random"), number);
+        }));
 
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(directEndpoint);

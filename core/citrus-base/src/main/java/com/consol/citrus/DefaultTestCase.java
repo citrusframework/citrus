@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.consol.citrus.common.Named;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.AfterTest;
 import com.consol.citrus.container.BeforeTest;
@@ -20,7 +19,7 @@ import com.consol.citrus.util.TestUtils;
  * performs the test lifecycle such as start, finish, before and after test.
  * @author Christoph Deppisch
  */
-public class DefaultTestCase extends AbstractActionContainer implements TestCase, TestGroupAware, TestParameterAware, Named {
+public class DefaultTestCase extends AbstractActionContainer implements TestCase, TestGroupAware, TestParameterAware {
 
     /** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */

@@ -18,14 +18,13 @@ package com.consol.citrus.integration.container;
 
 import java.io.IOException;
 
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.DefaultTestActionBuilder.action;
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 import static com.consol.citrus.actions.FailAction.Builder.fail;
 import static com.consol.citrus.container.Assert.Builder.assertException;
@@ -91,11 +90,6 @@ public class AssertJavaIT extends TestNGCitrusSupport {
 
         run(assertException()
                 .exception(CitrusRuntimeException.class).message("Unknown variable 'foo'")
-                .when(new AbstractTestAction() {
-                    @Override
-                    public void doExecute(TestContext context) {
-                        context.getVariable("foo");
-                    }
-                }));
+                .when(action(context -> context.getVariable("foo"))));
     }
 }

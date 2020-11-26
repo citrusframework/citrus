@@ -21,6 +21,7 @@ import java.util.Optional;
 import com.consol.citrus.CitrusVersion;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.common.Described;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
@@ -191,9 +192,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
                 debug("TEST ACTION CONTAINER with " + ((TestActionContainer)testAction).getActionCount() + " embedded actions");
             }
 
-            if (StringUtils.hasText(testAction.getDescription())) {
+            if (testAction instanceof Described &&
+                    StringUtils.hasText(((Described) testAction).getDescription())) {
                 debug("");
-                debug(testAction.getDescription());
+                debug(((Described) testAction).getDescription());
                 debug("");
             }
         }

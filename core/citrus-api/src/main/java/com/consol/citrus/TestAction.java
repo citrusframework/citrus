@@ -24,6 +24,7 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  * @since 2006
  */
+@FunctionalInterface
 public interface TestAction {
     /**
      * Main execution method doing all work
@@ -35,43 +36,25 @@ public interface TestAction {
      * Name of test action injected as Spring bean name
      * @return name as String
      */
-    String getName();
-
-    /**
-     * Name of test action injected as Spring bean name
-     * @return name as String
-     */
-    void setName(String name);
-
-    /**
-     * Description of this test action
-     * @return description as String
-     */
-    String getDescription();
-
-    /**
-     * Description setter.
-     * @param description
-     */
-    TestAction setDescription(String description);
+    default String getName() {
+        return this.getClass().getSimpleName();
+    }
 
     /**
      * Checks if this action is disabled.
      * @param context the current test context.
      * @return true if action is marked disabled.
      */
-    boolean isDisabled(TestContext context);
+    default boolean isDisabled(TestContext context) {
+        return false;
+    }
 
     /**
      * Gets the test actor associated with this test action.
      * @return
      */
-    TestActor getActor();
-
-    /**
-     * Sets the test actor associated with this test action.
-     * @param actor
-     */
-    TestAction setActor(TestActor actor);
+    default TestActor getActor() {
+        return null;
+    }
 
 }

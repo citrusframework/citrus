@@ -18,10 +18,10 @@ package com.consol.citrus.integration.container;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.DefaultTestActionBuilder.action;
 import static com.consol.citrus.actions.CreateVariablesAction.Builder.createVariable;
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 import static com.consol.citrus.container.Iterate.Builder.iterate;
@@ -53,13 +53,9 @@ public class IterateJavaIT extends TestNGCitrusSupport {
                 .step(5)
                 .actions(echo("index is: ${i}")));
 
-        AbstractTestAction anonymous = new AbstractTestAction() {
-            @Override
-            public void doExecute(TestContext context) {
-                log.info(context.getVariable("index"));
-            }
-        };
+        AbstractTestAction anonymous = action(context -> log.info(context.getVariable("index"))).build();
 
-        run(iterate().condition("i lt 5").index("i").actions(createVariable("index", "${i}"), () -> anonymous));
+        run(iterate().condition("i lt 5").index("i")
+                .actions(createVariable("index", "${i}"), () -> anonymous));
     }
 }

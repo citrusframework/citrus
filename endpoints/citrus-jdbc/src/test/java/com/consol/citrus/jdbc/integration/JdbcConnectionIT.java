@@ -20,10 +20,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.db.driver.JdbcDriver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -36,6 +34,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.DefaultTestActionBuilder.action;
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.container.Assert.Builder.assertException;
@@ -67,18 +66,15 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
         //GIVEN
 
         //WHEN
-        when(new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+        when(action(context -> {
+                try {
+                    Connection connection = jdbcDriver.connect(serverUrl, new Properties());
         //THEN
-                        Assert.assertNotNull(connection);
-                    } catch (SQLException e) {
-                        throw new CitrusRuntimeException("Failed to connect", e);
-                    }
+                    Assert.assertNotNull(connection);
+                } catch (SQLException e) {
+                    throw new CitrusRuntimeException("Failed to connect", e);
                 }
-            }
+            })
         );
     }
 
@@ -91,17 +87,14 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
 
         //WHEN
         when(async().actions(
-            new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
-                        Assert.assertNotNull(connection);
-                    } catch (SQLException e) {
-                        throw new CitrusRuntimeException("Failed to connect", e);
-                    }
+            action(context -> {
+                try {
+                    Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                    Assert.assertNotNull(connection);
+                } catch (SQLException e) {
+                    throw new CitrusRuntimeException("Failed to connect", e);
                 }
-            }
+            })
         ));
 
         //THEN
@@ -130,19 +123,16 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
 
         //WHEN
         when(async().actions(
-            new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    try {
-                        jdbcDriver.connect(serverUrl, properties);
-                    } catch (SQLException e) {
-                        Assert.assertTrue(e.getMessage().contains("java.sql.SQLException: Failed to connect to server"));
-                        return;
-                    }
-
-                    throw new CitrusRuntimeException("Missing exception for failed connection");
+            action(context -> {
+                try {
+                    jdbcDriver.connect(serverUrl, properties);
+                } catch (SQLException e) {
+                    Assert.assertTrue(e.getMessage().contains("java.sql.SQLException: Failed to connect to server"));
+                    return;
                 }
-            }
+
+                throw new CitrusRuntimeException("Missing exception for failed connection");
+            })
         ));
 
         //THEN
@@ -162,19 +152,16 @@ public class JdbcConnectionIT extends TestNGCitrusSupport {
         database.setValue("testdb");
 
         given(async().actions(
-            new AbstractTestAction() {
-                @Override
-                public void doExecute(TestContext context) {
-                    try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
-                        Assert.assertNotNull(connection);
-        //WHEN
-                        connection.close();
-                    } catch (SQLException e) {
-                        throw new CitrusRuntimeException("Failed to connect", e);
-                    }
+            action(context -> {
+                try {
+                    Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                    Assert.assertNotNull(connection);
+    //WHEN
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new CitrusRuntimeException("Failed to connect", e);
                 }
-            }
+            })
         ));
 
         when(receive(jdbcServer)
