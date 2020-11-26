@@ -16,6 +16,7 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.AbstractSuiteContainerBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
@@ -59,6 +60,25 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer implements 
 
         if (!success) {
             throw new CitrusRuntimeException("Error in after suite");
+        }
+    }
+
+    /**
+     * Container builder.
+     */
+    public static class Builder extends AbstractSuiteContainerBuilder<SequenceAfterSuite, Builder> {
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder afterSuite() {
+            return new Builder();
+        }
+
+        @Override
+        public SequenceAfterSuite build() {
+            return super.build(new SequenceAfterSuite());
         }
     }
 }

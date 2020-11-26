@@ -16,6 +16,7 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.AbstractSuiteContainerBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
@@ -32,15 +33,15 @@ import org.slf4j.LoggerFactory;
 public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements BeforeSuite {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SequenceBeforeSuite.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SequenceBeforeSuite.class);
 
     @Override
     public void doExecute(TestContext context) {
-        log.info("Entering before suite block");
+        LOG.info("Entering before suite block");
 
-        if (log.isDebugEnabled()) {
-            log.debug("Executing " + actions.size() + " actions before suite");
-            log.debug("");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Executing " + actions.size() + " actions before suite");
+            LOG.debug("");
         }
 
         for (TestActionBuilder<?> actionBuilder : actions)  {
@@ -49,9 +50,28 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements
                 /* Executing test action and validate its success */
                 action.execute(context);
             } catch (Exception e) {
-                log.error("Task failed " + action.getName() + "Nested exception is: ", e);
+                LOG.error("Task failed " + action.getName() + "Nested exception is: ", e);
                 throw new CitrusRuntimeException(e);
             }
+        }
+    }
+
+    /**
+     * Container builder.
+     */
+    public static class Builder extends AbstractSuiteContainerBuilder<SequenceBeforeSuite, Builder> {
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder beforeSuite() {
+            return new Builder();
+        }
+
+        @Override
+        public SequenceBeforeSuite build() {
+            return super.build(new SequenceBeforeSuite());
         }
     }
 }

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.AbstractTestBoundaryContainerBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
@@ -32,7 +33,7 @@ import org.springframework.util.CollectionUtils;
 public class SequenceAfterTest extends AbstractTestBoundaryActionContainer implements AfterTest {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SequenceAfterTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SequenceAfterTest.class);
 
     @Override
     public void doExecute(TestContext context) {
@@ -40,16 +41,35 @@ public class SequenceAfterTest extends AbstractTestBoundaryActionContainer imple
             return;
         }
 
-        log.info("Entering after test block");
+        LOG.info("Entering after test block");
 
-        if (log.isDebugEnabled()) {
-            log.debug("Executing " + actions.size() + " actions after test");
-            log.debug("");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Executing " + actions.size() + " actions after test");
+            LOG.debug("");
         }
 
         for (TestActionBuilder<?> actionBuilder : actions)  {
             TestAction action = actionBuilder.build();
             action.execute(context);
+        }
+    }
+
+    /**
+     * Container builder.
+     */
+    public static class Builder extends AbstractTestBoundaryContainerBuilder<SequenceAfterTest, Builder> {
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder afterTest() {
+            return new Builder();
+        }
+
+        @Override
+        public SequenceAfterTest build() {
+            return super.build(new SequenceAfterTest());
         }
     }
 }

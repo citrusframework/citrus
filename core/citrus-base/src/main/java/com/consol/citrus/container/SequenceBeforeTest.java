@@ -16,6 +16,7 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.AbstractTestBoundaryContainerBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
@@ -32,7 +33,7 @@ import org.springframework.util.CollectionUtils;
 public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer implements BeforeTest {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SequenceBeforeTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SequenceBeforeTest.class);
 
     @Override
     public void doExecute(TestContext context) {
@@ -40,16 +41,35 @@ public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer impl
             return;
         }
 
-        log.info("Entering before test block");
+        LOG.info("Entering before test block");
 
-        if (log.isDebugEnabled()) {
-            log.debug("Executing " + actions.size() + " actions before test");
-            log.debug("");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Executing " + actions.size() + " actions before test");
+            LOG.debug("");
         }
 
         for (TestActionBuilder<?> actionBuilder : actions)  {
             TestAction action = actionBuilder.build();
             action.execute(context);
+        }
+    }
+
+    /**
+     * Container builder.
+     */
+    public static class Builder extends AbstractTestBoundaryContainerBuilder<SequenceBeforeTest, Builder> {
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder beforeTest() {
+            return new Builder();
+        }
+
+        @Override
+        public SequenceBeforeTest build() {
+            return super.build(new SequenceBeforeTest());
         }
     }
 }

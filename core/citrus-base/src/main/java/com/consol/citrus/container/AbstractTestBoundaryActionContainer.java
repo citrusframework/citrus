@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 
@@ -34,9 +32,6 @@ import org.springframework.util.StringUtils;
  * @since 2.0
  */
 public abstract class AbstractTestBoundaryActionContainer extends AbstractActionContainer {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SequenceBeforeTest.class);
 
     /** Test case name pattern that this sequence container matches with */
     private String namePattern;
@@ -100,6 +95,8 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
 
         return true;
     }
+
+
 
     /**
      * Checks on included test groups if we should execute sequence. Included group list should have
