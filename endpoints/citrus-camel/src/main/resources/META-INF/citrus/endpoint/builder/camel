@@ -1,0 +1,4 @@
+async=com.consol.citrus.camel.endpoint.CamelEndpointBuilder
+inOnly=com.consol.citrus.camel.endpoint.CamelEndpointBuilder
+sync=com.consol.citrus.camel.endpoint.CamelSyncEndpointBuilder
+inOut=com.consol.citrus.camel.endpoint.CamelSyncEndpointBuilder

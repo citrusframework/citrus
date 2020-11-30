@@ -42,6 +42,12 @@ public class CamelEndpointComponent extends AbstractEndpointComponent {
         if (resourcePath.startsWith("sync:")) {
             endpoint = new CamelSyncEndpoint();
             endpoint.getEndpointConfiguration().setEndpointUri(resourcePath.substring("sync:".length()) + getParameterString(parameters, CamelSyncEndpointConfiguration.class));
+        } else if (resourcePath.startsWith("inOut:")) {
+            endpoint = new CamelSyncEndpoint();
+            endpoint.getEndpointConfiguration().setEndpointUri(resourcePath.substring("inOut:".length()) + getParameterString(parameters, CamelSyncEndpointConfiguration.class));
+        } else if (resourcePath.startsWith("inOnly:")) {
+            endpoint = new CamelEndpoint();
+            endpoint.getEndpointConfiguration().setEndpointUri(resourcePath.substring("inOnly:".length()) + getParameterString(parameters, CamelEndpointConfiguration.class));
         } else {
             endpoint = new CamelEndpoint();
             endpoint.getEndpointConfiguration().setEndpointUri(resourcePath + getParameterString(parameters, CamelEndpointConfiguration.class));

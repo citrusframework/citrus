@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.endpoint;
 
+import com.consol.citrus.camel.endpoint.CamelEndpoints;
 import com.consol.citrus.channel.endpoint.builder.MessageChannelEndpoints;
 import com.consol.citrus.docker.endpoint.builder.DockerEndpoints;
 import com.consol.citrus.ftp.endpoint.builder.FtpEndpoints;
@@ -190,6 +191,14 @@ public abstract class CitrusEndpoints {
      */
     public static KafkaEndpoints kafka() {
         return KafkaEndpoints.kafka();
+    }
+
+    /**
+     * Creates new CamelEndpoint endpoint builder.
+     * @return
+     */
+    public static CamelEndpoints camel() {
+        return CamelEndpoints.camel();
     }
 
 }

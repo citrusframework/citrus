@@ -17,26 +17,42 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms.endpoint;
+package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.endpoint.builder.AsyncSyncEndpointBuilder;
 
 /**
  * @author Christoph Deppisch
  */
-public final class JmsEndpoints extends AsyncSyncEndpointBuilder<JmsEndpointBuilder, JmsSyncEndpointBuilder> {
+public final class CamelEndpoints extends AsyncSyncEndpointBuilder<CamelEndpointBuilder, CamelSyncEndpointBuilder> {
     /**
      * Private constructor setting the sync and async builder implementation.
      */
-    private JmsEndpoints() {
-        super(new JmsEndpointBuilder(), new JmsSyncEndpointBuilder());
+    private CamelEndpoints() {
+        super(new CamelEndpointBuilder(), new CamelSyncEndpointBuilder());
     }
 
     /**
-     * Static entry method for Jms endpoint builders.
+     * Static entry method for Camel endpoint builders.
      * @return
      */
-    public static JmsEndpoints jms() {
-        return new JmsEndpoints();
+    public static CamelEndpoints camel() {
+        return new CamelEndpoints();
+    }
+
+    /**
+     * Gets the endpoint builder using inOnly pattern.
+     * @return
+     */
+    public CamelEndpointBuilder inOnly() {
+        return asynchronous();
+    }
+
+    /**
+     * Gets the endpoint builder using inOut pattern.
+     * @return
+     */
+    public CamelSyncEndpointBuilder inOut() {
+        return synchronous();
     }
 }

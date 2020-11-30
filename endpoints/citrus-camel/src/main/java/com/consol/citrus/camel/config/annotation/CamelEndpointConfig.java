@@ -17,26 +17,51 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms.endpoint;
+package com.consol.citrus.camel.config.annotation;
 
-import com.consol.citrus.endpoint.builder.AsyncSyncEndpointBuilder;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import com.consol.citrus.annotations.CitrusEndpointConfig;
 
 /**
  * @author Christoph Deppisch
+ * @since 2.5
  */
-public final class JmsEndpoints extends AsyncSyncEndpointBuilder<JmsEndpointBuilder, JmsSyncEndpointBuilder> {
-    /**
-     * Private constructor setting the sync and async builder implementation.
-     */
-    private JmsEndpoints() {
-        super(new JmsEndpointBuilder(), new JmsSyncEndpointBuilder());
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.FIELD })
+@CitrusEndpointConfig(qualifier = "camel.async")
+public @interface CamelEndpointConfig {
 
     /**
-     * Static entry method for Jms endpoint builders.
+     * Endpoint uri.
      * @return
      */
-    public static JmsEndpoints jms() {
-        return new JmsEndpoints();
-    }
+    String endpointUri() default "";
+
+    /**
+     * Camel context reference.
+     * @return
+     */
+    String camelContext() default "";
+
+    /**
+     * Message converter reference.
+     * @return
+     */
+    String messageConverter() default "";
+
+    /**
+     * Timeout.
+     * @return
+     */
+    long timeout() default 5000L;
+
+    /**
+     * Test actor.
+     * @return
+     */
+    String actor() default "";
 }

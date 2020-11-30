@@ -1,0 +1,4 @@
+async=com.consol.citrus.camel.config.annotation.CamelEndpointConfigParser
+inOnly=com.consol.citrus.camel.config.annotation.CamelEndpointConfigParser
+sync=com.consol.citrus.camel.config.annotation.CamelSyncEndpointConfigParser
+inOut=com.consol.citrus.camel.config.annotation.CamelSyncEndpointConfigParser
