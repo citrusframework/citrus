@@ -28,6 +28,7 @@ import java.util.StringTokenizer;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.TypeConversionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -77,6 +78,10 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
             }
 
             Endpoint endpoint = createEndpoint(path, parameters, context);
+
+            if (endpoint instanceof ReferenceResolverAware) {
+                ((ReferenceResolverAware) endpoint).setReferenceResolver(context.getReferenceResolver());
+            }
 
             if (StringUtils.hasText(endpointName)) {
                 endpoint.setName(endpointName);
