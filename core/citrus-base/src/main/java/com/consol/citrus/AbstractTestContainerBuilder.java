@@ -71,18 +71,22 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
         return builder;
     }
 
-    /**
-     * Adds actions to the container.
-     * @param container
-     * @return
-     */
-    protected T build(T container) {
+    @Override
+    public T build() {
+        T container = doBuild();
+
         container.setActions(actions.stream()
                 .map(TestActionBuilder::build)
                 .filter(action -> !(action instanceof NoopTestAction))
                 .collect(Collectors.toList()));
         return container;
     }
+
+    /**
+     * Builds the container.
+     * @return
+     */
+    protected abstract T doBuild();
 
     @Override
     public List<TestActionBuilder<?>> getActions() {
@@ -99,12 +103,17 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     public static <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container)  {
         return new AbstractTestContainerBuilder<T, B>() {
             @Override
+            public T doBuild() {
+                return container;
+            }
+
+            @Override
             public T build() {
                 if (container.getActions().size() > 0) {
                     return container;
                 }
 
-                return build(container);
+                return super.build();
             }
         };
     }

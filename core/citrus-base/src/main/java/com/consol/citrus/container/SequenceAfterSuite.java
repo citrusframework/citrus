@@ -77,8 +77,8 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer implements 
         }
 
         @Override
-        public SequenceAfterSuite build() {
-            return super.build(new SequenceAfterSuite());
+        public SequenceAfterSuite doBuild() {
+            return new SequenceAfterSuite();
         }
     }
 }

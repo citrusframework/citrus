@@ -202,6 +202,11 @@ public class Async extends AbstractActionContainer {
 
         @Override
         public Async build() {
+            return doBuild();
+        }
+
+        @Override
+        protected Async doBuild() {
             return new Async(this);
         }
     }

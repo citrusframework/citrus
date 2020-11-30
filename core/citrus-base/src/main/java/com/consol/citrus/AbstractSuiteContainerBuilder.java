@@ -109,12 +109,14 @@ public abstract class AbstractSuiteContainerBuilder<T extends AbstractSuiteActio
     }
 
     @Override
-    protected T build(T container) {
+    public T build() {
+        T container = super.build();
+
         container.setSuiteNames(suiteNames);
         container.setTestGroups(testGroups);
         container.setSystemProperties(systemProperties);
         container.setEnv(env);
 
-        return super.build(container);
+        return container;
     }
 }

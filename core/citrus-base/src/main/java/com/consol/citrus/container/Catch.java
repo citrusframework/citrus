@@ -109,8 +109,8 @@ public class Catch extends AbstractActionContainer {
         }
 
         @Override
-        public Catch build() {
-            return super.build(new Catch(this));
+        public Catch doBuild() {
+            return new Catch(this);
         }
     }
 }

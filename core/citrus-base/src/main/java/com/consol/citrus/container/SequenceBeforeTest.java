@@ -68,8 +68,8 @@ public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer impl
         }
 
         @Override
-        public SequenceBeforeTest build() {
-            return super.build(new SequenceBeforeTest());
+        public SequenceBeforeTest doBuild() {
+            return new SequenceBeforeTest();
         }
     }
 }

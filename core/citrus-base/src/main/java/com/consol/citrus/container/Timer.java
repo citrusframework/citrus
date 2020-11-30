@@ -238,12 +238,12 @@ public class Timer extends AbstractActionContainer implements StopTimer {
         }
 
         @Override
-        public Timer build() {
+        public Timer doBuild() {
             if (StringUtils.isEmpty(timerId)) {
                 timerId = "citrus-timer-" + serialNumber();
             }
 
-            return super.build(new Timer(this));
+            return new Timer(this);
         }
     }
 }

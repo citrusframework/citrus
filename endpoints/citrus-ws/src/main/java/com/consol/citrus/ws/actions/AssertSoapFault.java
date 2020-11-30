@@ -394,6 +394,11 @@ public class AssertSoapFault extends AbstractActionContainer {
 
         @Override
         public AssertSoapFault build() {
+            return doBuild();
+        }
+
+        @Override
+        public AssertSoapFault doBuild() {
             if (validationContext == null) {
                 this.validationContext = new SoapFaultValidationContext.Builder();
             }

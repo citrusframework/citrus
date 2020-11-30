@@ -149,8 +149,8 @@ public class Conditional extends AbstractActionContainer {
         }
 
         @Override
-        public Conditional build() {
-            return super.build(new Conditional(this));
+        public Conditional doBuild() {
+            return new Conditional(this);
         }
     }
 }

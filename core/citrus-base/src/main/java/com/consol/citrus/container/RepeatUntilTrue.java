@@ -79,8 +79,8 @@ public class RepeatUntilTrue extends AbstractIteratingActionContainer {
         }
 
         @Override
-        public RepeatUntilTrue build() {
-            return super.build(new RepeatUntilTrue(this));
+        public RepeatUntilTrue doBuild() {
+            return new RepeatUntilTrue(this);
         }
     }
 }

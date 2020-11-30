@@ -140,8 +140,8 @@ public class Parallel extends AbstractActionContainer {
         }
 
         @Override
-        public Parallel build() {
-            return super.build(new Parallel(this));
+        public Parallel doBuild() {
+            return new Parallel(this);
         }
     }
 }

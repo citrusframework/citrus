@@ -189,8 +189,8 @@ public class Assert extends AbstractActionContainer {
         }
 
         @Override
-        public Assert build() {
-            return super.build(new Assert(this));
+        public Assert doBuild() {
+            return new Assert(this);
         }
     }
 

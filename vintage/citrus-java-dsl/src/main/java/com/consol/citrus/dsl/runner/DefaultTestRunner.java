@@ -243,12 +243,17 @@ public class DefaultTestRunner implements TestRunner {
             }
 
             @Override
+            protected T doBuild() {
+                return container;
+            }
+
+            @Override
             public T build() {
                 if (container.getActions().size() > 0) {
                     return container;
                 }
 
-                return build(container);
+                return super.build();
             }
         };
 

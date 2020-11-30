@@ -119,6 +119,11 @@ public class AssertSoapFaultBuilder extends AbstractTestContainerBuilder<AssertS
     }
 
     @Override
+    protected AssertSoapFault doBuild() {
+        return delegate.doBuild();
+    }
+
+    @Override
     public AssertSoapFault build() {
         if (detailValidationContext != null) {
             this.validationContext.detail(detailValidationContext.build());

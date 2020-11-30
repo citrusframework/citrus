@@ -25,6 +25,7 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  * @since 2.3
  */
+@FunctionalInterface
 public interface IteratingConditionExpression {
 
     /**

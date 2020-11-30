@@ -38,7 +38,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     private final Long autoSleep;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
 
     /**
      * Default constructor.
@@ -61,7 +61,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
             } catch (CitrusRuntimeException e) {
                 exception = e;
 
-                log.info("Caught exception of type " + e.getClass().getName() + " '" +
+                LOG.info("Caught exception of type " + e.getClass().getName() + " '" +
                         e.getMessage() + "' - performing retry #" + index);
 
                 doAutoSleep();
@@ -70,7 +70,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
         }
 
         if (exception != null) {
-            log.info("All retries failed - raising exception " + exception.getClass().getName());
+            LOG.info("All retries failed - raising exception " + exception.getClass().getName());
             throw exception;
         }
     }
@@ -80,15 +80,15 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
      */
     private void doAutoSleep() {
         if (autoSleep > 0) {
-            log.info("Sleeping " + autoSleep + " milliseconds");
+            LOG.info("Sleeping " + autoSleep + " milliseconds");
 
             try {
                 Thread.sleep(autoSleep);
             } catch (InterruptedException e) {
-                log.error("Error during doc generation", e);
+                LOG.error("Error during doc generation", e);
             }
 
-            log.info("Returning after " + autoSleep + " milliseconds");
+            LOG.info("Returning after " + autoSleep + " milliseconds");
         }
     }
 
@@ -146,8 +146,8 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
         }
 
         @Override
-        public RepeatOnErrorUntilTrue build() {
-            return super.build(new RepeatOnErrorUntilTrue(this));
+        public RepeatOnErrorUntilTrue doBuild() {
+            return new RepeatOnErrorUntilTrue(this);
         }
     }
 }

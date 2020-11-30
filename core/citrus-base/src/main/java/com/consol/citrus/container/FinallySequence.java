@@ -56,8 +56,8 @@ public class FinallySequence extends Sequence {
         }
 
         @Override
-        public FinallySequence build() {
-            return super.build(new FinallySequence(this));
+        public FinallySequence doBuild() {
+            return new FinallySequence(this);
         }
     }
 }

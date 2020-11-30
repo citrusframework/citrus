@@ -66,8 +66,8 @@ public class Sequence extends AbstractActionContainer {
         }
 
         @Override
-        public Sequence build() {
-            return super.build(new Sequence(this));
+        public Sequence doBuild() {
+            return new Sequence(this);
         }
     }
 }

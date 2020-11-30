@@ -111,13 +111,15 @@ public abstract class AbstractTestBoundaryContainerBuilder<T extends AbstractTes
     }
 
     @Override
-    protected T build(T container) {
+    public T build() {
+        T container = super.build();
+
         container.setNamePattern(namePattern);
         container.setPackageNamePattern(packageNamePattern);
         container.setTestGroups(testGroups);
         container.setSystemProperties(systemProperties);
         container.setEnv(env);
 
-        return super.build(container);
+        return container;
     }
 }

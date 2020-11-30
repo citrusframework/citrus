@@ -68,8 +68,8 @@ public class SequenceAfterTest extends AbstractTestBoundaryActionContainer imple
         }
 
         @Override
-        public SequenceAfterTest build() {
-            return super.build(new SequenceAfterTest());
+        public SequenceAfterTest doBuild() {
+            return new SequenceAfterTest();
         }
     }
 }

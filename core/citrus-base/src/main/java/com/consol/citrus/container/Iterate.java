@@ -85,8 +85,8 @@ public class Iterate extends AbstractIteratingActionContainer {
         }
 
         @Override
-        public Iterate build() {
-            return super.build(new Iterate(this));
+        public Iterate doBuild() {
+            return new Iterate(this);
         }
     }
 }
