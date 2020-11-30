@@ -54,6 +54,15 @@ public abstract class AbstractIteratingContainerBuilder<T extends AbstractIterat
         return self;
     }
 
+    @Override
+    public T build() {
+        if (condition == null && conditionExpression == null) {
+            conditionExpression = (index, context) -> index > 10;
+        }
+
+        return super.build();
+    }
+
     /**
      * Gets the condition.
      * @return the condition
