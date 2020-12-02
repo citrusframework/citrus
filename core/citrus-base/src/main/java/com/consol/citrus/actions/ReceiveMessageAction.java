@@ -921,6 +921,25 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param processor
          * @return
          */
+        public B transform(MessageProcessor processor) {
+            return process(processor);
+        }
+
+        /**
+         * Adds message processor on the received message as fluent builder.
+         * @param builder
+         * @return
+         */
+        public B transform(MessageProcessor.Builder<?, ?> builder) {
+            return transform(builder.build());
+        }
+
+
+        /**
+         * Adds message processor on the received message.
+         * @param processor
+         * @return
+         */
         public B process(MessageProcessor processor) {
             if (processor instanceof VariableExtractor) {
                 this.variableExtractors.add((VariableExtractor) processor);

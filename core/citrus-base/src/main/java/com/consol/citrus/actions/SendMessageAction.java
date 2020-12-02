@@ -574,7 +574,25 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Adds message processor.
+         * Adds message processor on the message to be sent.
+         * @param processor
+         * @return
+         */
+        public B transform(MessageProcessor processor) {
+            return process(processor);
+        }
+
+        /**
+         * Adds message processor on the message to be sent as fluent builder.
+         * @param builder
+         * @return
+         */
+        public B transform(MessageProcessor.Builder<?, ?> builder) {
+            return transform(builder.build());
+        }
+
+        /**
+         * Adds message processor on the message to be sent.
          * @param processor
          * @return
          */
@@ -588,7 +606,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Adds message processor as fluent builder.
+         * Adds message processor on the message to be sent as fluent builder.
          * @param builder
          * @return
          */
