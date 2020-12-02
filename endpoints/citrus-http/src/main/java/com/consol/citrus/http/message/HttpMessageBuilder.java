@@ -23,9 +23,9 @@ import java.util.stream.Collectors;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.builder.StaticMessageBuilder;
 
-public class HttpMessageContentBuilder extends StaticMessageContentBuilder {
+public class HttpMessageBuilder extends StaticMessageBuilder {
 
     private final CookieEnricher cookieEnricher;
 
@@ -33,7 +33,7 @@ public class HttpMessageContentBuilder extends StaticMessageContentBuilder {
      * Default constructor using fields.
      * @param message The template http message to use for message creation
      */
-    public HttpMessageContentBuilder(final HttpMessage message) {
+    public HttpMessageBuilder(final HttpMessage message) {
         this(message, new CookieEnricher());
     }
 
@@ -43,18 +43,18 @@ public class HttpMessageContentBuilder extends StaticMessageContentBuilder {
      * @param message The template http message to use for message creation
      * @param cookieEnricher The cookie enricher to use for message creation
      */
-    HttpMessageContentBuilder(final HttpMessage message,
-                              final CookieEnricher cookieEnricher) {
+    HttpMessageBuilder(final HttpMessage message,
+                       final CookieEnricher cookieEnricher) {
         super(message);
         this.cookieEnricher = cookieEnricher;
     }
 
     @Override
-    public Message buildMessageContent(final TestContext context, final String messageType) {
+    public Message build(final TestContext context, final String messageType) {
         //Copy the initial message, so that it is not manipulated during the test.
         final HttpMessage message = new HttpMessage(super.getMessage());
 
-        final Message constructed = super.buildMessageContent(context, messageType);
+        final Message constructed = super.build(context, messageType);
 
         message.setName(constructed.getName());
         message.setType(constructed.getType());

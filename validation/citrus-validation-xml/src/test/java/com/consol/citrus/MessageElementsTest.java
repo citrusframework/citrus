@@ -28,7 +28,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
@@ -72,7 +72,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "text-value");
         validateMessageElements.put("//sub-elementB", "text-value");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -108,7 +108,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "");
         validateMessageElements.put("//sub-elementB", "");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -145,7 +145,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementB/@attribute", "");
         validateMessageElements.put("//root/element/sub-elementC/@attribute", "");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -181,7 +181,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "null");
         validateMessageElements.put("//sub-elementB", "null");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -217,7 +217,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA/@attribute", "A");
         validateMessageElements.put("//sub-elementB/@attribute", "B");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -253,7 +253,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-element-wrong", "text-value");
         validateMessageElements.put("//sub-element-wrong", "text-value");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -289,7 +289,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "text-value-wrong");
         validateMessageElements.put("//sub-elementB", "text-value-wrong");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -325,7 +325,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA/@attribute", "wrong-value");
         validateMessageElements.put("//sub-elementB/@attribute", "wrong-value");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -361,7 +361,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA/@attribute-wrong", "A");
         validateMessageElements.put("//sub-elementB/@attribute-wrong", "B");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -393,7 +393,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -438,7 +438,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -483,7 +483,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -537,7 +537,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -582,7 +582,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -627,7 +627,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -672,7 +672,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -717,7 +717,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -767,7 +767,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -817,7 +817,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -865,7 +865,7 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"

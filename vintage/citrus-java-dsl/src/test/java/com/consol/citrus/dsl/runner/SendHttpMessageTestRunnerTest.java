@@ -24,7 +24,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -93,9 +93,9 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
 
-        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 4L);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
@@ -108,9 +108,9 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
         action = ((SendMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
 
-        messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
+        messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Bar");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 3L);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
@@ -154,9 +154,9 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
 
-        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 7L);
         Assert.assertNotEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT);
@@ -201,9 +201,9 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
 
-        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1L);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
@@ -241,9 +241,9 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
 
-        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 4L);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), "GET");
@@ -285,9 +285,9 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
 
-        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
+        HttpMessageBuilder messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 5L);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), "GET");

@@ -34,7 +34,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageContentBuilder;
+import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageHeaderDataBuilder;
@@ -49,8 +49,8 @@ import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
@@ -82,7 +82,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     private final List<MessageProcessor> messageProcessors;
 
     /** Builder constructing a control message */
-    private final MessageContentBuilder messageBuilder;
+    private final MessageBuilder messageBuilder;
 
     /** Forks the message sending action so other actions can take place while this
      * message sender is waiting for the synchronous response */
@@ -192,7 +192,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      * @return
      */
     protected Message createMessage(TestContext context, String messageType) {
-        Message message = messageBuilder.buildMessageContent(context, messageType);
+        Message message = messageBuilder.build(context, messageType);
 
         if (message.getPayload() != null) {
             for (final MessageProcessor processor: context.getMessageProcessors().getMessageProcessors()) {
@@ -271,7 +271,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      * Gets the messageBuilder.
      * @return the messageBuilder
      */
-    public MessageContentBuilder getMessageBuilder() {
+    public MessageBuilder getMessageBuilder() {
         return messageBuilder;
     }
 
@@ -358,7 +358,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         protected String endpointUri;
         protected List<VariableExtractor> variableExtractors = new ArrayList<>();
         protected List<MessageProcessor> messageProcessors = new ArrayList<>();
-        protected MessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        protected MessageBuilder messageBuilder = new DefaultMessageBuilder();
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;
         protected String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
@@ -406,7 +406,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @param messageBuilder
          * @return
          */
-        public B message(MessageContentBuilder messageBuilder) {
+        public B message(MessageBuilder messageBuilder) {
             this.messageBuilder = messageBuilder;
             return self;
         }
@@ -417,13 +417,13 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B message(Message message) {
-            StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(message);
+            StaticMessageBuilder staticMessageBuilder = StaticMessageBuilder.withMessage(message);
 
             if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).getHeaderBuilders().forEach(staticMessageContentBuilder::addHeaderBuilder);
+                ((WithHeaderBuilder) messageBuilder).getHeaderBuilders().forEach(staticMessageBuilder::addHeaderBuilder);
             }
 
-            message(staticMessageContentBuilder);
+            message(staticMessageBuilder);
             messageType(message.getType());
             return self;
         }

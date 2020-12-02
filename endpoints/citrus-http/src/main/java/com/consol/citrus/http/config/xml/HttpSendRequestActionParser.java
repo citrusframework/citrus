@@ -25,8 +25,8 @@ import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.http.message.HttpMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -125,14 +125,14 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             }
         }
 
-        HttpMessageContentBuilder httpMessageContentBuilder = new HttpMessageContentBuilder(httpMessage);
-        DefaultMessageContentBuilder messageContentBuilder = constructMessageBuilder(body, builder);
+        HttpMessageBuilder httpMessageBuilder = new HttpMessageBuilder(httpMessage);
+        DefaultMessageBuilder messageContentBuilder = constructMessageBuilder(body, builder);
 
-        httpMessageContentBuilder.setName(messageContentBuilder.getName());
-        httpMessageContentBuilder.setPayloadBuilder(messageContentBuilder.getPayloadBuilder());
-        messageContentBuilder.getHeaderBuilders().forEach(httpMessageContentBuilder::addHeaderBuilder);
+        httpMessageBuilder.setName(messageContentBuilder.getName());
+        httpMessageBuilder.setPayloadBuilder(messageContentBuilder.getPayloadBuilder());
+        messageContentBuilder.getHeaderBuilders().forEach(httpMessageBuilder::addHeaderBuilder);
 
-        builder.addPropertyValue("messageBuilder", httpMessageContentBuilder);
+        builder.addPropertyValue("messageBuilder", httpMessageBuilder);
 
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
         parseExtractHeaderElements(element, variableExtractors);

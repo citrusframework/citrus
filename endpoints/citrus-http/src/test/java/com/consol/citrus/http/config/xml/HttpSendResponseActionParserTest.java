@@ -18,7 +18,7 @@ package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.MessageHeaders;
@@ -33,45 +33,45 @@ public class HttpSendResponseActionParserTest extends AbstractActionParserTest<S
         assertActionCount(4);
         assertActionClassAndName(SendMessageAction.class, "http:send-response");
 
-        HttpMessageContentBuilder httpMessageContentBuilder;
+        HttpMessageBuilder httpMessageBuilder;
 
         SendMessageAction action = getNextTestActionFromTest();
 
-        httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageContentBuilder);
+        httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
+        Assert.assertNotNull(httpMessageBuilder);
 
-        Assert.assertEquals(httpMessageContentBuilder.buildMessagePayload(context,action.getMessageType()), "");
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().size(), 2L);
-        Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context,action.getMessageType()), "");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 2L);
+        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
-        httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageContentBuilder);
-        Assert.assertEquals(httpMessageContentBuilder.buildMessagePayload(context, action.getMessageType()), "");
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().size(), 5L);
-        Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), "404");
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "NOT_FOUND");
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
+        httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
+        Assert.assertNotNull(httpMessageBuilder);
+        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 5L);
+        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
+        Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), "404");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "NOT_FOUND");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
-        httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageContentBuilder);
-        Assert.assertEquals(httpMessageContentBuilder.buildMessagePayload(context, action.getMessageType()), "<user><id>1001</id><name>new_user</name></user>");
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get("userId"), "1001");
+        httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
+        Assert.assertNotNull(httpMessageBuilder);
+        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "<user><id>1001</id><name>new_user</name></user>");
+        Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get("userId"), "1001");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
-        httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
-        Assert.assertNotNull(httpMessageContentBuilder);
-        Assert.assertEquals(httpMessageContentBuilder.buildMessagePayload(context, action.getMessageType()), "");
+        httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
+        Assert.assertNotNull(httpMessageBuilder);
+        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());
         Assert.assertEquals(action.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));

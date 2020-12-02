@@ -30,7 +30,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import org.mockito.Mockito;
@@ -72,7 +72,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreElements() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>no validation</sub-elementA>"
@@ -110,7 +110,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element>"
                     + "<sub-element attribute='A'>no validation</sub-element>"
@@ -147,7 +147,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element>"
                     + "<sub-element attribute='wrong'>no validation</sub-element>"
@@ -187,7 +187,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element>"
                     + "<another-element>no validation</another-element>"
@@ -214,7 +214,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreAttributes() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='no validation'>text-value</sub-elementA>"
@@ -241,7 +241,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreAttributesAll() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='no validation'>text-value</sub-elementA>"
@@ -284,7 +284,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-element attribute='no validation'>text-value</sub-element>"
@@ -324,7 +324,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element additonal-attribute='some'>Wrong text</element>"
                         + "</root>"));
@@ -346,7 +346,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreElementsAndValidate() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>no validation</sub-elementA>"
@@ -378,7 +378,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreElementsByPlaceholder() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>@ignore@</sub-elementA>"
@@ -396,7 +396,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreSubElementsByPlaceholder() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >@ignore@</element>"
             + "</root>"));
@@ -410,7 +410,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreAttributesByPlaceholder() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='@ignore@'>text-value</sub-elementA>"
@@ -428,7 +428,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "No result for XPath expression: '//something-else'")
     public void testIgnoreElementsNoMatch() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"

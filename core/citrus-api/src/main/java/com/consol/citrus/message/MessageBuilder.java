@@ -27,7 +27,7 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  */
 @FunctionalInterface
-public interface MessageContentBuilder {
+public interface MessageBuilder {
 
     /**
      * Builds the control message.
@@ -35,5 +35,5 @@ public interface MessageContentBuilder {
      * @param messageType the message type to build.
      * @return the constructed message object.
      */
-    Message buildMessageContent(TestContext context, String messageType);
+    Message build(TestContext context, String messageType);
 }

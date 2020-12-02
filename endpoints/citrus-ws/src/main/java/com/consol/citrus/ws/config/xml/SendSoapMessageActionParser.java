@@ -24,7 +24,7 @@ import java.util.Map;
 import com.consol.citrus.config.xml.AbstractSendMessageActionFactoryBean;
 import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.message.builder.DefaultHeaderBuilder;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.consol.citrus.ws.message.SoapAttachment;
@@ -61,7 +61,7 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
     }
 
     @Override
-    protected void parseHeaderElements(Element actionElement, DefaultMessageContentBuilder messageBuilder, List<ValidationContext> validationContexts) {
+    protected void parseHeaderElements(Element actionElement, DefaultMessageBuilder messageBuilder, List<ValidationContext> validationContexts) {
         super.parseHeaderElements(actionElement, messageBuilder, validationContexts);
 
         Map<String, Object> headers = new HashMap<>();

@@ -26,7 +26,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapFault;
 import com.consol.citrus.ws.message.SoapMessage;
@@ -168,7 +168,7 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
         private List<String> faultDetailResourcePaths = new ArrayList<>();
 
         public Builder() {
-            message(new StaticMessageContentBuilder(soapMessage));
+            message(new StaticMessageBuilder(soapMessage));
         }
 
         /**

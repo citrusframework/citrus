@@ -38,7 +38,7 @@ import com.consol.citrus.message.builder.FileResourcePayloadBuilder;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
 import com.consol.citrus.validation.xhtml.XhtmlXpathMessageValidator;
@@ -85,7 +85,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -107,7 +107,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -128,7 +128,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -152,7 +152,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResource() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(
                 new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload.xml"));
 
@@ -177,7 +177,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadDataVariablesSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
 
         context.setVariable("myText", "Hello World!");
@@ -203,7 +203,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResourceVariablesSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(
                 new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload-with-variables.xml"));
 
@@ -230,7 +230,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResourceFunctionsSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(
                 new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml"));
 
@@ -255,7 +255,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPath() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
 
         Map<String, Object> overwriteElements = new HashMap<>();
@@ -287,7 +287,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsDotNotation() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
 
         Map<String, Object> overwriteElements = new HashMap<>();
@@ -319,7 +319,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPathWithNamespaces() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>?</ns0:Message></ns0:TestRequest>"));
 
@@ -357,7 +357,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPathWithNestedNamespaces() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">?</ns1:Message></ns0:TestRequest>"));
 
@@ -395,7 +395,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPathWithDefaultNamespaces() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>?</Message></TestRequest>"));
 
@@ -432,7 +432,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageHeaders() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -462,7 +462,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageHeadersVariablesSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         context.setVariable("myOperation", "sayHello");
@@ -494,7 +494,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithUnknownVariablesInMessageHeaders() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -527,7 +527,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithUnknownVariableInMessagePayload() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -554,7 +554,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromHeaders() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Map<String, String> headers = new HashMap<String, String>();
@@ -591,7 +591,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsFromMessageXPath() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/TestRequest/Message", "Hello World!");
@@ -621,7 +621,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathDefaultNamespaceSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/:TestRequest/:Message", "Hello World!");
@@ -653,7 +653,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathNamespaceSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
@@ -685,7 +685,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathNestedNamespaceSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
@@ -717,7 +717,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathNamespaceBindings() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/pfx:TestRequest/pfx:Message", "Hello World!");
@@ -753,7 +753,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPath() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Map<String, String> extractMessageElements = new HashMap<String, String>();
@@ -788,7 +788,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNodeList() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest>" +
                 "<Message>Hello</Message>" +
                 "<Message>ByeBye</Message>" +
@@ -829,7 +829,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathDefaultNamespaceSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>"));
 
@@ -871,7 +871,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>"));
 
@@ -913,7 +913,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNestedNamespaceSupport() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
                 "<ns1:Message>Hello World!</ns1:Message></TestRequest>"));
 
@@ -955,7 +955,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceBindings() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>"));
 
@@ -1001,7 +1001,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithTimeout() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -1026,7 +1026,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelector() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         String messageSelector = "Operation = 'sayHello'";
@@ -1055,7 +1055,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorAndTimeout() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         String messageSelector = "Operation = 'sayHello'";
@@ -1085,7 +1085,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorMap() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Map<String, String> messageSelector = new HashMap<>();
@@ -1115,7 +1115,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorMapAndTimeout() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Map<String, String> messageSelector = new HashMap<>();
@@ -1145,7 +1145,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMessageTimeout() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -1173,7 +1173,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadAsExpected() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Message controlMessage = new DefaultMessage("");
 
@@ -1196,7 +1196,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadUnexpected() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         Message controlMessage = new DefaultMessage("");
@@ -1230,7 +1230,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -1257,7 +1257,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         reset(endpoint, consumer, endpointConfiguration);

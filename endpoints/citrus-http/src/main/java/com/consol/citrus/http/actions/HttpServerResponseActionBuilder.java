@@ -20,7 +20,7 @@ import javax.servlet.http.Cookie;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.message.Message;
 import org.springframework.http.HttpStatus;
@@ -38,7 +38,7 @@ public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessa
      * Default constructor.
      */
     public HttpServerResponseActionBuilder() {
-        message(new HttpMessageContentBuilder(httpMessage));
+        message(new HttpMessageBuilder(httpMessage));
     }
 
     @Override

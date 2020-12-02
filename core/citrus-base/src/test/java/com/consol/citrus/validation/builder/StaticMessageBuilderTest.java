@@ -33,18 +33,18 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
+public class StaticMessageBuilderTest extends AbstractTestNGUnitTest {
 
-    private StaticMessageContentBuilder messageBuilder;
+    private StaticMessageBuilder messageBuilder;
 
     @Test
     public void testBuildMessageContent() {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
-        messageBuilder = new StaticMessageContentBuilder(testMessage);
+        messageBuilder = new StaticMessageBuilder(testMessage);
 
-        final Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
+        final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
         Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
         Assert.assertEquals(message.getHeaders().size(), testMessage.getHeaders().size() + 1);
@@ -57,10 +57,10 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
-        messageBuilder = new StaticMessageContentBuilder(testMessage);
+        messageBuilder = new StaticMessageBuilder(testMessage);
         messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(Collections.singletonMap("additional", "new")));
 
-        final Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
+        final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
         Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
         Assert.assertNotNull(message.getHeader("additional"));
@@ -72,10 +72,10 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
-        messageBuilder = new StaticMessageContentBuilder(testMessage);
+        messageBuilder = new StaticMessageBuilder(testMessage);
         messageBuilder.addHeaderBuilder(new DefaultHeaderDataBuilder("TestMessageData"));
 
-        final Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
+        final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
         Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
         Assert.assertEquals(message.getHeaderData().size(), 1L);
@@ -87,11 +87,11 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
-        messageBuilder = new StaticMessageContentBuilder(testMessage);
+        messageBuilder = new StaticMessageBuilder(testMessage);
         messageBuilder.addHeaderBuilder(new DefaultHeaderDataBuilder("TestMessageData1"));
         messageBuilder.addHeaderBuilder(new DefaultHeaderDataBuilder("TestMessageData2"));
 
-        final Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
+        final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
         Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
         Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
@@ -105,11 +105,11 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
-        messageBuilder = new StaticMessageContentBuilder(testMessage);
+        messageBuilder = new StaticMessageBuilder(testMessage);
         messageBuilder.addHeaderBuilder(
                 new FileResourceHeaderDataBuilder("classpath:com/consol/citrus/validation/builder/payload-data-resource.txt"));
 
-        final Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
+        final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
         Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
         Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
@@ -125,9 +125,9 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         final Message testMessage = new DefaultMessage("${payload}")
                 .setHeader("header1", "${header}");
 
-        messageBuilder = new StaticMessageContentBuilder(testMessage);
+        messageBuilder = new StaticMessageBuilder(testMessage);
 
-        final Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
+        final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), "TestMessage");
         Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
         Assert.assertEquals(message.getHeader("header1"), "value1");
@@ -138,9 +138,9 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         final Message testMessage = new DefaultMessage(1000)
                 .setHeader("header1", 1000);
 
-        messageBuilder = new StaticMessageContentBuilder(testMessage);
+        messageBuilder = new StaticMessageBuilder(testMessage);
 
-        final Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
+        final Message message = messageBuilder.build(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
         Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
         Assert.assertEquals(message.getHeader("header1"), testMessage.getHeader("header1"));
@@ -149,7 +149,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     @Test
     public void testNullValueInHeaders() {
         //GIVEN
-        messageBuilder = new StaticMessageContentBuilder(new DefaultMessage()
+        messageBuilder = new StaticMessageBuilder(new DefaultMessage()
                                             .setHeader("foo", "bar")
                                             .setHeader("bar", null));
 

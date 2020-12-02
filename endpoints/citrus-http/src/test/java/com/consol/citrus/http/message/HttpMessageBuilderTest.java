@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-public class HttpMessageContentBuilderTest {
+public class HttpMessageBuilderTest {
 
     private HttpMessage message;
 
@@ -46,10 +46,10 @@ public class HttpMessageContentBuilderTest {
     public void testDefaultMessageHeader() {
 
         //GIVEN
-        final HttpMessageContentBuilder builder = getBuilder();
+        final HttpMessageBuilder builder = getBuilder();
 
         //WHEN
-        final Message builtMessage = builder.buildMessageContent(new TestContext(), MessageType.XML.name());
+        final Message builtMessage = builder.build(new TestContext(), MessageType.XML.name());
 
         //THEN
         assertEquals(builtMessage.getHeaders().entrySet().size(), 3);
@@ -62,7 +62,7 @@ public class HttpMessageContentBuilderTest {
     public void testHeaderVariableSubstitution() {
 
         //GIVEN
-        final HttpMessageContentBuilder builder = getBuilder();
+        final HttpMessageBuilder builder = getBuilder();
 
         final TestContext testContext = new TestContext();
         testContext.setVariable("testHeader", "foo");
@@ -71,7 +71,7 @@ public class HttpMessageContentBuilderTest {
         message.setHeader("${testHeader}", "${testValue}");
 
         //WHEN
-        final Message builtMessage = builder.buildMessageContent(testContext, String.valueOf(MessageType.XML));
+        final Message builtMessage = builder.build(testContext, String.valueOf(MessageType.XML));
 
         //THEN
         assertEquals(builtMessage.getHeader("foo"), "bar");
@@ -81,11 +81,11 @@ public class HttpMessageContentBuilderTest {
     public void testTemplateHeadersArePreserved(){
 
         //GIVEN
-        final HttpMessageContentBuilder builder = getBuilder();
+        final HttpMessageBuilder builder = getBuilder();
         message.setHeader("foo", "bar");
 
         //WHEN
-        final HttpMessage builtMessage = (HttpMessage) builder.buildMessageContent(
+        final HttpMessage builtMessage = (HttpMessage) builder.build(
                 new TestContext(),
                 String.valueOf(MessageType.XML));
 
@@ -109,12 +109,12 @@ public class HttpMessageContentBuilderTest {
                 eq(testContextMock)))
                 .thenReturn(Collections.singletonList(enrichedCookie));
 
-        final HttpMessageContentBuilder builder = new HttpMessageContentBuilder(
+        final HttpMessageBuilder builder = new HttpMessageBuilder(
                 message,
                 cookieEnricherMock);
 
         //WHEN
-        final HttpMessage message = (HttpMessage) builder.buildMessageContent(
+        final HttpMessage message = (HttpMessage) builder.build(
                 testContextMock, String.valueOf(MessageType.XML));
 
         //THEN
@@ -122,8 +122,8 @@ public class HttpMessageContentBuilderTest {
         assertTrue(message.getCookies().contains(enrichedCookie));
     }
 
-    private HttpMessageContentBuilder getBuilder() {
-        return new HttpMessageContentBuilder(
+    private HttpMessageBuilder getBuilder() {
+        return new HttpMessageBuilder(
                 message,
                 mock(CookieEnricher.class));
     }

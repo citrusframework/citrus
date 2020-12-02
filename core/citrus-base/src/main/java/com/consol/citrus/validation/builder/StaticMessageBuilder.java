@@ -35,7 +35,7 @@ import com.consol.citrus.message.builder.DefaultPayloadBuilder;
  *
  * @author Christoph Deppisch
  */
-public class StaticMessageContentBuilder extends DefaultMessageContentBuilder {
+public class StaticMessageBuilder extends DefaultMessageBuilder {
 
     protected static final List<String> FILTERED_HEADERS = Arrays.asList(
             MessageHeaders.ID,
@@ -48,7 +48,7 @@ public class StaticMessageContentBuilder extends DefaultMessageContentBuilder {
     /**
      * Default constructor with static message to be built by this message builder.
      */
-    public StaticMessageContentBuilder(final Message message) {
+    public StaticMessageBuilder(final Message message) {
         this.message = message;
         this.setName(message.getName());
     }
@@ -89,8 +89,8 @@ public class StaticMessageContentBuilder extends DefaultMessageContentBuilder {
     /**
      * Default constructor with static message to be built by this message builder.
      */
-    public static StaticMessageContentBuilder withMessage(final Message message) {
-        return new StaticMessageContentBuilder(message);
+    public static StaticMessageBuilder withMessage(final Message message) {
+        return new StaticMessageBuilder(message);
     }
 
     /**

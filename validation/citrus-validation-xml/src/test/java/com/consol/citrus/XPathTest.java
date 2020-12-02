@@ -26,7 +26,7 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
@@ -76,7 +76,7 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("//ns1:ns-element", "namespace");
         validateMessageElements.put("//*[.='search-for']", "search-for");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .schemaValidation(false)
@@ -120,7 +120,7 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("//:ns-element", "namespace");
         validateMessageElements.put("//*[.='search-for']", "search-for");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .schemaValidation(false)
@@ -160,7 +160,7 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .schemaValidation(false)
@@ -200,7 +200,7 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:ns-element", "namespace");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://citrus");
@@ -255,7 +255,7 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("boolean:/ns1:root/:element", "true");
         validateMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "false");
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .schemaValidation(false)
@@ -306,7 +306,7 @@ public class XPathTest extends UnitTestSupport {
                 .expressions(extractMessageElements)
                 .build();
 
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
                 .schemaValidation(false)

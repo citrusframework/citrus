@@ -25,7 +25,7 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractReceiveMessageActionFactoryBean;
 import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 import com.consol.citrus.message.builder.DefaultHeaderBuilder;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.consol.citrus.ws.message.SoapAttachment;
@@ -64,7 +64,7 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
     }
 
     @Override
-    protected void parseHeaderElements(Element actionElement, DefaultMessageContentBuilder messageBuilder, List<ValidationContext> validationContexts) {
+    protected void parseHeaderElements(Element actionElement, DefaultMessageBuilder messageBuilder, List<ValidationContext> validationContexts) {
         super.parseHeaderElements(actionElement, messageBuilder, validationContexts);
 
         Map<String, Object> headers = new HashMap<>();

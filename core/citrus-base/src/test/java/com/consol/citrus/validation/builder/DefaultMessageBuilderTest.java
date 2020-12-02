@@ -35,17 +35,17 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
+public class DefaultMessageBuilderTest extends AbstractTestNGUnitTest {
 
     private final String variablePayloadResource = "classpath:com/consol/citrus/validation/builder/variable-data-resource.txt";
     private final String initialVariableTestPayload = "{ \"person\": { \"name\": \"${name}\", \"age\": 20} }";
     private final String resultingVariableTestPayload = "{ \"person\": { \"name\": \"Frauke\", \"age\": 20} }";
 
-    private DefaultMessageContentBuilder messageBuilder;
+    private DefaultMessageBuilder messageBuilder;
 
     @BeforeMethod
     public void setUp() {
-        messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("TestMessagePayload"));
 
         context.getMessageProcessors().setMessageProcessors(Collections.emptyList());
@@ -53,7 +53,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMessageBuilder() {
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
     }
@@ -63,7 +63,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("This ${placeholder} contains variables!"));
         context.setVariable("placeholder", "payload data");
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "This payload data contains variables!");
     }
@@ -72,22 +72,22 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithPayloadResource() {
         String textPayloadResource = "classpath:com/consol/citrus/validation/builder/payload-data-resource.txt";
 
-        messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder(textPayloadResource));
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessageData");
     }
 
     @Test
     public void testMessageBuilderWithPayloadResourceVariableSupport() {
-        messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder = new DefaultMessageBuilder();
 
         messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder(variablePayloadResource));
         context.setVariable("placeholder", "payload data");
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "This payload data contains variables!");
     }
@@ -98,7 +98,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
         headers.put("operation", "unitTesting");
         messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
         assertNotNull(resultingMessage.getHeader("operation"));
@@ -118,7 +118,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
         headers.put("stringValue", "{string}:5.0");
         messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
         assertNotNull(resultingMessage.getHeader("intValue"));
@@ -147,7 +147,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
         context.setVariable("operation", "unitTesting");
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
         assertNotNull(resultingMessage.getHeader("operation"));
@@ -158,7 +158,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithHeaderData() {
         messageBuilder.addHeaderBuilder(new DefaultHeaderDataBuilder("MessageHeaderData"));
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
         assertEquals(resultingMessage.getHeaderData().size(), 1L);
@@ -170,7 +170,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder.addHeaderBuilder(new DefaultHeaderDataBuilder("MessageHeaderData1"));
         messageBuilder.addHeaderBuilder(new DefaultHeaderDataBuilder("MessageHeaderData2"));
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
         assertEquals(resultingMessage.getHeaderData().size(), 2L);
@@ -183,7 +183,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder.addHeaderBuilder(new DefaultHeaderDataBuilder("This ${placeholder} contains variables!"));
         context.setVariable("placeholder", "header data");
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
         assertEquals(resultingMessage.getHeaderData().size(), 1L);
@@ -195,7 +195,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
         String headerResource = "classpath:com/consol/citrus/validation/builder/header-data-resource.txt";
         messageBuilder.addHeaderBuilder(new FileResourceHeaderDataBuilder(headerResource));
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
         assertEquals(resultingMessage.getHeaderData().size(), 1L);
@@ -207,7 +207,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder.addHeaderBuilder(new FileResourceHeaderDataBuilder(variablePayloadResource));
         context.setVariable("placeholder", "header data");
 
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
+        Message resultingMessage = messageBuilder.build(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
         assertEquals(resultingMessage.getHeaderData().size(), 1L);
@@ -222,7 +222,7 @@ public class DefaultMessageContentBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder(initialVariableTestPayload));
 
         //WHEN
-        final Message message = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
+        final Message message = messageBuilder.build(context, MessageType.JSON.name());
 
         //THEN
         assertEquals(message.getPayload(), resultingVariableTestPayload);

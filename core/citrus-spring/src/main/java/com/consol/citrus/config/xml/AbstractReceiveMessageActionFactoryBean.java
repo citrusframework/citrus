@@ -7,7 +7,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
@@ -131,7 +131,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      *
      * @param messageBuilder the messageBuilder to set
      */
-    public void setMessageBuilder(DefaultMessageContentBuilder messageBuilder) {
+    public void setMessageBuilder(DefaultMessageBuilder messageBuilder) {
         getBuilder().message(messageBuilder);
     }
 

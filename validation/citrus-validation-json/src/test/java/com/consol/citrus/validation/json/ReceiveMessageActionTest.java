@@ -35,7 +35,7 @@ import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -74,7 +74,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsJsonPath() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("{ \"TestRequest\": { \"Message\": \"?\" }}"));
 
@@ -109,7 +109,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageJsonPath() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}"));
 
@@ -149,7 +149,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveMessageWithJsonPathValidation() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..text", "Hello World!");
@@ -183,7 +183,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = ValidationException.class)
     public void testReceiveMessageWithJsonPathValidationFailure() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..text", "Hello Citrus!");
@@ -212,7 +212,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testReceiveMessageWithJsonPathValidationNoPathResult() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.person.age", "50");
@@ -242,7 +242,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadAsExpected() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
         Message controlMessage = new DefaultMessage("");
 
@@ -266,7 +266,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadUnexpected() {
-        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("{\"text\":\"Hello World!\"}"));
 
         Message controlMessage = new DefaultMessage("");

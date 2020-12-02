@@ -23,9 +23,9 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -121,14 +121,14 @@ public class HttpSendResponseActionParser extends SendMessageActionParser {
             }
         }
 
-        HttpMessageContentBuilder httpMessageContentBuilder = new HttpMessageContentBuilder(httpMessage);
-        DefaultMessageContentBuilder messageContentBuilder = constructMessageBuilder(body, builder);
+        HttpMessageBuilder httpMessageBuilder = new HttpMessageBuilder(httpMessage);
+        DefaultMessageBuilder messageContentBuilder = constructMessageBuilder(body, builder);
 
-        httpMessageContentBuilder.setName(messageContentBuilder.getName());
-        httpMessageContentBuilder.setPayloadBuilder(messageContentBuilder.getPayloadBuilder());
-        messageContentBuilder.getHeaderBuilders().forEach(httpMessageContentBuilder::addHeaderBuilder);
+        httpMessageBuilder.setName(messageContentBuilder.getName());
+        httpMessageBuilder.setPayloadBuilder(messageContentBuilder.getPayloadBuilder());
+        messageContentBuilder.getHeaderBuilders().forEach(httpMessageBuilder::addHeaderBuilder);
 
-        builder.addPropertyValue("messageBuilder", httpMessageContentBuilder);
+        builder.addPropertyValue("messageBuilder", httpMessageBuilder);
 
         return builder.getBeanDefinition();
     }

@@ -8,7 +8,7 @@ import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageContentBuilder;
+import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.MarshallingHeaderDataBuilder;
 import com.consol.citrus.message.builder.MarshallingPayloadBuilder;
@@ -93,7 +93,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @param messageBuilder
      * @return
      */
-    public B messageBuilder(MessageContentBuilder messageBuilder) {
+    public B messageBuilder(MessageBuilder messageBuilder) {
         delegate.message(messageBuilder);
         return self;
     }

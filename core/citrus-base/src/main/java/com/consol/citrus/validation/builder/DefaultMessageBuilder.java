@@ -28,7 +28,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageContentBuilder;
+import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageHeaderBuilder;
 import com.consol.citrus.message.MessageHeaderDataBuilder;
 import com.consol.citrus.message.MessageHeaderType;
@@ -39,12 +39,12 @@ import com.consol.citrus.message.WithHeaderBuilder;
 import com.consol.citrus.message.WithPayloadBuilder;
 
 /**
- * Abstract control message builder is aware of message headers and delegates message payload
- * generation to subclass.
+ * Default message builder delegates to given message header builders and message payload
+ * builder.
  *
  * @author Christoph Deppisch
  */
-public class DefaultMessageContentBuilder implements MessageContentBuilder, WithPayloadBuilder, WithHeaderBuilder, Named {
+public class DefaultMessageBuilder implements MessageBuilder, WithPayloadBuilder, WithHeaderBuilder, Named {
 
     /** Optional message name */
     private String name = "";
@@ -57,7 +57,7 @@ public class DefaultMessageContentBuilder implements MessageContentBuilder, With
      * subclass implementation.
      */
     @Override
-    public Message buildMessageContent(final TestContext context, final String messageType) {
+    public Message build(final TestContext context, final String messageType) {
         final Object payload = buildMessagePayload(context, messageType);
 
         try {

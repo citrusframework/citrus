@@ -34,7 +34,7 @@ import com.consol.citrus.message.builder.FileResourcePayloadBuilder;
 import com.consol.citrus.message.builder.script.GroovyFileResourcePayloadBuilder;
 import com.consol.citrus.message.builder.script.GroovyScriptPayloadBuilder;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.interceptor.BinaryMessageProcessor;
@@ -61,8 +61,8 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      *
      * @param messageElement
      */
-    public DefaultMessageContentBuilder constructMessageBuilder(Element messageElement, BeanDefinitionBuilder actionBuilder) {
-        DefaultMessageContentBuilder messageBuilder = null;
+    public DefaultMessageBuilder constructMessageBuilder(Element messageElement, BeanDefinitionBuilder actionBuilder) {
+        DefaultMessageBuilder messageBuilder = null;
 
         if (messageElement != null) {
             messageBuilder = parsePayloadTemplateBuilder(messageElement, actionBuilder);
@@ -73,7 +73,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         }
 
         if (messageBuilder == null) {
-            messageBuilder = new DefaultMessageContentBuilder();
+            messageBuilder = new DefaultMessageBuilder();
         }
 
         if (messageElement != null && messageElement.hasAttribute("name")) {
@@ -87,8 +87,8 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * @param messageElement
      * @return
      */
-    private DefaultMessageContentBuilder parseScriptBuilder(Element messageElement) {
-        DefaultMessageContentBuilder scriptMessageBuilder = null;
+    private DefaultMessageBuilder parseScriptBuilder(Element messageElement) {
+        DefaultMessageBuilder scriptMessageBuilder = null;
 
         Element builderElement = DomUtils.getChildElementByTagName(messageElement, "builder");
         if (builderElement != null) {
@@ -98,7 +98,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
                 throw new BeanCreationException("Missing message builder type - please define valid type " +
                         "attribute for message builder");
             } else if (builderType.equals("groovy")) {
-                scriptMessageBuilder = new DefaultMessageContentBuilder();
+                scriptMessageBuilder = new DefaultMessageBuilder();
             } else {
                 throw new BeanCreationException("Unsupported message builder type: '" + builderType + "'");
             }
@@ -127,20 +127,20 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * @param messageElement
      * @param actionBuilder
      */
-    private DefaultMessageContentBuilder parsePayloadTemplateBuilder(Element messageElement, BeanDefinitionBuilder actionBuilder) {
-        DefaultMessageContentBuilder messageBuilder;
+    private DefaultMessageBuilder parsePayloadTemplateBuilder(Element messageElement, BeanDefinitionBuilder actionBuilder) {
+        DefaultMessageBuilder messageBuilder;
 
         messageBuilder = parsePayloadElement(messageElement);
 
         Element xmlDataElement = DomUtils.getChildElementByTagName(messageElement, "data");
         if (xmlDataElement != null) {
-            messageBuilder = new DefaultMessageContentBuilder();
+            messageBuilder = new DefaultMessageBuilder();
             messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder(DomUtils.getTextValue(xmlDataElement).trim()));
         }
 
         Element xmlResourceElement = DomUtils.getChildElementByTagName(messageElement, "resource");
         if (xmlResourceElement != null) {
-            messageBuilder = new DefaultMessageContentBuilder();
+            messageBuilder = new DefaultMessageBuilder();
             if (xmlResourceElement.hasAttribute("charset")) {
                 messageBuilder.setPayloadBuilder(
                         new FileResourcePayloadBuilder(xmlResourceElement.getAttribute("file"), xmlResourceElement.getAttribute("charset")));
@@ -183,13 +183,13 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * Parses the xs:any payload elements nested in message element.
      * @param messageElement
      */
-    private DefaultMessageContentBuilder parsePayloadElement(Element messageElement) {
-        DefaultMessageContentBuilder messageBuilder = null;
+    private DefaultMessageBuilder parsePayloadElement(Element messageElement) {
+        DefaultMessageBuilder messageBuilder = null;
 
         // parse payload with xs-any element
         Element payloadElement = DomUtils.getChildElementByTagName(messageElement, "payload");
         if (payloadElement != null) {
-            messageBuilder = new DefaultMessageContentBuilder();
+            messageBuilder = new DefaultMessageBuilder();
 
             if (messageElement.hasAttribute("name")) {
                 messageBuilder.setName(messageElement.getAttribute("name"));
@@ -212,7 +212,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * @param messageBuilder the message content builder.
      * @param validationContexts list of validation contexts.
      */
-    protected void parseHeaderElements(Element actionElement, DefaultMessageContentBuilder messageBuilder, List<ValidationContext> validationContexts) {
+    protected void parseHeaderElements(Element actionElement, DefaultMessageBuilder messageBuilder, List<ValidationContext> validationContexts) {
         Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
         Map<String, Object> messageHeaders = new LinkedHashMap<>();
 

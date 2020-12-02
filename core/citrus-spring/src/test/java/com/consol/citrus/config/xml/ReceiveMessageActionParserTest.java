@@ -25,7 +25,7 @@ import com.consol.citrus.message.DelegatingPathExpressionProcessor;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.DelegatingPayloadVariableExtractor;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -46,7 +46,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         assertActionCount(18);
         assertActionClassAndName(ReceiveMessageAction.class, "receive");
 
-        DefaultMessageContentBuilder messageBuilder;
+        DefaultMessageBuilder messageBuilder;
 
         // 1st action
         ReceiveMessageAction action = getNextTestActionFromTest();
@@ -60,8 +60,8 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
@@ -83,8 +83,8 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
@@ -109,8 +109,8 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()),
                 FileUtils.readToString(FileUtils.getFileResource("classpath:com/consol/citrus/actions/test-request-payload.xml")));
@@ -136,8 +136,8 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 2);
@@ -156,8 +156,8 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
 
@@ -185,8 +185,8 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
         XmlMessageValidationContext xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(1);
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<ns:TestMessage xmlns:ns=\"http://www.consol.com\">Hello Citrus</ns:TestMessage>");
 
@@ -290,7 +290,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
 
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().size(), 2);
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$.json.text"), "Hello Citrus");
@@ -307,7 +307,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
 
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().size(), 2);
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$.json.text"), "Hello Citrus");
@@ -321,8 +321,8 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
         JsonMessageValidationContext jsonValidationContext = (JsonMessageValidationContext)action.getValidationContexts().get(2);
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
-        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
 

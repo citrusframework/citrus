@@ -29,7 +29,7 @@ import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
@@ -133,7 +133,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
     public static final class Builder extends SendSoapMessageBuilder<SendSoapMessageAction, Builder> {
 
         public Builder() {
-            message(new StaticMessageContentBuilder(soapMessage));
+            message(new StaticMessageBuilder(soapMessage));
         }
 
         @Override

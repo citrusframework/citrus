@@ -35,7 +35,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageContentBuilder;
+import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageHeaderDataBuilder;
@@ -56,8 +56,8 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -101,7 +101,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     private final long receiveTimeout;
 
     /** Builder constructing a control message */
-    private final MessageContentBuilder messageBuilder;
+    private final MessageBuilder messageBuilder;
 
     /** MessageValidator responsible for message validation */
     private final List<MessageValidator<? extends ValidationContext>> validators;
@@ -284,7 +284,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @return
      */
     protected Message createControlMessage(TestContext context, String messageType) {
-        Message message = messageBuilder.buildMessageContent(context, messageType);
+        Message message = messageBuilder.build(context, messageType);
 
         if (message.getPayload() != null) {
             for (final MessageProcessor processor: context.getMessageProcessors().getMessageProcessors()) {
@@ -446,7 +446,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Gets the messageBuilder.
      * @return the messageBuilder
      */
-    public MessageContentBuilder getMessageBuilder() {
+    public MessageBuilder getMessageBuilder() {
         return messageBuilder;
     }
 
@@ -497,16 +497,16 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private Endpoint endpoint;
         private String endpointUri;
         private long receiveTimeout = 0L;
-        private Map<String, Object> messageSelectorMap = new HashMap<>();
+        private final Map<String, Object> messageSelectorMap = new HashMap<>();
         private String messageSelector;
-        private MessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
-        private List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<>();
+        private MessageBuilder messageBuilder = new DefaultMessageBuilder();
+        private final List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<>();
         private DataDictionary<?> dataDictionary;
         private String dataDictionaryName;
         private ValidationCallback validationCallback;
-        private List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
-        private List<VariableExtractor> variableExtractors = new ArrayList<>();
-        private List<MessageProcessor> messageProcessors = new ArrayList<>();
+        private final List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
+        private final List<VariableExtractor> variableExtractors = new ArrayList<>();
+        private final List<MessageProcessor> messageProcessors = new ArrayList<>();
         private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
         /** Validation context used in this action builder */
@@ -557,7 +557,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param messageBuilder
          * @return
          */
-        public B message(MessageContentBuilder messageBuilder) {
+        public B message(MessageBuilder messageBuilder) {
             this.messageBuilder = messageBuilder;
             return self;
         }
@@ -569,13 +569,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B message(final Message controlMessage) {
-            final StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(controlMessage);
+            final StaticMessageBuilder staticMessageBuilder = StaticMessageBuilder.withMessage(controlMessage);
 
             if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).getHeaderBuilders().forEach(staticMessageContentBuilder::addHeaderBuilder);
+                ((WithHeaderBuilder) messageBuilder).getHeaderBuilders().forEach(staticMessageBuilder::addHeaderBuilder);
             }
 
-            message(staticMessageContentBuilder);
+            message(staticMessageBuilder);
             messageType(controlMessage.getType());
             return self;
         }
@@ -924,7 +924,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Adds message processor.
+         * Adds message processor on the received message.
          * @param processor
          * @return
          */
@@ -939,7 +939,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Adds message processor as fluent builder.
+         * Adds message processor on the received message as fluent builder.
          * @param builder
          * @return
          */
@@ -1059,8 +1059,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         protected Optional<String> getMessagePayload() {
-            if (messageBuilder instanceof StaticMessageContentBuilder) {
-                Message message = ((StaticMessageContentBuilder) messageBuilder).getMessage();
+            if (messageBuilder instanceof StaticMessageBuilder) {
+                Message message = ((StaticMessageBuilder) messageBuilder).getMessage();
                 if (message.getPayload() instanceof String) {
                     return Optional.of(message.getPayload(String.class));
                 }

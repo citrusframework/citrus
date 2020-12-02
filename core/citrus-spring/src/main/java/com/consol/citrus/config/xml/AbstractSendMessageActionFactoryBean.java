@@ -5,7 +5,7 @@ import java.util.List;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageProcessor;
-import com.consol.citrus.message.MessageContentBuilder;
+import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
@@ -26,7 +26,7 @@ public abstract class AbstractSendMessageActionFactoryBean<T extends SendMessage
      * Sets the message builder implementation.
      * @param messageBuilder the messageBuilder to set
      */
-    public void setMessageBuilder(MessageContentBuilder messageBuilder) {
+    public void setMessageBuilder(MessageBuilder messageBuilder) {
         getBuilder().message(messageBuilder);
     }
 

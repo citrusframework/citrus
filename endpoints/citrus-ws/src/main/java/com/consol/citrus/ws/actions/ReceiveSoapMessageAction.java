@@ -27,7 +27,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
@@ -106,7 +106,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
         protected SoapMessage soapMessage = new SoapMessage();
 
         public Builder() {
-            message(new StaticMessageContentBuilder(soapMessage));
+            message(new StaticMessageBuilder(soapMessage));
             headerNameIgnoreCase(true);
         }
 
