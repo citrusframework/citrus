@@ -37,7 +37,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageHeaderDataBuilder;
 import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
@@ -121,6 +120,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** List of processors that handle the receive message */
     private final List<MessageProcessor> messageProcessors;
 
+    /** List of processors that handle the control message builder */
+    private final List<MessageProcessor> controlMessageProcessors;
+
     /** The expected message type to arrive in this receive action - this information is needed to find a proper
      * message validator for this message */
     private final String messageType;
@@ -145,6 +147,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         this.validationCallback = builder.validationCallback;
         this.validationContexts = builder.getValidationContexts();
         this.variableExtractors = builder.variableExtractors;
+        this.controlMessageProcessors = builder.controlMessageProcessors;
         this.messageProcessors = builder.messageProcessors;
         this.messageType = Optional.ofNullable(builder.messageType).orElse(CitrusSettings.DEFAULT_MESSAGE_TYPE);
     }
@@ -219,6 +222,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @param message
      */
     protected void validateMessage(Message message, TestContext context) {
+        messageProcessors.forEach(processor -> processor.process(message, context));
+
         // extract variables from received message content
         for (VariableExtractor variableExtractor : variableExtractors) {
             variableExtractor.extractVariables(message, context);
@@ -287,35 +292,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
         Message message = messageBuilder.build(context, messageType);
 
         if (message.getPayload() != null) {
-            for (final MessageProcessor processor: context.getMessageProcessors().getMessageProcessors()) {
-                MessageDirection processorDirection = MessageDirection.UNBOUND;
-
-                if (processor instanceof MessageDirectionAware) {
-                    processorDirection = ((MessageDirectionAware) processor).getDirection();
-                }
-
-                if (processorDirection.equals(MessageDirection.INBOUND)
-                        || processorDirection.equals(MessageDirection.UNBOUND)) {
-                    processor.process(message, context);
-                }
-            }
+            context.getMessageProcessors(MessageDirection.INBOUND)
+                    .forEach(processor -> processor.process(message, context));
 
             if (dataDictionary != null) {
                 dataDictionary.process(message, context);
             }
 
-            for (final MessageProcessor processor : messageProcessors) {
-                MessageDirection processorDirection = MessageDirection.UNBOUND;
-
-                if (processor instanceof MessageDirectionAware) {
-                    processorDirection = ((MessageDirectionAware) processor).getDirection();
-                }
-
-                if (processorDirection.equals(MessageDirection.INBOUND)
-                        || processorDirection.equals(MessageDirection.UNBOUND)) {
-                    processor.process(message, context);
-                }
-            }
+            controlMessageProcessors.forEach(processor -> processor.process(message, context));
         }
 
         return message;
@@ -376,6 +360,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public List<MessageProcessor> getMessageProcessors() {
         return messageProcessors;
+    }
+
+    /**
+     * Obtains the control message processors.
+     * @return
+     */
+    public List<MessageProcessor> getControlMessageProcessors() {
+        return controlMessageProcessors;
     }
 
     /**
@@ -506,6 +498,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private ValidationCallback validationCallback;
         private final List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
         private final List<VariableExtractor> variableExtractors = new ArrayList<>();
+        private final List<MessageProcessor> controlMessageProcessors = new ArrayList<>();
         private final List<MessageProcessor> messageProcessors = new ArrayList<>();
         private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
@@ -945,6 +938,26 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public B process(MessageProcessor.Builder<?, ?> builder) {
             return process(builder.build());
+        }
+
+        /**
+         * Adds message processor on the control message.
+         * @param processor
+         * @return
+         */
+        public B modify(MessageProcessor processor) {
+            this.controlMessageProcessors.add(processor);
+
+            return self;
+        }
+
+        /**
+         * Adds message processor on the control message as fluent builder.
+         * @param builder
+         * @return
+         */
+        public B modify(MessageProcessor.Builder<?, ?> builder) {
+            return modify(builder.build());
         }
 
         /**

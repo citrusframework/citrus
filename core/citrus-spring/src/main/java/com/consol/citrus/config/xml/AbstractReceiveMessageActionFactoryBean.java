@@ -87,7 +87,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      * @param messageProcessors the messageProcessors to set
      */
     public void setMessageProcessors(List<MessageProcessor> messageProcessors) {
-        messageProcessors.forEach(getBuilder()::process);
+        messageProcessors.forEach(getBuilder()::modify);
     }
 
     /**

@@ -100,7 +100,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .messageType(MessageType.JSON)
                 .message(controlMessageBuilder)
                 .validate(validationContext)
-                .process(processor)
+                .modify(processor)
                 .build();
         receiveAction.execute(context);
 

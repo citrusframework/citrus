@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.TestAction;
@@ -46,6 +47,8 @@ import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.message.DefaultMessageStore;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageDirectionAware;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.message.MessageStore;
 import com.consol.citrus.report.MessageListeners;
@@ -679,8 +682,26 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     }
 
     /**
+     * Gets the global message processors for given direction.
+     * @return
+     */
+    public List<MessageProcessor> getMessageProcessors(MessageDirection direction) {
+        return messageProcessors.getMessageProcessors().stream()
+                .filter(processor -> {
+                    MessageDirection processorDirection = MessageDirection.UNBOUND;
+
+                    if (processor instanceof MessageDirectionAware) {
+                        processorDirection = ((MessageDirectionAware) processor).getDirection();
+                    }
+
+                    return processorDirection.equals(direction)
+                            || processorDirection.equals(MessageDirection.UNBOUND);
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Gets the global message processors.
-     *
      * @return
      */
     public MessageProcessors getMessageProcessors() {

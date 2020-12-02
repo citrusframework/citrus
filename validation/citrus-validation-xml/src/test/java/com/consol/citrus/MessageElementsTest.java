@@ -414,7 +414,7 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .process(processor)
+                .modify(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -459,7 +459,7 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .process(processor)
+                .modify(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -513,7 +513,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .validate(validationContext)
-                .process(processor)
+                .modify(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -558,7 +558,7 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .process(processor)
+                .modify(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -603,7 +603,7 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .process(processor)
+                .modify(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -648,7 +648,7 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .process(processor)
+                .modify(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -693,7 +693,7 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .process(processor)
+                .modify(processor)
                 .build();
         receiveAction.execute(context);
     }

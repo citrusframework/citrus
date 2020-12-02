@@ -503,7 +503,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .process(processor)
+                .modify(processor)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);

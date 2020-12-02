@@ -27,6 +27,7 @@ import com.consol.citrus.testng.TestNGCitrusSupport;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XpathMessageValidator;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.StopServerAction.Builder.stop;
@@ -55,14 +56,14 @@ public class CustomMessageValidatorIT extends TestNGCitrusSupport {
         when(http().client(httpClient)
                 .send()
                 .post("/")
-                .contentType("application/xml")
+                .contentType(MediaType.APPLICATION_XML_VALUE)
                 .payload("<doc text=\"hello\"/>")
                 .fork(true));
 
         then(http().server(httpServer)
                 .receive()
                 .post("/")
-                .contentType("application/xml")
+                .contentType(MediaType.APPLICATION_XML_VALUE)
                 .validators(new DomXmlMessageValidator(), new XpathMessageValidator())
                 .validate(xpath().expression("//doc/@text", "hello")));
 
@@ -81,7 +82,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSupport {
         when(http().client(httpClient)
                 .send()
                 .post("/")
-                .contentType("application/xml")
+                .contentType(MediaType.APPLICATION_XML_VALUE)
                 .payload("<doc text=\"hello\"/>")
                 .fork(true));
 
@@ -90,7 +91,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusSupport {
             .when(http().server(httpServer)
                 .receive()
                 .post("/")
-                .contentType("application/xml")
+                .contentType(MediaType.APPLICATION_XML_VALUE)
                 .validators(new DomXmlMessageValidator(), new XpathMessageValidator())
                 .validate(xpath().expression("//doc/@text", "nothello"))));
 

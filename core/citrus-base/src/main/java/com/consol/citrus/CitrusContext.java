@@ -271,8 +271,8 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private TestListeners testListeners = new TestListeners();
         private TestReporters testReporters = new DefaultTestReporters();
 
-        private List<BeforeSuite> beforeSuite = new ArrayList<>();
-        private List<AfterSuite> afterSuite = new ArrayList<>();
+        private final List<BeforeSuite> beforeSuite = new ArrayList<>();
+        private final List<AfterSuite> afterSuite = new ArrayList<>();
 
         private FunctionRegistry functionRegistry = new DefaultFunctionRegistry();
         private ValidationMatcherRegistry validationMatcherRegistry = new DefaultValidationMatcherRegistry();

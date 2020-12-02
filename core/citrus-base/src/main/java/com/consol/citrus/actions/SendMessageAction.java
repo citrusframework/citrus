@@ -36,7 +36,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageHeaderDataBuilder;
 import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
@@ -195,35 +194,14 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         Message message = messageBuilder.build(context, messageType);
 
         if (message.getPayload() != null) {
-            for (final MessageProcessor processor: context.getMessageProcessors().getMessageProcessors()) {
-                MessageDirection processorDirection = MessageDirection.UNBOUND;
-
-                if (processor instanceof MessageDirectionAware) {
-                    processorDirection = ((MessageDirectionAware) processor).getDirection();
-                }
-
-                if (processorDirection.equals(MessageDirection.OUTBOUND)
-                        || processorDirection.equals(MessageDirection.UNBOUND)) {
-                    processor.process(message, context);
-                }
-            }
+            context.getMessageProcessors(MessageDirection.OUTBOUND)
+                    .forEach(processor -> processor.process(message, context));
 
             if (dataDictionary != null) {
                 dataDictionary.process(message, context);
             }
 
-            for (final MessageProcessor processor : messageProcessors) {
-                MessageDirection processorDirection = MessageDirection.UNBOUND;
-
-                if (processor instanceof MessageDirectionAware) {
-                    processorDirection = ((MessageDirectionAware) processor).getDirection();
-                }
-
-                if (processorDirection.equals(MessageDirection.OUTBOUND)
-                        || processorDirection.equals(MessageDirection.UNBOUND)) {
-                    processor.process(message, context);
-                }
-            }
+            messageProcessors.forEach(processor -> processor.process(message, context));
         }
 
         return message;

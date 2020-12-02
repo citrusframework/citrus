@@ -651,7 +651,7 @@ class ReceiveMessageBuilderTest {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final String path = "$ResultCode";
+		final String path = "$.ResultCode";
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
@@ -666,7 +666,7 @@ class ReceiveMessageBuilderTest {
 				.map(JsonMessageValidationContext.class::cast)
 				.findFirst()
 				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
-		assertTrue(jsonMessageValidationContext.getIgnoreExpressions().contains("$ResultCode"));
+		assertTrue(jsonMessageValidationContext.getIgnoreExpressions().contains("$.ResultCode"));
 	}
 
 	@Test

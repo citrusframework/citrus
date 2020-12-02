@@ -60,6 +60,7 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 3);

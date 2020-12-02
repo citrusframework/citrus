@@ -67,9 +67,11 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "Test");
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
 
         Assert.assertNull(action.getDataDictionary());
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
 
         // 2nd action
         action = getNextTestActionFromTest();
@@ -92,9 +94,11 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1);
         Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<Header xmlns=\"http://citrusframework.org/test\">\n  <operation>hello</operation>\n</Header>");
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
 
         Assert.assertNull(action.getDataDictionary());
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
 
         // 3rd action
         action = getNextTestActionFromTest();
@@ -116,6 +120,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
                 FileUtils.readToString(FileUtils.getFileResource("classpath:com/consol/citrus/actions/test-request-payload.xml")));
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0);
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
 
         // 4th action
         action = getNextTestActionFromTest();
@@ -190,9 +195,10 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<ns:TestMessage xmlns:ns=\"http://www.consol.com\">Hello Citrus</ns:TestMessage>");
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
-        DelegatingPathExpressionProcessor messageProcessor = (DelegatingPathExpressionProcessor)action.getMessageProcessors().get(0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getControlMessageProcessors().size(), 1);
+        Assert.assertTrue(action.getControlMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
+        DelegatingPathExpressionProcessor messageProcessor = (DelegatingPathExpressionProcessor)action.getControlMessageProcessors().get(0);
 
         Assert.assertEquals(messageProcessor.getPathExpressions().size(), 1);
         Assert.assertEquals(messageProcessor.getPathExpressions().get("/ns:TestMessage/"), "newValue");
@@ -326,9 +332,10 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
 
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
-        DelegatingPathExpressionProcessor jsonMessageProcessor = (DelegatingPathExpressionProcessor)action.getMessageProcessors().get(0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getControlMessageProcessors().size(), 1);
+        Assert.assertTrue(action.getControlMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
+        DelegatingPathExpressionProcessor jsonMessageProcessor = (DelegatingPathExpressionProcessor)action.getControlMessageProcessors().get(0);
 
         Assert.assertEquals(jsonMessageProcessor.getPathExpressions().size(), 1);
         Assert.assertEquals(jsonMessageProcessor.getPathExpressions().get("$.FooMessage.foo"), "newValue");
