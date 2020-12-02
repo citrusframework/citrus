@@ -16,29 +16,30 @@
 
 package com.consol.citrus.dsl.endpoint;
 
-import com.consol.citrus.camel.endpoint.CamelEndpoints;
-import com.consol.citrus.channel.endpoint.builder.MessageChannelEndpoints;
-import com.consol.citrus.docker.endpoint.builder.DockerEndpoints;
-import com.consol.citrus.ftp.endpoint.builder.FtpEndpoints;
-import com.consol.citrus.ftp.endpoint.builder.ScpEndpoints;
-import com.consol.citrus.ftp.endpoint.builder.SftpEndpoints;
-import com.consol.citrus.http.endpoint.builder.HttpEndpoints;
-import com.consol.citrus.jdbc.endpoint.builder.JdbcEndpoints;
-import com.consol.citrus.jms.endpoint.JmsEndpoints;
-import com.consol.citrus.jmx.endpoint.builder.JmxEndpoints;
-import com.consol.citrus.kafka.endpoint.builder.KafkaEndpoints;
-import com.consol.citrus.kubernetes.endpoint.builder.KubernetesEndpoints;
-import com.consol.citrus.mail.endpoint.builder.MailEndpoints;
-import com.consol.citrus.rmi.endpoint.builder.RmiEndpoints;
-import com.consol.citrus.selenium.endpoint.builder.SeleniumEndpoints;
-import com.consol.citrus.ssh.endpoint.builder.SshEndpoints;
-import com.consol.citrus.vertx.endpoint.builder.VertxEndpoints;
-import com.consol.citrus.websocket.endpoint.builder.WebSocketEndpoints;
-import com.consol.citrus.ws.endpoint.builder.WebServiceEndpoints;
+import com.consol.citrus.dsl.endpoint.camel.CamelEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.channel.MessageChannelEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.docker.DockerEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.ftp.FtpEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.ftp.ScpEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.ftp.SftpEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.http.HttpEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.jdbc.JdbcEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.jms.JmsEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.jmx.JmxEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.kafka.KafkaEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.kubernetes.KubernetesEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.mail.MailEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.rmi.RmiEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.selenium.SeleniumEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.ssh.SshEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.vertx.VertxEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.websocket.WebSocketEndpointCatalog;
+import com.consol.citrus.dsl.endpoint.ws.WebServiceEndpointCatalog;
+import com.consol.citrus.endpoint.direct.DirectEndpoints;
 
 /**
  * @author Christoph Deppisch
- * @since 2.5
+ * @since 3.0
  */
 public abstract class CitrusEndpoints {
 
@@ -50,155 +51,163 @@ public abstract class CitrusEndpoints {
     }
 
     /**
+     * Creates new DirectEndpoint sync or async builder.
+     * @return
+     */
+    public static DirectEndpoints direct() {
+        return DirectEndpoints.direct();
+    }
+
+    /**
      * Creates new ChannelEndpoint sync or async builder.
      * @return
      */
-    public static MessageChannelEndpoints channel() {
-        return MessageChannelEndpoints.channel();
+    public static MessageChannelEndpointCatalog channel() {
+        return MessageChannelEndpointCatalog.channel();
     }
 
     /**
      * Creates new JmsEndpoint sync or async builder.
      * @return
      */
-    public static JmsEndpoints jms() {
-        return JmsEndpoints.jms();
+    public static JmsEndpointCatalog jms() {
+        return JmsEndpointCatalog.jms();
     }
 
     /**
      * Creates new HttpClient or HttpServer builder.
      * @return
      */
-    public static HttpEndpoints http() {
-        return HttpEndpoints.http();
+    public static HttpEndpointCatalog http() {
+        return HttpEndpointCatalog.http();
     }
 
     /**
      * Creates new WebServiceClient or WebServiceServer builder.
      * @return
      */
-    public static WebServiceEndpoints soap() {
-        return WebServiceEndpoints.soap();
+    public static WebServiceEndpointCatalog soap() {
+        return WebServiceEndpointCatalog.soap();
     }
 
     /**
      * Creates new JmxClient or JmxServer builder.
      * @return
      */
-    public static JmxEndpoints jmx() {
-        return JmxEndpoints.jmx();
+    public static JmxEndpointCatalog jmx() {
+        return JmxEndpointCatalog.jmx();
     }
 
     /**
      * Creates new RmiClient or RmiServer builder.
      * @return
      */
-    public static RmiEndpoints rmi() {
-        return RmiEndpoints.rmi();
+    public static RmiEndpointCatalog rmi() {
+        return RmiEndpointCatalog.rmi();
     }
 
     /**
      * Creates new MailClient or MailServer builder.
      * @return
      */
-    public static MailEndpoints mail() {
-        return MailEndpoints.mail();
+    public static MailEndpointCatalog mail() {
+        return MailEndpointCatalog.mail();
     }
 
     /**
      * Creates new FtpClient or FtpServer builder.
      * @return
      */
-    public static FtpEndpoints ftp() {
-        return FtpEndpoints.ftp();
+    public static FtpEndpointCatalog ftp() {
+        return FtpEndpointCatalog.ftp();
     }
 
     /**
      * Creates new SftpClient or SftpServer builder.
      * @return
      */
-    public static SftpEndpoints sftp() {
-        return SftpEndpoints.sftp();
+    public static SftpEndpointCatalog sftp() {
+        return SftpEndpointCatalog.sftp();
     }
 
     /**
      * Creates new ScpClient or SftpServer builder.
      * @return
      */
-    public static ScpEndpoints scp() {
-        return ScpEndpoints.scp();
+    public static ScpEndpointCatalog scp() {
+        return ScpEndpointCatalog.scp();
     }
 
     /**
      * Creates new SshClient or SshServer builder.
      * @return
      */
-    public static SshEndpoints ssh() {
-        return SshEndpoints.ssh();
+    public static SshEndpointCatalog ssh() {
+        return SshEndpointCatalog.ssh();
     }
 
     /**
      * Creates new VertxEndpoint sync or async builder.
      * @return
      */
-    public static VertxEndpoints vertx() {
-        return VertxEndpoints.vertx();
+    public static VertxEndpointCatalog vertx() {
+        return VertxEndpointCatalog.vertx();
     }
 
     /**
      * Creates new WebSocketClient or WebSocketServer builder.
      * @return
      */
-    public static WebSocketEndpoints websocket() {
-        return WebSocketEndpoints.websocket();
+    public static WebSocketEndpointCatalog websocket() {
+        return WebSocketEndpointCatalog.websocket();
     }
 
     /**
      * Creates new DockerClient builder.
      * @return
      */
-    public static DockerEndpoints docker() {
-        return DockerEndpoints.docker();
+    public static DockerEndpointCatalog docker() {
+        return DockerEndpointCatalog.docker();
     }
 
     /**
      * Creates new KubernetesClient builder.
      * @return
      */
-    public static KubernetesEndpoints kubernetes() {
-        return KubernetesEndpoints.kubernetes();
+    public static KubernetesEndpointCatalog kubernetes() {
+        return KubernetesEndpointCatalog.kubernetes();
     }
 
     /**
      * Creates new SeleniumBrowser builder.
      * @return
      */
-    public static SeleniumEndpoints selenium() {
-        return SeleniumEndpoints.selenium();
+    public static SeleniumEndpointCatalog selenium() {
+        return SeleniumEndpointCatalog.selenium();
     }
 
     /**
      * Creates new JdbcDbServer builder.
      * @return
      */
-    public static JdbcEndpoints jdbc() {
-        return JdbcEndpoints.jdbc();
+    public static JdbcEndpointCatalog jdbc() {
+        return JdbcEndpointCatalog.jdbc();
     }
 
     /**
      * Creates new KafkaEndpoint endpoint builder.
      * @return
      */
-    public static KafkaEndpoints kafka() {
-        return KafkaEndpoints.kafka();
+    public static KafkaEndpointCatalog kafka() {
+        return KafkaEndpointCatalog.kafka();
     }
 
     /**
      * Creates new CamelEndpoint endpoint builder.
      * @return
      */
-    public static CamelEndpoints camel() {
-        return CamelEndpoints.camel();
+    public static CamelEndpointCatalog camel() {
+        return CamelEndpointCatalog.camel();
     }
 
 }
