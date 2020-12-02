@@ -17,32 +17,22 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.endpoint.selenium;
+package com.consol.citrus.validation.json;
 
-import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
-import com.consol.citrus.selenium.endpoint.builder.SeleniumEndpoints;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
+ * @deprecated in favor of using {{@link JsonMappingValidationProcessor}}
  * @author Christoph Deppisch
  */
-public class SeleniumEndpointCatalog {
+@Deprecated
+public abstract class JsonMappingValidationCallback<T> extends JsonMappingValidationProcessor<T> {
 
-    /**
-     * Private constructor setting the client and server builder implementation.
-     */
-    private SeleniumEndpointCatalog() {
-        // prevent direct instantiation
+    public JsonMappingValidationCallback(Class<T> resultType) {
+        super(resultType);
     }
 
-    public static SeleniumEndpointCatalog selenium() {
-        return new SeleniumEndpointCatalog();
-    }
-
-    /**
-     * Gets the browser builder.
-     * @return
-     */
-    public SeleniumBrowserBuilder browser() {
-        return SeleniumEndpoints.selenium().browser();
+    public JsonMappingValidationCallback(Class<T> resultType, ObjectMapper jsonMapper) {
+        super(resultType, jsonMapper);
     }
 }

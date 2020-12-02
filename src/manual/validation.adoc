@@ -22,7 +22,7 @@ The Java DSL offers some additional validation tricks and possibilities when dea
 @CitrusTest
 public void receiveMessageTest() {
     receive(bookResponseEndpoint)
-        .validationCallback(new XmlMarshallingValidationCallback<AddBookResponseMessage>() {
+        .validate(new XmlMarshallingValidationProcessor<AddBookResponseMessage>() {
             @Override
             public void validate(AddBookResponseMessage response, MessageHeaders headers) {
                 Assert.isTrue(response.isSuccess());
@@ -42,7 +42,7 @@ private Unmarshaller unmarshaller;
 @CitrusTest
 public void receiveMessageTest() {
     receive(bookResponseEndpoint)
-        .validationCallback(new MarshallingValidationCallback<AddBookResponseMessage>(unmarshaller) {
+        .validate(new MarshallingValidationProcessor<AddBookResponseMessage>(unmarshaller) {
             @Override
             public void validate(AddBookResponseMessage response, MessageHeaders headers) {
                 Assert.isTrue(response.isSuccess());

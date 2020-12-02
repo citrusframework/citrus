@@ -24,7 +24,7 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
-import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -780,14 +780,14 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
     }
 
     /**
-     * Adds validation callback to the receive action for validating
+     * Adds validation processor to the receive action for validating
      * the received message with Java code.
      *
-     * @param callback
+     * @param processor
      * @return
      */
-    public B validationCallback(final ValidationCallback callback) {
-        this.delegate.validationCallback(callback);
+    public B validationCallback(final ValidationProcessor processor) {
+        this.delegate.validate(processor);
         return self;
     }
 

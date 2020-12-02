@@ -44,7 +44,7 @@ import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
-import com.consol.citrus.validation.callback.AbstractValidationCallback;
+import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -1342,10 +1342,10 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithValidationCallback() {
-        final AbstractValidationCallback callback = Mockito.mock(AbstractValidationCallback.class);
+    public void testReceiveBuilderWithValidationProcessor() {
+        final AbstractValidationProcessor processor = Mockito.mock(AbstractValidationProcessor.class);
 
-        reset(callback, messageEndpoint, messageConsumer, configuration);
+        reset(processor, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -1359,7 +1359,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
                                 .messageType(MessageType.PLAINTEXT)
                                 .payload("TestMessage")
                                 .header("operation", "sayHello")
-                                .validationCallback(callback));
+                                .validationCallback(processor));
             }
         };
 
@@ -1372,14 +1372,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(action.getValidationCallback(), callback);
+        Assert.assertEquals(action.getValidationProcessor(), processor);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         Assert.assertEquals(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "TestMessage");
         Assert.assertTrue(((DefaultMessageBuilder) action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
 
-        verify(callback, atLeastOnce()).setReferenceResolver(context.getReferenceResolver());
-        verify(callback).validate(any(Message.class), any(TestContext.class));
+        verify(processor, atLeastOnce()).setReferenceResolver(context.getReferenceResolver());
+        verify(processor).validate(any(Message.class), any(TestContext.class));
     }
 
     @Test

@@ -21,7 +21,7 @@ import java.io.IOException;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.callback.AbstractValidationCallback;
+import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.Assert;
 
@@ -29,7 +29,7 @@ import org.springframework.util.Assert;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public abstract class JsonMappingValidationCallback<T> extends AbstractValidationCallback<T> {
+public abstract class JsonMappingValidationProcessor<T> extends AbstractValidationProcessor<T> {
 
     /** JSON object mapper */
     private ObjectMapper jsonMapper;
@@ -40,7 +40,7 @@ public abstract class JsonMappingValidationCallback<T> extends AbstractValidatio
     /**
      * Default constructor.
      */
-    public JsonMappingValidationCallback(Class<T> resultType) {
+    public JsonMappingValidationProcessor(Class<T> resultType) {
         super();
         this.resultType = resultType;
     }
@@ -48,7 +48,7 @@ public abstract class JsonMappingValidationCallback<T> extends AbstractValidatio
     /**
      * Default constructor with object mapper.
      */
-    public JsonMappingValidationCallback(Class<T> resultType, ObjectMapper jsonMapper) {
+    public JsonMappingValidationProcessor(Class<T> resultType, ObjectMapper jsonMapper) {
         this.resultType = resultType;
         this.jsonMapper = jsonMapper;
     }

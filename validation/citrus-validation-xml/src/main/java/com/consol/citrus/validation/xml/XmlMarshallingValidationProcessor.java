@@ -25,7 +25,7 @@ import java.io.IOException;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.callback.AbstractValidationCallback;
+import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.consol.citrus.xml.StringSource;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
@@ -37,7 +37,7 @@ import org.w3c.dom.Document;
  *
  * @author Christoph Deppisch
  */
-public abstract class XmlMarshallingValidationCallback<T> extends AbstractValidationCallback<T> {
+public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValidationProcessor<T> {
 
     /** Unmarshaller */
     private Unmarshaller unmarshaller;
@@ -45,14 +45,14 @@ public abstract class XmlMarshallingValidationCallback<T> extends AbstractValida
     /**
      * Default constructor.
      */
-    public XmlMarshallingValidationCallback() {
+    public XmlMarshallingValidationProcessor() {
         super();
     }
 
     /**
      * Default constructor with unmarshaller.
      */
-    public XmlMarshallingValidationCallback(Unmarshaller unmarshaller) {
+    public XmlMarshallingValidationProcessor(Unmarshaller unmarshaller) {
         this.unmarshaller = unmarshaller;
     }
 

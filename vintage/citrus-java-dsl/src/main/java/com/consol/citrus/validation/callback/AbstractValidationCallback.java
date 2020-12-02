@@ -17,32 +17,14 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.endpoint.selenium;
+package com.consol.citrus.validation.callback;
 
-import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
-import com.consol.citrus.selenium.endpoint.builder.SeleniumEndpoints;
+import com.consol.citrus.validation.AbstractValidationProcessor;
 
 /**
+ * @deprecated in favor of using {@link AbstractValidationProcessor}
  * @author Christoph Deppisch
  */
-public class SeleniumEndpointCatalog {
-
-    /**
-     * Private constructor setting the client and server builder implementation.
-     */
-    private SeleniumEndpointCatalog() {
-        // prevent direct instantiation
-    }
-
-    public static SeleniumEndpointCatalog selenium() {
-        return new SeleniumEndpointCatalog();
-    }
-
-    /**
-     * Gets the browser builder.
-     * @return
-     */
-    public SeleniumBrowserBuilder browser() {
-        return SeleniumEndpoints.selenium().browser();
-    }
+@Deprecated
+public abstract class AbstractValidationCallback<T> extends AbstractValidationProcessor<T> {
 }

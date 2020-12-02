@@ -17,32 +17,31 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.endpoint.selenium;
+package com.consol.citrus.validation;
 
-import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
-import com.consol.citrus.selenium.endpoint.builder.SeleniumEndpoints;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageProcessor;
 
 /**
+ * Callback called by receive message action for validation purpose. Implementations
+ * to validate the received message with Java code.
+ *
  * @author Christoph Deppisch
  */
-public class SeleniumEndpointCatalog {
+@FunctionalInterface
+public interface ValidationProcessor extends MessageProcessor {
 
     /**
-     * Private constructor setting the client and server builder implementation.
+     * Validate callback method with received message.
+     *
+     * @param message
+     * @param context
      */
-    private SeleniumEndpointCatalog() {
-        // prevent direct instantiation
-    }
+    void validate(Message message, TestContext context);
 
-    public static SeleniumEndpointCatalog selenium() {
-        return new SeleniumEndpointCatalog();
-    }
-
-    /**
-     * Gets the browser builder.
-     * @return
-     */
-    public SeleniumBrowserBuilder browser() {
-        return SeleniumEndpoints.selenium().browser();
+    @Override
+    default void process(Message message, TestContext context) {
+        validate(message, context);
     }
 }

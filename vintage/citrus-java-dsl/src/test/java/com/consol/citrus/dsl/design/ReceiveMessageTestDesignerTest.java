@@ -36,7 +36,7 @@ import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
-import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -1090,8 +1090,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithValidationCallback() {
-        final ValidationCallback callback = Mockito.mock(ValidationCallback.class);
+    public void testReceiveBuilderWithValidationProcessor() {
+        final ValidationProcessor processor = Mockito.mock(ValidationProcessor.class);
 
         MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
@@ -1100,7 +1100,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
                     .messageType(MessageType.PLAINTEXT)
                     .payload("TestMessage")
                     .header("operation", "sayHello")
-                    .validationCallback(callback);
+                    .validationCallback(processor);
             }
         };
 
@@ -1115,7 +1115,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(action.getValidationCallback(), callback);
+        Assert.assertEquals(action.getValidationProcessor(), processor);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "TestMessage");

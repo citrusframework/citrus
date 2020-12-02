@@ -57,7 +57,7 @@ import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
-import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -109,7 +109,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     private final DataDictionary<?> dataDictionary;
 
     /** Callback able to additionally validate received message */
-    private final ValidationCallback validationCallback;
+    private final ValidationProcessor validationProcessor;
 
     /** List of validation contexts for this receive action */
     private final List<ValidationContext> validationContexts;
@@ -144,7 +144,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         this.messageBuilder = builder.messageBuilder;
         this.validators = builder.validators;
         this.dataDictionary = builder.dataDictionary;
-        this.validationCallback = builder.validationCallback;
+        this.validationProcessor = builder.validationProcessor;
         this.validationContexts = builder.getValidationContexts();
         this.variableExtractors = builder.variableExtractors;
         this.controlMessageProcessors = builder.controlMessageProcessors;
@@ -229,14 +229,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
             variableExtractor.extractVariables(message, context);
         }
 
-        if (validationCallback != null) {
+        if (validationProcessor != null) {
             if (StringUtils.hasText(message.getName())) {
                 context.getMessageStore().storeMessage(message.getName(), message);
             } else {
                 context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), message);
             }
 
-            validationCallback.validate(message, context);
+            validationProcessor.validate(message, context);
         } else {
             Message controlMessage = createControlMessage(context, messageType);
             if (StringUtils.hasText(controlMessage.getName())) {
@@ -419,11 +419,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Gets the validationCallback.
-     * @return the validationCallback the validationCallback to get.
+     * Gets the validationProcessor.
+     * @return the validationProcessor the validationProcessor to get.
      */
-    public ValidationCallback getValidationCallback() {
-        return validationCallback;
+    public ValidationProcessor getValidationProcessor() {
+        return validationProcessor;
     }
 
     /**
@@ -495,7 +495,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private final List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<>();
         private DataDictionary<?> dataDictionary;
         private String dataDictionaryName;
-        private ValidationCallback validationCallback;
+        private ValidationProcessor validationProcessor;
         private final List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
         private final List<VariableExtractor> variableExtractors = new ArrayList<>();
         private final List<MessageProcessor> controlMessageProcessors = new ArrayList<>();
@@ -905,14 +905,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Adds validation callback to the receive action for validating
+         * Adds validation processor to the receive action for validating
          * the received message with Java code.
          *
-         * @param callback
+         * @param processor
          * @return
          */
-        public B validationCallback(final ValidationCallback callback) {
-            this.validationCallback = callback;
+        public B validate(final ValidationProcessor processor) {
+            this.validationProcessor = processor;
             return self;
         }
 
@@ -1004,9 +1004,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
             reconcileValidationContexts();
 
             if (referenceResolver != null) {
-                if (validationCallback != null &&
-                        validationCallback instanceof ReferenceResolverAware) {
-                    ((ReferenceResolverAware) validationCallback).setReferenceResolver(referenceResolver);
+                if (validationProcessor != null &&
+                        validationProcessor instanceof ReferenceResolverAware) {
+                    ((ReferenceResolverAware) validationProcessor).setReferenceResolver(referenceResolver);
                 }
 
                 while (!validatorNames.isEmpty()) {

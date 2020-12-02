@@ -8,7 +8,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
-import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -109,12 +109,12 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
     }
 
     /**
-     * Sets the validationCallback.
+     * Sets the processor.
      *
-     * @param validationCallback the validationCallback to set
+     * @param processor the processor to set
      */
-    public void setValidationCallback(ValidationCallback validationCallback) {
-        getBuilder().validationCallback(validationCallback);
+    public void setValidationProcessor(ValidationProcessor processor) {
+        getBuilder().validate(processor);
     }
 
     /**

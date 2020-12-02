@@ -36,7 +36,7 @@ import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
-import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -938,18 +938,18 @@ class ReceiveMessageBuilderTest {
 	}
 
 	@Test
-	void validationCallback() {
+	void validationProcessor() {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final ValidationCallback callback = mock(ValidationCallback.class);
+		final ValidationProcessor processor = mock(ValidationProcessor.class);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validationCallback(callback);
+		final ReceiveMessageAction.Builder copy = builder.validate(processor);
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(callback, builder.build().getValidationCallback());
+		assertEquals(processor, builder.build().getValidationProcessor());
 	}
 
 	@Test

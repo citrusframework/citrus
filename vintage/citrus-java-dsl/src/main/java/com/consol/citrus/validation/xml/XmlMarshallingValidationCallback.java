@@ -17,32 +17,22 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.endpoint.selenium;
+package com.consol.citrus.validation.xml;
 
-import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
-import com.consol.citrus.selenium.endpoint.builder.SeleniumEndpoints;
+import org.springframework.oxm.Unmarshaller;
 
 /**
+ * @deprecated in favor of using {@link XmlMarshallingValidationProcessor}
  * @author Christoph Deppisch
  */
-public class SeleniumEndpointCatalog {
+@Deprecated
+public abstract class XmlMarshallingValidationCallback<T> extends XmlMarshallingValidationProcessor<T> {
 
-    /**
-     * Private constructor setting the client and server builder implementation.
-     */
-    private SeleniumEndpointCatalog() {
-        // prevent direct instantiation
+    public XmlMarshallingValidationCallback() {
+        super();
     }
 
-    public static SeleniumEndpointCatalog selenium() {
-        return new SeleniumEndpointCatalog();
-    }
-
-    /**
-     * Gets the browser builder.
-     * @return
-     */
-    public SeleniumBrowserBuilder browser() {
-        return SeleniumEndpoints.selenium().browser();
+    public XmlMarshallingValidationCallback(Unmarshaller unmarshaller) {
+        super(unmarshaller);
     }
 }
