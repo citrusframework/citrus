@@ -22,12 +22,12 @@ import com.consol.citrus.message.MessageHeaders;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public abstract class CitrusCamelMessageHeaders {
+public abstract class CamelMessageHeaders {
 
     /**
      * Prevent instantiation.
      */
-    private CitrusCamelMessageHeaders() {
+    private CamelMessageHeaders() {
     }
 
     /** Special header prefix for camel transport headers */

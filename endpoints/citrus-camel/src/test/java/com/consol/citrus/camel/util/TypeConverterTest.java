@@ -34,15 +34,19 @@ public class TypeConverterTest {
 
     @Test
     public void testLookup() {
-        System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, "camel");
+        try {
+            System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, "camel");
 
-        Map<String, TypeConverter> converters = TypeConverter.lookup();
-        Assert.assertEquals(converters.size(), 2L);
-        Assert.assertEquals(converters.get("camel").getClass(), CamelTypeConverter.class);
-        Assert.assertEquals(converters.get("camel"), TypeConverter.lookupDefault());
+            Map<String, TypeConverter> converters = TypeConverter.lookup();
+            Assert.assertEquals(converters.size(), 2L);
+            Assert.assertEquals(converters.get("camel").getClass(), CamelTypeConverter.class);
+            Assert.assertEquals(converters.get("camel"), TypeConverter.lookupDefault());
 
-        Assert.assertEquals(converters.get("spring").getClass(), SpringBeanTypeConverter.class);
+            Assert.assertEquals(converters.get("spring").getClass(), SpringBeanTypeConverter.class);
 
-        Assert.assertFalse(TypeConverter.lookup().containsKey("default"));
+            Assert.assertFalse(TypeConverter.lookup().containsKey("default"));
+        } finally {
+            System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, CitrusSettings.TYPE_CONVERTER_DEFAULT);
+        }
     }
 }

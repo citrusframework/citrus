@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import com.consol.citrus.CitrusSettings;
@@ -31,7 +32,7 @@ import org.w3c.dom.Node;
 public class DefaultTypeConverter implements TypeConverter {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DefaultTypeConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultTypeConverter.class);
 
     @Override
     public final <T> T convertIfNecessary(Object target, Class<T> type) {
@@ -53,7 +54,7 @@ public class DefaultTypeConverter implements TypeConverter {
                 try {
                     return (T) new StreamSource(((InputStreamSource)target).getInputStream());
                 } catch (IOException e) {
-                    log.warn("Failed to create stream source from object", e);
+                    LOG.warn("Failed to create stream source from object", e);
                 }
             }
         }
@@ -124,7 +125,9 @@ public class DefaultTypeConverter implements TypeConverter {
         }
 
         if (type.equals(String.class)) {
-            if (ByteBuffer.class.isAssignableFrom(target.getClass())) {
+            if (target == null) {
+                return (T) "null";
+            } else if (ByteBuffer.class.isAssignableFrom(target.getClass())) {
                 return (T) new String(((ByteBuffer) target).array());
             } else if (short[].class.isAssignableFrom(target.getClass())) {
                 return (T) Arrays.toString((short[]) target);
@@ -155,7 +158,7 @@ public class DefaultTypeConverter implements TypeConverter {
             try {
                 return TypeConversionUtils.convertStringToType(String.valueOf(target), type);
             } catch (CitrusRuntimeException e) {
-                log.warn(String.format("Unable to convert String object to type '%s' - try fallback strategies", type), e);
+                LOG.warn(String.format("Unable to convert String object to type '%s' - try fallback strategies", type), e);
             }
         }
 
@@ -179,7 +182,7 @@ public class DefaultTypeConverter implements TypeConverter {
             return convertAfter(target, type);
         } catch (Exception e) {
             if (String.class.equals(type)) {
-                log.warn(String.format("Using default toString representation because object type conversion failed with: %s", e.getMessage()));
+                LOG.warn(String.format("Using default toString representation because object type conversion failed with: %s", e.getMessage()));
                 return (T) target.toString();
             }
 
@@ -201,10 +204,11 @@ public class DefaultTypeConverter implements TypeConverter {
      */
     protected <T> T convertAfter(Object target, Class<T> type) {
         if (String.class.equals(type)) {
-            log.warn(String.format("Using default toString representation for object type %s", target.getClass()));
+            LOG.warn(String.format("Using default toString representation for object type %s", target.getClass()));
             return (T) target.toString();
         }
 
-        throw new CitrusRuntimeException(String.format("Unable to convert object '%s' to target type '%s'", target.getClass(), type));
+        throw new CitrusRuntimeException(String.format("Unable to convert object '%s' to target type '%s'",
+                Optional.ofNullable(target).map(Object::getClass).map(Class::getName).orElse("null"), type));
     }
 }

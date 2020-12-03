@@ -65,10 +65,10 @@ public class CamelMessageConverter implements MessageConverter<Exchange, Exchang
         }
 
         Message message = new DefaultMessage(camelMessage.getBody(), camelMessage.getHeaders())
-                .setHeader(CitrusCamelMessageHeaders.EXCHANGE_ID, exchange.getExchangeId())
-                .setHeader(CitrusCamelMessageHeaders.ROUTE_ID, exchange.getFromRouteId())
-                .setHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN, exchange.getPattern().name())
-                .setHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED, exchange.isFailed());
+                .setHeader(CamelMessageHeaders.EXCHANGE_ID, exchange.getExchangeId())
+                .setHeader(CamelMessageHeaders.ROUTE_ID, exchange.getFromRouteId())
+                .setHeader(CamelMessageHeaders.EXCHANGE_PATTERN, exchange.getPattern().name())
+                .setHeader(CamelMessageHeaders.EXCHANGE_FAILED, exchange.isFailed());
 
         //add all exchange properties
         for (Map.Entry<String, Object> property : exchange.getProperties().entrySet()) {
@@ -76,8 +76,8 @@ public class CamelMessageConverter implements MessageConverter<Exchange, Exchang
         }
 
         if (exchange.getException() != null) {
-            message.setHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION, exchange.getException().getClass().getName());
-            message.setHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE, exchange.getException().getMessage());
+            message.setHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION, exchange.getException().getClass().getName());
+            message.setHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE, exchange.getException().getMessage());
         }
 
         return message;

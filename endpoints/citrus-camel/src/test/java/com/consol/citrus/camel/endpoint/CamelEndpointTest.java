@@ -16,7 +16,7 @@
 
 package com.consol.citrus.camel.endpoint;
 
-import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
+import com.consol.citrus.camel.message.CamelMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
@@ -127,9 +127,9 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         Message receivedMessage = camelEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
         Assert.assertEquals(receivedMessage.getHeader("operation"), "newsFeed");
-        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID));
-        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
-        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
+        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_ID));
+        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
     }
 
     @Test

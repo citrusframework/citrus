@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
  */
 public class DefaultTypeConverterTest {
 
-    private DefaultTypeConverter converter = new DefaultTypeConverter();
+    private final DefaultTypeConverter converter = new DefaultTypeConverter();
 
     @Test
     public void testConvertIfNecessary() {
@@ -69,6 +69,7 @@ public class DefaultTypeConverterTest {
         Assert.assertEquals(converter.convertIfNecessary(Collections.singletonMap("foo", "bar"), String.class), "{foo=bar}");
         Assert.assertEquals(converter.convertIfNecessary(Arrays.asList(1, 2), String.class), "[1, 2]");
         Assert.assertEquals(converter.convertIfNecessary(new int[] {1, 2}, String.class), "[1, 2]");
+        Assert.assertEquals(converter.convertIfNecessary(null, String.class), "null");
         Assert.assertEquals(converter.convertIfNecessary(payload, String.class), payload);
         Assert.assertEquals(converter.convertIfNecessary(payload, InputStream.class).getClass(), ByteArrayInputStream.class);
         Assert.assertEquals(converter.convertIfNecessary(payload, Source.class).getClass(), StringSource.class);

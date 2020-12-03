@@ -16,7 +16,7 @@
 
 package com.consol.citrus.camel.endpoint;
 
-import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
+import com.consol.citrus.camel.message.CamelMessageHeaders;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -82,9 +82,9 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         Message reply = camelEndpoint.createConsumer().receive(context, 5000L);
 
         Assert.assertEquals(reply.getPayload(), "Hello from Camel!");
-        Assert.assertEquals(reply.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertNotNull(reply.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
-        Assert.assertNotNull(reply.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
+        Assert.assertEquals(reply.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
+        Assert.assertNotNull(reply.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assert.assertNotNull(reply.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
         Assert.assertEquals(reply.getHeader("operation"), "newsFeed");
 
     }
@@ -119,9 +119,9 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         Message receivedMessage = camelEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
         Assert.assertEquals(receivedMessage.getHeader("operation"), "newsFeed");
-        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID));
-        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
-        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
+        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_ID));
+        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN));
+        Assert.assertNotNull(receivedMessage.getHeader(CamelMessageHeaders.EXCHANGE_FAILED));
 
         camelEndpoint.createProducer().send(replyMessage, context);
 

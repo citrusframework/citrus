@@ -87,10 +87,10 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
         Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
         Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.ROUTE_ID), "helloRoute");
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED), false);
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.ROUTE_ID), "helloRoute");
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), false);
         Assert.assertEquals(result.getHeader("operation"), "sayHello");
     }
 
@@ -108,10 +108,10 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
         Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
         Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.ROUTE_ID), "helloRoute");
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED), false);
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.ROUTE_ID), "helloRoute");
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), false);
         Assert.assertEquals(result.getHeader("operation"), "sayHello");
         Assert.assertEquals(result.getHeader("SpecialProperty"), "foo");
         Assert.assertEquals(result.getHeader("VerySpecialProperty"), "bar");
@@ -129,12 +129,12 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
         Message result = messageConverter.convertInbound(exchange, endpointConfiguration, context);
 
         Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.ROUTE_ID), "helloRoute");
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED), true);
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION), CitrusRuntimeException.class.getName());
-        Assert.assertEquals(result.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE), "Something went wrong");
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.ROUTE_ID), "helloRoute");
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), true);
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION), CitrusRuntimeException.class.getName());
+        Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE), "Something went wrong");
         Assert.assertEquals(result.getHeader("operation"), "sayHello");
     }
 }

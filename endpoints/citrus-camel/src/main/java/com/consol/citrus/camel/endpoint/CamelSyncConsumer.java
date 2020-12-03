@@ -18,7 +18,7 @@ package com.consol.citrus.camel.endpoint;
 
 import java.util.Map;
 
-import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
+import com.consol.citrus.camel.message.CamelMessageHeaders;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
@@ -121,12 +121,12 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
             }
         }
 
-        if (message.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION) != null) {
-            String exceptionClass = message.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION).toString();
+        if (message.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION) != null) {
+            String exceptionClass = message.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION).toString();
             String exceptionMsg = null;
 
-            if (message.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE) != null) {
-                exceptionMsg = message.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE).toString();
+            if (message.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE) != null) {
+                exceptionMsg = message.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE).toString();
             }
 
             try {
