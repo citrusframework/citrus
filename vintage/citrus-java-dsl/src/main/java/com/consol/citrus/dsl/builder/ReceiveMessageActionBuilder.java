@@ -11,6 +11,7 @@ import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.JsonSupport;
+import com.consol.citrus.dsl.XmlSupport;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -39,7 +40,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 
-import static com.consol.citrus.validation.xml.XpathPayloadVariableExtractor.Builder.xpathExtractor;
 import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 
 /**
@@ -686,7 +686,8 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
                     .expression(path, variable)
                 .build());
         } else {
-            variableExtractor(xpathExtractor()
+            variableExtractor(new XmlSupport()
+                    .extract()
                     .expression(path, variable)
                 .build());
         }

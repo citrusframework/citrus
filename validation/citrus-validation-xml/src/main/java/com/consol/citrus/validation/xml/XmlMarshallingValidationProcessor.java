@@ -21,11 +21,16 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.validation.AbstractValidationProcessor;
+import com.consol.citrus.validation.GenericValidationProcessor;
 import com.consol.citrus.xml.StringSource;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
@@ -100,5 +105,70 @@ public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValid
         }
 
         return source;
+    }
+
+    /**
+     * Fluent builder.
+     * @param <T>
+     */
+    public static final class Builder<T> implements MessageProcessor.Builder<XmlMarshallingValidationProcessor<T>, Builder<T>>, ReferenceResolverAware {
+
+        private final Class<T> type;
+        private Unmarshaller unmarshaller;
+        private GenericValidationProcessor<T> validationProcessor;
+
+        private ReferenceResolver referenceResolver;
+
+        public Builder(Class<T> type) {
+            this.type = type;
+        }
+
+        public static <T> Builder<T> validate(Class<T> type) {
+            return new Builder<>(type);
+        }
+
+        public Builder<T> validator(GenericValidationProcessor<T> validationProcessor) {
+            this.validationProcessor = validationProcessor;
+            return this;
+        }
+
+        public Builder<T> unmarshaller(Unmarshaller unmarshaller) {
+            this.unmarshaller = unmarshaller;
+            return this;
+        }
+
+        public Builder<T> withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+            return this;
+        }
+
+        @Override
+        public XmlMarshallingValidationProcessor<T> build() {
+            if (unmarshaller == null) {
+                if (referenceResolver != null) {
+                    unmarshaller = referenceResolver.resolve(Unmarshaller.class);
+                } else {
+                    throw new CitrusRuntimeException("Missing XML unmarshaller - " +
+                            "please set proper unmarshaller or reference resolver");
+                }
+            }
+
+            if (validationProcessor == null) {
+                throw new CitrusRuntimeException("Missing validation processor - " +
+                        "please add proper validation logic");
+            }
+
+            return new XmlMarshallingValidationProcessor<T>() {
+                @Override
+                public void validate(T payload, Map<String, Object> headers, TestContext context) {
+                    validationProcessor.validate(payload, headers, context);
+                }
+            };
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+        }
     }
 }

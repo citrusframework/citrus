@@ -24,7 +24,7 @@ import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.container.Parallel.Builder.parallel;
 import static com.consol.citrus.container.Sequence.Builder.sequential;
-import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
+import static com.consol.citrus.dsl.XmlSupport.xml;
 import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 
 /**
@@ -57,7 +57,7 @@ public class WebServiceServerJavaIT extends TestNGCitrusSupport {
                                   "<ns0:Text>Hello WebServer</ns0:Text>" +
                               "</ns0:HelloRequest>")
                     .header("Operation", "sayHello")
-                    .validate(xml().schemaValidation(false))
+                    .validate(xml().validate().schemaValidation(false))
                     .process(headerValueExtractor()
                                     .header("citrus_jms_messageId", "internal_correlation_id")),
                 send("soapResponseEndpoint")
@@ -78,6 +78,6 @@ public class WebServiceServerJavaIT extends TestNGCitrusSupport {
                             "<ns0:User>WebServer</ns0:User>" +
                             "<ns0:Text>Hello ${user}</ns0:Text>" +
                         "</ns0:HelloResponse>")
-                .validate(xml().schemaValidation(false)));
+                .validate(xml().validate().schemaValidation(false)));
     }
 }

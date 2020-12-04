@@ -66,9 +66,8 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXParseException;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
-import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
-import static com.consol.citrus.validation.xml.XpathMessageValidationContext.Builder.xpath;
-import static com.consol.citrus.validation.xml.XpathPayloadVariableExtractor.Builder.xpathExtractor;
+import static com.consol.citrus.dsl.XmlSupport.XpathSupport.xpath;
+import static com.consol.citrus.dsl.XmlSupport.xml;
 import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -967,7 +966,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .process(xpathExtractor()
+                                .process(xpath()
+                                            .extract()
                                             .expression("/TestRequest/Message", "text")
                                             .expression("/TestRequest/Message/@lang", "language")));
 
@@ -1052,7 +1052,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                                 .process(headerValueExtractor()
                                         .header("operation", "operationHeader")
                                         .header("requestId", "id"))
-                                .process(xpathExtractor()
+                                .process(xpath()
+                                        .extract()
                                         .expression("/TestRequest/Message", "text")
                                         .expression("/TestRequest/Message/@lang", "language")));
 
@@ -1138,6 +1139,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
                                 .validate(xml()
+                                        .validate()
                                         .namespace("pfx", "http://www.consol.de/schemas/test")));
 
         TestCase test = runner.getTestCase();
@@ -1180,6 +1182,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message><Operation>SayHello</Operation></TestRequest>")
                                 .validate(xpath()
+                                        .validate()
                                         .expression("TestRequest.Message", "Hello World!")
                                         .expression("TestRequest.Operation", "SayHello")));
 
@@ -1223,6 +1226,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message>?</Message></TestRequest>")
                                 .validate(xml()
+                                        .validate()
                                         .ignore("TestRequest.Message")));
 
         TestCase test = runner.getTestCase();
@@ -1277,6 +1281,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
                                 .validate(xml()
+                                        .validate()
                                         .schema("testSchema")));
 
         TestCase test = runner.getTestCase();
@@ -1335,6 +1340,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
                                 .validate(xml()
+                                        .validate()
                                         .schemaRepository("customSchemaRepository")));
 
         TestCase test = runner.getTestCase();
@@ -1377,6 +1383,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                         .payload("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
                         .validate(xml()
+                                .validate()
                                 .schemaValidation(false)));
 
         TestCase test = runner.getTestCase();

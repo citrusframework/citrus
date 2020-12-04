@@ -25,7 +25,7 @@ import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.container.Assert.Builder.assertException;
 import static com.consol.citrus.container.Parallel.Builder.parallel;
 import static com.consol.citrus.container.Sequence.Builder.sequential;
-import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
+import static com.consol.citrus.dsl.XmlSupport.xml;
 import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 
 /**
@@ -66,7 +66,7 @@ public class SoapHttpErrorJavaIT extends TestNGCitrusSupport {
                     .header("Operation", "sayHello")
                     .header("operation", "sayHello")
                     .header("citrus_soap_action", "sayHello")
-                    .validate(xml().schemaValidation(false))
+                    .validate(xml().validate().schemaValidation(false))
                     .process(headerValueExtractor()
                                     .header("citrus_jms_messageId", "internal_correlation_id")),
                 send("soapResponseEndpoint")

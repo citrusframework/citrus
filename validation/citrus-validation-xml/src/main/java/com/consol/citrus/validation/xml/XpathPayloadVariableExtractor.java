@@ -55,7 +55,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     private static Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
 
     public XpathPayloadVariableExtractor() {
-        this(Builder.xpathExtractor());
+        this(new Builder());
     }
 
     /**
@@ -130,12 +130,8 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      * Fluent builder.
      */
     public static final class Builder implements VariableExtractor.Builder<XpathPayloadVariableExtractor, Builder>, XmlNamespaceAware {
-        private Map<String, String> expressions = new HashMap<>();
-        private Map<String, String> namespaces = new HashMap<>();
-
-        public static Builder xpathExtractor() {
-            return new Builder();
-        }
+        private final Map<String, String> expressions = new HashMap<>();
+        private final Map<String, String> namespaces = new HashMap<>();
 
         /**
          * Adds explicit namespace declaration for later path validation expressions.

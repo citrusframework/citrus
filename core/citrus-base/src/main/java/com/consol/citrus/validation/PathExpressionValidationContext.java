@@ -78,7 +78,7 @@ public class PathExpressionValidationContext {
                         .expressions(expressions)
                         .build();
             } else if (XpathMessageValidationContext.isXpathExpression(expression)){
-                return XpathMessageValidationContext.Builder.xpath()
+                return new XpathMessageValidationContext.Builder()
                         .expressions(expressions)
                         .build();
             } else {

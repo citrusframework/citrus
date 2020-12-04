@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
-import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
+import static com.consol.citrus.dsl.XmlSupport.xml;
 
 /**
  * @author Christoph Deppisch
@@ -54,6 +54,6 @@ public class WebServiceClientJavaIT extends TestNGCitrusSupport {
                         "</ns0:HelloStandaloneResponse>")
             .header("Request", "HelloRequest")
             .header("Operation", "sayHelloResponse")
-            .validate(xml().schemaValidation(false)));
+            .validate(xml().validate().schemaValidation(false)));
     }
 }

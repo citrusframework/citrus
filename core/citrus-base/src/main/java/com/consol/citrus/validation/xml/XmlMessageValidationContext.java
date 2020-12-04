@@ -59,7 +59,7 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
      * Default constructor.
      */
     public XmlMessageValidationContext() {
-        this(Builder.xml());
+        this(new Builder());
     }
 
     /**

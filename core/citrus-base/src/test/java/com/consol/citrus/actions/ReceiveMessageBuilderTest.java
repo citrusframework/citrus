@@ -55,6 +55,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static com.consol.citrus.validation.json.JsonMessageValidationContext.Builder.json;
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
+import static com.consol.citrus.validation.xml.XpathMessageValidationContext.Builder.xpath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -564,7 +565,7 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(XpathMessageValidationContext.Builder.xpath()
+		final ReceiveMessageAction.Builder copy = builder.validate(xpath()
 				.expression(path, controlValue));
 
 		//THEN
@@ -595,7 +596,7 @@ class ReceiveMessageBuilderTest {
 		builder.messageType( MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(XpathMessageValidationContext.Builder.xpath()
+		final ReceiveMessageAction.Builder copy = builder.validate(xpath()
 				.expressions(map));
 
 		//THEN

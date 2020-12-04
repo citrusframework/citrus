@@ -49,13 +49,13 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
     private final Map<String, Object> xPathExpressions;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XpathMessageProcessor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XpathMessageProcessor.class);
 
     /**
      * Default constructor.
      */
     public XpathMessageProcessor() {
-        this(Builder.xpath());
+        this(new Builder());
     }
 
     /**
@@ -111,8 +111,8 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
                 node.setNodeValue(valueExpression);
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Element " +  pathExpression + " was set to value: " + valueExpression);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Element " +  pathExpression + " was set to value: " + valueExpression);
             }
         }
 
@@ -128,11 +128,7 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
      * Fluent builder.
      */
     public static final class Builder implements MessageProcessor.Builder<XpathMessageProcessor, Builder>, WithExpressions<Builder> {
-        private Map<String, Object> expressions = new LinkedHashMap<>();
-
-        public static Builder xpath() {
-            return new Builder();
-        }
+        private final Map<String, Object> expressions = new LinkedHashMap<>();
 
         /**
          * Sets the expressions to evaluate. Keys are expressions that should be evaluated and values are target

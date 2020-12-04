@@ -36,7 +36,7 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
      * Default constructor.
      */
     public XpathMessageValidationContext() {
-        this(Builder.xpath());
+        this(new Builder());
     }
 
     /**

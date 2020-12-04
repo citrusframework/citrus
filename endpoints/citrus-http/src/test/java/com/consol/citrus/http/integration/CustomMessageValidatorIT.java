@@ -33,8 +33,8 @@ import org.testng.annotations.Test;
 import static com.consol.citrus.actions.StopServerAction.Builder.stop;
 import static com.consol.citrus.container.Assert.Builder.assertException;
 import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
+import static com.consol.citrus.dsl.XmlSupport.XpathSupport.xpath;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
-import static com.consol.citrus.validation.xml.XpathMessageValidationContext.Builder.xpath;
 
 /**
  * @author Christoph Deppisch
@@ -65,7 +65,9 @@ public class CustomMessageValidatorIT extends TestNGCitrusSupport {
                 .post("/")
                 .contentType(MediaType.APPLICATION_XML_VALUE)
                 .validators(new DomXmlMessageValidator(), new XpathMessageValidator())
-                .validate(xpath().expression("//doc/@text", "hello")));
+                .validate(xpath()
+                        .validate()
+                        .expression("//doc/@text", "hello")));
 
         then(http().server(httpServer)
                 .send()
@@ -93,7 +95,9 @@ public class CustomMessageValidatorIT extends TestNGCitrusSupport {
                 .post("/")
                 .contentType(MediaType.APPLICATION_XML_VALUE)
                 .validators(new DomXmlMessageValidator(), new XpathMessageValidator())
-                .validate(xpath().expression("//doc/@text", "nothello"))));
+                .validate(xpath()
+                        .validate()
+                        .expression("//doc/@text", "nothello"))));
 
         then(doFinally().actions(
                 stop(httpServer)
