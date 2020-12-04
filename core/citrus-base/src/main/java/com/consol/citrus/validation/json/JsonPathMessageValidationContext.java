@@ -46,7 +46,7 @@ public class JsonPathMessageValidationContext extends DefaultValidationContext {
      * Default constructor.
      */
     public JsonPathMessageValidationContext() {
-        this(Builder.jsonPath());
+        this(new Builder());
     }
 
     /**
@@ -55,7 +55,7 @@ public class JsonPathMessageValidationContext extends DefaultValidationContext {
     public static final class Builder
             implements ValidationContext.Builder<JsonPathMessageValidationContext, Builder>, WithExpressions<Builder> {
 
-        private Map<String, Object> expressions = new HashMap<>();
+        private final Map<String, Object> expressions = new HashMap<>();
 
         /**
          * Static entry method for fluent builder API.

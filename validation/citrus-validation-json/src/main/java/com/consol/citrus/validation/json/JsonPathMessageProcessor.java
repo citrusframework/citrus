@@ -56,7 +56,7 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
      * Default constructor.
      */
     public JsonPathMessageProcessor() {
-        this(Builder.jsonPath());
+        this(new Builder());
     }
 
     /**
@@ -129,12 +129,8 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
      * Fluent builder.
      */
     public static final class Builder implements MessageProcessor.Builder<JsonPathMessageProcessor, Builder>, WithExpressions<Builder> {
-        private Map<String, Object> expressions = new LinkedHashMap<>();
+        private final Map<String, Object> expressions = new LinkedHashMap<>();
         private boolean ignoreNotFound = false;
-
-        public static Builder jsonPath() {
-            return new Builder();
-        }
 
         @Override
         public Builder expressions(Map<String, Object> expressions) {

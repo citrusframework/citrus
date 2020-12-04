@@ -48,10 +48,10 @@ public class JsonPathVariableExtractor implements VariableExtractor {
     private final Map<String, String> jsonPathExpressions;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JsonPathVariableExtractor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JsonPathVariableExtractor.class);
 
     public JsonPathVariableExtractor() {
-        this(Builder.jsonPathExtractor());
+        this(new Builder());
     }
 
     /**
@@ -66,8 +66,8 @@ public class JsonPathVariableExtractor implements VariableExtractor {
     public void extractVariables(Message message, TestContext context) {
         if (CollectionUtils.isEmpty(jsonPathExpressions)) {return;}
 
-        if (log.isDebugEnabled()) {
-            log.debug("Reading JSON elements with JSONPath");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Reading JSON elements with JSONPath");
         }
 
         String jsonPathExpression;
@@ -80,8 +80,8 @@ public class JsonPathVariableExtractor implements VariableExtractor {
                 jsonPathExpression = context.replaceDynamicContentInString(entry.getKey());
                 String variableName = entry.getValue();
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Evaluating JSONPath expression: " + jsonPathExpression);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Evaluating JSONPath expression: " + jsonPathExpression);
                 }
 
                 Object jsonPathResult = JsonPathUtils.evaluate(readerContext, jsonPathExpression);
@@ -102,11 +102,7 @@ public class JsonPathVariableExtractor implements VariableExtractor {
      * Fluent builder.
      */
     public static final class Builder implements VariableExtractor.Builder<JsonPathVariableExtractor, Builder> {
-        private Map<String, String> expressions = new HashMap<>();
-
-        public static Builder jsonPathExtractor() {
-            return new Builder();
-        }
+        private final Map<String, String> expressions = new HashMap<>();
 
         @Override
         public Builder expressions(Map<String, String> expressions) {

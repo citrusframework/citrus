@@ -74,7 +74,7 @@ public class PathExpressionValidationContext {
             String expression = expressions.keySet().iterator().next();
 
             if (JsonPathMessageValidationContext.isJsonPathExpression(expression)) {
-                return JsonPathMessageValidationContext.Builder.jsonPath()
+                return new JsonPathMessageValidationContext.Builder()
                         .expressions(expressions)
                         .build();
             } else if (XpathMessageValidationContext.isXpathExpression(expression)){

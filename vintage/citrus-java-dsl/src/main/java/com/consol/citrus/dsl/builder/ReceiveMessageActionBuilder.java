@@ -10,6 +10,7 @@ import java.util.Map;
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.dsl.JsonSupport;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -23,8 +24,8 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.ValidationProcessor;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -38,7 +39,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 
-import static com.consol.citrus.validation.json.JsonPathVariableExtractor.Builder.jsonPathExtractor;
 import static com.consol.citrus.validation.xml.XpathPayloadVariableExtractor.Builder.xpathExtractor;
 import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 
@@ -681,7 +681,8 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      */
     public B extractFromPayload(final String path, final String variable) {
         if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
-            variableExtractor(jsonPathExtractor()
+            variableExtractor(new JsonSupport()
+                    .extract()
                     .expression(path, variable)
                 .build());
         } else {

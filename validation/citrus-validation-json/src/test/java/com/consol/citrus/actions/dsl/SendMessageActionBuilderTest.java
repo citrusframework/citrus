@@ -29,8 +29,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
-import static com.consol.citrus.validation.json.JsonPathMessageProcessor.Builder.jsonPath;
-import static com.consol.citrus.validation.json.JsonPathVariableExtractor.Builder.jsonPathExtractor;
+import static com.consol.citrus.dsl.JsonSupport.JsonPathSupport.jsonPath;
+import static com.consol.citrus.dsl.JsonSupport.json;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
@@ -171,7 +171,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         runner.run(send(messageEndpoint)
                 .messageType(MessageType.JSON)
                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .process(jsonPathExtractor()
+                .process(json()
+                        .extract()
                         .expression("$.text", "text")
                         .expression("$.person", "person")));
 
@@ -213,6 +214,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
                 .messageType(MessageType.JSON)
                 .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
                 .process(jsonPath()
+                            .process()
                             .expression("$.TestRequest.Message", "Hello World!")));
 
         final TestCase test = runner.getTestCase();

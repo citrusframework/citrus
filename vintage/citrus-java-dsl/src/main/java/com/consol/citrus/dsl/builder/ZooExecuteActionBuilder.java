@@ -1,6 +1,7 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.AbstractTestActionBuilder;
+import com.consol.citrus.dsl.JsonSupport;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -12,8 +13,6 @@ import com.consol.citrus.zookeeper.command.CommandResultCallback;
 import com.consol.citrus.zookeeper.command.ZooCommand;
 import com.consol.citrus.zookeeper.command.ZooResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import static com.consol.citrus.validation.json.JsonPathVariableExtractor.Builder.jsonPathExtractor;
 
 /**
  * @author Christoph Deppisch
@@ -108,7 +107,8 @@ public class ZooExecuteActionBuilder extends AbstractTestActionBuilder<ZooExecut
     }
 
     public ZooExecuteActionBuilder extract(String jsonPath, String variableName) {
-        return extractor(jsonPathExtractor()
+        return extractor(new JsonSupport()
+                .extract()
                 .expression(jsonPath, variableName)
                 .build());
     }

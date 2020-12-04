@@ -19,29 +19,21 @@
 
 package com.consol.citrus.validation;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.spi.ReferenceResolverAware;
 
 /**
- * Validation callback automatically extracts message payload and headers so we work with
- * Java code for validation.
- *
  * @author Christoph Deppisch
  */
-public abstract class AbstractValidationProcessor<T> implements ValidationProcessor, GenericValidationProcessor<T>, ReferenceResolverAware {
+@FunctionalInterface
+public interface GenericValidationProcessor<T> {
 
-    /** Bean reference resolver injected before validation callback is called */
-    protected ReferenceResolver referenceResolver;
-
-    @Override
-    public void validate(Message message, TestContext context) {
-        validate((T) message.getPayload(), message.getHeaders(), context);
-    }
-
-    @Override
-    public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        this.referenceResolver = referenceResolver;
-    }
+    /**
+     * Subclasses do override this method for validation purpose.
+     * @param payload the message payload object.
+     * @param headers the message headers
+     * @param context the current test context
+     */
+    void validate(T payload, Map<String, Object> headers, TestContext context);
 }

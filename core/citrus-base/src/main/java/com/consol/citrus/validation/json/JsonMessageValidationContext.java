@@ -52,7 +52,7 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
      * Default constructor.
      */
     public JsonMessageValidationContext() {
-        this(Builder.json());
+        this(new Builder());
     }
 
     /**
