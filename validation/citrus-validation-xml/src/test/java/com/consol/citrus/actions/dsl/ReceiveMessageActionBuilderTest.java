@@ -42,9 +42,9 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
-import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -66,9 +66,9 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXParseException;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.dsl.MessageSupport.MessageHeaderSupport.headers;
 import static com.consol.citrus.dsl.XmlSupport.XpathSupport.xpath;
 import static com.consol.citrus.dsl.XmlSupport.xml;
-import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
@@ -1008,7 +1008,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .process(headerValueExtractor()
+                                .process(headers()
+                                        .extract()
                                         .header("operation", "operationHeader")
                                         .header("requestId", "id")));
 
@@ -1049,7 +1050,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .process(headerValueExtractor()
+                                .process(headers()
+                                        .extract()
                                         .header("operation", "operationHeader")
                                         .header("requestId", "id"))
                                 .process(xpath()

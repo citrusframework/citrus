@@ -48,8 +48,6 @@ public class VariableExtractorParserUtil {
     }
 
     public static void addPayloadVariableExtractors(Element element, List<VariableExtractor> variableExtractors, Map<String, String> extractFromPath) {
-        DelegatingPayloadVariableExtractor payloadVariableExtractor = new DelegatingPayloadVariableExtractor();
-        payloadVariableExtractor.setPathExpressions(extractFromPath);
         Map<String, String> namespaces = new HashMap<>();
         if (element != null) {
             Element messageElement = DomUtils.getChildElementByTagName(element, "message");
@@ -60,10 +58,14 @@ public class VariableExtractorParserUtil {
                         Element namespaceElement = (Element) namespaceElementObject;
                         namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
                     }
-                    payloadVariableExtractor.setNamespaces(namespaces);
                 }
             }
         }
+
+        DelegatingPayloadVariableExtractor payloadVariableExtractor = new DelegatingPayloadVariableExtractor.Builder()
+                .expressions(extractFromPath)
+                .namespaces(namespaces)
+                .build();
 
         variableExtractors.add(payloadVariableExtractor);
     }

@@ -40,19 +40,29 @@ import org.springframework.util.CollectionUtils;
 public class DelegatingPayloadVariableExtractor implements VariableExtractor {
 
     /** Map defines path expressions and target variable names */
-    private Map<String, String> pathExpressions = new HashMap<>();
+    private Map<String, String> pathExpressions;
 
-    private Map<String, String> namespaces = new HashMap<>();
+    private Map<String, String> namespaces;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DelegatingPayloadVariableExtractor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DelegatingPayloadVariableExtractor.class);
+
+    public DelegatingPayloadVariableExtractor() {
+        this(new Builder());
+    }
+
+    public DelegatingPayloadVariableExtractor(Builder builder) {
+        this.pathExpressions = builder.expressions;
+        this.namespaces = builder.namespaces;
+    }
+
 
     @Override
     public void extractVariables(Message message, TestContext context) {
         if (CollectionUtils.isEmpty(pathExpressions)) {return;}
 
-        if (log.isDebugEnabled()) {
-            log.debug("Reading path elements.");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Reading path elements.");
         }
 
         Map<String, String> jsonPathExpressions = new LinkedHashMap<>();
@@ -93,6 +103,42 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
                     .expressions(xpathExpressions)
                     .build()
                     .extractVariables(message, context);
+        }
+    }
+
+    /**
+     * Fluent builder.
+     */
+    public static final class Builder implements VariableExtractor.Builder<DelegatingPayloadVariableExtractor, Builder> {
+
+        private final Map<String, String> expressions = new HashMap<>();
+        private final Map<String, String> namespaces = new HashMap<>();
+
+        public Builder namespaces(Map<String, String> namespaces) {
+            this.namespaces.putAll(namespaces);
+            return this;
+        }
+
+        public Builder namespace(final String prefix, final String namespace) {
+            this.namespaces.put(prefix, namespace);
+            return this;
+        }
+
+        @Override
+        public Builder expressions(Map<String, String> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        @Override
+        public Builder expression(final String path, final String variableName) {
+            this.expressions.put(path, variableName);
+            return this;
+        }
+
+        @Override
+        public DelegatingPayloadVariableExtractor build() {
+            return new DelegatingPayloadVariableExtractor(this);
         }
     }
 

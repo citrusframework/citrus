@@ -11,6 +11,7 @@ import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.JsonSupport;
+import com.consol.citrus.dsl.MessageSupport;
 import com.consol.citrus.dsl.XmlSupport;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -39,8 +40,6 @@ import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
-
-import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 
 /**
  * @author Christoph Deppisch
@@ -666,7 +665,9 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B extractFromHeader(final String headerName, final String variable) {
-        variableExtractor(headerValueExtractor()
+        variableExtractor(new MessageSupport()
+                    .headers()
+                    .extract()
                     .header(headerName, variable)
                 .build());
         return self;

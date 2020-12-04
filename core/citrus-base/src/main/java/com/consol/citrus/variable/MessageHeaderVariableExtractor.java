@@ -36,7 +36,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
     private final Map<String, String> headerMappings;
 
     public MessageHeaderVariableExtractor() {
-        this(Builder.headerValueExtractor());
+        this(new Builder());
     }
 
     /**
@@ -69,11 +69,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
      * Fluent builder.
      */
     public static final class Builder implements VariableExtractor.Builder<MessageHeaderVariableExtractor, Builder> {
-        private Map<String, String> expressions = new HashMap<>();
-
-        public static Builder headerValueExtractor() {
-            return new Builder();
-        }
+        private final Map<String, String> expressions = new HashMap<>();
 
         /**
          * Evaluate all header name expressions and store values as new variables to the test context.
