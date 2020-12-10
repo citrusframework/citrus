@@ -20,7 +20,6 @@ import com.consol.citrus.CitrusInstanceManager;
 import io.cucumber.core.plugin.DefaultSummaryPrinter;
 import io.cucumber.plugin.ColorAware;
 import io.cucumber.plugin.ConcurrentEventListener;
-import io.cucumber.plugin.StrictAware;
 import io.cucumber.plugin.SummaryPrinter;
 import io.cucumber.plugin.event.EventPublisher;
 import io.cucumber.plugin.event.TestRunFinished;
@@ -29,7 +28,7 @@ import io.cucumber.plugin.event.TestRunFinished;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class CitrusReporter implements SummaryPrinter, ColorAware, StrictAware, ConcurrentEventListener {
+public class CitrusReporter implements SummaryPrinter, ColorAware, ConcurrentEventListener {
 
     public static final String SUITE_NAME = "cucumber-suite";
 
@@ -44,10 +43,5 @@ public class CitrusReporter implements SummaryPrinter, ColorAware, StrictAware, 
     @Override
     public void setMonochrome(boolean monochrome) {
         delegate.setMonochrome(monochrome);
-    }
-
-    @Override
-    public void setStrict(boolean strict) {
-        delegate.setStrict(strict);
     }
 }

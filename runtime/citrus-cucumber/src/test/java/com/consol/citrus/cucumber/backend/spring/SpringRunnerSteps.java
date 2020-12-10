@@ -20,12 +20,14 @@ import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
+import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
+@CucumberContextConfiguration
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 public class SpringRunnerSteps {
 

@@ -29,14 +29,6 @@ public final class Scenario {
         return delegate.isFailed();
     }
 
-    public void embed(byte[] data, String mediaType, String name) {
-        delegate.embed(data, mediaType, name);
-    }
-
-    public void write(String text) {
-        delegate.write(text);
-    }
-
     public String getName() {
         return delegate.getName();
     }

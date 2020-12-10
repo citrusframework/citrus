@@ -161,7 +161,7 @@
     <arquillian.version>1.6.0.Final</arquillian.version>
     <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
     <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
-    <cucumber.version>5.7.0</cucumber.version>
+    <cucumber.version>6.9.0</cucumber.version>
     <zookeeper.version>3.6.1</zookeeper.version>
     <dropwizard.metrics.version>3.2.5</dropwizard.metrics.version>
     <snappy.version>1.1.7.7</snappy.version>

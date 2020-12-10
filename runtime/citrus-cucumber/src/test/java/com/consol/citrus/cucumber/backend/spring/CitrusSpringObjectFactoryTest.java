@@ -46,17 +46,4 @@ public class CitrusSpringObjectFactoryTest {
         Assert.assertNotNull(steps.getTestContext());
         factory.stop();
     }
-
-    @Test
-    public void testRunnerInjectWithDefaultContext() {
-        CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
-        factory.addClass(DefaultSpringRunnerSteps.class);
-
-        // Scenario 1
-        factory.start();
-        final DefaultSpringRunnerSteps steps = factory.getInstance(DefaultSpringRunnerSteps.class);
-        Assert.assertNotNull(steps.getTestRunner());
-        Assert.assertNotNull(steps.getTestContext());
-        factory.stop();
-    }
 }
