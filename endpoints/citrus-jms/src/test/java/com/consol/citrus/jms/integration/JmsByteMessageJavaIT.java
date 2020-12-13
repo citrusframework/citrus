@@ -46,7 +46,8 @@ public class JmsByteMessageJavaIT extends TestNGCitrusSupport {
                 .process(toBinary()));
 
         then(receive("jms:queue:jms.binary.queue")
-                .messageType(MessageType.BINARY_BASE64)
-                .payload("citrus:readFile('classpath:com/consol/citrus/jms/integration/button.png', true)"));
+                .message()
+                .type(MessageType.BINARY_BASE64)
+                .body("citrus:readFile('classpath:com/consol/citrus/jms/integration/button.png', true)"));
     }
 }

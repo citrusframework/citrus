@@ -57,7 +57,8 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSupport {
             .header("CorrelationId", "${correlationId}"));
 
         then(receive("helloServiceResponseJmsEndpoint")
-            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .message()
+            .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<MessageId>${messageId}</MessageId>" +
                             "<CorrelationId>${correlationId}</CorrelationId>" +
                             "<User>HelloService</User>" +
@@ -74,7 +75,8 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSupport {
             .header("CorrelationId", "${correlationId}"));
 
         then(receive("helloServiceResponseJmsEndpoint")
-            .payload(new ClassPathResource("com/consol/citrus/jms/integration/helloResponse.xml"))
+            .message()
+            .body(new ClassPathResource("com/consol/citrus/jms/integration/helloResponse.xml"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
@@ -102,7 +104,8 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSupport {
 
         then(receive("helloServiceResponseJmsEndpoint")
             .selector(Collections.singletonMap("CorrelationId", "${correlationIdB}"))
-            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .message()
+            .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<MessageId>${messageIdB}</MessageId>" +
                             "<CorrelationId>${correlationIdB}</CorrelationId>" +
                             "<User>HelloService</User>" +
@@ -114,7 +117,8 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSupport {
 
         then(receive("helloServiceResponseJmsEndpoint")
             .selector(Collections.singletonMap("CorrelationId", "${correlationIdA}"))
-            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .message()
+            .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<MessageId>${messageIdA}</MessageId>" +
                             "<CorrelationId>${correlationIdA}</CorrelationId>" +
                             "<User>HelloService</User>" +
@@ -130,7 +134,8 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSupport {
             .exception(com.consol.citrus.exceptions.ActionTimeoutException.class)
             .when(receive("helloServiceResponseJmsEndpoint")
                 .selector(Collections.singletonMap("CorrelationId", "doesNotExist"))
-                .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                .message()
+                .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                               "<MessageId>?</MessageId>" +
                               "<CorrelationId>?</CorrelationId>" +
                               "<User>HelloService</User>" +

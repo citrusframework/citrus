@@ -43,7 +43,8 @@ import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
 import com.consol.citrus.validation.xhtml.XhtmlXpathMessageValidator;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -57,14 +58,19 @@ import static org.mockito.Mockito.when;
  */
 public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    @Mock
+    private Endpoint endpoint;
+    @Mock
+    private SelectiveConsumer consumer;
+    @Mock
+    private EndpointConfiguration endpointConfiguration;
 
-    private MessageQueue mockQueue = Mockito.mock(MessageQueue.class);
+    @Mock
+    private MessageQueue mockQueue;
 
     @Override
     protected TestContextFactory createTestContextFactory() {
+        MockitoAnnotations.openMocks(this);
         TestContextFactory factory = super.createTestContextFactory();
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
@@ -80,7 +86,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithEndpointUri() {
         TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
@@ -101,7 +106,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithVariableEndpointName() {
         context.setVariable("varEndpoint", "direct:mockQueue");
         TestActor testActor = new TestActor();
@@ -123,7 +127,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadData() {
         TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
@@ -150,7 +153,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(
@@ -175,7 +177,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadDataVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
@@ -201,7 +202,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResourceVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(
@@ -228,7 +228,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResourceFunctionsSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(
@@ -253,7 +252,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPath() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
@@ -278,14 +276,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsDotNotation() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
@@ -310,14 +307,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPathWithNamespaces() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -348,14 +344,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .validate(validationContext)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPathWithNestedNamespaces() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -386,14 +381,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .validate(validationContext)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsXPathWithDefaultNamespaces() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
@@ -423,14 +417,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .validate(validationContext)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageHeaders() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -460,7 +453,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageHeadersVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -492,7 +484,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithUnknownVariablesInMessageHeaders() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -525,7 +516,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithUnknownVariableInMessagePayload() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
@@ -552,7 +542,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromHeaders() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -589,7 +578,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsFromMessageXPath() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
@@ -619,7 +607,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathDefaultNamespaceSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
@@ -651,7 +638,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathNamespaceSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
@@ -683,7 +669,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathNestedNamespaceSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
@@ -715,7 +700,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidateMessageElementsXPathNamespaceBindings() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
@@ -751,7 +735,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPath() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -786,7 +769,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNodeList() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest>" +
@@ -827,7 +809,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathDefaultNamespaceSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
@@ -869,7 +850,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
@@ -911,7 +891,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNestedNamespaceSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
@@ -953,7 +932,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceBindings() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
@@ -999,7 +977,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -1024,7 +1001,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelector() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -1053,7 +1029,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorAndTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -1083,7 +1058,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorMap() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -1113,7 +1087,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorMapAndTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -1171,7 +1144,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadAsExpected() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
@@ -1194,7 +1166,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadUnexpected() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));

@@ -46,7 +46,8 @@ public class WebServiceClientJavaIT extends TestNGCitrusSupport {
             .header("{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Operation", "sayHello"));
 
         then(receive("helloSoapClient")
-            .payload("<ns0:HelloStandaloneResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .message()
+            .body("<ns0:HelloStandaloneResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                             "<ns0:User>WebServer</ns0:User>" +

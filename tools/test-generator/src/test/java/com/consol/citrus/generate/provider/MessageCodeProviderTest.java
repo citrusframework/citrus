@@ -16,7 +16,6 @@
 
 package com.consol.citrus.generate.provider;
 
-
 import com.consol.citrus.message.DefaultMessage;
 import com.squareup.javapoet.CodeBlock;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ class MessageCodeProviderTest {
 
         //GIVEN
         message.setHeader("foo","bar");
-        final String expectedCode = ".header(\"foo\", \"bar\")\n";
+        final String expectedCode = ".message()\n.header(\"foo\", \"bar\")\n";
 
         //WHEN
         messageCodeProvider.provideHeaderAndPayload(code, message);
@@ -49,7 +48,7 @@ class MessageCodeProviderTest {
 
         //GIVEN
         message.setPayload("foo");
-        final String expectedCode = ".payload(\"foo\")\n";
+        final String expectedCode = ".message()\n.body(\"foo\")\n";
 
         //WHEN
         messageCodeProvider.provideHeaderAndPayload(code, message);

@@ -37,7 +37,8 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -51,14 +52,19 @@ import static org.mockito.Mockito.when;
  */
 public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    @Mock
+    private Endpoint endpoint;
+    @Mock
+    private SelectiveConsumer consumer;
+    @Mock
+    private EndpointConfiguration endpointConfiguration;
 
-    private MessageQueue mockQueue = Mockito.mock(MessageQueue.class);
+    @Mock
+    private MessageQueue mockQueue;
 
     @Override
     protected TestContextFactory createTestContextFactory() {
+        MockitoAnnotations.openMocks(this);
         TestContextFactory factory = super.createTestContextFactory();
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
@@ -72,7 +78,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElementsJsonPath() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
@@ -97,23 +102,22 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageType(MessageType.JSON)
                 .message(controlMessageBuilder)
+                .type(MessageType.JSON)
                 .validate(validationContext)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageJsonPath() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}"));
 
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        Map<String, String> extractMessageElements = new HashMap<>();
         extractMessageElements.put("$.text", "messageVar");
         extractMessageElements.put("$.person", "person");
 
@@ -174,7 +178,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .messageType(MessageType.JSON)
+                .type(MessageType.JSON)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -204,7 +208,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .messageType(MessageType.JSON)
+                .type(MessageType.JSON)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -233,14 +237,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .messageType(MessageType.JSON)
+                .type(MessageType.JSON)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadAsExpected() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
@@ -257,14 +260,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .messageType(MessageType.JSON)
+                .type(MessageType.JSON)
                 .build();
         receiveAction.execute(context);
 
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadUnexpected() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("{\"text\":\"Hello World!\"}"));
@@ -282,7 +284,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .messageType(MessageType.JSON)
+                .type(MessageType.JSON)
                 .build();
         try {
             receiveAction.execute(context);

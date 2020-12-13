@@ -16,19 +16,27 @@
 
 package com.consol.citrus.generate.provider;
 
+import java.util.Optional;
+
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.squareup.javapoet.CodeBlock;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Optional;
-
 public class MessageCodeProvider {
 
     public void provideHeaderAndPayload(final CodeBlock.Builder code, final Message message) {
+        provideMessage(code, message);
         provideHeader(code, message);
         providePayload(code, message);
+    }
+
+    private void provideMessage(final CodeBlock.Builder code, final Message message) {
+        if (StringUtils.hasText(message.getPayload(String.class))
+                || !CollectionUtils.isEmpty(message.getHeaders())) {
+            code.add(".message()\n", message.getPayload(String.class));
+        }
     }
 
     private void provideHeader(final CodeBlock.Builder code, final Message message) {
@@ -44,7 +52,7 @@ public class MessageCodeProvider {
 
     private void providePayload(final CodeBlock.Builder code, final Message message) {
         if (StringUtils.hasText(message.getPayload(String.class))) {
-            code.add(".payload($S)\n", message.getPayload(String.class));
+            code.add(".body($S)\n", message.getPayload(String.class));
         }
     }
 }

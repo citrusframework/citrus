@@ -49,9 +49,10 @@ public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSupport {
         when(http().server("echoHttpServer")
             .receive()
             .post()
+            .message()
+            .type(MessageType.PLAINTEXT)
             .contentType("@startsWith(multipart/form-data)@")
-            .messageType(MessageType.PLAINTEXT)
-            .payload("@contains(This is an attachment!)@"));
+            .body("@contains(This is an attachment!)@"));
 
        then(http().server("echoHttpServer")
            .send()

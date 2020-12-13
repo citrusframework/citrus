@@ -30,6 +30,7 @@ import com.consol.citrus.validation.json.report.GraciousProcessingReport;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.DevNullProcessingReport;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 
 /**
@@ -99,7 +100,11 @@ public class JsonSchemaValidation {
     private ProcessingReport validate(Message message, SimpleJsonSchema simpleJsonSchema) {
         try {
             JsonNode receivedJson = objectMapper.readTree(message.getPayload(String.class));
-            return simpleJsonSchema.getSchema().validate(receivedJson);
+            if (receivedJson.isEmpty()) {
+                return new DevNullProcessingReport();
+            } else {
+                return simpleJsonSchema.getSchema().validate(receivedJson);
+            }
         } catch (IOException | ProcessingException e) {
             throw new CitrusRuntimeException("Failed to validate Json schema", e);
         }

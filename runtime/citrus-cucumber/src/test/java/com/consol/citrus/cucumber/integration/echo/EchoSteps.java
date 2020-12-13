@@ -61,8 +61,9 @@ public class EchoSteps {
     @Then("^the service should return: \"([^\"]*)\"$")
     public void verify_return(final String body) {
         runner.then(receive("echoEndpoint")
-            .messageType(MessageType.PLAINTEXT)
-            .payload("You just said: " + body));
+            .message()
+            .type(MessageType.PLAINTEXT)
+            .body("You just said: " + body));
     }
 
 }

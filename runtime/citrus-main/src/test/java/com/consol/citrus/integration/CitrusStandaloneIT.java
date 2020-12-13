@@ -100,8 +100,9 @@ public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests {
         test.run(echo("Receive message!"));
 
         test.run(receive(endpoint)
-                .messageType(MessageType.PLAINTEXT)
-                .payload("Hello from Citrus!"));
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body("Hello from Citrus!"));
     }
 
     @Test
@@ -117,8 +118,9 @@ public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests {
         test.run(echo("Receive message!"));
 
         test.run(receive("direct:my.queue")
-                .messageType(MessageType.PLAINTEXT)
-                .payload("Hello Citrus!"));
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body("Hello Citrus!"));
     }
 
     @Configuration

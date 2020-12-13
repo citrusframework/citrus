@@ -22,13 +22,13 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageActionBuilder<
 
     @Override
     public HttpServerRequestActionBuilder payload(String payload) {
-        delegate.payload(payload);
+        delegate.message().body(payload);
         return this;
     }
 
     @Override
     public HttpServerRequestActionBuilder messageName(String name) {
-        delegate.messageName(name);
+        delegate.message().name(name);
         return this;
     }
 
@@ -48,7 +48,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageActionBuilder<
      * @return
      */
     public HttpServerRequestActionBuilder method(HttpMethod method) {
-        delegate.method(method);
+        delegate.message().method(method);
         return this;
     }
 
@@ -58,7 +58,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageActionBuilder<
      * @return
      */
     public HttpServerRequestActionBuilder queryParam(String name) {
-        delegate.queryParam(name, null);
+        delegate.message().queryParam(name, null);
         return this;
     }
 
@@ -69,7 +69,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageActionBuilder<
      * @return
      */
     public HttpServerRequestActionBuilder queryParam(String name, String value) {
-        delegate.queryParam(name, value);
+        delegate.message().queryParam(name, value);
         return this;
     }
 
@@ -79,7 +79,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageActionBuilder<
      * @return
      */
     public HttpServerRequestActionBuilder version(String version) {
-        delegate.version(version);
+        delegate.message().version(version);
         return this;
     }
 
@@ -89,7 +89,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageActionBuilder<
      * @return
      */
     public HttpServerRequestActionBuilder contentType(String contentType) {
-        delegate.contentType(contentType);
+        delegate.message().contentType(contentType);
         return this;
     }
 
@@ -99,7 +99,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageActionBuilder<
      * @return
      */
     public HttpServerRequestActionBuilder accept(String accept) {
-        delegate.accept(accept);
+        delegate.message().accept(accept);
         return this;
     }
 
@@ -109,7 +109,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageActionBuilder<
      * @return
      */
     public HttpServerRequestActionBuilder cookie(Cookie cookie) {
-        delegate.cookie(cookie);
+        delegate.message().cookie(cookie);
         return this;
     }
 

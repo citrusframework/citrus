@@ -53,7 +53,6 @@ import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -71,9 +70,21 @@ import static org.mockito.Mockito.when;
  */
 public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    @Mock
+    private Endpoint endpoint;
+    @Mock
+    private SelectiveConsumer consumer;
+    @Mock
+    private EndpointConfiguration endpointConfiguration;
+    @Mock
+    private DataDictionary<String> dictionary;
+    @Mock
+    private DataDictionary<String> globalDictionary;
+
+    @Mock
+    DataDictionary<String> inboundDictionary;
+    @Mock
+    DataDictionary<String> outboundDictionary;
 
     @Mock
     private MessageValidator<?> validator;
@@ -82,7 +93,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
 
         TestContextFactory factory = super.createTestContextFactory();
@@ -96,7 +107,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithEndpointUri() {
         TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
@@ -127,7 +138,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithVariableEndpointName() {
         context.setVariable("varEndpoint", "direct:mockQueue");
         TestActor testActor = new TestActor();
@@ -159,7 +170,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
 	public void testReceiveMessageWithMessagePayloadData() {
 		TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
@@ -197,7 +208,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 	}
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessagePayloadResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload.xml"));
@@ -234,15 +245,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessageBuilderScriptData() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("markupBuilder.TestRequest(){\n");
-        sb.append("Message('Hello World!')\n");
-        sb.append("}");
-
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(sb.toString()));
+        String markup = "markupBuilder.TestRequest(){\n" +
+                    "Message('Hello World!')\n" +
+                "}";
+        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(markup));
 
         Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
                 "  <Message>Hello World!</Message>" + System.lineSeparator() +
@@ -275,17 +284,15 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessageBuilderScriptDataVariableSupport() {
         context.setVariable("text", "Hello World!");
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("markupBuilder.TestRequest(){\n");
-        sb.append("Message('${text}')\n");
-        sb.append("}");
-
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(sb.toString()));
+        String markup = "markupBuilder.TestRequest(){\n" +
+                "Message('${text}')\n" +
+                "}";
+        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(markup));
 
         Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
                 "  <Message>Hello World!</Message>" + System.lineSeparator() +
@@ -318,7 +325,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessageBuilderScriptResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload.groovy"));
@@ -354,7 +361,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessagePayloadDataVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
@@ -390,7 +397,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessagePayloadResourceVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload-with-variables.xml"));
@@ -429,7 +436,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessagePayloadResourceFunctionsSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml"));
@@ -466,15 +473,14 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageOverwriteMessageElements() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>?</Message></TestRequest>"));
 
-        MessageProcessor processor = (message, context) -> {
-            message.setPayload(message.getPayload(String.class).replaceAll("\\?", "Hello World!"));
-        };
+        MessageProcessor processor = (message, context) ->
+                message.setPayload(message.getPayload(String.class).replaceAll("\\?", "Hello World!"));
 
         Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
@@ -503,7 +509,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .modify(processor)
+                .process(processor)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -511,16 +517,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessageHeaders() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
@@ -551,18 +557,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessageHeadersVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         context.setVariable("myOperation", "sayHello");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "${myOperation}");
         controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
@@ -593,16 +599,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithUnknownVariablesInMessageHeaders() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "${myOperation}");
         controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
@@ -636,7 +642,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithUnknownVariableInMessagePayload() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
@@ -673,7 +679,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithExtractVariablesFromHeaders() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -685,7 +691,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .headers(headers)
                 .build();
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
@@ -720,17 +726,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithExtractVariables() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        VariableExtractor variableExtractor = new VariableExtractor() {
-            @Override
-            public void extractVariables(Message message, TestContext context) {
+        VariableExtractor variableExtractor = (message, context) ->
                 context.setVariable("messageVar", "Hello World!");
-            }
-        };
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -765,7 +767,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -800,14 +802,14 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveSelectedWithMessageSelector() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         String messageSelector = "Operation = 'sayHello'";
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
@@ -839,14 +841,14 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveSelectedWithMessageSelectorAndTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         String messageSelector = "Operation = 'sayHello'";
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
@@ -879,7 +881,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveSelectedWithMessageSelectorMap() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -887,7 +889,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
@@ -919,7 +921,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveSelectedWithMessageSelectorMapAndTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -927,7 +929,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
@@ -997,7 +999,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     public void testReceiveEmptyMessagePayloadAsExpected() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder(""));
@@ -1109,8 +1111,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
-        DataDictionary<String> dictionary = Mockito.mock(DataDictionary.class);
-        reset(endpoint, consumer, endpointConfiguration);
+        reset(endpoint, consumer, endpointConfiguration, dictionary);
         when(dictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
         when(dictionary.isGlobalScope()).thenReturn(false);
         doAnswer(invocationOnMock -> {
@@ -1151,9 +1152,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
-        DataDictionary<String> dictionary = Mockito.mock(DataDictionary.class);
-        DataDictionary<String> globalDictionary = Mockito.mock(DataDictionary.class);
-        reset(endpoint, consumer, endpointConfiguration);
+        reset(endpoint, consumer, endpointConfiguration, dictionary, globalDictionary);
         when(dictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
         when(globalDictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
         when(dictionary.isGlobalScope()).thenReturn(false);
@@ -1204,9 +1203,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        DataDictionary<String> inboundDictionary = Mockito.mock(DataDictionary.class);
-        DataDictionary<String> outboundDictionary = Mockito.mock(DataDictionary.class);
-        reset(endpoint, consumer, endpointConfiguration);
+        reset(endpoint, consumer, endpointConfiguration, inboundDictionary, outboundDictionary);
         when(inboundDictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
         when(outboundDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
         when(inboundDictionary.isGlobalScope()).thenReturn(true);

@@ -45,7 +45,6 @@ import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.Test;
 
@@ -62,9 +61,12 @@ import static org.mockito.Mockito.when;
  */
 public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    @Mock
+    private Endpoint endpoint;
+    @Mock
+    private SelectiveConsumer consumer;
+    @Mock
+    private EndpointConfiguration endpointConfiguration;
 
     @Mock
     private MessageValidator<?> xmlMessageValidator;
@@ -73,7 +75,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         TestContextFactory factory = super.createTestContextFactory();
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
@@ -89,15 +91,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageBuilderScriptData() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("markupBuilder.TestRequest(){\n");
-        sb.append("Message('Hello World!')\n");
-        sb.append("}");
 
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(sb.toString()));
+        String markup = "markupBuilder.TestRequest(){\n" +
+                "Message('Hello World!')\n" +
+                "}";
+        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(markup));
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -118,17 +118,14 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageBuilderScriptDataVariableSupport() {
         context.setVariable("text", "Hello World!");
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("markupBuilder.TestRequest(){\n");
-        sb.append("Message('${text}')\n");
-        sb.append("}");
-
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(sb.toString()));
+        String markup = "markupBuilder.TestRequest(){\n" +
+                "Message('${text}')\n" +
+                "}";
+        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(markup));
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -149,7 +146,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageBuilderScriptResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload.groovy"));
@@ -173,7 +169,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidationScript() {
         ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
@@ -201,7 +196,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidationScriptResource() {
         ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
@@ -228,7 +222,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testInjectedMessageValidators() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));

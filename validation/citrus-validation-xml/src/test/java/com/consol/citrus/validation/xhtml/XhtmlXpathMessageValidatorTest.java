@@ -19,6 +19,7 @@ package com.consol.citrus.validation.xhtml;
 import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.ValidationException;
@@ -29,7 +30,8 @@ import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
@@ -41,13 +43,21 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  */
 public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private Consumer consumer = Mockito.mock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    @Mock
+    private Endpoint endpoint;
+    @Mock
+    private Consumer consumer;
+    @Mock
+    private EndpointConfiguration endpointConfiguration;
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        MockitoAnnotations.openMocks(this);
+        return super.createTestContextFactory();
+    }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testXhtmlXpathValidation() throws Exception {
+    public void testXhtmlXpathValidation() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -91,14 +101,13 @@ public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .validate(validationContext)
-                .messageType(MessageType.XHTML)
+                .type(MessageType.XHTML)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test(expectedExceptions = ValidationException.class)
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testXhtmlXpathValidationFailed() throws Exception {
+    public void testXhtmlXpathValidationFailed() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -134,8 +143,8 @@ public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
+                .type(MessageType.XHTML)
                 .validate(validationContext)
-                .messageType(MessageType.XHTML)
                 .build();
         receiveAction.execute(context);
     }

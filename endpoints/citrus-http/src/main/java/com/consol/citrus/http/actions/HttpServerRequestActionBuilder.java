@@ -25,36 +25,25 @@ import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.http.message.HttpQueryParamHeaderValidator;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.MessageBuilderSupport;
 import org.springframework.http.HttpMethod;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpServerRequestActionBuilder extends ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder> {
+public class HttpServerRequestActionBuilder extends ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
 
     /** Http message to send or receive */
-    private HttpMessage httpMessage = new HttpMessage();
+    private final HttpMessage httpMessage = new HttpMessage();
 
     /**
      * Default constructor.
      */
     public HttpServerRequestActionBuilder() {
-        message(new HttpMessageBuilder(httpMessage));
-        headerNameIgnoreCase(true);
+        message(new HttpMessageBuilder(httpMessage))
+            .headerNameIgnoreCase(true);
         validator(new HttpQueryParamHeaderValidator());
-    }
-
-    @Override
-    public HttpServerRequestActionBuilder payload(String payload) {
-        httpMessage.setPayload(payload);
-        return this;
-    }
-
-    @Override
-    public HttpServerRequestActionBuilder messageName(String name) {
-        httpMessage.setName(name);
-        return super.messageName(name);
     }
 
     /**
@@ -67,81 +56,112 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
         return this;
     }
 
-    /**
-     * Sets the request method.
-     * @param method
-     * @return
-     */
-    public HttpServerRequestActionBuilder method(HttpMethod method) {
-        httpMessage.method(method);
-        return this;
-    }
-
-    /**
-     * Adds a query param to the request uri.
-     * @param name
-     * @return
-     */
-    public HttpServerRequestActionBuilder queryParam(String name) {
-        httpMessage.queryParam(name, null);
-        return this;
-    }
-
-    /**
-     * Adds a query param to the request uri.
-     * @param name
-     * @param value
-     * @return
-     */
-    public HttpServerRequestActionBuilder queryParam(String name, String value) {
-        httpMessage.queryParam(name, value);
-        return this;
-    }
-
-    /**
-     * Sets the http version.
-     * @param version
-     * @return
-     */
-    public HttpServerRequestActionBuilder version(String version) {
-        httpMessage.version(version);
-        return this;
-    }
-
-    /**
-     * Sets the request content type header.
-     * @param contentType
-     * @return
-     */
-    public HttpServerRequestActionBuilder contentType(String contentType) {
-        httpMessage.contentType(contentType);
-        return this;
-    }
-
-    /**
-     * Sets the request accept header.
-     * @param accept
-     * @return
-     */
-    public HttpServerRequestActionBuilder accept(String accept) {
-        httpMessage.accept(accept);
-        return this;
-    }
-
-    /**
-     * Adds cookie to response by "Cookie" header.
-     * @param cookie
-     * @return
-     */
-    public HttpServerRequestActionBuilder cookie(Cookie cookie) {
-        httpMessage.cookie(cookie);
-        return this;
-    }
-
     @Override
-    public HttpServerRequestActionBuilder message(Message message) {
-        HttpMessageUtils.copy(message, httpMessage);
-        return this;
+    public HttpMessageBuilderSupport getMessageBuilderSupport() {
+        if (messageBuilderSupport == null) {
+            messageBuilderSupport = new HttpMessageBuilderSupport(httpMessage, this);
+        }
+        return super.getMessageBuilderSupport();
+    }
+
+    public static class HttpMessageBuilderSupport extends MessageBuilderSupport<ReceiveMessageAction, HttpServerRequestActionBuilder, HttpMessageBuilderSupport> {
+
+        private final HttpMessage httpMessage;
+
+        protected HttpMessageBuilderSupport(HttpMessage httpMessage, HttpServerRequestActionBuilder delegate) {
+            super(delegate);
+            this.httpMessage = httpMessage;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport body(String payload) {
+            httpMessage.setPayload(payload);
+            return this;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport name(String name) {
+            httpMessage.setName(name);
+            return super.name(name);
+        }
+
+        @Override
+        public HttpMessageBuilderSupport from(Message controlMessage) {
+            HttpMessageUtils.copy(controlMessage, httpMessage);
+            return this;
+        }
+
+        /**
+         * Sets the request method.
+         * @param method
+         * @return
+         */
+        public HttpMessageBuilderSupport method(HttpMethod method) {
+            httpMessage.method(method);
+            return this;
+        }
+
+        /**
+         * Adds a query param to the request uri.
+         * @param name
+         * @return
+         */
+        public HttpMessageBuilderSupport queryParam(String name) {
+            httpMessage.queryParam(name, null);
+            return this;
+        }
+
+        /**
+         * Adds a query param to the request uri.
+         * @param name
+         * @param value
+         * @return
+         */
+        public HttpMessageBuilderSupport queryParam(String name, String value) {
+            httpMessage.queryParam(name, value);
+            return this;
+        }
+
+        /**
+         * Sets the http version.
+         * @param version
+         * @return
+         */
+        public HttpMessageBuilderSupport version(String version) {
+            httpMessage.version(version);
+            return this;
+        }
+
+        /**
+         * Sets the request content type header.
+         * @param contentType
+         * @return
+         */
+        public HttpMessageBuilderSupport contentType(String contentType) {
+            httpMessage.contentType(contentType);
+            return this;
+        }
+
+        /**
+         * Sets the request accept header.
+         * @param accept
+         * @return
+         */
+        public HttpMessageBuilderSupport accept(String accept) {
+            httpMessage.accept(accept);
+            return this;
+        }
+
+        /**
+         * Adds cookie to response by "Cookie" header.
+         * @param cookie
+         * @return
+         */
+        public HttpMessageBuilderSupport cookie(Cookie cookie) {
+            httpMessage.cookie(cookie);
+            return this;
+        }
+
     }
 
     @Override

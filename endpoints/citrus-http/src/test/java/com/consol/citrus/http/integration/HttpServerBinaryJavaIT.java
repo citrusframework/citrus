@@ -17,6 +17,7 @@
 package com.consol.citrus.http.integration;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
@@ -57,7 +58,7 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
 
     @CitrusTest
     public void customMediaTypeAndEncoding() {
-        byte[] binaryDataUtf8 = "$&%!!Äöü".getBytes(Charset.forName("utf-8"));
+        byte[] binaryDataUtf8 = "$&%!!Äöü".getBytes(StandardCharsets.UTF_8);
         byte[] binaryDataLatin1 = "$&%!!Äöü".getBytes(Charset.forName("latin1"));
 
         httpClient.getEndpointConfiguration().setRequestUrl(String.format(httpClient.getEndpointConfiguration().getRequestUrl(), serverPort));
@@ -77,8 +78,8 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
         when(http().server(httpServer)
                 .receive()
                 .post("/test")
-                .messageType(MessageType.BINARY)
                 .message(new DefaultMessage(binaryDataUtf8))
+                .type(MessageType.BINARY)
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM)
                 .accept(MEDIA_TYPE_APPLICATION_CUSTOM));
 
@@ -92,8 +93,8 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
         then(http().client(httpClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .messageType(MessageType.BINARY)
                 .message(new DefaultMessage(binaryDataLatin1))
+                .type(MessageType.BINARY)
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM));
 
         run(doFinally().actions(stop(httpServer)));
@@ -115,8 +116,8 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
         when(http().server("echoHttpServer")
                     .receive()
                     .post("/echo")
-                    .messageType(MessageType.BINARY)
                     .message(new DefaultMessage(binaryData))
+                    .type(MessageType.BINARY)
                     .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
                     .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
 
@@ -130,8 +131,8 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
         then(http().client("echoHttpClient")
                 .receive()
                 .response(HttpStatus.OK)
-                .messageType(MessageType.BINARY)
                 .message(new DefaultMessage(binaryData))
+                .type(MessageType.BINARY)
                 .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
     }
 }

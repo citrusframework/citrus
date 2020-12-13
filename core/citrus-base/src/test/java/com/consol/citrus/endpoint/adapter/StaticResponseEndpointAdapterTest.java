@@ -82,7 +82,7 @@ public class StaticResponseEndpointAdapterTest extends UnitTestSupport {
 
         endpointAdapter.setMessageHeader(header);
         endpointAdapter.setMessagePayload("<TestResponse>" +
-                    "<Text>Length is citrus:stringLength(citrus:message(request.payload()))!</Text>" +
+                    "<Text>Length is citrus:stringLength(citrus:message(request.body()))!</Text>" +
                 "</TestResponse>");
 
         String request = "<TestRequest>" +

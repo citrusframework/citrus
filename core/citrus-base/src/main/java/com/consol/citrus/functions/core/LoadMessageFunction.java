@@ -16,6 +16,8 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
@@ -23,8 +25,6 @@ import com.consol.citrus.functions.Function;
 import com.consol.citrus.message.Message;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 /**
  * Function loads message from test context message store. Incoming and sent messages get automatically
@@ -43,8 +43,8 @@ public class LoadMessageFunction implements Function {
 
         String messageName = parameterList.get(0);
         String messageHeader = null;
-        if (messageName.endsWith(".payload()")) {
-            messageName = messageName.substring(0, messageName.indexOf(".payload()"));
+        if (messageName.endsWith(".body()")) {
+            messageName = messageName.substring(0, messageName.indexOf(".body()"));
         } else if (messageName.contains(".header(") && messageName.endsWith(")")) {
             messageHeader = messageName.substring(messageName.indexOf(".header(") + 8, messageName.length() - 1);
             if (messageHeader.startsWith("'") && messageHeader.endsWith("'")) {

@@ -40,7 +40,9 @@ public class JmsTopicJavaIT extends TestNGCitrusSupport {
 
         run(parallel().actions(
            receive("helloServiceJmsTopicEndpoint")
-               .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+               .description("Receive asynchronous hello response: HelloService -> TestFramework")
+               .message()
+               .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -48,10 +50,11 @@ public class JmsTopicJavaIT extends TestNGCitrusSupport {
                         "</HelloRequest>")
                .header("Operation", "sayHello")
                .header("CorrelationId", "${correlationId}")
-               .timeout(5000)
-               .description("Receive asynchronous hello response: HelloService -> TestFramework"),
+               .timeout(5000),
            receive("helloServiceJmsTopicEndpoint")
-               .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+               .description("Receive asynchronous hello response: HelloService -> TestFramework")
+               .message()
+               .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -59,8 +62,7 @@ public class JmsTopicJavaIT extends TestNGCitrusSupport {
                         "</HelloRequest>")
                .header("Operation", "sayHello")
                .header("CorrelationId", "${correlationId}")
-               .timeout(5000)
-               .description("Receive asynchronous hello response: HelloService -> TestFramework"),
+               .timeout(5000),
            sequential().actions(
                sleep().milliseconds(1000L),
                send("helloServiceJmsTopicEndpoint")

@@ -57,7 +57,8 @@ public class SendReplyToJavaIT extends TestNGCitrusSupport {
 
             sequential().actions(
                 receive("syncGetDateRequestReceiver")
-                    .payload("<GetDateRequestMessage>" +
+                    .message()
+                    .body("<GetDateRequestMessage>" +
                             "<MessageHeader>" +
                                 "<ConversationId>${conversationId}</ConversationId>" +
                                 "<Timestamp>citrus:currentDate()</Timestamp>" +
@@ -85,7 +86,8 @@ public class SendReplyToJavaIT extends TestNGCitrusSupport {
 
                 receive("syncGetDateRequestSender")
                     .selector("citrus_message_id = '${syncRequestCorrelatorId}'")
-                    .payload("<GetDateResponseMessage>" +
+                    .message()
+                    .body("<GetDateResponseMessage>" +
                                 "<MessageHeader>" +
                                 "<ConversationId>${conversationId}</ConversationId>" +
                                 "<Timestamp>citrus:currentDate()</Timestamp>" +

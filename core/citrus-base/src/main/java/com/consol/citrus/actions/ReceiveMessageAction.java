@@ -16,8 +16,6 @@
 
 package com.consol.citrus.actions;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,35 +27,28 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.consol.citrus.AbstractTestActionBuilder;
-import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.common.Named;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.message.MessageHeaderDataBuilder;
 import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageSelectorBuilder;
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.message.WithHeaderBuilder;
 import com.consol.citrus.message.WithPayloadBuilder;
-import com.consol.citrus.message.builder.DefaultHeaderBuilder;
-import com.consol.citrus.message.builder.DefaultHeaderDataBuilder;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
+import com.consol.citrus.message.builder.MessageBuilderSupport;
+import com.consol.citrus.message.builder.ReceiveMessageBuilderSupport;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
-import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.DefaultMessageBuilder;
-import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.validation.ValidationProcessor;
+import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -69,7 +60,6 @@ import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -133,7 +123,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public ReceiveMessageAction(ReceiveMessageActionBuilder<?, ?> builder) {
+    public ReceiveMessageAction(ReceiveMessageActionBuilder<?, ?, ?> builder) {
         super("receive", builder);
 
         this.endpoint = builder.endpoint;
@@ -141,15 +131,16 @@ public class ReceiveMessageAction extends AbstractTestAction {
         this.receiveTimeout = builder.receiveTimeout;
         this.messageSelector = builder.messageSelector;
         this.messageSelectorMap = builder.messageSelectorMap;
-        this.messageBuilder = builder.messageBuilder;
         this.validators = builder.validators;
-        this.dataDictionary = builder.dataDictionary;
         this.validationProcessor = builder.validationProcessor;
         this.validationContexts = builder.getValidationContexts();
         this.variableExtractors = builder.variableExtractors;
-        this.controlMessageProcessors = builder.controlMessageProcessors;
         this.messageProcessors = builder.messageProcessors;
-        this.messageType = Optional.ofNullable(builder.messageType).orElse(CitrusSettings.DEFAULT_MESSAGE_TYPE);
+
+        this.messageBuilder = builder.messageBuilderSupport.getMessageBuilder();
+        this.dataDictionary = builder.messageBuilderSupport.getDataDictionary();
+        this.controlMessageProcessors = builder.messageBuilderSupport.getControlMessageProcessors();
+        this.messageType = builder.messageBuilderSupport.getMessageType();
     }
 
     /**
@@ -445,7 +436,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends ReceiveMessageActionBuilder<ReceiveMessageAction, Builder> {
+    public static final class Builder extends ReceiveMessageActionBuilder<ReceiveMessageAction, ReceiveMessageBuilderSupport, Builder> {
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -480,27 +471,33 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         @Override
+        public ReceiveMessageBuilderSupport getMessageBuilderSupport() {
+            if (messageBuilderSupport == null) {
+                messageBuilderSupport = new ReceiveMessageBuilderSupport(self);
+            }
+            return super.getMessageBuilderSupport();
+        }
+
+        @Override
         public ReceiveMessageAction doBuild() {
             return new ReceiveMessageAction(this);
         }
     }
 
-    public static abstract class ReceiveMessageActionBuilder<T extends ReceiveMessageAction, B extends ReceiveMessageActionBuilder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
+    public static abstract class ReceiveMessageActionBuilder<T extends ReceiveMessageAction, M extends MessageBuilderSupport<T, B, M>, B extends ReceiveMessageActionBuilder<T, M, B>>
+            extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
         private Endpoint endpoint;
         private String endpointUri;
         private long receiveTimeout = 0L;
         private final Map<String, Object> messageSelectorMap = new HashMap<>();
         private String messageSelector;
-        private MessageBuilder messageBuilder = new DefaultMessageBuilder();
         private final List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<>();
-        private DataDictionary<?> dataDictionary;
-        private String dataDictionaryName;
         private ValidationProcessor validationProcessor;
         private final List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
         private final List<VariableExtractor> variableExtractors = new ArrayList<>();
-        private final List<MessageProcessor> controlMessageProcessors = new ArrayList<>();
         private final List<MessageProcessor> messageProcessors = new ArrayList<>();
-        private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
+
+        protected M messageBuilderSupport;
 
         /** Validation context used in this action builder */
         private HeaderValidationContext headerValidationContext;
@@ -546,13 +543,20 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Sets the message builder to use.
+         * Construct the control message for this receive action.
+         * @return
+         */
+        public M message() {
+            return getMessageBuilderSupport();
+        }
+
+        /**
+         * Sets the control message for this receive action.
          * @param messageBuilder
          * @return
          */
-        public B message(MessageBuilder messageBuilder) {
-            this.messageBuilder = messageBuilder;
-            return self;
+        public M message(MessageBuilder messageBuilder) {
+            return getMessageBuilderSupport().from(messageBuilder);
         }
 
         /**
@@ -561,209 +565,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param controlMessage
          * @return
          */
-        public B message(final Message controlMessage) {
-            final StaticMessageBuilder staticMessageBuilder = StaticMessageBuilder.withMessage(controlMessage);
-
-            if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).getHeaderBuilders().forEach(staticMessageBuilder::addHeaderBuilder);
-            }
-
-            message(staticMessageBuilder);
-            messageType(controlMessage.getType());
-            return self;
-        }
-
-        /**
-         * Sets the message name.
-         *
-         * @param name
-         * @return
-         */
-        public B messageName(final String name) {
-            if (messageBuilder instanceof Named) {
-                ((Named) messageBuilder).setName(name);
-            } else {
-                throw new CitrusRuntimeException("Unable to set message name on builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Expect this message payload data in received message.
-         *
-         * @param payloadBuilder
-         * @return
-         */
-        public B payload(final MessagePayloadBuilder payloadBuilder) {
-            if (messageBuilder instanceof WithPayloadBuilder) {
-                ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(payloadBuilder);
-            } else {
-                throw new CitrusRuntimeException("Unable to set payload builder on message builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Expect this message payload data in received message.
-         *
-         * @param payload
-         * @return
-         */
-        public B payload(final String payload) {
-            payload(new DefaultPayloadBuilder(payload));
-            return self;
-        }
-
-        /**
-         * Expect this message payload data in received message.
-         *
-         * @param payloadResource
-         * @return
-         */
-        public B payload(final Resource payloadResource) {
-            return payload(payloadResource, FileUtils.getDefaultCharset());
-        }
-
-        /**
-         * Expect this message payload data in received message.
-         *
-         * @param payloadResource
-         * @param charset
-         * @return
-         */
-        public B payload(final Resource payloadResource, final Charset charset) {
-            try {
-                payload(FileUtils.readToString(payloadResource, charset));
-            } catch (final IOException e) {
-                throw new CitrusRuntimeException("Failed to read payload resource", e);
-            }
-
-            return self;
-        }
-
-        /**
-         * Expect this message header entry in received message.
-         *
-         * @param name
-         * @param value
-         * @return
-         */
-        public B header(final String name, final Object value) {
-            if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderBuilder(Collections.singletonMap(name, value)));
-            } else {
-                throw new CitrusRuntimeException("Unable to set message header on builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Expect this message header entries in received message.
-         *
-         * @param headers
-         * @return
-         */
-        public B headers(final Map<String, Object> headers) {
-            if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderBuilder(headers));
-            } else {
-                throw new CitrusRuntimeException("Unable to set message header on builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Expect this message header data in received message. Message header data is used in
-         * SOAP messages as XML fragment for instance.
-         *
-         * @param data
-         * @return
-         */
-        public B header(final String data) {
-            header(new DefaultHeaderDataBuilder(data));
-            return self;
-        }
-
-        /**
-         * Expect this message header data in received message. Message header data is used in
-         * SOAP messages as XML fragment for instance.
-         *
-         * @param headerDataBuilder
-         * @return
-         */
-        public B header(final MessageHeaderDataBuilder headerDataBuilder) {
-            if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(headerDataBuilder);
-            } else {
-                throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Expect this message header data in received message from file resource. Message header data is used in
-         * SOAP messages as XML fragment for instance.
-         *
-         * @param resource
-         * @return
-         */
-        public B header(final Resource resource) {
-            return header(resource, FileUtils.getDefaultCharset());
-        }
-
-        /**
-         * Expect this message header data in received message from file resource. Message header data is used in
-         * SOAP messages as XML fragment for instance.
-         *
-         * @param resource
-         * @param charset
-         * @return
-         */
-        public B header(final Resource resource, final Charset charset) {
-            try {
-                if (messageBuilder instanceof WithHeaderBuilder) {
-                    ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderDataBuilder(FileUtils.readToString(resource, charset)));
-                } else {
-                    throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
-                }
-            } catch (final IOException e) {
-                throw new CitrusRuntimeException("Failed to read header resource", e);
-            }
-
-            return self;
-        }
-
-        /**
-         * Validate header names with case insensitive keys.
-         *
-         * @param value
-         * @return
-         */
-        public B headerNameIgnoreCase(final boolean value) {
-            getHeaderValidationContext().setHeaderNameIgnoreCase(value);
-            return self;
-        }
-
-        /**
-         * Sets a explicit message type for this receive action.
-         *
-         * @param messageType
-         * @return
-         */
-        public B messageType(final MessageType messageType) {
-            messageType(messageType.name());
-            return self;
-        }
-
-        /**
-         * Sets a explicit message type for this receive action.
-         *
-         * @param messageType
-         * @return
-         */
-        public B messageType(final String messageType) {
-            this.messageType = messageType;
-            return self;
+        public M message(final Message controlMessage) {
+            return getMessageBuilderSupport().from(controlMessage);
         }
 
         /**
@@ -883,28 +686,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Sets explicit data dictionary for this receive action.
-         *
-         * @param dictionary
-         * @return
-         */
-        public B dictionary(final DataDictionary<?> dictionary) {
-            this.dataDictionary = dictionary;
-            return self;
-        }
-
-        /**
-         * Sets explicit data dictionary by name.
-         *
-         * @param dictionaryName
-         * @return
-         */
-        public B dictionary(final String dictionaryName) {
-            this.dataDictionaryName = dictionaryName;
-            return self;
-        }
-
-        /**
          * Adds validation processor to the receive action for validating
          * the received message with Java code.
          *
@@ -960,26 +741,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Adds message processor on the control message.
-         * @param processor
-         * @return
-         */
-        public B modify(MessageProcessor processor) {
-            this.controlMessageProcessors.add(processor);
-
-            return self;
-        }
-
-        /**
-         * Adds message processor on the control message as fluent builder.
-         * @param builder
-         * @return
-         */
-        public B modify(MessageProcessor.Builder<?, ?> builder) {
-            return modify(builder.build());
-        }
-
-        /**
          * Sets the bean reference resolver.
          *
          * @param referenceResolver
@@ -999,8 +760,16 @@ public class ReceiveMessageAction extends AbstractTestAction {
             this.referenceResolver = referenceResolver;
         }
 
+        public M getMessageBuilderSupport() {
+            return messageBuilderSupport;
+        }
+
         @Override
         public final T build() {
+            if (messageBuilderSupport == null) {
+                messageBuilderSupport = getMessageBuilderSupport();
+            }
+
             reconcileValidationContexts();
 
             if (referenceResolver != null) {
@@ -1020,8 +789,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
                     }
                 }
 
-                if (dataDictionaryName != null) {
-                    this.dataDictionary = referenceResolver.resolve(dataDictionaryName, DataDictionary.class);
+                if (messageBuilderSupport.getDataDictionaryName() != null) {
+                    messageBuilderSupport.dictionary(
+                            referenceResolver.resolve(messageBuilderSupport.getDataDictionaryName(), DataDictionary.class));
                 }
             }
 
@@ -1084,6 +854,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
                     }
                 }
             }
+
+            validationContexts.stream()
+                    .filter(HeaderValidationContext.class::isInstance)
+                    .forEach(c -> ((HeaderValidationContext) c).setHeaderNameIgnoreCase(getMessageBuilderSupport().isHeaderNameIgnoreCase()));
         }
 
         /**
@@ -1091,13 +865,17 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         protected Optional<String> getMessagePayload() {
-            if (messageBuilder instanceof StaticMessageBuilder) {
-                Message message = ((StaticMessageBuilder) messageBuilder).getMessage();
+            if (messageBuilderSupport == null) {
+                return Optional.empty();
+            }
+
+            if (messageBuilderSupport.getMessageBuilder() instanceof StaticMessageBuilder) {
+                Message message = ((StaticMessageBuilder) messageBuilderSupport.getMessageBuilder()).getMessage();
                 if (message.getPayload() instanceof String) {
                     return Optional.of(message.getPayload(String.class));
                 }
-            } else if (messageBuilder instanceof WithPayloadBuilder) {
-                MessagePayloadBuilder payloadBuilder = ((WithPayloadBuilder) messageBuilder).getPayloadBuilder();
+            } else if (messageBuilderSupport.getMessageBuilder() instanceof WithPayloadBuilder) {
+                MessagePayloadBuilder payloadBuilder = ((WithPayloadBuilder) messageBuilderSupport.getMessageBuilder()).getPayloadBuilder();
                 if (payloadBuilder instanceof DefaultPayloadBuilder) {
                     return Optional.ofNullable(((DefaultPayloadBuilder) payloadBuilder).getPayload())
                             .map(Object::toString);

@@ -88,7 +88,7 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
     /**
      * Test action factory bean.
      */
-    public static class ReceiveSoapMessageActionFactoryBean extends AbstractReceiveMessageActionFactoryBean<ReceiveSoapMessageAction, ReceiveSoapMessageAction.Builder> {
+    public static class ReceiveSoapMessageActionFactoryBean extends AbstractReceiveMessageActionFactoryBean<ReceiveSoapMessageAction, ReceiveSoapMessageAction.Builder.SoapMessageBuilderSupport, ReceiveSoapMessageAction.Builder> {
 
         private final ReceiveSoapMessageAction.Builder builder = new ReceiveSoapMessageAction.Builder();
 
@@ -97,7 +97,7 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
          * @param attachments the control attachments
          */
         public void setAttachments(List<SoapAttachment> attachments) {
-            attachments.forEach(builder::attachment);
+            attachments.forEach(builder.message()::attachment);
         }
 
         /**
@@ -105,7 +105,7 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
          * @param attachmentValidator the attachmentValidator to set
          */
         public void setAttachmentValidator(SoapAttachmentValidator attachmentValidator) {
-            builder.attachmentValidator(attachmentValidator);
+            builder.message().attachmentValidator(attachmentValidator);
         }
 
         @Override

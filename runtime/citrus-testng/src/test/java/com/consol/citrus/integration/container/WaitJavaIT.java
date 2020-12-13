@@ -81,10 +81,11 @@ public class WaitJavaIT extends TestNGCitrusSupport {
 
                         receive("direct:waitQueue")
                                 .selector(Collections.singletonMap("Operation", "waitForMe"))
-                                .messageType(MessageType.PLAINTEXT)
-                                .messageName(messageName)
-                                .payload("Wait for me")
-                                .header("Operation", "waitForMe")
+                                .message()
+                                    .type(MessageType.PLAINTEXT)
+                                    .name(messageName)
+                                    .body("Wait for me")
+                                    .header("Operation", "waitForMe")
                 )
         ));
     }

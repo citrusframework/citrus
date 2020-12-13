@@ -54,8 +54,9 @@ public class EndpointInjectionJavaIT extends TestNGCitrusSupport {
                 .payload("Hello!"));
 
         run(receive(directEndpoint)
-                .messageType(MessageType.PLAINTEXT)
-                .payload("Hello!"));
+                .message()
+                    .type(MessageType.PLAINTEXT)
+                    .body("Hello!"));
 
         Assert.assertNotNull(citrus);
     }

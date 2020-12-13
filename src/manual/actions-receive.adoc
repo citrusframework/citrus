@@ -24,7 +24,7 @@ As already mentioned before a message consists of a message header (name-value p
 ----
 
 Overall the receive message action looks quite similar to the send message action. Concepts are identical as we define the message content with payload and header values. The message name is optional and defines the message identifier in the local message store.
-This message name is very useful when accessing the message content later on during the test case. The local message store is handled per test case and contains all exchanged messages. 
+This message name is very useful when accessing the message content later on during the test case. The local message store is handled per test case and contains all exchanged messages.
 
 We can use test variables in both message payload an headers. Now let us have a look at the Java DSL representation of this simple example:
 
@@ -34,8 +34,9 @@ We can use test variables in both message payload an headers. Now let us have a 
 @CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
+        .message()
         .name("helloRequest")
-        .payload("<TestMessage>" +
+        .body("<TestMessage>" +
                     "<Text>${text}</Text>" +
                 "</TestMessage>")
         .header("Operation", "sayHello")
@@ -49,8 +50,9 @@ public void messagingTest() {
 @CitrusTest
 public void messagingTest() {
     receive(action -> action.endpoint("helloServiceEndpoint")
+                .message()
                 .name("helloRequest")
-                .payload("<TestMessage>" +
+                .body("<TestMessage>" +
                       "<Text>${text}</Text>" +
                     "</TestMessage>")
                 .header("Operation", "sayHello")
@@ -125,7 +127,8 @@ In Java DSL we also have multiple options for specifying the message payloads:
 @CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
-        .payload("<TestMessage>" +
+        .message()
+        .body("<TestMessage>" +
                     "<Text>Hello!</Text>" +
                 "</TestMessage>");
 }
@@ -136,7 +139,8 @@ public void messagingTest() {
 @CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
-        .payload(new ClassPathResource("com/consol/citrus/messages/TestRequest.xml"));
+        .message()
+        .body(new ClassPathResource("com/consol/citrus/messages/TestRequest.xml"));
 }
 ----
 
@@ -209,7 +213,8 @@ Let's see how this looks like in Java DSL:
 @CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
-        .payload("<TestMessage>" +
+        .message()
+        .body("<TestMessage>" +
                 "<Text>Hello!</Text>" +
             "</TestMessage>")
         .header("Operation", "sayHello");
@@ -222,7 +227,8 @@ public void messagingTest() {
 @CitrusTest
 public void messagingTest() {
     receive(action -> action.endpoint("helloServiceEndpoint")
-                .payload("<TestMessage>" +
+                .message()
+                .body("<TestMessage>" +
                       "<Text>Hello!</Text>" +
                     "</TestMessage>")
                 .header("Operation", "sayHello"));

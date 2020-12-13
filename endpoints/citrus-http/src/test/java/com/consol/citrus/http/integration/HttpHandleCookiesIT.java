@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class HttpHandleCookiesIT extends TestNGCitrusSupport {
 
     @Autowired
@@ -46,6 +47,7 @@ public class HttpHandleCookiesIT extends TestNGCitrusSupport {
         then(http().server(httpServer)
                 .receive()
                 .delete()
+                .message()
                 .cookie(aCookie)
                 .cookie(bCookie));
     }
@@ -75,6 +77,7 @@ public class HttpHandleCookiesIT extends TestNGCitrusSupport {
         then(http().client(httpClient)
                 .receive()
                 .response()
+                .message()
                 .cookie(loginCookie));
     }
 }

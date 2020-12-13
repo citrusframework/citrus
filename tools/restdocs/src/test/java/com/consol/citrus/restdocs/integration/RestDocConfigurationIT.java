@@ -80,7 +80,8 @@ public class RestDocConfigurationIT extends TestNGCitrusSupport {
         then(http().client(httpClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                .message()
+                .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                     "<MessageId>1234567890</MessageId>" +
                     "<CorrelationId>1000000001</CorrelationId>" +
                     "<User>HelloService</User>" +

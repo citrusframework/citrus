@@ -50,7 +50,8 @@ public class JmsSyncSendReceiveJavaIT extends TestNGCitrusSupport {
             .header("CorrelationId", "${correlationId}"));
 
         then(receive("helloServiceJmsSyncEndpoint")
-            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .message()
+            .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<MessageId>${messageId}</MessageId>" +
                             "<CorrelationId>${correlationId}</CorrelationId>" +
                             "<User>HelloService</User>" +
@@ -67,7 +68,8 @@ public class JmsSyncSendReceiveJavaIT extends TestNGCitrusSupport {
             .header("CorrelationId", "${correlationId}"));
 
         then(receive("helloServiceJmsSyncEndpoint")
-            .payload(new ClassPathResource("com/consol/citrus/jms/integration/helloResponse.xml"))
+            .message()
+            .body(new ClassPathResource("com/consol/citrus/jms/integration/helloResponse.xml"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
     }

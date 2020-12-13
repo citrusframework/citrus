@@ -112,12 +112,12 @@ public class MessagingSteps {
     public void receiveMessage(final String endpoint, final String type, final String messageId) {
         if (messages.containsKey(messageId)) {
             runner.when(receive().endpoint(endpoint)
-                    .messageType(type)
-                    .message(new DefaultMessage(messages.get(messageId))));
+                    .message(new DefaultMessage(messages.get(messageId)))
+                    .type(type));
         } else {
             runner.when(receive().endpoint(endpoint)
-                    .messageType(type)
-                    .message(messageCreators.createMessage(messageId)));
+                    .message(messageCreators.createMessage(messageId))
+                    .type(type));
         }
     }
 
@@ -134,8 +134,9 @@ public class MessagingSteps {
     @When("^<([^>]+)> receives ([^\\s]+) \"([^\"]*)\"$")
     public void doReceiveMessage(final String endpoint, final String type, final String payload) {
         runner.when(receive().endpoint(endpoint)
-        .messageType(type)
-        .payload(payload));
+                .message()
+                .type(type)
+                .body(payload));
     }
 
     @When("^<([^>]+)> receives \"([^\"]*)\"$")

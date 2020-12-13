@@ -34,9 +34,9 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
-import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -59,7 +59,6 @@ import static com.consol.citrus.validation.xml.XpathMessageValidationContext.Bui
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
@@ -87,10 +86,9 @@ class ReceiveMessageBuilderTest {
         final Endpoint endpoint = mock(Endpoint.class);
 
         //WHEN
-        final ReceiveMessageAction.Builder copy = builder.endpoint(endpoint);
+        builder.endpoint(endpoint);
 
         //THEN
-		assertSame(copy, builder);
 		assertEquals(endpoint, builder.build().getEndpoint());
 	}
 
@@ -102,10 +100,9 @@ class ReceiveMessageBuilderTest {
 		final String uri = "http://localhost:8080/foo/bar";
 
         //WHEN
-        final ReceiveMessageAction.Builder copy = builder.endpoint(uri);
+        builder.endpoint(uri);
 
         //THEN
-		assertSame(copy, builder);
 		assertEquals(uri, builder.build().getEndpointUri());
 	}
 
@@ -115,10 +112,9 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
         //WHEN
-        final ReceiveMessageAction.Builder copy = builder.timeout(1000L);
+        builder.timeout(1000L);
 
         //THEN
-        assertSame(copy, builder);
 		assertEquals(1000L, builder.build().getReceiveTimeout());
 	}
 
@@ -130,10 +126,9 @@ class ReceiveMessageBuilderTest {
         final Message message = mock(Message.class);
 
         //WHEN
-        final ReceiveMessageAction.Builder copy = builder.message(message);
+        builder.message(message);
 
         //THEN
-		assertSame(copy, builder);
 		assertNotNull(builder.build().getMessageBuilder());
 	}
 
@@ -143,10 +138,9 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
         //WHEN
-        final ReceiveMessageAction.Builder copy = builder.messageName("foo");
+        builder.message().name("foo");
 
         //THEN
-		assertSame(copy, builder);
 		assertTrue(builder.build().getMessageBuilder() instanceof DefaultMessageBuilder);
 		assertEquals("foo", builder.build().getMessageBuilder().build(context, MessageType.PLAINTEXT.name()).getName());
 	}
@@ -157,10 +151,9 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.payload("payload");
+		builder.message().body("payload");
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals("payload", getPayloadData(builder));
 	}
 
@@ -171,12 +164,11 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
         //WHEN
-        final ReceiveMessageAction.Builder copy = builder.payload("payload");
+        builder.message().body("payload");
 
         //THEN
-        assertSame(copy, builder);
         assertEquals("payload", getPayloadData(builder));
-        assertNotNull(copy.build().getMessageBuilder());
+        assertNotNull(builder.build().getMessageBuilder());
     }
 
     @Test
@@ -187,10 +179,9 @@ class ReceiveMessageBuilderTest {
 		builder.message(new StaticMessageBuilder(new DefaultMessage()));
 
         //WHEN
-        final ReceiveMessageAction.Builder copy = builder.payload("payload");
+        builder.message().body("payload");
 
         //THEN
-        assertSame(copy, builder);
         final Object payload = ((StaticMessageBuilder)
 				builder.build().getMessageBuilder()).getMessage().getPayload();
         assertEquals("payload", payload);
@@ -209,7 +200,7 @@ class ReceiveMessageBuilderTest {
 		});
 
         //WHEN
-        final Executable setPayload = () -> builder.payload("payload");
+        final Executable setPayload = () -> builder.message().body("payload");
 
         //THEN
         assertThrows(CitrusRuntimeException.class, setPayload);
@@ -221,10 +212,9 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.payload(this.resource);
+		builder.message().body(this.resource);
 
 		//THEN
-		assertSame(copy, builder);
 		assertNotNull(getPayloadData(builder));
 	}
 
@@ -234,10 +224,9 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.payload(this.resource, Charset.defaultCharset());
+		builder.message().body(this.resource, Charset.defaultCharset());
 
 		//THEN
-		assertSame(copy, builder);
 		assertNotNull(getPayloadData(builder));
 	}
 
@@ -249,7 +238,7 @@ class ReceiveMessageBuilderTest {
         when(resource.getInputStream()).thenThrow(IOException.class);
 
         //WHEN
-        final Executable setPayload = () -> builder.payload(this.resource, Charset.defaultCharset());
+        final Executable setPayload = () -> builder.message().body(this.resource, Charset.defaultCharset());
 
         //THEN
         assertThrows(CitrusRuntimeException.class, setPayload, "Failed to read payload resource");
@@ -264,10 +253,9 @@ class ReceiveMessageBuilderTest {
 		final Integer headerValue = 45;
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.header(headerName, headerValue);
+		builder.message().header(headerName, headerValue);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(headerValue, ((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context).get(headerName));
 	}
 
@@ -281,10 +269,9 @@ class ReceiveMessageBuilderTest {
 		headers.put("bar", "hello");
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headers(headers);
+		builder.message().headers(headers);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(headers, ((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context));
 	}
 
@@ -297,10 +284,9 @@ class ReceiveMessageBuilderTest {
 
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.header(data);
+		builder.message().header(data);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(Collections.singletonList(data),
 				((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
@@ -313,10 +299,9 @@ class ReceiveMessageBuilderTest {
 		final List<String> expected = Collections.singletonList("");
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.header(resource);
+		builder.message().header(resource);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(expected, ((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
@@ -328,10 +313,9 @@ class ReceiveMessageBuilderTest {
 		final List<String> expected = Collections.singletonList("");
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.header(resource, Charset.defaultCharset());
+		builder.message().header(resource, Charset.defaultCharset());
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(expected, ((DefaultMessageBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
@@ -341,10 +325,9 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headerNameIgnoreCase(false);
+		builder.message().headerNameIgnoreCase(false);
 
 		//THEN
-		assertSame(copy, builder);
 		final HeaderValidationContext headerValidationContext =
 				getFieldFromBuilder(builder, HeaderValidationContext.class, "headerValidationContext");
 		assertNotNull(headerValidationContext);
@@ -357,15 +340,14 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String validationScript = "validation.txt";
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new ScriptValidationContext.Builder()
 				.script(validationScript)
 				.build());
 
 		//THEN
-		assertSame(copy, builder);
 		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
@@ -379,15 +361,14 @@ class ReceiveMessageBuilderTest {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new ScriptValidationContext.Builder()
 				.script(resource)
 				.build());
 
 		//THEN
-		assertSame(copy, builder);
 		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
@@ -401,15 +382,14 @@ class ReceiveMessageBuilderTest {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new ScriptValidationContext.Builder()
 				.script(resource, Charset.defaultCharset())
 				.build());
 
 		//THEN
-		assertSame(copy, builder);
 		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
@@ -424,15 +404,14 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String validationScript = "validation.txt";
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new ScriptValidationContext.Builder()
 				.scriptResource(validationScript)
 				.build());
 
 		//THEN
-		assertSame(copy, builder);
 		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
@@ -447,15 +426,14 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String scriptType = "bash";
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+		builder.validate(new ScriptValidationContext.Builder()
 				.scriptType(scriptType)
 				.build());
 
 		//THEN
-		assertSame(copy, builder);
 		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
 				.filter(ScriptValidationContext.class::isInstance)
 				.map(ScriptValidationContext.class::cast)
@@ -468,8 +446,7 @@ class ReceiveMessageBuilderTest {
 	void messageType_fromEnum() {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final MessageType messageType = MessageType.JSON;
-		final ReceiveMessageAction.Builder copy = builder.messageType(messageType);
-		assertSame(copy, builder);
+		builder.message().type(messageType);
 		assertEquals(messageType.name(), ReflectionTestUtils.getField(builder, "messageType"));
 	}
 
@@ -481,10 +458,9 @@ class ReceiveMessageBuilderTest {
 		final String messageType = "JSON";
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.messageType(messageType);
+		builder.message().type(messageType);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(messageType, ReflectionTestUtils.getField(builder, "messageType"));
 		assertEquals(messageType, builder.build().getMessageType());
 		assertEquals(3, builder.build().getValidationContexts().size());
@@ -499,10 +475,9 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(xml().schemaValidation(true));
+		builder.validate(xml().schemaValidation(true));
 
 		//THEN
-		assertSame(copy, builder);
 		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(XmlMessageValidationContext.class::isInstance)
 				.map(XmlMessageValidationContext.class::cast)
@@ -520,10 +495,9 @@ class ReceiveMessageBuilderTest {
 		final String uri = "http://foo.com";
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(xml().namespace(prefix, uri));
+		builder.validate(xml().namespace(prefix, uri));
 
 		//THEN
-		assertSame(copy, builder);
 		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(XmlMessageValidationContext.class::isInstance)
 				.map(XmlMessageValidationContext.class::cast)
@@ -539,14 +513,13 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String path = "$ResultCode";
 		final String controlValue = "Success";
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(jsonPath()
+		builder.validate(jsonPath()
 				.expression(path, controlValue));
 
 		//THEN
-		assertSame(copy, builder);
 		final JsonPathMessageValidationContext jsonMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(JsonPathMessageValidationContext.class::isInstance)
 				.map(JsonPathMessageValidationContext.class::cast)
@@ -562,14 +535,13 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String path = "//ResultCode";
 		final String controlValue = "Success";
-		builder.messageType(MessageType.XML);
+		builder.message().type(MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(xpath()
+		builder.validate(xpath()
 				.expression(path, controlValue));
 
 		//THEN
-		assertSame(copy, builder);
 		final XpathMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(XpathMessageValidationContext.class::isInstance)
 				.map(XpathMessageValidationContext.class::cast)
@@ -593,14 +565,13 @@ class ReceiveMessageBuilderTest {
 		map.put(key1, value1);
 		map.put(key2, value2);
 		map.put(key3, value3);
-		builder.messageType( MessageType.XML);
+		builder.message().type( MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(xpath()
+		builder.validate(xpath()
 				.expressions(map));
 
 		//THEN
-		assertSame(copy, builder);
 
 		final XpathMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(XpathMessageValidationContext.class::isInstance)
@@ -628,14 +599,13 @@ class ReceiveMessageBuilderTest {
 		map.put(key1, value1);
 		map.put(key2, value2);
 		map.put(key3, value3);
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(jsonPath()
+		builder.validate(jsonPath()
 				.expressions(map));
 
 		//THEN
-		assertSame(copy, builder);
 
 		final JsonPathMessageValidationContext jsonPathValidationContext = builder.getValidationContexts().stream()
 				.filter(JsonPathMessageValidationContext.class::isInstance)
@@ -654,14 +624,13 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String path = "$.ResultCode";
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(json()
+		builder.validate(json()
 				.ignore(path));
 
 		//THEN
-		assertSame(copy, builder);
 
 		final JsonMessageValidationContext jsonMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(JsonMessageValidationContext.class::isInstance)
@@ -677,13 +646,12 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String path = "//ResultCode";
-		builder.messageType(MessageType.XML);
+		builder.message().type(MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(xml().ignore(path));
+		builder.validate(xml().ignore(path));
 
 		//THEN
-		assertSame(copy, builder);
 
 		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(XmlMessageValidationContext.class::isInstance)
@@ -699,13 +667,12 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String schemaName = "foo.xsd";
-		builder.messageType(MessageType.XML);
+		builder.message().type(MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(xml().schema(schemaName));
+		builder.validate(xml().schema(schemaName));
 
 		//THEN
-		assertSame(copy, builder);
 
 		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(XmlMessageValidationContext.class::isInstance)
@@ -721,13 +688,12 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String schemaName = "foo.json";
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(json().schema(schemaName));
+		builder.validate(json().schema(schemaName));
 
 		//THEN
-		assertSame(copy, builder);
 
 		final JsonMessageValidationContext jsonMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(JsonMessageValidationContext.class::isInstance)
@@ -743,13 +709,12 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String schemaRepository = "/schemas";
-		builder.messageType(MessageType.XML);
+		builder.message().type(MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(xml().schemaRepository(schemaRepository));
+		builder.validate(xml().schemaRepository(schemaRepository));
 
 		//THEN
-		assertSame(copy, builder);
 
 		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(XmlMessageValidationContext.class::isInstance)
@@ -765,13 +730,12 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String schemaRepository = "/schemas";
-		builder.messageType(MessageType.JSON);
+		builder.message().type(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(json().schemaRepository(schemaRepository));
+		builder.validate(json().schemaRepository(schemaRepository));
 
 		//THEN
-		assertSame(copy, builder);
 
 		final JsonMessageValidationContext jsonMessageValidationContext = builder.getValidationContexts().stream()
 				.filter(JsonMessageValidationContext.class::isInstance)
@@ -789,10 +753,9 @@ class ReceiveMessageBuilderTest {
 		final String selector = "selector";
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.selector(selector);
+		builder.selector(selector);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(selector, builder.build().getMessageSelector());
 	}
 
@@ -806,10 +769,9 @@ class ReceiveMessageBuilderTest {
 		final Map<String, String> selectors = Collections.singletonMap(selectorKey, selectorValue);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.selector(selectors);
+		builder.selector(selectors);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(selectors.toString(), builder.build().getMessageSelectorMap().toString());
 	}
 
@@ -823,10 +785,9 @@ class ReceiveMessageBuilderTest {
 		final MessageValidator<?> validator3 = mock(MessageValidator.class);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validators(Arrays.asList(validator1, validator2, validator3));
+		builder.validators(Arrays.asList(validator1, validator2, validator3));
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(3, builder.build().getValidators().size());
 	}
 
@@ -848,10 +809,9 @@ class ReceiveMessageBuilderTest {
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validator(name1, name2, name3);
+		builder.validator(name1, name2, name3);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(3, builder.build().getValidators().size());
 	}
 
@@ -865,10 +825,9 @@ class ReceiveMessageBuilderTest {
 		final HeaderValidator validator3 = mock(HeaderValidator.class);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validator(validator1, validator2, validator3);
+		builder.validator(validator1, validator2, validator3);
 
 		//THEN
-		assertSame(copy, builder);
 
 		final HeaderValidationContext headerValidationContext =
 				getFieldFromBuilder(builder, HeaderValidationContext.class, "headerValidationContext");
@@ -893,10 +852,9 @@ class ReceiveMessageBuilderTest {
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validator(name1, name2, name3);
+		builder.validator(name1, name2, name3);
 
 		//THEN
-		assertSame(copy, builder);
 
 		builder.build();
 		final HeaderValidationContext headerValidationContext =
@@ -912,10 +870,9 @@ class ReceiveMessageBuilderTest {
 		final DataDictionary<?> dataDictionary = mock(DataDictionary.class);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.dictionary(dataDictionary);
+		builder.message().dictionary(dataDictionary);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(dataDictionary, builder.build().getDataDictionary());
 	}
 
@@ -931,11 +888,9 @@ class ReceiveMessageBuilderTest {
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.dictionary(name);
+		builder.message().dictionary(name);
 
 		//THEN
-
-		assertSame(copy, builder);
 		assertEquals(dataDictionary, builder.build().getDataDictionary());
 	}
 
@@ -947,10 +902,9 @@ class ReceiveMessageBuilderTest {
 		final ValidationProcessor processor = mock(ValidationProcessor.class);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(processor);
+		builder.validate(processor);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(processor, builder.build().getValidationProcessor());
 	}
 
@@ -963,10 +917,9 @@ class ReceiveMessageBuilderTest {
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.withReferenceResolver(referenceResolver);
+		builder.withReferenceResolver(referenceResolver);
 
 		//THEN
-		assertSame(copy, builder);
 		assertEquals(referenceResolver, ReflectionTestUtils.getField(builder, "referenceResolver"));
 	}
 
@@ -978,7 +931,7 @@ class ReceiveMessageBuilderTest {
         final MessageType messageType = MessageType.BINARY_BASE64;
 
         //WHEN
-        builder.messageType(messageType);
+        builder.message().type(messageType);
 
         //THEN
         final Object currentMessageType = ReflectionTestUtils.getField(builder, "messageType");
@@ -994,7 +947,7 @@ class ReceiveMessageBuilderTest {
         final String messageType = "postalMessage";
 
         //WHEN
-        builder.messageType(messageType);
+        builder.message().type(messageType);
 
         //THEN
         assertEquals(messageType, ReflectionTestUtils.getField(builder, "messageType"));

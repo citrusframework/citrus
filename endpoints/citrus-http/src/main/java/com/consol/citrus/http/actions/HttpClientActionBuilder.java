@@ -257,7 +257,7 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
             }
 
             builder.withReferenceResolver(referenceResolver);
-            builder.status(status);
+            builder.message().status(status);
             HttpClientActionBuilder.this.delegate = builder;
             return builder;
         }

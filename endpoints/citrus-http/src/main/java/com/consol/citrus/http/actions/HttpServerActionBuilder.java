@@ -102,7 +102,7 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
         }
 
         builder.withReferenceResolver(referenceResolver);
-        builder.method(method);
+        builder.message().method(method);
 
         if (StringUtils.hasText(path)) {
             builder.path(path);

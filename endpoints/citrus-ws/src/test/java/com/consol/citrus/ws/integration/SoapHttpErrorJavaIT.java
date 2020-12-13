@@ -57,7 +57,8 @@ public class SoapHttpErrorJavaIT extends TestNGCitrusSupport {
             ),
             sequential().actions(
                 receive("soapRequestEndpoint")
-                    .payload("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                    .message()
+                    .body("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                   "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                   "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                                   "<ns0:User>${user}</ns0:User>" +

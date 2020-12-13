@@ -20,6 +20,7 @@ import java.util.HashMap;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -32,7 +33,8 @@ import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -45,12 +47,20 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  */
 public class MessageElementsTest extends UnitTestSupport {
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private Consumer consumer = Mockito.mock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    @Mock
+    private Endpoint endpoint;
+    @Mock
+    private Consumer consumer;
+    @Mock
+    private EndpointConfiguration endpointConfiguration;
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        MockitoAnnotations.openMocks(this);
+        return super.createTestContextFactory();
+    }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElements() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -86,7 +96,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateEmptyMessageElements() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -122,7 +131,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateEmptyMessageAttributes() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -159,7 +167,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateNullElements() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -195,7 +202,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementAttributes() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -231,7 +237,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = {CitrusRuntimeException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWrongExpectedElement() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -267,7 +272,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWrongExpectedValue() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -303,7 +307,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = {ValidationException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementAttributesWrongExpectedValue() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -339,7 +342,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = {CitrusRuntimeException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementAttributesWrongExpectedAttribute() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -375,7 +377,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElements() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -414,13 +415,12 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementsUsingEmptyString() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -459,13 +459,12 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementsAndValidate() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -513,13 +512,12 @@ public class MessageElementsTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
                 .validate(validationContext)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementAttributes() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -558,13 +556,12 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test(expectedExceptions = {CitrusRuntimeException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementsError() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -603,13 +600,12 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test(expectedExceptions = {CitrusRuntimeException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementAttributesError() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -648,13 +644,12 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test(expectedExceptions = {CitrusRuntimeException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementAttributesErrorWrongElement() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -693,13 +688,12 @@ public class MessageElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(controlMessageBuilder)
-                .modify(processor)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElements() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -727,7 +721,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractMessageElements = new HashMap<String, String>();
+        HashMap<String, String> extractMessageElements = new HashMap<>();
         extractMessageElements.put("//root/element/sub-elementA", "${valueA}");
         extractMessageElements.put("//root/element/sub-elementB", "${valueB}");
 
@@ -749,7 +743,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageAttributes() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -777,7 +770,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractMessageElements = new HashMap<String, String>();
+        HashMap<String, String> extractMessageElements = new HashMap<>();
         extractMessageElements.put("//root/element/sub-elementA/@attribute", "${valueA}");
         extractMessageElements.put("//root/element/sub-elementB/@attribute", "${valueB}");
 
@@ -799,7 +792,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = {CitrusRuntimeException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElementsForWrongElement() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -827,7 +819,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractMessageElements = new HashMap<String, String>();
+        HashMap<String, String> extractMessageElements = new HashMap<>();
         extractMessageElements.put("//root/element/sub-element-wrong", "${valueA}");
         extractMessageElements.put("//element/sub-element-wrong", "${valueB}");
 
@@ -847,7 +839,6 @@ public class MessageElementsTest extends UnitTestSupport {
     }
 
     @Test(expectedExceptions = {CitrusRuntimeException.class})
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElementsForWrongAtribute() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -875,7 +866,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractMessageElements = new HashMap<String, String>();
+        HashMap<String, String> extractMessageElements = new HashMap<>();
         extractMessageElements.put("//root/element/sub-elementA/@attribute-wrong", "${attributeA}");
 
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()

@@ -66,6 +66,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSupport {
             .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
+            .message()
             .version("HTTP/1.1"));
 
         run(echo("Use context path variables."));
@@ -96,6 +97,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSupport {
             .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
+            .message()
             .version("HTTP/1.1"));
 
         run(echo("Use query parameter and context path variables."));
@@ -133,6 +135,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSupport {
             .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
+            .message()
             .version("HTTP/1.1"));
 
         run(echo("Query WSDL with special query param"));
@@ -149,6 +152,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSupport {
                         http().server("httpServerRequestEndpoint")
                                 .receive()
                                 .get()
+                                .message()
                                 .contentType("text/html")
                                 .header("Host", "localhost:11082")
                                 .accept("application/xml;charset=UTF-8")
@@ -159,6 +163,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSupport {
                 .receive()
                 .response(HttpStatus.OK)
                 .timeout(2000L)
+                .message()
                 .version("HTTP/1.1"));
     }
 }

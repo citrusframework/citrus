@@ -103,7 +103,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
+                        .message()
+                        .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -136,7 +137,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
+                        .message()
+                        .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -178,7 +180,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
+                        .message()
+                        .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -221,6 +224,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
+                        .message()
                         .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"))));
 
         TestCase test = runner.getTestCase();
@@ -257,6 +261,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
+                        .message()
                         .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), mapper)));
 
         TestCase test = runner.getTestCase();
@@ -301,6 +306,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
+                        .message()
                         .header(new ObjectMappingHeaderDataBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         TestCase test = runner.getTestCase();
@@ -343,7 +349,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .header(resource));
 
         runner.run(receive(messageEndpoint)
@@ -399,7 +406,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
                         .header(resource)
                         .header(resource));
@@ -462,8 +470,9 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                .messageType(MessageType.JSON)
-                .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                .message()
+                .type(MessageType.JSON)
+                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                 .process(json()
                         .extract()
                         .expression("$.text", "text")
@@ -507,8 +516,9 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.JSON)
-                                .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
+                                .message()
+                                .type(MessageType.JSON)
+                                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .validate(jsonPath()
                                         .validate()
                                         .expression("$.person.name", "John")
@@ -558,8 +568,9 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.JSON)
-                                .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                                .message()
+                                .type(MessageType.JSON)
+                                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .validate(jsonPath()
                                         .validate()
                                         .expression("$.person.name", "John")
@@ -579,8 +590,9 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.JSON)
-                                .payload("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                                .message()
+                                .type(MessageType.JSON)
+                                .body("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                                 .validate(jsonPath()
                                         .validate()
                                         .expression("$.person.name", "John")
@@ -600,8 +612,9 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.JSON)
-                                .payload("{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}")
+                                .message()
+                                .type(MessageType.JSON)
+                                .body("{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}")
                                 .validate(json()
                                         .validate()
                                         .ignore("$..text")
@@ -656,7 +669,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                .payload("{}")
+                .message()
+                .body("{}")
                 .validate(json()
                         .validate()
                         .schemaRepository("customJsonSchemaRepository")));
@@ -705,7 +719,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                .payload("{}")
+                .message()
+                .body("{}")
                 .validate(json()
                         .validate()
                         .schema("jsonTestSchema")));
@@ -752,7 +767,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                .payload("{}")
+                .message()
+                .body("{}")
                 .validate(json()
                         .validate()
                         .schemaValidation(true)));
@@ -791,7 +807,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                .payload("{}")
+                .message()
+                .body("{}")
                 .validate(json()
                         .validate()
                         .schemaValidation(false)));

@@ -54,7 +54,8 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusSupport {
             sequential().actions(
                 parallel().actions(
                     receive("syncJmsTopicSubscriberEndpoint")
-                        .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                        .message()
+                        .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
                                    "<CorrelationId>${correlationId}</CorrelationId>" +
                                    "<User>${user}</User>" +
@@ -65,7 +66,8 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusSupport {
                     sequential().actions(
                         sleep().milliseconds(500L),
                         receive("syncJmsTopicSubscriberEndpoint")
-                            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                            .message()
+                            .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                        "<MessageId>${messageId}</MessageId>" +
                                        "<CorrelationId>${correlationId}</CorrelationId>" +
                                        "<User>${user}</User>" +
@@ -88,7 +90,8 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusSupport {
         ));
 
         then(receive("syncJmsTopicEndpoint")
-            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .message()
+            .body("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                     "<MessageId>${messageId}</MessageId>" +
                                     "<CorrelationId>${correlationId}</CorrelationId>" +
                                     "<User>HelloService</User>" +

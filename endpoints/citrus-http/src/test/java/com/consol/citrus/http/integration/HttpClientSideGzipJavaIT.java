@@ -61,9 +61,10 @@ public class HttpClientSideGzipJavaIT extends TestNGCitrusSupport {
         when(http().server(server)
                 .receive()
                 .post("/echo")
+                .message()
+                .type(MessageType.PLAINTEXT)
                 .header(HttpHeaders.CONTENT_ENCODING, "gzip")
-                .messageType(MessageType.PLAINTEXT)
-                .payload(text));
+                .body(text));
 
         then(http().server(server)
                 .respond()
@@ -73,6 +74,7 @@ public class HttpClientSideGzipJavaIT extends TestNGCitrusSupport {
         then(http().client(client)
                 .receive()
                 .response()
+                .message()
                 .contentType(MediaType.TEXT_PLAIN_VALUE));
     }
 }

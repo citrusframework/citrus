@@ -30,7 +30,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder soapAction(String soapAction) {
-        delegate.soapAction(soapAction);
+        delegate.message().soapAction(soapAction);
         return this;
     }
 
@@ -42,7 +42,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder attachment(String contentId, String contentType, String content) {
-        delegate.attachment(contentId, contentType, content);
+        delegate.message().attachment(contentId, contentType, content);
         return this;
     }
 
@@ -66,7 +66,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
-        delegate.attachment(contentId, contentType, contentResource, charset);
+        delegate.message().attachment(contentId, contentType, contentResource, charset);
         return this;
     }
 
@@ -76,7 +76,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder charset(String charsetName) {
-        delegate.charset(charsetName);
+        delegate.message().charset(charsetName);
         return this;
     }
 
@@ -86,7 +86,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder attachment(SoapAttachment attachment) {
-        delegate.attachment(attachment);
+        delegate.message().attachment(attachment);
         return this;
     }
 
@@ -96,7 +96,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder attachmentValidator(SoapAttachmentValidator validator) {
-        delegate.attachmentValidator(validator);
+        delegate.message().attachmentValidator(validator);
         return this;
     }
 
@@ -106,7 +106,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder contentType(String contentType) {
-        delegate.contentType(contentType);
+        delegate.message().contentType(contentType);
         return this;
     }
 
@@ -116,7 +116,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder accept(String accept) {
-        delegate.accept(accept);
+        delegate.message().accept(accept);
         return this;
     }
 
@@ -126,7 +126,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder status(HttpStatus status) {
-        delegate.status(status);
+        delegate.message().status(status);
         return this;
     }
 
@@ -136,7 +136,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder statusCode(Integer statusCode) {
-        delegate.statusCode(statusCode);
+        delegate.message().statusCode(statusCode);
         return this;
     }
 
@@ -146,7 +146,7 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
      * @return
      */
     public ReceiveSoapMessageActionBuilder contextPath(String contextPath) {
-        delegate.contextPath(contextPath);
+        delegate.message().contextPath(contextPath);
         return this;
     }
 

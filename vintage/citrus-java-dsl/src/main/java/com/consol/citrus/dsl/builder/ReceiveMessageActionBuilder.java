@@ -48,7 +48,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
 
     protected final B self;
 
-    private final ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?> delegate;
+    private final ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?, ?> delegate;
 
     private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
@@ -63,7 +63,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
     /** Script validation context used in this action builder */
     private ScriptValidationContext.Builder scriptValidationContext;
 
-    public ReceiveMessageActionBuilder(ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?> builder) {
+    public ReceiveMessageActionBuilder(ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?, ?> builder) {
         this.self = (B) this;
         this.delegate = builder;
     }
@@ -129,7 +129,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B messageName(final String name) {
-        delegate.messageName(name);
+        delegate.message().name(name);
         return self;
     }
 
@@ -140,7 +140,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B payload(final String payload) {
-        delegate.payload(payload);
+        delegate.message().body(payload);
         return self;
     }
 
@@ -162,7 +162,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B payload(final Resource payloadResource, final Charset charset) {
-        delegate.payload(payloadResource, charset);
+        delegate.message().body(payloadResource, charset);
         return self;
     }
 
@@ -175,7 +175,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B payload(final Object payload, final Marshaller marshaller) {
-        delegate.payload(new MarshallingPayloadBuilder(payload, marshaller));
+        delegate.message().body(new MarshallingPayloadBuilder(payload, marshaller));
         return self;
     }
 
@@ -188,7 +188,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B payload(final Object payload, final ObjectMapper objectMapper) {
-        delegate.payload(new ObjectMappingPayloadBuilder(payload, objectMapper));
+        delegate.message().body(new ObjectMappingPayloadBuilder(payload, objectMapper));
         return self;
     }
 
@@ -201,9 +201,9 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      */
     public B payloadModel(final Object payload) {
         if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
-            delegate.payload(new ObjectMappingPayloadBuilder(payload));
+            delegate.message().body(new ObjectMappingPayloadBuilder(payload));
         } else {
-            delegate.payload(new MarshallingPayloadBuilder(payload));
+            delegate.message().body(new MarshallingPayloadBuilder(payload));
         }
         return self;
     }
@@ -218,9 +218,9 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      */
     public B payload(final Object payload, final String mapperOrMarshallerName) {
         if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
-            delegate.payload(new ObjectMappingPayloadBuilder(payload, mapperOrMarshallerName));
+            delegate.message().body(new ObjectMappingPayloadBuilder(payload, mapperOrMarshallerName));
         } else {
-            delegate.payload(new MarshallingPayloadBuilder(payload, mapperOrMarshallerName));
+            delegate.message().body(new MarshallingPayloadBuilder(payload, mapperOrMarshallerName));
         }
         return self;
     }
@@ -233,7 +233,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B header(final String name, final Object value) {
-        delegate.header(name, value);
+        delegate.message().header(name, value);
         return self;
     }
 
@@ -244,7 +244,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B headers(final Map<String, Object> headers) {
-        delegate.headers(headers);
+        delegate.message().headers(headers);
         return self;
     }
 
@@ -256,7 +256,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B header(final String data) {
-        delegate.header(data);
+        delegate.message().header(data);
         return self;
     }
 
@@ -269,9 +269,9 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      */
     public B headerFragment(final Object model) {
         if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
-            delegate.header(new ObjectMappingHeaderDataBuilder(model));
+            delegate.message().header(new ObjectMappingHeaderDataBuilder(model));
         } else {
-            delegate.header(new MarshallingHeaderDataBuilder(model));
+            delegate.message().header(new MarshallingHeaderDataBuilder(model));
         }
         return self;
     }
@@ -286,9 +286,9 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      */
     public B headerFragment(final Object model, final String mapperOrMarshallerName) {
         if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
-            delegate.header(new ObjectMappingHeaderDataBuilder(model, mapperOrMarshallerName));
+            delegate.message().header(new ObjectMappingHeaderDataBuilder(model, mapperOrMarshallerName));
         } else {
-            delegate.header(new MarshallingHeaderDataBuilder(model, mapperOrMarshallerName));
+            delegate.message().header(new MarshallingHeaderDataBuilder(model, mapperOrMarshallerName));
         }
         return self;
     }
@@ -302,7 +302,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B headerFragment(final Object model, final Marshaller marshaller) {
-        delegate.header(new MarshallingHeaderDataBuilder(model, marshaller));
+        delegate.message().header(new MarshallingHeaderDataBuilder(model, marshaller));
         return self;
     }
 
@@ -315,7 +315,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B headerFragment(final Object model, final ObjectMapper objectMapper) {
-        delegate.header(new ObjectMappingHeaderDataBuilder(model, objectMapper));
+        delegate.message().header(new ObjectMappingHeaderDataBuilder(model, objectMapper));
         return self;
     }
 
@@ -339,7 +339,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B header(final Resource resource, final Charset charset) {
-        delegate.header(resource, charset);
+        delegate.message().header(resource, charset);
         return self;
     }
 
@@ -350,7 +350,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B headerNameIgnoreCase(final boolean value) {
-        delegate.headerNameIgnoreCase(value);
+        delegate.message().headerNameIgnoreCase(value);
         return self;
     }
 
@@ -432,7 +432,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      */
     public B messageType(final String messageType) {
         this.messageType = messageType;
-        delegate.messageType(messageType);
+        delegate.message().type(messageType);
 
         if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
             getJsonMessageValidationContext();
@@ -767,7 +767,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B dictionary(final DataDictionary<?> dictionary) {
-        this.delegate.dictionary(dictionary);
+        this.delegate.message().dictionary(dictionary);
         return self;
     }
 
@@ -778,7 +778,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B dictionary(final String dictionaryName) {
-        this.delegate.dictionary(dictionaryName);
+        this.delegate.message().dictionary(dictionaryName);
         return self;
     }
 

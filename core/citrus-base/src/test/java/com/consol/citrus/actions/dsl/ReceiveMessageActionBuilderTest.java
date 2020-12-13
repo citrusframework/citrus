@@ -52,7 +52,9 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -74,14 +76,20 @@ import static org.mockito.Mockito.when;
  */
 public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
-    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
-    private Consumer messageConsumer = Mockito.mock(Consumer.class);
-    private EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
-    private Resource resource = Mockito.mock(Resource.class);
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
+    @Mock
+    private Endpoint messageEndpoint;
+    @Mock
+    private Consumer messageConsumer;
+    @Mock
+    private EndpointConfiguration configuration;
+    @Mock
+    private Resource resource;
+    @Mock
+    private ReferenceResolver referenceResolver;
 
     @BeforeMethod
     public void prepareTestContext() {
+        MockitoAnnotations.openMocks(this);
         context.getMessageValidatorRegistry().addMessageValidator("default", new TextEqualsMessageValidator());
     }
 
@@ -121,8 +129,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("Foo").setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .messageType(MessageType.PLAINTEXT)
-                        .message(new DefaultMessage("Foo").setHeader("operation", "foo")));
+                        .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
+                        .type(MessageType.PLAINTEXT));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -164,7 +172,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload(payloadBuilder));
+                        .message()
+                        .body(payloadBuilder));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -197,7 +206,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -232,7 +242,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload(resource));
+                        .message()
+                        .body(resource));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -273,7 +284,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive("fooMessageEndpoint")
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -296,7 +308,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "foo"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .timeout(1000L));
 
         TestCase test = runner.getTestCase();
@@ -325,16 +338,18 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
                         .setHeader("foo", "bar"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .headers(Collections.singletonMap("some", "value"))
                         .header("operation", "sayHello")
                         .header("foo", "bar"));
 
         runner.run(receive(messageEndpoint)
+                        .message()
                         .header("operation", "sayHello")
                         .header("foo", "bar")
                         .headers(Collections.singletonMap("some", "value"))
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
@@ -380,7 +395,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
                         .addHeaderData("<Header><Name>operation</Name><Value>foo</Value></Header>"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .header("<Header><Name>operation</Name><Value>foo</Value></Header>"));
 
         runner.run(receive(messageEndpoint)
@@ -429,7 +445,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
                         .addHeaderData("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
                         .header("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
 
@@ -490,6 +507,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
+                        .message()
                         .header(headerDataBuilder));
 
         TestCase test = runner.getTestCase();
@@ -532,7 +550,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .header(resource));
 
         runner.run(receive(messageEndpoint)
@@ -588,7 +607,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
                         .header(resource)
                         .header(resource));
@@ -644,8 +664,9 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .messageType(MessageType.PLAINTEXT)
-                        .payload("TestMessage")
+                        .message()
+                        .type(MessageType.PLAINTEXT)
+                        .body("TestMessage")
                         .header("operation", "sayHello")
                         .validator(validator));
 
@@ -687,8 +708,9 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .messageType(MessageType.PLAINTEXT)
-                        .payload("TestMessage")
+                        .message()
+                        .type(MessageType.PLAINTEXT)
+                        .body("TestMessage")
                         .header("operation", "sayHello")
                         .validator("plainTextValidator"));
 
@@ -728,8 +750,9 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.PLAINTEXT)
-                                .payload("TestMessage")
+                                .message()
+                                .type(MessageType.PLAINTEXT)
+                                .body("TestMessage")
                                 .header("operation", "sayHello")
                                 .dictionary(dictionary));
 
@@ -769,8 +792,9 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.PLAINTEXT)
-                                .payload("TestMessage")
+                                .message()
+                                .type(MessageType.PLAINTEXT)
+                                .body("TestMessage")
                                 .header("operation", "sayHello")
                                 .dictionary("customDictionary"));
 
@@ -807,7 +831,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .message()
+                                .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .selector(messageSelector));
 
         TestCase test = runner.getTestCase();
@@ -838,7 +863,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "sayHello"));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .message()
+                                .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .selector("operation = 'sayHello'"));
 
         TestCase test = runner.getTestCase();
@@ -877,7 +903,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                                .message()
+                                .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .process(extractor));
 
         Assert.assertNotNull(context.getVariable("messageId"));
@@ -911,7 +938,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                                .message()
+                                .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .process(headers()
                                         .extract()
                                         .header("operation", "operationHeader")
@@ -956,7 +984,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                                .message()
+                                .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .process(new MessageSupport()
                                         .headers()
                                         .extract()
@@ -1004,8 +1033,9 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.PLAINTEXT)
-                                .payload("TestMessage")
+                                .message()
+                                .type(MessageType.PLAINTEXT)
+                                .body("TestMessage")
                                 .header("operation", "sayHello")
                                 .validate(callback));
 
@@ -1042,7 +1072,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                        .payload("{}")
+                        .message()
+                        .body("{}")
                         .validate(xml()
                                 .schemaValidation(false)));
 

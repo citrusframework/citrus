@@ -16,10 +16,14 @@
 
 package com.consol.citrus.ws.message;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-
-import java.util.*;
 
 /**
  * SOAP message representation holding additional elements like SOAP action, header fragment data and
@@ -45,7 +49,7 @@ public class SoapMessage extends DefaultMessage {
     public SoapMessage() {
         super();
     }
-    
+
     /**
      * Constructs copy of given message.
      * @param message
@@ -125,7 +129,9 @@ public class SoapMessage extends DefaultMessage {
      * @return
      */
     public String getSoapAction() {
-        return getHeader(SoapMessageHeaders.SOAP_ACTION).toString();
+        return Optional.ofNullable(getHeader(SoapMessageHeaders.SOAP_ACTION))
+                .map(Object::toString)
+                .orElse(null);
     }
 
     /**
@@ -135,10 +141,10 @@ public class SoapMessage extends DefaultMessage {
     public List<SoapAttachment> getAttachments() {
         return attachments;
     }
-    
+
     /**
      * Gets mtom attachments enabled
-     * @return 
+     * @return
      */
     public boolean isMtomEnabled() {
         return this.mtomEnabled;

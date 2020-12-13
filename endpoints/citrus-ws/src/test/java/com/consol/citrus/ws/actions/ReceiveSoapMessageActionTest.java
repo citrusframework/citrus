@@ -19,6 +19,7 @@ package com.consol.citrus.ws.actions;
 import java.util.List;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.Message;
@@ -30,7 +31,8 @@ import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
@@ -48,11 +50,21 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private Consumer consumer = Mockito.mock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    @Mock
+    private Endpoint endpoint;
+    @Mock
+    private Consumer consumer;
+    @Mock
+    private EndpointConfiguration endpointConfiguration;
 
-    private SoapAttachmentValidator attachmentValidator = Mockito.mock(SoapAttachmentValidator.class);
+    @Mock
+    private SoapAttachmentValidator attachmentValidator;
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        MockitoAnnotations.openMocks(this);
+        return super.createTestContextFactory();
+    }
 
     @Test
     public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
@@ -87,10 +99,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction.Builder()
                 .endpoint(endpoint)
-                .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
                 .message(controlMessageBuilder)
                 .attachment(attachment)
+                .attachmentValidator(attachmentValidator)
                 .build();
         soapMessageAction.execute(context);
     }
@@ -132,10 +144,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction.Builder()
                 .endpoint(endpoint)
-                .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
                 .message(controlMessageBuilder)
                 .attachment(attachment)
+                .attachmentValidator(attachmentValidator)
                 .build();
         soapMessageAction.execute(context);
     }
@@ -190,11 +202,11 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction.Builder()
                 .endpoint(endpoint)
-                .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
                 .message(controlMessageBuilder)
                 .attachment(attachment)
                 .attachment(attachment2)
+                .attachmentValidator(attachmentValidator)
                 .build();
         soapMessageAction.execute(context);
 
@@ -235,10 +247,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction.Builder()
                 .endpoint(endpoint)
-                .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
                 .message(controlMessageBuilder)
                 .attachment(attachment)
+                .attachmentValidator(attachmentValidator)
                 .build();
         soapMessageAction.execute(context);
 
@@ -262,9 +274,9 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction.Builder()
                 .endpoint(endpoint)
-                .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
                 .message(controlMessageBuilder)
+                .attachmentValidator(attachmentValidator)
                 .build();
         soapMessageAction.execute(context);
 
@@ -306,10 +318,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction.Builder()
                 .endpoint(endpoint)
-                .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
                 .message(controlMessageBuilder)
                 .attachment(attachment)
+                .attachmentValidator(attachmentValidator)
                 .build();
         soapMessageAction.execute(context);
 
@@ -353,10 +365,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction.Builder()
                 .endpoint(endpoint)
-                .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
                 .message(controlMessageBuilder)
                 .attachment(attachment)
+                .attachmentValidator(attachmentValidator)
                 .build();
         soapMessageAction.execute(context);
 
@@ -400,10 +412,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveSoapMessageAction soapMessageAction = new ReceiveSoapMessageAction.Builder()
                 .endpoint(endpoint)
-                .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
                 .message(controlMessageBuilder)
                 .attachment(attachment)
+                .attachmentValidator(attachmentValidator)
                 .build();
         soapMessageAction.execute(context);
     }

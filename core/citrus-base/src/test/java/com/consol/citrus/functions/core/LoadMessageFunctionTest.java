@@ -16,14 +16,14 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.Collections;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -40,7 +40,7 @@ public class LoadMessageFunctionTest extends AbstractTestNGUnitTest {
     public void testLoadMessagePayload() throws Exception {
         context.getMessageStore().storeMessage("request", message);
         Assert.assertEquals(function.execute(Collections.singletonList("request"), context), "This is a sample message");
-        Assert.assertEquals(function.execute(Collections.singletonList("request.payload()"), context), "This is a sample message");
+        Assert.assertEquals(function.execute(Collections.singletonList("request.body()"), context), "This is a sample message");
     }
 
     @Test

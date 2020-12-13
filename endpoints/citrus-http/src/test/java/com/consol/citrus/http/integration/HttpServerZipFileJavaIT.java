@@ -50,8 +50,8 @@ public class HttpServerZipFileJavaIT extends TestNGCitrusSupport {
         when(http().server("echoHttpServer")
                     .receive()
                     .post("/echo")
-                    .messageType(MessageType.BINARY)
                     .message(zipMessage)
+                    .type(MessageType.BINARY)
                     .contentType(APPLICATION_ZIP_VALUE)
                     .accept(APPLICATION_ZIP_VALUE));
 
@@ -65,8 +65,8 @@ public class HttpServerZipFileJavaIT extends TestNGCitrusSupport {
         then(http().client("echoHttpClient")
                 .receive()
                 .response(HttpStatus.OK)
-                .messageType(MessageType.BINARY)
                 .message(zipMessage)
+                .type(MessageType.BINARY)
                 .contentType(APPLICATION_ZIP_VALUE));
     }
 }

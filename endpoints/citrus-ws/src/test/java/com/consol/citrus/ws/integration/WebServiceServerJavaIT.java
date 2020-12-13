@@ -50,7 +50,8 @@ public class WebServiceServerJavaIT extends TestNGCitrusSupport {
                 .header("{http://citrusframework.org/test}Operation", "sayHello"),
             sequential().actions(
                 receive("soapRequestEndpoint")
-                    .payload("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                    .message()
+                    .body("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                   "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                   "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                                   "<ns0:User>${user}</ns0:User>" +
@@ -73,12 +74,13 @@ public class WebServiceServerJavaIT extends TestNGCitrusSupport {
         ));
 
         then(receive("helloSoapClient")
-            .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .message()
+            .body("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                             "<ns0:User>WebServer</ns0:User>" +
                             "<ns0:Text>Hello ${user}</ns0:Text>" +
                         "</ns0:HelloResponse>")
-                .validate(xml().validate().schemaValidation(false)));
+            .validate(xml().validate().schemaValidation(false)));
     }
 }

@@ -46,7 +46,8 @@ public class JmsGzipMessageJavaIT extends TestNGCitrusSupport {
                 .process(toGzip()));
 
         then(receive("jms:queue:jms.gzip.queue")
-                .messageType(MessageType.GZIP_BASE64)
-                .payload("citrus:readFile('classpath:com/consol/citrus/jms/integration/button.png', true)"));
+                .message()
+                .type(MessageType.GZIP_BASE64)
+                .body("citrus:readFile('classpath:com/consol/citrus/jms/integration/button.png', true)"));
     }
 }

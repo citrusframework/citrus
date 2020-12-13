@@ -280,7 +280,7 @@ public class HttpSteps {
      * @param response
      */
     protected void receiveClientResponse(HttpMessage response) {
-        HttpClientResponseActionBuilder responseBuilder = http().client(httpClient).receive()
+        HttpClientResponseActionBuilder.HttpMessageBuilderSupport responseBuilder = http().client(httpClient).receive()
                 .response(response.getStatusCode())
                 .message(response);
 
@@ -328,7 +328,7 @@ public class HttpSteps {
      */
     protected void receiveServerRequest(HttpMessage request) {
         HttpServerActionBuilder.HttpServerReceiveActionBuilder receiveBuilder = http().server(httpServer).receive();
-        HttpServerRequestActionBuilder requestBuilder;
+        HttpServerRequestActionBuilder.HttpMessageBuilderSupport requestBuilder;
 
         if (request.getRequestMethod() == null || request.getRequestMethod().equals(HttpMethod.POST)) {
             requestBuilder = receiveBuilder.post().message(request);

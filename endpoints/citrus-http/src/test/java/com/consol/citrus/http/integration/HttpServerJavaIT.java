@@ -54,7 +54,8 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
                 http().server("httpServerRequestEndpoint")
                     .receive()
                     .post("/test")
-                    .payload("<testRequestMessage>" +
+                    .message()
+                    .body("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
@@ -81,7 +82,8 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
         then(http().client("httpClient")
             .receive()
             .response(HttpStatus.OK)
-            .payload("<testResponseMessage>" +
+            .message()
+            .body("<testResponseMessage>" +
                     "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")
             .header("CustomHeaderId", "${custom_header_id}")
@@ -105,7 +107,8 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
                     .receive()
                     .post()
                     .path("/test")
-                    .payload("<testRequestMessage>" +
+                    .message()
+                    .body("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
@@ -133,8 +136,9 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
         then(http().client("httpClient")
             .receive()
             .response()
+            .message()
             .status(HttpStatus.NOT_FOUND)
-            .payload("<testResponseMessage>" +
+            .body("<testResponseMessage>" +
                         "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")
             .header("CustomHeaderId", "${custom_header_id}")
@@ -155,6 +159,7 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
         then(http().client("httpClient")
             .receive()
             .response(HttpStatus.OK)
+            .message()
             .version("HTTP/1.1")
             .timeout(2000L));
 

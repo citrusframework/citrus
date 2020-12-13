@@ -80,7 +80,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.JSON)
+                                .message()
+                                .type(MessageType.JSON)
                                 .validate(groovy().script("assert json.message == 'Hello Citrus!'"))
                                 .validator("groovyMessageValidator"));
 
@@ -131,7 +132,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.JSON)
+                                .message()
+                                .type(MessageType.JSON)
                                 .validate(groovy().scriptResource("classpath:com/consol/citrus/actions/dsl/validation.groovy"))
                                 .validator("groovyMessageValidator"));
 
@@ -181,7 +183,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.JSON)
+                                .message()
+                                .type(MessageType.JSON)
                                 .validate(groovy().script(new ClassPathResource("com/consol/citrus/actions/dsl/validation.groovy")))
                                 .validator("groovyMessageValidator"));
 
@@ -231,7 +234,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
-                                .messageType(MessageType.JSON)
+                                .message()
+                                .type(MessageType.JSON)
                                 .validate(groovy().script("assert json.message == 'Hello Citrus!'"))
                                 .validator("groovyMessageValidator")
                                 .header("operation", "sayHello"));

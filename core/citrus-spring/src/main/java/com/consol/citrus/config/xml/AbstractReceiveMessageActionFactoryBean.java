@@ -6,9 +6,10 @@ import java.util.Map;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.message.builder.MessageBuilderSupport;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.ValidationProcessor;
+import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -16,7 +17,7 @@ import com.consol.citrus.variable.dictionary.DataDictionary;
 /**
  * @author Christoph Deppisch
  */
-public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveMessageAction, B extends ReceiveMessageAction.ReceiveMessageActionBuilder<T, B>> extends AbstractTestActionFactoryBean<T, B> {
+public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveMessageAction, M extends MessageBuilderSupport<T, B, M>, B extends ReceiveMessageAction.ReceiveMessageActionBuilder<T, M, B>> extends AbstractTestActionFactoryBean<T, B> {
 
     /**
      * Setter for messageSelectorMap.
@@ -87,7 +88,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      * @param messageProcessors the messageProcessors to set
      */
     public void setMessageProcessors(List<MessageProcessor> messageProcessors) {
-        messageProcessors.forEach(getBuilder()::modify);
+        messageProcessors.forEach(getBuilder().message()::process);
     }
 
     /**
@@ -105,7 +106,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      * @param messageType the messageType to set
      */
     public void setMessageType(String messageType) {
-        getBuilder().messageType(messageType);
+        getBuilder().message().type(messageType);
     }
 
     /**
@@ -123,7 +124,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      * @param dataDictionary
      */
     public void setDataDictionary(DataDictionary<?> dataDictionary) {
-        getBuilder().dictionary(dataDictionary);
+        getBuilder().message().dictionary(dataDictionary);
     }
 
     /**
@@ -132,7 +133,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      * @param messageBuilder the messageBuilder to set
      */
     public void setMessageBuilder(DefaultMessageBuilder messageBuilder) {
-        getBuilder().message(messageBuilder);
+        getBuilder().message().from(messageBuilder);
     }
 
     /**

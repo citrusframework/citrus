@@ -30,6 +30,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.util.ValidateMessageParserUtil;
 import com.consol.citrus.config.util.VariableExtractorParserUtil;
+import com.consol.citrus.message.builder.ReceiveMessageBuilderSupport;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.SchemaValidationContext;
@@ -486,7 +487,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     /**
      * Test action factory bean.
      */
-    public static class ReceiveMessageActionFactoryBean extends AbstractReceiveMessageActionFactoryBean<ReceiveMessageAction, ReceiveMessageAction.Builder> {
+    public static class ReceiveMessageActionFactoryBean extends AbstractReceiveMessageActionFactoryBean<ReceiveMessageAction, ReceiveMessageBuilderSupport, ReceiveMessageAction.Builder> {
 
         private final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 

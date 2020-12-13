@@ -40,8 +40,9 @@ public class CamelRouteIT extends TestNGCitrusSupport {
                 .payload("<News><Message>Citrus rocks!</Message></News>"));
 
         then(receive("defaultRouteEndpoint")
-                .messageType(MessageType.PLAINTEXT)
-                .payload("<News><Message>Citrus rocks!</Message></News>"));
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body("<News><Message>Citrus rocks!</Message></News>"));
     }
 
     @Test
@@ -55,8 +56,9 @@ public class CamelRouteIT extends TestNGCitrusSupport {
         then(receiveTimeout("outRouteEndpoint").timeout(500));
 
         and(receive("defaultRouteEndpoint")
-                .messageType(MessageType.PLAINTEXT)
-                .payload("<News><Message>Citrus rocks!</Message></News>"));
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body("<News><Message>Citrus rocks!</Message></News>"));
     }
 
 }

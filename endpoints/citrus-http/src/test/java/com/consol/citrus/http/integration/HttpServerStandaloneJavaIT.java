@@ -49,7 +49,8 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSupport {
         when(http().client("httpStandaloneClient")
             .receive()
             .response(HttpStatus.OK)
-            .payload("<testResponseMessage>" +
+            .message()
+            .body("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")
             .version("HTTP/1.1"));
@@ -65,8 +66,9 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSupport {
         then(http().client("httpStandaloneClient")
             .receive()
             .response()
+            .message()
             .status(HttpStatus.OK)
-            .payload("<testResponseMessage>" +
+            .body("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")
             .version("HTTP/1.1"));
@@ -98,6 +100,7 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSupport {
         then(http().client("httpStandaloneClient")
                 .receive()
                 .response()
+                .message()
                 .header(HttpMessageHeaders.HTTP_STATUS_CODE, Matchers.isOneOf(HttpStatus.CREATED.value(),
                                                                                 HttpStatus.ACCEPTED.value(),
                                                                                 HttpStatus.OK.value())));

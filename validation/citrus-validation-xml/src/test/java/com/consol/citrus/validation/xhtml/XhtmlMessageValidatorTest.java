@@ -19,6 +19,7 @@ package com.consol.citrus.validation.xhtml;
 import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
@@ -27,7 +28,8 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
@@ -39,13 +41,21 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  */
 public class XhtmlMessageValidatorTest extends UnitTestSupport {
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private Consumer consumer = Mockito.mock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    @Mock
+    private Endpoint endpoint;
+    @Mock
+    private Consumer consumer;
+    @Mock
+    private EndpointConfiguration endpointConfiguration;
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        MockitoAnnotations.openMocks(this);
+        return super.createTestContextFactory();
+    }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testXhtmlConversion() throws Exception {
+    public void testXhtmlConversion() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -82,15 +92,14 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageType(MessageType.XHTML)
                 .message(controlMessageBuilder)
+                .type(MessageType.XHTML)
                 .build();
         receiveAction.execute(context);
     }
 
     @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testXhtmlValidation() throws Exception {
+    public void testXhtmlValidation() {
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -128,8 +137,8 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageType(MessageType.XHTML)
                 .message(controlMessageBuilder)
+                .type(MessageType.XHTML)
                 .build();
         receiveAction.execute(context);
     }
