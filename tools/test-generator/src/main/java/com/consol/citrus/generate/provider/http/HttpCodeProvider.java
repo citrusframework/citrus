@@ -16,6 +16,9 @@
 
 package com.consol.citrus.generate.provider.http;
 
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import com.consol.citrus.generate.provider.MessageCodeProvider;
 import com.consol.citrus.http.message.HttpMessage;
 import com.squareup.javapoet.CodeBlock;
@@ -24,12 +27,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
 class HttpCodeProvider {
 
-    private MessageCodeProvider messageCodeProvider = new MessageCodeProvider();
+    private final MessageCodeProvider messageCodeProvider = new MessageCodeProvider();
 
     void provideRequestConfiguration(final CodeBlock.Builder code, final HttpMessage message) {
         final String method = Optional.ofNullable(message.getRequestMethod())
@@ -37,8 +37,8 @@ class HttpCodeProvider {
                 .orElse(RequestMethod.POST.name());
 
         providePath(code, message, method);
-        provideContentType(code, message);
         messageCodeProvider.provideHeaderAndPayload(code, message);
+        provideContentType(code, message);
         provideQueryParameter(code, message);
     }
 

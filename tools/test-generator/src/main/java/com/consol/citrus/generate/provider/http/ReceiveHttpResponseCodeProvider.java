@@ -26,7 +26,7 @@ import com.squareup.javapoet.CodeBlock;
  */
 public class ReceiveHttpResponseCodeProvider implements CodeProvider<HttpMessage> {
 
-    private HttpCodeProvider httpCodeProvider = new HttpCodeProvider();
+    private final HttpCodeProvider httpCodeProvider = new HttpCodeProvider();
 
     @Override
     public CodeBlock getCode(final String endpoint, final HttpMessage message) {
@@ -35,7 +35,6 @@ public class ReceiveHttpResponseCodeProvider implements CodeProvider<HttpMessage
         code.add("runner.run(http().client($S)\n", endpoint);
         code.indent();
         code.add(".receive()\n");
-
         httpCodeProvider.provideResponseConfiguration(code, message);
         code.unindent();
         code.add(");");

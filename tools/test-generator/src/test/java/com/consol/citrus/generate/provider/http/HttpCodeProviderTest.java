@@ -26,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HttpCodeProviderTest {
 
-    private HttpCodeProvider httpCodeProvider = new HttpCodeProvider();
+    private final HttpCodeProvider httpCodeProvider = new HttpCodeProvider();
 
-    private HttpMessage message = new HttpMessage();
-    private CodeBlock.Builder code = CodeBlock.builder();
+    private final HttpMessage message = new HttpMessage();
+    private final CodeBlock.Builder code = CodeBlock.builder();
 
     @Test
     void testPathCodeIsGenerated() {

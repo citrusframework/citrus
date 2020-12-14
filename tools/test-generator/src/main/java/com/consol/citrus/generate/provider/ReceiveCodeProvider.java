@@ -25,7 +25,7 @@ import com.squareup.javapoet.CodeBlock;
  */
 public class ReceiveCodeProvider implements CodeProvider<Message> {
 
-    private MessageCodeProvider messageCodeProvider = new MessageCodeProvider();
+    private final MessageCodeProvider messageCodeProvider = new MessageCodeProvider();
 
     @Override
     public CodeBlock getCode(final String endpoint, final Message message) {
