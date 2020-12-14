@@ -116,7 +116,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
     /**
      * Test action factory bean.
      */
-    public static class SendSoapFaultActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendSoapFaultAction, SendSoapFaultAction.Builder> {
+    public static class SendSoapFaultActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendSoapFaultAction, SendSoapFaultAction.Builder.SoapFaultMessageBuilderSupport, SendSoapFaultAction.Builder> {
 
         private final SendSoapFaultAction.Builder builder = new SendSoapFaultAction.Builder();
 
@@ -125,7 +125,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
          * @param attachments the control attachments
          */
         public void setAttachments(List<SoapAttachment> attachments) {
-            attachments.forEach(builder::attachment);
+            attachments.forEach(builder.message()::attachment);
         }
 
         /**
@@ -133,7 +133,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
          * @param mtomEnabled
          */
         public void setMtomEnabled(boolean mtomEnabled) {
-            builder.mtomEnabled(mtomEnabled);
+            builder.message().mtomEnabled(mtomEnabled);
         }
 
         /**
@@ -144,7 +144,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
          * @param faultCode the faultCode to set
          */
         public void setFaultCode(String faultCode) {
-            builder.faultCode(faultCode);
+            builder.message().faultCode(faultCode);
         }
 
         /**
@@ -152,7 +152,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
          * @param faultString the faultString to set
          */
         public void setFaultString(String faultString) {
-            builder.faultString(faultString);
+            builder.message().faultString(faultString);
         }
 
         /**
@@ -160,7 +160,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
          * @param faultActor the faultActor to set
          */
         public void setFaultActor(String faultActor) {
-            builder.faultActor(faultActor);
+            builder.message().faultActor(faultActor);
         }
 
         /**
@@ -168,7 +168,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
          * @param faultDetails the faultDetails to set
          */
         public void setFaultDetails(List<String> faultDetails) {
-            faultDetails.forEach(builder::faultDetail);
+            faultDetails.forEach(builder.message()::faultDetail);
         }
 
         /**
@@ -176,7 +176,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
          * @param faultDetailResourcePaths
          */
         public void setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
-            faultDetailResourcePaths.forEach(builder::faultDetailResource);
+            faultDetailResourcePaths.forEach(builder.message()::faultDetailResource);
         }
 
         @Override

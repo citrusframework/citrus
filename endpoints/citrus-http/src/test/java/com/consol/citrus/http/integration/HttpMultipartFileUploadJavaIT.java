@@ -43,8 +43,9 @@ public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSupport {
             .send()
             .post()
             .fork(true)
+            .message()
             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-            .payload(files));
+            .body(files));
 
         when(http().server("echoHttpServer")
             .receive()

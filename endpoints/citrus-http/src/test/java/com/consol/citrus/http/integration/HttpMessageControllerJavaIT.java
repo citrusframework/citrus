@@ -145,6 +145,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSupport {
                         .send()
                         .get()
                         .queryParam("wsdl")
+                        .message()
                         .contentType("text/html")
                         .accept("application/xml;charset=UTF-8"),
 

@@ -6,13 +6,14 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageBuilder;
+import com.consol.citrus.message.builder.SendMessageBuilderSupport;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 /**
  * @author Christoph Deppisch
  */
-public abstract class AbstractSendMessageActionFactoryBean<T extends SendMessageAction, B extends SendMessageAction.SendMessageActionBuilder<T, B>> extends AbstractTestActionFactoryBean<T, B> {
+public abstract class AbstractSendMessageActionFactoryBean<T extends SendMessageAction, M extends SendMessageBuilderSupport<T, B, M>, B extends SendMessageAction.SendMessageActionBuilder<T, M, B>> extends AbstractTestActionFactoryBean<T, B> {
 
     /**
      * Sets the message endpoint.
@@ -60,7 +61,7 @@ public abstract class AbstractSendMessageActionFactoryBean<T extends SendMessage
      * @param messageType the messageType to set
      */
     public void setMessageType(String messageType) {
-        getBuilder().messageType(messageType);
+        getBuilder().message().type(messageType);
     }
 
     /**
@@ -68,7 +69,7 @@ public abstract class AbstractSendMessageActionFactoryBean<T extends SendMessage
      * @param dataDictionary
      */
     public void setDataDictionary(DataDictionary<?> dataDictionary) {
-        getBuilder().dictionary(dataDictionary);
+        getBuilder().message().dictionary(dataDictionary);
     }
 
     /**

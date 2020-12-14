@@ -56,8 +56,9 @@ public class CustomMessageValidatorIT extends TestNGCitrusSupport {
         when(http().client(httpClient)
                 .send()
                 .post("/")
+                .message()
                 .contentType(MediaType.APPLICATION_XML_VALUE)
-                .payload("<doc text=\"hello\"/>")
+                .body("<doc text=\"hello\"/>")
                 .fork(true));
 
         then(http().server(httpServer)
@@ -85,8 +86,9 @@ public class CustomMessageValidatorIT extends TestNGCitrusSupport {
         when(http().client(httpClient)
                 .send()
                 .post("/")
+                .message()
                 .contentType(MediaType.APPLICATION_XML_VALUE)
-                .payload("<doc text=\"hello\"/>")
+                .body("<doc text=\"hello\"/>")
                 .fork(true));
 
         then(assertException()

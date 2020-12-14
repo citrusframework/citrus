@@ -39,15 +39,16 @@ public class JmsCommunicationJavaIT extends TestNGCitrusSupport {
         variable("user", "Christoph");
 
         when(send("helloServiceJmsEndpoint")
-            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .description("Send asynchronous hello request: TestFramework -> HelloService")
+            .message()
+            .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                "<MessageId>${messageId}</MessageId>" +
                                "<CorrelationId>${correlationId}</CorrelationId>" +
                                "<User>${user}</User>" +
                                "<Text>Hello TestFramework</Text>" +
                            "</HelloRequest>")
             .header("Operation", operation)
-            .header("CorrelationId", "${correlationId}")
-            .description("Send asynchronous hello request: TestFramework -> HelloService"));
+            .header("CorrelationId", "${correlationId}"));
 
         then(receive("helloServiceResponseJmsEndpoint")
             .description("Receive asynchronous hello response: HelloService -> TestFramework")
@@ -62,7 +63,8 @@ public class JmsCommunicationJavaIT extends TestNGCitrusSupport {
             .header("CorrelationId", "${correlationId}"));
 
         when(send("helloServiceJmsEndpoint")
-            .payload(new ClassPathResource("com/consol/citrus/jms/integration/helloRequest.xml"))
+            .message()
+            .body(new ClassPathResource("com/consol/citrus/jms/integration/helloRequest.xml"))
             .header("Operation", operation)
             .header("CorrelationId", "${correlationId}"));
 
@@ -82,21 +84,23 @@ public class JmsCommunicationJavaIT extends TestNGCitrusSupport {
         variable("user", "Christoph");
 
         when(send("helloServiceJmsEndpoint")
-                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                .description("Send asynchronous hello request: TestFramework -> HelloService")
+                .message()
+                .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +
                         "<Text>Hello TestFramework</Text>" +
                         "</HelloRequest>")
                 .header("Operation", operation)
-                .header("CorrelationId", "${correlationId}")
-                .description("Send asynchronous hello request: TestFramework -> HelloService"));
+                .header("CorrelationId", "${correlationId}"));
 
         then(receive("helloServiceResponseJmsEndpoint")
                 .description("Receive asynchronous hello response: HelloService -> TestFramework"));
 
         when(send("helloServiceJmsEndpoint")
-                .payload(new ClassPathResource("com/consol/citrus/jms/integration/helloRequest.xml"))
+                .message()
+                .body(new ClassPathResource("com/consol/citrus/jms/integration/helloRequest.xml"))
                 .header("Operation", operation)
                 .header("CorrelationId", "${correlationId}"));
 

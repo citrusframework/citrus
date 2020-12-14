@@ -45,7 +45,8 @@ public class SoapHttpErrorJavaIT extends TestNGCitrusSupport {
                 .exception(org.springframework.ws.client.WebServiceTransportException.class)
                 .message("Server Error [500]")
                 .when(send("helloSoapClient")
-                    .payload("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                    .message()
+                    .body("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                   "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                   "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                                   "<ns0:User>${user}</ns0:User>" +
@@ -72,6 +73,7 @@ public class SoapHttpErrorJavaIT extends TestNGCitrusSupport {
                                 .extract()
                                 .header("citrus_jms_messageId", "internal_correlation_id")),
                 send("soapResponseEndpoint")
+                    .message()
                     .header("citrus_http_status_code", "500")
                     .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )

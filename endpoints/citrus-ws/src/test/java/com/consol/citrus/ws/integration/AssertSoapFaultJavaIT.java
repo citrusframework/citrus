@@ -39,7 +39,8 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSupport {
             .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
             .when(soap().client("helloSoapClient")
                 .send()
-                .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                .message()
+                .body("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<ns0:Message>This is invalid</ns0:Message>" +
                         "</ns0:SoapFaultForcingRequest>")
         ));
@@ -49,7 +50,8 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSupport {
             .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
             .when(soap().client("helloSoapClient")
                 .send()
-                .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                .message()
+                .body("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<ns0:Message>This is invalid</ns0:Message>" +
                         "</ns0:SoapFaultForcingRequest>")
         ));
@@ -59,7 +61,8 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSupport {
             .faultCode("{http://www.citrusframework.org/faults}${soapFaultCode}")
             .when(soap().client("helloSoapClient")
                     .send()
-                    .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                    .message()
+                    .body("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                 "<ns0:Message>This is invalid</ns0:Message>" +
                             "</ns0:SoapFaultForcingRequest>")
         ));

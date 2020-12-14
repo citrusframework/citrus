@@ -70,7 +70,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payload(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"))));
+                .message()
+                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"))));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -101,7 +102,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payload(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), marshaller)));
+                .message()
+                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), marshaller)));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -140,7 +142,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payload(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), "myMarshaller")));
+                .message()
+                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), "myMarshaller")));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -172,7 +175,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payload("<TestRequest><Message lang=\"ENG\">?</Message></TestRequest>")
+                .message()
+                .body("<TestRequest><Message lang=\"ENG\">?</Message></TestRequest>")
                 .process(xpath()
                             .process()
                             .expression("/TestRequest/Message", "Hello World!")));

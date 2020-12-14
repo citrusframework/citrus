@@ -294,12 +294,14 @@ public class HelloServiceIT extends TestNGCitrusSupport {
         then(http().server(httpServer)
                 .send()
                 .response(HttpStatus.OK)
-                .payload("Hello from Citrus!"));
+                .message()
+                .body("Hello from Citrus!"));
 
         then(http().client(httpClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("Hello from Citrus!"));
+                .message()
+                .body("Hello from Citrus!"));
 
         then(doFinally().actions(
                 stop(httpServer)

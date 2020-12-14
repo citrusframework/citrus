@@ -225,7 +225,7 @@ public class HttpSteps {
      */
     protected void sendClientRequest(HttpMessage request) {
         HttpClientActionBuilder.HttpClientSendActionBuilder sendBuilder = http().client(httpClient).send();
-        HttpClientRequestActionBuilder requestBuilder;
+        HttpClientRequestActionBuilder.HttpMessageBuilderSupport requestBuilder;
 
         if (request.getRequestMethod() == null || request.getRequestMethod().equals(HttpMethod.POST)) {
             requestBuilder = sendBuilder.post().message(request);

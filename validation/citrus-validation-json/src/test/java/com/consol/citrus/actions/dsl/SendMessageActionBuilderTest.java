@@ -68,7 +68,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
+                .message()
+                .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"))));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -99,7 +100,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
+                .message()
+                .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), mapper)));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -138,7 +140,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .payload(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
+                .message()
+                .body(new ObjectMappingPayloadBuilder(new TestRequest("Hello Citrus!"), "myObjectMapper")));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -169,8 +172,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .messageType(MessageType.JSON)
-                .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                .message()
+                .type(MessageType.JSON)
+                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                 .process(json()
                         .extract()
                         .expression("$.text", "text")
@@ -211,8 +215,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .messageType(MessageType.JSON)
-                .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                .message()
+                .type(MessageType.JSON)
+                .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
                 .process(jsonPath()
                             .process()
                             .expression("$.TestRequest.Message", "Hello World!")));
@@ -249,8 +254,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .messageType(MessageType.JSON)
-                .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                .message()
+                .type(MessageType.JSON)
+                .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
                 .dictionary(dictionary));
 
         final TestCase test = runner.getTestCase();
@@ -288,8 +294,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                .messageType(MessageType.JSON)
-                .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                .message()
+                .type(MessageType.JSON)
+                .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
                 .dictionary("customDictionary"));
 
         final TestCase test = runner.getTestCase();

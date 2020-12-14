@@ -28,7 +28,7 @@ public class SendSoapFaultActionBuilder extends SendMessageActionBuilder<SendSoa
      * @return
      */
     public SendSoapFaultActionBuilder faultCode(String code) {
-        delegate.faultCode(code);
+        delegate.message().faultCode(code);
         return this;
     }
 
@@ -38,7 +38,7 @@ public class SendSoapFaultActionBuilder extends SendMessageActionBuilder<SendSoa
      * @return
      */
     public SendSoapFaultActionBuilder faultString(String faultString) {
-        delegate.faultString(faultString);
+        delegate.message().faultString(faultString);
         return this;
     }
 
@@ -48,7 +48,7 @@ public class SendSoapFaultActionBuilder extends SendMessageActionBuilder<SendSoa
      * @return
      */
     public SendSoapFaultActionBuilder faultActor(String faultActor) {
-        delegate.faultActor(faultActor);
+        delegate.message().faultActor(faultActor);
         return this;
     }
 
@@ -58,7 +58,7 @@ public class SendSoapFaultActionBuilder extends SendMessageActionBuilder<SendSoa
      * @return
      */
     public SendSoapFaultActionBuilder faultDetail(String faultDetail) {
-        delegate.faultDetail(faultDetail);
+        delegate.message().faultDetail(faultDetail);
         return this;
     }
 
@@ -78,7 +78,7 @@ public class SendSoapFaultActionBuilder extends SendMessageActionBuilder<SendSoa
      * @return
      */
     public SendSoapFaultActionBuilder faultDetailResource(Resource resource, Charset charset) {
-        delegate.faultDetailResource(resource, charset);
+        delegate.message().faultDetailResource(resource, charset);
         return this;
     }
 
@@ -88,7 +88,7 @@ public class SendSoapFaultActionBuilder extends SendMessageActionBuilder<SendSoa
      * @return
      */
     public SendSoapFaultActionBuilder faultDetailResource(String filePath) {
-        delegate.faultDetailResource(filePath);
+        delegate.message().faultDetailResource(filePath);
         return this;
     }
 
@@ -98,7 +98,7 @@ public class SendSoapFaultActionBuilder extends SendMessageActionBuilder<SendSoa
      * @return
      */
     public SendSoapFaultActionBuilder status(HttpStatus status) {
-        delegate.status(status);
+        delegate.message().status(status);
         return this;
     }
 
@@ -108,7 +108,7 @@ public class SendSoapFaultActionBuilder extends SendMessageActionBuilder<SendSoa
      * @return
      */
     public SendSoapFaultActionBuilder statusCode(Integer statusCode) {
-        delegate.statusCode(statusCode);
+        delegate.message().statusCode(statusCode);
         return this;
     }
 

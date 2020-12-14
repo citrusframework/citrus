@@ -23,7 +23,7 @@ public class HttpClientRequestActionBuilder extends SendMessageActionBuilder<Htt
 
     @Override
     public HttpClientRequestActionBuilder payload(String payload) {
-        delegate.payload(payload);
+        delegate.message().body(payload);
         return this;
     }
 
@@ -34,13 +34,13 @@ public class HttpClientRequestActionBuilder extends SendMessageActionBuilder<Htt
      * @return
      */
     public HttpClientRequestActionBuilder payload(MultiValueMap<String,Object> payload) {
-        delegate.payload(payload);
+        delegate.message().body(payload);
         return this;
     }
 
     @Override
     public HttpClientRequestActionBuilder messageName(String name) {
-        delegate.messageName(name);
+        delegate.message().name(name);
         return super.messageName(name);
     }
 
@@ -103,7 +103,7 @@ public class HttpClientRequestActionBuilder extends SendMessageActionBuilder<Htt
      * @return
      */
     public HttpClientRequestActionBuilder version(String version) {
-        delegate.version(version);
+        delegate.message().version(version);
         return this;
     }
 
@@ -113,7 +113,7 @@ public class HttpClientRequestActionBuilder extends SendMessageActionBuilder<Htt
      * @return
      */
     public HttpClientRequestActionBuilder contentType(String contentType) {
-        delegate.contentType(contentType);
+        delegate.message().contentType(contentType);
         return this;
     }
 
@@ -123,7 +123,7 @@ public class HttpClientRequestActionBuilder extends SendMessageActionBuilder<Htt
      * @return
      */
     public HttpClientRequestActionBuilder accept(String accept) {
-        delegate.accept(accept);
+        delegate.message().accept(accept);
         return this;
     }
 
@@ -133,7 +133,7 @@ public class HttpClientRequestActionBuilder extends SendMessageActionBuilder<Htt
      * @return
      */
     public HttpClientRequestActionBuilder cookie(Cookie cookie) {
-        delegate.cookie(cookie);
+        delegate.message().cookie(cookie);
         return this;
     }
 

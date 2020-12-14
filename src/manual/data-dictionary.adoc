@@ -145,7 +145,7 @@ For more complex JSON message payloads JsonPath data dictionaries are very effec
 </citrus:json-path-data-dictionary>
 ----
 
-JsonPath mapping expressions are way more powerful and can also handle very complex scenarios. You can apply for all elements named _CorrelationId_ in one single entry for instance. 
+JsonPath mapping expressions are way more powerful and can also handle very complex scenarios. You can apply for all elements named _CorrelationId_ in one single entry for instance.
 
 [[dictionary-scopes]]
 == Dictionary scopes
@@ -181,7 +181,8 @@ We set the global scope property to *false* so the dictionary is handled in expl
 @CitrusTest
 public void dictionaryTest() {
     send(myEndpoint)
-        .payload("<TestMessage>Hello Citrus</TestMessage>")
+        .message()
+        .body("<TestMessage>Hello Citrus</TestMessage>")
         .dictionary("specialDataDictionary");
 }
 ----

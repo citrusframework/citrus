@@ -41,7 +41,8 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSupport {
         given(http().client("httpStandaloneClient")
             .send()
             .post()
-            .payload("<testRequestMessage>" +
+            .message()
+            .body("<testRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</testRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}"));
@@ -58,7 +59,8 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSupport {
         then(http().client("httpStandaloneClient")
             .send()
             .post()
-            .payload("<moreRequestMessage>" +
+            .message()
+            .body("<moreRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</moreRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}"));
@@ -78,7 +80,8 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSupport {
         when(http().client("httpStandaloneClient")
             .send()
             .post()
-            .payload("<moreRequestMessage>" +
+            .message()
+            .body("<moreRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</moreRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}"));
@@ -92,7 +95,8 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSupport {
         when(http().client("httpStandaloneClient")
                 .send()
                 .post()
-                .payload("<moreRequestMessage>" +
+                .message()
+                .body("<moreRequestMessage>" +
                         "<text>Hello HttpServer</text>" +
                         "</moreRequestMessage>")
                 .header("CustomHeaderId", "${custom_header_id}"));
@@ -110,7 +114,8 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusSupport {
         when(http().client("httpStandaloneClient")
             .send()
             .post()
-            .payload("<moreRequestMessage>" +
+            .message()
+            .body("<moreRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</moreRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}"));

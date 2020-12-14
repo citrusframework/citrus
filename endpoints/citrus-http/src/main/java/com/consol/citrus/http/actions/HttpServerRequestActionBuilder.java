@@ -25,8 +25,9 @@ import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.http.message.HttpQueryParamHeaderValidator;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.builder.MessageBuilderSupport;
+import com.consol.citrus.message.builder.ReceiveMessageBuilderSupport;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.MultiValueMap;
 
 /**
  * @author Christoph Deppisch
@@ -46,6 +47,14 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
         validator(new HttpQueryParamHeaderValidator());
     }
 
+    @Override
+    public HttpMessageBuilderSupport getMessageBuilderSupport() {
+        if (messageBuilderSupport == null) {
+            messageBuilderSupport = new HttpMessageBuilderSupport(httpMessage, this);
+        }
+        return super.getMessageBuilderSupport();
+    }
+
     /**
      * Sets the request path.
      * @param path
@@ -56,15 +65,38 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
         return this;
     }
 
-    @Override
-    public HttpMessageBuilderSupport getMessageBuilderSupport() {
-        if (messageBuilderSupport == null) {
-            messageBuilderSupport = new HttpMessageBuilderSupport(httpMessage, this);
-        }
-        return super.getMessageBuilderSupport();
+    /**
+     * Sets the request method.
+     * @param method
+     * @return
+     */
+    public HttpServerRequestActionBuilder method(HttpMethod method) {
+        httpMessage.method(method);
+        return this;
     }
 
-    public static class HttpMessageBuilderSupport extends MessageBuilderSupport<ReceiveMessageAction, HttpServerRequestActionBuilder, HttpMessageBuilderSupport> {
+    /**
+     * Adds a query param to the request uri.
+     * @param name
+     * @return
+     */
+    public HttpServerRequestActionBuilder queryParam(String name) {
+        httpMessage.queryParam(name, null);
+        return this;
+    }
+
+    /**
+     * Adds a query param to the request uri.
+     * @param name
+     * @param value
+     * @return
+     */
+    public HttpServerRequestActionBuilder queryParam(String name, String value) {
+        httpMessage.queryParam(name, value);
+        return this;
+    }
+
+    public static class HttpMessageBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveMessageAction, HttpServerRequestActionBuilder, HttpMessageBuilderSupport> {
 
         private final HttpMessage httpMessage;
 
@@ -75,6 +107,17 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
 
         @Override
         public HttpMessageBuilderSupport body(String payload) {
+            httpMessage.setPayload(payload);
+            return this;
+        }
+
+        /**
+         * Adds message payload multi value map data to this builder. This is used when using multipart file upload via
+         * Spring RestTemplate.
+         * @param payload
+         * @return
+         */
+        public HttpMessageBuilderSupport body(MultiValueMap<String,Object> payload) {
             httpMessage.setPayload(payload);
             return this;
         }
@@ -97,7 +140,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
          * @return
          */
         public HttpMessageBuilderSupport method(HttpMethod method) {
-            httpMessage.method(method);
+            delegate.method(method);
             return this;
         }
 
@@ -107,7 +150,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
          * @return
          */
         public HttpMessageBuilderSupport queryParam(String name) {
-            httpMessage.queryParam(name, null);
+            delegate.queryParam(name, null);
             return this;
         }
 
@@ -118,7 +161,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
          * @return
          */
         public HttpMessageBuilderSupport queryParam(String name, String value) {
-            httpMessage.queryParam(name, value);
+            delegate.queryParam(name, value);
             return this;
         }
 
@@ -161,7 +204,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
             httpMessage.cookie(cookie);
             return this;
         }
-
     }
 
     @Override

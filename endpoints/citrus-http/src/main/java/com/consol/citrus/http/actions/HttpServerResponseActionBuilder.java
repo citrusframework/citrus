@@ -23,16 +23,17 @@ import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.SendMessageBuilderSupport;
 import org.springframework.http.HttpStatus;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpServerResponseActionBuilder> {
+public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpServerResponseActionBuilder.HttpMessageBuilderSupport, HttpServerResponseActionBuilder> {
 
     /** Http message to send or receive */
-    private HttpMessage httpMessage = new HttpMessage();
+    private final HttpMessage httpMessage = new HttpMessage();
 
     /**
      * Default constructor.
@@ -42,81 +43,99 @@ public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessa
     }
 
     @Override
-    public HttpServerResponseActionBuilder payload(String payload) {
-        httpMessage.setPayload(payload);
-        return this;
+    public HttpMessageBuilderSupport getMessageBuilderSupport() {
+        if (messageBuilderSupport == null) {
+            messageBuilderSupport = new HttpMessageBuilderSupport(httpMessage, this);
+        }
+        return super.getMessageBuilderSupport();
     }
 
-    @Override
-    public HttpServerResponseActionBuilder messageName(String name) {
-        httpMessage.setName(name);
-        return super.messageName(name);
-    }
+    public static class HttpMessageBuilderSupport extends SendMessageBuilderSupport<SendMessageAction, HttpServerResponseActionBuilder, HttpMessageBuilderSupport> {
 
-    /**
-     * Sets the response status.
-     * @param status
-     * @return
-     */
-    public HttpServerResponseActionBuilder status(HttpStatus status) {
-        httpMessage.status(status);
-        return this;
-    }
+        private final HttpMessage httpMessage;
 
-    /**
-     * Sets the response status code.
-     * @param statusCode
-     * @return
-     */
-    public HttpServerResponseActionBuilder statusCode(Integer statusCode) {
-        httpMessage.statusCode(statusCode);
-        return this;
-    }
+        protected HttpMessageBuilderSupport(HttpMessage httpMessage, HttpServerResponseActionBuilder delegate) {
+            super(delegate);
+            this.httpMessage = httpMessage;
+        }
 
-    /**
-     * Sets the response reason phrase.
-     * @param reasonPhrase
-     * @return
-     */
-    public HttpServerResponseActionBuilder reasonPhrase(String reasonPhrase) {
-        httpMessage.reasonPhrase(reasonPhrase);
-        return this;
-    }
+        @Override
+        public HttpMessageBuilderSupport body(String payload) {
+            httpMessage.setPayload(payload);
+            return this;
+        }
 
-    /**
-     * Sets the http version.
-     * @param version
-     * @return
-     */
-    public HttpServerResponseActionBuilder version(String version) {
-        httpMessage.version(version);
-        return this;
-    }
+        @Override
+        public HttpMessageBuilderSupport name(String name) {
+            httpMessage.setName(name);
+            return super.name(name);
+        }
 
-    /**
-     * Sets the response content type header.
-     * @param contentType
-     * @return
-     */
-    public HttpServerResponseActionBuilder contentType(String contentType) {
-        httpMessage.contentType(contentType);
-        return this;
-    }
+        @Override
+        public HttpMessageBuilderSupport from(Message controlMessage) {
+            HttpMessageUtils.copy(controlMessage, httpMessage);
+            return this;
+        }
 
-    /**
-     * Adds cookie to response by "Set-Cookie" header.
-     * @param cookie
-     * @return
-     */
-    public HttpServerResponseActionBuilder cookie(Cookie cookie) {
-        httpMessage.cookie(cookie);
-        return this;
-    }
+        /**
+         * Sets the response status.
+         * @param status
+         * @return
+         */
+        public HttpMessageBuilderSupport status(HttpStatus status) {
+            httpMessage.status(status);
+            return this;
+        }
 
-    @Override
-    public HttpServerResponseActionBuilder message(Message message) {
-        HttpMessageUtils.copy(message, httpMessage);
-        return this;
+        /**
+         * Sets the response status code.
+         * @param statusCode
+         * @return
+         */
+        public HttpMessageBuilderSupport statusCode(Integer statusCode) {
+            httpMessage.statusCode(statusCode);
+            return this;
+        }
+
+        /**
+         * Sets the response reason phrase.
+         * @param reasonPhrase
+         * @return
+         */
+        public HttpMessageBuilderSupport reasonPhrase(String reasonPhrase) {
+            httpMessage.reasonPhrase(reasonPhrase);
+            return this;
+        }
+
+        /**
+         * Sets the http version.
+         * @param version
+         * @return
+         */
+        public HttpMessageBuilderSupport version(String version) {
+            httpMessage.version(version);
+            return this;
+        }
+
+        /**
+         * Sets the response content type header.
+         * @param contentType
+         * @return
+         */
+        public HttpMessageBuilderSupport contentType(String contentType) {
+            httpMessage.contentType(contentType);
+            return this;
+        }
+
+        /**
+         * Adds cookie to response by "Set-Cookie" header.
+         * @param cookie
+         * @return
+         */
+        public HttpMessageBuilderSupport cookie(Cookie cookie) {
+            httpMessage.cookie(cookie);
+            return this;
+        }
     }
 
     @Override

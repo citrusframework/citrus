@@ -36,15 +36,16 @@ public class SyncJmsQueueJavaIT extends TestNGCitrusSupport {
         variable("user", "Christoph");
 
         when(send("helloServiceJmsSyncEndpoint")
-            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .description("Send synchronous hello request: TestFramework -> HelloService")
+            .message()
+            .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
                            "<Text>Hello TestFramework</Text>" +
                        "</HelloRequest>")
             .header("Operation", "sayHello")
-            .header("CorrelationId", "${correlationId}")
-            .description("Send synchronous hello request: TestFramework -> HelloService"));
+            .header("CorrelationId", "${correlationId}"));
 
         then(receive("helloServiceJmsSyncEndpoint")
             .description("Receive sync hello response: HelloService -> TestFramework")

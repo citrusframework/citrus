@@ -105,14 +105,14 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
      * Gets the bean definition builder class.
      * @return
      */
-    protected Class<? extends AbstractSendMessageActionFactoryBean<?, ?>> getBeanDefinitionClass() {
+    protected Class<? extends AbstractSendMessageActionFactoryBean<?, ?, ?>> getBeanDefinitionClass() {
         return SendMessageActionFactoryBean.class;
     }
 
     /**
      * Test action factory bean.
      */
-    public static class SendMessageActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendMessageAction, SendMessageAction.Builder> {
+    public static class SendMessageActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendMessageAction, SendMessageAction.SendMessageActionBuilderSupport, SendMessageAction.Builder> {
 
         private final SendMessageAction.Builder builder = new SendMessageAction.Builder();
 

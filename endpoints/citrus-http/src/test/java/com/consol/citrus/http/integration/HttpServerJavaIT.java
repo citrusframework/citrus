@@ -43,7 +43,8 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
             http().client("httpClient")
                 .send()
                 .post()
-                .payload("<testRequestMessage>" +
+                .message()
+                .body("<testRequestMessage>" +
                         "<text>Hello HttpServer</text>" +
                         "</testRequestMessage>")
                 .header("CustomHeaderId", "${custom_header_id}")
@@ -69,7 +70,8 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
                http().server("httpServerResponseEndpoint")
                    .send()
                    .response(HttpStatus.OK)
-                   .payload("<testResponseMessage>" +
+                   .message()
+                   .body("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                             "</testResponseMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
@@ -95,7 +97,8 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
             http().client("httpClient")
                 .send()
                 .post()
-                .payload("<testRequestMessage>" +
+                .message()
+                .body("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                 .header("CustomHeaderId", "${custom_header_id}")
@@ -122,8 +125,9 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
                http().server("httpServerResponseEndpoint")
                    .send()
                    .response()
+                   .message()
                    .status(HttpStatus.NOT_FOUND)
-                   .payload("<testResponseMessage>" +
+                   .body("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                             "</testResponseMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
@@ -149,7 +153,8 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
         when(http().client("httpClient")
             .send()
             .post()
-            .payload("<testRequestMessage>" +
+            .message()
+            .body("<testRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</testRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}")

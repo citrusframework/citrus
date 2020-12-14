@@ -36,7 +36,8 @@ public class WebServiceClientJavaIT extends TestNGCitrusSupport {
         variable("correlationId", "CORR123456789");
 
         when(send("helloSoapClient")
-            .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+            .message()
+            .body("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                             "<ns0:User>User</ns0:User>" +

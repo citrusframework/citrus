@@ -38,7 +38,6 @@ import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.message.WithPayloadBuilder;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
-import com.consol.citrus.message.builder.MessageBuilderSupport;
 import com.consol.citrus.message.builder.ReceiveMessageBuilderSupport;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
@@ -436,7 +435,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends ReceiveMessageActionBuilder<ReceiveMessageAction, ReceiveMessageBuilderSupport, Builder> {
+    public static final class Builder extends ReceiveMessageActionBuilder<ReceiveMessageAction, ReceiveMessageActionBuilderSupport, Builder> {
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -471,9 +470,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         @Override
-        public ReceiveMessageBuilderSupport getMessageBuilderSupport() {
+        public ReceiveMessageActionBuilderSupport getMessageBuilderSupport() {
             if (messageBuilderSupport == null) {
-                messageBuilderSupport = new ReceiveMessageBuilderSupport(self);
+                messageBuilderSupport = new ReceiveMessageActionBuilderSupport(self);
             }
             return super.getMessageBuilderSupport();
         }
@@ -484,7 +483,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
     }
 
-    public static abstract class ReceiveMessageActionBuilder<T extends ReceiveMessageAction, M extends MessageBuilderSupport<T, B, M>, B extends ReceiveMessageActionBuilder<T, M, B>>
+    public static class ReceiveMessageActionBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveMessageAction, Builder, ReceiveMessageActionBuilderSupport> {
+
+        public ReceiveMessageActionBuilderSupport(Builder delegate) {
+            super(delegate);
+        }
+    }
+
+    public static abstract class ReceiveMessageActionBuilder<T extends ReceiveMessageAction, M extends ReceiveMessageBuilderSupport<T, B, M>, B extends ReceiveMessageActionBuilder<T, M, B>>
             extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
         private Endpoint endpoint;
         private String endpointUri;

@@ -51,6 +51,7 @@ public class SendSoapFaultActionTest extends UnitTestSupport {
     public void testSendSoapFault() {
         SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction.Builder()
                 .endpoint(endpoint)
+                .message()
                 .faultCode("{http://citrusframework.org}ws:TEC-1000")
                 .faultString("Internal server error")
                 .build();
@@ -85,6 +86,7 @@ public class SendSoapFaultActionTest extends UnitTestSupport {
     public void testSendSoapFaultWithActor() {
         SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction.Builder()
                 .endpoint(endpoint)
+                .message()
                 .faultCode("{http://citrusframework.org}ws:TEC-1000")
                 .faultString("Internal server error")
                 .faultActor("SERVER")
@@ -121,6 +123,7 @@ public class SendSoapFaultActionTest extends UnitTestSupport {
     public void testSendSoapFaultMissingFaultString() {
         SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction.Builder()
                 .endpoint(endpoint)
+                .message()
                 .faultCode("{http://citrusframework.org}ws:TEC-1000")
                 .build();
 
@@ -154,6 +157,7 @@ public class SendSoapFaultActionTest extends UnitTestSupport {
     public void testSendSoapFaultWithVariableSupport() {
         SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction.Builder()
                 .endpoint(endpoint)
+                .message()
                 .faultCode("citrus:concat('{http://citrusframework.org}ws:', ${faultCode})")
                 .faultString("${faultString}")
                 .build();

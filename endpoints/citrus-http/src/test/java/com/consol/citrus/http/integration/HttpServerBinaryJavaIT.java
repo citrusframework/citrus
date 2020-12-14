@@ -70,9 +70,9 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
                 .send()
                 .post()
                 .fork(true)
-                .accept(MEDIA_TYPE_APPLICATION_CUSTOM)
-                .messageType(MessageType.BINARY)
                 .message(new DefaultMessage(binaryDataUtf8))
+                .accept(MEDIA_TYPE_APPLICATION_CUSTOM)
+                .type(MessageType.BINARY)
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM));
 
         when(http().server(httpServer)
@@ -86,8 +86,8 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
         then(http().server(httpServer)
                 .send()
                 .response(HttpStatus.OK)
-                .messageType(MessageType.BINARY)
                 .message(new DefaultMessage(binaryDataLatin1))
+                .type(MessageType.BINARY)
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM));
 
         then(http().client(httpClient)
@@ -108,8 +108,8 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
                 .send()
                 .post()
                 .fork(true)
-                .messageType(MessageType.BINARY)
                 .message(new DefaultMessage(binaryData))
+                .type(MessageType.BINARY)
                 .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
                 .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
 
@@ -124,8 +124,8 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
         then(http().server("echoHttpServer")
                 .send()
                 .response(HttpStatus.OK)
-                .messageType(MessageType.BINARY)
                 .message(new DefaultMessage(binaryData))
+                .type(MessageType.BINARY)
                 .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
 
         then(http().client("echoHttpClient")

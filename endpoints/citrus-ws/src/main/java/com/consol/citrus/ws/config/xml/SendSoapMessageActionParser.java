@@ -83,14 +83,14 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSendMessageActionFactoryBean<?, ?>> getBeanDefinitionClass() {
+    protected Class<? extends AbstractSendMessageActionFactoryBean<?, ?, ?>> getBeanDefinitionClass() {
         return SendSoapMessageActionFactoryBean.class;
     }
 
     /**
      * Test action factory bean.
      */
-    public static class SendSoapMessageActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendSoapMessageAction, SendSoapMessageAction.Builder> {
+    public static class SendSoapMessageActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendSoapMessageAction, SendSoapMessageAction.Builder.SendSoapMessageBuilderSupport, SendSoapMessageAction.Builder> {
 
         private final SendSoapMessageAction.Builder builder = new SendSoapMessageAction.Builder();
 
@@ -99,7 +99,7 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
          * @param attachments the control attachments
          */
         public void setAttachments(List<SoapAttachment> attachments) {
-            attachments.forEach(builder::attachment);
+            attachments.forEach(builder.message()::attachment);
         }
 
         /**
@@ -107,7 +107,7 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
          * @param mtomEnabled
          */
         public void setMtomEnabled(boolean mtomEnabled) {
-            builder.mtomEnabled(mtomEnabled);
+            builder.message().mtomEnabled(mtomEnabled);
         }
 
         @Override

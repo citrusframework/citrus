@@ -50,8 +50,9 @@ public class EndpointInjectionJavaIT extends TestNGCitrusSupport {
         citrus.getCitrusContext().getReferenceResolver().bind("FOO.test.queue", new DefaultMessageQueue("FOO.test.queue"));
 
         run(send(directEndpoint)
-                .messageType(MessageType.PLAINTEXT)
-                .payload("Hello!"));
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body("Hello!"));
 
         run(receive(directEndpoint)
                 .message()

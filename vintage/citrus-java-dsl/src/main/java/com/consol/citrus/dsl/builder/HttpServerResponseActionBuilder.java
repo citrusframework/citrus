@@ -22,13 +22,13 @@ public class HttpServerResponseActionBuilder extends SendMessageActionBuilder<Ht
 
     @Override
     public HttpServerResponseActionBuilder payload(String payload) {
-        delegate.payload(payload);
+        delegate.message().body(payload);
         return this;
     }
 
     @Override
     public HttpServerResponseActionBuilder messageName(String name) {
-        delegate.messageName(name);
+        delegate.message().name(name);
         return this;
     }
 
@@ -38,7 +38,7 @@ public class HttpServerResponseActionBuilder extends SendMessageActionBuilder<Ht
      * @return
      */
     public HttpServerResponseActionBuilder status(HttpStatus status) {
-        delegate.status(status);
+        delegate.message().status(status);
         return this;
     }
 
@@ -48,7 +48,7 @@ public class HttpServerResponseActionBuilder extends SendMessageActionBuilder<Ht
      * @return
      */
     public HttpServerResponseActionBuilder statusCode(Integer statusCode) {
-        delegate.statusCode(statusCode);
+        delegate.message().statusCode(statusCode);
         return this;
     }
 
@@ -58,7 +58,7 @@ public class HttpServerResponseActionBuilder extends SendMessageActionBuilder<Ht
      * @return
      */
     public HttpServerResponseActionBuilder reasonPhrase(String reasonPhrase) {
-        delegate.reasonPhrase(reasonPhrase);
+        delegate.message().reasonPhrase(reasonPhrase);
         return this;
     }
 
@@ -68,7 +68,7 @@ public class HttpServerResponseActionBuilder extends SendMessageActionBuilder<Ht
      * @return
      */
     public HttpServerResponseActionBuilder version(String version) {
-        delegate.version(version);
+        delegate.message().version(version);
         return this;
     }
 
@@ -78,7 +78,7 @@ public class HttpServerResponseActionBuilder extends SendMessageActionBuilder<Ht
      * @return
      */
     public HttpServerResponseActionBuilder contentType(String contentType) {
-        delegate.contentType(contentType);
+        delegate.message().contentType(contentType);
         return this;
     }
 
@@ -88,7 +88,7 @@ public class HttpServerResponseActionBuilder extends SendMessageActionBuilder<Ht
      * @return
      */
     public HttpServerResponseActionBuilder cookie(Cookie cookie) {
-        delegate.cookie(cookie);
+        delegate.message().cookie(cookie);
         return this;
     }
 

@@ -38,7 +38,8 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSupport {
         given(parallel().actions(
                 soap().client("helloSoapClient")
                         .send()
-                        .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                        .message()
+                        .body("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                 "</ns0:SoapMessageWithAttachmentRequest>")
                         .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt")),
@@ -57,7 +58,8 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSupport {
                                 .timeout(5000L),
                         soap().server("soapResponseEndpoint")
                                 .send()
-                                .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                                .message()
+                                .body("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                             "<ns0:Success>true</ns0:Success>" +
                                         "</ns0:SoapMessageWithAttachmentResponse>")
@@ -77,7 +79,8 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSupport {
         given(parallel().actions(
                 soap().client("helloSoapClient")
                         .send()
-                        .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                        .message()
+                        .body("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                 "</ns0:SoapMessageWithAttachmentRequest>")
                         .attachment("MySoapAttachment", "text/plain", "This is an attachment!"),
@@ -96,7 +99,8 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSupport {
                                 .timeout(5000L),
                         soap().server("soapResponseEndpoint")
                                 .send()
-                                .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                                .message()
+                                .body("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                             "<ns0:Success>true</ns0:Success>" +
                                         "</ns0:SoapMessageWithAttachmentResponse>")

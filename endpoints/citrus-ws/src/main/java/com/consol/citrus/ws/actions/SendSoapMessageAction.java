@@ -28,11 +28,13 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.SendMessageBuilderSupport;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.ws.message.SoapMessageUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
@@ -47,7 +49,7 @@ import org.springframework.core.io.Resource;
 public class SendSoapMessageAction extends SendMessageAction implements TestAction {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SendSoapMessageAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SendSoapMessageAction.class);
 
     /** SOAP attachments */
     private final List<SoapAttachment> attachments;
@@ -58,11 +60,11 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
     /** Marker for inline mtom binary data */
     public static final String CID_MARKER = "cid:";
 
-    public SendSoapMessageAction(SendSoapMessageBuilder<?, ?> builder) {
+    public SendSoapMessageAction(SendSoapMessageBuilder<?, ?, ?> builder) {
         super(builder);
 
-        this.attachments = builder.attachments;
-        this.mtomEnabled = builder.mtomEnabled;
+        this.attachments = builder.getMessageBuilderSupport().getAttachments();
+        this.mtomEnabled = builder.getMessageBuilderSupport().isMtomEnabled();
     }
 
     @Override
@@ -81,13 +83,13 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
                     if (attachment.isMtomInline() && messagePayload.contains(cid)) {
                         byte[] attachmentBinaryData = FileUtils.readToString(attachment.getInputStream(), Charset.forName(attachment.getCharsetName())).getBytes(Charset.forName(attachment.getCharsetName()));
                         if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_BASE64_BINARY)) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Adding inline base64Binary data for attachment: %s", cid);
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug(String.format("Adding inline base64Binary data for attachment: %s", cid));
                             }
                             messagePayload = messagePayload.replaceAll(cid, Base64.encodeBase64String(attachmentBinaryData));
                         } else if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_HEX_BINARY)) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Adding inline hexBinary data for attachment: %s", cid);
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug(String.format("Adding inline hexBinary data for attachment: %s", cid));
                             }
                             messagePayload = messagePayload.replaceAll(cid, Hex.encodeHexString(attachmentBinaryData).toUpperCase());
                         } else {
@@ -130,10 +132,25 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
     /**
      * Action builder.
      */
-    public static final class Builder extends SendSoapMessageBuilder<SendSoapMessageAction, Builder> {
+    public static final class Builder extends SendSoapMessageBuilder<SendSoapMessageAction, Builder.SendSoapMessageBuilderSupport, Builder> {
 
         public Builder() {
             message(new StaticMessageBuilder(soapMessage));
+        }
+
+        @Override
+        public SendSoapMessageBuilderSupport getMessageBuilderSupport() {
+            if (messageBuilderSupport == null) {
+                messageBuilderSupport = new SendSoapMessageBuilderSupport(soapMessage, this);
+            }
+            return super.getMessageBuilderSupport();
+        }
+
+        public static class SendSoapMessageBuilderSupport extends SoapMessageBuilderSupport<SendSoapMessageAction, Builder, SendSoapMessageBuilderSupport> {
+
+            protected SendSoapMessageBuilderSupport(SoapMessage soapMessage, Builder delegate) {
+                super(soapMessage, delegate);
+            }
         }
 
         @Override
@@ -145,20 +162,55 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
     /**
      * Action builder.
      */
-    public abstract static class SendSoapMessageBuilder<T extends SendSoapMessageAction, B extends SendSoapMessageBuilder<T, B>> extends SendMessageActionBuilder<T, B> {
+    public abstract static class SendSoapMessageBuilder<T extends SendSoapMessageAction, M extends SoapMessageBuilderSupport<T, B, M>, B extends SendSoapMessageBuilder<T, M, B>> extends SendMessageActionBuilder<T, M, B> {
 
-        private List<SoapAttachment> attachments = new ArrayList<>();
+        /** Soap message to send */
+        protected SoapMessage soapMessage = new SoapMessage();
+
+        public B mtomEnabled(boolean mtomEnabled) {
+            getMessageBuilderSupport().mtomEnabled(mtomEnabled);
+            return self;
+        }
+
+    }
+
+    public static class SoapMessageBuilderSupport<T extends SendSoapMessageAction, B extends SendSoapMessageBuilder<T, M, B>, M extends SoapMessageBuilderSupport<T, B, M>> extends SendMessageBuilderSupport<T, B, M> {
+
+        protected final SoapMessage soapMessage;
+
+        private final List<SoapAttachment> attachments = new ArrayList<>();
         private boolean mtomEnabled = false;
 
-        /** Soap message to send or receive */
-        protected SoapMessage soapMessage = new SoapMessage();
+        protected SoapMessageBuilderSupport(SoapMessage soapMessage, B delegate) {
+            super(delegate);
+            this.soapMessage = soapMessage;
+        }
+
+        @Override
+        public M body(String payload) {
+            soapMessage.setPayload(payload);
+            return self;
+        }
+
+        @Override
+        public M name(String name) {
+            soapMessage.setName(name);
+            return super.name(name);
+        }
+
+        @Override
+        public M from(Message controlMessage) {
+            SoapMessageUtils.copy(controlMessage, soapMessage);
+            type(controlMessage.getType());
+            return self;
+        }
 
         /**
          * Sets special SOAP action message header.
          * @param soapAction
          * @return
          */
-        public B soapAction(String soapAction) {
+        public M soapAction(String soapAction) {
             soapMessage.header(SoapMessageHeaders.SOAP_ACTION, soapAction);
             return self;
         }
@@ -170,7 +222,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @param content
          * @return
          */
-        public B attachment(String contentId, String contentType, String content) {
+        public M attachment(String contentId, String contentType, String content) {
             SoapAttachment attachment = new SoapAttachment();
             attachment.setContentId(contentId);
             attachment.setContentType(contentType);
@@ -187,7 +239,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @param contentResource
          * @return
          */
-        public B attachment(String contentId, String contentType, Resource contentResource) {
+        public M attachment(String contentId, String contentType, Resource contentResource) {
             return attachment(contentId, contentType, contentResource, FileUtils.getDefaultCharset());
         }
 
@@ -199,7 +251,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @param charset
          * @return
          */
-        public B attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
+        public M attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
             SoapAttachment attachment = new SoapAttachment();
             attachment.setContentId(contentId);
             attachment.setContentType(contentType);
@@ -220,7 +272,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @param charsetName
          * @return
          */
-        public B charset(String charsetName) {
+        public M charset(String charsetName) {
             if (!this.attachments.isEmpty()) {
                 this.attachments.get(this.attachments.size() - 1).setCharsetName(charsetName);
             }
@@ -232,7 +284,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @param attachment
          * @return
          */
-        public B attachment(SoapAttachment attachment) {
+        public M attachment(SoapAttachment attachment) {
             this.attachments.add(attachment);
             return self;
         }
@@ -244,7 +296,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @param uri absolute URI to use for the endpoint
          * @return self
          */
-        public B uri(String uri) {
+        public M uri(String uri) {
             soapMessage.header(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, uri);
             return self;
         }
@@ -254,7 +306,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @param contentType
          * @return
          */
-        public B contentType(String contentType) {
+        public M contentType(String contentType) {
             soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
             return self;
         }
@@ -264,15 +316,23 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @param accept
          * @return
          */
-        public B accept(String accept) {
+        public M accept(String accept) {
             soapMessage.header(SoapMessageHeaders.HTTP_ACCEPT, accept);
             return self;
         }
 
-        public B mtomEnabled(boolean mtomEnabled) {
+        public M mtomEnabled(boolean mtomEnabled) {
             soapMessage.mtomEnabled(mtomEnabled);
             this.mtomEnabled = mtomEnabled;
             return self;
+        }
+
+        protected List<SoapAttachment> getAttachments() {
+            return attachments;
+        }
+
+        protected boolean isMtomEnabled() {
+            return mtomEnabled;
         }
     }
 }

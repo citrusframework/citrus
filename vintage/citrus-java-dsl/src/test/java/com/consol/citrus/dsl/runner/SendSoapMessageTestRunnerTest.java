@@ -24,6 +24,8 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
@@ -111,7 +113,8 @@ public class SendSoapMessageTestRunnerTest extends UnitTestSupport {
         StaticMessageBuilder messageBuilder = (StaticMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 2L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 3L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "additionalValue");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
 

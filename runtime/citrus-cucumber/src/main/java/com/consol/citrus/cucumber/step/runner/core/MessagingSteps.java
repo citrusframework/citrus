@@ -85,7 +85,8 @@ public class MessagingSteps {
     @When("^<([^>]+)> sends$")
     public void doSendMessage(final String endpoint, final String payload) {
         runner.when(send().endpoint(endpoint)
-                .payload(payload));
+                .message()
+                .body(payload));
     }
 
     @When("^<([^>]+)> sends \"([^\"]*)\"$")

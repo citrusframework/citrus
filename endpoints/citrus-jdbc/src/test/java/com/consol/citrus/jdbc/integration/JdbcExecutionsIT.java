@@ -86,8 +86,8 @@ public class JdbcExecutionsIT extends TestNGCitrusSupport {
                 .message(JdbcMessage.execute(sql)));
 
         then(send(jdbcServer)
-                .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]")));
+                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]"))
+                .type(MessageType.JSON));
     }
 
     @CitrusTest
@@ -116,8 +116,8 @@ public class JdbcExecutionsIT extends TestNGCitrusSupport {
                 .message(JdbcMessage.execute(sql + " - (5)")));
 
         then(send(jdbcServer)
-                .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]")));
+                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]"))
+                .type(MessageType.JSON));
     }
 
     @CitrusTest

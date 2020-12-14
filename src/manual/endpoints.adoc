@@ -84,9 +84,10 @@ public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
     @CitrusTest(name = "SendMessageTest")
     public void sendMessageTest() {
         description("Basic send message example");
-    
+
         send("helloServiceEndpoint")
-            .payload("<TestMessage>" +
+            .message()
+            .body("<TestMessage>" +
                         "<Text>Hello!</Text>" +
                     "</TestMessage>")
             .header("Operation", "sayHello");
@@ -132,7 +133,8 @@ Before we go into detail on validating the received message we have a quick look
 @CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
-        .payload("<TestMessage>" +
+        .message()
+        .body("<TestMessage>" +
                     "<Text>Hello!</Text>" +
                 "</TestMessage>")
         .header("Operation", "sayHello");
@@ -172,8 +174,9 @@ storing a message in the local storage Citrus uses a message name as identifier 
 @CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
+        .message()
         .name("helloMessage")
-        .payload("<TestMessage>" +
+        .body("<TestMessage>" +
                     "<Text>Hello!</Text>" +
                 "</TestMessage>")
         .header("Operation", "sayHello");
@@ -186,7 +189,7 @@ the message content for instance by using a function:
 [source,xml]
 ----
 <echo>
-    <message>citrus:message(helloMessage.payload())</message>
+    <message>citrus:message(helloMessage.body())</message>
 </echo>
 ----
 

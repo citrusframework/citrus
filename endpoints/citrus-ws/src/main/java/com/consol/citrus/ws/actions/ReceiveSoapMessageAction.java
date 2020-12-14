@@ -26,7 +26,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.builder.MessageBuilderSupport;
+import com.consol.citrus.message.builder.ReceiveMessageBuilderSupport;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.ws.message.SoapAttachment;
@@ -99,9 +99,9 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
     /**
      * Action builder.
      */
-    public static final class Builder extends ReceiveMessageActionBuilder<ReceiveSoapMessageAction, Builder.SoapMessageBuilderSupport, Builder> {
+    public static final class Builder extends ReceiveMessageActionBuilder<ReceiveSoapMessageAction, SoapMessageBuilderSupport, Builder> {
 
-        /** Soap message to send or receive */
+        /** Soap message to receive */
         private final SoapMessage soapMessage = new SoapMessage();
 
         private final List<SoapAttachment> attachments = new ArrayList<>();
@@ -120,184 +120,184 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
             return super.getMessageBuilderSupport();
         }
 
-        public static class SoapMessageBuilderSupport extends MessageBuilderSupport<ReceiveSoapMessageAction, Builder, SoapMessageBuilderSupport> {
-
-            private final SoapMessage soapMessage;
-
-            protected SoapMessageBuilderSupport(SoapMessage soapMessage, Builder delegate) {
-                super(delegate);
-                this.soapMessage = soapMessage;
-            }
-
-            @Override
-            public SoapMessageBuilderSupport body(String payload) {
-                soapMessage.setPayload(payload);
-                return this;
-            }
-
-            @Override
-            public SoapMessageBuilderSupport name(String name) {
-                soapMessage.setName(name);
-                return super.name(name);
-            }
-
-            @Override
-            public SoapMessageBuilderSupport from(Message controlMessage) {
-                SoapMessageUtils.copy(controlMessage, soapMessage);
-                type(controlMessage.getType());
-                return this;
-            }
-
-            /**
-             * Sets special SOAP action message header.
-             * @param soapAction
-             * @return
-             */
-            public SoapMessageBuilderSupport soapAction(String soapAction) {
-                soapMessage.header(SoapMessageHeaders.SOAP_ACTION, soapAction);
-                return this;
-            }
-
-            /**
-             * Sets the control attachment with string content.
-             * @param contentId
-             * @param contentType
-             * @param content
-             * @return
-             */
-            public SoapMessageBuilderSupport attachment(String contentId, String contentType, String content) {
-                SoapAttachment attachment = new SoapAttachment();
-                attachment.setContentId(contentId);
-                attachment.setContentType(contentType);
-                attachment.setContent(content);
-
-                attachment(attachment);
-
-                return this;
-            }
-
-            /**
-             * Sets the control attachment with content resource.
-             * @param contentId
-             * @param contentType
-             * @param contentResource
-             * @return
-             */
-            public SoapMessageBuilderSupport attachment(String contentId, String contentType, Resource contentResource) {
-                return attachment(contentId, contentType, contentResource, FileUtils.getDefaultCharset());
-            }
-
-            /**
-             * Sets the control attachment with content resource.
-             * @param contentId
-             * @param contentType
-             * @param contentResource
-             * @param charset
-             * @return
-             */
-            public SoapMessageBuilderSupport attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
-                SoapAttachment attachment = new SoapAttachment();
-                attachment.setContentId(contentId);
-                attachment.setContentType(contentType);
-                attachment.setCharsetName(charset.name());
-
-                try {
-                    attachment.setContent(FileUtils.readToString(contentResource, charset));
-                } catch (IOException e) {
-                    throw new CitrusRuntimeException("Failed to read attachment content resource", e);
-                }
-
-                attachment(attachment);
-
-                return this;
-            }
-
-            /**
-             * Sets the charset name for this send action builder's control attachment.
-             * @param charsetName
-             * @return
-             */
-            public SoapMessageBuilderSupport charset(String charsetName) {
-                if (!delegate.attachments.isEmpty()) {
-                    delegate.attachments.get(delegate.attachments.size() - 1).setCharsetName(charsetName);
-                }
-                return this;
-            }
-
-            /**
-             * Sets the control attachment from Java object instance.
-             * @param attachment
-             * @return
-             */
-            public SoapMessageBuilderSupport attachment(SoapAttachment attachment) {
-                delegate.attachments.add(attachment);
-                return this;
-            }
-
-            /**
-             * Set explicit SOAP attachment validator.
-             * @param validator
-             * @return
-             */
-            public SoapMessageBuilderSupport attachmentValidator(SoapAttachmentValidator validator) {
-                delegate.attachmentValidator = validator;
-                return this;
-            }
-
-            /**
-             * Sets the request content type header.
-             * @param contentType
-             * @return
-             */
-            public SoapMessageBuilderSupport contentType(String contentType) {
-                soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
-                return this;
-            }
-
-            /**
-             * Sets the request accept header.
-             * @param accept
-             * @return
-             */
-            public SoapMessageBuilderSupport accept(String accept) {
-                soapMessage.header(SoapMessageHeaders.HTTP_ACCEPT, accept);
-                return this;
-            }
-
-            /**
-             * Sets the response status.
-             * @param status
-             * @return
-             */
-            public SoapMessageBuilderSupport status(HttpStatus status) {
-                soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, status.value());
-                return this;
-            }
-
-            /**
-             * Sets the response status code.
-             * @param statusCode
-             * @return
-             */
-            public SoapMessageBuilderSupport statusCode(Integer statusCode) {
-                soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, statusCode);
-                return this;
-            }
-
-            /**
-             * Sets the context path.
-             * @param contextPath
-             * @return
-             */
-            public SoapMessageBuilderSupport contextPath(String contextPath) {
-                soapMessage.header(SoapMessageHeaders.HTTP_CONTEXT_PATH, contextPath);
-                return this;
-            }
-        }
-
         @Override
         public ReceiveSoapMessageAction doBuild() {
             return new ReceiveSoapMessageAction(this);
+        }
+    }
+
+    public static class SoapMessageBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveSoapMessageAction, Builder, SoapMessageBuilderSupport> {
+
+        private final SoapMessage soapMessage;
+
+        protected SoapMessageBuilderSupport(SoapMessage soapMessage, Builder delegate) {
+            super(delegate);
+            this.soapMessage = soapMessage;
+        }
+
+        @Override
+        public SoapMessageBuilderSupport body(String payload) {
+            soapMessage.setPayload(payload);
+            return this;
+        }
+
+        @Override
+        public SoapMessageBuilderSupport name(String name) {
+            soapMessage.setName(name);
+            return super.name(name);
+        }
+
+        @Override
+        public SoapMessageBuilderSupport from(Message controlMessage) {
+            SoapMessageUtils.copy(controlMessage, soapMessage);
+            type(controlMessage.getType());
+            return this;
+        }
+
+        /**
+         * Sets special SOAP action message header.
+         * @param soapAction
+         * @return
+         */
+        public SoapMessageBuilderSupport soapAction(String soapAction) {
+            soapMessage.header(SoapMessageHeaders.SOAP_ACTION, soapAction);
+            return this;
+        }
+
+        /**
+         * Sets the control attachment with string content.
+         * @param contentId
+         * @param contentType
+         * @param content
+         * @return
+         */
+        public SoapMessageBuilderSupport attachment(String contentId, String contentType, String content) {
+            SoapAttachment attachment = new SoapAttachment();
+            attachment.setContentId(contentId);
+            attachment.setContentType(contentType);
+            attachment.setContent(content);
+
+            attachment(attachment);
+
+            return this;
+        }
+
+        /**
+         * Sets the control attachment with content resource.
+         * @param contentId
+         * @param contentType
+         * @param contentResource
+         * @return
+         */
+        public SoapMessageBuilderSupport attachment(String contentId, String contentType, Resource contentResource) {
+            return attachment(contentId, contentType, contentResource, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Sets the control attachment with content resource.
+         * @param contentId
+         * @param contentType
+         * @param contentResource
+         * @param charset
+         * @return
+         */
+        public SoapMessageBuilderSupport attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
+            SoapAttachment attachment = new SoapAttachment();
+            attachment.setContentId(contentId);
+            attachment.setContentType(contentType);
+            attachment.setCharsetName(charset.name());
+
+            try {
+                attachment.setContent(FileUtils.readToString(contentResource, charset));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read attachment content resource", e);
+            }
+
+            attachment(attachment);
+
+            return this;
+        }
+
+        /**
+         * Sets the charset name for this send action builder's control attachment.
+         * @param charsetName
+         * @return
+         */
+        public SoapMessageBuilderSupport charset(String charsetName) {
+            if (!delegate.attachments.isEmpty()) {
+                delegate.attachments.get(delegate.attachments.size() - 1).setCharsetName(charsetName);
+            }
+            return this;
+        }
+
+        /**
+         * Sets the control attachment from Java object instance.
+         * @param attachment
+         * @return
+         */
+        public SoapMessageBuilderSupport attachment(SoapAttachment attachment) {
+            delegate.attachments.add(attachment);
+            return this;
+        }
+
+        /**
+         * Set explicit SOAP attachment validator.
+         * @param validator
+         * @return
+         */
+        public SoapMessageBuilderSupport attachmentValidator(SoapAttachmentValidator validator) {
+            delegate.attachmentValidator = validator;
+            return this;
+        }
+
+        /**
+         * Sets the request content type header.
+         * @param contentType
+         * @return
+         */
+        public SoapMessageBuilderSupport contentType(String contentType) {
+            soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
+            return this;
+        }
+
+        /**
+         * Sets the request accept header.
+         * @param accept
+         * @return
+         */
+        public SoapMessageBuilderSupport accept(String accept) {
+            soapMessage.header(SoapMessageHeaders.HTTP_ACCEPT, accept);
+            return this;
+        }
+
+        /**
+         * Sets the response status.
+         * @param status
+         * @return
+         */
+        public SoapMessageBuilderSupport status(HttpStatus status) {
+            soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, status.value());
+            return this;
+        }
+
+        /**
+         * Sets the response status code.
+         * @param statusCode
+         * @return
+         */
+        public SoapMessageBuilderSupport statusCode(Integer statusCode) {
+            soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, statusCode);
+            return this;
+        }
+
+        /**
+         * Sets the context path.
+         * @param contextPath
+         * @return
+         */
+        public SoapMessageBuilderSupport contextPath(String contextPath) {
+            soapMessage.header(SoapMessageHeaders.HTTP_CONTEXT_PATH, contextPath);
+            return this;
         }
     }
 }

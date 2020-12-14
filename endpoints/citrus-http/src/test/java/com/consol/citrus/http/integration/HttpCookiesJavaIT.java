@@ -47,7 +47,8 @@ public class HttpCookiesJavaIT extends TestNGCitrusSupport {
             .send()
             .post()
             .fork(true)
-            .payload("<HelloRequest>" +
+            .message()
+            .body("<HelloRequest>" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +
@@ -70,7 +71,8 @@ public class HttpCookiesJavaIT extends TestNGCitrusSupport {
        then(http().server("echoHttpServer")
            .send()
            .response(HttpStatus.OK)
-           .payload("<HelloResponse>" +
+           .message()
+           .body("<HelloResponse>" +
                        "<MessageId>${messageId}</MessageId>" +
                        "<CorrelationId>${correlationId}</CorrelationId>" +
                        "<User>HelloService</User>" +

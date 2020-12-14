@@ -68,8 +68,9 @@ public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
         variable("messageId", "Mx1x123456789");
 
         send("helloServiceEndpoint")
+                .message()
                 .name("helloMessage")
-                .payload("<TestMessage>" +
+                .body("<TestMessage>" +
                     "<Text>${text}</Text>" +
                     "</TestMessage>")
                 .header("Operation", "sayHello")
@@ -95,8 +96,9 @@ public class SendMessageTestRunner extends TestNGCitrusTestRunner {
         variable("messageId", "Mx1x123456789");
 
         send(action -> action.endpoint("helloServiceEndpoint")
+                .message()
                 .name("helloMessage")
-                .payload("<TestMessage>" +
+                .body("<TestMessage>" +
                         "<Text>${text}</Text>" +
                     "</TestMessage>")
                 .header("Operation", "sayHello")
@@ -166,7 +168,8 @@ The The same possibilities apply to the Citrus Java DSL.
 @CitrusTest
 public void messagingTest() {
     send("helloServiceEndpoint")
-        .payload("<TestMessage>" +
+        .message()
+        .body("<TestMessage>" +
                 "<Text>Hello!</Text>" +
             "</TestMessage>");
 }
@@ -177,7 +180,8 @@ public void messagingTest() {
 @CitrusTest
 public void messagingTest() {
     send("helloServiceEndpoint")
-        .payload(new ClassPathResource("com/consol/citrus/messages/TestRequest.xml"));
+        .message()
+        .body(new ClassPathResource("com/consol/citrus/messages/TestRequest.xml"));
 }
 ----
 
@@ -245,7 +249,8 @@ The message headers to send are defined by a simple name and value pair. Of cour
 @CitrusTest
 public void messagingTest() {
     receive("helloServiceEndpoint")
-        .payload("<TestMessage>" +
+        .message()
+        .body("<TestMessage>" +
                 "<Text>Hello!</Text>" +
             "</TestMessage>")
         .header("Operation", "sayHello");
@@ -258,7 +263,8 @@ public void messagingTest() {
 @CitrusTest
 public void messagingTest() {
     receive(action -> action.endpoint("helloServiceEndpoint")
-        .payload("<TestMessage>" +
+        .message()
+        .body("<TestMessage>" +
                 "<Text>Hello!</Text>" +
             "</TestMessage>")
         .header("Operation", "sayHello"));

@@ -16,45 +16,27 @@
 
 package com.consol.citrus.actions;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import com.consol.citrus.AbstractTestActionBuilder;
-import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.Completable;
-import com.consol.citrus.common.Named;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.message.MessageHeaderDataBuilder;
-import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.message.WithHeaderBuilder;
-import com.consol.citrus.message.WithPayloadBuilder;
-import com.consol.citrus.message.builder.DefaultHeaderBuilder;
-import com.consol.citrus.message.builder.DefaultHeaderDataBuilder;
-import com.consol.citrus.message.builder.DefaultPayloadBuilder;
+import com.consol.citrus.message.builder.SendMessageBuilderSupport;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.DefaultMessageBuilder;
-import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.util.StringUtils;
 
@@ -103,17 +85,17 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /**
      * Default constructor.
      */
-    public SendMessageAction(SendMessageActionBuilder<?, ?> builder) {
+    public SendMessageAction(SendMessageActionBuilder<?, ?, ?> builder) {
         super("send", builder);
 
         this.endpoint = builder.endpoint;
         this.endpointUri = builder.endpointUri;
         this.variableExtractors = builder.variableExtractors;
         this.messageProcessors = builder.messageProcessors;
-        this.messageBuilder = builder.messageBuilder;
         this.forkMode = builder.forkMode;
-        this.messageType = builder.messageType;
-        this.dataDictionary = builder.dataDictionary;
+        this.messageBuilder = builder.messageBuilderSupport.getMessageBuilder();
+        this.messageType = builder.messageBuilderSupport.getMessageType();
+        this.dataDictionary = builder.messageBuilderSupport.getDataDictionary();
     }
 
     /**
@@ -288,7 +270,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /**
      * Action builder.
      */
-    public static final class Builder extends SendMessageActionBuilder<SendMessageAction, Builder> {
+    public static final class Builder extends SendMessageActionBuilder<SendMessageAction, SendMessageActionBuilderSupport, Builder> {
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -321,33 +303,45 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         @Override
+        public SendMessageActionBuilderSupport getMessageBuilderSupport() {
+            if (messageBuilderSupport == null) {
+                messageBuilderSupport = new SendMessageActionBuilderSupport(self);
+            }
+            return super.getMessageBuilderSupport();
+        }
+
+        @Override
         public SendMessageAction doBuild() {
             return new SendMessageAction(this);
         }
 
     }
 
+    public static class SendMessageActionBuilderSupport extends SendMessageBuilderSupport<SendMessageAction, SendMessageAction.Builder, SendMessageAction.SendMessageActionBuilderSupport> {
+
+        public SendMessageActionBuilderSupport(SendMessageAction.Builder delegate) {
+            super(delegate);
+        }
+    }
+
     /**
      * Base send message action builder also used by subclasses of base send message action.
      */
-    public static abstract class SendMessageActionBuilder<T extends SendMessageAction, B extends SendMessageActionBuilder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
+    public static abstract class SendMessageActionBuilder<T extends SendMessageAction, M extends SendMessageBuilderSupport<T, B, M>, B extends SendMessageActionBuilder<T, M, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
 
         protected Endpoint endpoint;
         protected String endpointUri;
-        protected List<VariableExtractor> variableExtractors = new ArrayList<>();
-        protected List<MessageProcessor> messageProcessors = new ArrayList<>();
-        protected MessageBuilder messageBuilder = new DefaultMessageBuilder();
+
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;
-        protected String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
-        protected DataDictionary<?> dataDictionary;
-        protected String dataDictionaryName;
 
-        private final Map<String, List<Object>> headerFragmentMappers = new HashMap<>();
-        private final Map<String, List<Object>> payloadMappers = new HashMap<>();
+        protected List<VariableExtractor> variableExtractors = new ArrayList<>();
+        protected List<MessageProcessor> messageProcessors = new ArrayList<>();
 
         /** Basic bean reference resolver */
         protected ReferenceResolver referenceResolver;
+
+        protected M messageBuilderSupport;
 
         /**
          * Sets the message endpoint to send messages to.
@@ -380,197 +374,30 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Sets the message builder to use.
+         * Construct the control message for this receive action.
+         * @return
+         */
+        public M message() {
+            return getMessageBuilderSupport();
+        }
+
+        /**
+         * Sets the control message for this receive action.
          * @param messageBuilder
          * @return
          */
-        public B message(MessageBuilder messageBuilder) {
-            this.messageBuilder = messageBuilder;
-            return self;
+        public M message(MessageBuilder messageBuilder) {
+            return getMessageBuilderSupport().from(messageBuilder);
         }
 
         /**
-         * Sets the message instance to send.
-         * @param message
-         * @return
-         */
-        public B message(Message message) {
-            StaticMessageBuilder staticMessageBuilder = StaticMessageBuilder.withMessage(message);
-
-            if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).getHeaderBuilders().forEach(staticMessageBuilder::addHeaderBuilder);
-            }
-
-            message(staticMessageBuilder);
-            messageType(message.getType());
-            return self;
-        }
-
-        /**
-         * Sets the message name.
-         * @param name
-         * @return
-         */
-        public B messageName(String name) {
-            if (messageBuilder instanceof Named) {
-                ((Named) messageBuilder).setName(name);
-            } else {
-                throw new CitrusRuntimeException("Unable to set message name on builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Sets the payload data on the message builder implementation.
-         * @param payloadBuilder
-         * @return
-         */
-        public B payload(final MessagePayloadBuilder payloadBuilder) {
-            if (messageBuilder instanceof WithPayloadBuilder) {
-                ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(payloadBuilder);
-            } else {
-                throw new CitrusRuntimeException("Unable to set payload builder on message builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Adds message payload data to this builder.
-         * @param payload
-         * @return
-         */
-        public B payload(String payload) {
-            payload(new DefaultPayloadBuilder(payload));
-            return self;
-        }
-
-        /**
-         * Adds message payload resource to this builder.
-         * @param payloadResource
-         * @return
-         */
-        public B payload(Resource payloadResource) {
-            return payload(payloadResource, FileUtils.getDefaultCharset());
-        }
-
-        /**
-         * Adds message payload resource to this builder.
-         * @param payloadResource
-         * @param charset
-         * @return
-         */
-        public B payload(Resource payloadResource, Charset charset) {
-            try {
-                payload(FileUtils.readToString(payloadResource, charset));
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to read payload resource", e);
-            }
-            return self;
-        }
-
-        /**
-         * Adds message header name value pair to this builder's message sending action.
-         * @param name
-         * @param value
-         */
-        public B header(String name, Object value) {
-            if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderBuilder(Collections.singletonMap(name, value)));
-            } else {
-                throw new CitrusRuntimeException("Unable to set message header on builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Adds message headers to this builder's message sending action.
-         * @param headers
-         */
-        public B headers(Map<String, Object> headers) {
-            if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderBuilder(headers));
-            } else {
-                throw new CitrusRuntimeException("Unable to set message header on builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Adds message header data to this builder's message sending action. Message header data is used in SOAP
-         * messages for instance as header XML fragment.
-         * @param data
-         */
-        public B header(String data) {
-            if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderDataBuilder(data));
-            } else {
-                throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Adds message header data as file resource to this builder's message sending action. Message header data is used in SOAP
-         * messages for instance as header XML fragment.
-         * @param resource
-         */
-        public B header(Resource resource) {
-            return header(resource, FileUtils.getDefaultCharset());
-        }
-
-        /**
-         * Adds message header data as file resource to this builder's message sending action. Message header data is used in SOAP
-         * messages for instance as header XML fragment.
-         * @param resource
-         * @param charset
-         */
-        public B header(Resource resource, Charset charset) {
-            try {
-                if (messageBuilder instanceof WithHeaderBuilder) {
-                    ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderDataBuilder(FileUtils.readToString(resource, charset)));
-                } else {
-                    throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
-                }
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to read header resource", e);
-            }
-            return self;
-        }
-
-        /**
-         * Adds message header data builder to this builder's message sending action. Message header data is used in
-         * SOAP messages as XML fragment for instance.
+         * Expect a control message in this receive action.
          *
-         * @param headerDataBuilder
+         * @param controlMessage
          * @return
          */
-        public B header(final MessageHeaderDataBuilder headerDataBuilder) {
-            if (messageBuilder instanceof WithHeaderBuilder) {
-                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(headerDataBuilder);
-            } else {
-                throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
-            }
-            return self;
-        }
-
-        /**
-         * Sets a explicit message type for this send action.
-         * @param messageType
-         * @return
-         */
-        public B messageType(MessageType messageType) {
-            messageType(messageType.name());
-            return self;
-        }
-
-        /**
-         * Sets an explicit message type for this send action.
-         * @param messageType the type of the message indicates the content type (e.g. Xml, Json, binary).
-         * @return The modified send message
-         */
-        public B messageType(String messageType) {
-            this.messageType = messageType;
-            return self;
+        public M message(final Message controlMessage) {
+            return getMessageBuilderSupport().from(controlMessage);
         }
 
         /**
@@ -623,29 +450,13 @@ public class SendMessageAction extends AbstractTestAction implements Completable
             return self;
         }
 
-        /**
-         * Sets explicit data dictionary for this receive action.
-         * @param dictionary
-         * @return
-         */
-        public B dictionary(DataDictionary<?> dictionary) {
-            this.dataDictionary = dictionary;
-            return self;
-        }
-
-        /**
-         * Sets explicit data dictionary by name.
-         * @param dictionaryName
-         * @return
-         */
-        public B dictionary(String dictionaryName) {
-            this.dataDictionaryName = dictionaryName;
-            return self;
-        }
-
         @Override
         public void setReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
+        }
+
+        public M getMessageBuilderSupport() {
+            return messageBuilderSupport;
         }
 
         /**
@@ -656,9 +467,14 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         @Override
         public final T build() {
+            if (messageBuilderSupport == null) {
+                messageBuilderSupport = getMessageBuilderSupport();
+            }
+
             if (referenceResolver != null) {
-                if (dataDictionaryName != null) {
-                    this.dataDictionary = referenceResolver.resolve(dataDictionaryName, DataDictionary.class);
+                if (messageBuilderSupport.getDataDictionaryName() != null) {
+                    this.messageBuilderSupport.dictionary(
+                            referenceResolver.resolve(messageBuilderSupport.getDataDictionaryName(), DataDictionary.class));
                 }
             }
 

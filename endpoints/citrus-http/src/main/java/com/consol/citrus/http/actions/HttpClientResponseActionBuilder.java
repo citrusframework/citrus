@@ -24,7 +24,7 @@ import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.builder.MessageBuilderSupport;
+import com.consol.citrus.message.builder.ReceiveMessageBuilderSupport;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -52,7 +52,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
         return super.getMessageBuilderSupport();
     }
 
-    public static class HttpMessageBuilderSupport extends MessageBuilderSupport<ReceiveMessageAction, HttpClientResponseActionBuilder, HttpMessageBuilderSupport> {
+    public static class HttpMessageBuilderSupport extends ReceiveMessageBuilderSupport<ReceiveMessageAction, HttpClientResponseActionBuilder, HttpMessageBuilderSupport> {
 
         private final HttpMessage httpMessage;
 

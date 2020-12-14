@@ -21,15 +21,12 @@ package com.consol.citrus.message.builder;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.common.Named;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -43,55 +40,45 @@ import com.consol.citrus.message.WithPayloadBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.HeaderValidator;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch
  */
-public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends ReceiveMessageAction.ReceiveMessageActionBuilder<T, S, B>, S extends MessageBuilderSupport<T, B, S>>
+public class SendMessageBuilderSupport<T extends SendMessageAction, B extends SendMessageAction.SendMessageActionBuilder<T, S, B>, S extends SendMessageBuilderSupport<T, B, S>>
         implements TestActionBuilder<T>, ReferenceResolverAware {
-    private final S self;
+    protected final S self;
 
     private MessageBuilder messageBuilder = new DefaultMessageBuilder();
 
-    private final List<MessageProcessor> controlMessageProcessors = new ArrayList<>();
     private DataDictionary<?> dataDictionary;
     private String dataDictionaryName;
 
     private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
-
-    private boolean headerNameIgnoreCase = false;
-
     protected final B delegate;
 
-    protected MessageBuilderSupport(B delegate) {
+    protected SendMessageBuilderSupport(B delegate) {
         this.self = (S) this;
         this.delegate = delegate;
     }
 
     /**
-     * Adds a custom timeout to this message receiving action.
-     *
-     * @param receiveTimeout
-     * @return
+     * Sets the fork mode for this send action builder.
+     * @param forkMode
+     * @return The modified send message action builder
      */
-    public S timeout(final long receiveTimeout) {
-        delegate.timeout(receiveTimeout);
+    public S fork(boolean forkMode) {
+        delegate.fork(forkMode);
         return self;
     }
 
     /**
      * Build message from given message builder.
      * @param messageBuilder
-     * @return
+     * @return The modified send message action builder
      */
     public S from(final MessageBuilder messageBuilder) {
         this.messageBuilder = messageBuilder;
@@ -101,7 +88,7 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     /**
      * Build message from given message template.
      * @param controlMessage
-     * @return
+     * @return The modified send message action builder
      */
     public S from(final Message controlMessage) {
         this.messageBuilder = StaticMessageBuilder.withMessage(controlMessage);
@@ -111,9 +98,8 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
 
     /**
      * Sets the message name.
-     *
      * @param name
-     * @return
+     * @return The modified send message action builder
      */
     public S name(final String name) {
         if (messageBuilder instanceof Named) {
@@ -125,10 +111,9 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     }
 
     /**
-     * Expect this message payload data in received message.
-     *
+     * Sets the payload data on the message builder implementation.
      * @param payloadBuilder
-     * @return
+     * @return The modified send message action builder
      */
     public S body(final MessagePayloadBuilder payloadBuilder) {
         if (messageBuilder instanceof WithPayloadBuilder) {
@@ -140,10 +125,9 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     }
 
     /**
-     * Expect this message payload data in received message.
-     *
+     * Adds message payload data to this builder.
      * @param payload
-     * @return
+     * @return The modified send message action builder
      */
     public S body(final String payload) {
         body(new DefaultPayloadBuilder(payload));
@@ -151,38 +135,34 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     }
 
     /**
-     * Expect this message payload data in received message.
-     *
+     * Adds message payload resource to this builder.
      * @param payloadResource
-     * @return
+     * @return The modified send message action builder
      */
     public S body(final Resource payloadResource) {
         return body(payloadResource, FileUtils.getDefaultCharset());
     }
 
     /**
-     * Expect this message payload data in received message.
-     *
+     * Adds message payload resource to this builder.
      * @param payloadResource
      * @param charset
-     * @return
+     * @return The modified send message action builder
      */
     public S body(final Resource payloadResource, final Charset charset) {
         try {
             body(FileUtils.readToString(payloadResource, charset));
-        } catch (final IOException e) {
+        } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
-
         return self;
     }
 
     /**
-     * Expect this message header entry in received message.
-     *
+     * Adds message header name value pair to this builder's message sending action.
      * @param name
      * @param value
-     * @return
+     * @return The modified send message action builder
      */
     public S header(final String name, final Object value) {
         if (messageBuilder instanceof WithHeaderBuilder) {
@@ -194,10 +174,9 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     }
 
     /**
-     * Expect this message header entries in received message.
-     *
+     * Adds message headers to this builder's message sending action.
      * @param headers
-     * @return
+     * @return The modified send message action builder
      */
     public S headers(final Map<String, Object> headers) {
         if (messageBuilder instanceof WithHeaderBuilder) {
@@ -209,11 +188,10 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     }
 
     /**
-     * Expect this message header data in received message. Message header data is used in
-     * SOAP messages as XML fragment for instance.
-     *
+     * Adds message header data to this builder's message sending action. Message header data is used in SOAP
+     * messages for instance as header XML fragment.
      * @param data
-     * @return
+     * @return The modified send message action builder
      */
     public S header(final String data) {
         header(new DefaultHeaderDataBuilder(data));
@@ -221,11 +199,11 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     }
 
     /**
-     * Expect this message header data in received message. Message header data is used in
+     * Adds message header data builder to this builder's message sending action. Message header data is used in
      * SOAP messages as XML fragment for instance.
      *
      * @param headerDataBuilder
-     * @return
+     * @return The modified send message action builder
      */
     public S header(final MessageHeaderDataBuilder headerDataBuilder) {
         if (messageBuilder instanceof WithHeaderBuilder) {
@@ -237,23 +215,21 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     }
 
     /**
-     * Expect this message header data in received message from file resource. Message header data is used in
-     * SOAP messages as XML fragment for instance.
-     *
+     * Adds message header data as file resource to this builder's message sending action. Message header data is used in SOAP
+     * messages for instance as header XML fragment.
      * @param resource
-     * @return
+     * @return The modified send message action builder
      */
     public S header(final Resource resource) {
         return header(resource, FileUtils.getDefaultCharset());
     }
 
     /**
-     * Expect this message header data in received message from file resource. Message header data is used in
-     * SOAP messages as XML fragment for instance.
-     *
+     * Adds message header data as file resource to this builder's message sending action. Message header data is used in SOAP
+     * messages for instance as header XML fragment.
      * @param resource
      * @param charset
-     * @return
+     * @return The modified send message action builder
      */
     public S header(final Resource resource, final Charset charset) {
         try {
@@ -262,29 +238,16 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
             } else {
                 throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
             }
-        } catch (final IOException e) {
+        } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }
-
         return self;
     }
 
     /**
-     * Validate header names with case insensitive keys.
-     *
-     * @param value
-     * @return
-     */
-    public S headerNameIgnoreCase(final boolean value) {
-        this.headerNameIgnoreCase = value;
-        return self;
-    }
-
-    /**
-     * Sets a explicit message type for this receive action.
-     *
+     * Sets a explicit message type for this send action.
      * @param messageType
-     * @return
+     * @return The modified send message action builder
      */
     public S type(final MessageType messageType) {
         type(messageType.name());
@@ -292,10 +255,9 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     }
 
     /**
-     * Sets a explicit message type for this receive action.
-     *
-     * @param messageType
-     * @return
+     * Sets an explicit message type for this send action.
+     * @param messageType the type of the message indicates the content type (e.g. Xml, Json, binary).
+     * @return The modified send message action builder
      */
     public S type(final String messageType) {
         this.messageType = messageType;
@@ -303,125 +265,46 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
     }
 
     /**
-     * Adds a validation context.
-     * @param validationContext
-     * @return
+     * Adds message processor on the message to be sent.
+     * @param processor
+     * @return The modified send message action builder
      */
-    public S validate(final ValidationContext.Builder<?, ?> validationContext) {
-        delegate.validate(validationContext);
+    public S transform(MessageProcessor processor) {
+        return process(processor);
+    }
+
+    /**
+     * Adds message processor on the message to be sent as fluent builder.
+     * @param builder
+     * @return The modified send message action builder
+     */
+    public S transform(MessageProcessor.Builder<?, ?> builder) {
+        return transform(builder.build());
+    }
+
+    /**
+     * Adds message processor on the message to be sent.
+     * @param processor
+     * @return The modified send message action builder
+     */
+    public S process(MessageProcessor processor) {
+        delegate.process(processor);
         return self;
     }
 
     /**
-     * Adds a validation context.
-     * @param validationContext
-     * @return
+     * Adds message processor on the message to be sent as fluent builder.
+     * @param builder
+     * @return The modified send message action builder
      */
-    public S validate(final ValidationContext validationContext) {
-        return validate((ValidationContext.Builder) () -> validationContext);
-    }
-
-    /**
-     * Sets validation contexts.
-     * @param validationContexts
-     * @return
-     */
-    public S validate(final List<ValidationContext.Builder<?, ?>> validationContexts) {
-        delegate.validate(validationContexts);
-        return self;
-    }
-
-    /**
-     * Sets validation contexts.
-     * @param validationContexts
-     * @return
-     */
-    public S validate(ValidationContext.Builder<?, ?> ... validationContexts) {
-        return validate(Arrays.asList(validationContexts));
-    }
-
-    /**
-     * Sets message selector string.
-     *
-     * @param messageSelector
-     * @return
-     */
-    public S selector(final String messageSelector) {
-        delegate.selector(messageSelector);
-        return self;
-    }
-
-    /**
-     * Sets message selector elements.
-     *
-     * @param messageSelector
-     * @return
-     */
-    public S selector(final Map<String, String> messageSelector) {
-        delegate.selector(messageSelector);
-        return self;
-    }
-
-    /**
-     * Sets explicit message validators for this receive action.
-     *
-     * @param validator
-     * @return
-     */
-    public S validator(final MessageValidator<? extends ValidationContext> validator) {
-        delegate.validator(validator);
-        return self;
-    }
-
-    /**
-     * Sets explicit message validators for this receive action.
-     *
-     * @param validators
-     * @return
-     */
-    @SafeVarargs
-    public final S validators(final MessageValidator<? extends ValidationContext>... validators) {
-        return validators(Arrays.asList(validators));
-    }
-
-    /**
-     * Sets explicit message validators for this receive action.
-     *
-     * @param validators
-     * @return
-     */
-    public S validators(final List<MessageValidator<? extends ValidationContext>> validators) {
-        delegate.validators(validators);
-        return self;
-    }
-
-    /**
-     * Sets explicit message validators by name.
-     *
-     * @param validatorNames
-     * @return
-     */
-    public S validator(final String... validatorNames) {
-        delegate.validator(validatorNames);
-        return self;
-    }
-
-    /**
-     * Sets explicit header validator for this receive action.
-     *
-     * @param validators
-     * @return
-     */
-    public S validator(final HeaderValidator... validators) {
-        delegate.validator(validators);
-        return self;
+    public S process(MessageProcessor.Builder<?, ?> builder) {
+        return process(builder.build());
     }
 
     /**
      * Sets explicit data dictionary for this receive action.
-     *
      * @param dictionary
-     * @return
+     * @return The modified send message action builder
      */
     public S dictionary(final DataDictionary<?> dictionary) {
         this.dataDictionary = dictionary;
@@ -430,47 +313,12 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
 
     /**
      * Sets explicit data dictionary by name.
-     *
      * @param dictionaryName
-     * @return
+     * @return The modified send message action builder
      */
     public S dictionary(final String dictionaryName) {
         this.dataDictionaryName = dictionaryName;
         return self;
-    }
-
-    /**
-     * Adds validation processor to the receive action for validating
-     * the received message with Java code.
-     *
-     * @param processor
-     * @return
-     */
-    public B validate(final ValidationProcessor processor) {
-        return delegate.validate(processor);
-    }
-
-    /**
-     * Adds message processor on the control message.
-     * @param processor
-     * @return
-     */
-    public S process(MessageProcessor processor) {
-        if (processor instanceof VariableExtractor) {
-            delegate.process(processor);
-        } else {
-            this.controlMessageProcessors.add(processor);
-        }
-        return self;
-    }
-
-    /**
-     * Adds message processor on the control message as fluent builder.
-     * @param builder
-     * @return
-     */
-    public S process(MessageProcessor.Builder<?, ?> builder) {
-        return process(builder.build());
     }
 
     /**
@@ -505,15 +353,7 @@ public class MessageBuilderSupport<T extends ReceiveMessageAction, B extends Rec
         return messageBuilder;
     }
 
-    public List<MessageProcessor> getControlMessageProcessors() {
-        return controlMessageProcessors;
-    }
-
     public String getMessageType() {
         return messageType;
-    }
-
-    public boolean isHeaderNameIgnoreCase() {
-        return headerNameIgnoreCase;
     }
 }

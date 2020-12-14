@@ -37,7 +37,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
 
     protected final B self;
 
-    private final SendMessageAction.SendMessageActionBuilder<?, ?> delegate;
+    private final SendMessageAction.SendMessageActionBuilder<?, ?, ?> delegate;
 
     private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
@@ -52,7 +52,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
         this(new SendMessageAction.Builder());
     }
 
-    public SendMessageActionBuilder(SendMessageAction.SendMessageActionBuilder<?, ?> builder) {
+    public SendMessageActionBuilder(SendMessageAction.SendMessageActionBuilder<?, ?, ?> builder) {
         this.self = (B) this;
         this.delegate = builder;
     }
@@ -113,7 +113,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B messageName(String name) {
-        delegate.messageName(name);
+        delegate.message().name(name);
         return self;
     }
 
@@ -123,7 +123,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B payload(String payload) {
-        delegate.payload(payload);
+        delegate.message().body(payload);
         return self;
     }
 
@@ -143,7 +143,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B payload(Resource payloadResource, Charset charset) {
-        delegate.payload(payloadResource, charset);
+        delegate.message().body(payloadResource, charset);
         return self;
     }
 
@@ -154,7 +154,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B payload(Object payload, Marshaller marshaller) {
-        delegate.payload(new MarshallingPayloadBuilder(payload, marshaller));
+        delegate.message().body(new MarshallingPayloadBuilder(payload, marshaller));
         return self;
     }
 
@@ -165,7 +165,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B payload(Object payload, ObjectMapper objectMapper) {
-        delegate.payload(new ObjectMappingPayloadBuilder(payload, objectMapper));
+        delegate.message().body(new ObjectMappingPayloadBuilder(payload, objectMapper));
         return self;
     }
 
@@ -178,9 +178,9 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      */
     public B payloadModel(Object payload) {
         if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
-            delegate.payload(new ObjectMappingPayloadBuilder(payload));
+            delegate.message().body(new ObjectMappingPayloadBuilder(payload));
         } else {
-            delegate.payload(new MarshallingPayloadBuilder(payload));
+            delegate.message().body(new MarshallingPayloadBuilder(payload));
         }
         return self;
     }
@@ -195,9 +195,9 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      */
     public B payload(Object payload, String mapperOrMarshallerName) {
         if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
-            delegate.payload(new ObjectMappingPayloadBuilder(payload, mapperOrMarshallerName));
+            delegate.message().body(new ObjectMappingPayloadBuilder(payload, mapperOrMarshallerName));
         } else {
-            delegate.payload(new MarshallingPayloadBuilder(payload, mapperOrMarshallerName));
+            delegate.message().body(new MarshallingPayloadBuilder(payload, mapperOrMarshallerName));
         }
         return self;
     }
@@ -208,7 +208,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @param value
      */
     public B header(String name, Object value) {
-        delegate.header(name, value);
+        delegate.message().header(name, value);
         return self;
     }
 
@@ -217,7 +217,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @param headers
      */
     public B headers(Map<String, Object> headers) {
-        delegate.headers(headers);
+        delegate.message().headers(headers);
         return self;
     }
 
@@ -227,7 +227,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @param data
      */
     public B header(String data) {
-        delegate.header(data);
+        delegate.message().header(data);
         return self;
     }
 
@@ -247,7 +247,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @param charset
      */
     public B header(Resource resource, Charset charset) {
-        delegate.header(resource, charset);
+        delegate.message().header(resource, charset);
         return self;
     }
 
@@ -258,7 +258,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B headerFragment(Object model, Marshaller marshaller) {
-        delegate.header(new MarshallingHeaderDataBuilder(model, marshaller));
+        delegate.message().header(new MarshallingHeaderDataBuilder(model, marshaller));
         return self;
     }
 
@@ -269,7 +269,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B headerFragment(Object model, ObjectMapper objectMapper) {
-        delegate.header(new ObjectMappingHeaderDataBuilder(model, objectMapper));
+        delegate.message().header(new ObjectMappingHeaderDataBuilder(model, objectMapper));
         return self;
     }
 
@@ -282,9 +282,9 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      */
     public B headerFragment(Object model) {
         if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
-            delegate.header(new ObjectMappingHeaderDataBuilder(model));
+            delegate.message().header(new ObjectMappingHeaderDataBuilder(model));
         } else {
-            delegate.header(new MarshallingHeaderDataBuilder(model));
+            delegate.message().header(new MarshallingHeaderDataBuilder(model));
         }
         return self;
     }
@@ -299,9 +299,9 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      */
     public B headerFragment(Object model, String mapperOrMarshallerName) {
         if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
-            delegate.header(new ObjectMappingHeaderDataBuilder(model, mapperOrMarshallerName));
+            delegate.message().header(new ObjectMappingHeaderDataBuilder(model, mapperOrMarshallerName));
         } else {
-            delegate.header(new MarshallingHeaderDataBuilder(model, mapperOrMarshallerName));
+            delegate.message().header(new MarshallingHeaderDataBuilder(model, mapperOrMarshallerName));
         }
         return self;
     }
@@ -323,7 +323,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      */
     public B messageType(String messageType) {
         this.messageType = messageType;
-        delegate.messageType(messageType);
+        delegate.message().type(messageType);
 
         if (MessageType.BINARY.name().equalsIgnoreCase(messageType)) {
             delegate.process(binaryMessageProcessor);
@@ -429,7 +429,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B dictionary(DataDictionary<?> dictionary) {
-        delegate.dictionary(dictionary);
+        delegate.message().dictionary(dictionary);
         return self;
     }
 
@@ -439,7 +439,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B dictionary(String dictionaryName) {
-        delegate.dictionary(dictionaryName);
+        delegate.message().dictionary(dictionaryName);
         return self;
     }
 

@@ -40,6 +40,7 @@ public class HttpHandleCookiesIT extends TestNGCitrusSupport {
         when(http().client(httpClient)
                 .send()
                 .delete()
+                .message()
                 .cookie(aCookie)
                 .cookie(bCookie));
 
@@ -71,6 +72,7 @@ public class HttpHandleCookiesIT extends TestNGCitrusSupport {
         //WHEN
         when(http().server(httpServer)
                 .respond()
+                .message()
                 .cookie(loginCookie));
 
         //THEN

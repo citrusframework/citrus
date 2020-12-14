@@ -47,15 +47,17 @@ public class EchoSteps {
     @When("^I say hello.*$")
     public void say_hello() {
         runner.when(send("echoEndpoint")
-            .messageType(MessageType.PLAINTEXT)
-            .payload("Hello, my name is ${username}!"));
+            .message()
+            .type(MessageType.PLAINTEXT)
+            .body("Hello, my name is ${username}!"));
     }
 
     @When("^I say goodbye.*$")
     public void say_goodbye() {
         runner.when(send("echoEndpoint")
-            .messageType(MessageType.PLAINTEXT)
-            .payload("Goodbye from ${username}!"));
+            .message()
+            .type(MessageType.PLAINTEXT)
+            .body("Goodbye from ${username}!"));
     }
 
     @Then("^the service should return: \"([^\"]*)\"$")

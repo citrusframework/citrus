@@ -207,7 +207,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .payload(payloadBuilder));
+                        .message()
+                        .body(payloadBuilder));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -238,7 +239,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -270,7 +272,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .payload(resource));
+                        .message()
+                        .body(resource));
 
 
         final TestCase test = runner.getTestCase();
@@ -309,7 +312,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send("fooMessageEndpoint")
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -338,7 +342,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .headers(Collections.singletonMap("some", "value"))
                         .header("operation", "foo")
                         .header("language", "eng"));
@@ -378,8 +383,9 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>"));
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .header("<Header><Name>operation</Name><Value>foo</Value></Header>"));
 
         runner.run(send(messageEndpoint)
                     .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
@@ -433,9 +439,10 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                         .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
-                         .header("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
+                        .header("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
 
         runner.run(send(messageEndpoint)
                     .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
@@ -500,7 +507,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo2</Value></Header>".getBytes()));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .header(resource));
 
         runner.run(send(messageEndpoint)
@@ -553,7 +561,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                         .process(extractor));
 
         Assert.assertNotNull(context.getVariable("messageId"));
@@ -585,7 +594,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                        .message()
+                        .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                         .header("operation", "sayHello")
                         .header("requestId", "123456")
                         .process(new MessageSupport()
@@ -632,8 +642,9 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .messageType(MessageType.JSON)
-                        .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                        .message()
+                        .type(MessageType.JSON)
+                        .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
                         .dictionary(dictionary));
 
         final TestCase test = runner.getTestCase();
@@ -671,8 +682,9 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
-                        .messageType(MessageType.JSON)
-                        .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                        .message()
+                        .type(MessageType.JSON)
+                        .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
                         .dictionary("customDictionary"));
 
         final TestCase test = runner.getTestCase();

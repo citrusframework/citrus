@@ -75,8 +75,9 @@ public class WaitJavaIT extends TestNGCitrusSupport {
                 sequential().actions(
                         //THEN
                         send("direct:waitQueue")
-                                .messageName(messageName)
-                                .payload("Wait for me")
+                                .message()
+                                .name(messageName)
+                                .body("Wait for me")
                                 .header("Operation", "waitForMe"),
 
                         receive("direct:waitQueue")

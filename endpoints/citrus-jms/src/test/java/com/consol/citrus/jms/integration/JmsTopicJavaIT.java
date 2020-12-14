@@ -66,7 +66,9 @@ public class JmsTopicJavaIT extends TestNGCitrusSupport {
            sequential().actions(
                sleep().milliseconds(1000L),
                send("helloServiceJmsTopicEndpoint")
-                   .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                   .description("Send asynchronous hello request: TestFramework -> HelloService")
+                   .message()
+                   .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -74,7 +76,6 @@ public class JmsTopicJavaIT extends TestNGCitrusSupport {
                         "</HelloRequest>")
                     .header("Operation", "sayHello")
                     .header("CorrelationId", "${correlationId}")
-                    .description("Send asynchronous hello request: TestFramework -> HelloService")
            )
         ));
     }

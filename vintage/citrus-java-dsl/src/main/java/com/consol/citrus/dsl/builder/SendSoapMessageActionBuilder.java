@@ -28,7 +28,7 @@ public class SendSoapMessageActionBuilder extends SendMessageActionBuilder<SendS
      * @return
      */
     public SendSoapMessageActionBuilder soapAction(String soapAction) {
-        delegate.soapAction(soapAction);
+        delegate.message().soapAction(soapAction);
         return this;
     }
 
@@ -40,7 +40,7 @@ public class SendSoapMessageActionBuilder extends SendMessageActionBuilder<SendS
      * @return
      */
     public SendSoapMessageActionBuilder attachment(String contentId, String contentType, String content) {
-        delegate.attachment(contentId, contentType, content);
+        delegate.message().attachment(contentId, contentType, content);
         return this;
     }
 
@@ -64,7 +64,7 @@ public class SendSoapMessageActionBuilder extends SendMessageActionBuilder<SendS
      * @return
      */
     public SendSoapMessageActionBuilder attachment(String contentId, String contentType, Resource contentResource, Charset charset) {
-        delegate.attachment(contentId, contentType, contentResource, charset);
+        delegate.message().attachment(contentId, contentType, contentResource, charset);
         return this;
     }
 
@@ -74,7 +74,7 @@ public class SendSoapMessageActionBuilder extends SendMessageActionBuilder<SendS
      * @return
      */
     public SendSoapMessageActionBuilder charset(String charsetName) {
-        delegate.charset(charsetName);
+        delegate.message().charset(charsetName);
         return this;
     }
 
@@ -84,7 +84,7 @@ public class SendSoapMessageActionBuilder extends SendMessageActionBuilder<SendS
      * @return
      */
     public SendSoapMessageActionBuilder attachment(SoapAttachment attachment) {
-        delegate.attachment(attachment);
+        delegate.message().attachment(attachment);
         return this;
     }
 
@@ -96,7 +96,7 @@ public class SendSoapMessageActionBuilder extends SendMessageActionBuilder<SendS
      * @return self
      */
     public SendSoapMessageActionBuilder uri(String uri) {
-        delegate.uri(uri);
+        delegate.message().uri(uri);
         return this;
     }
 
@@ -106,7 +106,7 @@ public class SendSoapMessageActionBuilder extends SendMessageActionBuilder<SendS
      * @return
      */
     public SendSoapMessageActionBuilder contentType(String contentType) {
-        delegate.contentType(contentType);
+        delegate.message().contentType(contentType);
         return this;
     }
 
@@ -116,7 +116,7 @@ public class SendSoapMessageActionBuilder extends SendMessageActionBuilder<SendS
      * @return
      */
     public SendSoapMessageActionBuilder accept(String accept) {
-        delegate.accept(accept);
+        delegate.message().accept(accept);
         return this;
     }
 

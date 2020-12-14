@@ -37,7 +37,8 @@ public class WsAddressingJavaIT extends TestNGCitrusSupport {
         run(assertSoapFault().faultString("One or more mandatory SOAP header blocks not understood")
             .faultCode("{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand")
             .when(send("helloWsAddressingSoapClient")
-                .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                .message()
+                .body("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                                 "<ns0:User>User</ns0:User>" +

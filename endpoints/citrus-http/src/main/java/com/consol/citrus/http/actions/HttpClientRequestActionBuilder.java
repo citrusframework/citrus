@@ -23,6 +23,7 @@ import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.SendMessageBuilderSupport;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
 
@@ -30,10 +31,10 @@ import org.springframework.util.MultiValueMap;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder> {
+public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
 
     /** Http message to send or receive */
-    private HttpMessage httpMessage = new HttpMessage();
+    private final HttpMessage httpMessage = new HttpMessage();
 
     /**
      * Default constructor initializes http message.
@@ -43,26 +44,11 @@ public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessag
     }
 
     @Override
-    public HttpClientRequestActionBuilder payload(String payload) {
-        httpMessage.setPayload(payload);
-        return this;
-    }
-
-    /**
-     * Adds message payload multi value map data to this builder. This is used when using multipart file upload via
-     * Spring RestTemplate.
-     * @param payload
-     * @return
-     */
-    public HttpClientRequestActionBuilder payload(MultiValueMap<String,Object> payload) {
-        httpMessage.setPayload(payload);
-        return this;
-    }
-
-    @Override
-    public HttpClientRequestActionBuilder messageName(String name) {
-        httpMessage.setName(name);
-        return super.messageName(name);
+    public HttpMessageBuilderSupport getMessageBuilderSupport() {
+        if (messageBuilderSupport == null) {
+            messageBuilderSupport = new HttpMessageBuilderSupport(httpMessage, this);
+        }
+        return super.getMessageBuilderSupport();
     }
 
     /**
@@ -118,50 +104,126 @@ public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessag
         return this;
     }
 
-    /**
-     * Sets the http version.
-     * @param version
-     * @return
-     */
-    public HttpClientRequestActionBuilder version(String version) {
-        httpMessage.version(version);
-        return this;
-    }
+    public static class HttpMessageBuilderSupport extends SendMessageBuilderSupport<SendMessageAction, HttpClientRequestActionBuilder, HttpMessageBuilderSupport> {
 
-    /**
-     * Sets the request content type header.
-     * @param contentType
-     * @return
-     */
-    public HttpClientRequestActionBuilder contentType(String contentType) {
-        httpMessage.contentType(contentType);
-        return this;
-    }
+        private final HttpMessage httpMessage;
 
-    /**
-     * Sets the request accept header.
-     * @param accept
-     * @return
-     */
-    public HttpClientRequestActionBuilder accept(String accept) {
-        httpMessage.accept(accept);
-        return this;
-    }
+        protected HttpMessageBuilderSupport(HttpMessage httpMessage, HttpClientRequestActionBuilder delegate) {
+            super(delegate);
+            this.httpMessage = httpMessage;
+        }
 
-    /**
-     * Adds cookie to response by "Cookie" header.
-     * @param cookie
-     * @return
-     */
-    public HttpClientRequestActionBuilder cookie(Cookie cookie) {
-        httpMessage.cookie(cookie);
-        return this;
-    }
+        @Override
+        public HttpMessageBuilderSupport body(String payload) {
+            httpMessage.setPayload(payload);
+            return this;
+        }
 
-    @Override
-    public HttpClientRequestActionBuilder message(Message message) {
-        HttpMessageUtils.copy(message, httpMessage);
-        return this;
+        /**
+         * Adds message payload multi value map data to this builder. This is used when using multipart file upload via
+         * Spring RestTemplate.
+         * @param payload
+         * @return
+         */
+        public HttpMessageBuilderSupport body(MultiValueMap<String,Object> payload) {
+            httpMessage.setPayload(payload);
+            return this;
+        }
+
+        @Override
+        public HttpMessageBuilderSupport name(String name) {
+            httpMessage.setName(name);
+            return super.name(name);
+        }
+
+        @Override
+        public HttpMessageBuilderSupport from(Message controlMessage) {
+            HttpMessageUtils.copy(controlMessage, httpMessage);
+            return this;
+        }
+
+        /**
+         * Sets the request method.
+         * @param method
+         * @return
+         */
+        public HttpMessageBuilderSupport method(HttpMethod method) {
+            delegate.method(method);
+            return this;
+        }
+
+        /**
+         * Set the endpoint URI for the request. This works only if the HTTP endpoint used
+         * doesn't provide an own endpoint URI resolver.
+         *
+         * @param uri absolute URI to use for the endpoint
+         * @return self
+         */
+        public HttpMessageBuilderSupport uri(String uri) {
+            delegate.uri(uri);
+            return this;
+        }
+
+        /**
+         * Adds a query param to the request uri.
+         * @param name
+         * @return
+         */
+        public HttpMessageBuilderSupport queryParam(String name) {
+            delegate.queryParam(name, null);
+            return this;
+        }
+
+        /**
+         * Adds a query param to the request uri.
+         * @param name
+         * @param value
+         * @return
+         */
+        public HttpMessageBuilderSupport queryParam(String name, String value) {
+            delegate.queryParam(name, value);
+            return this;
+        }
+
+        /**
+         * Sets the http version.
+         * @param version
+         * @return
+         */
+        public HttpMessageBuilderSupport version(String version) {
+            httpMessage.version(version);
+            return this;
+        }
+
+        /**
+         * Sets the request content type header.
+         * @param contentType
+         * @return
+         */
+        public HttpMessageBuilderSupport contentType(String contentType) {
+            httpMessage.contentType(contentType);
+            return this;
+        }
+
+        /**
+         * Sets the request accept header.
+         * @param accept
+         * @return
+         */
+        public HttpMessageBuilderSupport accept(String accept) {
+            httpMessage.accept(accept);
+            return this;
+        }
+
+        /**
+         * Adds cookie to response by "Cookie" header.
+         * @param cookie
+         * @return
+         */
+        public HttpMessageBuilderSupport cookie(Cookie cookie) {
+            httpMessage.cookie(cookie);
+            return this;
+        }
     }
 
     @Override

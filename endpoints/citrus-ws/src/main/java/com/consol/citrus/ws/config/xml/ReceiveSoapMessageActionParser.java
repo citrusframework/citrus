@@ -88,7 +88,7 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
     /**
      * Test action factory bean.
      */
-    public static class ReceiveSoapMessageActionFactoryBean extends AbstractReceiveMessageActionFactoryBean<ReceiveSoapMessageAction, ReceiveSoapMessageAction.Builder.SoapMessageBuilderSupport, ReceiveSoapMessageAction.Builder> {
+    public static class ReceiveSoapMessageActionFactoryBean extends AbstractReceiveMessageActionFactoryBean<ReceiveSoapMessageAction, ReceiveSoapMessageAction.SoapMessageBuilderSupport, ReceiveSoapMessageAction.Builder> {
 
         private final ReceiveSoapMessageAction.Builder builder = new ReceiveSoapMessageAction.Builder();
 
