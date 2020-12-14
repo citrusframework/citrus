@@ -149,8 +149,8 @@
     <ftpserver.version>1.1.1</ftpserver.version>
     <mockftpserver.version>2.7.1</mockftpserver.version>
     <vertx.version>3.9.2</vertx.version>
-    <groovy.version>2.5.13</groovy.version>
-    <jetty.version>9.4.34.v20201102</jetty.version>
+    <groovy.version>2.5.14</groovy.version>
+    <jetty.version>9.4.35.v20201120</jetty.version>
     <testng.version>7.3.0</testng.version>
     <junit.version>4.13.1</junit.version>
     <junit.jupiter.version>5.6.2</junit.jupiter.version>
