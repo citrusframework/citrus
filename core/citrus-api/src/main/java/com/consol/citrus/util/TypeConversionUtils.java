@@ -36,6 +36,13 @@ public abstract class TypeConversionUtils {
     }
 
     /**
+     * Reload default type converter.
+     */
+    public static void loadDefaultConverter() {
+        typeConverter = TypeConverter.lookupDefault();
+    }
+
+    /**
      * Converts target object to required type if necessary.
      *
      * @param target

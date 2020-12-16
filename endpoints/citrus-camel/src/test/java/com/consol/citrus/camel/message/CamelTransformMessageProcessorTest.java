@@ -24,6 +24,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.TypeConversionUtils;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -45,11 +46,13 @@ public class CamelTransformMessageProcessorTest extends AbstractTestNGUnitTest {
     @BeforeClass
     public void setupTypeConverter() {
         System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, "camel");
+        TypeConversionUtils.loadDefaultConverter();
     }
 
     @AfterClass(alwaysRun = true)
     public void restoreTypeConverterDefault() {
         System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, CitrusSettings.TYPE_CONVERTER_DEFAULT);
+        TypeConversionUtils.loadDefaultConverter();
     }
 
     @Test

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.util.SpringBeanTypeConverter;
+import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.util.TypeConverter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -36,6 +37,7 @@ public class TypeConverterTest {
     public void testLookup() {
         try {
             System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, "camel");
+            TypeConversionUtils.loadDefaultConverter();
 
             Map<String, TypeConverter> converters = TypeConverter.lookup();
             Assert.assertEquals(converters.size(), 2L);
@@ -47,6 +49,7 @@ public class TypeConverterTest {
             Assert.assertFalse(TypeConverter.lookup().containsKey("default"));
         } finally {
             System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, CitrusSettings.TYPE_CONVERTER_DEFAULT);
+            TypeConversionUtils.loadDefaultConverter();
         }
     }
 }
