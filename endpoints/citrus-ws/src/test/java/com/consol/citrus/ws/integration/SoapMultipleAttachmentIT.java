@@ -17,14 +17,14 @@
 package com.consol.citrus.ws.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2009
  */
-public class SoapMultipleAttachmentIT extends AbstractTestNGCitrusTest {
+public class SoapMultipleAttachmentIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusXmlTest
     public void SoapMultipleAttachmentIT() {}

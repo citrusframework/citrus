@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.actions;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
@@ -26,7 +26,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
  * @author Christoph Deppisch
  */
 @Test
-public class GlobalPropertiesJavaIT extends TestNGCitrusSupport {
+public class GlobalPropertiesJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void globalProperties() {

@@ -17,14 +17,14 @@
 package com.consol.citrus.ws.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class WebServiceEndpointFactoryIT extends AbstractTestNGCitrusTest {
+public class WebServiceEndpointFactoryIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusXmlTest

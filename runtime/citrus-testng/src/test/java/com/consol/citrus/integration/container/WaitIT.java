@@ -21,7 +21,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.sun.net.httpserver.HttpServer;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class WaitIT extends AbstractTestNGCitrusTest {
+public class WaitIT extends TestNGCitrusSpringSupport {
 
     private HttpServer server;
 

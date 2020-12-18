@@ -17,7 +17,7 @@
 package com.consol.citrus.jms.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 
@@ -29,7 +29,7 @@ import static com.consol.citrus.actions.SendMessageAction.Builder.send;
  * @author Christoph Deppisch
  */
 @Test
-public class JmsSyncSendReceiveJavaIT extends TestNGCitrusSupport {
+public class JmsSyncSendReceiveJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void JmsSyncSendReceiveJavaIT() {

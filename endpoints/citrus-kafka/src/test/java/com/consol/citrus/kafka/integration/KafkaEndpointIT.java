@@ -17,14 +17,14 @@
 package com.consol.citrus.kafka.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class KafkaEndpointIT extends AbstractTestNGCitrusTest {
+public class KafkaEndpointIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "KafkaEndpointIT")
     public void testKafkaEndpoint() {}

@@ -17,14 +17,14 @@
 package com.consol.citrus.http.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class HttpClientIT extends AbstractTestNGCitrusTest {
+public class HttpClientIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "HttpClientIT")
     public void testHttpClient() {}

@@ -17,13 +17,13 @@
 package com.consol.citrus.integration.container;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class AsyncIT extends AbstractTestNGCitrusTest {
+public class AsyncIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusXmlTest

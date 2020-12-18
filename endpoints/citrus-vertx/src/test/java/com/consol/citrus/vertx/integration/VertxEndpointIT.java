@@ -17,7 +17,7 @@
 package com.consol.citrus.vertx.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @since 1.4.1
  */
 @Test
-public class VertxEndpointIT extends AbstractTestNGCitrusTest {
+public class VertxEndpointIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "VertxEndpointIT")
     public void testVertxEndpoint() {}

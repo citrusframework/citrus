@@ -17,7 +17,7 @@
 package com.consol.citrus.jmx.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @since 2.5
  */
 @Test
-public class JmxServerIT extends AbstractTestNGCitrusTest {
+public class JmxServerIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "JmxServerIT")
     public void jmxServerTest() {}

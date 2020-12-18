@@ -18,7 +18,7 @@ package com.consol.citrus.http.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,7 +32,7 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
  * @author Christoph Deppisch
  */
 @Test
-public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSupport {
+public class HttpMultipartFileUploadJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void httpMultipartFileUpload() {

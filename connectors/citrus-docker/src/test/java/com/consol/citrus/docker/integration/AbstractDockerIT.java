@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
@@ -34,7 +34,7 @@ import org.testng.annotations.BeforeSuite;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class AbstractDockerIT extends AbstractTestNGCitrusTest {
+public class AbstractDockerIT extends TestNGCitrusSpringSupport {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractDockerIT.class);

@@ -22,7 +22,7 @@ import com.consol.citrus.rmi.message.RmiMessage;
 import com.consol.citrus.rmi.remote.HelloService;
 import com.consol.citrus.rmi.remote.NewsService;
 import com.consol.citrus.rmi.server.RmiServer;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -35,7 +35,7 @@ import static com.consol.citrus.actions.SendMessageAction.Builder.send;
  * @since 2.5
  */
 @Test
-public class RmiEndpointJavaIT extends TestNGCitrusSupport {
+public class RmiEndpointJavaIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     @Qualifier("rmiNewsClient")

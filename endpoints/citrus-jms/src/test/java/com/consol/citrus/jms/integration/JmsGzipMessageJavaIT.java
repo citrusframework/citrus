@@ -21,7 +21,7 @@ import java.io.IOException;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.util.FileCopyUtils;
 import org.testng.annotations.Test;
@@ -34,7 +34,7 @@ import static com.consol.citrus.validation.interceptor.GzipMessageProcessor.Buil
  * @author Christoph Deppisch
  */
 @Test
-public class JmsGzipMessageJavaIT extends TestNGCitrusSupport {
+public class JmsGzipMessageJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void jmsByteMessage() throws IOException {

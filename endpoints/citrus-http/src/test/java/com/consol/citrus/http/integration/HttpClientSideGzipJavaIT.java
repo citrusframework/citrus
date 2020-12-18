@@ -20,7 +20,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.validation.interceptor.GzipMessageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,7 +34,7 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
  * @author Christoph Deppisch
  */
 @Test
-public class HttpClientSideGzipJavaIT extends TestNGCitrusSupport {
+public class HttpClientSideGzipJavaIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     @Qualifier("echoHttpClient")

@@ -18,7 +18,7 @@ package com.consol.citrus.integration.container;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
@@ -33,7 +33,7 @@ import static com.consol.citrus.container.Sequence.Builder.sequential;
  * @author Christoph Deppisch
  */
 @Test
-public class ParallelJavaIT extends TestNGCitrusSupport {
+public class ParallelJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void parallelContainer() {

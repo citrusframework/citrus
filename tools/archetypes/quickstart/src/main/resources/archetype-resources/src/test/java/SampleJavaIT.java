@@ -3,7 +3,7 @@ package ${package};
 import org.testng.annotations.Test;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
@@ -13,7 +13,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
  * @author Citrus
  */
 @Test
-public class SampleJavaIT extends TestNGCitrusSupport {
+public class SampleJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void echoToday() {

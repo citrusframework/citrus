@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.parameter;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.testng.CitrusParameters;
 import org.testng.annotations.*;
 
@@ -25,7 +25,7 @@ import org.testng.annotations.*;
  * @author Christoph Deppisch
  * @since 2011
  */
-public class DataProviderIT extends AbstractTestNGCitrusTest {
+public class DataProviderIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest
     @CitrusParameters( "message" )

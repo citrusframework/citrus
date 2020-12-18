@@ -17,13 +17,13 @@
 package com.consol.citrus.ws.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class SoapWsdlRequestIT extends AbstractTestNGCitrusTest {
+public class SoapWsdlRequestIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusXmlTest
     public void SoapWsdlRequestIT() {}

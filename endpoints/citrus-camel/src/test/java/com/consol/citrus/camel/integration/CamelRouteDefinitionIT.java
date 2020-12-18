@@ -17,7 +17,7 @@
 package com.consol.citrus.camel.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @since 2.4
  */
 @Test
-public class CamelRouteDefinitionIT extends AbstractTestNGCitrusTest {
+public class CamelRouteDefinitionIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "CamelRouteDefinitionIT")
     public void testCamelRouteDefinition() {}

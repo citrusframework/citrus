@@ -6,7 +6,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.server.HttpServer;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-public class HttpHandleCookiesIT extends TestNGCitrusSupport {
+public class HttpHandleCookiesIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     @Qualifier("echoHttpClient")

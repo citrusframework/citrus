@@ -17,7 +17,7 @@
 package com.consol.citrus.jms.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
@@ -30,7 +30,7 @@ import static com.consol.citrus.container.Sequence.Builder.sequential;
  * @author Christoph Deppisch
  */
 @Test
-public class SyncJmsTopicJavaIT extends TestNGCitrusSupport {
+public class SyncJmsTopicJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void syncJmsTopic() {

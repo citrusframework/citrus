@@ -35,6 +35,7 @@ import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.TestNGHelper;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.IHookCallBack;
@@ -64,7 +65,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
                 testResult.setStatus(ITestResult.FAILURE);
             }
 
-            super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
+            super.run(new TestNGHelper.FakeExecutionCallBack(callBack.getParameters()), testResult);
 
             if (testResult.getThrowable() != null) {
                 if (testResult.getThrowable() instanceof RuntimeException) {

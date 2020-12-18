@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.container;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
@@ -27,7 +27,7 @@ import static com.consol.citrus.container.RepeatUntilTrue.Builder.repeat;
  * @author Christoph Deppisch
  */
 @Test
-public class RepeatUntilTrueJavaIT extends TestNGCitrusSupport {
+public class RepeatUntilTrueJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void repeatContainer() {

@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.actions;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.SleepAction.Builder.sleep;
@@ -26,7 +26,7 @@ import static com.consol.citrus.actions.SleepAction.Builder.sleep;
  * @author Christoph Deppisch
  */
 @Test
-public class SleepActionJavaIT extends TestNGCitrusSupport {
+public class SleepActionJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void sleepAction() {

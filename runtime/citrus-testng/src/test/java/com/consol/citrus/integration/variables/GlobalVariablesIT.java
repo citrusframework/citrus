@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.variables;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author Philipp Komninos
  * @since 2010
  */
-public class GlobalVariablesIT extends AbstractTestNGCitrusTest {
+public class GlobalVariablesIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusXmlTest
     public void GlobalVariablesIT() {}

@@ -18,7 +18,7 @@ package com.consol.citrus.jms.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
@@ -31,7 +31,7 @@ import static com.consol.citrus.dsl.MessageSupport.MessageHeaderSupport.headers;
  * @author Christoph Deppisch
  */
 @Test
-public class SendReplyToJavaIT extends TestNGCitrusSupport {
+public class SendReplyToJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void jmsSyncQueues() {

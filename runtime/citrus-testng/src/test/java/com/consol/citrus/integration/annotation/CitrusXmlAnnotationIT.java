@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.annotation;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @since 2.1
  */
 @Test
-public class CitrusXmlAnnotationIT extends AbstractTestNGCitrusTest {
+public class CitrusXmlAnnotationIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = { "SampleIT" })
     public void CitrusXmlAnnotation_1_IT() {}

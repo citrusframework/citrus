@@ -17,14 +17,14 @@
 package com.consol.citrus.http.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class HttpGzipEncodedIT extends AbstractTestNGCitrusTest {
+public class HttpGzipEncodedIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "HttpGzipEncodedIT")
     public void testHttpGzipEncoded() {}

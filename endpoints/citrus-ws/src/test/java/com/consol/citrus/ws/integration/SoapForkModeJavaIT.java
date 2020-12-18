@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.dsl.MessageSupport.MessageHeaderSupport.headers;
@@ -28,7 +28,7 @@ import static com.consol.citrus.ws.actions.SoapActionBuilder.soap;
  * @author Christoph Deppisch
  */
 @Test
-public class SoapForkModeJavaIT extends TestNGCitrusSupport {
+public class SoapForkModeJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void soapForkMode() {

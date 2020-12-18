@@ -17,7 +17,7 @@
 package com.consol.citrus.jmx.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @since 2.5
  */
 @Test
-public class JmxDynamicEndpointIT extends AbstractTestNGCitrusTest {
+public class JmxDynamicEndpointIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "JmxDynamicEndpointIT")
     public void jmxDynamicEndpointTest() {}

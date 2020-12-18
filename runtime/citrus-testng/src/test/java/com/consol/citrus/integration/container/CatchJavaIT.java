@@ -18,7 +18,7 @@ package com.consol.citrus.integration.container;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.FailAction.Builder.fail;
@@ -28,7 +28,7 @@ import static com.consol.citrus.container.Catch.Builder.catchException;
  * @author Christoph Deppisch
  */
 @Test
-public class CatchJavaIT extends TestNGCitrusSupport {
+public class CatchJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void catchAction() {

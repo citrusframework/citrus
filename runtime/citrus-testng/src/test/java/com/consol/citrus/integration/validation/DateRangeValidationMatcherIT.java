@@ -17,14 +17,14 @@
 package com.consol.citrus.integration.validation;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Martin Maher
  * @since 2.5
  */
-public class DateRangeValidationMatcherIT  extends AbstractTestNGCitrusTest {
+public class DateRangeValidationMatcherIT  extends TestNGCitrusSpringSupport {
     @Test
     @CitrusXmlTest
     public void DateRangeValidationMatcherIT() {}

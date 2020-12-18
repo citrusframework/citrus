@@ -17,14 +17,14 @@
 package com.consol.citrus.jms.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class JmsGzipMessageIT extends AbstractTestNGCitrusTest {
+public class JmsGzipMessageIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "JmsGzipMessageIT")
     public void testGzipMessage() {}

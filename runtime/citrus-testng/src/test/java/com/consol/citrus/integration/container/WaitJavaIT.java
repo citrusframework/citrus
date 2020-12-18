@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.integration.common.FileHelper;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.sun.net.httpserver.HttpServer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.SocketUtils;
@@ -40,9 +40,8 @@ import static com.consol.citrus.container.Parallel.Builder.parallel;
 import static com.consol.citrus.container.Sequence.Builder.sequential;
 import static com.consol.citrus.container.Wait.Builder.waitFor;
 
-
 @Test
-public class WaitJavaIT extends TestNGCitrusSupport {
+public class WaitJavaIT extends TestNGCitrusSpringSupport {
 
     private final int serverPort = SocketUtils.findAvailableTcpPort();
     private HttpServer server;

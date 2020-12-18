@@ -27,7 +27,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfig;
 import com.consol.citrus.functions.Functions;
 import com.consol.citrus.testng.CitrusParameters;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
@@ -42,7 +42,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class ResourceInjectionJavaIT extends TestNGCitrusSupport {
+public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusFramework
     private Citrus citrus;

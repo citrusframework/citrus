@@ -19,7 +19,7 @@ package com.consol.citrus.http.integration;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.ZipMessage;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
@@ -30,7 +30,7 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
  * @author Christoph Deppisch
  */
 @Test
-public class HttpServerZipFileJavaIT extends TestNGCitrusSupport {
+public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport {
 
     public static final String APPLICATION_ZIP_VALUE = "application/zip";
 

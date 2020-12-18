@@ -17,7 +17,7 @@
 package com.consol.citrus.zookeeper.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.zookeeper.client.ZooClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
@@ -30,7 +30,7 @@ import static com.consol.citrus.zookeeper.actions.ZooExecuteAction.Builder.zooke
  * @author Martin Maher
  * @since 2.5
  */
-public class ZooExecuteJavaIT extends TestNGCitrusSupport {
+public class ZooExecuteJavaIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     private ZooClient zooClient;

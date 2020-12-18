@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.actions;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 
@@ -28,7 +28,7 @@ import static com.consol.citrus.actions.TransformAction.Builder.transform;
  * @author Christoph Deppisch
  */
 @Test
-public class TransformActionJavaIT extends TestNGCitrusSupport {
+public class TransformActionJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void transformAction() {

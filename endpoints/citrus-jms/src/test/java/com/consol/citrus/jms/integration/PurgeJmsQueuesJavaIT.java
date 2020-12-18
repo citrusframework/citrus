@@ -20,7 +20,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -31,7 +31,7 @@ import static com.consol.citrus.jms.actions.PurgeJmsQueuesAction.Builder.purgeQu
  * @author Christoph Deppisch
  */
 @Test
-public class PurgeJmsQueuesJavaIT extends TestNGCitrusSupport {
+public class PurgeJmsQueuesJavaIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     @Qualifier("connectionFactory")

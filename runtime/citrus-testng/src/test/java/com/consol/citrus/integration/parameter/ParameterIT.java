@@ -17,12 +17,12 @@
 package com.consol.citrus.integration.parameter;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.testng.CitrusParameters;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class ParameterIT extends AbstractTestNGCitrusTest {
+public class ParameterIT extends TestNGCitrusSpringSupport {
 
     @DataProvider(name = "someDataProvider")
     public Object[][] someDataProvider() {

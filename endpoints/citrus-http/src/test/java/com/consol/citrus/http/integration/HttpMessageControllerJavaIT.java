@@ -18,7 +18,7 @@ package com.consol.citrus.http.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
  * @author Christoph Deppisch
  */
 @Test
-public class HttpMessageControllerJavaIT extends TestNGCitrusSupport {
+public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest(name = "HttpMessageControllerJavaIT")
     public void httpMessageControllerIT() {

@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.actions;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveTimeoutAction.Builder.receiveTimeout;
@@ -26,7 +26,7 @@ import static com.consol.citrus.actions.ReceiveTimeoutAction.Builder.receiveTime
  * @author Christoph Deppisch
  */
 @Test
-public class ReceiveTimeoutJavaIT extends TestNGCitrusSupport {
+public class ReceiveTimeoutJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void receiveTimeoutAction() {

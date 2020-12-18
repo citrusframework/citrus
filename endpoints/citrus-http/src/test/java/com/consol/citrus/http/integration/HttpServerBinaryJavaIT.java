@@ -27,7 +27,7 @@ import com.consol.citrus.http.config.annotation.HttpServerConfig;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.apache.http.entity.ContentType;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.SocketUtils;
@@ -42,7 +42,7 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
  * @author Christoph Deppisch
  */
 @Test
-public class HttpServerBinaryJavaIT extends TestNGCitrusSupport {
+public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
 
     /** Random http server port */
     private final static int serverPort = SocketUtils.findAvailableTcpPort();

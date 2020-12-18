@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeSuite;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class AbstractKubernetesIT extends AbstractTestNGCitrusTest {
+public class AbstractKubernetesIT extends TestNGCitrusSpringSupport {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractKubernetesIT.class);

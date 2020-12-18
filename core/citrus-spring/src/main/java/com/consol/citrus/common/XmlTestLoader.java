@@ -67,8 +67,8 @@ public class XmlTestLoader implements TestLoader {
                 testCase = ctx.getBean(testName, TestCase.class);
 
                 if (testCase instanceof DefaultTestCase) {
-                    ((DefaultTestCase) testCase).setTestClass(testClass);
-                    ((DefaultTestCase) testCase).setPackageName(packageName);
+                    testCase.setTestClass(testClass);
+                    testCase.setPackageName(packageName);
                 }
             } catch (NoSuchBeanDefinitionException e) {
                 throw citrusContext.getTestContextFactory().getObject()

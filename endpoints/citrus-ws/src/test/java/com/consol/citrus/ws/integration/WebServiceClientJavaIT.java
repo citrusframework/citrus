@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
@@ -28,7 +28,7 @@ import static com.consol.citrus.dsl.XmlSupport.xml;
  * @author Christoph Deppisch
  */
 @Test
-public class WebServiceClientJavaIT extends TestNGCitrusSupport {
+public class WebServiceClientJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void soapClient() {

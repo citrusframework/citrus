@@ -17,12 +17,12 @@
 package com.consol.citrus.integration.container;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
-import static com.consol.citrus.actions.StopTimerAction.Builder.stopTimer;
 import static com.consol.citrus.actions.SleepAction.Builder.sleep;
+import static com.consol.citrus.actions.StopTimerAction.Builder.stopTimer;
 import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 import static com.consol.citrus.container.Timer.Builder.timer;
 
@@ -31,7 +31,7 @@ import static com.consol.citrus.container.Timer.Builder.timer;
  * @since 2.5
  */
 @Test
-public class TimerJavaIT extends TestNGCitrusSupport {
+public class TimerJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void timerTest() {

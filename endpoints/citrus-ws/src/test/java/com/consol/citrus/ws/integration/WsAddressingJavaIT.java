@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
@@ -27,7 +27,7 @@ import static com.consol.citrus.ws.actions.AssertSoapFault.Builder.assertSoapFau
  * @author Christoph Deppisch
  */
 @Test
-public class WsAddressingJavaIT extends TestNGCitrusSupport {
+public class WsAddressingJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void wsAddressing() {

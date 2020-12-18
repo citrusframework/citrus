@@ -23,7 +23,7 @@ import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.config.annotation.HttpClientConfig;
 import com.consol.citrus.http.config.annotation.HttpServerConfig;
 import com.consol.citrus.http.server.HttpServer;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XpathMessageValidator;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
  * @author Christoph Deppisch
  * @since 2.7.5
  */
-public class CustomMessageValidatorIT extends TestNGCitrusSupport {
+public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport {
 
     @CitrusEndpoint
     @HttpClientConfig(requestUrl = "http://localhost:7177")

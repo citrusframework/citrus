@@ -17,7 +17,7 @@
 package com.consol.citrus.ftp.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @since 2.7.5
  */
 @Test
-public class FtpLoginIT extends AbstractTestNGCitrusTest {
+public class FtpLoginIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "FtpLoginIT")
     public void testLogin() {}

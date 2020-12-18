@@ -24,7 +24,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfig;
 import com.consol.citrus.message.DefaultMessageQueue;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,7 +35,7 @@ import static com.consol.citrus.actions.SendMessageAction.Builder.send;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class EndpointInjectionJavaIT extends TestNGCitrusSupport {
+public class EndpointInjectionJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusFramework
     private Citrus citrus;

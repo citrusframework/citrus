@@ -18,7 +18,7 @@ package com.consol.citrus.integration.container;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.DefaultTestActionBuilder.action;
@@ -33,7 +33,7 @@ import static com.consol.citrus.container.Async.Builder.async;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class AsyncJavaIT extends TestNGCitrusSupport {
+public class AsyncJavaIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusTest

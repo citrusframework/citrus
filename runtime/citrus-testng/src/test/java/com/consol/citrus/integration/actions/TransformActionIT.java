@@ -17,14 +17,14 @@
 package com.consol.citrus.integration.actions;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Philipp Komninos
  * @since 2010
  */
-public class TransformActionIT extends AbstractTestNGCitrusTest {
+public class TransformActionIT extends TestNGCitrusSpringSupport {
 	@Test
     @CitrusXmlTest
 	public void TransformActionIT() {}

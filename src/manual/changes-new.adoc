@@ -271,7 +271,7 @@ This is how a new Java DSL test looks like:
 
 [source,java]
 ----
-public class HelloServiceIT extends TestNGCitrusSupport {
+public class HelloServiceIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     private HttpClient httpClient;

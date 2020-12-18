@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -51,7 +52,7 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
 
         for (IMethodInstance method : methods) {
             boolean baseMethodAdded = false;
-            if (method.getInstance() instanceof AbstractTestNGCitrusTest) {
+            if (method.getInstance() instanceof TestNGCitrusSpringSupport) {
                 CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class);
                 if (citrusXmlTestAnnotation != null) {
                     if (citrusXmlTestAnnotation.name().length > 1) {

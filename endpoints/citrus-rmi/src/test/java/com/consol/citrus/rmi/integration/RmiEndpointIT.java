@@ -17,7 +17,7 @@
 package com.consol.citrus.rmi.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @since 2.5
  */
 @Test
-public class RmiEndpointIT extends AbstractTestNGCitrusTest {
+public class RmiEndpointIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "RmiClientIT")
     public void testClientXml() {

@@ -18,7 +18,7 @@ package com.consol.citrus.integration.actions;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.FailAction.Builder.fail;
@@ -29,7 +29,7 @@ import static com.consol.citrus.container.Assert.Builder.assertException;
  * @author Christoph Deppisch
  */
 @Test
-public class FailActionJavaIT extends TestNGCitrusSupport {
+public class FailActionJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void failAction() {

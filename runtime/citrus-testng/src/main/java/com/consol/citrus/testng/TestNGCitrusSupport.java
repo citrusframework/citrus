@@ -1,11 +1,14 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2020 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,28 +23,23 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
-import com.consol.citrus.DefaultTestCase;
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.CitrusContext;
 import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.TestBehavior;
-import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.TestCaseFailedException;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
+import org.testng.IHookable;
+import org.testng.ITestContext;
 import org.testng.ITestResult;
 
 /**
@@ -50,11 +48,14 @@ import org.testng.ITestResult;
  * and {@link GherkinTestActionRunner}.
  *
  * @author Christoph Deppisch
- * @since 3.0.0
  */
-public class TestNGCitrusSupport extends AbstractTestNGCitrusTest implements GherkinTestActionRunner {
+public class TestNGCitrusSupport implements IHookable, TestNGSuiteListener, GherkinTestActionRunner {
 
-    private static final String BUILDER_ATTRIBUTE = "builder";
+    /** Logger */
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    /** Citrus instance */
+    protected Citrus citrus;
 
     /** Test builder delegate */
     private TestCaseRunner testCaseRunner;
@@ -65,13 +66,11 @@ public class TestNGCitrusSupport extends AbstractTestNGCitrusTest implements Ghe
 
         if (method != null && method.getAnnotation(CitrusTest.class) != null) {
             try {
-                run(testResult, method, null, testResult.getMethod().getCurrentInvocationCount());
+                run(testResult, method, testResult.getMethod().getCurrentInvocationCount());
             } catch (Exception e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
             }
-
-            super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
 
             if (testResult.getThrowable() != null) {
                 if (testResult.getThrowable() instanceof RuntimeException) {
@@ -80,98 +79,82 @@ public class TestNGCitrusSupport extends AbstractTestNGCitrusTest implements Ghe
                     throw new CitrusRuntimeException(testResult.getThrowable());
                 }
             }
+        } else if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
+            throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
         } else {
-            super.run(callBack, testResult);
+            callBack.runTestMethod(testResult);
         }
     }
 
-    @Override
-    protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
+    /**
+     * Run method prepares and executes test case.
+     * @param testResult
+     * @param method
+     * @param invocationCount
+     */
+    protected void run(ITestResult testResult, Method method, int invocationCount) {
         if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
-            super.run(testResult, method, testLoader, invocationCount);
+            throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
         } else {
             try {
                 if (citrus == null) {
-                    citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+                    citrus = Citrus.newInstance();
                 }
 
                 TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
-                TestCaseRunner testCaseBuilder = createTestCaseRunner(method, ctx);
-                testCaseBuilder.groups(testResult.getMethod().getGroups());
-                testResult.setAttribute(BUILDER_ATTRIBUTE, testCaseBuilder);
+                testCaseRunner = TestNGHelper.createTestCaseRunner(this, method, ctx);
+                testCaseRunner.groups(testResult.getMethod().getGroups());
+                testResult.setAttribute(TestNGHelper.BUILDER_ATTRIBUTE, testCaseRunner);
 
                 CitrusAnnotations.injectAll(this, citrus, ctx);
 
-                invokeTestMethod(testResult, method, testCaseBuilder, ctx, invocationCount);
+                TestNGHelper.invokeTestMethod(this, testResult, method, testCaseRunner, ctx, invocationCount);
             } finally {
-                testResult.removeAttribute(BUILDER_ATTRIBUTE);
+                testResult.removeAttribute(TestNGHelper.BUILDER_ATTRIBUTE);
             }
-        }
-    }
-
-    /**
-     * Invokes test method.
-     * @param testResult
-     * @param method
-     * @param testCaseBuilder
-     * @param context
-     * @param invocationCount
-     */
-    protected void invokeTestMethod(ITestResult testResult, Method method, TestCaseRunner testCaseBuilder, TestContext context, int invocationCount) {
-        final TestCase testCase = testCaseBuilder.getTestCase();
-        try {
-            Object[] params = resolveParameter(testResult, method, testCase, context, invocationCount);
-            testCaseBuilder.start();
-            ReflectionUtils.invokeMethod(method, this, params);
-        } catch (Exception | AssertionError e) {
-            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-            throw new TestCaseFailedException(e);
-        } finally {
-            testCaseBuilder.stop();
         }
     }
 
     @Override
-    protected Object resolveAnnotatedResource(ITestResult testResult, Class<?> parameterType, TestContext context) {
-        Object storedBuilder = testResult.getAttribute(BUILDER_ATTRIBUTE);
-        if (TestCaseRunner.class.isAssignableFrom(parameterType)) {
-            return storedBuilder;
-        } else if (TestActionRunner.class.isAssignableFrom(parameterType)
-                && storedBuilder instanceof TestActionRunner) {
-            return storedBuilder;
-        } else if (GherkinTestActionRunner.class.isAssignableFrom(parameterType)
-                && storedBuilder instanceof GherkinTestActionRunner) {
-            return storedBuilder;
-        }
-
-        return super.resolveAnnotatedResource(testResult, parameterType, context);
+    public void beforeSuite(ITestContext testContext) {
+        citrus = Citrus.newInstance();
+        beforeSuite(citrus.getCitrusContext());
+        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
     }
 
     /**
-     * Creates new test runner instance for this test method.
-     * @param method
-     * @param context
-     * @return
+     * Subclasses may add before suite actions on the provided context.
+     * @param context the Citrus context.
      */
-    protected TestCaseRunner createTestCaseRunner(Method method, TestContext context) {
-        testCaseRunner = new DefaultTestCaseRunner(new DefaultTestCase(), context);
-        testCaseRunner.testClass(this.getClass());
-        testCaseRunner.name(this.getClass().getSimpleName());
-        testCaseRunner.packageName(this.getClass().getPackage().getName());
+    protected void beforeSuite(CitrusContext context) {
+    }
 
-        if (method.getAnnotation(CitrusTest.class) != null) {
-            CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
-            if (StringUtils.hasText(citrusTestAnnotation.name())) {
-                testCaseRunner.name(citrusTestAnnotation.name());
-            } else {
-                testCaseRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-            }
-        }  else {
-            testCaseRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+    @Override
+    public void afterSuite(ITestContext testContext) {
+        if (citrus != null) {
+            afterSuite(citrus.getCitrusContext());
+            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
         }
+    }
 
-        return testCaseRunner;
+    /**
+     * Subclasses may add after suite actions on the provided context.
+     * @param context the Citrus context.
+     */
+    protected void afterSuite(CitrusContext context) {
+    }
+
+    /**
+     * Prepares the test context.
+     *
+     * Provides a hook for test context modifications before the test gets executed.
+     *
+     * @param testContext the test context.
+     * @return the (prepared) test context.
+     */
+    protected TestContext prepareTestContext(final TestContext testContext) {
+        return testContext;
     }
 
     @Override

@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.actions;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.CreateVariablesAction.Builder.createVariable;
@@ -28,7 +28,7 @@ import static com.consol.citrus.script.GroovyAction.Builder.groovy;
  * @author Christoph Deppisch
  */
 @Test
-public class CreateVariablesJavaIT extends TestNGCitrusSupport {
+public class CreateVariablesJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void createVariablesAction() {

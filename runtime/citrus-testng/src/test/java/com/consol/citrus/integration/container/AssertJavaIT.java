@@ -21,7 +21,7 @@ import java.io.IOException;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.DefaultTestActionBuilder.action;
@@ -33,7 +33,7 @@ import static com.consol.citrus.container.Assert.Builder.assertException;
  * @author Christoph Deppisch
  */
 @Test
-public class AssertJavaIT extends TestNGCitrusSupport {
+public class AssertJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void assertAction() {

@@ -19,7 +19,7 @@ package com.consol.citrus.integration.inject;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
@@ -32,7 +32,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class ContextInjectionJavaIT extends TestNGCitrusSupport {
+public class ContextInjectionJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusResource
     private TestContext globalContext;

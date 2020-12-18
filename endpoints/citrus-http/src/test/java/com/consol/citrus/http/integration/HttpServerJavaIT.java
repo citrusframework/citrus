@@ -17,7 +17,7 @@
 package com.consol.citrus.http.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
@@ -31,7 +31,7 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
  * @author Christoph Deppisch
  */
 @Test
-public class HttpServerJavaIT extends TestNGCitrusSupport {
+public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void httpServer() {

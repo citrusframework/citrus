@@ -17,14 +17,14 @@
 package com.consol.citrus.websocket.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Martin Maher
  */
 @Test
-public class WebSocketEndpointIT extends AbstractTestNGCitrusTest {
+public class WebSocketEndpointIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "WebSocketEndpoint_1_IT")
     public void testWebSocketEndpoint1() {}

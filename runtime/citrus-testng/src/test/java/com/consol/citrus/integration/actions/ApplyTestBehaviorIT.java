@@ -24,7 +24,7 @@ import com.consol.citrus.actions.ApplyTestBehaviorAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.Sequence;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,7 +37,7 @@ import static com.consol.citrus.container.Sequence.Builder.sequential;
  * @author Christoph Deppisch
  */
 @Test
-public class ApplyTestBehaviorIT extends TestNGCitrusSupport {
+public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void shouldApply() {

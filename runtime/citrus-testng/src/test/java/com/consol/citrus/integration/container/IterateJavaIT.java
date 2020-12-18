@@ -18,7 +18,7 @@ package com.consol.citrus.integration.container;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.DefaultTestActionBuilder.action;
@@ -30,7 +30,7 @@ import static com.consol.citrus.container.Iterate.Builder.iterate;
  * @author Christoph Deppisch
  */
 @Test
-public class IterateJavaIT extends TestNGCitrusSupport {
+public class IterateJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void iterateContainer() {

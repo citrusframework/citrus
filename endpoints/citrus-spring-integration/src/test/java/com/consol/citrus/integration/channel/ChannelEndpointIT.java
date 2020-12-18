@@ -17,14 +17,14 @@
 package com.consol.citrus.integration.channel;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class ChannelEndpointIT extends AbstractTestNGCitrusTest {
+public class ChannelEndpointIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "ChannelEndpointIT")
     public void testChannelEndpoint() {}

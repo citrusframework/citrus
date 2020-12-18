@@ -17,13 +17,13 @@
 package com.consol.citrus.restdocs.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class SoapRestDocsIT extends AbstractTestNGCitrusTest {
+public class SoapRestDocsIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusXmlTest(name = "SoapRestDocsIT")
     public void soapRestDocsIT() {}

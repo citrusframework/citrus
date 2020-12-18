@@ -20,7 +20,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.jmx.client.JmxClient;
 import com.consol.citrus.jmx.message.JmxMessage;
 import com.consol.citrus.jmx.server.JmxServer;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -33,7 +33,7 @@ import static com.consol.citrus.actions.SendMessageAction.Builder.send;
  * @since 2.5
  */
 @Test
-public class JmxEndpointIT extends TestNGCitrusSupport {
+public class JmxEndpointIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     @Qualifier("jmxHelloClient")

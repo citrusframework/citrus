@@ -24,7 +24,7 @@ import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.restdocs.http.CitrusRestDocConfigurer;
 import com.consol.citrus.restdocs.http.RestDocClientInterceptor;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -41,7 +41,7 @@ import static com.consol.citrus.restdocs.http.CitrusRestDocsSupport.restDocsInte
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class RestDocConfigurationIT extends TestNGCitrusSupport {
+public class RestDocConfigurationIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     private TestListeners testListeners;

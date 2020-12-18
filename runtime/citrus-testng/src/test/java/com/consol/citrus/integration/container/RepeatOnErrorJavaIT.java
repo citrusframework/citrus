@@ -18,7 +18,7 @@ package com.consol.citrus.integration.container;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
@@ -30,7 +30,7 @@ import static com.consol.citrus.container.RepeatOnErrorUntilTrue.Builder.repeatO
  * @author Christoph Deppisch
  */
 @Test
-public class RepeatOnErrorJavaIT extends TestNGCitrusSupport {
+public class RepeatOnErrorJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void repeatOnErrorContainer() {

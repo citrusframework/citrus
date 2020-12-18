@@ -20,7 +20,7 @@ import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.AbstractTestContainerBuilder.container;
@@ -32,7 +32,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
  * @since 2.6
  */
 @Test
-public class CustomContainerJavaIT extends TestNGCitrusSupport {
+public class CustomContainerJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void shouldExecuteReverseContainer() {

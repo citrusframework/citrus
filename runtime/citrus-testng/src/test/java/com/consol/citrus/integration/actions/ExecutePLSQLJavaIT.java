@@ -19,7 +19,7 @@ package com.consol.citrus.integration.actions;
 import javax.sql.DataSource;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -30,7 +30,7 @@ import static com.consol.citrus.actions.ExecutePLSQLAction.Builder.plsql;
  * @author Christoph Deppisch
  */
 @Test
-public class ExecutePLSQLJavaIT extends TestNGCitrusSupport {
+public class ExecutePLSQLJavaIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     @Qualifier("testDataSource")

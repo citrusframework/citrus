@@ -17,14 +17,14 @@
 package com.consol.citrus.integration.container;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Martin Maher
  * @since 2.5
  */
-public class TimerIT extends AbstractTestNGCitrusTest {
+public class TimerIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusXmlTest
     public void TimerIT() {}

@@ -16,22 +16,15 @@
 
 package com.consol.citrus.testng;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestGroupAware;
-import com.consol.citrus.TestParameterAware;
 import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusXmlTest;
@@ -43,8 +36,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
@@ -58,7 +49,6 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 /**
@@ -81,7 +71,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     public void run(IHookCallBack callBack, ITestResult testResult) {
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
         if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
-            List<TestLoader> methodTestLoaders = createTestLoadersForMethod(method);
+            List<TestLoader> methodTestLoaders = TestNGHelper.createTestLoadersForMethod(method, this::createTestLoader);
 
             if (!CollectionUtils.isEmpty(methodTestLoaders)) {
                 try {
@@ -93,7 +83,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 }
             }
 
-            super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
+            super.run(new TestNGHelper.FakeExecutionCallBack(callBack.getParameters()), testResult);
 
             if (testResult.getThrowable() != null) {
                 if (testResult.getThrowable() instanceof RuntimeException) {
@@ -186,7 +176,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     resolveParameter(testResult, dataProvider[0], testCase, context, -1));
             if (parameters != null) {
                 dataProviderParams = parameters[invocationCount % parameters.length];
-                injectTestParameters(method, testCase, dataProviderParams);
+                TestNGParameterHelper.injectTestParameters(method, testCase, dataProviderParams);
             }
         }
 
@@ -226,65 +216,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         } else {
             throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + parameterType);
         }
-    }
-
-    /**
-     * Creates test loader from @CitrusXmlTest annotated test method and saves those to local member.
-     * Test loaders get executed later when actual method is called by TestNG. This way user can annotate
-     * multiple methods in one single class each executing several Citrus XML tests.
-     *
-     * @param method
-     * @return
-     */
-    private List<TestLoader> createTestLoadersForMethod(Method method) {
-        List<TestLoader> methodTestLoaders = new ArrayList<TestLoader>();
-
-        if (method.getAnnotation(CitrusXmlTest.class) != null) {
-            CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
-
-            String[] testNames = new String[] {};
-            if (citrusTestAnnotation.name().length > 0) {
-                testNames = citrusTestAnnotation.name();
-            } else if (citrusTestAnnotation.packageScan().length == 0) {
-                // only use default method name as test in case no package scan is set
-                testNames = new String[] { method.getName() };
-            }
-
-            String testPackage;
-            if (StringUtils.hasText(citrusTestAnnotation.packageName())) {
-                testPackage = citrusTestAnnotation.packageName();
-            } else {
-                testPackage = method.getDeclaringClass().getPackage().getName();
-            }
-
-            for (String testName : testNames) {
-                methodTestLoaders.add(createTestLoader(testName, testPackage));
-            }
-
-            String[] packagesToScan = citrusTestAnnotation.packageScan();
-            for (String packageScan : packagesToScan) {
-                try {
-                    for (String fileNamePattern : CitrusSettings.getXmlTestFileNamePattern()) {
-                        Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageScan.replace('.', File.separatorChar) + fileNamePattern);
-                        for (Resource fileResource : fileResources) {
-                            String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
-
-                            if (packageScan.startsWith("file:")) {
-                                filePath = "file:" + filePath;
-                            }
-
-                            filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
-
-                            methodTestLoaders.add(createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
-                        }
-                    }
-                } catch (RuntimeException | IOException e) {
-                    throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageScan + "'", e);
-                }
-            }
-        }
-
-        return methodTestLoaders;
     }
 
     /**
@@ -345,64 +276,5 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     protected TestCase getTestCase() {
         return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()).load();
-    }
-
-    /**
-     * Methods adds optional TestNG parameters as variables to the test case.
-     *
-     * @param method the method currently executed
-     * @param testCase the constructed Citrus test.
-     */
-    protected void injectTestParameters(Method method, TestCase testCase, Object[] parameterValues) {
-        if (testCase instanceof TestParameterAware) {
-            ((TestParameterAware) testCase).setParameters(getParameterNames(method), parameterValues);
-        }
-    }
-
-    /**
-     * Read parameter names form method annotation.
-     * @param method
-     * @return
-     */
-    protected String[] getParameterNames(Method method) {
-        String[] parameterNames;
-        CitrusParameters citrusParameters = method.getAnnotation(CitrusParameters.class);
-        Parameters testNgParameters = method.getAnnotation(Parameters.class);
-        if (citrusParameters != null) {
-            parameterNames = citrusParameters.value();
-        } else if (testNgParameters != null) {
-            parameterNames = testNgParameters.value();
-        } else {
-            List<String> methodParameterNames = new ArrayList<>();
-            for (Parameter parameter : method.getParameters()) {
-                methodParameterNames.add(parameter.getName());
-            }
-            parameterNames = methodParameterNames.toArray(new String[methodParameterNames.size()]);
-        }
-
-        return parameterNames;
-    }
-
-    /**
-     * Class faking test execution as callback. Used in run hookable method when test case
-     * was executed before and callback is needed for super class run method invocation.
-     */
-    protected static final class FakeExecutionCallBack implements IHookCallBack {
-        private Object[] parameters;
-
-        public FakeExecutionCallBack(Object[] parameters) {
-            this.parameters = Arrays.copyOf(parameters, parameters.length);
-        }
-
-        @Override
-        public void runTestMethod(ITestResult testResult) {
-            // do nothing as test case was already executed
-        }
-
-        @Override
-        public Object[] getParameters() {
-            return Arrays.copyOf(parameters, parameters.length);
-        }
-
     }
 }

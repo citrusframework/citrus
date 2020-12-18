@@ -17,13 +17,13 @@
 package com.consol.citrus.mail.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class MailServerAcceptIT extends AbstractTestNGCitrusTest {
+public class MailServerAcceptIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusXmlTest

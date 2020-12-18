@@ -82,10 +82,10 @@ Now that we have an XML definition that describes the steps of our test we need 
 ----
 import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 
 @Test
-public class MyFirstTest extends AbstractTestNGCitrusTest {
+public class MyFirstTest extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "MyFirstTest")
     public void myFirstTest() {

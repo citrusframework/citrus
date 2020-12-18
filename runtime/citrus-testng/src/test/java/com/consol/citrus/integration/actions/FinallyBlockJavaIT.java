@@ -19,7 +19,7 @@ package com.consol.citrus.integration.actions;
 import javax.sql.DataSource;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -33,7 +33,7 @@ import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
  * @author Christoph Deppisch
  */
 @Test
-public class FinallyBlockJavaIT extends TestNGCitrusSupport {
+public class FinallyBlockJavaIT extends TestNGCitrusSpringSupport {
 
     @Autowired
     @Qualifier("testDataSource")

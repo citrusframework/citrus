@@ -18,13 +18,13 @@ package com.consol.citrus.integration.container;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class AsyncFailIT extends AbstractTestNGCitrusTest {
+public class AsyncFailIT extends TestNGCitrusSpringSupport {
 
     @Test(groups = "com.consol.citrus.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
     @CitrusXmlTest

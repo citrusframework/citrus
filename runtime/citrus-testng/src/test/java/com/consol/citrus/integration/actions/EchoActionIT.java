@@ -17,7 +17,7 @@
 package com.consol.citrus.integration.actions;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @since 2008
  */
 @Test
-public class EchoActionIT extends AbstractTestNGCitrusTest {
+public class EchoActionIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest
     public void EchoActionIT() {}

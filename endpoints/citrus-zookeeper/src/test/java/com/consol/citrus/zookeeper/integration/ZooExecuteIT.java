@@ -17,7 +17,7 @@
 package com.consol.citrus.zookeeper.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * @since 2.5
  */
 @Test
-public class ZooExecuteIT extends AbstractTestNGCitrusTest {
+public class ZooExecuteIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "ZooExecuteIT")
     public void zookeeperTest() {}

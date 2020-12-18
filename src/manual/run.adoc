@@ -7,8 +7,8 @@ If you create new test cases in Citrus - for instance via Maven plugin or ANT bu
 
 [source]
 ----
-src/it/tests/com/consol/citrus/MyFirstCitrusTest.xml 
-src/it/java/com/consol/citrus/MyFirstCitrusTest.java 
+src/it/tests/com/consol/citrus/MyFirstCitrusTest.xml
+src/it/java/com/consol/citrus/MyFirstCitrusTest.java
 ----
 
 NOTE: If you prefer to just write Java code you can throw away the XML part immediately and continue working with the Java part only. In case you are familiar with writing Java code you may just skip the test template generation via Maven or ANT and preferably just create new Citrus Java test classes on your own.
@@ -34,9 +34,9 @@ package com.consol.citrus.samples;
 import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-    
+
 @Test
-public class SampleIT extends AbstractTestNGCitrusTest {
+public class SampleIT extends TestNGCitrusSpringSupport {
     @CitrusXmlTest(name = "SampleIT")
     public void sampleTest() {}
 }
@@ -88,7 +88,7 @@ TestNG as a framework comes with lots of great features such as data providers. 
 .TestNG Citrus data provider test
 [source,java]
 ----
-public class DataProviderIT extends AbstractTestNGCitrusTest {
+public class DataProviderIT extends TestNGCitrusSpringSupport {
 
   @CitrusXmlTest
   @CitrusParameters("message")
@@ -320,7 +320,7 @@ You can also mix the various CitrusXmlTest annotation patterns in a single Java 
 [source,java]
 ----
 @Test
-public class SampleIT extends AbstractTestNGCitrusTest {
+public class SampleIT extends TestNGCitrusSpringSupport {
     @CitrusXmlTest(name = "SampleIT")
     public void sampleTest() {}
 

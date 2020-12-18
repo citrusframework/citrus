@@ -19,7 +19,7 @@ package com.consol.citrus.http.integration;
 import javax.servlet.http.Cookie;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
@@ -29,7 +29,7 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
  * @author Christoph Deppisch
  */
 @Test
-public class HttpCookiesJavaIT extends TestNGCitrusSupport {
+public class HttpCookiesJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void httpCookies() {

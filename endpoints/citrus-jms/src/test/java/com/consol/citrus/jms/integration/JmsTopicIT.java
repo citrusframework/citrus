@@ -17,14 +17,14 @@
 package com.consol.citrus.jms.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class JmsTopicIT extends AbstractTestNGCitrusTest {
+public class JmsTopicIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(name = "JmsTopicIT")
     public void testJmsTopic() {}

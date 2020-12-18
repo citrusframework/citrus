@@ -25,6 +25,7 @@ import com.consol.citrus.report.TestReporters;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.util.SpringBeanTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
@@ -45,7 +46,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = CitrusSpringConfigTest.CustomConfig.class)
-public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
+public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
 
     static {
         System.setProperty(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:citrus-unit-context.xml");

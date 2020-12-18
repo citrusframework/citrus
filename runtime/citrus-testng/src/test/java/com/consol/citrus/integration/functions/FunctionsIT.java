@@ -17,14 +17,14 @@
 package com.consol.citrus.integration.functions;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2008
  */
-public class FunctionsIT extends AbstractTestNGCitrusTest {
+public class FunctionsIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusXmlTest
     public void FunctionsIT() {}
