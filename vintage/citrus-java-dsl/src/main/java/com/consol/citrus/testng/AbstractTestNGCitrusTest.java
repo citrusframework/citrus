@@ -56,9 +56,11 @@ import org.testng.annotations.Test;
  * loading basic application context files for Citrus.
  *
  * @author Christoph Deppisch
+ * @deprecated in favor of using {@link com.consol.citrus.testng.spring.TestNGCitrusSpringSupport}
  */
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 @Listeners( { PrepareTestNGMethodInterceptor.class } )
+@Deprecated
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
 
     /** Logger */
