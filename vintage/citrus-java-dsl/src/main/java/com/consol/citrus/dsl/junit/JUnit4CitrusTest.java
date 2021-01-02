@@ -46,7 +46,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
     private static final String RUNNER_ATTRIBUTE = "runner";
 
     @Override
-    protected void run(CitrusFrameworkMethod frameworkMethod) {
+    public void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
             citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
         }

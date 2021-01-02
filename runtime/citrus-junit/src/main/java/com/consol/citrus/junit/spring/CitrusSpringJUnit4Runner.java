@@ -158,9 +158,9 @@ public class CitrusSpringJUnit4Runner extends SpringJUnit4ClassRunner {
 
         @Override
         public void evaluate() throws Throwable {
-            if (JUnit4CitrusSpringSupport.class.isAssignableFrom(testInstance.getClass()) &&
+            if (CitrusFrameworkMethod.Runner.class.isAssignableFrom(testInstance.getClass()) &&
                     frameworkMethod instanceof CitrusFrameworkMethod) {
-                ((JUnit4CitrusSpringSupport)testInstance).run((CitrusFrameworkMethod) frameworkMethod);
+                ((CitrusFrameworkMethod.Runner)testInstance).run((CitrusFrameworkMethod) frameworkMethod);
             } else {
                 super.evaluate();
             }

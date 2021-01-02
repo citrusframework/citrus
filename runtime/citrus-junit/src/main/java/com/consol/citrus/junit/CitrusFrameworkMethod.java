@@ -37,7 +37,15 @@ public class CitrusFrameworkMethod extends FrameworkMethod {
     private final String testName;
     private final String packageName;
 
-    private Map<String, Object> attributes = new HashMap<>();
+    private final Map<String, Object> attributes = new HashMap<>();
+
+    public interface Runner {
+        /**
+         * Reads Citrus test annotation from framework method and executes test case.
+         * @param frameworkMethod
+         */
+        void run(CitrusFrameworkMethod frameworkMethod);
+    }
 
     /**
      * Returns a new {@code FrameworkMethod} for {@code method}

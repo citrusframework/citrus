@@ -109,9 +109,9 @@ public class CitrusJUnit4Runner extends BlockJUnit4ClassRunner {
 
         @Override
         public void evaluate() throws Throwable {
-            if (JUnit4CitrusSupport.class.isAssignableFrom(testInstance.getClass()) &&
+            if (CitrusFrameworkMethod.Runner.class.isAssignableFrom(testInstance.getClass()) &&
                     frameworkMethod instanceof CitrusFrameworkMethod) {
-                ((JUnit4CitrusSupport)testInstance).run((CitrusFrameworkMethod) frameworkMethod);
+                ((CitrusFrameworkMethod.Runner)testInstance).run((CitrusFrameworkMethod) frameworkMethod);
             } else {
                 super.evaluate();
             }

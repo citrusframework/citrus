@@ -37,7 +37,7 @@ import org.junit.runner.RunWith;
  * @since 2.5
  */
 @RunWith(CitrusJUnit4Runner.class)
-public class JUnit4CitrusSupport implements GherkinTestActionRunner {
+public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrameworkMethod.Runner {
 
     /** Citrus instance */
     protected Citrus citrus;
@@ -45,11 +45,8 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner {
     /** Test builder delegate */
     private TestCaseRunner testCaseRunner;
 
-    /**
-     * Reads Citrus test annotation from framework method and executes test case.
-     * @param frameworkMethod
-     */
-    protected void run(CitrusFrameworkMethod frameworkMethod) {
+    @Override
+    public void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
             citrus = Citrus.newInstance();
         }

@@ -44,7 +44,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 @Deprecated
 @RunWith(CitrusSpringJUnit4Runner.class)
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringContextTests {
+public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringContextTests implements CitrusFrameworkMethod.Runner {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -52,11 +52,8 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
     /** Citrus instance */
     protected Citrus citrus;
 
-    /**
-     * Reads Citrus test annotation from framework method and executes test case.
-     * @param frameworkMethod
-     */
-    protected void run(CitrusFrameworkMethod frameworkMethod) {
+    @Override
+    public void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
             citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
         }
