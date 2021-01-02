@@ -27,7 +27,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfig;
 import com.consol.citrus.functions.Functions;
-import com.consol.citrus.junit.JUnit4CitrusSupport;
+import com.consol.citrus.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,7 +39,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class ResourceInjectionJUnit4IT extends JUnit4CitrusSupport {
+public class ResourceInjectionJUnit4IT extends JUnit4CitrusSpringSupport {
 
     @CitrusFramework
     private Citrus citrus;

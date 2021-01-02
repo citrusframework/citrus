@@ -79,7 +79,7 @@ import com.consol.citrus.dsl.design.TestBehavior;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.junit.CitrusJUnit4Runner;
+import com.consol.citrus.junit.CitrusFrameworkMethod;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import org.springframework.core.io.Resource;
@@ -97,13 +97,13 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     private TestDesigner testDesigner;
 
     @Override
-    protected TestDesigner createTestDesigner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
+    protected TestDesigner createTestDesigner(CitrusFrameworkMethod frameworkMethod, TestContext context) {
         testDesigner = super.createTestDesigner(frameworkMethod, context);
         return testDesigner;
     }
 
     @Override
-    protected void invokeTestMethod(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
+    protected void invokeTestMethod(CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
         if (isConfigure(frameworkMethod.getMethod())) {
             try {
                 configure();

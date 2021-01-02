@@ -19,7 +19,7 @@ package com.consol.citrus.junit.integration;
 import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.TestBehavior;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.junit.JUnit4CitrusSupport;
+import com.consol.citrus.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 
 import static com.consol.citrus.actions.ApplyTestBehaviorAction.Builder.apply;
@@ -29,7 +29,7 @@ import static com.consol.citrus.container.Sequence.Builder.sequential;
 /**
  * @author Christoph Deppisch
  */
-public class ApplyTestBehaviorIT extends JUnit4CitrusSupport {
+public class ApplyTestBehaviorIT extends JUnit4CitrusSpringSupport {
 
     @Test
     @CitrusTest

@@ -32,7 +32,7 @@ import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
-import com.consol.citrus.junit.CitrusJUnit4Runner;
+import com.consol.citrus.junit.CitrusFrameworkMethod;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -45,7 +45,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
     private static final String RUNNER_ATTRIBUTE = "runner";
 
     @Override
-    protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
+    protected void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
             citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
         }
@@ -72,7 +72,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
      * @param testCase
      * @param context
      */
-    protected void invokeTestMethod(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
+    protected void invokeTestMethod(CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
         if (frameworkMethod.getAttribute(DESIGNER_ATTRIBUTE) != null) {
             try {
                 ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
@@ -103,7 +103,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
     }
 
     @Override
-    protected Object resolveAnnotatedResource(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, Class<?> parameterType, TestContext context) {
+    protected Object resolveAnnotatedResource(CitrusFrameworkMethod frameworkMethod, Class<?> parameterType, TestContext context) {
         if (TestDesigner.class.isAssignableFrom(parameterType)) {
             return frameworkMethod.getAttribute(DESIGNER_ATTRIBUTE);
         } else if (TestRunner.class.isAssignableFrom(parameterType)) {
@@ -119,7 +119,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
      * @param context
      * @return
      */
-    protected TestDesigner createTestDesigner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
+    protected TestDesigner createTestDesigner(CitrusFrameworkMethod frameworkMethod, TestContext context) {
         TestDesigner testDesigner = new DefaultTestDesigner(context);
         testDesigner.testClass(getClass());
         testDesigner.name(frameworkMethod.getTestName());
@@ -136,7 +136,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
      * @param context
      * @return
      */
-    protected TestRunner createTestRunner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
+    protected TestRunner createTestRunner(CitrusFrameworkMethod frameworkMethod, TestContext context) {
         TestRunner testRunner = new DefaultTestRunner(context);
         testRunner.testClass(getClass());
         testRunner.name(frameworkMethod.getTestName());

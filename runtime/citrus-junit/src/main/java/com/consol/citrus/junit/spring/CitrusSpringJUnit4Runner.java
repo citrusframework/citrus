@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit;
+package com.consol.citrus.junit.spring;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.junit.CitrusFrameworkMethod;
+import com.consol.citrus.junit.TestSuiteExecutionListener;
 import org.junit.Test;
 import org.junit.internal.runners.statements.InvokeMethod;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.StringUtils;
 
 /**
@@ -37,14 +45,18 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.2
  */
-public class CitrusJUnit4Runner extends BlockJUnit4ClassRunner {
+public class CitrusSpringJUnit4Runner extends SpringJUnit4ClassRunner {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(CitrusSpringJUnit4Runner.class);
 
     /**
      * Default constructor using class to run.
      * @param clazz the test class to be run
      */
-    public CitrusJUnit4Runner(Class<?> clazz) throws InitializationError {
+    public CitrusSpringJUnit4Runner(Class<?> clazz) throws InitializationError {
         super(clazz);
+        getTestContextManager().registerTestExecutionListeners(new TestSuiteExecutionListener());
     }
 
     @Override
@@ -58,7 +70,46 @@ public class CitrusJUnit4Runner extends BlockJUnit4ClassRunner {
         List<FrameworkMethod> interceptedMethods = new ArrayList<>();
 
         for (FrameworkMethod method : methods) {
-            if (method.getMethod().getAnnotation(CitrusTest.class) != null) {
+            if (method.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
+                CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getAnnotation(CitrusXmlTest.class);
+                String[] packagesToScan = citrusXmlTestAnnotation.packageScan();
+
+                String packageName = method.getMethod().getDeclaringClass().getPackage().getName();
+                if (StringUtils.hasText(citrusXmlTestAnnotation.packageName())) {
+                    packageName = citrusXmlTestAnnotation.packageName();
+                }
+
+                if (citrusXmlTestAnnotation.name().length > 0) {
+                    for (int i = 0; i < citrusXmlTestAnnotation.name().length; i++) {
+                        interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), citrusXmlTestAnnotation.name()[i], packageName));
+                    }
+                } else if (packagesToScan.length == 0) {
+                    interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), method.getName(), packageName));
+                }
+
+                for (String packageScan : packagesToScan) {
+                    try {
+                        for (String fileNamePattern : CitrusSettings.getXmlTestFileNamePattern()) {
+                            Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageScan.replace('.', File.separatorChar) + fileNamePattern);
+                            for (Resource fileResource : fileResources) {
+                                String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+
+                                if (packageScan.startsWith("file:")) {
+                                    filePath = "file:" + filePath;
+                                }
+
+                                filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
+
+                                interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(),
+                                        fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()),
+                                        filePath));
+                            }
+                        }
+                    } catch (RuntimeException | IOException e) {
+                        LOG.error("Unable to locate file resources for test package '" + packageScan + "'", e);
+                    }
+                }
+            } else if (method.getMethod().getAnnotation(CitrusTest.class) != null) {
                 CitrusTest citrusTestAnnotation = method.getMethod().getAnnotation(CitrusTest.class);
 
                 if (StringUtils.hasText(citrusTestAnnotation.name())) {
@@ -68,8 +119,6 @@ public class CitrusJUnit4Runner extends BlockJUnit4ClassRunner {
                     interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), method.getDeclaringClass().getSimpleName() + "." + method.getName(),
                             method.getMethod().getDeclaringClass().getPackage().getName()));
                 }
-            } else if (method.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-                throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
             } else {
                 interceptedMethods.add(method);
             }
@@ -109,9 +158,9 @@ public class CitrusJUnit4Runner extends BlockJUnit4ClassRunner {
 
         @Override
         public void evaluate() throws Throwable {
-            if (JUnit4CitrusSupport.class.isAssignableFrom(testInstance.getClass()) &&
+            if (JUnit4CitrusSpringSupport.class.isAssignableFrom(testInstance.getClass()) &&
                     frameworkMethod instanceof CitrusFrameworkMethod) {
-                ((JUnit4CitrusSupport)testInstance).run((CitrusFrameworkMethod) frameworkMethod);
+                ((JUnit4CitrusSpringSupport)testInstance).run((CitrusFrameworkMethod) frameworkMethod);
             } else {
                 super.evaluate();
             }

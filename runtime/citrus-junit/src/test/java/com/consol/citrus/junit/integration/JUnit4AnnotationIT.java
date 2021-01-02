@@ -19,7 +19,7 @@ package com.consol.citrus.junit.integration;
 import com.consol.citrus.ShouldFailGroup;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
+import com.consol.citrus.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -28,7 +28,7 @@ import org.junit.experimental.categories.Category;
  * @since 2.2
  */
 @SuppressWarnings("squid:S2699")
-public class JUnit4AnnotationIT extends AbstractJUnit4CitrusTest {
+public class JUnit4AnnotationIT extends JUnit4CitrusSpringSupport {
 
     @Test
     @CitrusXmlTest

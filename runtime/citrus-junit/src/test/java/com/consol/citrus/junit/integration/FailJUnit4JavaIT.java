@@ -19,7 +19,7 @@ package com.consol.citrus.junit.integration;
 import com.consol.citrus.ShouldFailGroup;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.junit.JUnit4CitrusSupport;
+import com.consol.citrus.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -28,7 +28,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
 /**
  * @author Christoph Deppisch
  */
-public class FailJUnit4JavaIT extends JUnit4CitrusSupport {
+public class FailJUnit4JavaIT extends JUnit4CitrusSpringSupport {
 
     @Test(expected = TestCaseFailedException.class)
     @Category( ShouldFailGroup.class )

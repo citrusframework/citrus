@@ -19,9 +19,9 @@ package com.consol.citrus.junit.integration;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.junit.JUnit4CitrusSupport;
-import org.junit.Test;
+import com.consol.citrus.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Assert;
+import org.junit.Test;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
@@ -29,7 +29,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class ContextInjectionJUnit4IT extends JUnit4CitrusSupport {
+public class ContextInjectionJUnit4IT extends JUnit4CitrusSpringSupport {
 
     @CitrusResource
     private TestContext globalContext;

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit;
+package com.consol.citrus.junit.spring;
 
 import java.lang.annotation.Annotation;
 import java.util.Date;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.GherkinTestActionRunner;
@@ -35,18 +36,32 @@ import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.TestLoader;
+import com.consol.citrus.common.XmlTestLoader;
+import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
+import com.consol.citrus.junit.CitrusFrameworkMethod;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * Base test implementation for test cases that use JUnit testing framework. Class also provides
+ * test listener support and loads the Spring root application context files for Citrus.
+ *
  * @author Christoph Deppisch
- * @since 2.5
  */
-@RunWith(CitrusJUnit4Runner.class)
-public class JUnit4CitrusSupport implements GherkinTestActionRunner {
+@RunWith(CitrusSpringJUnit4Runner.class)
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests implements GherkinTestActionRunner {
+
+    /** Logger */
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private static final String BUILDER_ATTRIBUTE = "builder";
 
@@ -56,21 +71,28 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner {
     /** Test builder delegate */
     private TestCaseRunner testCaseRunner;
 
+    /**
+     * Reads Citrus test annotation from framework method and executes test case.
+     * @param frameworkMethod
+     */
     protected void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
-            citrus = Citrus.newInstance();
+            citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
         }
 
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
-        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
+        if (frameworkMethod.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
+            TestLoader testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName());
+            TestCase testCase = testLoader.load();
+
+            citrus.run(testCase, ctx);
+        } else if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
             TestCaseRunner testCaseBuilder = createTestRunner(frameworkMethod, ctx);
             frameworkMethod.setAttribute(BUILDER_ATTRIBUTE, testCaseBuilder);
             CitrusAnnotations.injectAll(this, citrus, ctx);
 
             invokeTestMethod(frameworkMethod, testCaseBuilder, ctx);
-        } else if (frameworkMethod.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-            throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
         }
     }
 
@@ -153,6 +175,26 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner {
      */
     protected TestContext prepareTestContext(final TestContext testContext) {
         return testContext;
+    }
+
+    /**
+     * Creates new test loader which has TestNG test annotations set for test execution. Only
+     * suitable for tests that get created at runtime through factory method. Subclasses
+     * may overwrite this in order to provide custom test loader with custom test annotations set.
+     * @param testName
+     * @param packageName
+     * @return
+     */
+    protected TestLoader createTestLoader(String testName, String packageName) {
+        return new XmlTestLoader(getClass(), testName, packageName, CitrusSpringContext.create(applicationContext));
+    }
+
+    /**
+     * Constructs the test case to execute.
+     * @return
+     */
+    protected TestCase getTestCase() {
+        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()).load();
     }
 
     /**

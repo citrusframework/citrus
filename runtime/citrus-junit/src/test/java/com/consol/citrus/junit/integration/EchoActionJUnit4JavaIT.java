@@ -1,7 +1,7 @@
 package com.consol.citrus.junit.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.junit.JUnit4CitrusSupport;
+import com.consol.citrus.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Test;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
@@ -9,7 +9,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
 /**
  * @author Christoph Deppisch
  */
-public class EchoActionJUnit4JavaIT extends JUnit4CitrusSupport {
+public class EchoActionJUnit4JavaIT extends JUnit4CitrusSpringSupport {
 
     @Test
     @CitrusTest

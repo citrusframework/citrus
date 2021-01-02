@@ -73,7 +73,7 @@ import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.dsl.runner.ApplyTestBehaviorAction;
 import com.consol.citrus.dsl.runner.TestBehavior;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.junit.CitrusJUnit4Runner;
+import com.consol.citrus.junit.CitrusFrameworkMethod;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 
@@ -90,7 +90,7 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     private TestRunner testRunner;
 
     @Override
-    protected TestRunner createTestRunner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
+    protected TestRunner createTestRunner(CitrusFrameworkMethod frameworkMethod, TestContext context) {
         testRunner = super.createTestRunner(frameworkMethod, context);
         return testRunner;
     }

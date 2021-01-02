@@ -15,8 +15,8 @@ import org.testng.annotations.Test;
 
 public class JavaDslTestGeneratorTest {
 
-    private JavaDslTestGenerator generatorUnderTest = new JavaDslTestGenerator();
-    private File testFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "/java/com/consol/citrus/FooTest.java");
+    private final JavaDslTestGenerator generatorUnderTest = new JavaDslTestGenerator();
+    private final File testFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "/java/com/consol/citrus/FooTest.java");
 
     private final CleanupUtils cleanupUtils = new CleanupUtils();
 

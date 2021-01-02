@@ -27,6 +27,7 @@ import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.junit.spring.CitrusSpringJUnit4Runner;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +35,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 /**
- * Abstract base test implementation for test cases that rather use JUnit testing framework. Class also provides
- * test listener support and loads the root application context files for Citrus.
+ * Abstract base test implementation for test cases that use JUnit testing framework. Class also provides
+ * test listener support and loads the Spring root application context files for Citrus.
  *
  * @author Christoph Deppisch
  */
-@RunWith(CitrusJUnit4Runner.class)
+@RunWith(CitrusSpringJUnit4Runner.class)
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringContextTests {
 
@@ -53,7 +54,7 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * Reads Citrus test annotation from framework method and executes test case.
      * @param frameworkMethod
      */
-    protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
+    protected void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
             citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
         }
@@ -74,7 +75,7 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * @param context
      * @return
      */
-    protected Object[] resolveParameter(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
+    protected Object[] resolveParameter(CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
         Object[] values = new Object[frameworkMethod.getMethod().getParameterTypes().length];
         Class<?>[] parameterTypes = frameworkMethod.getMethod().getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
@@ -97,7 +98,7 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * @param parameterType
      * @return
      */
-    protected Object resolveAnnotatedResource(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, Class<?> parameterType, TestContext context) {
+    protected Object resolveAnnotatedResource(CitrusFrameworkMethod frameworkMethod, Class<?> parameterType, TestContext context) {
         if (TestContext.class.isAssignableFrom(parameterType)) {
             return context;
         } else {
