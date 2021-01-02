@@ -19,12 +19,9 @@
 
 package com.consol.citrus.junit;
 
-import java.lang.annotation.Annotation;
-
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
@@ -69,31 +66,6 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
         TestCase testCase = testLoader.load();
 
         citrus.run(testCase, ctx);
-    }
-
-    /**
-     * Resolves method arguments supporting TestNG data provider parameters as well as
-     * {@link CitrusResource} annotated methods.
-     *
-     * @param frameworkMethod
-     * @param testCase
-     * @param context
-     * @return
-     */
-    protected Object[] resolveParameter(CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
-        Object[] values = new Object[frameworkMethod.getMethod().getParameterTypes().length];
-        Class<?>[] parameterTypes = frameworkMethod.getMethod().getParameterTypes();
-        for (int i = 0; i < parameterTypes.length; i++) {
-            final Annotation[] parameterAnnotations = frameworkMethod.getMethod().getParameterAnnotations()[i];
-            Class<?> parameterType = parameterTypes[i];
-            for (Annotation annotation : parameterAnnotations) {
-                if (annotation instanceof CitrusResource) {
-                    values[i] = resolveAnnotatedResource(frameworkMethod, parameterType, context);
-                }
-            }
-        }
-
-        return values;
     }
 
     /**

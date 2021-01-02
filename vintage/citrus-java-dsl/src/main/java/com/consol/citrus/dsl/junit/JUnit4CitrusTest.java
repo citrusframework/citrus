@@ -33,6 +33,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.CitrusFrameworkMethod;
+import com.consol.citrus.junit.JUnit4ParameterHelper;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -76,7 +77,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
         if (frameworkMethod.getAttribute(DESIGNER_ATTRIBUTE) != null) {
             try {
                 ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
-                        resolveParameter(frameworkMethod, testCase, context));
+                        JUnit4ParameterHelper.resolveParameter(frameworkMethod, testCase, context));
             } catch (TestCaseFailedException e) {
                 throw e;
             } catch (Exception | AssertionError e) {
@@ -90,7 +91,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
             TestRunner testRunner = (TestRunner) frameworkMethod.getAttribute(RUNNER_ATTRIBUTE);
 
             try {
-                Object[] params = resolveParameter(frameworkMethod, testCase, context);
+                Object[] params = JUnit4ParameterHelper.resolveParameter(frameworkMethod, testCase, context);
                 testRunner.start();
                 ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this, params);
             } catch (Exception | AssertionError e) {
