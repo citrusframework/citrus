@@ -22,8 +22,8 @@ import java.util.stream.Stream;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
@@ -33,10 +33,15 @@ import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.junit.jupiter.CitrusBaseExtension;
-import org.junit.jupiter.api.TestFactory;
+import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
+import com.consol.citrus.junit.jupiter.spring.XmlTestHelper;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -52,11 +57,12 @@ import org.springframework.util.StringUtils;
  *
  * @author Christoph Deppisch
  */
-public class CitrusExtension extends CitrusBaseExtension implements TestExecutionExceptionHandler {
+public class CitrusExtension extends CitrusBaseExtension implements ParameterResolver,
+        BeforeEachCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback, TestExecutionExceptionHandler {
 
     @Override
     public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
-        if (!isXmlTestMethod(extensionContext.getRequiredTestMethod()) &&
+        if (!CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod()) &&
                 (isRunnerMethod(extensionContext.getRequiredTestMethod()) || isRunnerClass(extensionContext.getRequiredTestClass()))) {
             TestCase testCase = getTestCase(extensionContext);
             testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), throwable));
@@ -67,7 +73,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
 
     @Override
     public void afterTestExecution(ExtensionContext extensionContext) throws Exception {
-        if (!isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+        if (!CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
             TestCase testCase = getTestCase(extensionContext);
 
             extensionContext.getExecutionException()
@@ -75,38 +81,40 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
 
             if (isDesignerMethod(extensionContext.getRequiredTestMethod()) ||
                     isDesignerClass(extensionContext.getRequiredTestClass())) {
-                TestContext context = getTestContext(extensionContext);
-                getCitrus(extensionContext).run(testCase, context);
+                TestContext context = CitrusExtensionHelper.getTestContext(extensionContext);
+                CitrusExtensionHelper.getCitrus(extensionContext).run(testCase, context);
             } else if (isRunnerMethod(extensionContext.getRequiredTestMethod()) ||
                     isRunnerClass(extensionContext.getRequiredTestClass())) {
                 getTestRunner(extensionContext).stop();
             }
 
-            extensionContext.getRoot().getStore(NAMESPACE).remove(getBaseKey(extensionContext) + TestRunner.class.getSimpleName());
-            extensionContext.getRoot().getStore(NAMESPACE).remove(getBaseKey(extensionContext) + TestDesigner.class.getSimpleName());
+            extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestRunner.class.getSimpleName());
+            extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestDesigner.class.getSimpleName());
         }
 
-        super.afterTestExecution(extensionContext);
+        extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestContext.class.getSimpleName());
+        extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCase.class.getSimpleName());
     }
 
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
-        if (isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            super.beforeTestExecution(extensionContext);
+        if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+            CitrusExtensionHelper.getCitrus(extensionContext).run(XmlTestHelper.getXmlTestCase(extensionContext), CitrusExtensionHelper.getTestContext(extensionContext));
+        } else {
+            CitrusDslAnnotations.injectTestDesigner(extensionContext.getRequiredTestInstance(), getTestDesigner(extensionContext));
+            CitrusDslAnnotations.injectTestRunner(extensionContext.getRequiredTestInstance(), getTestRunner(extensionContext));
+            CitrusAnnotations.injectTestContext(extensionContext.getRequiredTestInstance(), CitrusExtensionHelper.getTestContext(extensionContext));
+            CitrusAnnotations.injectEndpoints(extensionContext.getRequiredTestInstance(), CitrusExtensionHelper.getTestContext(extensionContext));
         }
-
-        CitrusDslAnnotations.injectTestDesigner(extensionContext.getRequiredTestInstance(), getTestDesigner(extensionContext));
-        CitrusDslAnnotations.injectTestRunner(extensionContext.getRequiredTestInstance(), getTestRunner(extensionContext));
-        CitrusAnnotations.injectTestContext(extensionContext.getRequiredTestInstance(), getTestContext(extensionContext));
-        CitrusAnnotations.injectEndpoints(extensionContext.getRequiredTestInstance(), getTestContext(extensionContext));
     }
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
-        if (isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            super.beforeEach(extensionContext);
+        CitrusExtensionHelper.getTestContext(extensionContext);
+
+        if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+            XmlTestHelper.getXmlTestCase(extensionContext);
         } else {
-            getTestContext(extensionContext);
             TestCase testCase = getTestCase(extensionContext);
 
             if (isRunnerMethod(extensionContext.getRequiredTestMethod()) || isRunnerClass(extensionContext.getRequiredTestClass())) {
@@ -123,6 +131,11 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
     }
 
     @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return parameterContext.getParameter().isAnnotationPresent(CitrusResource.class);
+    }
+
+    @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         if (TestDesigner.class.isAssignableFrom(parameterContext.getParameter().getType())) {
             return getTestDesigner(extensionContext);
@@ -130,7 +143,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
             return getTestRunner(extensionContext);
         }
 
-        return super.resolveParameter(parameterContext, extensionContext);
+        return CitrusExtensionHelper.resolveParameter(parameterContext, extensionContext);
     }
 
     /**
@@ -140,7 +153,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
     protected static TestDesigner getTestDesigner(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
 
-        return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestDesigner.class.getSimpleName(), key -> {
+        return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(CitrusExtensionHelper.getBaseKey(extensionContext) + TestDesigner.class.getSimpleName(), key -> {
             String testName = extensionContext.getRequiredTestClass().getSimpleName() + "." + extensionContext.getRequiredTestMethod().getName();
 
             if (extensionContext.getRequiredTestMethod().getAnnotation(CitrusTest.class) != null) {
@@ -150,7 +163,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
                 }
             }
 
-            TestDesigner testDesigner = new DefaultTestDesigner(getTestContext(extensionContext));
+            TestDesigner testDesigner = new DefaultTestDesigner(CitrusExtensionHelper.getTestContext(extensionContext));
             testDesigner.testClass(extensionContext.getRequiredTestClass());
             testDesigner.name(testName);
             testDesigner.packageName(extensionContext.getRequiredTestClass().getPackage().getName());
@@ -165,7 +178,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
     protected static TestRunner getTestRunner(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
 
-        return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestRunner.class.getSimpleName(), key -> {
+        return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(CitrusExtensionHelper.getBaseKey(extensionContext) + TestRunner.class.getSimpleName(), key -> {
             String testName = extensionContext.getRequiredTestClass().getSimpleName() + "." + extensionContext.getRequiredTestMethod().getName();
 
             if (extensionContext.getRequiredTestMethod().getAnnotation(CitrusTest.class) != null) {
@@ -175,7 +188,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
                 }
             }
 
-            TestRunner testRunner = new DefaultTestRunner(getTestContext(extensionContext));
+            TestRunner testRunner = new DefaultTestRunner(CitrusExtensionHelper.getTestContext(extensionContext));
             testRunner.testClass(extensionContext.getRequiredTestClass());
             testRunner.name(testName);
             testRunner.packageName(extensionContext.getRequiredTestClass().getPackage().getName());
@@ -189,13 +202,13 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
      */
     protected static TestCase getTestCase(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
-        return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCase.class.getSimpleName(), key -> {
+        return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCase.class.getSimpleName(), key -> {
             if (isDesignerMethod(extensionContext.getRequiredTestMethod())) {
                 return getTestDesigner(extensionContext).getTestCase();
             } else if (isRunnerMethod(extensionContext.getRequiredTestMethod())) {
                 return getTestRunner(extensionContext).getTestCase();
-            } else if (isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-                return CitrusBaseExtension.getXmlTestCase(extensionContext);
+            } else if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+                return XmlTestHelper.getXmlTestCase(extensionContext);
             } else if (isDesignerClass(extensionContext.getRequiredTestClass())) {
                 return getTestDesigner(extensionContext).getTestCase();
             } else if (Stream.of(extensionContext.getRequiredTestClass().getDeclaredFields()).anyMatch(field -> TestRunner.class.isAssignableFrom(field.getType()))) {
@@ -256,14 +269,5 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
      */
     private static boolean isRunnerClass(Class<?> type) {
         return Stream.of(type.getDeclaredFields()).anyMatch(field -> TestRunner.class.isAssignableFrom(field.getType()));
-    }
-
-    /**
-     * Checks for {@link CitrusXmlTest} annotations or {@link TestFactory} annotations on test method.
-     * @param method
-     * @return
-     */
-    private static boolean isXmlTestMethod(Method method) {
-        return method.isAnnotationPresent(CitrusXmlTest.class) || method.isAnnotationPresent(TestFactory.class);
     }
 }

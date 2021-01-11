@@ -123,14 +123,14 @@ You can use the Citrus JUnit5 extension on your unit test as follows:
 package com.consol.citrus.samples;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.junit.jupiter.CitrusBaseExtension;
+import com.consol.citrus.junit.jupiter.spring.CitrusSpringSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusBaseExtension.class)
+@ExtendWith(CitrusSpringSupport.class)
 public class SampleXmlIT {
     @Test
     @CitrusXmlTest(name = "SampleXmlIT")
@@ -138,7 +138,7 @@ public class SampleXmlIT {
 }
 ----
 
-The class above is using the JUnit5 `@Test` annotation as a normal unit test would do. In addition to that we extend with the `CitrusBaseExtension`. This enables us to use the
+The class above is using the JUnit5 `@Test` annotation as a normal unit test would do. In addition to that we extend with the `CitrusSpringSupport`. This enables us to use the
 `@CitrusXmlTest` annotation on the test method which automatically loads the XML test case file for execution.
 
 In case you want to use the Citrus Java DSL for writing the test logic you can use the following setup:

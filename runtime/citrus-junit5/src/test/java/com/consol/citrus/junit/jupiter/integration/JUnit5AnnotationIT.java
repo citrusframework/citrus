@@ -19,7 +19,7 @@ package com.consol.citrus.junit.jupiter.integration;
 import java.util.stream.Stream;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.junit.jupiter.CitrusBaseExtension;
+import com.consol.citrus.junit.jupiter.spring.CitrusSpringSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusBaseExtension.class)
+@ExtendWith(CitrusSpringSupport.class)
 public class JUnit5AnnotationIT {
 
     @Test
@@ -46,14 +46,14 @@ public class JUnit5AnnotationIT {
     @TestFactory
     public Stream<DynamicTest> JUnit5Annotation_2_IT() {
         return Stream.of(
-                CitrusBaseExtension.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "EchoActionIT"),
-                CitrusBaseExtension.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "FailActionIT"),
-                CitrusBaseExtension.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "CreateVariablesIT")
+                CitrusSpringSupport.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "EchoActionIT"),
+                CitrusSpringSupport.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "FailActionIT"),
+                CitrusSpringSupport.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "CreateVariablesIT")
         );
     }
 
     @TestFactory
     public Stream<DynamicTest> JUnit5Annotation_3_IT() {
-        return CitrusBaseExtension.packageScan("com.consol.citrus.junit.jupiter.simple");
+        return CitrusSpringSupport.packageScan("com.consol.citrus.junit.jupiter.simple");
     }
 }
