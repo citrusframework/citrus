@@ -55,6 +55,12 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
     }
 
     @Override
+    public boolean isResolvable(Class<?> type) {
+        return objectStore.entrySet().stream()
+                .anyMatch(entry -> type.isInstance(entry.getValue()));
+    }
+
+    @Override
     public void bind(String name, Object value) {
         this.objectStore.put(name, value);
     }

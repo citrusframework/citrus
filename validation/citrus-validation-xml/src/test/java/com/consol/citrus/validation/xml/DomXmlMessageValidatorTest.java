@@ -110,7 +110,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository.getSchemas().add(schema);
 
-        validator.addSchemaRepository(schemaRepository);
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
 
         validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
     }
@@ -139,7 +139,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         schemaRepository.getLocations().add("schemas/soap-1.1.xsd");
         schemaRepository.initialize();
 
-        validator.addSchemaRepository(schemaRepository);
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
 
         validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
     }
@@ -168,7 +168,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         schemaRepository.getLocations().add("schemas/soap-1.1.xsd");
         schemaRepository.initialize();
 
-        validator.addSchemaRepository(schemaRepository);
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
 
         validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
     }
@@ -197,7 +197,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         schemaRepository.getLocations().add("schemas/soap-1.1.xsd");
         schemaRepository.initialize();
 
-        validator.addSchemaRepository(schemaRepository);
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
 
         validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
     }
@@ -226,7 +226,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         schemaRepository.getLocations().add("schemas/soap-1.1.xsd");
         schemaRepository.initialize();
 
-        validator.addSchemaRepository(schemaRepository);
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
 
         validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
     }
@@ -302,7 +302,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository.getSchemas().add(schema);
 
-        validator.addSchemaRepository(schemaRepository);
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
 
         XsdSchemaRepository schemaRepository2 = new XsdSchemaRepository();
         schemaRepository2.setName("schemaRepository2");
@@ -312,7 +312,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository2.getSchemas().add(schema2);
 
-        validator.addSchemaRepository(schemaRepository2);
+        context.getReferenceResolver().bind("schemaRepository2", schemaRepository2);
 
         validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
 
@@ -343,7 +343,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository.getSchemas().add(schema);
 
-        validator.addSchemaRepository(schemaRepository);
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
 
         XsdSchemaRepository schemaRepository2 = new XsdSchemaRepository();
         schemaRepository2.setName("schemaRepository2");
@@ -353,7 +353,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository2.getSchemas().add(schema2);
 
-        validator.addSchemaRepository(schemaRepository2);
+        context.getReferenceResolver().bind("schemaRepository2", schemaRepository2);
 
         try {
             validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
@@ -385,10 +385,14 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         schemaRepository.getSchemas().add(schema);
         schemaRepository.getSchemas().add(schema2);
 
-        validator.addSchemaRepository(schemaRepository);
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaRepository("schemaRepository")
+                .build();
 
         try {
-            validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
+            validator.validateXMLSchema(message, context, validationContext);
             Assert.fail("Missing exception due to no matching schema repository error");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to find proper XML schema definition"), e.getMessage());
@@ -425,7 +429,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository.getSchemas().add(schema);
 
-        validator.addSchemaRepository(schemaRepository);
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
 
         validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
     }
@@ -766,7 +770,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
@@ -786,7 +792,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
@@ -806,7 +814,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
@@ -826,7 +836,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
@@ -846,7 +858,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
@@ -902,7 +916,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
@@ -922,7 +938,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
@@ -942,7 +960,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
@@ -962,7 +982,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);

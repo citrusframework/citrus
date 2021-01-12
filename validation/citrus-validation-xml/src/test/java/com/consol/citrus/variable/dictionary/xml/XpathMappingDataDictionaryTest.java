@@ -54,7 +54,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslate() throws Exception {
         Message message = new DefaultMessage(payload);
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("//TestMessage/Text", "Hello!");
         mappings.put("//@name", "bar");
         mappings.put("//something/else", "not_found");
@@ -73,7 +73,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateMultipleNodes() throws Exception {
         Message message = new DefaultMessage(payload);
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("//*[string-length(normalize-space(text())) > 0]", "Hello!");
         mappings.put("//@*", "bar");
 
@@ -91,7 +91,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateWithNamespaceLookup() throws Exception {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\"><ns1:Text>Hello World!</ns1:Text><ns1:OtherText name=\"foo\">No changes</ns1:OtherText></ns1:TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("//ns1:TestMessage/ns1:Text", "Hello!");
         mappings.put("//@name", "bar");
 
@@ -109,7 +109,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateWithNamespaceBuilder() throws Exception {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\"><ns1:Text>Hello World!</ns1:Text><ns1:OtherText name=\"foo\">No changes</ns1:OtherText></ns1:TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("//foo:TestMessage/foo:Text", "Hello!");
         mappings.put("//@name", "bar");
 
@@ -117,7 +117,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
         namespaces.put("foo", "http://www.foo.bar");
         namespaceContextBuilder.setNamespaceMappings(namespaces);
         dictionary.setNamespaceContextBuilder(namespaceContextBuilder);
@@ -133,7 +133,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateWithVariables() throws Exception {
         Message message = new DefaultMessage(payload);
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("//TestMessage/Text", "${hello}");
         mappings.put("//@name", "bar");
 
@@ -168,7 +168,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateNoResult() {
         Message message = new DefaultMessage(payload);
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("//TestMessage/Unknown", "Hello!");
         mappings.put("//@name", "bar");
 
@@ -187,7 +187,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage(htmlPayload);
         message.setType(MessageType.XHTML.name());
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("/xh:html/xh:head/xh:title", "Hello");
         mappings.put("//xh:h1", "Hello Citrus!");
 

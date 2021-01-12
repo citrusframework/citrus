@@ -100,6 +100,11 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         return applicationContext.containsBean(name) || fallback.isResolvable(name);
     }
 
+    @Override
+    public boolean isResolvable(Class<?> type) {
+        return applicationContext.getBeanNamesForType(type).length > 0 || fallback.isResolvable(type);
+    }
+
     /**
      * Specifies the fallback.
      * @param fallback

@@ -16,6 +16,10 @@
 
 package com.consol.citrus.validation.xml;
 
+import javax.xml.namespace.NamespaceContext;
+import java.util.Map;
+
+import com.consol.citrus.XmlValidationHelper;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -28,14 +32,10 @@ import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
-import javax.xml.namespace.NamespaceContext;
-import java.util.Map;
 
 /**
  * Message validator evaluates set of XPath expressions on message payload and checks that values are as expected.
@@ -45,24 +45,24 @@ import java.util.Map;
 public class XpathMessageValidator extends AbstractMessageValidator<XpathMessageValidationContext> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XpathMessageValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XpathMessageValidator.class);
 
-    @Autowired(required = false)
-    private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
+    private NamespaceContextBuilder namespaceContextBuilder;
 
     @Override
-    public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, XpathMessageValidationContext validationContext) throws ValidationException {
+    public void validateMessage(Message receivedMessage, Message controlMessage,
+                                TestContext context, XpathMessageValidationContext validationContext) throws ValidationException {
         if (CollectionUtils.isEmpty(validationContext.getXpathExpressions())) { return; }
 
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
             throw new ValidationException("Unable to validate message elements - receive message payload was empty");
         }
 
-        log.debug("Start XPath element validation ...");
+        LOG.debug("Start XPath element validation ...");
 
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
-        NamespaceContext namespaceContext = namespaceContextBuilder.buildContext(
-                receivedMessage, validationContext.getNamespaces());
+        NamespaceContext namespaceContext = getNamespaceContextBuilder(context)
+                .buildContext(receivedMessage, validationContext.getNamespaces());
 
         for (Map.Entry<String, Object> entry : validationContext.getXpathExpressions().entrySet()) {
             String xPathExpression = entry.getKey();
@@ -111,12 +111,12 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
             //do the validation of actual and expected value for element
             ValidationUtils.validateValues(xPathResult, expectedValue, xPathExpression, context);
 
-            if (log.isDebugEnabled()) {
-                log.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");
             }
         }
 
-        log.info("XPath element validation successful: All elements OK");
+        LOG.info("XPath element validation successful: All elements OK");
     }
 
     @Override
@@ -140,5 +140,26 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
         } else {
             return node.getNodeValue();
         }
+    }
+
+    /**
+     * Get explicit namespace context builder set on this class or obtain instance from reference resolver.
+     * @param context
+     * @return
+     */
+    private NamespaceContextBuilder getNamespaceContextBuilder(TestContext context) {
+        if (namespaceContextBuilder != null) {
+            return namespaceContextBuilder;
+        }
+
+        return XmlValidationHelper.getNamespaceContextBuilder(context);
+    }
+
+    /**
+     * Sets the namespace context builder.
+     * @param namespaceContextBuilder
+     */
+    public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
+        this.namespaceContextBuilder = namespaceContextBuilder;
     }
 }

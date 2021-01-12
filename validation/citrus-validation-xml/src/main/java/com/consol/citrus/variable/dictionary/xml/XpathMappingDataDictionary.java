@@ -20,6 +20,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPathConstants;
 import java.util.Map;
 
+import com.consol.citrus.XmlValidationHelper;
 import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.XMLUtils;
@@ -28,7 +29,6 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.xml.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -43,22 +43,23 @@ import org.w3c.dom.NodeList;
  */
 public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingPhase {
 
-    @Autowired(required = false)
-    private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
-
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(XpathMappingDataDictionary.class);
+
+    private NamespaceContextBuilder namespaceContextBuilder;
 
     @Override
     public <T> T translate(Node node, T value, TestContext context) {
         for (Map.Entry<String, String> expressionEntry : mappings.entrySet()) {
             String expression = expressionEntry.getKey();
 
-            NodeList findings = (NodeList) XPathUtils.evaluateExpression(node.getOwnerDocument(), expression, buildNamespaceContext(node), XPathConstants.NODESET);
+            NodeList findings = (NodeList) XPathUtils.evaluateExpression(node.getOwnerDocument(), expression,
+                    buildNamespaceContext(node, context), XPathConstants.NODESET);
 
             if (findings != null && containsNode(findings, node)) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(String.format("Data dictionary setting element '%s' value: %s", XMLUtils.getNodesPathName(node), expressionEntry.getValue()));
+                    LOG.debug(String.format("Data dictionary setting element '%s' value: %s",
+                            XMLUtils.getNodesPathName(node), expressionEntry.getValue()));
                 }
                 return convertIfNecessary(expressionEntry.getValue(), value, context);
             }
@@ -87,14 +88,15 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
      * Builds namespace context with dynamic lookup on received node document and global namespace mappings from
      * namespace context builder.
      * @param node the element node from message
+     * @param context the current test context
      * @return
      */
-    private NamespaceContext buildNamespaceContext(Node node) {
+    private NamespaceContext buildNamespaceContext(Node node, TestContext context) {
         SimpleNamespaceContext simpleNamespaceContext = new SimpleNamespaceContext();
         Map<String, String> namespaces = XMLUtils.lookupNamespaces(node.getOwnerDocument());
 
         // add default namespace mappings
-        namespaces.putAll(namespaceContextBuilder.getNamespaceMappings());
+        namespaces.putAll(getNamespaceContextBuilder(context).getNamespaceMappings());
 
         simpleNamespaceContext.setBindings(namespaces);
 
@@ -113,11 +115,16 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
     }
 
     /**
-     * Gets the namespace context builder.
+     * Get explicit namespace context builder set on this class or obtain instance from reference resolver.
+     * @param context
      * @return
      */
-    public NamespaceContextBuilder getNamespaceContextBuilder() {
-        return namespaceContextBuilder;
+    private NamespaceContextBuilder getNamespaceContextBuilder(TestContext context) {
+        if (namespaceContextBuilder != null) {
+            return namespaceContextBuilder;
+        }
+
+        return XmlValidationHelper.getNamespaceContextBuilder(context);
     }
 
     /**
