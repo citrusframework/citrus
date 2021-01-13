@@ -26,11 +26,8 @@ import java.util.concurrent.TimeoutException;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusInstanceManager;
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.junit.JUnit4TestEngine;
-import com.consol.citrus.testng.TestNGEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ClassUtils;
 
 /**
  * Main command line application callable via static run methods and command line main method invocation.
@@ -127,12 +124,7 @@ public class CitrusApp {
 
         LOG.info(String.format("Running Citrus %s", Citrus.getVersion()));
         setDefaultProperties(configuration);
-
-        if (ClassUtils.isPresent("org.testng.annotations.Test", getClass().getClassLoader())) {
-            new TestNGEngine(configuration).run();
-        } else if (ClassUtils.isPresent("org.junit.Test", getClass().getClassLoader())) {
-            new JUnit4TestEngine(configuration).run();
-        }
+        TestEngine.lookup(configuration).run();
     }
 
     /**

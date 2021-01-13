@@ -26,7 +26,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        strict = true,
         glue = { "com.consol.citrus.cucumber.integration.birthday" },
         plugin = { "pretty", "com.consol.citrus.cucumber.CitrusReporter" } )
 public class BirthdayXmlFeatureIT {

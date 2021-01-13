@@ -16,11 +16,44 @@
 
 package com.consol.citrus.main;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
 public interface TestEngine {
 
+    /** Logger */
+    Logger LOG = LoggerFactory.getLogger(TestEngine.class);
+
+    /** Endpoint parser resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/engine";
+
+    /** Default Citrus engine from classpath resource properties */
+    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    /**
+     * Runs all tests with the given engine.
+     */
     void run();
+
+    /**
+     * Resolves engine from resource path lookup. Scans classpath for engine meta information
+     * and instantiates engine with respective name given in test run configuration.
+     * @param configuration the test run configuration used to initialize the engine.
+     * @return
+     */
+    static TestEngine lookup(TestRunConfiguration configuration) {
+        try {
+            TestEngine testEngine = TYPE_RESOLVER.resolve(configuration.getEngine(), configuration);
+            LOG.debug(String.format("Using Citrus engine '%s' as %s", configuration.getEngine(), testEngine));
+            return testEngine;
+        } catch (CitrusRuntimeException e) {
+            throw new CitrusRuntimeException(String.format("Failed to resolve Citrus engine from resource '%s/%s'", RESOURCE_PATH, configuration.getEngine()), e);
+        }
+    }
 }

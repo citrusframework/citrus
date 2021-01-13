@@ -65,11 +65,11 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     @Override
-    public <T> T resolve(String resourcePath, String property) {
+    public <T> T resolve(String resourcePath, String property, Object ... initargs) {
         String type = resolveProperty(resourcePath, property);
 
         try {
-            return (T) Class.forName(type).getDeclaredConstructor().newInstance();
+            return (T) Class.forName(type).getDeclaredConstructor(getParameterTypes(initargs)).newInstance(initargs);
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
                 NoSuchMethodException | InvocationTargetException e) {
 
@@ -160,5 +160,14 @@ public class ResourcePathTypeResolver implements TypeResolver {
         } else {
             return resourcePath;
         }
+    }
+
+    /**
+     * Get types of init arguments.
+     * @param initargs
+     * @return
+     */
+    private Class<?>[] getParameterTypes(Object... initargs) {
+        return Arrays.stream(initargs).map(Object::getClass).toArray(Class[]::new);
     }
 }

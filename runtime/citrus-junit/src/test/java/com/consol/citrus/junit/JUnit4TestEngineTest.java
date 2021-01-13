@@ -16,15 +16,16 @@
 
 package com.consol.citrus.junit;
 
+import java.util.Collections;
+
 import com.consol.citrus.TestClass;
 import com.consol.citrus.junit.scan.SampleJUnit4Test;
+import com.consol.citrus.main.TestEngine;
 import com.consol.citrus.main.TestRunConfiguration;
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -45,7 +46,7 @@ public class JUnit4TestEngineTest {
     public void testRunClass() {
         TestRunConfiguration configuration = new TestRunConfiguration();
         configuration.setTestClasses(Collections.singletonList(new TestClass(SampleJUnit4Test.class.getName())));
-        
+
         runTestEngine(configuration, 0L, 1L);
     }
 
@@ -56,6 +57,13 @@ public class JUnit4TestEngineTest {
         configuration.setPackages(Collections.singletonList(SampleJUnit4Test.class.getPackage().getName()));
 
         runTestEngine(configuration, 0L, 0L);
+    }
+
+    @Test
+    public void shouldResolveJUnit4Engine() {
+        TestRunConfiguration configuration = new TestRunConfiguration();
+        configuration.setEngine("junit4");
+        Assert.assertEquals(TestEngine.lookup(configuration).getClass(), JUnit4TestEngine.class);
     }
 
     private void runTestEngine(TestRunConfiguration configuration, long failure, long passed) {

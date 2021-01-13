@@ -16,13 +16,16 @@
 
 package com.consol.citrus.testng;
 
+import java.util.Collections;
+
 import com.consol.citrus.TestClass;
+import com.consol.citrus.main.TestEngine;
 import com.consol.citrus.main.TestRunConfiguration;
 import com.consol.citrus.testng.scan.SampleTestNGTest;
-import org.testng.*;
+import org.testng.Assert;
+import org.testng.ISuite;
+import org.testng.ISuiteListener;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -54,6 +57,13 @@ public class TestNGEngineTest {
         configuration.setPackages(Collections.singletonList(SampleTestNGTest.class.getPackage().getName()));
 
         runTestEngine(configuration, 0L, 0L);
+    }
+
+    @Test
+    public void shouldResolveTestNGEngine() {
+        TestRunConfiguration configuration = new TestRunConfiguration();
+        configuration.setEngine("testng");
+        Assert.assertEquals(TestEngine.lookup(configuration).getClass(), TestNGEngine.class);
     }
 
     private void runTestEngine(TestRunConfiguration configuration, long failure, long passed) {

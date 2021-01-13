@@ -25,10 +25,11 @@ public interface TypeResolver {
     /**
      * Load default type information from given resource path property file and create new instance of given type.
      * @param resourcePath
+     * @param initargs
      * @return
      */
-    default <T> T resolve(String resourcePath) {
-        return resolve(resourcePath, DEFAULT_TYPE_PROPERTY);
+    default <T> T resolve(String resourcePath, Object ... initargs) {
+        return resolve(resourcePath, DEFAULT_TYPE_PROPERTY, initargs);
     }
 
     /**
@@ -36,9 +37,10 @@ public interface TypeResolver {
      * is read by the given property in the resource file.
      * @param resourcePath
      * @param property
+     * @param initargs
      * @return
      */
-    <T> T resolve(String resourcePath, String property);
+    <T> T resolve(String resourcePath, String property, Object ... initargs);
 
     /**
      * Load all resources and create new instance of given type. The type information is read by

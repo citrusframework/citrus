@@ -120,11 +120,22 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("e", "exit", "Force system exit when finished") {
+        options.add(new CliOption<T>("", "exit", "Force system exit when finished") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
-                    configuration.setSystemExit(Boolean.valueOf(value));
+                    configuration.setSystemExit(Boolean.parseBoolean(value));
+                } else {
+                    throw new CitrusRuntimeException("Missing parameter value for -e/--exit option");
+                }
+            }
+        });
+
+        options.add(new CliOption<T>("e", "engine", "Set test engine name used to run the tests") {
+            @Override
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
+                if (StringUtils.hasText(value)) {
+                    configuration.setEngine(value);
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -e/--exit option");
                 }
@@ -236,7 +247,11 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
         }
 
         public String getInformation() {
-            return "  " + getShortName() + " or " + getFullName() + " = " + getDescription();
+            if (getShortName().equals("-")) {
+                return "  " + getFullName() + " = " + getDescription();
+            } else {
+                return "  " + getShortName() + " or " + getFullName() + " = " + getDescription();
+            }
         }
 
         protected abstract void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs);
