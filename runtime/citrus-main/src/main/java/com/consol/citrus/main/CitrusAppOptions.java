@@ -16,84 +16,88 @@
 
 package com.consol.citrus.main;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.consol.citrus.TestClass;
-import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
-
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class CitrusAppOptions {
+public class CitrusAppOptions<T extends CitrusAppConfiguration> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusAppOptions.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CitrusAppOptions.class);
 
-    protected final List<CliOption<? extends CitrusAppConfiguration>> options = new ArrayList<>();
+    protected final List<CliOption<T>> options = new ArrayList<>();
 
     protected CitrusAppOptions() {
-        options.add(new CliOption<CitrusAppConfiguration>("h", "help", "Displays cli option usage") {
+        options.add(new CliOption<T>("h", "help", "Displays cli option usage") {
             @Override
-            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 StringBuilder builder = new StringBuilder();
                 builder.append(System.lineSeparator()).append("Citrus application option usage:").append(System.lineSeparator());
-                for (CliOption option : options) {
+                for (CliOption<?> option : options) {
                     builder.append(option.getInformation()).append(System.lineSeparator());
                 }
 
-                log.info(builder.toString());
+                LOG.info(builder.toString());
                 configuration.setTimeToLive(1000);
                 configuration.setSkipTests(true);
             }
         });
 
-        options.add(new CliOption<CitrusAppConfiguration>("d", "duration", "Maximum time in milliseconds the server should be up and running - server will terminate automatically when time exceeds") {
+        options.add(new CliOption<T>("d", "duration", "Maximum time in milliseconds the server should be up and running - server will terminate automatically when time exceeds") {
             @Override
-            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (value != null && value.length() > 0) {
-                    configuration.setTimeToLive(Long.valueOf(value));
+                    configuration.setTimeToLive(Long.parseLong(value));
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -d/--duration option");
                 }
             }
         });
 
-        options.add(new CliOption<CitrusAppConfiguration>("c", "config", "Custom Spring configuration class") {
+        options.add(new CliOption<T>("c", "config", "Custom Spring configuration class") {
             @Override
-            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
                     try {
-                        configuration.setConfigClass((Class<? extends CitrusSpringConfig>) Class.forName(value));
+                        Class.forName(value);
                     } catch (ClassNotFoundException e) {
                         throw new CitrusRuntimeException("Unable to access config class type: " + value, e);
                     }
+                    configuration.setConfigClass(value);
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -c/--config option");
                 }
             }
         });
 
-        options.add(new CliOption<CitrusAppConfiguration>("s", "skipTests", "Skip test execution") {
+        options.add(new CliOption<T>("s", "skipTests", "Skip test execution") {
             @Override
-            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
-                    configuration.setSkipTests(Boolean.valueOf(value));
+                    configuration.setSkipTests(Boolean.parseBoolean(value));
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -s/--skipTests option");
                 }
             }
         });
 
-        options.add(new CliOption<CitrusAppConfiguration>("p", "package", "Test package to execute") {
+        options.add(new CliOption<T>("p", "package", "Test package to execute") {
             @Override
-            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
                     configuration.getPackages().add(value);
                 } else {
@@ -102,9 +106,9 @@ public class CitrusAppOptions {
             }
         });
 
-        options.add(new CliOption<CitrusAppConfiguration>("D", "properties", "Default system properties to set") {
+        options.add(new CliOption<T>("D", "properties", "Default system properties to set") {
             @Override
-            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
                     configuration.getDefaultProperties().putAll(StringUtils.commaDelimitedListToSet(value)
                                                                             .stream()
@@ -116,9 +120,9 @@ public class CitrusAppOptions {
             }
         });
 
-        options.add(new CliOption<CitrusAppConfiguration>("e", "exit", "Force system exit when finished") {
+        options.add(new CliOption<T>("e", "exit", "Force system exit when finished") {
             @Override
-            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
                     configuration.setSystemExit(Boolean.valueOf(value));
                 } else {
@@ -127,9 +131,9 @@ public class CitrusAppOptions {
             }
         });
 
-        options.add(new CliOption<CitrusAppConfiguration>("t", "test", "Test class/method to execute") {
+        options.add(new CliOption<T>("t", "test", "Test class/method to execute") {
             @Override
-            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
 
                     String className = value;
@@ -151,9 +155,9 @@ public class CitrusAppOptions {
             }
         });
 
-        options.add(new CliOption<CitrusAppConfiguration>("j", "jar", "External test jar to load tests from") {
+        options.add(new CliOption<T>("j", "jar", "External test jar to load tests from") {
             @Override
-            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+            protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
                     configuration.setTestJar(new File(value));
                 } else {
@@ -179,11 +183,11 @@ public class CitrusAppOptions {
     public static <T extends CitrusAppConfiguration> T apply(T configuration, String[] arguments) {
         LinkedList<String> args = new LinkedList<>(Arrays.asList(arguments));
 
-        CitrusAppOptions options = new CitrusAppOptions();
+        CitrusAppOptions<T> options = new CitrusAppOptions<>();
         while (!args.isEmpty()) {
             String arg = args.removeFirst();
 
-            for (CliOption option : options.options) {
+            for (CliOption<T> option : options.options) {
                 if (option.processOption(configuration, arg, args)) {
                     break;
                 }
@@ -196,10 +200,10 @@ public class CitrusAppOptions {
     /**
      * Command line option represented with either short of full name.
      */
-    public abstract class CliOption<T extends CitrusAppConfiguration> {
-        private String shortName;
-        private String fullName;
-        private String description;
+    public abstract static class CliOption<T extends CitrusAppConfiguration> {
+        private final String shortName;
+        private final String fullName;
+        private final String description;
 
         protected CliOption(String shortName, String fullName, String description) {
             this.shortName = "-" + shortName;

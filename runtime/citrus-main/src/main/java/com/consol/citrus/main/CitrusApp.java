@@ -25,7 +25,7 @@ import java.util.concurrent.TimeoutException;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusInstanceManager;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.junit.JUnit4TestEngine;
 import com.consol.citrus.testng.TestNGEngine;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ import org.springframework.util.ClassUtils;
 public class CitrusApp {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusApp.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CitrusApp.class);
 
     /** Endpoint configuration */
     private final CitrusAppConfiguration configuration;
@@ -86,20 +86,15 @@ public class CitrusApp {
                 try {
                     new CompletableFuture<Void>().get(citrusApp.configuration.getTimeToLive(), TimeUnit.MILLISECONDS);
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    log.info(String.format("Shutdown Citrus application after %s ms", citrusApp.configuration.getTimeToLive()));
+                    LOG.info(String.format("Shutdown Citrus application after %s ms", citrusApp.configuration.getTimeToLive()));
                     citrusApp.stop();
                 }
             });
         }
 
         if (citrusApp.configuration.isSkipTests()) {
-            if (citrusApp.configuration.getConfigClass() != null) {
-                Citrus.newInstance(CitrusSpringContext.create(citrusApp.configuration.getConfigClass()));
-            } else {
-                Citrus.newInstance();
-            }
-
             setDefaultProperties(citrusApp.configuration);
+            Citrus.newInstance();
         } else {
             try {
                 citrusApp.run();
@@ -126,11 +121,11 @@ public class CitrusApp {
      */
     public void run() {
         if (isCompleted()) {
-            log.info("Not executing tests as application state is completed!");
+            LOG.info("Not executing tests as application state is completed!");
             return;
         }
 
-        log.info(String.format("Running Citrus %s", Citrus.getVersion()));
+        LOG.info(String.format("Running Citrus %s", Citrus.getVersion()));
         setDefaultProperties(configuration);
 
         if (ClassUtils.isPresent("org.testng.annotations.Test", getClass().getClassLoader())) {
@@ -155,21 +150,21 @@ public class CitrusApp {
         try {
             return completed.get();
         } catch (InterruptedException | ExecutionException e) {
-            log.warn("Failed to wait for application completion", e);
+            LOG.warn("Failed to wait for application completion", e);
         }
 
         return false;
     }
 
     /**
-     * Stop application by setting completed state and stop application context.
+     * Stop Citrus application and set completed state.
      */
     private void stop() {
         complete();
 
         Optional<Citrus> citrus = CitrusInstanceManager.get();
         if (citrus.isPresent()) {
-            log.info("Closing Citrus and its application context");
+            LOG.info("Closing Citrus and its context");
             citrus.get().close();
         }
     }
@@ -178,10 +173,16 @@ public class CitrusApp {
      * Reads default properties in configuration and sets them as system properties.
      * @param configuration
      */
-    private static void setDefaultProperties(CitrusAppConfiguration configuration) {
+    private static void setDefaultProperties(TestRunConfiguration configuration) {
         for (Map.Entry<String, String> entry : configuration.getDefaultProperties().entrySet()) {
-            log.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
+            LOG.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
             System.setProperty(entry.getKey(), Optional.ofNullable(entry.getValue()).orElse(""));
+        }
+
+        if (configuration instanceof CitrusAppConfiguration &&
+                ((CitrusAppConfiguration)configuration).getConfigClass() != null) {
+            System.setProperty(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY,
+                                ((CitrusAppConfiguration)configuration).getConfigClass());
         }
     }
 

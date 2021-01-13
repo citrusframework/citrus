@@ -16,8 +16,6 @@
 
 package com.consol.citrus.main;
 
-import com.consol.citrus.config.CitrusSpringConfig;
-
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
@@ -27,8 +25,8 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
     /** Server time to live in milliseconds */
     private long timeToLive = 0;
 
-    /** Optional custom configuration class for Spring application context */
-    private Class<? extends CitrusSpringConfig> configClass;
+    /** Optional custom configuration class name for Spring application context */
+    private String configClass;
 
     /** Skip test execution at runtime */
     private boolean skipTests;
@@ -59,7 +57,7 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
      *
      * @return
      */
-    public Class<? extends CitrusSpringConfig> getConfigClass() {
+    public String getConfigClass() {
         return configClass;
     }
 
@@ -68,7 +66,7 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
      *
      * @param configClass
      */
-    public void setConfigClass(Class<? extends CitrusSpringConfig> configClass) {
+    public void setConfigClass(String configClass) {
         this.configClass = configClass;
     }
 

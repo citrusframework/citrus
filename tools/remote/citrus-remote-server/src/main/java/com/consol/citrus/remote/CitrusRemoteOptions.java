@@ -16,17 +16,17 @@
 
 package com.consol.citrus.remote;
 
+import java.util.LinkedList;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.main.CitrusAppOptions;
 import org.springframework.util.StringUtils;
-
-import java.util.LinkedList;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class CitrusRemoteOptions extends CitrusAppOptions {
+public class CitrusRemoteOptions extends CitrusAppOptions<CitrusRemoteConfiguration> {
 
     protected CitrusRemoteOptions() {
         super();
@@ -35,7 +35,7 @@ public class CitrusRemoteOptions extends CitrusAppOptions {
             @Override
             protected void doProcess(CitrusRemoteConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
-                    configuration.setPort(Integer.valueOf(value));
+                    configuration.setPort(Integer.parseInt(value));
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -P/--port option");
                 }

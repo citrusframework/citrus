@@ -164,8 +164,9 @@ public final class Citrus implements TestListenerAware, TestSuiteListenerAware, 
     }
 
     /**
-     * Closing Citrus and its application context.
+     * Closing Citrus and its context.
      */
     public void close() {
+        citrusContext.close();
     }
 }

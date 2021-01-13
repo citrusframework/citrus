@@ -48,9 +48,9 @@ import org.testng.xml.XmlTest;
 public class TestNGEngine extends AbstractTestEngine {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TestNGEngine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestNGEngine.class);
 
-    private List<ITestNGListener> listeners = new ArrayList<>();
+    private final List<ITestNGListener> listeners = new ArrayList<>();
 
     /**
      * Default constructor using run configuration.
@@ -72,7 +72,9 @@ public class TestNGEngine extends AbstractTestEngine {
 
         if (!CollectionUtils.isEmpty(getConfiguration().getTestClasses())) {
             for (TestClass testClass : getConfiguration().getTestClasses()) {
-                log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName())));
+                LOG.info(String.format("Running test %s",
+                        Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
+                                .orElse(testClass.getName())));
 
                 XmlTest test = new XmlTest(suite);
                 test.setClasses(new ArrayList<>());
@@ -80,7 +82,8 @@ public class TestNGEngine extends AbstractTestEngine {
                 try {
                     Class<?> clazz;
                     if (getConfiguration().getTestJar() != null) {
-                        clazz = Class.forName(testClass.getName(), false, new URLClassLoader(new URL[]{getConfiguration().getTestJar().toURI().toURL()}, getClass().getClassLoader()));
+                        clazz = Class.forName(testClass.getName(), false,
+                                new URLClassLoader(new URL[]{getConfiguration().getTestJar().toURI().toURL()}, getClass().getClassLoader()));
                     } else {
                         clazz = Class.forName(testClass.getName());
                     }
@@ -92,19 +95,19 @@ public class TestNGEngine extends AbstractTestEngine {
 
                     test.getClasses().add(xmlClass);
                 } catch (ClassNotFoundException | MalformedURLException e) {
-                    log.warn("Unable to read test class: " + testClass.getName());
+                    LOG.warn("Unable to read test class: " + testClass.getName());
                 }
             }
         } else {
             List<String> packagesToRun = getConfiguration().getPackages();
             if (CollectionUtils.isEmpty(packagesToRun)) {
                 packagesToRun = Collections.singletonList("");
-                log.info("Running all tests in project");
+                LOG.info("Running all tests in project");
             }
 
             for (String packageName : packagesToRun) {
                 if (StringUtils.hasText(packageName)) {
-                    log.info(String.format("Running tests in package %s", packageName));
+                    LOG.info(String.format("Running tests in package %s", packageName));
                 }
 
                 XmlTest test = new XmlTest(suite);
@@ -112,24 +115,28 @@ public class TestNGEngine extends AbstractTestEngine {
 
                 List<TestClass> classesToRun;
                 if (getConfiguration().getTestJar() != null) {
-                    classesToRun = new JarFileTestScanner(getConfiguration().getTestJar(), getConfiguration().getIncludes()).findTestsInPackage(packageName);
+                    classesToRun = new JarFileTestScanner(getConfiguration().getTestJar(),
+                            getConfiguration().getIncludes()).findTestsInPackage(packageName);
                 } else {
                     classesToRun = new ClassPathTestScanner(Test.class, getConfiguration().getIncludes()).findTestsInPackage(packageName);
                 }
 
                 classesToRun.stream()
-                        .peek(testClass -> log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName()))))
+                        .peek(testClass -> LOG.info(String.format("Running test %s",
+                                Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
+                                        .orElse(testClass.getName()))))
                         .map(testClass -> {
                             try {
                                 Class<?> clazz;
                                 if (getConfiguration().getTestJar() != null) {
-                                    clazz = Class.forName(testClass.getName(), false, new URLClassLoader(new URL[]{getConfiguration().getTestJar().toURI().toURL()}, getClass().getClassLoader()));
+                                    clazz = Class.forName(testClass.getName(), false,
+                                            new URLClassLoader(new URL[]{getConfiguration().getTestJar().toURI().toURL()}, getClass().getClassLoader()));
                                 } else {
                                     clazz = Class.forName(testClass.getName());
                                 }
                                 return clazz;
                             } catch (ClassNotFoundException | MalformedURLException e) {
-                                log.warn("Unable to read test class: " + testClass.getName());
+                                LOG.warn("Unable to read test class: " + testClass.getName());
                                 return Void.class;
                             }
                         })
@@ -137,7 +144,7 @@ public class TestNGEngine extends AbstractTestEngine {
                         .map(XmlClass::new)
                         .forEach(test.getClasses()::add);
 
-                log.info(String.format("Found %s test classes to execute", test.getClasses().size()));
+                LOG.info(String.format("Found %s test classes to execute", test.getClasses().size()));
             }
         }
 
