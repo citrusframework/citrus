@@ -47,13 +47,26 @@ public interface HamcrestMatcherProvider {
      */
     static Optional<HamcrestMatcherProvider> lookup(String matcherName) {
         try {
-            HamcrestMatcherProvider matcherProvider = TYPE_RESOLVER.resolve(matcherName);
-            return Optional.of(matcherProvider);
+            return Optional.of(TYPE_RESOLVER.resolve(matcherName));
         } catch (CitrusRuntimeException e) {
             LOG.warn(String.format("Failed to resolve Hamcrest matcher provider from resource '%s/%s'", RESOURCE_PATH, matcherName));
         }
 
         return Optional.empty();
+    }
+
+    /**
+     * Checks if the matcher provider with given name is resolvable with resource path lookup.
+     * @param matcherName
+     * @return
+     */
+    static boolean canResolve(String matcherName) {
+        try {
+            TYPE_RESOLVER.resolve(matcherName);
+            return true;
+        } catch (CitrusRuntimeException e) {
+            return false;
+        }
     }
 
     /**

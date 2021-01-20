@@ -53,23 +53,23 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @SuppressWarnings("unchecked")
 public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpressionParser {
 
-    private List<String> matchers = Arrays.asList( "equalTo", "equalToIgnoringCase", "equalToIgnoringWhiteSpace", "is", "not", "containsString", "startsWith", "endsWith" );
+    private final List<String> matchers = Arrays.asList( "equalTo", "equalToIgnoringCase", "equalToIgnoringWhiteSpace", "is", "not", "containsString", "startsWith", "endsWith" );
 
-    private List<String> collectionMatchers = Arrays.asList("hasSize", "hasItem", "hasItems", "contains", "containsInAnyOrder");
+    private final List<String> collectionMatchers = Arrays.asList("hasSize", "hasItem", "hasItems", "contains", "containsInAnyOrder");
 
-    private List<String> mapMatchers = Arrays.asList("hasEntry", "hasKey", "hasValue");
+    private final List<String> mapMatchers = Arrays.asList("hasEntry", "hasKey", "hasValue");
 
-    private List<String> optionMatchers = Arrays.asList("isOneOf", "isIn");
+    private final List<String> optionMatchers = Arrays.asList("isOneOf", "isIn");
 
-    private List<String> numericMatchers = Arrays.asList( "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo", "closeTo" );
+    private final List<String> numericMatchers = Arrays.asList( "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo", "closeTo" );
 
-    private List<String> containerMatchers = Arrays.asList( "is", "not", "everyItem" );
+    private final List<String> containerMatchers = Arrays.asList( "is", "not", "everyItem" );
 
-    private List<String> noArgumentMatchers = Arrays.asList( "isEmptyString", "isEmptyOrNullString", "nullValue", "notNullValue", "anything" );
+    private final List<String> noArgumentMatchers = Arrays.asList( "isEmptyString", "isEmptyOrNullString", "nullValue", "notNullValue", "anything" );
 
-    private List<String> noArgumentCollectionMatchers = Collections.singletonList("empty");
+    private final List<String> noArgumentCollectionMatchers = Collections.singletonList("empty");
 
-    private List<String> iterableMatchers = Arrays.asList( "anyOf", "allOf" );
+    private final List<String> iterableMatchers = Arrays.asList( "anyOf", "allOf" );
 
     @Override
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
@@ -126,11 +126,19 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
      */
     private Matcher<?> getMatcher(String matcherName, String[] matcherParameter, TestContext context) {
         try {
+            if (context.getReferenceResolver().isResolvable(matcherName, HamcrestMatcherProvider.class) ||
+                    HamcrestMatcherProvider.canResolve(matcherName)) {
+                Optional<HamcrestMatcherProvider> matcherProvider = lookupMatcherProvider(matcherName, context);
+                if (matcherProvider.isPresent()) {
+                    return matcherProvider.get().provideMatcher(matcherParameter[0]);
+                }
+            }
+
             if (noArgumentMatchers.contains(matcherName)) {
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null);
+                    return (Matcher<?>) matcherMethod.invoke(null);
                 }
             }
 
@@ -138,7 +146,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null);
+                    return (Matcher<?>) matcherMethod.invoke(null);
                 }
             }
 
@@ -154,7 +162,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                         String nestedMatcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
                         String[] nestedMatcherParameter = matcherExpression.trim().substring(nestedMatcherName.length() + 1, matcherExpression.trim().length() - 1).split(",");
 
-                        return (Matcher) matcherMethod.invoke(null, getMatcher(nestedMatcherName, nestedMatcherParameter,context));
+                        return (Matcher<?>) matcherMethod.invoke(null, getMatcher(nestedMatcherName, nestedMatcherParameter,context));
                     }
                 }
             }
@@ -163,20 +171,15 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, Iterable.class);
 
                 if (matcherMethod != null) {
-                    List<Matcher> nestedMatchers = new ArrayList<>();
+                    List<Matcher<?>> nestedMatchers = new ArrayList<>();
                     for (String matcherExpression : matcherParameter) {
                         String nestedMatcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
                         String nestedMatcherParameter = matcherExpression.trim().substring(nestedMatcherName.length() + 1, matcherExpression.trim().length() - 1);
                         nestedMatchers.add(getMatcher(nestedMatcherName, new String[] { nestedMatcherParameter }, context));
                     }
 
-                    return (Matcher) matcherMethod.invoke(null, nestedMatchers);
+                    return (Matcher<?>) matcherMethod.invoke(null, nestedMatchers);
                 }
-            }
-
-            Optional<HamcrestMatcherProvider> matcherProvider = lookupMatcherProvider(matcherName, context);
-            if (matcherProvider.isPresent()) {
-                return matcherProvider.get().provideMatcher(matcherParameter[0]);
             }
 
             if (matchers.contains(matcherName)) {
@@ -187,7 +190,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 }
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, matcherParameter[0]);
+                    return (Matcher<?>) matcherMethod.invoke(null, matcherParameter[0]);
                 }
             }
 
@@ -195,13 +198,13 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, double.class, double.class);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, Double.valueOf(matcherParameter[0]), matcherParameter.length > 1 ? Double.valueOf(matcherParameter[1]) : 0.0D);
+                    return (Matcher<?>) matcherMethod.invoke(null, Double.valueOf(matcherParameter[0]), matcherParameter.length > 1 ? Double.parseDouble(matcherParameter[1]) : 0.0D);
                 }
 
                 matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, Comparable.class);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, matcherParameter[0]);
+                    return (Matcher<?>) matcherMethod.invoke(null, matcherParameter[0]);
                 }
             }
 
@@ -209,19 +212,19 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, int.class);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, Integer.valueOf(matcherParameter[0]));
+                    return (Matcher<?>) matcherMethod.invoke(null, Integer.valueOf(matcherParameter[0]));
                 }
 
                 matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Object.class);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, matcherParameter[0]);
+                    return (Matcher<?>) matcherMethod.invoke(null, matcherParameter[0]);
                 }
 
                 matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Object[].class);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, new Object[] { matcherParameter });
+                    return (Matcher<?>) matcherMethod.invoke(null, new Object[] { matcherParameter });
                 }
             }
 
@@ -229,13 +232,13 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 Method matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Object.class);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, matcherParameter[0]);
+                    return (Matcher<?>) matcherMethod.invoke(null, matcherParameter[0]);
                 }
 
                 matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Object.class, Object.class);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, matcherParameter[0], matcherParameter[1]);
+                    return (Matcher<?>) matcherMethod.invoke(null, matcherParameter[0], matcherParameter[1]);
                 }
             }
 
@@ -243,13 +246,13 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 Method matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Object[].class);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, new Object[] { matcherParameter });
+                    return (Matcher<?>) matcherMethod.invoke(null, new Object[] { matcherParameter });
                 }
 
                 matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Collection.class);
 
                 if (matcherMethod != null) {
-                    return (Matcher) matcherMethod.invoke(null, new Object[] { getCollection(StringUtils.arrayToCommaDelimitedString(matcherParameter)) });
+                    return (Matcher<?>) matcherMethod.invoke(null, new Object[] { getCollection(StringUtils.arrayToCommaDelimitedString(matcherParameter)) });
                 }
             }
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -363,7 +366,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
      * Numeric value comparable automatically converts types to numeric values for
      * comparison.
      */
-    private class NumericComparable implements Comparable {
+    private static class NumericComparable implements Comparable<Object> {
 
         private Long number = null;
         private Double decimal = null;

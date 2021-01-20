@@ -16,6 +16,7 @@
 
 package com.consol.citrus.context;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -103,6 +104,11 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
     @Override
     public boolean isResolvable(Class<?> type) {
         return applicationContext.getBeanNamesForType(type).length > 0 || fallback.isResolvable(type);
+    }
+
+    @Override
+    public boolean isResolvable(String name, Class<?> type) {
+        return Arrays.asList(applicationContext.getBeanNamesForType(type)).contains(name) || fallback.isResolvable(name, type);
     }
 
     /**

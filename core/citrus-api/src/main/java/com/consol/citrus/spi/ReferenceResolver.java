@@ -104,4 +104,12 @@ public interface ReferenceResolver extends ReferenceRegistry {
      * @return
      */
     boolean isResolvable(Class<?> type);
+
+    /**
+     * Checks if this reference name is resolvable to an object of given type.
+     * @param name
+     * @param type
+     * @return
+     */
+    boolean isResolvable(String name, Class<?> type);
 }
