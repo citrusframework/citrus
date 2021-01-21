@@ -23,7 +23,7 @@ http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-2.7.xsd=
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-2.8.0.xsd=com/consol/citrus/schema/citrus-camel-config-2.8.0.xsd
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-3.0.0-M1.xsd=com/consol/citrus/schema/citrus-camel-config-3.0.0-M1.xsd
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-3.0.0-M2.xsd=com/consol/citrus/schema/citrus-camel-config-3.0.0-M2.xsd
-http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-3.0.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-camel-config-3.0.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-3.0.0-M3.xsd=com/consol/citrus/schema/citrus-camel-config-3.0.0-M3.xsd
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd=com/consol/citrus/schema/citrus-camel-config.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-2.3.xsd=com/consol/citrus/schema/citrus-camel-testcase-2.3.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-2.4.xsd=com/consol/citrus/schema/citrus-camel-testcase-2.4.xsd
@@ -45,5 +45,5 @@ http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-2.7.
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-2.8.0.xsd=com/consol/citrus/schema/citrus-camel-testcase-2.8.0.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-3.0.0-M1.xsd=com/consol/citrus/schema/citrus-camel-testcase-3.0.0-M1.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-3.0.0-M2.xsd=com/consol/citrus/schema/citrus-camel-testcase-3.0.0-M2.xsd
-http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-3.0.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-camel-testcase-3.0.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-3.0.0-M3.xsd=com/consol/citrus/schema/citrus-camel-testcase-3.0.0-M3.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase.xsd=com/consol/citrus/schema/citrus-camel-testcase.xsd
