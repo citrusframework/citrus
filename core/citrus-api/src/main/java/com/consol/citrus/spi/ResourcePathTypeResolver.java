@@ -2,6 +2,7 @@ package com.consol.citrus.spi;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -69,7 +70,11 @@ public class ResourcePathTypeResolver implements TypeResolver {
         String type = resolveProperty(resourcePath, property);
 
         try {
-            return (T) Class.forName(type).getDeclaredConstructor(getParameterTypes(initargs)).newInstance(initargs);
+            if (initargs.length == 0) {
+                return (T) Class.forName(type).getDeclaredConstructor().newInstance();
+            } else {
+                return (T) getConstructor(Class.forName(type), initargs).newInstance(initargs);
+            }
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
                 NoSuchMethodException | InvocationTargetException e) {
 
@@ -82,7 +87,8 @@ public class ResourcePathTypeResolver implements TypeResolver {
                 throw new CitrusRuntimeException(String.format("Failed to resolve classpath resource of type '%s'", type), e1);
             }
 
-            LOG.warn(String.format("Neither static instance nor accessible default constructor is given on type '%s'", type));
+            LOG.warn(String.format("Neither static instance nor accessible default constructor (%s) is given on type '%s'",
+                    Arrays.toString(getParameterTypes(initargs)), type));
             throw new CitrusRuntimeException(String.format("Failed to resolve classpath resource of type '%s'", type), e);
         }
     }
@@ -122,6 +128,47 @@ public class ResourcePathTypeResolver implements TypeResolver {
         }
 
         return resources;
+    }
+
+    /**
+     * Gets the constructor best matching the given parameter types.
+     * @param type
+     * @param initargs
+     * @return
+     */
+    private Constructor<?> getConstructor(Class<?> type, Object[] initargs) {
+        final Class<?>[] parameterTypes = getParameterTypes(initargs);
+
+        Optional<Constructor<?>> exactMatch = Arrays.stream(type.getDeclaredConstructors())
+                .filter(constructor -> Arrays.equals(constructor.getParameterTypes(), parameterTypes))
+                .findFirst();
+
+        if (exactMatch.isPresent()) {
+            return exactMatch.get();
+        }
+
+        Optional<Constructor<?>> match = Arrays.stream(type.getDeclaredConstructors())
+                .filter(constructor -> {
+                    if (constructor.getParameterCount() != parameterTypes.length) {
+                        return false;
+                    }
+
+                    for (int i = 0; i < parameterTypes.length; i++) {
+                        if (!constructor.getParameterTypes()[i].isAssignableFrom(parameterTypes[i])) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                })
+                .findFirst();
+
+        if (match.isPresent()) {
+            return match.get();
+        }
+
+        throw new IllegalArgumentException(String.format("No matching constructor found for type %s and parameters %s",
+                type.getName(), Arrays.toString(parameterTypes)));
     }
 
     /**

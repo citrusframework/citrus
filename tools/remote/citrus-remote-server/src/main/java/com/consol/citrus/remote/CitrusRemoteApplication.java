@@ -71,7 +71,7 @@ import static spark.Spark.put;
 public class CitrusRemoteApplication implements SparkApplication {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusRemoteApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CitrusRemoteApplication.class);
 
     /** Global url encoding */
     private static final String ENCODING = "UTF-8";
@@ -87,7 +87,7 @@ public class CitrusRemoteApplication implements SparkApplication {
     private Future<List<RemoteResult>> remoteResultFuture;
 
     /** Latest test reports */
-    private RemoteTestResultReporter remoteTestResultReporter = new RemoteTestResultReporter();
+    private final RemoteTestResultReporter remoteTestResultReporter = new RemoteTestResultReporter();
 
     private final JsonRequestTransformer requestTransformer = new JsonRequestTransformer();
     private final JsonResponseTransformer responseTransformer = new JsonResponseTransformer();
@@ -114,7 +114,7 @@ public class CitrusRemoteApplication implements SparkApplication {
             citrus.addTestReporter(remoteTestResultReporter);
         });
 
-        before((Filter) (request, response) -> log.info(request.requestMethod() + " " + request.url() + Optional.ofNullable(request.queryString()).map(query -> "?" + query).orElse("")));
+        before((Filter) (request, response) -> LOG.info(request.requestMethod() + " " + request.url() + Optional.ofNullable(request.queryString()).map(query -> "?" + query).orElse("")));
 
         get("/health", (req, res) -> {
             res.type(APPLICATION_JSON);
@@ -185,6 +185,12 @@ public class CitrusRemoteApplication implements SparkApplication {
             get("", (req, res) -> {
                 TestRunConfiguration runConfiguration = new TestRunConfiguration();
 
+                if (req.queryParams().contains("engine")) {
+                    runConfiguration.setEngine(URLDecoder.decode(req.queryParams("engine"), ENCODING));
+                } else {
+                    runConfiguration.setEngine(configuration.getEngine());
+                }
+
                 if (req.queryParams().contains("includes")) {
                     runConfiguration.setIncludes(StringUtils.commaDelimitedListToStringArray(URLDecoder.decode(req.queryParams("includes"), ENCODING)));
                 }
@@ -245,6 +251,7 @@ public class CitrusRemoteApplication implements SparkApplication {
     private List<RemoteResult> runTests(TestRunConfiguration runConfiguration) {
         RunController runController = new RunController(configuration);
 
+        runController.setEngine(runConfiguration.getEngine());
         runController.setIncludes(runConfiguration.getIncludes());
 
         if (!CollectionUtils.isEmpty(runConfiguration.getDefaultProperties())) {
@@ -287,7 +294,7 @@ public class CitrusRemoteApplication implements SparkApplication {
     public void destroy() {
         Optional<Citrus> citrus = CitrusInstanceManager.get();
         if (citrus.isPresent()) {
-            log.info("Closing Citrus and its application context");
+            LOG.info("Closing Citrus and its application context");
             citrus.get().close();
         }
     }

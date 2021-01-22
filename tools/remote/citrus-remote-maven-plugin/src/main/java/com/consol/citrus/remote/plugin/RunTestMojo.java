@@ -103,6 +103,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
     private void runPackages(List<String> packages) throws MojoExecutionException {
         TestRunConfiguration runConfiguration = new TestRunConfiguration();
 
+        runConfiguration.setEngine(run.getEngine());
         runConfiguration.setPackages(packages);
 
         if (run.getIncludes() != null) {
@@ -119,6 +120,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
     private void runClasses(List<String> classes) throws MojoExecutionException {
         TestRunConfiguration runConfiguration = new TestRunConfiguration();
 
+        runConfiguration.setEngine(run.getEngine());
         runConfiguration.setTestClasses(classes.stream()
                                                 .map(TestClass::fromString)
                                                 .collect(Collectors.toList()));
@@ -133,6 +135,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
     private void runAllTests() throws MojoExecutionException {
         TestRunConfiguration runConfiguration = new TestRunConfiguration();
 
+        runConfiguration.setEngine(run.getEngine());
         if (run.getIncludes() != null) {
             runConfiguration.setIncludes(run.getIncludes().toArray(new String[run.getIncludes().size()]));
         }

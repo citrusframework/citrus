@@ -16,12 +16,16 @@
 
 package com.consol.citrus.remote.controller;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import com.consol.citrus.TestClass;
 import com.consol.citrus.main.CitrusApp;
 import com.consol.citrus.main.CitrusAppConfiguration;
 import com.consol.citrus.remote.CitrusRemoteConfiguration;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -29,11 +33,14 @@ import java.util.*;
  */
 public class RunController {
 
+    /** Test engine to run the tests */
+    private String engine;
+
     /** Include tests based on these test names patterns */
     private String[] includes;
 
     /** Default properties set as system properties */
-    private Map<String, String> defaultProperties = new LinkedHashMap<>();
+    private final Map<String, String> defaultProperties = new LinkedHashMap<>();
 
     private final CitrusRemoteConfiguration configuration;
 
@@ -43,6 +50,7 @@ public class RunController {
      */
     public RunController(CitrusRemoteConfiguration configuration) {
         this.configuration = configuration;
+        this.engine = configuration.getEngine();
     }
 
     /**
@@ -58,6 +66,7 @@ public class RunController {
      */
     public void runPackages(List<String> packages) {
         CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
+        citrusAppConfiguration.setEngine(engine);
         citrusAppConfiguration.setIncludes(Optional.ofNullable(includes).orElse(configuration.getIncludes()));
         citrusAppConfiguration.setPackages(packages);
         citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
@@ -73,6 +82,7 @@ public class RunController {
     public void runClasses(List<TestClass> testClasses) {
         CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
 
+        citrusAppConfiguration.setEngine(engine);
         citrusAppConfiguration.setTestClasses(testClasses);
         citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
         citrusAppConfiguration.addDefaultProperties(configuration.getDefaultProperties());
@@ -95,6 +105,14 @@ public class RunController {
     private void run(CitrusAppConfiguration citrusAppConfiguration) {
         CitrusApp citrusApp = new CitrusApp(citrusAppConfiguration);
         citrusApp.run();
+    }
+
+    /**
+     * Sets the engine.
+     * @param engine
+     */
+    public void setEngine(String engine) {
+        this.engine = engine;
     }
 
     /**

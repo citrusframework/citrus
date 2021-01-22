@@ -50,6 +50,7 @@ public class CitrusRemoteConfiguration extends CitrusAppConfiguration {
      * @param configuration
      */
     public void apply(CitrusAppConfiguration configuration) {
+        setEngine(configuration.getEngine());
         setPackages(configuration.getPackages());
         setTestClasses(configuration.getTestClasses());
         setIncludes(configuration.getIncludes());

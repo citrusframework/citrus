@@ -16,10 +16,10 @@
 
 package com.consol.citrus.remote.plugin.config;
 
-import org.apache.maven.plugins.annotations.Parameter;
-
 import java.util.List;
 import java.util.Map;
+
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * @author Christoph Deppisch
@@ -44,6 +44,9 @@ public class RunConfiguration {
 
     @Parameter(property = "citrus.remote.run.polling.interval", defaultValue = "10000")
     private long pollingInterval = 10000L;
+
+    @Parameter(property = "citrus.remote.run.engine", defaultValue = "junit4")
+    private String engine;
 
     /**
      * Gets the classes.
@@ -167,5 +170,21 @@ public class RunConfiguration {
      */
     public void setPollingInterval(long pollingInterval) {
         this.pollingInterval = pollingInterval;
+    }
+
+    /**
+     * Gets the engine.
+     * @return
+     */
+    public String getEngine() {
+        return engine;
+    }
+
+    /**
+     * Sets the engine.
+     * @param engine
+     */
+    public void setEngine(String engine) {
+        this.engine = engine;
     }
 }
