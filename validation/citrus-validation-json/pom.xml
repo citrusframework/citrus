@@ -51,10 +51,6 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
-    <dependency>
-      <groupId>jakarta.mail</groupId>
-      <artifactId>jakarta.mail-api</artifactId>
-    </dependency>
 
     <!-- Test scoped dependencies -->
     <dependency>
