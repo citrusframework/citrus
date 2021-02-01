@@ -16,24 +16,35 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import com.consol.citrus.generate.*;
-import com.consol.citrus.generate.javadsl.*;
-import com.consol.citrus.generate.xml.*;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.*;
-import org.codehaus.plexus.components.interactivity.Prompter;
-import org.codehaus.plexus.components.interactivity.PrompterException;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.consol.citrus.generate.SwaggerTestGenerator;
+import com.consol.citrus.generate.TestGenerator;
+import com.consol.citrus.generate.UnitFramework;
+import com.consol.citrus.generate.WsdlTestGenerator;
+import com.consol.citrus.generate.XsdTestGenerator;
+import com.consol.citrus.generate.javadsl.JavaDslTestGenerator;
+import com.consol.citrus.generate.javadsl.SwaggerJavaTestGenerator;
+import com.consol.citrus.generate.javadsl.WsdlJavaTestGenerator;
+import com.consol.citrus.generate.javadsl.XsdJavaTestGenerator;
+import com.consol.citrus.generate.xml.SwaggerXmlTestGenerator;
+import com.consol.citrus.generate.xml.WsdlXmlTestGenerator;
+import com.consol.citrus.generate.xml.XmlTestGenerator;
+import com.consol.citrus.generate.xml.XsdXmlTestGenerator;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.codehaus.plexus.components.interactivity.Prompter;
+import org.codehaus.plexus.components.interactivity.PrompterException;
+import org.springframework.util.StringUtils;
+
 /**
  * Creates new Citrus test cases with empty XML test file and executable Java class.
- * 
+ *
  * Mojo offers an interactive mode, where the plugin prompts for parameters during execution.
  *
  * @author Christoph Deppisch
@@ -112,7 +123,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
         	while (!StringUtils.hasText(name)) {
         		name = prompter.prompt("Enter test name:");
         	}
-        	
+
         	if (!StringUtils.hasText(name)) {
         		throw new MojoExecutionException("Please provide proper test name! Test name must not be empty starting with uppercase letter!");
         	}
@@ -120,12 +131,12 @@ public class CreateTestMojo extends AbstractCitrusMojo {
             String author = prompter.prompt("Enter test author:", "Unknown");
             String description = prompter.prompt("Enter test description:", "");
             String targetPackage = prompter.prompt("Enter test package:", "com.consol.citrus");
-            String framework = prompter.prompt("Choose unit test framework:", CollectionUtils.arrayToList(new String[] {"testng", "junit4", "junit5"}), UnitFramework.TESTNG.name().toLowerCase());
-            String type = prompter.prompt("Choose target code base type:", CollectionUtils.arrayToList(new String[] {"java", "xml"}), "java");
+            String framework = prompter.prompt("Choose unit test framework:", Arrays.asList("testng", "junit4", "junit5"), UnitFramework.TESTNG.name().toLowerCase());
+            String type = prompter.prompt("Choose target code base type:", Arrays.asList("java", "xml"), "java");
 
             setType(type);
 
-            String useXsd = prompter.prompt("Create test with XML schema?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
+            String useXsd = prompter.prompt("Create test with XML schema?", Arrays.asList("y", "n"), "n");
 
             if (useXsd.equalsIgnoreCase("y")) {
                 XsdTestGenerator generator = getXsdTestGenerator();
@@ -140,7 +151,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                 return;
             }
 
-            String useWsdl = prompter.prompt("Create test with WSDL?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
+            String useWsdl = prompter.prompt("Create test with WSDL?", Arrays.asList("y", "n"), "n");
 
             if (useWsdl.equalsIgnoreCase("y")) {
                 WsdlTestGenerator generator = getWsdlTestGenerator();
@@ -155,7 +166,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                 return;
             }
 
-            String useSwagger = prompter.prompt("Create test with Swagger API?", CollectionUtils.arrayToList(new String[] {"y", "n"}), "n");
+            String useSwagger = prompter.prompt("Create test with Swagger API?", Arrays.asList("y", "n"), "n");
 
             if (useSwagger.equalsIgnoreCase("y")) {
                 SwaggerTestGenerator generator = getSwaggerTestGenerator();
@@ -176,7 +187,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                     "name: " + name + "\n" +
                     "author: " + author + "\n" +
                     "description: " + description + "\n" +
-                    "package: " + targetPackage + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
+                    "package: " + targetPackage + "\n", Arrays.asList("y", "n"), "y");
 
             if (confirm.equalsIgnoreCase("n")) {
                 return;
@@ -243,7 +254,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                     "request: " + generator.getRequestMessage() + "\n" +
                     "response: " + generator.getResponseMessage() + "\n" +
                     "actor: " + generator.getMode() + "\n" +
-                    "package: " + generator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
+                    "package: " + generator.getTargetPackage() + "\n", Arrays.asList("y", "n"), "y");
 
             if (confirm.equalsIgnoreCase("n")) {
                 return;
@@ -301,7 +312,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                     "wsdl: " + generator.getWsdl() + "\n" +
                     "operation: " + Optional.ofNullable(generator.getOperation()).orElse("all") + "\n" +
                     "actor: " + generator.getMode() + "\n" +
-                    "package: " + generator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
+                    "package: " + generator.getTargetPackage() + "\n", Arrays.asList("y", "n"), "y");
 
             if (confirm.equalsIgnoreCase("n")) {
                 return;
@@ -360,7 +371,7 @@ public class CreateTestMojo extends AbstractCitrusMojo {
                     "swagger-api: " + generator.getSwaggerResource() + "\n" +
                     "operation: " + Optional.ofNullable(generator.getOperation()).orElse("all") + "\n" +
                     "actor: " + generator.getMode() + "\n" +
-                    "package: " + generator.getTargetPackage() + "\n", CollectionUtils.arrayToList(new String[] {"y", "n"}), "y");
+                    "package: " + generator.getTargetPackage() + "\n", Arrays.asList("y", "n"), "y");
 
             if (confirm.equalsIgnoreCase("n")) {
                 return;

@@ -17,6 +17,7 @@
 package com.consol.citrus.report;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.consol.citrus.DefaultTestCase;
@@ -26,7 +27,6 @@ import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.springframework.util.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -348,11 +348,9 @@ public class FailureStackTestListenerTest extends AbstractTestNGUnitTest {
     }
 
     private static class MockedActionContainer extends AbstractActionContainer {
-
-        @SuppressWarnings("unchecked")
         public MockedActionContainer(String name, TestAction... actions) {
             setName(name);
-            setActions(CollectionUtils.arrayToList(actions));
+            setActions(Arrays.asList(actions));
         }
 
         @Override

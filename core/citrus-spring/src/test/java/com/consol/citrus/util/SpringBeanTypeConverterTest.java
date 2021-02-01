@@ -1,6 +1,6 @@
 package com.consol.citrus.util;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import org.springframework.util.MultiValueMap;
 import org.testng.Assert;
@@ -16,7 +16,7 @@ public class SpringBeanTypeConverterTest {
     @Test
     public void testConverter() {
         Assert.assertEquals(converter.convertIfNecessary("{key=[value]}", MultiValueMap.class).getFirst("key"), new String[] {"value"});
-        Assert.assertEquals(converter.convertIfNecessary("{key=[value1,value2]}", MultiValueMap.class).get("key").getClass(), LinkedList.class);
+        Assert.assertEquals(converter.convertIfNecessary("{key=[value1,value2]}", MultiValueMap.class).get("key").getClass(), ArrayList.class);
         Assert.assertEquals(converter.convertIfNecessary("{key=[value1,value2]}", MultiValueMap.class).getFirst("key"), new String[] {"value1", "value2"});
     }
 }

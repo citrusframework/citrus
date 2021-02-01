@@ -22,6 +22,7 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.util.Arrays;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
@@ -42,7 +43,6 @@ import com.consol.citrus.rmi.model.RmiServiceResult;
 import com.consol.citrus.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -96,20 +96,12 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             if (StringUtils.hasText(invocation.getMethod())) {
                 method[0] = ReflectionUtils.findMethod(remoteTarget.getClass(), invocation.getMethod(), invocation.getArgTypes());
             } else {
-                ReflectionUtils.doWithMethods(remoteTarget.getClass(), new ReflectionUtils.MethodCallback() {
-                    @Override
-                    public void doWith(Method declaredMethod) throws IllegalArgumentException, IllegalAccessException {
-                        if (method[0] == null) {
-                            method[0] = declaredMethod;
-                        }
+                ReflectionUtils.doWithMethods(remoteTarget.getClass(), declaredMethod -> {
+                    if (method[0] == null) {
+                        method[0] = declaredMethod;
                     }
-                }, new ReflectionUtils.MethodFilter() {
-                    @Override
-                    public boolean matches(Method declaredMethod) {
-                        return CollectionUtils.arrayToList(declaredMethod.getExceptionTypes()).contains(RemoteException.class) &&
-                                declaredMethod.getDeclaringClass().equals(remoteTarget.getClass());
-                    }
-                });
+                }, declaredMethod -> Arrays.asList(declaredMethod.getExceptionTypes()).contains(RemoteException.class) &&
+                        declaredMethod.getDeclaringClass().equals(remoteTarget.getClass()));
             }
 
             if (method[0] == null) {
