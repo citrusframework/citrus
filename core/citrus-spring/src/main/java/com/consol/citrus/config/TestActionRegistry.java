@@ -77,7 +77,7 @@ public final class TestActionRegistry {
     private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /** Parser registry as map */
-    private static Map<String, BeanDefinitionParser> parserCache = new HashMap<>();
+    private static final Map<String, BeanDefinitionParser> ACTION_PARSER = new HashMap<>();
 
     static {
         registerActionParser("send", new SendMessageActionParser());
@@ -129,7 +129,7 @@ public final class TestActionRegistry {
      * @param parserObject
      */
     public static void registerActionParser(String actionName, BeanDefinitionParser parserObject) {
-        parserCache.put(actionName, parserObject);
+        ACTION_PARSER.put(actionName, parserObject);
     }
 
     /**
@@ -137,7 +137,7 @@ public final class TestActionRegistry {
      * @return
      */
     public static Map<String, BeanDefinitionParser> getRegisteredActionParser() {
-        return parserCache;
+        return ACTION_PARSER;
     }
 
     /**
@@ -147,14 +147,14 @@ public final class TestActionRegistry {
      * @return
      */
     public static BeanDefinitionParser getActionParser(String name) {
-        if (!parserCache.containsKey(name)) {
+        if (!ACTION_PARSER.containsKey(name)) {
             try {
-                parserCache.put(name, TYPE_RESOLVER.resolve(name));
+                ACTION_PARSER.put(name, TYPE_RESOLVER.resolve(name));
             } catch (Exception e) {
                 log.warn(String.format("Unable to locate test action parser for '%s'", name), e);
             }
         }
 
-        return parserCache.get(name);
+        return ACTION_PARSER.get(name);
     }
 }

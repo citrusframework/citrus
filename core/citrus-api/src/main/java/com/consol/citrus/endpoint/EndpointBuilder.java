@@ -52,8 +52,6 @@ public interface EndpointBuilder<T extends Endpoint> {
     /** Default Citrus endpoint builders from classpath resource properties */
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
-    Map<String, EndpointBuilder> builders = new HashMap<>();
-
     /**
      * Evaluate if this builder supports the given type.
      * @param endpointType type to check.
@@ -74,7 +72,10 @@ public interface EndpointBuilder<T extends Endpoint> {
      * @return
      */
     default T build(CitrusEndpoint endpointAnnotation, ReferenceResolver referenceResolver) {
-        ReflectionUtils.invokeMethod(ReflectionUtils.findMethod(this.getClass(), "name", String.class), this, endpointAnnotation.name());
+        Method nameSetter = ReflectionUtils.findMethod(this.getClass(), "name", String.class);
+        if (nameSetter != null) {
+            ReflectionUtils.invokeMethod(nameSetter, this, endpointAnnotation.name());
+        }
 
         for (CitrusEndpointProperty endpointProperty : endpointAnnotation.properties()) {
             Method propertyMethod = ReflectionUtils.findMethod(this.getClass(), endpointProperty.name(), endpointProperty.type());
@@ -114,12 +115,10 @@ public interface EndpointBuilder<T extends Endpoint> {
      * @return
      */
     static Map<String, EndpointBuilder> lookup() {
-        if (builders.isEmpty()) {
-            builders.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
+        Map<String, EndpointBuilder> builders = new HashMap<>(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
-            if (LOG.isDebugEnabled()) {
-                builders.forEach((k, v) -> LOG.debug(String.format("Found endpoint builder '%s' as %s", k, v.getClass())));
-            }
+        if (LOG.isDebugEnabled()) {
+            builders.forEach((k, v) -> LOG.debug(String.format("Found endpoint builder '%s' as %s", k, v.getClass())));
         }
         return builders;
     }
@@ -138,7 +137,7 @@ public interface EndpointBuilder<T extends Endpoint> {
             EndpointBuilder instance;
             if (builder.contains(".")) {
                 int separatorIndex = builder.lastIndexOf('.');
-                instance = TYPE_RESOLVER.resolve(builder.substring(0, separatorIndex - 1), builder.substring(separatorIndex));
+                instance = TYPE_RESOLVER.resolve(builder.substring(0, separatorIndex), builder.substring(separatorIndex + 1));
             } else {
                 instance = TYPE_RESOLVER.resolve(builder);
             }

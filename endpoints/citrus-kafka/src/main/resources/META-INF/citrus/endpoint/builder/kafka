@@ -1,1 +1,4 @@
-type=com.consol.citrus.kafka.endpoint.KafkaEndpointBuilder
+async=com.consol.citrus.kafka.endpoint.KafkaEndpointBuilder
+asynchronous=com.consol.citrus.kafka.endpoint.KafkaEndpointBuilder
+sync=com.consol.citrus.kafka.endpoint.KafkaEndpointBuilder
+synchronous=com.consol.citrus.kafka.endpoint.KafkaEndpointBuilder

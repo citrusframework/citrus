@@ -46,7 +46,7 @@ public class SchemaParser implements BeanDefinitionParser {
     private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /** Local cache to hold already looked up parsers */
-    private static final Map<String, BeanDefinitionParser> PARSER_CACHE = new HashMap<>();
+    private static final Map<String, BeanDefinitionParser> SCHEMA_PARSER = new HashMap<>();
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
@@ -64,13 +64,13 @@ public class SchemaParser implements BeanDefinitionParser {
         // extract file extension from schema location and use this as key to lookup the parser for these files
         String fileExtension = FileUtils.getFileExtension(location);
 
-        if (PARSER_CACHE.containsKey(fileExtension)) {
-            return PARSER_CACHE.get(fileExtension);
+        if (SCHEMA_PARSER.containsKey(fileExtension)) {
+            return SCHEMA_PARSER.get(fileExtension);
         }
 
         BeanDefinitionParser parser = TYPE_RESOLVER.resolve(fileExtension);
         log.info(String.format("Found schema bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + fileExtension));
-        PARSER_CACHE.put(fileExtension, parser);
+        SCHEMA_PARSER.put(fileExtension, parser);
         return parser;
     }
 }

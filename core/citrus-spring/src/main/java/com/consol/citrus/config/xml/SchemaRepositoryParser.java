@@ -60,7 +60,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
     private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /** Local cache to hold already looked up parsers */
-    private static final Map<String, BeanDefinitionParser> PARSER_CACHE = new HashMap<>();
+    private static final Map<String, BeanDefinitionParser> SCHEMA_REPOSITORY_PARSER = new HashMap<>();
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
@@ -80,13 +80,13 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
      * @return
      */
     private BeanDefinitionParser lookupSchemaRepositoryParser(String type) {
-        if (PARSER_CACHE.containsKey(type)) {
-            return PARSER_CACHE.get(type);
+        if (SCHEMA_REPOSITORY_PARSER.containsKey(type)) {
+            return SCHEMA_REPOSITORY_PARSER.get(type);
         }
 
         BeanDefinitionParser parser = TYPE_RESOLVER.resolve(type);
         log.info(String.format("Found schema repository bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + type));
-        PARSER_CACHE.put(type, parser);
+        SCHEMA_REPOSITORY_PARSER.put(type, parser);
         return parser;
     }
 
