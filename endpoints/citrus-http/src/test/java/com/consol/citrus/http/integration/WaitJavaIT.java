@@ -55,6 +55,8 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport {
         //GIVEN
         given(start(httpServer));
 
+        then(doFinally().actions(stop(httpServer)));
+
         //WHEN
         when(waitFor()
                 .execution()
@@ -67,9 +69,6 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport {
         then(waitFor()
                 .execution()
                 .action(send(String.format("http://localhost:%s/test", serverPort))));
-
-        //THEN
-        then(doFinally().actions(stop(httpServer)));
     }
 
     @CitrusTest
@@ -78,10 +77,10 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport {
         //GIVEN
         given(start(httpServer));
 
+        then(doFinally().actions(stop(httpServer)));
+
         then(waitFor()
             .http()
             .url(String.format("http://localhost:%s/test", serverPort)));
-
-        then(doFinally().actions(stop(httpServer)));
     }
 }

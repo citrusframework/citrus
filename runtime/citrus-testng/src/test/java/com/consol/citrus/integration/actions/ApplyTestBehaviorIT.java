@@ -114,9 +114,9 @@ public class ApplyTestBehaviorIT extends TestNGCitrusSpringSupport {
                 .actions(echo("finally")));
 
         run(applyBehavior(runner -> {
-            runner.run(echo("behavior"));
             runner.run(doFinally()
                     .actions(echo("finally in behavior")));
+            runner.run(echo("behavior"));
         }));
     }
 

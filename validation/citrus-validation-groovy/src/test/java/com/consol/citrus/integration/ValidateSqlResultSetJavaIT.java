@@ -45,6 +45,9 @@ public class ValidateSqlResultSetJavaIT extends TestNGCitrusSpringSupport {
         variable("rtag", "requestTag");
         variable("desc", "Migrate");
 
+        run(doFinally()
+                .actions(sql(dataSource).statement("DELETE FROM ORDERS")));
+
         run(sql(dataSource)
             .statement("INSERT INTO ORDERS VALUES(1, 'requestTag', 'conversationId', 'creation_date', 'Migrate')")
             .statement("INSERT INTO ORDERS VALUES(2, 'requestTag', 'conversationId', 'creation_date', NULL)"));
@@ -54,8 +57,5 @@ public class ValidateSqlResultSetJavaIT extends TestNGCitrusSpringSupport {
             .validateScript("assert rows.size == ${rowsCount}\n" +
                     "assert rows[0].RTAG == '${rtag}'\n" +
                     "assert rows[0].DESC == '${desc}'\n", ScriptTypes.GROOVY));
-
-        run(doFinally()
-                .actions(sql(dataSource).statement("DELETE FROM ORDERS")));
     }
 }

@@ -31,7 +31,6 @@ import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.DefaultTestActionBuilder.action;
@@ -55,7 +54,6 @@ public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport {
     private TestContext globalContext;
 
     @Test
-    @Parameters( { "designer", "context" })
     @CitrusTest
     public void injectResources(@Optional @CitrusResource TestCaseRunner runner,
                                 @Optional @CitrusResource TestContext context) {
@@ -77,16 +75,18 @@ public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport {
     }
 
     @Test(dataProvider = "testData")
-    @Parameters( { "data", "designer", "context" })
+    @CitrusParameters( { "data", "designer", "context" })
     @CitrusTest
     public void injectResourcesCombinedWithParameter(String data,
                                                     @CitrusResource TestCaseRunner runner,
                                                     @CitrusResource TestContext context) {
         final String number = Functions.randomNumber(10L, context);
         context.setVariable("message", "Injection worked!");
+        context.setVariable("parameter", data);
 
         runner.run(echo("${message}"));
         runner.run(echo("${data}"));
+        runner.run(echo("${parameter}"));
         runner.run(createVariable("random", number));
 
         runner.run(action(tc -> {

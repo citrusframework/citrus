@@ -66,6 +66,8 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
 
         given(start(httpServer));
 
+        run(doFinally().actions(stop(httpServer)));
+
         given(http().client(httpClient)
                 .send()
                 .post()
@@ -96,8 +98,6 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
                 .message(new DefaultMessage(binaryDataLatin1))
                 .type(MessageType.BINARY)
                 .contentType(MEDIA_TYPE_APPLICATION_CUSTOM));
-
-        run(doFinally().actions(stop(httpServer)));
     }
 
     @CitrusTest

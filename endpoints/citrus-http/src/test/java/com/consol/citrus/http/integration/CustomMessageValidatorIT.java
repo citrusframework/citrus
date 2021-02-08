@@ -53,6 +53,12 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusTest
     public void test() {
+        this.getClass().getResource("/citrus.properties");
+
+        given(doFinally().actions(
+                stop(httpServer)
+        ));
+
         when(http().client(httpClient)
                 .send()
                 .post("/")
@@ -74,15 +80,15 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport {
         then(http().server(httpServer)
                 .send()
                 .response(HttpStatus.OK));
-
-        then(doFinally().actions(
-                stop(httpServer)
-        ));
     }
 
     @Test
     @CitrusTest
     public void testFailure() {
+        then(doFinally().actions(
+                stop(httpServer)
+        ));
+
         when(http().client(httpClient)
                 .send()
                 .post("/")
@@ -102,10 +108,6 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport {
                 .validate(xpath()
                         .validate()
                         .expression("//doc/@text", "nothello"))));
-
-        then(doFinally().actions(
-                stop(httpServer)
-        ));
     }
 
 }

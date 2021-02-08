@@ -35,6 +35,10 @@ public class TimerJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void timerTest() {
+        run(doFinally().actions(
+                stopTimer("forkedTimer")
+        ));
+
         run(timer()
             .timerId("forkedTimer")
             .interval(100L)
@@ -54,9 +58,5 @@ public class TimerJavaIT extends TestNGCitrusSpringSupport {
         ));
 
         run(echo("Test almost complete. Make sure all timers running in the background are stopped"));
-
-        run(doFinally().actions(
-                stopTimer("forkedTimer")
-        ));
     }
 }

@@ -43,6 +43,11 @@ public class FinallyBlockJavaIT extends TestNGCitrusSpringSupport {
     public void finallyBlock() {
         variable("orderId", "citrus:randomNumber(5)");
 
+        run(doFinally().actions(
+                sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"),
+                echo("ORDER deletion time: ${date}")
+        ));
+
         run(sql(dataSource)
             .statement("INSERT INTO ORDERS (ORDER_ID, REQUEST_TAG, CONVERSATION_ID, CREATION_DATE) VALUES (${orderId},1,1,'citrus:currentDate(dd.MM.yyyy)')"));
 
@@ -51,10 +56,5 @@ public class FinallyBlockJavaIT extends TestNGCitrusSpringSupport {
             .extract("CREATION_DATE", "date"));
 
         run(echo("ORDER creation time: ${date}"));
-
-        run(doFinally().actions(
-                sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'"),
-                echo("ORDER deletion time: ${date}")
-        ));
     }
 }
