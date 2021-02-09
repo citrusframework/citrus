@@ -52,7 +52,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusConfigNamespaceHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CitrusConfigNamespaceHandler.class);
 
     /** Resource path where to find custom config parsers via lookup */
     private static final String RESOURCE_PATH = "META-INF/citrus/config/parser/core";
@@ -93,7 +93,9 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
         actionParserMap.forEach((k, p) -> {
             registerBeanDefinitionParser(k, p);
-            log.info(String.format("Register bean definition parser %s from resource %s", p.getClass(), k));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(String.format("Register bean definition parser %s from resource %s", p.getClass(), k));
+            }
         });
     }
 
