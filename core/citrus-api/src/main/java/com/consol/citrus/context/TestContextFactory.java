@@ -129,11 +129,6 @@ public class TestContextFactory implements ReferenceResolverAware {
             context.setTypeConverter(typeConverter);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Created new test context - using global variables: '"
-                    + context.getGlobalVariables() + "'");
-        }
-
         return context;
     }
 

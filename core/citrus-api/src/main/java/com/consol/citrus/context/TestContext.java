@@ -502,13 +502,15 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @param globalVariables
      */
     public void setGlobalVariables(GlobalVariables globalVariables) {
-        this.globalVariables = new GlobalVariables();
+        GlobalVariables.Builder builder = new GlobalVariables.Builder();
         for (Entry<String, Object> entry : globalVariables.getVariables().entrySet()) {
             final String adaptedKey = resolveDynamicContentIfRequired(entry.getKey());
             final Object adaptedValue = resolveDynamicContentIfRequired(entry.getValue());
             variables.put(adaptedKey, adaptedValue);
-            this.globalVariables.getVariables().put(adaptedKey, adaptedValue);
+            builder.variable(adaptedKey, adaptedValue);
         }
+
+        this.globalVariables = builder.build();
     }
 
     /**

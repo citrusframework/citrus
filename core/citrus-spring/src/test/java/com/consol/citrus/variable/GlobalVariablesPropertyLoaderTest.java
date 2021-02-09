@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class GlobalVariablePropertyLoaderTest extends UnitTestSupport {
+public class GlobalVariablesPropertyLoaderTest extends UnitTestSupport {
 
     @Test
     public void testPropertyLoadingFromClasspath() {
@@ -40,7 +40,7 @@ public class GlobalVariablePropertyLoaderTest extends UnitTestSupport {
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(testContextFactory.getFunctionRegistry());
 
-        propertyLoader.loadPropertiesAsVariables();
+        propertyLoader.afterPropertiesSet();
 
         Assert.assertEquals(globalVariables.getVariables().size(), 1);
         Assert.assertTrue(globalVariables.getVariables().containsKey("property.load.test"));
@@ -57,7 +57,7 @@ public class GlobalVariablePropertyLoaderTest extends UnitTestSupport {
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(testContextFactory.getFunctionRegistry());
 
-        propertyLoader.loadPropertiesAsVariables();
+        propertyLoader.afterPropertiesSet();
 
         Assert.assertEquals(globalVariables.getVariables().size(), 1);
         Assert.assertTrue(globalVariables.getVariables().containsKey("property.load.test"));
@@ -74,7 +74,7 @@ public class GlobalVariablePropertyLoaderTest extends UnitTestSupport {
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(testContextFactory.getFunctionRegistry());
 
-        propertyLoader.loadPropertiesAsVariables();
+        propertyLoader.afterPropertiesSet();
     }
 
     @Test
@@ -87,7 +87,7 @@ public class GlobalVariablePropertyLoaderTest extends UnitTestSupport {
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(testContextFactory.getFunctionRegistry());
 
-        propertyLoader.loadPropertiesAsVariables();
+        propertyLoader.afterPropertiesSet();
 
         Assert.assertNotNull(globalVariables.getVariables().get("globalUserName"));
         Assert.assertEquals(globalVariables.getVariables().get("globalUserName"), "Citrus");
@@ -105,7 +105,7 @@ public class GlobalVariablePropertyLoaderTest extends UnitTestSupport {
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(testContextFactory.getFunctionRegistry());
 
-        propertyLoader.loadPropertiesAsVariables();
+        propertyLoader.afterPropertiesSet();
 
         Assert.assertNotNull(globalVariables.getVariables().get("globalDate"));
         Assert.assertEquals(globalVariables.getVariables().get("globalDate"),
@@ -123,7 +123,7 @@ public class GlobalVariablePropertyLoaderTest extends UnitTestSupport {
         propertyLoader.setFunctionRegistry(testContextFactory.getFunctionRegistry());
 
         try {
-            propertyLoader.loadPropertiesAsVariables();
+            propertyLoader.afterPropertiesSet();
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(globalVariables.getVariables().isEmpty());
             Assert.assertEquals(e.getMessage(), "Unknown variable 'unknownVar'");

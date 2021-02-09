@@ -95,9 +95,9 @@ public class Template extends AbstractTestAction {
             innerContext = new TestContext();
             innerContext.setFunctionRegistry(context.getFunctionRegistry());
 
-            GlobalVariables globalVariables = new GlobalVariables();
-            globalVariables.getVariables().putAll(context.getGlobalVariables());
-            innerContext.setGlobalVariables(globalVariables);
+            innerContext.setGlobalVariables(new GlobalVariables.Builder()
+                    .variables(context.getGlobalVariables())
+                    .build());
             innerContext.getVariables().putAll(context.getVariables());
 
             innerContext.setMessageStore(context.getMessageStore());

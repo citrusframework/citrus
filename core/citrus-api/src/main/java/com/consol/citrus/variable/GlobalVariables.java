@@ -23,18 +23,16 @@ import java.util.Map;
  * Global variables valid in each test case.
  */
 public class GlobalVariables {
-    /** Bean name in Spring application context */
-    public static final String BEAN_NAME = "globalVariables";
 
     /** Variables name value pair map */
-    private Map<String, Object> variables = new LinkedHashMap<>();
+    private final Map<String, Object> variables;
 
-	/**
-	 * Set the global variables.
-	 * @param variables the variables to set
-	 */
-	public void setVariables(Map<String, Object> variables) {
-		this.variables = variables;
+    public GlobalVariables() {
+    	this(new Builder());
+	}
+
+    public GlobalVariables(Builder builder) {
+    	this.variables = builder.variables;
 	}
 
 	/**
@@ -43,5 +41,26 @@ public class GlobalVariables {
 	 */
 	public Map<String, Object> getVariables() {
 		return variables;
+	}
+
+	/**
+	 * Fluent builder.
+	 */
+	public static class Builder {
+		private final Map<String, Object> variables = new LinkedHashMap<>();
+
+		public Builder variable(String name, Object value) {
+			this.variables.put(name, value);
+			return this;
+		}
+
+		public Builder variables(Map<String, Object> variables) {
+			this.variables.putAll(variables);
+			return this;
+		}
+
+		public GlobalVariables build() {
+			return new GlobalVariables(this);
+		}
 	}
 }

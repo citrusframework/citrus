@@ -16,8 +16,14 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.GlobalVariablesPropertyLoader;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -25,22 +31,23 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-
 /**
  * @author Christoph Deppisch
  * @since 1.4
  */
 public class GlobalVariablesParser implements BeanDefinitionParser {
 
+    /** Bean name in Spring application context */
+    public static final String BEAN_NAME = "globalVariables";
+
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(GlobalVariables.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(GlobalVariablesFactoryBean.class);
         parseVariableDefinitions(builder, element);
 
-        parserContext.getRegistry().registerBeanDefinition(GlobalVariables.BEAN_NAME, builder.getBeanDefinition());
+        parserContext.getRegistry().registerBeanDefinition(BEAN_NAME, builder.getBeanDefinition());
 
-        List<String> propertyFiles = new ArrayList<String>();
+        List<String> propertyFiles = new ArrayList<>();
         List<Element> propertyFileElements = DomUtils.getChildElementsByTagName(element, "file");
         for (Element propertyFileElement : propertyFileElements) {
             propertyFiles.add(propertyFileElement.getAttribute("path"));
@@ -62,7 +69,7 @@ public class GlobalVariablesParser implements BeanDefinitionParser {
      * @param element the source element.
      */
     private void parseVariableDefinitions(BeanDefinitionBuilder builder, Element element) {
-        Map<String, String> testVariables = new LinkedHashMap<String, String>();
+        Map<String, String> testVariables = new LinkedHashMap<>();
         List<Element> variableElements = DomUtils.getChildElementsByTagName(element, "variable");
         for (Element variableDefinition : variableElements) {
             testVariables.put(variableDefinition.getAttribute("name"), variableDefinition.getAttribute("value"));
@@ -70,6 +77,32 @@ public class GlobalVariablesParser implements BeanDefinitionParser {
 
         if (!testVariables.isEmpty()) {
             builder.addPropertyValue("variables", testVariables);
+        }
+    }
+
+    /**
+     * Factory bean.
+     */
+    public static class GlobalVariablesFactoryBean implements FactoryBean<GlobalVariables> {
+
+        private final GlobalVariables.Builder builder = new GlobalVariables.Builder();
+
+        @Override
+        public GlobalVariables getObject() throws Exception {
+            return builder.build();
+        }
+
+        /**
+         * Set the global variables.
+         * @param variables the variables to set
+         */
+        public void setVariables(Map<String, Object> variables) {
+            this.builder.variables(variables);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return GlobalVariables.class;
         }
     }
 }

@@ -39,6 +39,10 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  */
 public class GlobalVariablesPropertyLoader implements InitializingBean {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(GlobalVariablesPropertyLoader.class);
+
     /** Bean name in Spring application context */
     public static final String BEAN_NAME = "globalVariablesPropertyLoader";
 
@@ -49,16 +53,13 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     private FunctionRegistry functionRegistry;
 
     /** List of property files loaded as global variables */
-    private List<String> propertyFiles = new ArrayList<String>();
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(GlobalVariablesPropertyLoader.class);
+    private List<String> propertyFiles = new ArrayList<>();
 
     /**
      * Load the properties as variables.
-     * @throws CitrusRuntimeException
      */
-    public void loadPropertiesAsVariables() {
+    @Override
+    public void afterPropertiesSet() {
         BufferedReader reader = null;
 
         try {
@@ -66,7 +67,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                 for (String propertyFilePath : propertyFiles) {
                     Resource propertyFile = new PathMatchingResourcePatternResolver().getResource(propertyFilePath.trim());
 
-                    log.debug("Reading property file " + propertyFile.getFilename());
+                    LOG.debug("Reading property file " + propertyFile.getFilename());
 
                     // Use input stream as this also allows to read from resources in a JAR file
                     reader = new BufferedReader(new InputStreamReader(propertyFile.getInputStream()));
@@ -82,7 +83,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                     String propertyExpression;
                     while ((propertyExpression = reader.readLine()) != null) {
 
-                        log.debug("Property line [ {} ]", propertyExpression);
+                        LOG.debug("Property line [ {} ]", propertyExpression);
 
                         propertyExpression = propertyExpression.trim();
                         if (!isPropertyLine(propertyExpression)) {
@@ -92,15 +93,15 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                         String key = propertyExpression.substring(0, propertyExpression.indexOf('=')).trim();
                         String value = propertyExpression.substring(propertyExpression.indexOf('=') + 1).trim();
 
-                        log.debug("Property value replace dynamic content [ {} ]", value);
+                        LOG.debug("Property value replace dynamic content [ {} ]", value);
                         value = context.replaceDynamicContentInString(value);
 
-                        if (log.isDebugEnabled()) {
-                            log.debug("Loading property: " + key + "=" + value + " into default variables");
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Loading property: " + key + "=" + value + " into default variables");
                         }
 
-                        if (log.isDebugEnabled() && globalVariables.getVariables().containsKey(key)) {
-                            log.debug("Overwriting property " + key + " old value:" + globalVariables.getVariables().get(key)
+                        if (LOG.isDebugEnabled() && globalVariables.getVariables().containsKey(key)) {
+                            LOG.debug("Overwriting property " + key + " old value:" + globalVariables.getVariables().get(key)
                                     + " new value:" + value);
                         }
 
@@ -109,7 +110,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                         context.setVariable(key, globalVariables.getVariables().get(key));
                     }
 
-                    log.info("Loaded property file " + propertyFile.getFilename());
+                    LOG.info("Loaded property file " + propertyFile.getFilename());
                 }
             }
         } catch (IOException e) {
@@ -119,7 +120,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    log.warn("Unable to close property file reader", e);
+                    LOG.warn("Unable to close property file reader", e);
                 }
             }
         }
@@ -132,11 +133,6 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     private boolean isPropertyLine(String line) {
         return StringUtils.hasText(line) && !line.startsWith("#")
                                 && line.indexOf('=') > -1;
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        loadPropertiesAsVariables();
     }
 
     /**
