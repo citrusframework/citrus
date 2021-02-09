@@ -167,11 +167,11 @@ build_and_stage_artifacts() {
         echo "==== Release to local"
         ./mvnw ${maven_opts} install
     elif [ $(hasflag --snapshot-release) ]; then
-        echo "==== Release to consol.labs repository"
-        ./mvnw ${maven_opts} install deploy -Prelease-labs
+        echo "==== Release snapshot to local"
+        ./mvnw ${maven_opts} install
     else
         echo "==== Release to Maven central and stage artifacts to Sonatype"
-        ./mvnw ${maven_opts} install deploy -Prelease-central -DstagingDescription="Staging Syndesis for $release_version"
+        ./mvnw ${maven_opts} install deploy -Prelease-central -DstagingDescription="Staging Citrus for v$release_version"
     fi
 }
 

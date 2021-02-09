@@ -39,8 +39,8 @@
   </licenses>
 
   <ciManagement>
-    <system>Jenkins</system>
-    <url>http://labs-build.consol.de/view/Citrus/</url>
+    <system>GitHub actions</system>
+    <url>https://github.com/citrusframework/citrus/actions</url>
     <notifiers>
       <notifier>
         <type>mail</type>
@@ -1489,29 +1489,6 @@
                 </goals>
               </execution>
             </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>release-labs</id>
-      <distributionManagement>
-        <repository>
-          <id>consol-labs-release</id>
-          <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/repository</url>
-        </repository>
-        <snapshotRepository>
-          <id>consol-labs-snapshots</id>
-          <url>scpexe://labs.consol.de/home/maven-repository/www/htdocs/snapshots-repository</url>
-        </snapshotRepository>
-      </distributionManagement>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
           </plugin>
         </plugins>
       </build>
