@@ -3,11 +3,11 @@
               xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
                                   http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/selenium/testcase
                                   http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd
-                                  http://www.citrusframework.org/schema/testcase 
+                                  http://www.citrusframework.org/schema/testcase
                                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
   <testcase name="SeleniumIT">
@@ -81,7 +81,7 @@
       <selenium:navigate page="form"/>
 
       <create-variables>
-        <variable name="username" value="Selenium"></variable>
+        <variable name="username" value="Selenium"/>
       </create-variables>
 
       <selenium:page name="userForm" action="setUserName">
