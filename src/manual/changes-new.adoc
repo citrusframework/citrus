@@ -3,14 +3,18 @@
 
 [[changes-3-0-0]]
 == Since Citrus 3.0.0
-YAY, we have started to work on Citrus 3!
+
+YAY, we have finally made it to Citrus 3.0!
 
 In the following sections you find our strategy, ideas and all major changes that are part of Citrus 3.0.0!
 
 [[changes-3-0-0-objectives]]
 == Objectives
 
-Citrus 3.0.0 is a major release and we want to take that as an opportunity to follow up with some improvements and refactoring that we are eager to do for quite some time. That being said we try to comply with your need to migrate older version to that new major release. So we take extra care to provide some migration guide and keep the breaking changes to a required level.
+Citrus 3.0.0 is a major release and we want to take that as an opportunity to follow up with some improvements
+and refactorings that we are eager to do for quite some time. That being said we try to comply with your need to
+migrate older version to that new major release. So we take extra care to provide some migration guide and keep
+the breaking changes to a required level.
 
 Here are the main objectives we have in Citrus 3.0.0
 
@@ -549,7 +553,7 @@ The module `citrus-integration` combined hundreds of internal integration tests 
 We have updated the Citrus dependencies to latest versions:
 
 - Spring framework 5.2
-- Apache Camel 3.1
+- Apache Camel 3.5
 - TestNG
 - JUnit 4 & 5
 - Jetty
@@ -559,4 +563,4 @@ We have updated the Citrus dependencies to latest versions:
 - Selenium
 - Ssh/Ftp
 - Log4J2
-- Cucumber 5.4
+- Cucumber 6.9

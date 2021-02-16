@@ -2,13 +2,57 @@
 = Appendix
 :numbered!:
 
-This chapter gives a brief overview of all archived changes.
+[[maven-archetypes]]
+== Maven archetype
 
-include::changes-2-7.adoc[]
-include::changes-2-6.adoc[]
-include::changes-2-5.adoc[]
-include::changes-2-4.adoc[]
-include::changes-2-3.adoc[]
-include::changes-2-2.adoc[]
-include::changes-2-1.adoc[]
-include::changes-2-0.adoc[]
+If you start from scratch or in case you would like to have Citrus operating in a separate Maven module you can use the
+Citrus Maven archetype to create a new Maven project. The archetype will setup a basic Citrus project structure with basic
+settings and files.
+
+[source,xml]
+----
+mvn archetype:generate -Dfilter=com.consol.citrus.mvn:citrus
+
+1: remote -> com.consol.citrus.mvn:citrus-quickstart (Citrus quickstart project)
+2: remote -> com.consol.citrus.mvn:citrus-quickstart-jms (Citrus quickstart project with JMS consumer and producer)
+3: remote -> com.consol.citrus.mvn:citrus-quickstart-soap (Citrus quickstart project with SOAP client and producer)
+Choose a number: 1
+
+Define value for groupId: com.consol.citrus.samples
+Define value for artifactId: citrus-sample
+Define value for version: 1.0-SNAPSHOT
+Define value for package: com.consol.citrus.samples
+----
+
+In the sample above we used the Citrus archetype available in Maven central repository.
+As the list of default archetypes available in Maven central is very long, it has been filtered for official Citrus archetypes.
+
+After choosing the Citrus quickstart archetype you have to define several values for your project: the groupId, the artifactId,
+the package and the project version. After that we are done! Maven created a Citrus project structure for us which is
+ready for testing. You should see the following basic project folder structure.
+
+[source,xml]
+----
+citrus-sample
+  |   + src
+  |   |   + main
+  |   |    |   + java
+  |   |    |   + resources
+  |   |   + test
+  |   |    |   + java
+  |   |    |   + resources
+  pom.xml
+----
+
+The Citrus project is absolutely ready for testing. With Maven we can build, package, install and test our project right
+away without any adjustments. Try to execute the following commands:
+
+[source,xml]
+----
+mvn clean verify
+mvn clean verify -Dit.test=MyFirstCitrusTest
+----
+
+NOTE: If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on
+https://citfrusframework.org[https://citrusframework.org/tutorials.html].
+

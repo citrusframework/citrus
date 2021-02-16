@@ -9,7 +9,7 @@
   <fileSets>
     <fileSet>
       <directory>${project.build.directory}/generated-docs</directory>
-      <outputDirectory>reference/${project.version}/html</outputDirectory>
+      <outputDirectory>reference/${project.docs.version}/html</outputDirectory>
       <includes>
         <include>**/**</include>
       </includes>
@@ -38,8 +38,8 @@
     </file>
     <file>
       <source>${project.build.directory}/generated-docs/index.pdf</source>
-      <outputDirectory>reference/${project.version}/pdf</outputDirectory>
-      <destName>citrus-reference-${project.version}.pdf</destName>
+      <outputDirectory>reference/${project.docs.version}/pdf</outputDirectory>
+      <destName>citrus-reference-${project.docs.version}.pdf</destName>
     </file>
     <file>
       <source>${project.build.directory}/generated-docs/index.pdf</source>

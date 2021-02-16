@@ -1,0 +1,177 @@
+[[runtime-testng]]
+== TestNG
+
+https://testng.org[TestNG] stands for next generation testing and has had a great influence in adding Java annotations to the unit test community.
+Citrus is able to define tests as executable TestNG Java classes.
+
+NOTE: The TestNG support is shipped in a separate Maven module. You need to include the module as a dependency in your
+project.
+
+.TestNG module dependency
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-testng</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+[[testng-tests]]
+=== TestNG tests
+
+See the following sample showing how to write a Citrus test on top of TestNG:
+
+.TestNG Citrus test
+[source,java]
+----
+package com.consol.citrus.samples;
+
+import org.testng.annotations.Test;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.testng.TestNGCitrusSupport;
+
+@Test
+public class Simple_IT extends TestNGCitrusSupport {
+
+    @CitrusTest(name = "Simple_IT")
+    public void simpleTest() {
+        description("First example showing the basic Java DSL!");
+
+        given(
+            variable("user", "Citrus")
+        );
+
+        then(
+            echo().message("Hello ${user}!"
+        ));
+    }
+}
+----
+
+If you are familiar with TestNG you will see that the Java class is a normal TestNG test class using the usual
+`@Test` annotation. For convenience reasons you can extend a basic Citrus TestNG base class `TestNGCitrusSupport` which
+enables the Citrus test execution as well as the Java DSL features for us.
+
+NOTE: You can also combine Citrus with the Spring framework and its dependency injection and IoC capabilities. In order to
+enable Spring support in Citrus add the `citrus-spring` module to your project and extend `TestNGCitrusSpringSupport` as a
+base class. With the Spring support in Citrus the test is able to use `@Autowired` annotations for injecting Spring beans into the
+test class and you can define the Spring application context with `@Configuration` annotations for instance.
+
+In addition, the test methods use the *@CitrusTest* annotation which allows setting properties such as test names and packages.
+
+The Citrus test logic goes directly as the method body with using the Citrus Java domain specific language features. As you
+can see the Java DSL is able to follow BDD (Behavior Drive Design) principles with Given-When-Then syntax. As an alternative
+to that you can just use `run()` for all test actions.
+
+.Pure test action DSL
+[source,java]
+----
+@CitrusTest(name = "Simple_IT")
+public void simpleTest() {
+    description("First example showing the basic Java DSL!");
+
+    run(variable("user", "Citrus"));
+
+    run(
+        echo().message("Hello ${user}!"
+    ));
+}
+----
+
+The great news is that you can still use the awesome TestNG features in with the Citrus test class (e.g. parallel test
+execution, test groups, setup and tear down operations and so on). Just to give an example we can simply add a test group
+to our test like this:
+
+.Set test groups
+[source,java]
+----
+@Test(groups = {"long-running"})
+public void longRunningTest() {
+    ...
+}
+----
+
+For more information on TestNG please visit the https://testng.org[official TestNG website], where you find a complete
+reference documentation. The following sections deal with a subset of these TestNG features in particular.
+
+[[testng-dataproviders]]
+=== Use TestNG data providers
+
+TestNG as a framework comes with lots of great features such as data providers. Data providers execute a test case several
+times with different test data. Each test execution works with a specific parameter value. You can use data provider
+parameter values as test variables in Citrus. See the next listing on how to use TestNG data providers in Citrus:
+
+.TestNG Citrus data provider test
+[source,java]
+----
+public class DataProviderIT extends TestNGCitrusSupport {
+
+    @CitrusTest
+    @CitrusParameters( {"message", "delay"} )
+    @Test(dataProvider = "messageDataProvider")
+    public void dataProvider(String message, Long sleep) {
+        run(echo(message));
+        run(sleep().milliseconds(sleep));
+
+        run(echo("${message}"));
+        run(echo("${delay}"));
+    }
+
+    @DataProvider
+    public Object[][] messageDataProvider() {
+        return new Object[][] {
+                { "Hello World!", 300L },
+                { "Citrus rocks!", 1000L },
+                { "Hi from Citrus!", 500L },
+        };
+    }
+}
+----
+
+Above test case method is annotated with TestNG data provider called *messageDataProvider* . In the same class you can write
+the data provider that returns a list of parameter values. TestNG will execute the test case several times according to the
+provided parameter list. Each execution is shipped with the respective parameter value.
+
+According to the *@CitrusParameter* annotation the test will have test variables called `message` and `delay`.
+
+[[testng-parallel]]
+=== Run tests in parallel
+
+Integration tests tend to be more time-consuming compared to pure unit tests when it comes to execute tests. This is because
+integration tests often need to initialize test infrastructure (e.g. test servers, database connections). Running tests
+in parallel can reduce the overall test suite time a lot.
+
+When running tests in parallel you need to make sure each test operates on its own set of resources. Tests must not share
+components such as the Citrus Java DSL test action runner or the test context.
+
+You should be using the resource injection to make sure each test operates on its own resources.
+
+.Resource injection
+[source,java]
+----
+public class ResourceInjection_IT extends TestNGCitrusSupport {
+
+    @Test
+    @CitrusTest
+    public void injectResources(@Optional @CitrusResource TestCaseRunner runner,
+                                @Optional @CitrusResource TestContext context) {
+
+        runner.given(
+            createVariable("random", "citrus:randomNumber(10)")
+        );
+
+        runner.run(
+            echo("The random number is: ${random}")
+        );
+    }
+}
+----
+
+First of all the method parameters must be annotated with `@Optional` because the values are not injected by TestNG itself
+but by the Citrus base test class. Finally, the parameter requires the `@CitrusResource` annotations in order to mark the
+parameter for Citrus resource injection.
+
+Now each method uses its own resource instances which makes sure that parallel test execution can take place without having
+the risk of side effects on other tests running at the same time. Of course, you also need to make sure that the message
+exchange in your tests is ready to be performed in parallel (e.g. use message selectors).

@@ -1,5 +1,5 @@
 [[actions-receive]]
-== Receive messages
+== Receive
 
 Just like sending messages the receiving part is a very important action in an integration test. Honestly the receive action is even more important in Citrus as we also want to validate the incoming message contents. We are writing a test so we also need assertions and checks that everything works as expected.
 

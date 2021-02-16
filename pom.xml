@@ -138,6 +138,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <project.docs.version>${project.version}</project.docs.version>
     <spring.version>5.3.3</spring.version>
     <spring.ws.version>3.0.10.RELEASE</spring.ws.version>
     <spring.integration.version>5.4.3</spring.integration.version>
@@ -1383,17 +1384,15 @@
         <plugin>
           <groupId>org.asciidoctor</groupId>
           <artifactId>asciidoctor-maven-plugin</artifactId>
-          <version>1.5.7</version>
+          <version>2.1.0</version>
           <inherited>false</inherited>
           <configuration>
             <sourceDirectory>src/manual</sourceDirectory>
             <sourceDocumentName>index.adoc</sourceDocumentName>
-            <sourceHighlighter>coderay</sourceHighlighter>
             <attributes>
               <icons>font</icons>
               <pagenums/>
-              <version>${project.version}</version>
-              <plugindir>${project.basedir}/plugin</plugindir>
+              <version>${project.docs.version}</version>
               <idprefix/>
               <idseparator>-</idseparator>
               <allow-uri-read>true</allow-uri-read>
@@ -1496,6 +1495,12 @@
 
     <profile>
       <id>docs-html</id>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>bintray</id>
+          <url>https://jcenter.bintray.com/</url>
+        </pluginRepository>
+      </pluginRepositories>
       <build>
         <plugins>
           <plugin>
@@ -1529,6 +1534,13 @@
                 </configuration>
               </execution>
             </executions>
+            <dependencies>
+              <dependency>
+                <groupId>com.bmuschko</groupId>
+                <artifactId>asciidoctorj-tabbed-code-extension</artifactId>
+                <version>0.3</version>
+              </dependency>
+            </dependencies>
           </plugin>
         </plugins>
       </build>

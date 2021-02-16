@@ -1,0 +1,69 @@
+[[validation-callbacks]]
+== Validation callbacks
+
+The Java DSL offers some additional validation tricks and possibilities when dealing with messages that are sent and received over Citrus. One of them is the validation callback functionality. With this feature you can marshal/unmarshal message payloads and code validation steps on Java objects.
+
+.Java DSL designer
+[source,java]
+----
+@CitrusTest
+public void receiveMessageTest() {
+    receive(bookResponseEndpoint)
+        .validate(new XmlMarshallingValidationProcessor<AddBookResponseMessage>() {
+            @Override
+            public void validate(AddBookResponseMessage response, MessageHeaders headers) {
+                Assert.isTrue(response.isSuccess());
+            }
+        });
+}
+----
+
+By default the validation callback needs some XML unmarshaller implementation for transforming the XML payload to a Java object. Citrus will automatically search for the unmarshaller bean in your Spring application context if nothing specific is set. Of course you can also set the unmarshaller instance explicitly.
+
+.Java DSL designer
+[source,java]
+----
+@Autowired
+private Unmarshaller unmarshaller;
+
+@CitrusTest
+public void receiveMessageTest() {
+    receive(bookResponseEndpoint)
+        .validate(new MarshallingValidationProcessor<AddBookResponseMessage>(unmarshaller) {
+            @Override
+            public void validate(AddBookResponseMessage response, MessageHeaders headers) {
+                Assert.isTrue(response.isSuccess());
+            }
+        });
+}
+----
+
+Obviously working on Java objects is much more comfortable than using the XML String concatenation. This is why you can also use this feature when sending messages.
+
+.Java DSL designer
+[source,java]
+----
+@Autowired
+private Marshaller marshaller;
+
+@CitrusTest
+public void sendMessageTest() {
+    send(bookRequestEndpoint)
+        .payload(createAddBookRequestMessage("978-citrus:randomNumber(10)"), marshaller)
+        .header(SoapMessageHeaders.SOAP_ACTION, "addBook");
+}
+
+private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
+    AddBookRequestMessage requestMessage = new AddBookRequestMessage();
+    Book book = new Book();
+    book.setAuthor("Foo");
+    book.setTitle("FooTitle");
+    book.setIsbn(isbn);
+    book.setYear(2008);
+    book.setRegistrationDate(Calendar.getInstance());
+    requestMessage.setBook(book);
+    return requestMessage;
+}
+----
+
+The example above creates a *AddBookRequestMessage* object and puts this as payload to a send action. In combination with a marshaller instance Citrus is able to create a proper XML message payload then.

@@ -1,5 +1,5 @@
 [[binary-message-validation]]
-== Binary message validation
+== Binary validation
 
 Binary message validation is not very easy to do especially when it comes to compare data with a given control message. As a tester you want to validate the binary content. There are basically two ways in Citrus how to compare binary message content.
 

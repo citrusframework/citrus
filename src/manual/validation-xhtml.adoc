@@ -1,5 +1,5 @@
 [[xhtml-message-validation]]
-== XHTML message validation
+== XHTML validation
 
 When Citrus receives plain Html messages we likely want to use the powerful XML validation capabilities such as XML tree comparison or XPath support. Unfortunately Html messages do not follow the XML well formed rules very strictly. This implies that XML message validation will fail because of non well formed Html code.
 

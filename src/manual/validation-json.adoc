@@ -1,5 +1,5 @@
 [[json-message-validation]]
-== JSON message validation
+== JSON validation
 
 Message formats such as JSON have become very popular, in particular when speaking of RESTful WebServices and JavaScript using JSON as the message format to go for. Citrus is able to expect and validate JSON messages as we will see in the next sections.
 
@@ -165,3 +165,235 @@ So much for receiving JSON message data in Citrus. Of course sending JSON messag
     </message>
 </send>
 ----
+
+[[json-ignore-validation]]
+=== Ignore with JsonPath
+
+The next usage scenario for JsonPath expressions in Citrus is the ignoring of elements during message validation. As you
+already know Citrus provides powerful validation mechanisms for XML and JSON message format. The framework is able to compare
+received and expected message contents with powerful validator implementations. Now it this time we want to use a JsonPath
+expression for ignoring a very specific entry in the JSON object structure.
+
+[source,xml]
+----
+<message type="json">
+  <data>
+  {
+      "users":
+      [{
+        "name": "Jane",
+        "token": "?",
+        "lastLogin": 0
+      },
+      {
+        "name": "Penny",
+        "token": "?",
+        "lastLogin": 0
+      },
+      {
+        "name": "Mary",
+        "token": "?",
+        "lastLogin": 0
+      }]
+  }
+  </data>
+  <ignore expression="$.users[*].token" />
+  <ignore expression="$..lastLogin" />
+</message>
+----
+
+This time we add JsonPath expressions as ignore statements. This means that we explicitly leave out the evaluated elements
+from validation. Obviously this mechanism is a good thing to do when dynamic message data simply is not deterministic such
+as timestamps and dynamic identifiers. In the example above we explicitly skip the *token* entry and all *lastLogin* values
+that are obviously timestamp values in milliseconds.
+
+The JsonPath evaluation is very powerful when it comes to select a set of JSON objects and elements. This is how we can ignore
+several elements with one single JsonPath expression which is very powerful.
+
+[[json-path-validation]]
+=== JsonPath validation
+
+Let's continue to use JsonPath expressions when validating a received message in Citrus:
+
+.XML DSL
+[source,xml]
+----
+<message type="json">
+  <validate>
+    <json-path expression="$.user.name" value="Penny"/>
+    <json-path expression="$['user']['name']" value="${userName}"/>
+    <json-path expression="$.user.aliases" value="['penny','jenny','nanny']"/>
+    <json-path expression="$.user[?(@.admin)].password" value="@startsWith('$%00')@"/>
+    <json-path expression="$.user.address[?(@.type='office')]"
+        value="{&quot;city&quot;:&quot;Munich&quot;,&quot;street&quot;:&quot;Company Street&quot;,&quot;type&quot;:&quot;office&quot;}"/>
+  </validate>
+</message>
+----
+
+.Java DSL
+[source,java]
+----
+receive(receiveMessageBuilder -> receiveMessageBuilder
+    .endpoint(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate("$.user.name", "Penny")
+    .validate("$['user']['name']", "${userName}")
+    .validate("$.user.aliases", "[\"penny\",\"jenny\",\"nanny\"]")
+    .validate("$.user[?(@.admin)].password", "@startsWith('$%00')@")
+    .validate("$.user.address[?(@.type='office')]", "{\"city\":\"Munich\",\"street\":\"Company Street\",\"type\":\"office\"}"));
+----
+
+.Java DSL
+[source,java]
+----
+final Map<String, Object> validationMap = new HashMap<>();
+validationMap.put("$.user.name", "Penny");
+validationMap.put("$['user']['name']", "${userName}");
+validationMap.put("$.user.aliases", "[\"penny\",\"jenny\",\"nanny\"]");
+validationMap.put(""$.user[?(@.admin)].password", "@startsWith('$%00')@");
+validationMap.put("$.user.address[?(@.type='office')]", "{\"city\":\"Munich\",\"street\":\"Company Street\",\"type\":\"office\"}");
+
+receive(receiveMessageBuilder -> receiveMessageBuilder
+    .endpoint(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate(validationMap));
+----
+
+The above JsonPath expressions will be evaluated when Citrus validates the received message. The expression result is compared
+to the expected value where expectations can be static values as well as test variables and validation matcher expressions.
+In case a JsonPath expression should not be able to find any elements the test case will also fail.
+
+JSON is a pretty simple yet powerful message format. Simply put, a JSON message just knows JSONObject, JSONArray and JSONValue
+items. The handling of JSONObject and JSONValue items in JsonPath expressions is straight forward. We just use a dot notated
+syntax for walking through the JSONObject hierarchy. The handling of JSONArray items is also not very difficult either. Citrus
+will try the best to convert JSONArray items to String representation values for comparison.
+
+IMPORTANT: JsonPath expressions will only work on JSON message formats. This is why we have to tell Citrus the correct message
+format. By default Citrus is working with XML message data and therefore the XML validation mechanisms do apply by default.
+With the message type attribute set to *json* we make sure that Citrus enables JSON specific features on the message validation
+such as JsonPath support.
+
+Now lets get a bit more complex with validation matchers and JSON object functions. Citrus tries to give you the most comfortable
+validation capabilities when comparing JSON object values and JSON arrays. One first thing you can use is object functions
+like *keySet()* or *size()* . This functionality is not covered by JsonPath out of the box but added by Citrus. See the following
+example on how to use it:
+
+.XML DSL
+[source,xml]
+----
+<message type="json">
+  <validate>
+    <json-path expression="$.user.keySet()" value="[id,name,admin,projects]"/>
+    <json-path expression="$.user.aliases.size()" value="3"/>
+  </validate>
+</message>
+----
+
+.Java DSL
+[source,java]
+----
+receive(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate("$.user.keySet()", "[id,name,admin,projects]")
+    .validate("$.user.aliases.size()", "3");
+----
+
+The object functions do return special JSON object related properties such as the set of *keys* for an object or the size
+of an JSON array.
+
+Now lets get even more comfortable validation capabilities with matchers. Citrus supports Hamcrest matchers which gives
+us a very powerful way of validating JSON object elements and arrays. See the following examples that demonstrate how this works:
+
+.XML DSL
+[source,xml]
+----
+<message type="json">
+  <validate>
+    <json-path expression="$.user.keySet()" value="@assertThat(contains(id,name,admin,projects))@"/>
+    <json-path expression="$.user.aliases.size()" value="@assertThat(allOf(greaterThan(0), lessThan(5)))@"/>
+  </validate>
+</message>
+----
+
+.Java DSL
+[source,java]
+----
+receive(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate("$.user.keySet()", contains("id","name","admin","projects"))
+    .validate("$.user.aliases.size()", allOf(greaterThan(0), lessThan(5)));
+----
+
+When using the XML DSL we have to use the *assertThat* validation matcher syntax for defining the Hamcrest matchers. You
+can combine matcher implementation as seen in the *allOf(greaterThan(0), lessThan(5))* expression. When using the Java DSL
+you can just add the matcher as expected result object. Citrus evaluates the matchers and makes sure everything is as expected.
+This is a very powerful validation mechanism as it combines the Hamcrest matcher capabilities with JSON message validation.
+
+[[json-schema-validation]]
+=== JSON schema validation
+
+The JSON schema validation in Citrus is based on the drafts provided by http://json-schema.org/[json-schema.org].
+Because JSON schema is a fast evolving project, only JSON schema V3 and V4 are currently supported.
+
+IMPORTANT: In contrast to the XML validation, the JSON validation is an optional feature. You have to activate it
+withing every receive-message action by setting `schema-validation="true"`
+
+[source,xml]
+----
+<http:receive-request server="echoHttpServer">
+    <http:POST>
+      <http:body type="json" schema="bookStore" schema-validation="true">
+        <http:data>
+          {
+            "isbn" : "0345391802",
+            "title": "The Hitchhiker's Guide to the Galaxy",
+            "author": "Douglas Adams"
+          }
+        </http:data>
+      </http:body>
+    </http:POST>
+</http:receive-request>
+----
+
+This behavior is currently required, to provide downwards compatibility to previous Citrus versions, because a
+mandatory validation would cause all previous JSON based test cases to fail, due to the missing JSON schemas for the
+messages within the test. That would have forced you to update all your JSON tests with the proper schema files.
+This led us the decision to add the JSON validation as an optional feature initially. Nevertheless we encourage you to
+add JSON schema validation to your test cases as soon as possible, because we think that message validation is a
+important part of integration testing.
+
+=== JSON schema repositories
+Because Citrus supports different types of schema repositories, it is necessary to declare a JSON schema repository
+as `type="json"`. This allows Citrus to collect all JSON schema files for the message validation.
+
+[source,xml]
+----
+<citrus:schema-repository type="json" id="jsonSchemaRepository">
+    <citrus:schemas>
+        <citrus:schema id="product" location="classpath:com/consol/citrus/validation/ProductsSchema.json"/>
+    </citrus:schemas>
+</citrus:schema-repository>
+----
+
+=== JSON schema filtering and validation strategy
+In reference to the current JSON schema definition, it is not possible to create a direct reference between a JSON
+message and a set of schemas, as it would be possible with XML namespaces. Because of that, Citrus follows a rule set
+for choosing the relevant schemas based on the configuration withing the test case in relation to the given context.
+The following table assumes that the JSON schema validation is activated for the test action.
+
+|===
+|Scenario |Validation rules
+
+|No JSON schema repositories are defined in the context.
+|No JSON schema validation applies.
+
+|There is at least one JSON schema repository defined in the context.
+|The message of the test action must be valid regarding at least one of the available schemas within the context.
+
+|A schema overruling is configured in the test case.
+|The configured schema must exist and the message must be valid regarding to the specified schema.
+
+|A schema repository overruling is configured in the test case.
+|The configured schema repository must exist and the message must be valid regarding at least one of the schemas within
+the specified schema repository.
+|===

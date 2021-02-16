@@ -1,135 +1,231 @@
 [[schema-validation]]
 == Schema validation
 
-When structured data is transmitted from one system to another, it's important that the sender and the receiver
-understand each other. To ensure this, a contract is required introducing the rules of communication for both parties.
-This is mostly done by using schemas. Citrus brings the schema based validation of messages directly to your integration
-test environment. This includes the management, mapping and filtering of schemas in context to your current test case
-by just defining some rules in XML configuration or Java DSL. Let's start with this chapter by introducing some basic
-concepts of the schema validation.
+When structured data is transmitted from one system to another, it is important that both sender and receiver
+agree on an interface contract. The contract introduces rules of communication for both parties.
 
-[[managing-schemas]]
-=== Managing schemas
-Most complex applications have a lot of schemas that are relevant for different use cases. To organize these schemas
-in your test cases, Citrus brings you some structuring capabilities.
+Schemas represent the most popular way to define contracts. Citrus is able to manage multiple schemas in the project context.
+You can define mapping rules to pick the right schema for a message validation.
 
-[[schema-definitions]]
-==== Schema definitions
-[source,xml]
+Let's start with this chapter by introducing some basic concepts of the schema validation.
+
+[[schema-definition]]
+=== Schema definition
+
+Complex applications require multiple schemas that are relevant for different use cases. You should organize these schemas
+in your test project. First you need to add a schema definition that points to the schema location.
+
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<citrus:schema id="bookstore" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
+@Bean
+public SimpleXsdSchema bookstoreSchema() {
+    return new SimpleXsdSchema(new ClassPathResource("classpath:com/consol/citrus/xml/BookStore.wsdl"));
+}
 ----
 
-This xml snippet allows you to define a schema identified by its id, located at the given classpath.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus:schema id="bookstoreSchema" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
+----
+
 Please keep in mind, that the id of the schema has to be unique within the context.
 
-[[schema-references]]
-==== Schema references
-[source,xml]
-----
-<citrus:schema id="testSchema" location="classpath:com/consol/citrus/xml/test.xsd"/>
+NOTE: The samples above are using XML XSD/WSDL schema definitions. The same approach applies to Json schemas, too. You just need
+to use the `SimpleJsonSchema` class in the Java configuration. The XML configuration components derive the schema type automatically
+based on the file extension (`.xsd`, `.wsdl`, `.json`).
 
-...
-<citrus:reference schema="testSchema"/>
-...
+[[schema-repository]]
+=== Schema repository
+
+You can now reference the schema definition in a repository component. The repository is able to hold multiple schema definitions.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XsdSchemaRepository schemaRepository() {
+    XsdSchemaRepository repository = new XsdSchemaRepository();
+    repository.getSchemas().add(bookstoreSchema());
+    return repository;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus:schema-repository id="schemaRepository">
+  <citrus:schemas>
+    <citrus:reference schema="bookstoreSchema" />
+  </citrus:schemas>
+</citrus:schema-repository>
 ----
 
 Citrus allows you to reuse your schema definition within your context by referencing them. For a valid reference,
-the id of the schema and the value of the schema Attribute within the reference Element have to match.
+the id of the schema and the value of the schema attribute within the reference element have to match.
 
-[[schema-location-definitions]]
-==== Schema location definitions
-[source,xml]
+As an alternative to a schema reference you can also provide the schema location in a repository.
+
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<citrus:location path="classpath:citrus/flightbooking/*.xsd"/>
+@Bean
+public XsdSchemaRepository schemaRepository() {
+    XsdSchemaRepository repository = new XsdSchemaRepository();
+    repository.getLocations().add("classpath:schemas/flightbooking.xsd");
+    return repository;
+}
 ----
 
-Setting all schemas one by one can be verbose and uncomfortable, especially when dealing with
-lots of schema files. Therefore, Citrus offers you schema location patterns which will import all matching schema files
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus:schema-repository id="schemaRepository">
+  <citrus:locations>
+    <citrus:location path="classpath:schemas/flightbooking.xsd"/>
+  </citrus:locations>
+</citrus:schema-repository>
+----
+
+The given location points to the schema definition file. Setting all schemas one by one can be verbose and cumbersome, especially
+when dealing with lots of schema files. Therefore, Citrus provides schema location patterns which will import all matching schema files
 within the given location.
 
-[[schema-repositories]]
-==== Schema repositories
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XsdSchemaRepository schemaRepository() {
+    XsdSchemaRepository repository = new XsdSchemaRepository();
+    repository.getLocations().add("classpath:schemas/*.xsd");
+    return repository;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus:schema-repository id="schemaRepository">
+  <citrus:locations>
+    <citrus:location path="classpath:schemas/*.xsd"/>
+  </citrus:locations>
+</citrus:schema-repository>
+----
+
+The schema repository is able to receive many schemas with different locations and schema sources.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public SimpleXsdSchema testSchema() {
+    return new SimpleXsdSchema(new ClassPathResource("classpath:com/consol/citrus/xml/test.xsd"));
+}
+
+@Bean
+public XsdSchemaRepository schemaRepository() {
+    SimpleXsdSchema bookstoreSchema = new SimpleXsdSchema(
+            new ClassPathResource("classpath:com/consol/citrus/xml/BookStore.wsdl"));
+
+    XsdSchemaRepository repository = new XsdSchemaRepository();
+    repository.getSchemas().add(bookstoreSchema);
+    repository.getSchemas().add(testSchema());
+    repository.getLocations().add("classpath:schemas/*.xsd");
+    return repository;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:schema id="testSchema" location="classpath:com/consol/citrus/xml/test.xsd"/>
 
 <citrus:schema-repository id="xmlSchemaRepository">
   <citrus:schemas>
-    <citrus:schema id="bookstore" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
+    <citrus:schema id="bookstoreSchema" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
     <citrus:reference schema="testSchema"/>
-    <citrus:location path="classpath:com/consol/citrus/validation/*"/>
+    <citrus:location path="classpath:schemas/*.xsd"/>
   </citrus:schemas>
-</citrus:schema-repository>
-
-<citrus:schema-repository type="json" id="jsonSchemaRepository">
-    <citrus:schemas>
-        <citrus:schema id="product" location="classpath:com/consol/citrus/validation/ProductsSchema.json"/>
-    </citrus:schemas>
 </citrus:schema-repository>
 ----
 
-Citrus introduces a central schema repository component which holds a set of schema files for a project disjoint
-by their type (xml, json, etc.) and identified by its unique id. The default type of a schema repository is `type=xml`.
+NOTE: The examples in this chapter have been using XML XSD schema repository components. Of course, the same components are
+available for Json schema repositories, too. By default, the type of the schema repository is `type=xml`. You can use `type=json`
+to mark the schema repository as Json nature. In Java configuration please use the `JsonSchemaRepository` class.
 
-As you can see the schema repository is a simple XML component defined inside the Spring application context.
+The schema repository component holds a set of schema files for a project disjoint by their type (xml, json, etc.) and identified
+by its unique id.
+
+As you can see the schema repository is a simple bean defined inside the Spring application context.
 The repository can hold nested schema definitions, references and location definitions for all types of schema
 repositories.
 
 IMPORTANT: In case you have several schema repositories in your project do always define a default repository
 (name="schemaRepository"). This helps Citrus to always find at least one repository to interact with.
 
-[[schema-definition-overruling]]
-=== Schema definition overruling
-Depending on the type of message you want to validate, there are different attempts to find the correct schema for the
-given message.  There comes a time where you as a tester have to pick the right schema definition by yourself.
-You can overrule all schema mapping strategies in Citrus by directly setting the desired schema in your receiving
-message action.
+[[schema-mapping]]
+=== Schema definition mapping
 
-[source,xml]
+Depending on the type of message you want to validate, there are different attempts to find the correct schema for the
+given message. The XML schema repository will apply a mapping strategy that decides which schema should verify the current
+message. Citrus knows multiple mapping strategies that you can review in chapter link:#xml-schema-validation.
+
+As a user you always have the chance to explicitly pick the right schema definition for a `receive` operation. You can overrule
+all schema mapping strategies in Citrus by directly setting the desired schema in your receiving message action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive(httpMessageEndpoint)
+    .message()
+    .validate(
+        xml().schema("helloSchema")
+    );
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <receive endpoint="httpMessageEndpoint">
     <message schema="helloSchema">
-      <validate>
-        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId"
-                  value="${messageId}"/>
-        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId"
-                  value="${correlationId}"/>
-        <namespace prefix="ns1" value="http://citrus.com/namespace"/>
-      </validate>
+      <payload>
+        ...
+      </payload>
     </message>
 </receive>
-
-<citrus:schema id="helloSchema"
-    location="classpath:citrus/samples/sayHello.xsd"/>
 ----
 
-In the example above the tester explicitly sets a schema definition in the receive action (schema="helloSchema").
-The attribute value refers to named schema bean somewhere in the application context. This overrules all schema mapping
-strategies used in the central schema repository as the given schema is directly used for validation. This feature is
-helpful when dealing with different schema versions at the same time where the schema repository can not help you
-anymore.
+In the example above the tester explicitly sets a schema definition in the `receive` action (schema="helloSchema").
+The schema value refers to named schema bean defined in the project context (e.g. Spring application context).
+
+IMPORTANT: This overrules all schema mapping strategies used in the central schema repository as the given schema is directly
+used for validation. This feature is helpful when dealing with different schema versions at the same time.
 
 Another possibility would be to set a custom schema repository at this point. This means you can have more than one
-schema repository in your Citrus project and you pick the right one by yourself in the receive action.
+schema repository in your Citrus project and you pick the right one by yourself in the `receive` action.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive(httpMessageEndpoint)
+    .message()
+    .validate(
+        xml().schemaRepository("helloSchemaRepository")
+    );
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <receive endpoint="httpMessageEndpoint">
-    <message schema-repository="mySpecialSchemaRepository">
-      <validate>
-        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId"
-                  value="${messageId}"/>
-        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId"
-                  value="${correlationId}"/>
-        <namespace prefix="ns1" value="http://citrus.com/namespace"/>
-      </validate>
+    <message schema-repository="helloSchemaRepository">
+      <payload>
+        ...
+      </payload>
     </message>
 </receive>
 ----
 
-The *schema-repository* attribute refers to a Citrus schema repository component which is defined somewhere in the
-Spring application context.
-
-include::validation-schema-xml.adoc[]
-include::validation-schema-json.adoc[]
+The *schema-repository* attribute refers to a Citrus schema repository component which is defined as bean in the
+project context.

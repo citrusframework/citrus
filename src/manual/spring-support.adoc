@@ -1,0 +1,124 @@
+[[spring-support]]
+= Spring support
+
+The Spring framework provides an awesome set of projects, libraries and tools and is a wide spread and well appreciated
+framework for Java. The dependency injection and IoC concepts introduced with Spring are awesome.
+
+Citrus is able to work with Spring in terms of loading central components as Spring beans as part of a Spring application
+context. In the following you can use Spring autowiring and configuration in your tests.
+
+Read the following chapters to know more about how to use Citrus together with Spring.
+
+[[spring-xml-config]]
+== Spring XML application context
+
+Citrus supports the Spring framework as IoC container in order to load all components as Spring beans in a central
+application context. By default, Citrus loads basic components as Spring beans in a Spring Java config class.
+
+With Spring in place it is very easy to change/add custom bean components in the Spring application context. Citrus
+searches for custom Spring application context files in your project and adds these bean definitions to the Spring
+application context.
+
+By default, Citrus looks for custom XML Spring application context files in this location: `classpath*:citrus-context.xml`.
+So you can just add this file named *citrus-context.xml* to your project classpath and Citrus will load all Spring beans
+automatically.
+
+The location of this file can be customized by setting a System property `citrus.spring.application.context` or the environment
+variable `CITRUS_SPRING_APPLICATION_CONTEXT`.
+
+.Custom Spring XML bean definition context.
+[source,bash]
+----
+CITRUS_SPRING_APPLICATION_CONTEXT=file:/custom/path/to/custom-beans.xml
+----
+
+.custom-beans.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.citrusframework.org/schema/config
+            http://www.citrusframework.org/schema/config/citrus-config.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <!-- Add your bean definitions here -->
+
+</beans>
+----
+
+The file `custom-beans.xml` should provide a normal Spring bean XML configuration. You can add Spring beans as usual and
+you can use the Citrus XML components provided by the schemas like `xmlns:citrus="http://www.citrusframework.org/schema/config"`.
+
+Citrus provides several schemas for custom Spring XML components. These are described in more detail in the respective
+chapters and sections in this reference guide.
+
+TIP: You can also use import statements in this Spring application context in order to load other configuration files.
+So you are free to modularize your configuration in several files that get loaded by Citrus.
+
+[[spring-java-config]]
+== Spring Java config
+
+You can also use pure Java code to load Spring beans as a configuration. Citrus is able to load the Spring beans from a
+configuration class. Please define the configuration class with the System property `citrus.spring.java.config` or with
+the environment variable `CITRUS_SPRING_JAVA_CONFIG`.
+
+.Custom Spring Java configuration class.
+[source,bash]
+----
+CITRUS_SPRING_JAVA_CONFIG=custom.package.to.MyCustomConfig
+----
+
+Citrus loads the given Spring bean configuration class in *MyCustomConfig.class* and adds all defined Spring beans to the
+application context. See the following example for custom Spring Java configuration:
+
+.MyCustomConfig.java
+[source,java]
+----
+import com.consol.citrus.TestCase;
+import com.consol.citrus.report.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class MyCustomConfig {
+
+    @Bean(name = "plusMinusTestReporter")
+    public TestReporter plusMinusTestReporter() {
+        return new PlusMinusTestReporter();
+    }
+
+    /**
+     * Sample test reporter.
+     */
+    private static class PlusMinusTestReporter extends AbstractTestReporter {
+
+        @Override
+        public void generate(TestResults testResults) {
+            StringBuilder testReport = new StringBuilder();
+
+            testResults.doWithResults(result -> {
+                if (result.isSuccess()) {
+                    testReport.append("+");
+                } else if (result.isFailed()) {
+                    testReport.append("-");
+                } else {
+                    testReport.append("o");
+                }
+            });
+
+            LoggerFactory.getLogger(PlusMinusTestReporter.class).info(testReport.toString());
+        }
+    }
+}
+----
+
+TIP: You can mix XML and Java based Spring bean configuration. Citrus loads both sources and adds beans to the Spring bean
+application context during start.

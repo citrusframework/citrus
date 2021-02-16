@@ -1,5 +1,5 @@
 [[xml-message-validation]]
-== XML message validation
+== XML validation
 
 XML is a very common message format especially in the SOAP WebServices and JMS messaging world. Citrus provides XML message validator implementations that are able to compare XML message structures. The validator will notice differences in the XML message structure and supports XML namespaces, attributes and XML schema validation. The default XML message validator implementation is active by default and can be overwritten with a custom implementation using the bean id *defaultXmlMessageValidator* .
 
@@ -70,8 +70,8 @@ Message headers are represented as name-value pairs. Each expected header elemen
 
 NOTE: Sometimes message headers may not apply to the name-value pair pattern. For example SOAP headers can also contain XML fragments. Citrus supports these kind of headers too. Please see the SOAP chapter for more details.
 
-[[xml-ignore]]
-== Ignore XML elements
+[[xml-ignore-validation]]
+=== Ignore XML elements
 
 Some elements in the message payload might not apply for validation at all. Just think of communication timestamps an dynamic values inside a message:
 
@@ -110,6 +110,279 @@ public void receiveMessageTest() {
 ----
 
 Of course you can use the inline *@ignore@* placeholder in an external file resource, too.
+
+[[xml-xpath-validation]]
+=== XPath validation
+
+We have already seen how to validate whole XML structures with control message templates. All elements are validated and
+compared one after another. In some cases this approach might be too extensive. Imagine the tester only needs to validate a
+small subset of message elements. The definition of control templates in combination with several ignore statements is not
+appropriate in this case. You would rather want to use explicit element validation with XPath.
+
+.XML DSL
+[source,xml]
+----
+<message>
+  <validate>
+    <xpath expression="/TestRequest/MessageId" value="${messageId}"/>
+    <xpath expression="/TestRequest/VersionId" value="2"/>
+  </validate>
+</message>
+----
+
+.Java DSL
+[source,java]
+----
+receive(receiveMessageBuilder -> receiveMessageBuilder
+    .endpoint("helloServiceServer")
+    .validate("/TestRequest/MessageId", "${messageId}")
+    .validate("//VersionId", "2")
+    .header("Operation", "sayHello"));
+}
+----
+
+.Java DSL
+[source,java]
+----
+final Map<String, Object> validationMap = new HashMap<>();
+validationMap.put("/TestRequest/MessageId", "${messageId}");
+validationMap.put("//VersionId", "2");
+
+receive(receiveMessageBuilder -> receiveMessageBuilder
+    .endpoint("helloServiceServer")
+    .validate(validationMap)
+    .header("Operation", "sayHello"));
+}
+----
+
+Instead of comparing the whole message some message elements are validated explicitly via XPath. Citrus evaluates the XPath
+expression on the received message and compares the result value to the control value. The basic message structure as well
+as all other message elements are not included into this explicit validation.
+
+NOTE: If this type of element validation is chosen neither <payload> nor <data> nor <resource> template definitions are
+allowed in Citrus XML test cases.
+
+TIP: Citrus offers an alternative dot-notated syntax in order to walk through XML trees. In case you are not familiar with
+XPath or simply need a very easy way to find your element inside the XML tree you might use this way. Every element hierarchy
+in the XML tree is represented with a simple dot - for example:
+
+`TestRequest.VersionId`
+
+The expression will search the XML tree for the respective <TestRequest><VersionId> element. Attributes are supported too.
+In case the last element in the dot-notated expression is a XML attribute the framework will automatically find it.
+
+Of course this dot-notated syntax is very simple and might not be applicable for more complex tree navigation. XPath is
+much more powerful - no doubt. However the dot-notated syntax might help those of you that are not familiar with XPath.
+So the dot-notation is supported wherever XPath expressions might apply.
+
+The Xpath expressions can evaluate to different result types. By default Citrus is operating on *NODE* and *STRING* result
+types so that you can validate some element value. But you can also use different result types such as *NODESET* and *BOOLEAN* .
+See this example how that works:
+
+.XML DSL
+[source,xml]
+----
+<message>
+  <validate>
+    <xpath expression="/TestRequest/Error" value="false" result-type="boolean"/>
+    <xpath expression="/TestRequest/Status[.='success']" value="3" result-type="number"/>
+    <xpath expression="/TestRequest/OrderType" value="[single, multi, multi]" result-type="node-set"/>
+  </validate>
+</message>
+----
+
+.Java DSL designer
+[source,java]
+----
+@CitrusTest
+public void receiveMessageTest() {
+    receive("helloServiceServer")
+        .validate("boolean:/TestRequest/Error", false)
+        .validate("number:/TestRequest/Status[.='success']", 3)
+        .validate("node-set:/TestRequest/OrderType", "[single, multi, multi]")
+        .header("Operation", "sayHello");
+}
+----
+
+In the example above we use different expression result types. First we want to make sure nor */TestRequest/Error* element
+is present. This can be done with a boolean result type and *false* value. Second we want to validate the number of found
+elements for the expression */TestRequest/Status[.='success']* . The XPath expression evaluates to a node list that results
+in its list size to be checked. And last not least we evaluate to a *node-set* result type where all values in the node list
+will be translated to a comma delimited string value.
+
+Now lets have a look at some more powerful validation expressions using matcher implementations. Up to now we have seen that
+XPath expression results are comparable with *equalTo* operations. We would like to add some more powerful validation such
+as *greaterThan*, *lessThan*, *hasSize* and much more. Therefore we have introduced Hamcrest validation matcher support in
+Citrus. Hamcrest is a very powerful matcher library that provides a fantastic set of matcher implementations. Let's see how
+we can add these in our test case:
+
+.XML DSL
+[source,xml]
+----
+<message>
+  <validate>
+    <xpath expression="/TestRequest/Error" value="@assertThat(anyOf(empty(), nullValue()))@"/>
+    <xpath expression="/TestRequest/Status[.='success']" value="@assertThat(greaterThan(0.0))@" result-type="number"/>
+    <xpath expression="/TestRequest/Status[.='failed']" value="@assertThat(lowerThan(1))@" result-type="integer"/>
+    <xpath expression="/TestRequest/OrderType" value="@assertThat(hasSize(3))@" result-type="node-set"/>
+  </validate>
+</message>
+----
+
+.Java DSL designer
+[source,java]
+----
+@CitrusTest
+public void receiveMessageTest() {
+    receive("helloServiceServer")
+        .validate("/TestRequest/Error", anyOf(empty(), nullValue()))
+        .validate("number:/TestRequest/Status[.='success']", greaterThan(0.0))
+        .validate("integer:/TestRequest/Status[.='failed']", lowerThan(1))
+        .validate("node-set:/TestRequest/OrderType", hasSize(3))
+        .header("Operation", "sayHello");
+}
+----
+
+NOTE: XPath uses decimal number type *Double* by default when evaluating expressions with *number* result type. This means
+we have to use Double typed expected values, too. Citrus also provides the result type *integer* that automatically converts
+the XPath expression result to a *Integer* type.
+
+When using the XML DSL we have to use the *assertThat* validation matcher syntax for defining the Hamcrest matcher. You can
+combine matcher implementation as seen in the *anyOf(empty(), nullValue())* expression. When using the Java DSL you can just
+add the matcher as expected result object. Citrus evaluates the matchers and makes sure everything is as expected. This is a
+very powerful validation mechanism as it also works with node-sets containing multiple values as list.
+
+This is how you can add very powerful message element validation in XML using XPath expressions.
+
+[[xml-validation-namespaces]]
+=== XML namespaces
+
+When it comes to XML namespaces you have to be careful with your XPath expressions. Let's have a look at an example message
+that uses XML namespaces:
+
+[source,xml]
+----
+<ns1:TestMessage xmlns:ns1="http://citrus.com/namespace">
+    <ns1:TestHeader>
+        <ns1:CorrelationId>_</ns1:CorrelationId>
+        <ns1:Timestamp>2001-12-17T09:30:47.0Z</ns1:Timestamp>
+        <ns1:VersionId>2</ns1:VersionId>
+    </ns1:TestHeader>
+    <ns1:TestBody>
+        <ns1:Customer>
+            <ns1:Id>1</ns1:Id>
+        </ns1:Customer>
+    </ns1:TestBody>
+</ns1:TestMessage>
+----
+
+Now we would like to validate some elements in this message using XPath
+
+[source,xml]
+----
+<message>
+  <validate>
+    <xpath expression="//TestMessage/TestHeader/VersionId" value="2"/>
+    <xpath expression="//TestMessage/TestHeader/CorrelationId" value="${correlationId}"/>
+  </validate>
+</message>
+----
+
+The validation will fail although the XPath expression looks correct regarding the XML tree. This is because the message uses the
+namespace `xmlns:ns1="http://citrus.com/namespace"`. The XPath expression is not able to find the elements because of the missing
+namespace declaration in the expression. The correct XPath expression uses the namespace prefix as defined in the message.
+
+[source,xml]
+----
+<message>
+  <validate>
+    <xpath expression="//ns1:TestMessage/ns1:TestHeader/ns1:VersionId" value="2"/>
+    <xpath expression="//ns1:TestMessage/ns1:TestHeader/ns1:CorrelationId" value="${correlationId}"/>
+  </validate>
+</message>
+----
+
+Now the expressions works fine, and the validation is successful. Relying on the namespace prefix `ns1` is quite error prone though.
+This is because the test depends on the very specific namespace prefix. As soon as the message is sent with a different
+namespace prefix (e.g. ns2) the validation will fail again.
+
+You can avoid this effect when specifying your own namespace context and your own namespace prefix during validation.
+
+[source,xml]
+----
+<message>
+  <validate>
+    <xpath expression="//pfx:TestMessage/pfx:TestHeader/pfx:VersionId" value="2"/>
+    <xpath expression="//pfx:TestMessage/pfx:TestHeader/pfx:CorrelationId" value="${correlationId}"/>
+    <namespace prefix="pfx" value="http://citrus.com/namespace"/>
+  </validate>
+</message>
+----
+
+Now the test is independent of any namespace prefix in the received message. The namespace context will resolve the namespaces
+and find the elements although the message might use different prefixes. The only thing that matters is that the namespace
+value (http://citrus.com/namespace[http://citrus.com/namespace]) matches.
+
+TIP: Instead of this namespace context on validation level you can also have a global namespace context which is valid in
+all test cases. We just add a bean in the basic Spring application context configuration which defines global namespace mappings.
+
+[source,xml]
+----
+<namespace-context>
+    <namespace prefix="def" uri="http://www.consol.de/samples/sayHello"/>
+</namespace-context>
+----
+
+Once defined the *def* namespace prefix is valid in all test cases and all XPath expressions. This enables you to free your
+test cases from namespace prefix bindings that might be broken with time. You can use these global namespace mappings wherever
+XPath expressions are valid inside a test case (validation, ignore, extract).
+
+In the previous section we have seen that XML namespaces can get tricky with XPath validation. Default namespaces can do
+even more! So lets look at the example with default namespaces:
+
+[source,xml]
+----
+<TestMessage xmlns="http://citrus.com/namespace">
+    <TestHeader>
+        <CorrelationId>_</CorrelationId>
+        <Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
+        <VersionId>2</VersionId>
+    </TestHeader>
+    <TestBody>
+        <Customer>
+            <Id>1</Id>
+        </Customer>
+    </TestBody>
+</TestMessage>
+----
+
+The message uses default namespaces. The following approach in XPath will fail due to namespace problems.
+
+[source,xml]
+----
+<message>
+  <validate>
+    <xpath expression="//TestMessage/TestHeader/VersionId" value="2"/>
+    <xpath expression="//TestMessage/TestHeader/CorrelationId" value="${correlationId}"/>
+  </validate>
+</message>
+----
+
+Even default namespaces need to be specified in the XPath expressions. Look at the following code listing that works fine
+with default namespaces:
+
+[source,xml]
+----
+<message>
+  <validate>
+    <xpath expression="//:TestMessage/:TestHeader/:VersionId" value="2"/>
+    <xpath expression="//:TestMessage/:TestHeader/:CorrelationId" value="${correlationId}"/>
+  </validate>
+</message>
+----
+
+TIP: It is recommended to use the namespace context as described in the previous chapter when validating. Only this approach
+ensures flexibility and stable test cases regarding namespace changes.
 
 [[customize-xml-parser-and-serializer]]
 === Customize XML parser and serializer
@@ -255,3 +528,315 @@ We referenced some external file resource *_validationScript.groovy_* . This fil
 NOTE: You can use the Groovy validation script in combination with other validation types like XML tree comparison and XPath validation.
 
 TIP: For further information on the Groovy XmlSlurper please see the official Groovy website and documentation
+
+[[xml-schema-validation]]
+=== XML schema validation
+
+There are several possibilities to describe the structure of XML documents. The two most popular ways are DTD
+(Document type definition) and XSD (XML Schema definition). Once a XML document has decided to be classified using a
+schema definition the structure of the document has to fit the predefined rules inside the schema definition.
+XML document instances are valid only in case they meet all these structure rules defined in the schema definition.
+Currently Citrus can validate XML documents using the schema languages DTD and XSD.
+
+[[xsd-schema-repositories]]
+==== XSD schema repositories
+
+Citrus tries to validate all incoming XML messages against a schema definition in order to ensure that all rules are
+fulfilled. As a consequence the message receiving actions in Citrus do have to know the XML schema definition file
+resources that belong to our test context.
+
+[source,xml]
+----
+<citrus:schema-repository id="schemaRepository">
+    <citrus:schemas>
+        <citrus:schema id="travelAgencySchema"
+            location="classpath:citrus/flightbooking/TravelAgencySchema.xsd"/>
+        <citrus:schema id="royalArilineSchema"
+            location="classpath:citrus/flightbooking/RoyalAirlineSchema.xsd"/>
+        <citrus:reference schema="smartArilineSchema"/>
+    </citrus:schemas>
+</citrus:schema-repository>
+
+<citrus:schema id="smartArilineSchema"
+      location="classpath:citrus/flightbooking/SmartAirlineSchema.xsd"/>
+----
+
+By convention there is a default schema repository component defined in the Citrus Spring application context with
+the id *schemaRepository*. Spring application context is then able to inject the schema repository into all message
+receiving test actions at runtime. The receiving test action consolidates the repository for a matching schema
+definition file in order to validate the incoming XML document structure.
+
+The connection between incoming XML messages and xsd schema files in the repository is done by a mapping strategy which
+we will discuss later in this chapter. By default Citrus picks the right schema based on the target namespace that is
+defined inside the schema definition. The target namespace of the schema definition has to match the namespace of the
+root element in the received XML message. With this mapping strategy you will not have to wire XML messages and schema
+files manually all is done automatically by the Citrus schema repository at runtime. All you need to do is to register
+all available schema definition files regardless of which target namespace or nature inside the Citrus schema
+repository.
+
+IMPORTANT: XML schema validation is mandatory in Citrus. This means that Citrus always tries to find a matching schema
+definition inside the schema repository in order to perform syntax validation on incoming schema qualified XML messages.
+A classified XML message is defined by its namespace definitions. Consequently you will get validation errors in case
+no matching schema definition file is found inside the schema repository. So if you explicitly do not want to validate
+the XML schema for some reason you have to disable the validation explicitly in your test with
+*schema-validation="false"*.
+
+[source,xml]
+----
+<receive endpoint="httpMessageEndpoint">
+    <message schema-validation="false">
+      <validate>
+        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId"
+             value="${messageId}"/>
+        <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId"
+             value="${correlationId}"/>
+        <namespace prefix="ns1" value="http://citrus.com/namespace"/>
+      </validate>
+    </message>
+    <header>
+        <element name="Operation" value="sayHello"/>
+        <element name="MessageId" value="${messageId}"/>
+    </header>
+</receive>
+----
+
+This mandatory schema validation might sound annoying to you but in our opinion it is very important to validate the
+structure of the received XML messages, so disabling the schema validation should not be the standard for all tests.
+Disabling automatic schema validation should only apply to very special situations. So please try to put all available
+schema definitions to the schema repository and you will be fine.
+
+[[wsdl-schemas]]
+==== WSDL schemas
+
+In SOAP WebServices world the WSDL (WebService Schema Definition Language) defines the structure an nature of the XML
+messages exchanged across the interface. Often the WSDL files do hold the XML schema definitions as nested elements.
+In Citrus you can directly set the WSDL file as location of a schema definition like this:
+
+[source,xml]
+----
+<citrus:schema id="arilineWsdl"
+    location="classpath:citrus/flightbooking/AirlineSchema.wsdl"/>
+----
+
+Citrus is able to find the nested schema definitions inside the WSDL file in order to build a valid schema file for the
+schema repository. So incoming XML messages that refer to the WSDL file can be validated for syntax rules.
+
+
+[[schema-collections]]
+==== Schema collections
+
+Sometimes a XML schema definition is separated into multiple files. This is a problem for the Citrus schema repository
+as the schema mapping strategy then is not able to pick the right file for validation, in particular when working with
+target namespace values as key for the schema mapping strategy. As a solution for this problem you have to put all
+schemas with the same target namespace value into a schema collection.
+
+[source,xml]
+----
+<citrus:schema-collection id="flightbookingSchemaCollection">
+  <citrus:schemas>
+    <citrus:schema location="classpath:citrus/flightbooking/BaseTypes.xsd"/>
+    <citrus:schema location="classpath:citrus/flightbooking/AirlineSchema.xsd"/>
+  </citrus:schemas>
+</citrus:schema-collection>
+----
+
+Both schema definitions *BaseTypes.xsd* and *AirlineSchema.xsd* share the same target namespace and therefore need to
+be combined in schema collection component. The schema collection can be referenced in any schema repository as normal
+schema definition.
+
+[source,xml]
+----
+<citrus:schema-repository id="schemaRepository">
+  <citrus:schemas>
+    <citrus:reference schema="flightbookingSchemaCollection"/>
+  </citrus:schemas>
+</citrus:schema-repository>
+----
+
+[[schema-mapping-strategy]]
+==== Schema mapping strategy
+
+The schema repository in Citrus holds one to many schema definition files and dynamically picks up the right one
+according to the validated message payload. The repository needs to have some strategy for deciding which schema
+definition to choose. See the following schema mapping strategies and decide which of them is suitable for you.
+
+[[target-namespace-mapping-strategy]]
+==== Target Namespace Mapping Strategy
+
+This is the default schema mapping strategy. Schema definitions usually define some target namespace which is valid
+for all elements and types inside the schema file. The target namespace is also used as root namespace in XML message
+payloads. According to this information Citrus can pick up the right schema definition file in the schema repository.
+You can set the schema mapping strategy as property in the configuration files:
+
+[source,xml]
+----
+<citrus:schema-repository id="schemaRepository"
+    schema-mapping-strategy="schemaMappingStrategy">
+  <citrus:schemas>
+    <citrus:schema id="helloSchema"
+        location="classpath:citrus/samples/sayHello.xsd"/>
+  </citrus:schemas>
+</citrus:schema-repository>
+
+<bean id="schemaMappingStrategy"
+    class="com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy"/>
+----
+
+The *sayHello.xsd* schema file defines a target namespace
+(http://consol.de/schemas/sayHello.xsd)[http://consol.de/schemas/sayHello.xsd)]:
+
+[source,xml]
+----
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://consol.de/schemas/sayHello.xsd"
+    targetNamespace="http://consol.de/schemas/sayHello.xsd"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+</xs:schema>
+----
+
+Incoming request messages should also have the target namespace set in the root element and this is how Citrus matches
+the right schema file in the repository.
+
+[source,xml]
+----
+<HelloRequest xmlns="http://consol.de/schemas/sayHello.xsd">
+   <MessageId>123456789</MessageId>
+   <CorrelationId>1000</CorrelationId>
+   <User>Christoph</User>
+   <Text>Hello Citrus</Text>
+</HelloRequest>
+----
+
+[[root-qname-mapping-strategy]]
+==== Root QName Mapping Strategy
+
+The next possibility for mapping incoming request messages to a schema definition is via the XML root element QName.
+Each XML message payload starts with a root element that usually declares the type of a XML message. According to this
+root element you can set up mappings in the schema repository.
+
+[source,xml]
+----
+<citrus:schema-repository id="schemaRepository"
+    schema-mapping-strategy="schemaMappingStrategy">
+  <citrus:schemas>
+    <citrus:reference schema="helloSchema"/>
+    <citrus:reference schema="goodbyeSchema"/>
+  </citrus:schemas>
+</citrus:schema-repository>
+
+<bean id="schemaMappingStrategy"
+    class="com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy">
+  <property name="mappings">
+    <map>
+      <entry key="HelloRequest" value="helloSchema"/>
+      <entry key="GoodbyeRequest" value="goodbyeSchema"/>
+    </map>
+  </property>
+</bean>
+
+<citrus:schema id="helloSchema"
+    location="classpath:citrus/samples/sayHello.xsd"/>
+
+<citrus:schema id="goodbyeSchema"
+     location="classpath:citrus/samples/sayGoodbye.xsd"/>
+----
+
+The listing above defines two root qname mappings - one for *HelloRequest* and one for *GoodbyeRequest* message types.
+An incoming message of type <HelloRequest> is then mapped to the respective schema and so on. With this dedicated
+mappings you are able to control which schema is used on a XML request, regardless of target namespace definitions.
+
+[[schema-mapping-strategy-chain]]
+==== Schema mapping strategy chain
+
+Let's discuss the possibility to combine several schema mapping strategies in a logical chain. You can define more than
+one mapping strategy that are evaluated in sequence. The first strategy to find a proper schema definition file in the
+repository wins.
+
+[source,xml]
+----
+<citrus:schema-repository id="schemaRepository"
+    schema-mapping-strategy="schemaMappingStrategy">
+  <citrus:schemas>
+    <citrus:reference schema="helloSchema"/>
+    <citrus:reference schema="goodbyeSchema"/>
+  </citrus:schemas>
+</citrus:schema-repository>
+
+<bean id="schemaMappingStrategy"
+    class="com.consol.citrus.xml.schema.SchemaMappingStrategyChain">
+  <property name="strategies">
+    <list>
+      <bean class="com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy">
+        <property name="mappings">
+          <map>
+            <entry key="HelloRequest" value="helloSchema"/>
+          </map>
+        </property>
+      </bean>
+      <bean class="com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy"/>
+    </list>
+  </property>
+</bean>
+----
+
+So the schema mapping chain uses both *RootQNameSchemaMappingStrategy* and *TargetNamespaceSchemaMappingStrategy* in
+combination. In case the first root qname strategy fails to find a proper mapping the next target namespace strategy
+comes in and tries to find a proper schema.
+
+[[dtd-validation]]
+==== DTD validation
+
+XML DTD (document type definition) is another way to validate the structure of a XML document. Many people say that
+DTD is deprecated and XML schema is the much more efficient way to describe the rules of a XML structure. We do not
+disagree with that, but we also know that legacy systems might still use DTD. So in order to avoid validation errors
+we have to deal with DTD validation as well.
+
+First thing you can do about DTD validation is to specify an inline DTD in your expected message template.
+
+[source,xml]
+----
+<receive endpoint="httpMessageEndpoint">
+    <message schema-validation="false">
+        <data>
+        <![CDATA[
+            <!DOCTYPE root [
+                <!ELEMENT root (message)>
+                <!ELEMENT message (text)>
+                <!ELEMENT text (#PCDATA)>
+                ]>
+            <root>
+                <message>
+                    <text>Hello TestFramework!</text>
+                </message>
+            </root>
+        ]]>
+        <data/>
+    </message>
+</receive>
+----
+
+The system under test may also send the message with a inline DTD definition. So validation will succeed.
+
+In most cases the DTD is referenced as external .dtd file resource. You can do this in your expected message template
+as well.
+
+[source,xml]
+----
+<receive endpoint="httpMessageEndpoint">
+    <message schema-validation="false">
+        <data>
+        <![CDATA[
+            <!DOCTYPE root SYSTEM
+                         "com/consol/citrus/validation/example.dtd">
+            <root>
+                <message>
+                    <text>Hello TestFramework!</text>
+                </message>
+            </root>
+        ]]>
+        <data/>
+    </message>
+</receive>
+----

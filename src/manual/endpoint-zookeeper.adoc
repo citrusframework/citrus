@@ -1,0 +1,243 @@
+[[zookeeper]]
+= Zookeeper support
+
+Citrus provides configuration components and test actions for interacting with Zookeeper. The Citrus Zookeeper client component executes commands like create-node, check node-exists, delete-node, get node-data or set node-data. As a user you can execute Zookeeper commands as part of a Citrus test and validate possible command results.
+
+NOTE: The Zookeeper test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+
+[source,xml]
+----
+<dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-zookeeper</artifactId>
+      <version>${citrus.version}</version>
+      </dependency>
+----
+
+Citrus provides a "citrus-zookeeper" configuration namespace and schema definition for Zookeeper related components and actions. Include this namespace into your Spring configuration in order to use the Citrus zookeeper configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.
+
+[source,xml]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:citrus-zookeeper="http://www.citrusframework.org/schema/zookeeper/config"
+      xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.citrusframework.org/schema/zookeeper/config
+      http://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config.xsd">
+
+      [...]
+
+      </beans>
+----
+
+After that you are able to use customized Citrus XML elements in order to define the Spring beans.
+
+[[zookeeper-client]]
+== Zookeeper client
+
+Before you can interact with a Zookeeper server you have to configure the Zookeeper client. A sample configuration is provided below describing the configuration options available:
+
+[source,xml]
+----
+<citrus-zookeeper:client id="zookeeperClient"
+                               url="http://localhost:21118"
+                               timeout="2000"/>
+----
+
+This is a typical client configuration for connecting to a Zookeeper server. Now you are able to execute several commands. These commands will be sent to the Zookeeper server for execution.
+
+[[zookeeper-commands]]
+== Zookeeper commands
+
+See below all available Zookeeper commands that a Citrus client is able to execute.
+
+[source,xml]
+----
+info: Retrieves the current state of the client connection
+create: Creates a znode in a specified path of the ZooKeeper namespace
+delete: Deletes a znode from a specified path of the ZooKeeper namespace
+exists: Checks if a znode exists in the path
+children: Gets a list of children of a znode
+get: Gets the data associated with a znode
+set: Sets/writes data into the data field of a znode
+----
+
+Before we see some of these commands in action we have to add a new test namespace to our test case when using the XML DSL.
+
+[source,xml]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:zookeeper="http://www.citrusframework.org/schema/zookeeper/testcase"
+      xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.citrusframework.org/schema/zookeeper/testcase
+      http://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase.xsd">
+
+      [...]
+
+      </beans>
+----
+
+We added the Zookeeper namespace with prefix *zookeeper:* so now we can start to add special test actions to the test case:
+
+.XML DSL
+[source,xml]
+----
+<zookeeper:create zookeeper-client="zookeeperClient" path="/${randomString}" acl="OPEN_ACL_UNSAFE" mode="PERSISTENT">
+  <zookeeper:data>foo</zookeeper:data>
+  <zookeeper:expect>
+    <zookeeper:result>
+      <![CDATA[
+        {
+          "responseData":{
+              "path":"/${randomString}"
+          }
+        }
+      ]]>
+    </zookeeper:result>
+  </zookeeper:expect>
+</zookeeper:create>
+
+<zookeeper:get zookeeper-client="zookeeperClient" path="/${randomString}">
+  <zookeeper:expect>
+    <zookeeper:result>
+      <![CDATA[
+      {
+        "responseData":{
+          "data":"foo"
+        }
+      }
+      ]]>
+    </zookeeper:result>
+  </zookeeper:expect>
+</zookeeper:getData>
+
+<zookeeper:set zookeeper-client="zookeeperClient" path="/${randomString}">
+  <zookeeper:data>bar</zookeeper:data>
+</zookeeper:setData>
+----
+
+When using the Java DSL we can directly configure the commands with a fluent API.
+
+.Java DSL
+[source,xml]
+----
+@CitrusTest
+public void testZookeeper() {
+    variable("randomString", "citrus:randomString(10)");
+
+    zookeeper()
+        .create("/${randomString}", "foo")
+        .acl("OPEN_ACL_UNSAFE")
+        .mode("PERSISTENT")
+        .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+            @Override
+            public void doWithCommandResult(ZooResponse result, TestContext context) {
+                Assert.assertEquals(result.getResponseData().get("path"), context.replaceDynamicContentInString("/${randomString}"));
+            }
+        });
+
+    zookeeper()
+        .get("/${randomString}")
+        .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+            @Override
+            public void doWithCommandResult(ZooResponse result, TestContext context) {
+                Assert.assertEquals(result.getResponseData().get("version"), 0);
+            }
+        });
+
+    zookeeper()
+        .set("/${randomString}", "bar");
+}
+----
+
+The examples above create a new znode in Zookeeper using a *randomString* as path. We can get and set the data with expecting and validating the result of the Zookeeper server. This is basically the idea of integrating Zookepper operations to a Citrus test. This opens the gate to manage Zookeeper related entities within a Citrus test. We can manipulate and validate the znodes on the Zookeeper instance.
+
+Zookeeper keeps its nodes in a hierarchical storage. This means a znode can have children and we can add and remove those. In Citrus you can get all children of a znode and manage those within the test:
+
+.XML DSL
+[source,xml]
+----
+<zookeeper:create zookeeper-client="zookeeperClient" path="/${randomString}/child1" acl="OPEN_ACL_UNSAFE" mode="EPHEMERAL">
+  <zookeeper:data></zookeeper:data>
+  <zookeeper:expect>
+    <zookeeper:result>
+      <![CDATA[
+        {
+          "responseData":{
+              "path":"/${randomString}/child1"
+          }
+        }
+      ]]>
+    </zookeeper:result>
+  </zookeeper:expect>
+</zookeeper:create>
+
+<zookeeper:create zookeeper-client="zookeeperClient" path="/${randomString}/child2" acl="OPEN_ACL_UNSAFE" mode="EPHEMERAL">
+  <zookeeper:data></zookeeper:data>
+  <zookeeper:expect>
+    <zookeeper:result>
+      <![CDATA[
+        {
+          "responseData":{
+              "path":"/${randomString}/child2"
+          }
+        }
+      ]]>
+    </zookeeper:result>
+  </zookeeper:expect>
+</zookeeper:create>
+
+<zookeeper:children zookeeper-client="zookeeperClient" path="/${randomString}">
+  <zookeeper:expect>
+    <zookeeper:result>
+      <![CDATA[
+        {
+          "responseData":{
+              "children":["child1","child2"]
+          }
+        }
+      ]]>
+    </zookeeper:result>
+  </zookeeper:expect>
+</zookeeper:children>
+----
+
+.Java DSL
+[source,xml]
+----
+zookeeper()
+    .create("/${randomString}/child1", "")
+    .acl("OPEN_ACL_UNSAFE")
+    .mode("PERSISTENT")
+    .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+        @Override
+        public void doWithCommandResult(ZooResponse result, TestContext context) {
+            Assert.assertEquals(result.getResponseData().get("path"), context.replaceDynamicContentInString("/${randomString}/child1"));
+        }
+    });
+
+zookeeper()
+    .create("/${randomString}/child2", "")
+    .acl("OPEN_ACL_UNSAFE")
+    .mode("PERSISTENT")
+    .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+        @Override
+        public void doWithCommandResult(ZooResponse result, TestContext context) {
+            Assert.assertEquals(result.getResponseData().get("path"), context.replaceDynamicContentInString("/${randomString}/child2"));
+        }
+    });
+
+zookeeper()
+    .children("/${randomString}")
+    .validateCommandResult(new CommandResultCallback<ZooResponse>() {
+        @Override
+        public void doWithCommandResult(ZooResponse result, TestContext context) {
+            Assert.assertEquals(result.getResponseData().get("children").toString(), "[child1, child2]");
+        }
+    });
+----

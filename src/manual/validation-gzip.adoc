@@ -1,5 +1,5 @@
 [[gzip-message-validation]]
-== Gzip message validation
+== Gzip validation
 
 Gzip is a famous message compression library. When dealing with large message content the compression might be a good way to optimize the message transportation.
 Citrus is able to handle gzipped message payloads on send and receive operations. When sending compressed data we just have to use the message type *gzip*.

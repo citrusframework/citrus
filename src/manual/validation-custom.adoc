@@ -1,0 +1,64 @@
+[[validation-custom]]
+== Custom validation
+
+The previous section showed us how to customize the global set of available message validators in a Citrus project using the validator registry. Besides that you can also explicitly use a message validator in a receive test action. When using
+this approach the complete automatic message validator resolving mechanism is skipped and the receive action is using the defined validator implementation. Lets see this in a small example:
+
+.XML DSL
+[source, xml]
+----
+<receive endpoint="someEndpoint">
+    <message type="json" validator="groovyJsonMessageValidator">
+        <validate>
+            <script type="groovy">
+                <![CDATA[
+                  assert json.type == 'read'
+                  assert json.mbean == 'java.lang:type=Memory'
+                  assert json.attribute == 'HeapMemoryUsage'
+                  assert json.value == '${heapUsage}'
+                ]]>
+            </script>
+        </validate>
+    </message>
+</receive>
+----
+
+.Java DSL
+[source, java]
+----
+receive("someEndpoint")
+    .messageType(MessageType.JSON)
+    .validator(groovyJsonMessageValidator)
+    .validateScript("assert json.type == 'read'\n" +
+                  "assert json.mbean == 'java.lang:type=Memory'\n" +
+                  "assert json.attribute == 'HeapMemoryUsage'\n" +
+                  "assert json.value == '${heapUsage}'");
+----
+
+The receive action defines the message validator to use in this specific use case. You can set custom message validator implementations or use default implementations here.
+
+NOTE: Be careful when overwriting default message validation behavior. When setting a specific message validator your receive action may not use the other default implementations. The explicit validator
+definition in a receive action is exclusive so no further message validator resolving is performed on this receive action.
+
+You may want to set multiple validators here in order to meet your validation requirements. For instance when setting a `DomXmlMessageValidator` explicitly you may not be able to use the `XpathMessageValidator` capabilities on that specific receive action anymore.
+Fortunately you can set multiple validators on a receive action that will all perform validation tasks on the received message.
+
+.XML DSL
+[source, xml]
+----
+<receive endpoint="someEndpoint">
+    <message type="json" validators="myXmlMessageValidator,defaultXpathMessageValidator">
+        <payload>...</data>
+        <validate path="//some/xpath/expression" value="someControlValue"/>
+    </message>
+</receive>
+----
+
+.Java DSL
+[source, java]
+----
+receive("someEndpoint")
+    .validators(myXmlMessageValidator, defaultXpathMessageValidator)
+    .payload("...")
+    .validate("//some/xpath/expression", "someControlValue");
+----

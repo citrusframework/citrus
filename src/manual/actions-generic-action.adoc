@@ -1,5 +1,5 @@
 [[actions-custom]]
-== Custom test actions
+== Custom action
 
 Now we have a look at the opportunity to add custom test actions to the test case flow. Let us start this section with an example:
 
@@ -36,11 +36,11 @@ public class SpecialDatabaseCleanupAction extends AbstractTestAction {
 
     @Autowired
     private DataSource dataSource;
-    
+
     @Override
     public void doExecute(TestContext context) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        
+
         jdbcTemplate.execute("...");
     }
 
@@ -60,9 +60,9 @@ private SpecialDatabaseCleanupAction cleanUpDatabaseAction;
 @CitrusTest
 public void genericActionTest() {
     echo("Now let's include our special test action");
-    
+
     action(cleanUpDatabaseAction);
-    
+
     echo("That's it!");
 }
 ----
@@ -75,13 +75,13 @@ Using anonymous class implementations is also possible.
 @CitrusTest
 public void genericActionTest() {
     echo("Now let's call our special test action anonymously");
-    
+
     action(new AbstractTestAction() {
         public void doExecute(TestContext context) {
             // do something
         }
     });
-    
+
     echo("That's it!");
 }
 ----

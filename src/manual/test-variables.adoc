@@ -1,147 +1,384 @@
 [[test-variables]]
 = Test variables
 
-The usage of test variables is a core concept when writing good maintainable tests. The key identifiers of a test case should be exposed as test variables at the very beginning of a test. This way hard coded identifiers and multiple redundant values inside the test can be avoided from scratch. As a tester you define all test variables at the very beginning of your test.
-
-.XML DSL
-[source,xml]
-----
-<variables>
-    <variable name="text" value="Hello Test Framework"/>
-    <variable name="customerId" value="123456789"/>
-</variables>
-----
+The usage of test variables is a core concept when writing maintainable tests. The key identifiers of a test case should
+be exposed as test variables at the very beginning of a test. This avoids hard coded identifiers and multiple redundant values
+inside the test.
 
 .Java DSL
-[source,xml]
+[source,java,indent=0,role="primary"]
 ----
-variable("text", "Hello Test Framework");
-variable("customerId", "123456789");
+public void fooService_IT() {
+    variable("text", "Hello Citrus!");
+    variable("customerId", "123456789");
+
+    run(echo("Text: ${text} Id: ${id}"));
+}
 ----
 
-The concept of test variables is essential when writing complex tests with lots of identifiers and semantic data. Test variables are valid for the whole test case. You can reference them several times using a common variable expression *_"${variable-name}"_* . It is good practice to provide all important entities as test variables. This makes the test easier to maintain and more flexible. All essential entities and identifiers are present right at the beginning of the test, which may also give the opportunity to easily create test variants by simply changing the variable values for other test scenarios.
+.XML DSL
+[source,xml,indent=0,role="secondary"]
+----
+<testcase name="FooService_IT">
+  <variables>
+    <variable name="text" value="Hello Citrus!"/>
+    <variable name="customerId" value="123456789"/>
+  </variables>
 
-The name of the variable is arbitrary. Feel free to specify any name you can think of. Of course you need to be careful with special characters and reserved XML entities like '&amp;', '&lt;', '&gt;'. If you are familiar with Java or any other programming language simply think of the naming rules there and you will be fine with working on Citrus variables, too. The value of a variable can be any character sequence. But again be aware of special XML characters like "&lt;" that need to be escaped ("&lt;") when used in variable values.
+  <actions>
+    <echo>
+      <message>Text: ${text} Id: ${id}</message>
+    </echo>
+  </actions>
+</testcase>
+----
 
-The advantage of variables is obvious. Once declared the variables can be referenced many times in the test. This makes it very easy to vary different test cases by adjusting the variables for different means (e.g. use different error codes in test cases).
+Test variables help significantly when writing complex tests with lots of identifiers and semantic data. The
+variables are valid for the whole test case. You can reference a variable multiple times using a common variable
+expression `${variable-name}`.
+
+The usage of variables should make the test easier to maintain and more flexible. All essential entities and identifiers are present
+right at the beginning of the test, which may also give the opportunity to easily create test variants by simply changing
+the variable values for other test scenarios (e.g. different error codes, identifiers).
+
+The name of the variable is arbitrary. Of course, you need to be careful with special characters and reserved XML entities
+like '&amp;', '&lt;', '&gt;'. In general, you can apply to the Java naming convention, and you will be fine.
 
 [[global-variables]]
 == Global variables
 
-The last section told us to use variables as they are very useful and extend the maintainability of test cases. Now that every test case defines local variables you can also define global variables. The global variables are valid in all tests by default. This is a good opportunity to declare constant values for all tests. As these variables are global we need to add those to the basic Spring application context file. The following example demonstrates how to add global variables in Citrus:
+You can work with different variable scopes (local or global). Local variables are accessible throughout a single test.
+Global variables are visible for all tests yet global variables are immutable, so tests cannot change its value.
 
-[source,xml]
+This is a good opportunity to declare constant values for all tests. As these variables are global we need to add those
+to the basic Citrus context. The following example demonstrates how to add global variables in Citrus:
+
+.Java DSL
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public GlobalVariables globalVariables() {
+    return new GlobalVariables.Builder()
+        .variable("projectName", "Citrus Integration Testing")
+        .variable("userName", "TestUser")
+        .build();
+}
+----
+
+.XML DSL
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:global-variables>
-    <citrus:variable name="projectName" value="Citrus Integration Testing"/>
-    <citrus:variable name="userName" value="TestUser"/>
+  <citrus:variable name="projectName" value="Citrus Integration Testing"/>
+  <citrus:variable name="userName" value="TestUser"/>
 </citrus:global-variables>
 ----
 
-We add the Spring bean component to the application context file. The component receives a list of name-value variable elements. You can reference the global variables in your test cases as usual.
+We add the Spring bean component to the application context file. The component receives a list of name-value variable
+elements. You can reference the global variables in your test cases as usual.
 
-Another possibility to set global variables is to load those from external property files. This may give you more powerful global variables with user specific properties for instance. See how to load property files as global variables in this example:
+Another possibility to set global variables is to load those from external property files. This may give you more powerful
+global variables with user specific properties for instance. See how to load property files as global variables in this example:
 
-[source,xml]
+.Java DSL
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public GlobalVariablesPropertyLoader propertyLoader() {
+    GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
+
+    propertyLoader.getPropertyFiles().add("classpath:global-variable.properties");
+
+    return propertyLoader;
+}
+----
+
+.XML DSL
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:global-variables>
-    <citrus:file path="classpath:global-variable.properties"/>
+  <citrus:file path="classpath:global-variable.properties"/>
 </citrus:global-variables>
 ----
 
-We have just added a file path reference to the global variables component. Citrus loads the property file content as global test variables. You can mix property file and name-value pair variable definitions in the global variables component.
+You can use the `GlobalVariablesPropertyLoader` component and add it to the context as a Spring bean. Citrus loads the
+given property file content as global test variables. You can mix property file and name-value pair variable definitions
+in the global variables component.
 
-NOTE: The global variables can have variable expressions and Citrus functions. It is possible to use previously defined global variables as values of new variables, like in this example:
+NOTE: The global variables can have variable expressions and Citrus functions. It is possible to use previously defined
+global variables as values of new variables, like in this example:
 
-[source,xml]
+.global-variable.properties
+[source,properties]
 ----
 user=Citrus
 greeting=Hello ${user}!
 date=citrus:currentDate('yyyy-MM-dd')
 ----
 
-[[create-variables-with-cdata]]
-== Create variables with CDATA
+[[variables-extract]]
+== Extract variables
 
-When using th XML test case DSL we can not have XML variable values out of the box. This would interfere with the XML DSL elements defined in the Citrus testcase XSD schema. You can use CDATA sections within the variable value element in order to do this though.
+Imagine you receive a message in your test with some generated message identifier values. You have no chance to predict the
+identifier value because it was generated at runtime by a foreign application. You can ignore the value in order to protect
+your validation. In many cases you might want to save this identifier in order to use this value in the respective response
+message or somewhat later on in the test.
 
-[source,xml]
-----
-<variables>
-    <variable name="persons">
-        <value>
-            <data>
-                <![CDATA[
-                  <persons>
-                    <person>
-                      <name>Theodor</name>
-                      <age>10</age>
-                    </person>
-                    <person>
-                      <name>Alvin</name>
-                      <age>9</age>
-                    </person>
-                  </persons>
-                ]]>
-            </data>
-        </value>
-    </variable>
-</variables>
-----
+The solution is to extract dynamic values from received messages and save those to test variables at runtime.
 
-That is how you can use XML variable values in the XML DSL. In the Java DSL we do not have these problems.
+[[variables-extract-json-path]]
+=== JsonPath expressions
 
-[[create-variables-with-groovy]]
-== Create variables with Groovy
-
-You can also use a script to create variable values. This is extremely handy when you have very complex variable values. Just code a small Groovy script for instance in order to define the variable value. A small sample should give you the idea how that works:
+When an incoming message is passing the message validation the user can extract some values of that received message to
+new test variables for later use in the test.
 
 [source,xml]
 ----
-<variables>
-    <variable name="avg">
-        <value>
-            <script type="groovy">
-                <![CDATA[
-                    a = 4
-                    b = 6
-                    return (a + b) / 2
-                ]]>
-            </script>
-        </value>
-    </variable>
-    <variable name="sum">
-        <value>
-            <script type="groovy">
-                <![CDATA[
-                    5 + 5
-                ]]>
-            </script>
-        </value>
-    </variable>
-</variables>
+<message type="json">
+  <data>
+    { "user":
+      {
+        "name": "Admin",
+        "password": "secret",
+        "admin": "true",
+        "aliases": ["penny","chef","master"]
+      }
+    }
+  </data>
+  <extract>
+    <message path="$.user.name" variable="userName"/>
+    <message path="$.user.aliases" variable="userAliases"/>
+    <message path="$.user[?(@.admin)].password" variable="adminPassword"/>
+  </extract>
+</message>
 ----
 
-We use the script code right inside the variable value definition. The value of the variable is the result of the last operation performed within the script. For longer script code the use of *_`&lt;![CDATA[ ]]&gt;`_* sections is recommended.
+With this example we have extracted three new test variables via JSONPath expression evaluation. The three test variables
+will be available to all upcoming test actions. The variable values are:
 
-Citrus uses the javax ScriptEngine mechanism in order to evaluate the script code. By default Groovy is supported in any Citrus project. So you can add additional ScriptEngine implementations to your project and support other script types, too.
+[source,properties]
+----
+userName=Admin
+userAliases=["penny","chef","master"]
+adminPassword=secret
+----
+
+As you can see we can also extract complex JSONObject items or JSONArray items. The test variable value is a String representation
+of the complex object.
+
+[[variables-extract-xpath]]
+=== XPath expressions
+
+Add this code to your message receiving action.
+
+.Java DSL
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void receiveMessageTest() {
+    when(
+        receive("helloService")
+            .process(message()
+                    .body()
+                    .extract()
+                    .expression("//TestRequest/VersionId", "versionId"))
+            .process(message()
+                    .headers()
+                    .extract()
+                    .header("Operation", "operation"))
+    );
+
+    then(
+        echo("Extracted operation from header is: ${operation}")
+    );
+
+    then(
+        echo("Extracted version from body is: ${versionId}")
+    );
+}
+----
+
+.XML DSL
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="helloService">
+    <message>
+      ...
+    </message>
+    <extract>
+      <header name="Operation" variable="operation"/>
+      <message path="/TestRequest/VersionId" variable="versionId"/>
+    </extract>
+</receive>
+
+<echo>
+  <message>Extracted operation from header is: ${operation}</message>
+</echo>
+
+<echo>
+  <message>Extracted version from body is: ${versionId}</message>
+</echo>
+----
+
+As you can see Citrus is able to extract both header and message body content into test variables. The extraction will automatically
+create a new variable in case it does not exist. The time the variable was created all following test actions can access the
+test variables as usual. So you can reference the variable values in response messages or other test steps ahead.
+
+TIP: We can also use expression result types in order to manipulate the test variable outcome. In case we use a *boolean* result
+type the existence of elements can be saved to variable values. The result type *node-set* translates a node list result to
+a comma separated string of all values in this node list. Simply use the expression result type attributes as shown in previous
+sections.
+
+[[variables-path-expressions]]
+== Path expressions
+
+Some elements in message body might be of dynamic nature. Just think of generated identifiers or timestamps. This is the right
+time to use test variables and dynamic message element overwrite. You can overwrite a specific elements in the message body
+with path expressions (XPath or JsonPath).
+
+[[variables-json-path-expressions]]
+=== JsonPath expressions
+
+First thing we want to do with JsonPath is to manipulate a message content before it is actually processed. This is very
+useful when working with message file resources that are reused across multiple test cases. Each test case can manipulate
+the message content individually with JsonPath before processing the message content.
+
+Let's have a look at this simple sample Json message body:
+
+.Json message body user.json
+[source,json]
+----
+{ "user":
+  {
+    "id": citrus:randomNumber(10),
+    "name": "Unknown",
+    "admin": "?",
+    "projects":
+      [{
+        "name": "Project1",
+        "status": "open"
+      },
+      {
+        "name": "Project2",
+        "status": "open"
+      },
+      {
+        "name": "Project3",
+        "status": "closed"
+      }]
+  }
+}
+----
+
+Citrus can load the file content and used it as message body when sending or receiving messages in a test case. You can apply
+JsonPath expressions in order to manipulate the message content.
+
+[source,xml]
+----
+<message type="json">
+  <resource file="file:path/to/user.json" />
+  <element path="$.user.name" value="Admin" />
+  <element path="$.user.admin" value="true" />
+  <element path="$..status" value="closed" />
+</message>
+----
+
+When all path expressions are evaluated the resulting message looks like follows:
+
+[source,json]
+----
+{ "user":
+  {
+    "id": citrus:randomNumber(10),
+    "name": "Admin",
+    "admin": "true",
+    "projects":
+      [{
+        "name": "Project1",
+        "status": "closed"
+      },
+      {
+        "name": "Project2",
+        "status": "closed"
+      },
+      {
+        "name": "Project3",
+        "status": "closed"
+      }]
+  }
+}
+----
+
+The JsonPath expressions set the username to *Admin* . The *admin* boolean property was set to *true* and all project
+status values were set to *closed*. In case a JsonPath expression should fail to find a matching element within the message
+structure the test case will fail.
+
+With this JsonPath mechanism ou are able to manipulate message content before it is sent or received within Citrus. This
+makes life very easy when using message resource files that are reused across multiple test cases.
+
+[[variables-xpath-expressions]]
+=== XPath expressions
+
+In case of XML message bodies you can use XPath expressions to manipulate the body content before any message processing
+takes place.
+
+.XML DSL
+[source,xml]
+----
+<message>
+  <payload>
+    <TestMessage>
+      <MessageId>${messageId}</MessageId>
+      <CreatedAt>?</CreatedAt>
+      <VersionId>${version}</VersionId>
+    </TestMessage>
+  </payload>
+  <element path="/TestMessage/CreatedAt" value="${date}"/>
+</message>
+----
+
+The program listing above shows ways of setting variable values inside a message template. First you can simply place a variable
+expressions inside the message (see how `${messageId}` is used in the sample). In addition to that you can also use path
+expressions to explicitly overwrite message elements before message processing takes place.
+
+The sample above uses an XPath expression that evaluates and searches for the right element in the message body in order
+to set the given value. The previously defined variable *${date}* replaces the respective element value. Of course this
+works with XML attributes too (e.g. path expression `/TestMessage/Person/@age`).
+
+Both ways via XPath or JsonPath or inline variable expressions are equal to each other. With respect to the complexity of
+XML namespaces and XPath you may find the inline variable expression more comfortable to use. Anyway feel free to choose
+the way that fits best for you.
+
+This is how you can overwrite values in message templates in order to increase maintainability and robustness of your test.
+
+TIP: Validation matchers put validation mechanisms to a new level offering dynamic assertion statements for validation.
+Have a look at the possibilities with assertion statements in link:#validation-matcher[validation-matcher].
 
 [[escaping-variables-expression]]
-== Escaping variables expression
+== Escape variables
 
-The test variables expression syntax *_"${variable-name}"_* is preserved to evaluate to a test variable within the current test context. However the same syntax may be part of a message content
-as is. So you need to somehow escape the syntax from beeing interpreted as test variable syntax. You can do this by using the variable expression escaping *//* character sequence wrapping the actual variable name like this
+The test variable expression syntax `${variable-name}` is preserved to evaluate to a test variable within the current
+test context. In case the same syntax is used in one of your message content values you need to escape the syntax from
+being interpreted as test variable expression. You can do this by using the variable expression escaping character sequence
+`//` wrapping the actual variable name like this:
 
-[source]
+.Plain text message content with escapes
+[source,text]
 ----
 This is a escaped variable expression ${//escaped//} and should not lead to unknown variable exceptions within Citrus.
 ----
 
-The escaped expression *${//escaped//}* above will result in the string *${escaped}* where _escaped_ is not treated as a test variable name but as a normal string in the message payload. This way you are able to have the same variable syntax in a
-message content without interfering with the Citrus variable expression syntax. As a result Citrus will not complain about not finding the test variable *escaped* in the current context. The variable syntax escaping characters *//* are automatically
-removed when the expression is processed by Citrus. So we will get the following result after processing.
+The escaped expression `${//escaped//}` above will result in the string *${escaped}* where _escaped_ is not treated as a
+test variable name but as a normal string in the message body.
 
-[source]
+This way you are able to have the same variable syntax in a message content without interfering with the Citrus variable
+expression syntax. As a result Citrus will not complain about not finding the test variable *escaped* in the current context.
+
+The variable syntax escaping characters `//` are automatically removed when the expression is processed by Citrus. So we
+will get the following result after processing.
+
+.Parsed plain text mesage content
+[source,text]
 ----
 This is a escaped variable expression ${escaped} and should not lead to unknown variable exceptions within Citrus.
 ----

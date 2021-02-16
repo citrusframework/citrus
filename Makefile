@@ -22,6 +22,21 @@ default: help
 help:
 	./scripts/citrus -h
 
+open-manual:
+	./scripts/citrus manual
+
+generate-docs:
+	./scripts/citrus docs --release-version $(VERSION) --local --html-only
+
+release-docs:
+	./scripts/citrus docs --release-version $(VERSION)
+
+release-docs-major:
+	./scripts/citrus docs --release-version $(VERSION) --major-release
+
+release-docs-dry-run:
+	./scripts/citrus docs --release-version $(VERSION) --dry-run
+
 release:
 	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --release-version $(VERSION) --skip-tests
 

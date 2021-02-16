@@ -1,0 +1,103 @@
+[[runtime-junit4]]
+== JUnit4
+
+JUnit4 is still very popular and widely supported by many tools even though there is a new major version with JUnit5 already
+available. In general Citrus supports both JUnit4 and JUnit5 as test execution framework.
+
+NOTE: The JUnit4 support is shipped in a separate Maven module. You need to include the module as a dependency in your
+project.
+
+.JUnit4 module dependency
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-junit</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+[[junit4-tests]]
+=== JUnit4 tests
+
+See the following sample test class that uses JUnit4.
+
+.JUnit4 Citrus test
+[source,java]
+----
+package com.consol.citrus.samples;
+
+import org.testng.annotations.Test;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.junit.JUnit4CitrusSupport;
+
+@Test
+public class Simple_IT extends JUnit4CitrusSupport {
+
+    @CitrusTest(name = "Simple_IT")
+    public void simpleTest() {
+        description("First example showing the basic Java DSL!");
+
+        given(
+            variable("user", "Citrus")
+        );
+
+        then(
+            echo().message("Hello ${user}!"
+        ));
+    }
+}
+----
+
+The simple test class above uses the normal `@Test` annotation and extends the base class `JUnit4CitrusSupport`. This is
+the most convenient way to access the Citrus Java DSL capabilities. As an alternative you may switch to using the
+`CitrusJUnit4Runner` in your test class.
+
+The fine thing here is that we are still able to use all JUnit features such as before/after hooks or ignoring tests.
+
+After the test run the result is reported exactly like a usual JUnit unit test would do. This also means that
+you can execute this Citrus JUnit class like every other JUnit test, especially out of any Java IDE, with Maven, with Gradle and so on.
+
+NOTE: You can also combine Citrus with the Spring framework and its dependency injection and IoC capabilities. In order to
+enable Spring support in Citrus add the `citrus-spring` module to your project and extend `JUnit4CitrusSpringSupport` as a
+base class. With the Spring support in Citrus the test is able to use `@Autowired` annotations for injecting Spring beans into the
+test class and you can define the Spring application context with `@Configuration` annotations for instance.
+
+[[junit4-parallel]]
+=== Run tests in parallel
+
+Integration tests tend to be more time-consuming compared to pure unit tests when it comes to execute tests. This is because
+integration tests often need to initialize test infrastructure (e.g. test servers, database connections). Running tests
+in parallel can reduce the overall test suite time a lot.
+
+When running tests in parallel you need to make sure each test operates on its own set of resources. Tests must not share
+components such as the Citrus Java DSL test action runner or the test context.
+
+You should be using the resource injection to make sure each test operates on its own resources.
+
+.Resource injection
+[source,java]
+----
+public class ResourceInjection_IT extends JUnit4CitrusSupport {
+
+    @Test
+    @CitrusTest
+    public void injectResources(@CitrusResource TestCaseRunner runner,
+                                @CitrusResource TestContext context) {
+
+        runner.given(
+            createVariable("random", "citrus:randomNumber(10)")
+        );
+
+        runner.run(
+            echo("The random number is: ${random}")
+        );
+    }
+}
+----
+
+The method parameters require the `@CitrusResource` annotations in order to mark the parameter for Citrus resource injection.
+
+Now each method uses its own resource instances which makes sure that parallel test execution can take place without having
+the risk of side effects on other tests running at the same time. Of course, you also need to make sure that the message
+exchange in your tests is ready to be performed in parallel (e.g. use message selectors).

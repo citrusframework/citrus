@@ -1,0 +1,548 @@
+[[direct]]
+= Direct endpoint
+
+Direct endpoints represent the default in memory messaging solution in Citrus. Producer and consumer components are linked
+via queues exchanging messages in memory.
+
+NOTE: The direct endpoint configuration components use the default "citrus" configuration namespace and schema definition.
+Include this namespace into your Spring bean configuration in order to use the Citrus configuration elements. The namespace
+URI and schema location are added to the Spring configuration XML file as follows.
+
+[source,xml]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/config
+        http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+    [...]
+
+</beans>
+----
+
+Right now you are able to use the Citrus XML elements in order to define the direct endpoint components.
+
+[[direct-endpoint]]
+== Channel endpoint
+
+Citrus offers a direct endpoint component that is able to create producers and consumers. Producer and consumer
+send and receive messages both to and from a direct endpoint. By default, the endpoint is asynchronous when configured
+in the Citrus context.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public ChannelEndpoint helloEndpoint() {
+    return new ChannelEndpointBuilder()
+        .queue("helloChannel")
+        .build();
+}
+
+@Bean
+public MessageSelectingQueueChannel helloChannel() {
+    return new MessageSelectingQueueChannel();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus:direct-endpoint id="helloEndpoint" queue="helloChannel"/>
+
+<citrus:queue id="helloChannel"/>
+----
+
+The Citrus direct endpoint references a queue directly. Inside your test case you can reference the
+Citrus endpoint as usual to send and receive messages.
+
+The message sender is now ready to publish messages on the defined queue. The communication is supposed to be asynchronous,
+so the producer is not able to process any reply message. We will deal with synchronous communication and reply messages
+later in this chapter. You can reference the id of the endpoint in a send and receive test action.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(send("helloEndpoint")
+        .message()
+        .body("<v1:HelloRequest xmlns:v1=\"http://citrusframework.org/schemas/HelloService.xsd\">" +
+                "<v1:Text>Hello World!</v1:Text>" +
+            "</v1:HelloRequest>"));
+
+then(receive("helloEndpoint")
+        .message()
+        .body("<v1:HelloResponse xmlns:v1=\"http://citrusframework.org/schemas/HelloService.xsd\">" +
+                "<v1:Text>Hello Citrus!</v1:Text>" +
+            "</v1:HelloResponse>"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<send endpoint="helloEndpoint">
+    <message>
+        <payload>
+            <v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd">
+                <v1:Text>Hello World!</v1:Text>
+            </v1:HelloRequest>
+        </payload>
+    </message>
+</send>
+
+<receive endpoint="helloEndpoint">
+    <message>
+        <payload>
+            <v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd">
+                <v1:Text>Hello Citrus!</v1:Text>
+            </v1:HelloResponse>
+        </payload>
+    </message>
+</receive>
+----
+
+You can send and receive messages from the same direct endpoint. As usual the receiver connects
+to the message destination and waits for messages to arrive. The user can set a receive timeout which is set to 5000 milliseconds
+by default. In case no message was received in this time frame the receiver raises timeout errors and the test fails.
+
+[[synchronous-direct-endpoints]]
+== Synchronous direct endpoints
+
+The synchronous direct producer publishes messages and waits synchronously for the response to arrive on a reply queue
+destination. The reply queue name is set in the message headers. The counterpart in this communication must send its
+reply to that queue. The basic configuration for a synchronous direct endpoint component looks like follows:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public ChannelSyncEndpoint helloEndpoint() {
+    return new ChannelSyncEndpointBuilder()
+        .queue("helloChannel")
+        .replyTimeout(1000L)
+        .pollingInterval(1000L)
+        .build();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus:direct-sync-endpoint id="helloSyncEndpoint"
+                            queue="helloChannel"
+                            reply-timeout="1000"
+                            polling-interval="1000"/>
+----
+
+Synchronous direct endpoints usually do poll for synchronous reply messages for processing the reply messages.
+The poll interval is an optional setting in order to manage the amount of reply message handshake attempts. When the endpoint
+was able to receive the reply message synchronously the test case can verify the reply.
+
+In case all polling attempts have failed the action raises a timeout error, and the test will fail.
+
+NOTE: By default, the direct endpoint uses temporary reply queue destinations. The temporary reply queues are only
+used once for a single communication handshake. The temporary reply queue is deleted automatically.
+
+When sending a message to this endpoint in the first place the producer will wait synchronously for the response message
+to arrive on the reply queue. You can receive the reply message in your test case using the same endpoint component. So
+we have two actions on the same endpoint, first send then receive.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(send("helloSyncEndpoint")
+        .message()
+        .body("<v1:HelloRequest xmlns:v1=\"http://citrusframework.org/schemas/HelloService.xsd\">" +
+                "<v1:Text>Hello World!</v1:Text>" +
+            "</v1:HelloRequest>"));
+
+then(receive("helloSyncEndpoint")
+        .message()
+        .body("<v1:HelloResponse xmlns:v1=\"http://citrusframework.org/schemas/HelloService.xsd\">" +
+                "<v1:Text>Hello Citrus!</v1:Text>" +
+            "</v1:HelloResponse>"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<send endpoint="helloSyncEndpoint">
+    <message>
+        <payload>
+            <v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd">
+                <v1:Text>Hello World!</v1:Text>
+            </v1:HelloRequest>
+        </payload>
+    </message>
+</send>
+
+<receive endpoint="helloSyncEndpoint">
+    <message>
+        <payload>
+            <v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd">
+                <v1:Text>Hello Citrus!</v1:Text>
+            </v1:HelloResponse>
+        </payload>
+    </message>
+</receive>
+----
+
+This is how you handle synchronous communication as a sender. You publish messages to a queue and wait for reply messages
+on a temporary reply queue. The next section deals with the same synchronous communication, but now Citrus will receive
+a request and send a synchronous reply message to a temporary reply queue.
+
+As usual the reply queue name is stored in the message headers. Citrus handles this synchronous communication with the
+same synchronous direct endpoint component. The handling of temporary reply destinations is done automatically behind
+the scenes.
+
+So we have again two actions in our test case, but this time first receive then send.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(receive("helloSyncEndpoint")
+        .message()
+        .body("<v1:HelloRequest xmlns:v1=\"http://citrusframework.org/schemas/HelloService.xsd\">" +
+                "<v1:Text>Hello World!</v1:Text>" +
+            "</v1:HelloRequest>"));
+
+then(send("helloSyncEndpoint")
+        .message()
+        .body("<v1:HelloResponse xmlns:v1=\"http://citrusframework.org/schemas/HelloService.xsd\">" +
+                "<v1:Text>Hello Citrus!</v1:Text>" +
+            "</v1:HelloResponse>"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="helloSyncEndpoint">
+    <message>
+        <payload>
+            <v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd">
+                <v1:Text>Hello World!</v1:Text>
+            </v1:HelloRequest>
+        </payload>
+    </message>
+</receive>
+
+<send endpoint="helloSyncEndpoint">
+    <message>
+        <payload>
+            <v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd">
+                <v1:Text>Hello Citrus!</v1:Text>
+            </v1:HelloResponse>
+        </payload>
+    </message>
+</send>
+----
+
+[[message-queue-selector]]
+== Message selectors
+
+A queue can hold multiple messages at the same time. Usually you receive messages using first-in-first-out pattern. Message
+selectors enable you to select messages form that queue so you can pick messages form a queue based on a selector evaluation.
+Message selectors are described in link:#message-selectors[message-selector].
+
+Citrus introduces a special queue message queue implementation that support message selectors.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public MessageSelectingQueueChannel helloChannel() {
+    return new MessageSelectingQueueChannel();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus:queue id="orderChannel" capacity="5"/>
+----
+
+We can add a capacity attribute for this queue. A receive test action makes use of message selectors on header values as described
+in link:#message-selectors[message-selector].
+
+In addition to that we have implemented other message filter possibilities on message queues that we discuss in the next
+sections.
+
+[[payload-matching-message-selector]]
+== Payload matching selector
+
+You can select messages based on the payload content. Either you define the expected payload as an exact match in the selector
+or you make use of Citrus validation matchers which is more adequate in most scenarios.
+
+Assume there are two different plain text messages living on a message queue waiting to be picked up by a consumer.
+
+[source,text]
+----
+Hello, welcome!
+----
+
+[source,text]
+----
+GoodBye, see you next time!
+----
+
+The tester would like to pick up the message starting with *GoodBye* in our test case. The other messages should be left on the
+queue as we are not interested in it right now. We can define a payload matching selector in the receive action like this:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(receive("orderChannelEndpoint")
+        .selector(Collections.singletonMap("payload", "@startsWith(GoodBye)@"))
+        .message()
+        .body("GoodBye, see you next time!"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="orderChannelEndpoint">
+    <selector>
+        <element name="payload" value="@startsWith(GoodBye)@"/>
+    </selector>
+    <message>
+        <payload>GoodBye, see you next time!</payload>
+    </message>
+</receive>
+----
+
+The Citrus receiver picks up the *GoodBye* from the queue selected via the payload matching expression defined in the
+selector element. Of course, you can also combine message header selectors and payload matching selectors as shown in this
+example below where a message header *sequenceId* is added to the selection logic.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+Map<String, String> selectorMap = new HashMap<>();
+selectorMap.put("payload", "@startsWith(GoodBye)@");
+selectorMap.put("sequenceId", "1234");
+
+when(receive("orderChannelEndpoint")
+        .selector(selector)
+        .message()
+        .body("GoodBye, see you next time!"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<selector>
+    <element name="payload" value="@startsWith(GoodBye)@"/>
+    <element name="sequenceId" value="1234"/>
+</selector>
+----
+
+[[root-qname-message-selector]]
+== Root QName selector
+
+As a special payload matching selector you can use the XML root QName of your message as selection criteria when dealing
+with XML message content. Let's see how this works in a small example:
+
+We have two different XML messages on a message queue waiting to be picked up by a consumer.
+
+[source,xml]
+----
+<HelloMessage xmlns="http://citrusframework.org/schema">Hello Citrus</HelloMessage>
+----
+
+[source,xml]
+----
+<GoodbyeMessage xmlns="http://citrusframework.org/schema">Goodbye Citrus</GoodbyeMessage>
+----
+
+We would like to pick up the *GoodbyeMessage* in our test case. The *HelloMessage* should be left on the message queue
+as we are not interested in it right now. We can define a root qname message selector in the receive action like this:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(receive("orderChannelEndpoint")
+        .selector(Collections.singletonMap("root-qname", "GoodbyeMessage"))
+        .message()
+        .body("<GoodbyeMessage xmlns=\"http://citrusframework.org/schema\">Goodbye Citrus</GoodbyeMessage>"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="orderChannelEndpoint">
+    <selector>
+        <element name="root-qname" value="GoodbyeMessage"/>
+    </selector>
+    <message>
+        <payload>
+            <GoodbyeMessage xmlns="http://citrusframework.org/schema">Goodbye Citrus</GoodbyeMessage>
+        </payload>
+    </message>
+</receive>
+----
+
+The Citrus receiver picks up the *GoodbyeMessage* from the queue selected via the root qname of the XML message payload.
+Of course, you can also combine message header selectors and root qname selectors as shown in this example below where a
+message header *sequenceId* is added to the selection logic.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+Map<String, String> selectorMap = new HashMap<>();
+selectorMap.put("root-qname", "GoodbyeMessage");
+selectorMap.put("sequenceId", "1234");
+
+when(receive("orderChannelEndpoint")
+        .selector(selector)
+        .message()
+        .body("GoodBye, see you next time!"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<selector>
+    <element name="root-qname" value="GoodbyeMessage"/>
+    <element name="sequenceId" value="1234"/>
+</selector>
+----
+
+As we deal with XML qname values, we can also use namespaces in our selector root qname selection.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(receive("orderChannelEndpoint")
+        .selector(Collections.singletonMap("root-qname", "{http://citrusframework.org/schema}GoodbyeMessage"))
+        .message()
+        .body("<GoodbyeMessage xmlns=\"http://citrusframework.org/schema\">Goodbye Citrus</GoodbyeMessage>"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<selector>
+    <element name="root-qname" value="{http://citrusframework.org/schema}GoodbyeMessage"/>
+</selector>
+----
+
+[[xpath-message-selector]]
+== Xpath selector
+
+It is also possible to evaluate some XPath expression on the message payload in order to select a message from a message
+queue. The XPath expression outcome must match an expected value and only then the message is consumed form the queue.
+
+The syntax for the XPath expression is to be defined as the element name like this:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(receive("orderChannelEndpoint")
+        .selector(Collections.singletonMap("xpath://Order/status", "pending"))
+        .message()
+        .body("<Order><status>pending</status></Order>"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<selector>
+    <element name="xpath://Order/status" value="pending"/>
+</selector>
+----
+
+The message selector looks for order messages with *status="pending"* in the message payload. This means that following
+messages would get accepted/declined by the message selector.
+
+[source,xml]
+----
+<Order><status>pending</status></Order> <!-- ACCEPTED -->
+<Order><status>finished</status></Order> <!-- NOT ACCEPTED -->
+----
+
+Of course, you can also use XML namespaces in your XPath expressions when selecting messages from queues.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(receive("orderChannelEndpoint")
+        .selector(Collections.singletonMap("xpath://ns1:Order/ns1:status", "pending"))
+        .message()
+        .body("<Order><status>pending</status></Order>"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<selector>
+    <element name="xpath://ns1:Order/ns1:status" value="pending"/>
+</selector>
+----
+
+Namespace prefixes must match the incoming message - otherwise the XPath expression will not work as expected. In our example
+the message should look like this:
+
+[source,xml]
+----
+<ns1:Order xmlns:ns1="http://citrus.org/schema"><ns1:status>pending</ns1:status></ns1:Order>
+----
+
+Knowing the correct XML namespace prefix is not always easy. If you are not sure which namespace prefix to choose Citrus
+ships with a dynamic namespace replacement for XPath expressions. The XPath expression looks like this and is most flexible:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(receive("orderChannelEndpoint")
+        .selector(Collections.singletonMap(
+                "xpath://{http://citrus.org/schema}:Order/{http://citrus.org/schema}:status", "pending"))
+        .message()
+        .body("<Order><status>pending</status></Order>"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<selector>
+    <element name="xpath://{http://citrus.org/schema}:Order/{http://citrus.org/schema}:status"
+                value="pending"/>
+</selector>
+----
+
+This will match all incoming messages regardless the XML namespace prefix that is used.
+
+[[json-path-message-selector]]
+== JsonPath selector
+
+It is also possible to evaluate some JsonPath expression on the message payload in order to select a message from a message
+queue. The JsonPath expression outcome must match an expected value and only then the message is consumed form the queue.
+
+The syntax for the JsonPath expression is to be defined as the element name like this:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+when(receive("orderChannelEndpoint")
+        .selector(Collections.singletonMap("jsonPath:$.order.status", "pending"))
+        .message()
+        .body("{ \"order\": { \"status\": \"pending\" } }"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<selector>
+    <element name="jsonPath:$.order.status" value="pending"/>
+</selector>
+----
+
+The message selector looks for order messages with *status="pending"* in the message payload. This means that following messages would get accepted/declined by the message selector.
+
+[source,json]
+----
+{ "order": { "status": "pending" } } //ACCEPTED
+{ "order": { "status": "finished" } } //NOT ACCEPTED
+----

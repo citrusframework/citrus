@@ -1,5 +1,5 @@
 [[actions-send]]
-== Sending messages
+== Send
 
 In a integration test scenario we want to trigger processes and call interface services on the system under test. In order to do this we need to be able to send messages to various message transports. Therefore the send message test action in Citrus is one of the most important test actions. First of all let us have a look at the Citrus message definition in Citrus:
 

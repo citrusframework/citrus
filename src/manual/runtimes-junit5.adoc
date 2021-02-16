@@ -1,0 +1,107 @@
+[[runtime-junit5]]
+== JUnit5
+
+With JUnit version 5 the famous unit test framework offers a new major version. The JUnit platform provides awesome extension
+points for other frameworks like Citrus to integrate with the unit testing execution.
+
+Citrus provides extensions in order to enable Citrus related dependency injection and parameter resolving in your JUnit5 test.
+
+NOTE: The JUnit5 support is shipped in a separate Maven module. You need to include the module as a dependency in your
+project.
+
+.JUnit5 module dependency
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-junit5</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+[[junit5-tests]]
+=== JUnit5 tests
+
+You can use the Citrus JUnit5 extension on your unit test as follows:
+
+.JUnit5 Citrus test
+[source,java]
+----
+package com.consol.citrus.samples;
+
+import com.consol.citrus.GherkinTestActionRunner;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+@ExtendWith(CitrusSupport.class)
+public class Simple_IT {
+
+    @Test
+    @CitrusTest(name = "Simple_IT")
+    public void simpleTest(@CitrusResource GherkinTestActionRunner runner) {
+        runner.description("First example showing the basic Java DSL!");
+
+        runner.given(
+            variable("user", "Citrus")
+        );
+
+        runner.then(
+            echo().message("Hello ${user}!"
+        ));
+    }
+}
+----
+
+The class above is using the JUnit5 `@Test` annotation as a normal unit test would do. In addition to that we extend with
+the `CitrusSupport`. This enables us to use the `@CitrusTest` annotation on the test and adds support for the parameter injection
+for the `TestActionRunner`.
+
+The Citrus Java DSL runner is the entrance to the Java fluent API provided by Citrus. The sample above uses the Gherkin test runner
+variation for leveraging the Behavior Driven Behavior style Given-When-Then syntax.
+
+You can also inject the current `TestContext` in order to get access to the current test variables used by Citrus.
+
+NOTE: You can also combine Citrus with the Spring framework and its dependency injection and IoC capabilities. In order to
+enable Spring support in Citrus add the `citrus-spring` module to your project and use the `CitrusSpringSupport` extension.
+With the Spring support in Citrus the test is able to load components via the Spring application context.
+
+[[junit5-endpoint-injection]]
+=== Endpoint injection
+
+In addition to injecting test resources you can also inject endpoints via `@CitrusEndpoint` annotated field injection in
+your test class. This enabled you to inject endpoint components that are defined in the Citrus context configuration.
+
+.JUnit5 Citrus endpoint injection
+[source,java]
+----
+package com.consol.citrus.samples;
+
+import com.consol.citrus.annotations.*;
+import com.consol.citrus.GherkinTestActionRunner;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
+import com.consol.citrus.http.client.HttpClient;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.http.HttpStatus;
+
+@ExtendWith(CitrusSupport.class)
+public class Simple_IT {
+
+    @CitrusEndpoint
+    private HttpClient httpClient;
+
+    @Test
+    @CitrusTest
+    public void test(@CitrusResource GherkinTestActionRunner runner) {
+        runner.http().client(httpClient)
+                    .send()
+                    .get("/hello");
+
+        runner.http().client(httpClient)
+                    .receive()
+                    .response(HttpStatus.OK);
+    }
+}
+----

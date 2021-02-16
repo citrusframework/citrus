@@ -1,0 +1,23 @@
+[[runtime-main]]
+== Main CLI runtime
+
+Citrus provides a main class that you can run from command line.
+
+NOTE: The Main CLI support is shipped in a separate Maven module. You need to include the module as a dependency in your
+project.
+
+.Main CLI module dependency
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-main</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+.Run Citrus main
+[source,bash]
+----
+
+----

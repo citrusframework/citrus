@@ -1,5 +1,5 @@
 [[plain-text-message-validation]]
-== Plain text message validation
+== Plain text validation
 
 Plain text message validation is the easiest validation in Citrus that you can think of. This validation just performs an exact Java String match of received and expected message payloads.
 

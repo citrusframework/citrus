@@ -1,5 +1,5 @@
 [[actions-sql]]
-== Database actions
+== SQL
 
 In many cases it is necessary to access the database during a test. This enables a tester to also validate the persistent
 data in a database. It might also be helpful to prepare the database with some test data before running a test. You can do this
@@ -7,7 +7,7 @@ using the two database actions that are described in the following sections.
 
 In general Citrus handles SELECT statements differently to other statements like INSERT, UPDATE and DELETE. When executing a SQL query with
 SELECT you are able to add validation steps on the result sets returned from the database. This is not allowed when executing update statements like
-INSERT, UPDATE, DELETE. 
+INSERT, UPDATE, DELETE.
 
 IMPORTANT: Do not mix statements of type *_SELECT_* with others in a single sql test action. This will lead to errors because validation steps are not valid
 for statements other than SELECT. Please use separate test actions for update statements.
@@ -27,7 +27,7 @@ On the one hand you can specify the statements as inline SQL or stored in an ext
         <statement>DELETE FROM CUSTOMERS</statement>
         <statement>DELETE FROM ORDERS</statement>
     </sql>
-    
+
     <sql datasource="myDataSource">
         <resource file="file:tests/unit/resources/script.sql"/>
     </sql>
@@ -46,7 +46,7 @@ public void sqlTest() {
     sql(dataSource)
         .statement("DELETE FROM CUSTOMERS")
         .statement("DELETE FROM ORDERS");
-            
+
     sql(dataSource)
         .sqlResource("file:tests/unit/resources/script.sql");
 }
@@ -95,7 +95,7 @@ The <sql> query action is specially designed to execute SQL queries (SELECT * FR
     <statement>select count(*) from ERRORS</statement>
     <statement>select ID from ORDERS where DESC LIKE 'Def%'</statement>
     <statement>select DESCRIPTION from ORDERS where ID='${id}'</statement>
-    
+
     <validate column="ID" value="1"/>
     <validate column="NAME" value="Christoph"/>
     <validate column="COUNT(*)" value="${rowsCount}"/>
@@ -168,9 +168,9 @@ IMPORTANT: The validation with *_"<validate column="..." value="..."/>"_* meets 
           <value>Value in 2nd row</value>
           <value>Value in 3rd row</value>
           <value>Value in x row</value>
-      </values>               
+      </values>
   </validate>
-        
+
 ----
 
 Within Java you can pass a variable argument list to the validate method like this:
@@ -198,7 +198,7 @@ Next example shows how to work with multiple row result sets and multiple values
               <value>Friday</value>
               <value>@ignore@</value>
               <value>@ignore@</value>
-          </values>            	
+          </values>
       </validate>
       <validate column="DESCRIPTION">
           <values>
@@ -209,10 +209,10 @@ Next example shows how to work with multiple row result sets and multiple values
               <value>Friday, the weekend is near!</value>
               <value>@ignore@</value>
               <value>@ignore@</value>
-          </values>            	
+          </values>
       </validate>
   </sql>
-      
+
 ----
 
 For the validation of multiple rows the *_`&lt;validate&gt;`_* element is able to host a list of control values for a column. As you can see from the example above, you have to add a control value for each row in the result set. This also means that we have to take care of the total number of rows. Fortunately we can use the ignore placeholder, in order to skip the validation of a specific row in the result set. Functions and variables are supported as usual.
@@ -228,9 +228,9 @@ By default no transactions are used when Citrus executes SQL statements on a dat
 [source,xml]
 ----
 <actions>
-    <sql datasource="someDataSource" 
-         transaction-manager="someTransactionManager" 
-         transaction-timeout="15000" 
+    <sql datasource="someDataSource"
+         transaction-manager="someTransactionManager"
+         transaction-timeout="15000"
          transaction-isolation-level="ISOLATION_READ_COMMITTED">
         <statement>DELETE FROM CUSTOMERS</statement>
         <statement>DELETE FROM ORDERS</statement>
@@ -284,12 +284,12 @@ Groovy provides great support for accessing Java list objects and maps. As a Jav
 <sql datasource="testDataSource">
     <statement>select ID from CUSTOMERS where NAME='${customerName}'</statement>
     <statement>select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'</statement>
-    
+
     <validate-script type="groovy">
         assert rows.size() == 2
         assert rows[0].ID == '1'
         assert rows[1].STATUS == 'in progress'
-        assert rows[1] == [ORDERTYPE:'SampleOrder', STATUS:'in progress']               
+        assert rows[1] == [ORDERTYPE:'SampleOrder', STATUS:'in progress']
     </validate-script>
 </sql>
 ----
@@ -329,7 +329,7 @@ Now the validation of database entries is a very powerful feature but sometimes 
 <sql datasource="testDataSource">
     <statement>select ID from CUSTOMERS where NAME='${customerName}'</statement>
     <statement>select STATUS from ORDERS where ID='${orderId}'</statement>
-    
+
     <extract column="ID" variable="${customerId}"/>
     <extract column="STATUS" variable="${orderStatus}"/>
 </sql>
