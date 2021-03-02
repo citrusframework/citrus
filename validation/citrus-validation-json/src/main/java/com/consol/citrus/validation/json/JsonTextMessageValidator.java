@@ -73,7 +73,9 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * Default constructor.
      */
     public JsonTextMessageValidator() {
-        strict = Boolean.parseBoolean(System.getProperty("citrus.json.message.validation.strict", "true"));
+        strict = Boolean.parseBoolean(
+                System.getProperty("citrus.json.message.validation.strict", System.getenv("CITRUS_JSON_MESSAGE_VALIDATION_STRICT") != null ?
+                        System.getenv("CITRUS_JSON_MESSAGE_VALIDATION_STRICT") : "true"));
     }
 
     @Override

@@ -1,86 +1,161 @@
 [[binary-message-validation]]
 == Binary validation
 
-Binary message validation is not very easy to do especially when it comes to compare data with a given control message. As a tester you want to validate the binary content. There are basically two ways in Citrus how to compare binary message content.
+Binary message validation is not an easy task in particular when it comes to compare data with a given control message.
+
+Binary message validation is not enabled by default in your project. You need to add the validation module to your project
+as a Maven dependency.
+
+.Binary validation module dependency
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-validation-binary</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+There are basically two ways in Citrus how to compare binary message content for validation purpose.
 
 [[binary-stream-message-validation]]
 === Stream message validation
 
-A first approach to validate incoming binary message content is to compare the binary stream data with an expected stream. This comparison is straight forward as each byte in the
-binary stream is compared to an expected stream.
+A first approach to validate incoming binary message content is to compare the binary stream data with an expected stream.
+This comparison is straight forward as each byte in the binary stream is compared to an expected stream.
 
-The default message validator for binary messages is active by default. Citrus will pick this message validator for all messages of *type="binary_base64"* . The default message validator implementation can be overwritten by placing a Spring bean with id *defaultBinaryBase64MessageValidator* to the Spring application context.
+The default message validator for binary messages is active by default. Citrus will pick this message validator for all
+messages of *type="binary_base64"* . The default message validator implementation can be overwritten by placing a Spring
+bean with id *defaultBinaryBase64MessageValidator* to the Spring application context.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public BinaryMessageValidator defaultBinaryMessageValidator() {
+    return new BinaryMessageValidator();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <bean id="defaultBinaryMessageValidator" class="com.consol.citrus.validation.text.BinaryMessageValidator"/>
 ----
 
-You can use the binary message type in your receive action in order to enable this stream comparison during validation.
+You can use the binary message type in a receive action in order to enable this stream comparison during validation.
 
+.Java
 [source,java]
 ----
-@CitrusTest
-public void httpServerBinary() {
-    http().client("httpClient")
-            .send()
-            .get("/imagestream/foo.png")
-            .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
-
-    http().client("httpClient")
-            .receive()
-            .response(HttpStatus.OK)
-            .messageType(MessageType.BINARY)
-            .message(new DefaultMessage(FileCopyUtils.copyToByteArray(new ClassPathResource("templates/foo.png").getFile())))
-            .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+.receive("someEndpoint")
+    .message(new DefaultMessage(FileCopyUtils.copyToByteArray(new ClassPathResource("templates/foo.png").getFile())))
+    .type(MessageType.BINARY);
 }
 ----
 
-It is very important to set the message type to `MessageType.BINARY` as this is the message type that is automatically handled by the binary stream message validator.
-
-[[binary-base64-message-validation]]
-=== Base64 message validation
-
-Another way to validate binary message content is to use base64 String encoding. The binary data is encoded as base64 character sequence and there fore is comparable with an expected content.
-
-The received message content does not have to be base64 encoded. Citrus is doing this conversion automatically before validation takes place. The binary data can be anything e.g. images, pdf or gzip content.
-
-The default message validator for binary messages is active by default. Citrus will pick this message validator for all messages of *type="binary_base64"* . The default message validator implementation can be overwritten by placing a Spring bean with id *defaultBinaryBase64MessageValidator* to the Spring application context.
-
-[source,xml]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultBinaryBase64MessageValidator" class="com.consol.citrus.validation.text.BinaryBase64MessageValidator"/>
-----
-
-In the test case receiving action we tell Citrus to use binary base64 message validation.
-
-[source,xml]
-----
-<receive endpoint="httpMessageEndpoint">
-    <message type="binary_base64">
-        <data>citrus:encodeBase64('Hello World!')</data>
+<receive endpoint="someEndpoint">
+    <message type="binary">
+        <resource file="classpath:templates/foo.png"/>
     </message>
 </receive>
 ----
 
-With the message format type *type="binary_base64"* Citrus performs the base64 character sequence validation. Incoming message content is automatically encoded as base64 String and compared to the expected data. This way we can make sure that the binary content is as expected.
+It is very important to set the message type to `MessageType.BINARY` as this is the message type that is automatically handled
+by the binary stream message validator.
 
-By the way sending binary messages in Citrus is also very easy. Just use the *type="binary"* message type in the send operation. Citrus now converts the message payload to a binary stream as payload.
+By the way sending binary messages in Citrus is also very easy. Just use the *type="binary"* message type in the send
+operation. Citrus now converts the message payload to a binary stream as payload.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="httpMessageEndpoint">
+send("someEndpoint")
+    .message()
+    .type(MessageType.BINARY)
+    .body("Hello World")
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<send endpoint="someEndpoint">
     <message type="binary">
         <data>Hello World!</data>
     </message>
 </send>
 ----
 
-Base64 encoding is also supported in outbound messages. Just use the *encodeBase64* function in Citrus. The result is a base64 encoded String as message payload.
+[[binary-base64-message-validation]]
+=== Base64 message validation
 
-[source,xml]
+Another way to validate binary message content is to use base64 String encoding. The binary data is encoded as base64
+character sequence and there fore is comparable with an expected content.
+
+The received message content does not have to be base64 encoded. Citrus is doing this conversion automatically before validation
+takes place. The binary data can be anything e.g. images, pdf or gzip content.
+
+The default message validator for binary messages is active by default. Citrus will pick this message validator for all
+messages of *type="binary_base64"* . The default message validator implementation can be overwritten by placing a Spring
+bean with id *defaultBinaryBase64MessageValidator* to the Spring application context.
+
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="httpMessageEndpoint">
+@Bean
+public BinaryBase64MessageValidator defaultBinaryBase64MessageValidator() {
+    return new BinaryBase64MessageValidator();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<bean id="defaultBinaryBase64MessageValidator" class="com.consol.citrus.validation.text.BinaryBase64MessageValidator"/>
+----
+
+In the test case receiving action we tell Citrus to use binary base64 message validation.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive("someEndpoint")
+    .message()
+    .body("citrus:encodeBase64('Hello World!')")
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+    <message type="binary_base64">
+        <data>citrus:encodeBase64('Hello World!')</data>
+    </message>
+</receive>
+----
+
+With the message format type *type="binary_base64"* Citrus performs the base64 character sequence validation. Incoming
+message content is automatically encoded as base64 String and compared to the expected data. This way we can make sure that
+the binary content is as expected.
+
+Base64 encoding is also supported in outbound messages. Just use the *encodeBase64* function in Citrus. The result is a
+base64 encoded String as message payload.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+send("someEndpoint")
+    .message()
+    .body("citrus:encodeBase64('Hello World!')")
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<send endpoint="someEndpoint">
     <message>
         <data>citrus:encodeBase64('Hello World!')</data>
     </message>

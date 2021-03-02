@@ -1,23 +1,22 @@
 [[message-validation]]
 = Message validation
 
-When Citrus receives a message from external applications it is time to verify the message content. This message validation includes syntax rules as well as semantic values that need to be compared to an expected behavior. Citrus provides powerful message validation capabilities. Each incoming message is validated with syntax and semantics. The tester is able to define expected message headers and payloads. Citrus message validator implementations will compare the messages and report differences as test failure. With the upcoming sections we have a closer look at message validation of XML messages with XPath and XML schema validation and further message formats like JSON and plaintext.
-
-include::validation-json.adoc[]
-include::validation-xml.adoc[]
-include::validation-schema.adoc[]
-include::validation-plaintext.adoc[]
-include::validation-binary.adoc[]
-include::validation-gzip.adoc[]
-include::validation-xhtml.adoc[]
-include::validation-custom.adoc[]
-include::validation-callback.adoc[]
+When Citrus receives a message from external applications it is time to verify the message content. This message validation
+includes syntax rules with schema validation and message content comparison to expected templates. Citrus provides powerful
+message validation capabilities for different data formats. The tester is able to define expected message headers and body
+content. The Citrus message validator finds values not matching the expectations and reports the difference as test failure.
 
 [[message-validator-registry]]
-== Validator registry
+== Validation registry
 
-In the previous sections we have already seen some examples on how to overwrite default message validator implementations in Citrus. By default all message validators can be overwritten by placing a Spring bean
-of the same id to the Spring application context. The default implementations of Citrus are:
+Citrus provides default message validator implementations for different data formats. The Citrus project context
+automatically loads these default message validators. In case one of these message validators matches the incoming
+message the message validator performs its validation steps with the message.
+
+All default message validators can be overwritten by binding a component with the same id to the project context (e.g. as
+Spring bean in the application context).
+
+The default message validator implementations of Citrus are:
 
 [horizontal]
 defaultXmlMessageValidator:: com.consol.citrus.validation.xml.DomXmlMessageValidator
@@ -33,41 +32,70 @@ defaultGroovyXmlMessageValidator:: com.consol.citrus.validation.script.GroovyXml
 defaultGroovyTextMessageValidator:: com.consol.citrus.validation.script.GroovyScriptMessageValidator
 defaultGroovyJsonMessageValidator:: com.consol.citrus.validation.script.GroovyJsonMessageValidator
 
-Overwriting a single message validator with a custom implementation is then very easy. Just add your custom Spring bean to the application context using one of these default bean identifiers. In case you want to change
-the message validator gang by adding or removing a message validator implementation completely you can place a message validator component in the Spring application context.
+TIP: You can overwrite a default message validator with a custom implementation. Just add your customized validator implementation
+as a bean to the Citrus context and use one of the default bean identifiers.
 
+You can add a custom message validator as a component in the context (e.g. as Spring bean in the application context).
+
+.Java DSL
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public CustomMessageValidator customMessageValidator() {
+    return new CustomMessageValidator();
+}
+----
+
+.XML DSL
+[source,xml,indent=0,role="secondary"]
+----
+<bean id="customMessageValidator" class="com.consol.citrus.validation.custom.CustomMessageValidator"/>
+----
+
+The listing above adds a custom message validator implementation. The message validator registry will automatically add this
+validator to the list of available validators in the project.
+
+The custom implementation class has to implement the basic interface *com.consol.citrus.validation.MessageValidator<>*. Now
+Citrus will try to match the custom implementation to incoming message types and occasionally execute the message validator
+logic when applicable.
+
+[[message-validator-modules]]
+== Validation modules
+
+The list of available message validators in your project is controlled by the available message validator implementations
+on the project classpath.
+
+You need to add validator modules to the project accordingly. For instance if you want to use the default Json message validation
+capabilities in Citrus you need to add the following dependency:
+
+.Json validation module dependency
 [source,xml]
 ----
-<citrus:message-validators>
-    <citrus:validator ref="defaultXmlMessageValidator"/>
-    <citrus:validator ref="defaultXpathMessageValidator"/>
-    <citrus:validator ref="defaultGroovyXmlMessageValidator"/>
-    <citrus:validator ref="defaultPlaintextMessageValidator"/>
-    <citrus:validator ref="defaultMessageHeaderValidator"/>
-    <citrus:validator ref="defaultBinaryBase64MessageValidator"/>
-    <citrus:validator ref="defaultGzipBinaryBase64MessageValidator"/>
-    <citrus:validator class="com.consol.citrus.validation.custom.CustomMessageValidator"/>
-    <citrus:validator ref="defaultJsonMessageValidator"/>
-    <citrus:validator ref="defaultJsonPathMessageValidator"/>
-    <citrus:validator ref="defaultGroovyJsonMessageValidator"/>
-    <citrus:validator ref="defaultGroovyTextMessageValidator"/>
-    <citrus:validator ref="defaultXhtmlMessageValidator"/>
-</citrus:message-validators>
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-validation-json</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
 ----
 
-The listing above adds a custom message validator implementation to the sequence of message validators in Citrus. We reference default message validators and add a implementation of type *com.consol.citrus.validation.custom.CustomMessageValidator* . The custom implementation class has to implement the basic interface *com.consol.citrus.validation.MessageValidator* . Now Citrus will try to match the custom implementation to incoming message types and occasionally execute the message validator logic. This is how you can add and change the basic message validator registry in Citrus. You can add custom implementations for new message formats very easy.
+This adds the Citrus message validator component for dealing with Json message format. This includes message validators and
+JsonPath support. Now your Citrus project is able to validate Json messages.
 
-The same approach applies in case you want to remove a message validator implementation by banning it completely. Just delete the entry in the message validator registry component:
+Citrus provides the following validation modules:
 
-[source,xml]
-----
-<citrus:message-validators>
-    <citrus:validator ref="defaultJsonMessageValidator"/>
-    <citrus:validator ref="defaultJsonPathMessageValidator"/>
-    <citrus:validator ref="defaultGroovyJsonMessageValidator"/>
-    <citrus:validator ref="defaultGroovyTextMessageValidator"/>
-    <citrus:validator ref="defaultMessageHeaderValidator"/>
-</citrus:message-validators>
-----
+* link:#json-message-validation[citrus-validation-json]
+* link:#xml-message-validation[citrus-validation-xml]
+* link:#plaintext-message-validation[citrus-validation-text]
+* link:#binary-message-validation[citrus-validation-binary]
+* link:#groovy-xml-validation[citrus-validation-groovy]
+* link:#hamcrest-message-validation[citrus-validation-hamcrest]
 
-The Citrus message validator component deleted all default implementations except of those dealing with JSON message format. Now Citrus is only able to validate JSON messages. Be careful as the complete Citrus project will be affected by this change.
+Read more about the individual validation modules in the next sections.
+
+include::validation-json.adoc[]
+include::validation-xml.adoc[]
+include::validation-schema.adoc[]
+include::validation-plaintext.adoc[]
+include::validation-binary.adoc[]
+include::validation-hamcrest.adoc[]
+include::validation-custom.adoc[]

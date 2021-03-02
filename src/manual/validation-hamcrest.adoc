@@ -1,0 +1,45 @@
+[[hamcrest-message-validation]]
+== Hamcrest validation
+
+Hamcrest validation empowers the validation capabilities by adding special assertions.
+
+Hamcrest message validation capability is not enabled by default in your project. You need to add the validation module
+to your project as a Maven dependency.
+
+.Binary validation module dependency
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-validation-hamcrest</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+You can use the Hamcrest assertions when receiving a message in order to validate elements, for instance with XPath.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive("someEndpoint")
+    .validate(xpath()
+        .expression("/TestRequest/Error", anyOf(empty(), nullValue()))
+        .expression("number:/TestRequest/Status[.='success']", greaterThan(0.0))
+        .expression("integer:/TestRequest/Status[.='failed']", lowerThan(1))
+        .expression("node-set:/TestRequest/OrderType", hasSize(3));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <validate>
+      <xpath expression="/TestRequest/Error" value="@assertThat(anyOf(empty(), nullValue()))@"/>
+      <xpath expression="/TestRequest/Status[.='success']" value="@assertThat(greaterThan(0.0))@" result-type="number"/>
+      <xpath expression="/TestRequest/Status[.='failed']" value="@assertThat(lowerThan(1))@" result-type="integer"/>
+      <xpath expression="/TestRequest/OrderType" value="@assertThat(hasSize(3))@" result-type="node-set"/>
+    </validate>
+  </message>
+</receive>
+----

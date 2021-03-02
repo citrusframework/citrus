@@ -5,7 +5,7 @@ The usage of test variables is a core concept when writing maintainable tests. T
 be exposed as test variables at the very beginning of a test. This avoids hard coded identifiers and multiple redundant values
 inside the test.
 
-.Java DSL
+.Java
 [source,java,indent=0,role="primary"]
 ----
 public void fooService_IT() {
@@ -16,7 +16,7 @@ public void fooService_IT() {
 }
 ----
 
-.XML DSL
+.XML
 [source,xml,indent=0,role="secondary"]
 ----
 <testcase name="FooService_IT">

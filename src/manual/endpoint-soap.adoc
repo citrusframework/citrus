@@ -273,7 +273,7 @@ SOAP defines several header variations that we discuss in the following sections
     </message>
 </ws:send>
 
-          <ws:receive endpoint="soapServer" soap-action="MySoapService/sayHello">
+<ws:receive endpoint="soapServer" soap-action="MySoapService/sayHello">
     <message>
         [...]
     </message>

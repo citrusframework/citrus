@@ -1,77 +1,131 @@
-[[plain-text-message-validation]]
+[[plaintext-message-validation]]
 == Plain text validation
 
-Plain text message validation is the easiest validation in Citrus that you can think of. This validation just performs an exact Java String match of received and expected message payloads.
+Plain text message validation performs an exact Java String match of received and expected message payloads.
 
-As usual a default message validator for plaintext messages is active by default. Citrus will pick this message validator for all messages of *type="plaintext"* . The default message validator implementation can be overwritten by placing a Spring bean with id *defaultPlaintextMessageValidator* to the Spring application context.
+Plaintext message validation is not enabled by default in your project. You need to add the validation module to your project
+as a Maven dependency.
 
+.Plaintext validation module dependency
 [source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-validation-text</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+This adds the default message validator for plaintext messages. Citrus will pick this message validator for all messages
+of *type="plaintext"*. The default message validator implementation can be overwritten by placing a Spring bean with
+id *defaultPlaintextMessageValidator*.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public PlainTextMessageValidator defaultPlaintextMessageValidator() {
+    return new PlainTextMessageValidator();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <bean id="defaultPlaintextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
 ----
 
-In the test case receiving action we tell Citrus to use plain text message validation.
+Citrus will try to auto-guess the appropiate message validator for the incoming message. You can explicitly set the message
+type on the receive action so Citrus knows how to apply plaintext message validation.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="httpMessageEndpoint">
+receive("someEndpoint")
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body("Hello World!");
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
     <message type="plaintext">
         <data>Hello World!</data>
     </message>
 </receive>
 ----
 
-With the message format type *type="plaintext"* set Citrus performs String equals on the message payloads (received and expected). Only exact match will pass the test.
+With the message format type *type="plaintext"* set Citrus performs String equals on the message payloads (received and expected).
+Only exact match will pass the test.
 
-By the way sending plain text messages in Citrus is also very easy. Just use the plain text message payload data in your sending message action.
+Of course test variables are supported in the plaintext payloads. The variables are replaced before processing the message
+template.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="httpMessageEndpoint">
-    <message>
-        <data>Hello World!</data>
-    </message>
-</send>
+receive("someEndpoint")
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body("${hello} ${world}!");
 ----
 
-Of course test variables are supported in the plain text payloads. The variables are replace by the referenced values before sending or receiving the message.
-
-[source,xml]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="httpMessageEndpoint">
+<receive endpoint="someEndpoint">
     <message type="plaintext">
         <data>${hello} ${world}!</data>
     </message>
 </receive>
 ----
 
-[[plain-text-validation-whitespaces]]
+[[plaintext-validation-whitespaces]]
 === Whitespace characters
 
-Plaintext message payloads may only differ in system-dependent line separator characters (*CR*, _LF_, _CRLF_). By default the plain text message validation fails because of that differences even if only whitespace
-characters are different.
+Plaintext message payloads may only differ in system-dependent line separator characters (*CR*, _LF_, _CRLF_). By default,
+the plaintext message validation fails because of that differences even if only whitespace characters are different.
 
 You can disable this default validation behavior and ignore new line types with following system property or environment variable:
 
-[source]
+.Plaintext validation settings
+[source,properties]
 ----
 citrus.plaintext.validation.ignore.newline.type=true
 CITRUS_PLAINTEXT_VALIDATION_IGNORE_NEWLINE_TYPE=true
 ----
 
-In case you need to ignore all whitespaces during plain text validation such as multiple new line characters or tabs you need to set this system property or environment variable:
+In case you need to ignore all whitespaces during plaintext validation such as multiple new line characters or tabs you
+need to set this system property or environment variable:
 
-[source]
+.Plaintext validation settings
+[source,properties]
 ----
 citrus.plaintext.validation.ignore.whitespace=true
 CITRUS_PLAINTEXT_VALIDATION_IGNORE_WHITESPACE=true
 ----
 
-This property will not only ignore new line types but also normalize the whitespaces. As a result all empty lines, tabs and double whitespace characters are filtered before comparison.
+This property will not only ignore new line types but also normalize the whitespaces. As a result all empty lines, tabs
+and double whitespace characters are filtered before comparison.
 
-Of course you can also set the properties directly on the plain text message validator bean:
+Of course, you can also set the properties directly on the plaintext message validator bean:
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public PlainTextMessageValidator defaultPlaintextMessageValidator() {
+    PlainTextMessageValidator validatoe = new PlainTextMessageValidator();
+    validator.setIgnoreNewLineType(true);
+    validator.setIgnoreWhitespace(true);
+    return validator;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <bean id="defaultPlaintextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator">
   <property name="ignoreNewLineType" value="true"/>
@@ -79,19 +133,22 @@ Of course you can also set the properties directly on the plain text message val
 </bean>
 ----
 
-[[plain-text-validation-ignore]]
+[[plaintext-validation-ignore]]
 === Ignoring text parts
 
-By default the plaint text validator performs a String equals operation. Test variables are automatically replaced before that comparison takes place but what about ignore statements?
-The plain text message validator is able to ignore words and character sequences based on their position in the text value. Given a source plain text value:
+The plaintext validator performs a String equals operation. Test variables are automatically replaced before that comparison
+takes place but what about ignore statements? The plaintext message validator is able to ignore words and character sequences
+based on their position in the text value. Given a source plaintext value:
 
-.Source text
+.Received text
 [source,text]
 ----
 Your current id is "1234567890"
 ----
 
-Now in the plain text validation we need to ignore the actual id value due to some reason. Maybe the id is generated on a foreign system and we simply do not know the actual value at runtime.
+In the plaintext validation you need to ignore the actual id value due to some reason. Maybe the id is generated on a foreign
+application and you simply do not know the actual value at runtime.
+
 In this case we can use the common `@ignore@` statement in the control message payload as follows:
 
 .Control text
@@ -100,21 +157,26 @@ In this case we can use the common `@ignore@` statement in the control message p
 Your current id is "@ignore@"
 ----
 
-Citrus and the plain text message validator will ignore the marked part of the text during validation. This mechanism is based on the fact that the `@ignore@` statement is placed at the exact same
-position as the actual id value. So this mechanism requires you to know the exact structure of the plaintext value including all whitespace characters. When Citrus finds the `@ignore@` keyword in the control value
-the placeholder is replaced with the actual character sequence that is located at the exact same position in the source message payload that is validated.
+Citrus and the plaintext message validator will ignore the marked part of the text during validation. This mechanism is
+based on the fact that the `@ignore@` statement is placed at the exact same position as the actual id value. So this mechanism
+requires you to know the exact structure of the plaintext value including all whitespace characters. In case Citrus finds the `@ignore@`
+keyword in the control value the placeholder is replaced with the actual character sequence that is located at the exact
+same position in the source message payload that is validated.
 
-The character sequence is defined as sequence of Java word characters. This word sequence is ending with a non-word character defined in Java (`\\W` which is a character that is not in `[a-zA-Z_0-9]`).
+The character sequence is defined as sequence of Java word characters. This word sequence is ending with a non-word character
+defined in Java (`\\W` which is a character that is not in `[a-zA-Z_0-9]`).
 
-Instead of ignoring a single word you can also specify the amount of characters that should be ignored. This is when you have Java non-word characters that you need to ignore. Let's have an example for that, too:
+Instead of ignoring a single word you can also specify the amount of characters that should be ignored. This is when you
+have Java non-word characters that you need to ignore. Let's have an example for that, too:
 
-.Source text
+.Received text
 [source,text]
 ----
 Your current id is "#12345-67890"
 ----
 
-Given that text the simple `@ignore@` statement will fail because of the non-word characters *'#'* and *'-'* that are located in the id value. This time we ignore the whole id sequence with:
+Given that text the simple `@ignore@` statement will fail because of the non-word characters *'#'* and *'-'* that are located
+in the id value. This time we ignore the whole id sequence with:
 
 .Control text
 [source,text]
@@ -122,15 +184,16 @@ Given that text the simple `@ignore@` statement will fail because of the non-wor
 Your current id is "@ignore(12)@"
 ----
 
-This will ignore exactly *12* characters starting from the exact position of the `@ignore@` keyword. So knowing that the id is exactly *12* characters long we can ignore that part.
+This will ignore exactly *12* characters starting from the exact position of the `@ignore@` keyword. So knowing that the
+id is exactly *12* characters long we can ignore that part.
 
-[[plain-text-validation-variables]]
+[[plaintext-validation-variables]]
 === Creating variables
 
-Instead of just ignoring certain text parts we can also extract those parts into test variables. The actual character sequence is ignored during validation and in addition to that the actual
-value is stored to a new test variable. Given the following text payload:
+Instead of just ignoring certain text parts we can also extract those parts into test variables. The actual character sequence
+is ignored during validation and in addition to that the actual value is stored to a new test variable. Given the following text payload:
 
-.Source text
+.Received text
 [source,text]
 ----
 Your current id is "1234567890"
@@ -144,18 +207,17 @@ And the expected control text:
 Your current id is "@variable('id')@"
 ----
 
-The validation will automatically ignore the id part in the text and create a new test variable with name `id` that holds the actual value. The name of the variable to create is given in the
-`@variable()@` statement. This enables us to extract dynamic text parts that we are not able to validate. After that we can access the dynamic text part using the normal test variable syntax:
+The validation will automatically ignore the id part in the text and create a new test variable with name `id` that holds
+the actual value. The name of the variable to create is given in the `@variable()@` statement. This enables us to extract
+dynamic text parts that we are not able to validate. After that we can access the dynamic text part using the normal test
+variable syntax `${id}`.
 
-[source,text]
-----
-The id was ${id}
-----
+Also notice that the `@variable()@` keyword expression has to be placed at the exact same position in the text as the actual
+value. The variable extractor will read the variable value from the source message payload starting from that position.
+The ending of the variable value is defined by a non-word Java character. Dashes *'-'* and dots *'.'* are automatically
+included in these values, too. So this will also work for you:
 
-Also notice that the `@variable()@` keyword expression has to be placed at the exact same position in the text as the actual value. The variable extractor will read the variable value from the source message payload
-starting from that position. The ending of the variable value is defined by a non-word Java character. Dashes *'-'* and dots *'.'* are automatically included in these values, too. So this will also work for you:
-
-.Source text
+.Received text
 [source,text]
 ----
 Today is "2017-12-24"
@@ -169,10 +231,97 @@ And the expected control text:
 Today is "@variable('date')@"
 ----
 
-This results in a new variable called `date` with value `2017-12-24`. Also the European date representation works fine here as dots and dashes are automatically included:
+This results in a new variable called `date` with value `2017-12-24`. In addition, the European date representation works fine
+here, too because dots and dashes are automatically included:
 
-.Source text
+.Received text
 [source,text]
 ----
 Today is "24.12.2017"
 ----
+
+[[plaintext-validation-gzip]]
+=== Gzip validation
+
+Gzip is a message compression library to optimize the message transport of large content. Citrus is able to handle
+compressed message payloads on send and receive operations. Sending compressed data sets the message type to *gzip*.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+send("someEndpoint")
+    .message()
+    .type(MessageType.GZIP)
+    .body("Hello World!")
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<send endpoint="someEndpoint">
+    <message type="gzip">
+        <data>Hello World!</data>
+    </message>
+</send>
+----
+
+Just use the *type="gzip"* message type in the send operation. Citrus now converts the message payload to a gzip binary
+stream as payload.
+
+When validating gzip binary message content the messages are compared with a given control message in binary base64 String
+representation. The gzip binary data is automatically unzipped and encoded as base64 character sequence in order to compare
+with an expected content.
+
+The received message content is using gzip format but the actual message content does not have to be base64 encoded. Citrus
+is doing this conversion automatically before validation takes place. The binary data can be anything e.g. images, pdf or
+plaintext content.
+
+The default message validator for gzip messages is active by default. Citrus will pick this message validator for all messages
+of *type="gzip_base64"* . The default message validator implementation can be overwritten by placing a Spring bean with
+id *defaultGzipBinaryBase64MessageValidator* to the Spring application context.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public GzipBinaryBase64MessageValidator defaultGzipBinaryBase64MessageValidator() {
+    return new GzipBinaryBase64MessageValidator();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<bean id="defaultGzipBinaryBase64MessageValidator"
+      class="com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator"/>
+----
+
+In the test case receiving action we tell Citrus to use gzip message validation.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive("someEndpoint")
+    .message()
+    .type(MessageType.GZIP_BASE64)
+    .body("citrus:encodeBase64('Hello World!')")
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+    <message type="gzip_base64">
+        <data>citrus:encodeBase64('Hello World!')</data>
+    </message>
+</receive>
+----
+
+With the message format type *type="gzip_base64"* Citrus performs the gzip base64 character sequence validation. Incoming
+message content is automatically unzipped and encoded as base64 String and compared to the expected data. This way we can
+make sure that the binary content is as expected.
+
+NOTE: If you are using http client and server components the gzip compression support is built in with the underlying Spring
+and http commons libraries. So in http communication you just have to set the header *Accept-Encoding=gzip* or *Content-Encoding=gzip*.
+The message data is then automatically zipped/unzipped before Citrus gets the message data for validation. Read more about
+this http specific gzip compression in link:#http-rest[chapter http].

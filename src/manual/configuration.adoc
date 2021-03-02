@@ -118,9 +118,3 @@ CITRUS_APPLICATION_PROPERTIES=file:/custom/path/to/citrus-application.properties
 ----
 
 NOTE: You can use *classpath:* and *file:* path prefix in order to give locate a classpath or file-system resource.
-
-[[configuration-spring]]
-== Spring application context
-
-When Spring support is enabled you can add custom Spring beans and configuration to the central Spring application context.
-Read more about this configuration option in link:#spring-support[Spring support].

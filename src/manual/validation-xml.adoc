@@ -1,157 +1,303 @@
 [[xml-message-validation]]
 == XML validation
 
-XML is a very common message format especially in the SOAP WebServices and JMS messaging world. Citrus provides XML message validator implementations that are able to compare XML message structures. The validator will notice differences in the XML message structure and supports XML namespaces, attributes and XML schema validation. The default XML message validator implementation is active by default and can be overwritten with a custom implementation using the bean id *defaultXmlMessageValidator* .
+XML is a very common message format especially in the SOAP WebServices and JMS messaging world. Citrus provides XML message
+validator implementations that are able to compare XML message structures. The validator will notice differences in the XML
+message and supports XML namespaces, attributes and XML schema validation.
 
+XML message validation is not enabled by default in your project. You need to add the validation module to your project
+as a Maven dependency.
+
+.XML validation module dependency
 [source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-validation-xml</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+The default XML message validator implementation is active by default and can be overwritten with a custom implementation
+using the bean id *defaultXmlMessageValidator* .
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public DomXmlMessageValidator defaultXmlMessageValidator() {
+    return new DomXmlMessageValidator();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <bean id="defaultXmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
 ----
 
-The default XML message validator is very powerful when it comes to compare XML structures. The validator supports namespaces with different prefixes and attributes als well as namespace qualified attributes. See the following sections for a detailed description of all capabilities.
+The default XML message validator is very powerful when it comes to compare XML structures. The validator supports namespaces
+with different prefixes and attributes als well as namespace qualified attributes. See the following sections for a detailed
+description of all capabilities.
 
 [[xml-payload-validation]]
 === XML payload validation
 
-Once Citrus has received a message the tester can validate the message contents in various ways. First of all the tester can compare the whole message payload to a predefined control message template.
+Citrus is able to verify XML message content on a received message. You as a tester can compare the whole XML message body
+to a predefined control message template. The Citrus message validator will walk through the XML document and compare the
+elements, attributes and values.
 
-The receiving action offers following elements for control message templates:
+You can define the expected XML message template in multiple ways:
 
-&lt;payload&gt;:: Defines the message payload as nested XML message template. The whole message payload is defined inside the test case.
-&lt;data&gt;:: Defines an inline XML message template as nested CDATA. Slightly different to the payload variation as we define the whole message payload inside the test case as CDATA section.
-&lt;resource&gt;:: Defines an expected XML message template via external file resources. This time the payload is loaded at runtime from the external file.
+* Defines the message body as nested XML message template in the test code. The whole message body is defined inside the test case.
+* Defines an expected XML message template via external file resources. This time the body content is loaded at runtime from the external file.
 
-Both ways inline payload definition or external file resource give us a control message template that the test case expects to arrive. Citrus uses this control template for extended message comparison. All elements, namespaces, attributes and node values are validated in this comparison. When using XML message payloads Citrus will navigate through the whole XML structure validating each element and its content. Same with JSON payloads.
+In Java tests that use the Citrus domain specific language you must use verbose String concatenation when constructing XML
+message contents inline. You need to escape reserved characters like quotes and line breaks. This is why you should consider
+to using external file resources in Java when dealing with large complex message data.
 
-Only in case received message and control message are equal to each other as expected the message validation will pass. In case differences occur Citrus gives detailed error messages and the test case fails.
-
-The control message template is not necessarily very static. Citrus supports various ways to add dynamic message content on the one side and on the other side Citrus can ignore some elements that are not part of message comparison (e.g. when generated content or timestamps are part of the message content). The tester can enrich the expected message template with test variables or ignore expressions so we get a more robust validation mechanism. We will talk about this in the next sections to come.
-
-When using the Citrus Java DSL you will face a verbose message payload definition. This is because Java does not support multiline character sequence values as Strings. We have to use verbose String concatenation when constructing XML message payload contents for instance. In addition to that reserved characters like quotes must be escaped and line breaks must be explicitly added. All these impediments let me suggest to use external file resources in Java DSL when dealing with large complex message payload data. Here is an example:
-
-.Java DSL designer
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
-public void receiveMessageTest() {
-    receive("helloServiceServer")
-        .payload(new ClassPathResource("com/consol/citrus/message/data/TestRequest.xml"))
+public void externalBodyResourceTest() {
+    receive("someEndpoint")
+        .message()
+        .body(new ClassPathResource("com/consol/citrus/message/data/TestRequest.xml"))
         .header("Operation", "sayHello")
         .header("MessageId", "${messageId}");
 }
 ----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <payload file="classpath:com/consol/citrus/message/data/TestRequest.xml"/>
+  </message>
+</receive>
+----
+
+Inline message body definition or external file resource give us a control message template that the test case expects to
+validate. Citrus uses this control template for extended message comparison. All elements, namespaces, attributes and node
+values are validated in this comparison. When using XML message bodies Citrus will navigate through the whole XML structure
+validating each element and its content.
+
+Only in case received message and control message are equal to each other as expected the message validation will pass. In
+case differences occur the test case fails with detailed error message.
+
+Citrus supports various ways to add dynamic message content in the message template. Secondly, Citrus can ignore some elements
+that should not be part of message comparison (e.g. when generated content or timestamps are part of the message content).
+The tester can enrich the expected message template with test variables or ignore-expressions so we get a more robust
+validation mechanism. We will talk about this in the next sections to come.
 
 [[xml-header-validation]]
 === XML header validation
 
-Now that we have validated the message payload in various ways we are now interested in validating the message header. This is simple as you have to define the header name and the control value that you expect. Just add the following header validation to your receiving action.
+A message can have multiple headers in addition to the body content. You can validate headers with expected name and the
+control value. Just add the following header validation to your receiving action.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<header>
-    <element name="Operation" value="GetCustomer"/>
-    <element name="RequestTag" value="${requestTag}"/>
-</header>
-----
-
-.Java DSL designer
-[source,java]
-----
-@CitrusTest
-public void receiveMessageTest() {
-    receive("helloServiceServer")
-        .header("Operation", "sayHello")
-        .header("MessageId", "${messageId}");
-}
+receive("someEndpoint")
+    .message()
+    .header("Operation", "sayHello")
+    .header("MessageId", "${messageId}");
 ----
 
-Message headers are represented as name-value pairs. Each expected header element identified by its name has to be present in the received message. In addition to that the header value is compared to the given control value. If a header entry is not found by its name or the value does not fit accordingly Citrus will raise validation errors and the test case will fail.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <header>
+        <element name="Operation" value="GetCustomer"/>
+        <element name="RequestTag" value="${requestTag}"/>
+    </header>
+  </message>
+</receive>
+----
 
-NOTE: Sometimes message headers may not apply to the name-value pair pattern. For example SOAP headers can also contain XML fragments. Citrus supports these kind of headers too. Please see the SOAP chapter for more details.
+Message headers are represented as name-value pairs. Each expected header element identified by its name has to be present
+in the received message. In addition to that the header value is compared to the given control value. If a header entry is
+not available, or the value does not match the expectations the test raises validation errors.
+
+[[xml-header-fragment-validation]]
+=== XML header fragment validation
+
+Sometimes message headers may not apply to the name-value pair pattern. For example SOAP headers can also contain XML
+fragments as header values. You can add complex header data as expected value in the validation.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive("someEndpoint")
+    .message()
+    .header("Operation", "SayHello")
+    .header("<ns0:HelloHeader xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                "<ns0:MessageId>${messageId}</ns0:MessageId>" +
+                "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
+                "<ns0:User>${user}</ns0:User>" +
+                "<ns0:Text>Hello from Citrus!</ns0:Text>" +
+            "</ns0:HelloHeader>");
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <header>
+      <data>
+        <![CDATA[
+          <ns0:HelloHeader xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+              <ns0:MessageId>${messageId}</ns0:MessageId>
+              <ns0:CorrelationId>${correlationId}</ns0:CorrelationId>
+              <ns0:User>${user}</ns0:User>
+              <ns0:Text>Hello from Citrus!</ns0:Text>
+          </ns0:HelloHeader>
+        ]]>
+      </data>
+      <element name="Operation" value="SayHello"/>
+    </header>
+  </message>
+</receive>
+----
+
+The header data has not name but uses a complex XML fragment as a value. In SOAP this header fragment will be added as
+a `SOAP-ENV:Header` then. Please read more about this in link:#soap-headers[SOAP support].
 
 [[xml-ignore-validation]]
 === Ignore XML elements
 
-Some elements in the message payload might not apply for validation at all. Just think of communication timestamps an dynamic values inside a message:
+Some elements in the message payload might not apply for validation at all. Just think of communication timestamps or dynamic
+values that have been generated from a foreign service.
 
-The timestamp value in our next example will dynamically change from test run to test run and is hardly predictable for the tester, so lets ignore it in validation.
+You as a tester may not be able to predict such a timestamp or dynamically value for expected validation. This is why you can
+safely ignore elements and attributes in the XML message validation.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
+receive("someEndpoint")
+    .message()
+    .header("<TestMessage>" +
+                "<VersionId>${versionId}</VersionId>" +
+                "<Timestamp>?</Timestamp>" +
+                "<MessageId>?</MessageId>" +
+            "</TestMessage>")
+    .validate(xpath()
+            .ignore("/TestMessage/Timestamp")
+            .ignore("/TestMessage/MessageId"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
     <payload>
-        <TestMessage>
-            <MessageId>${messageId}</MessageId>
-            <Timestamp>2001-12-17T09:30:47.0Z</Timestamp>
-            <VersionId>@ignore@</VersionId>
-        </TestMessage>
+      <TestMessage>
+        <VersionId>${versionId}</VersionId>
+        <Timestamp>?</Timestamp>
+        <MessageId>?</MessageId>
+      </TestMessage>
     </payload>
     <ignore path="/TestMessage/Timestamp"/>
-</message>
+    <ignore path="/TestMessage/MessageId"/>
+  </message>
+</receive>
 ----
 
-Although we have given a static timestamp value in the payload data the element is ignored during validation as the ignore XPath expression matches the element. In addition to that we also ignored the version id element in this example. This time with an inline *@ignore@* expression. This is for those of you that do not like XPath. As a result the ignored message elements are automatically skipped when Citrus compares and validates message contents and do not break the test case.
+The receive action above is not able to verify the elements `Timestamp` and `MessageId`. This is because the timestamp uses
+milliseconds and the message id has been generated by the server application. Both values must be excluded from XML validation.
 
-When using the Java DSL the *@ignore@* placeholder as well as XPath expressions can be used seamlessly. Here is an example of that:
+You can use ignore XPath expressions that match elements in the message content that should be excluded. XPath expressions can
+be cumbersome and error prone though.
 
-.Java DSL designer
-[source,java]
+You can also use inline *@ignore@* expressions as expected template values in order to exclude elements from valdidation. This
+is for those of you that do not like to write XPath expressions. As a result the ignored message elements are automatically
+skipped when Citrus compares and validates message contents and do not break the test case.
+
+.Java
+[source,java,indent=0,role="primary"]
 ----
-@CitrusTest
-public void receiveMessageTest() {
-    receive("helloServiceServer")
-        .payload(new ClassPathResource("com/consol/citrus/message/data/TestRequest.xml"))
-        .header("Operation", "sayHello")
-        .header("MessageId", "${messageId}")
-        .ignore("/TestMessage/Timestamp");
-}
+receive("someEndpoint")
+    .message()
+    .header("<TestMessage>" +
+                "<VersionId>${versionId}</VersionId>" +
+                "<Timestamp>@ignore@</Timestamp>" +
+                "<MessageId>@ignore@</MessageId>" +
+            "</TestMessage>");
 ----
 
-Of course you can use the inline *@ignore@* placeholder in an external file resource, too.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <payload>
+      <TestMessage>
+        <VersionId>${versionId}</VersionId>
+        <Timestamp>@ignore@</Timestamp>
+        <MessageId>@ignore@</MessageId>
+      </TestMessage>
+    </payload>
+  </message>
+</receive>
+----
+
+Feel free to mix both mechanisms to ignore message elements. Ignore expressions are valid as elements, sub-tree nodes and
+attributes. You can use the *@ignore@* placeholder in external file resources, too.
 
 [[xml-xpath-validation]]
 === XPath validation
 
-We have already seen how to validate whole XML structures with control message templates. All elements are validated and
-compared one after another. In some cases this approach might be too extensive. Imagine the tester only needs to validate a
-small subset of message elements. The definition of control templates in combination with several ignore statements is not
-appropriate in this case. You would rather want to use explicit element validation with XPath.
+The section link:#xml-payload-validation[XML payload validation] showed how to validate the complete XML message structure
+with control message template. All elements are validated and compared one after another.
 
-.XML DSL
-[source,xml]
-----
-<message>
-  <validate>
-    <xpath expression="/TestRequest/MessageId" value="${messageId}"/>
-    <xpath expression="/TestRequest/VersionId" value="2"/>
-  </validate>
-</message>
-----
+In some cases this approach might be too extensive. Imagine the tester only needs to validate a small subset of message elements.
+You would rather want to use explicit element validation with XPath.
 
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-receive(receiveMessageBuilder -> receiveMessageBuilder
-    .endpoint("helloServiceServer")
-    .validate("/TestRequest/MessageId", "${messageId}")
-    .validate("//VersionId", "2")
-    .header("Operation", "sayHello"));
+receive("someEndpoint")
+    .message()
+    .validate(xpath()
+        .expression("/TestRequest/MessageId", "${messageId}")
+        .expression("//VersionId", "2"));
 }
 ----
 
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <validate>
+      <xpath expression="/TestRequest/MessageId" value="${messageId}"/>
+      <xpath expression="/TestRequest/VersionId" value="2"/>
+    </validate>
+  </message>
+</receive>
+----
+
+In Java the use of a map may be the easiest way to declare multiple expressions for XPath validation.
+
 .Java DSL
 [source,java]
 ----
-final Map<String, Object> validationMap = new HashMap<>();
-validationMap.put("/TestRequest/MessageId", "${messageId}");
-validationMap.put("//VersionId", "2");
+final Map<String, Object> expressions = new HashMap<>();
+expressions.put("/TestRequest/MessageId", "${messageId}");
+expressions.put("//VersionId", "2");
 
-receive(receiveMessageBuilder -> receiveMessageBuilder
-    .endpoint("helloServiceServer")
-    .validate(validationMap)
-    .header("Operation", "sayHello"));
+receive("someEndpoint")
+    .message()
+    .validate(xpath()
+        .expressions(expressions));
 }
 ----
 
@@ -168,40 +314,38 @@ in the XML tree is represented with a simple dot - for example:
 
 `TestRequest.VersionId`
 
-The expression will search the XML tree for the respective <TestRequest><VersionId> element. Attributes are supported too.
+The expression will search the XML tree for the respective `<TestRequest><VersionId>` element. Attributes are supported too.
 In case the last element in the dot-notated expression is a XML attribute the framework will automatically find it.
 
 Of course this dot-notated syntax is very simple and might not be applicable for more complex tree navigation. XPath is
-much more powerful - no doubt. However the dot-notated syntax might help those of you that are not familiar with XPath.
+much more powerful - no doubt. The dot-notated syntax might help those of you that are not familiar with XPath.
 So the dot-notation is supported wherever XPath expressions might apply.
 
-The Xpath expressions can evaluate to different result types. By default Citrus is operating on *NODE* and *STRING* result
+The Xpath expressions can evaluate to different result types. By default, Citrus is operating on *NODE* and *STRING* result
 types so that you can validate some element value. But you can also use different result types such as *NODESET* and *BOOLEAN* .
-See this example how that works:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
-  <validate>
-    <xpath expression="/TestRequest/Error" value="false" result-type="boolean"/>
-    <xpath expression="/TestRequest/Status[.='success']" value="3" result-type="number"/>
-    <xpath expression="/TestRequest/OrderType" value="[single, multi, multi]" result-type="node-set"/>
-  </validate>
-</message>
+receive("someEndpoint")
+    .validate(xpath()
+        .expression("boolean:/TestRequest/Error", false)
+        .expression("number:/TestRequest/Status[.='success']", 3)
+        .expression("node-set:/TestRequest/OrderType", "[single, multi, multi]");
 ----
 
-.Java DSL designer
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void receiveMessageTest() {
-    receive("helloServiceServer")
-        .validate("boolean:/TestRequest/Error", false)
-        .validate("number:/TestRequest/Status[.='success']", 3)
-        .validate("node-set:/TestRequest/OrderType", "[single, multi, multi]")
-        .header("Operation", "sayHello");
-}
+<receive endpoint="someEndpoint">
+  <message>
+    <validate>
+      <xpath expression="/TestRequest/Error" value="false" result-type="boolean"/>
+      <xpath expression="/TestRequest/Status[.='success']" value="3" result-type="number"/>
+      <xpath expression="/TestRequest/OrderType" value="[single, multi, multi]" result-type="node-set"/>
+    </validate>
+  </message>
+</receive>
 ----
 
 In the example above we use different expression result types. First we want to make sure nor */TestRequest/Error* element
@@ -210,38 +354,37 @@ elements for the expression */TestRequest/Status[.='success']* . The XPath expre
 in its list size to be checked. And last not least we evaluate to a *node-set* result type where all values in the node list
 will be translated to a comma delimited string value.
 
-Now lets have a look at some more powerful validation expressions using matcher implementations. Up to now we have seen that
-XPath expression results are comparable with *equalTo* operations. We would like to add some more powerful validation such
-as *greaterThan*, *lessThan*, *hasSize* and much more. Therefore we have introduced Hamcrest validation matcher support in
-Citrus. Hamcrest is a very powerful matcher library that provides a fantastic set of matcher implementations. Let's see how
-we can add these in our test case:
+You can use even more powerful validation expressions with matcher implementations. With validation matchers you are able to
+use validations such as *greaterThan*, *lessThan*, *hasSize* and much more.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
-  <validate>
-    <xpath expression="/TestRequest/Error" value="@assertThat(anyOf(empty(), nullValue()))@"/>
-    <xpath expression="/TestRequest/Status[.='success']" value="@assertThat(greaterThan(0.0))@" result-type="number"/>
-    <xpath expression="/TestRequest/Status[.='failed']" value="@assertThat(lowerThan(1))@" result-type="integer"/>
-    <xpath expression="/TestRequest/OrderType" value="@assertThat(hasSize(3))@" result-type="node-set"/>
-  </validate>
-</message>
+receive("someEndpoint")
+    .validate(xpath()
+        .expression("/TestRequest/Error", anyOf(empty(), nullValue()))
+        .expression("number:/TestRequest/Status[.='success']", greaterThan(0.0))
+        .expression("integer:/TestRequest/Status[.='failed']", lowerThan(1))
+        .expression("node-set:/TestRequest/OrderType", hasSize(3));
 ----
 
-.Java DSL designer
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void receiveMessageTest() {
-    receive("helloServiceServer")
-        .validate("/TestRequest/Error", anyOf(empty(), nullValue()))
-        .validate("number:/TestRequest/Status[.='success']", greaterThan(0.0))
-        .validate("integer:/TestRequest/Status[.='failed']", lowerThan(1))
-        .validate("node-set:/TestRequest/OrderType", hasSize(3))
-        .header("Operation", "sayHello");
-}
+<receive endpoint="someEndpoint">
+  <message>
+    <validate>
+      <xpath expression="/TestRequest/Error" value="@assertThat(anyOf(empty(), nullValue()))@"/>
+      <xpath expression="/TestRequest/Status[.='success']" value="@assertThat(greaterThan(0.0))@" result-type="number"/>
+      <xpath expression="/TestRequest/Status[.='failed']" value="@assertThat(lowerThan(1))@" result-type="integer"/>
+      <xpath expression="/TestRequest/OrderType" value="@assertThat(hasSize(3))@" result-type="node-set"/>
+    </validate>
+  </message>
+</receive>
 ----
+
+NOTE: The validation matchers used in the example above use the link:#hamcrest-message-validation[citrus-hamcrest-validation]
+module.
 
 NOTE: XPath uses decimal number type *Double* by default when evaluating expressions with *number* result type. This means
 we have to use Double typed expected values, too. Citrus also provides the result type *integer* that automatically converts
@@ -257,9 +400,10 @@ This is how you can add very powerful message element validation in XML using XP
 [[xml-validation-namespaces]]
 === XML namespaces
 
-When it comes to XML namespaces you have to be careful with your XPath expressions. Let's have a look at an example message
-that uses XML namespaces:
+Namespaces represent an essential concept in XML. A namespace declares an element to be part of a very specific ruleset. You
+have to specify namespaces also when using XPath expressions. Let's have a look at an example message that uses XML namespaces:
 
+.Sample XML body with namepaces
 [source,xml]
 ----
 <ns1:TestMessage xmlns:ns1="http://citrus.com/namespace">
@@ -278,28 +422,52 @@ that uses XML namespaces:
 
 Now we would like to validate some elements in this message using XPath
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
-  <validate>
-    <xpath expression="//TestMessage/TestHeader/VersionId" value="2"/>
-    <xpath expression="//TestMessage/TestHeader/CorrelationId" value="${correlationId}"/>
-  </validate>
-</message>
+receive("someEndpoint")
+    .validate(xpath()
+        .expression("//TestMessage/TestHeader/VersionId", 2L)
+        .expression("//TestMessage/TestHeader/CorrelationId", "${correlationId}");
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <validate>
+      <xpath expression="//TestMessage/TestHeader/VersionId" value="2"/>
+      <xpath expression="//TestMessage/TestHeader/CorrelationId" value="${correlationId}"/>
+    </validate>
+  </message>
+</receive>
 ----
 
 The validation will fail although the XPath expression looks correct regarding the XML tree. This is because the message uses the
 namespace `xmlns:ns1="http://citrus.com/namespace"`. The XPath expression is not able to find the elements because of the missing
 namespace declaration in the expression. The correct XPath expression uses the namespace prefix as defined in the message.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
-  <validate>
-    <xpath expression="//ns1:TestMessage/ns1:TestHeader/ns1:VersionId" value="2"/>
-    <xpath expression="//ns1:TestMessage/ns1:TestHeader/ns1:CorrelationId" value="${correlationId}"/>
-  </validate>
-</message>
+receive("someEndpoint")
+    .validate(xpath()
+        .expression("//ns1:TestMessage/ns1:TestHeader/ns1:VersionId", 2L)
+        .expression("//ns1:TestMessage/ns1:TestHeader/ns1:CorrelationId", "${correlationId}");
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <validate>
+      <xpath expression="//ns1:TestMessage/ns1:TestHeader/ns1:VersionId" value="2"/>
+      <xpath expression="//ns1:TestMessage/ns1:TestHeader/ns1:CorrelationId" value="${correlationId}"/>
+    </validate>
+  </message>
+</receive>
 ----
 
 Now the expressions works fine, and the validation is successful. Relying on the namespace prefix `ns1` is quite error prone though.
@@ -308,15 +476,28 @@ namespace prefix (e.g. ns2) the validation will fail again.
 
 You can avoid this effect when specifying your own namespace context and your own namespace prefix during validation.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
-  <validate>
-    <xpath expression="//pfx:TestMessage/pfx:TestHeader/pfx:VersionId" value="2"/>
-    <xpath expression="//pfx:TestMessage/pfx:TestHeader/pfx:CorrelationId" value="${correlationId}"/>
-    <namespace prefix="pfx" value="http://citrus.com/namespace"/>
-  </validate>
-</message>
+receive("someEndpoint")
+    .validate(xpath()
+        .expression("//pfx:TestMessage/pfx:TestHeader/pfx:VersionId", 2L)
+        .expression("//pfx:TestMessage/pfx:TestHeader/pfx:CorrelationId", "${correlationId}")
+        .namespaceContext("pfx", "http://citrus.com/namespace"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <validate>
+      <xpath expression="//pfx:TestMessage/pfx:TestHeader/pfx:VersionId" value="2"/>
+      <xpath expression="//pfx:TestMessage/pfx:TestHeader/pfx:CorrelationId" value="${correlationId}"/>
+      <namespace prefix="pfx" value="http://citrus.com/namespace"/>
+    </validate>
+  </message>
+</receive>
 ----
 
 Now the test is independent of any namespace prefix in the received message. The namespace context will resolve the namespaces
@@ -326,7 +507,19 @@ value (http://citrus.com/namespace[http://citrus.com/namespace]) matches.
 TIP: Instead of this namespace context on validation level you can also have a global namespace context which is valid in
 all test cases. We just add a bean in the basic Spring application context configuration which defines global namespace mappings.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public NamespaceContextBuilder namespaceContext() {
+    NamespaceContextBuilder builder = new NamespaceContextBuilder();
+    builder.getNamepspaceMappings().put("pfx", "http://www.consol.de/samples/sayHello");
+    return builder;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <namespace-context>
     <namespace prefix="def" uri="http://www.consol.de/samples/sayHello"/>
@@ -340,6 +533,7 @@ XPath expressions are valid inside a test case (validation, ignore, extract).
 In the previous section we have seen that XML namespaces can get tricky with XPath validation. Default namespaces can do
 even more! So lets look at the example with default namespaces:
 
+.Sample XML body with default namespaces
 [source,xml]
 ----
 <TestMessage xmlns="http://citrus.com/namespace">
@@ -358,27 +552,51 @@ even more! So lets look at the example with default namespaces:
 
 The message uses default namespaces. The following approach in XPath will fail due to namespace problems.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
-  <validate>
-    <xpath expression="//TestMessage/TestHeader/VersionId" value="2"/>
-    <xpath expression="//TestMessage/TestHeader/CorrelationId" value="${correlationId}"/>
-  </validate>
-</message>
+receive("someEndpoint")
+    .validate(xpath()
+        .expression("//TestMessage/TestHeader/VersionId", 2L)
+        .expression("//TestMessage/TestHeader/CorrelationId", "${correlationId}"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <validate>
+      <xpath expression="//TestMessage/TestHeader/VersionId" value="2"/>
+      <xpath expression="//TestMessage/TestHeader/CorrelationId" value="${correlationId}"/>
+    </validate>
+  </message>
+</receive>
 ----
 
 Even default namespaces need to be specified in the XPath expressions. Look at the following code listing that works fine
 with default namespaces:
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<message>
-  <validate>
-    <xpath expression="//:TestMessage/:TestHeader/:VersionId" value="2"/>
-    <xpath expression="//:TestMessage/:TestHeader/:CorrelationId" value="${correlationId}"/>
-  </validate>
-</message>
+receive("someEndpoint")
+    .validate(xpath()
+        .expression("//:TestMessage/:TestHeader/:VersionId", 2L)
+        .expression("//:TestMessage/:TestHeader/:CorrelationId", "${correlationId}"));
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+  <message>
+    <validate>
+      <xpath expression="//:TestMessage/:TestHeader/:VersionId" value="2"/>
+      <xpath expression="//:TestMessage/:TestHeader/:CorrelationId" value="${correlationId}"/>
+    </validate>
+  </message>
+</receive>
 ----
 
 TIP: It is recommended to use the namespace context as described in the previous chapter when validating. Only this approach
@@ -387,9 +605,10 @@ ensures flexibility and stable test cases regarding namespace changes.
 [[customize-xml-parser-and-serializer]]
 === Customize XML parser and serializer
 
-When working with XML data format parsing and serializing is a common task. XML structures are parsed to a DOM (Document Object Model) representation in order
-to process elements, attributes and text nodes. Also DOM node objects get serialized to a String message payload representation. The XML parser and serializer is customizable
-to a certain level. By default Citrus uses the https://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/[DOM Level 3 Load and Save] implementation with following settings:
+When working with XML data format parsing and serializing is a common task. XML structures are parsed to a DOM (Document
+Object Model) representation in order to process elements, attributes and text nodes. DOM node objects get serialized to a
+String message payload representation. The XML parser and serializer is customizable to a certain level. By default, Citrus
+uses the https://www.w3.org/TR/2004/REC-DOM-Level-3-LS-20040407/[DOM Level 3 Load and Save] implementation with following settings:
 
 .Parser settings
 [horizontal]
@@ -407,7 +626,22 @@ element-content-whitespace:: *true*
 The parameters are also described in https://www.w3.org/TR/DOM-Level-3-Core/core.html#DOMConfiguration[W3C DOM configuration] documentation. We can customize the default settings by adding
 a _XmlConfigurer_ Spring bean to the Citrus application context.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XmlConfigurer xmlConfigurer() {
+    XmlConfigurer configurer = new XmlConfigurer();
+    configurer.getParseSettings().put("validate-if-schema", false);
+
+    configurer.getSerializeSettings().put("comments", false);
+    configurer.getSerializeSettings().put("format-pretty-print", false);
+    return configurer;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <bean id="xmlConfigurer" class="com.consol.citrus.xml.XmlConfigurer">
     <property name="parseSettings">
@@ -429,19 +663,34 @@ NOTE: This configuration is of global nature. All XML processing operations will
 [[groovy-xml-validation]]
 === Groovy XML validation
 
-With the Groovy XmlSlurper you can easily validate XML message payloads without having to deal directly with XML. People who do not want to deal with XPath may also like this validation alternative. The tester directly navigates through the message elements and uses simple code assertions in order to control the message content. Here is an example how to validate messages with Groovy script:
+With the Groovy XmlSlurper you can easily validate XML message payloads without having to deal directly with XML. People
+who do not want to deal with XPath may also like this validation alternative. The tester directly navigates through the
+message elements and uses simple code assertions in order to control the message content. Here is an example how to validate
+messages with Groovy script:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="helloServiceClient" timeout="5000">
+receive("someEndpoint")
+    .validate(groovy().script("assert root.children().size() == 4\n" +
+                              "assert root.MessageId.text() == '${messageId}'\n" +
+                              "assert root.CorrelationId.text() == '${correlationId}'\n")
+                              "assert root.Text.text() == 'Hello ' + context.getVariable(\"user\")"))
+    .header("Operation, "sayHello")
+    .header("CorrelationId", "${correlationId}")
+    .timeout(5000L);
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint" timeout="5000">
     <message>
         <validate>
             <script type="groovy">
                 assert root.children().size() == 4
                 assert root.MessageId.text() == '${messageId}'
                 assert root.CorrelationId.text() == '${correlationId}'
-                assert root.User.text() == 'HelloService'
                 assert root.Text.text() == 'Hello ' + context.getVariable("user")
             </script>
         </validate>
@@ -453,30 +702,36 @@ With the Groovy XmlSlurper you can easily validate XML message payloads without 
 </receive>
 ----
 
-.Java DSL designer
-[source,java]
+The Groovy XmlSlurper validation script goes right into the message-tag instead of a XML control template or XPath validation.
+The Groovy script supports Java *_assert_* statements for message element validation. Citrus automatically injects the root
+element *_root_* to the validation script. This is the Groovy XmlSlurper object and the start of element navigation. Based on
+this root element you can access child elements and attributes with a dot notated syntax. Just use the element names separated
+by a simple dot. Very easy! If you need the list of child elements use the *_children()_* function on any element. With the
+*_text()_* function you get access to the element's text-value. The *_size()_* is very useful for validating the number of
+child elements which completes the basic validation statements.
+
+As you can see from the example, we may use test variables within the validation script, too. Citrus has also injected the
+actual test context to the validation script. The test context object holds all test variables. So you can also access variables
+with *_context.getVariable("user")_* for instance. On the test context you can also set new variable values with *_context.setVariable("user", "newUserName")_* .
+
+There is even more object injection for the validation script. With the automatically added object *_receivedMessage_* You
+have access to the Citrus message object for this receive action. This enables you to do whatever you want with the message
+payload or header.
+
+.Java
+[source,java,indent=0,role="primary"]
 ----
-@CitrusTest
-public void receiveMessageTest() {
-    receive("helloServiceClient")
-        .validateScript("assert root.MessageId.text() == '${messageId}';" +
-                        "assert root.CorrelationId.text() == '${correlationId}';")
-        .header("Operation, "sayHello")
-        .header("CorrelationId", "${correlationId}")
-        .timeout(5000L);
-}
+receive("someEndpoint")
+    .validate(groovy().script("assert receivedMessage.getPayload(String.class).contains(\"Hello Citrus!\")\n" +
+                              "assert receivedMessage.getHeader("Operation") == 'sayHello'\n" +
+                              "context.setVariable(\"request_payload\", receivedMessage.getPayload(String.class))"))
+    .timeout(5000L);
 ----
 
-The Groovy XmlSlurper validation script goes right into the message-tag instead of a XML control template or XPath validation. The Groovy script supports Java *_assert_* statements for message element validation. Citrus automatically injects the root element *_root_* to the validation script. This is the Groovy XmlSlurper object and the start of element navigation. Based on this root element you can access child elements and attributes with a dot notated syntax. Just use the element names separated by a simple dot. Very easy! If you need the list of child elements use the *_children()_* function on any element. With the *_text()_* function you get access to the element's text-value. The *_size()_* is very useful for validating the number of child elements which completes the basic validation statements.
-
-As you can see from the example, we may use test variables within the validation script, too. Citrus has also injected the actual test context to the validation script. The test context object holds all test variables. So you can also access variables with *_context.getVariable("user")_* for instance. On the test context you can also set new variable values with *_context.setVariable("user", "newUserName")_* .
-
-There is even more object injection for the validation script. With the automatically added object *_receivedMessage_* You have access to the Citrus message object for this receive action. This enables you to do whatever you want with the message payload or header.
-
-.XML DSL
-[source,xml]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="helloServiceClient" timeout="5000">
+<receive endpoint="someEndpoint" timeout="5000">
     <message>
         <validate>
             <script type="groovy">
@@ -490,42 +745,40 @@ There is even more object injection for the validation script. With the automati
 </receive>
 ----
 
-The listing above shows some power of the validation script. We can access the message payload, we can access the message header. With test context access we can also save the whole message payload as a new test variable for later usage in the test.
+The listing above shows some power of the validation script. We can access the message payload, we can access the message
+header. With test context access we can also save the whole message payload as a new test variable for later usage in the test.
 
-In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain. You do not have code syntax assist or code completion. This is why we can also use external file resources for the validation scripts. The syntax looks like follows:
+In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain.
+You do not have code syntax assist or code completion. This is why we can also use external file resources for the validation
+scripts. The syntax looks like follows:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="helloServiceClient" timeout="5000">
+receive("someEndpoint")
+    .validate(groovy()
+            .script(new ClassPathResource("validationScript.groovy"))
+    .timeout(5000L);
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint" timeout="5000">
     <message>
         <validate>
             <script type="groovy" file="classpath:validationScript.groovy"/>
         </validate>
     </message>
-    <header>
-        <element name="Operation" value="sayHello"/>
-        <element name="CorrelationId" value="${correlationId}"/>
-    </header>
 </receive>
 ----
 
-.Java DSL designer
-[source,java]
-----
-@CitrusTest
-public void receiveMessageTest() {
-    receive("helloServiceClient")
-        .validateScript(new FileSystemResource("validationScript.groovy"))
-        .header("Operation, "sayHello")
-        .header("CorrelationId", "${correlationId}")
-        .timeout(5000L);
-}
-----
+We referenced some external file resource *_validationScript.groovy_* . This file content is loaded at runtime and is used
+as script body. Now that we have a normal groovy file we can use the code completion and syntax highlighting of our favorite
+Groovy editor.
 
-We referenced some external file resource *_validationScript.groovy_* . This file content is loaded at runtime and is used as script body. Now that we have a normal groovy file we can use the code completion and syntax highlighting of our favorite Groovy editor.
-
-NOTE: You can use the Groovy validation script in combination with other validation types like XML tree comparison and XPath validation.
+NOTE: You can use the Groovy validation script in combination with other validation types like XML tree comparison and XPath
+validation.
 
 TIP: For further information on the Groovy XmlSlurper please see the official Groovy website and documentation
 
@@ -533,19 +786,51 @@ TIP: For further information on the Groovy XmlSlurper please see the official Gr
 === XML schema validation
 
 There are several possibilities to describe the structure of XML documents. The two most popular ways are DTD
-(Document type definition) and XSD (XML Schema definition). Once a XML document has decided to be classified using a
+(Document type definition) and XSD (XML Schema definition). In case the XML document is classified using a
 schema definition the structure of the document has to fit the predefined rules inside the schema definition.
 XML document instances are valid only in case they meet all these structure rules defined in the schema definition.
-Currently Citrus can validate XML documents using the schema languages DTD and XSD.
+Citrus can validate XML documents using the schema languages DTD and XSD.
 
 [[xsd-schema-repositories]]
 ==== XSD schema repositories
 
 Citrus tries to validate all incoming XML messages against a schema definition in order to ensure that all rules are
-fulfilled. As a consequence the message receiving actions in Citrus do have to know the XML schema definition file
+fulfilled. This means that the message receiving actions in Citrus have to know the XML schema definition file
 resources that belong to our test context.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XsdSchemaRepository schemaRepository() {
+    XsdSchemaRepository repository = new XsdSchemaRepository();
+    repository.getSchemas().add(travelAgencySchema());
+    repository.getSchemas().add(royalArilineSchema());
+    repository.getSchemas().add(smartArilineSchema());
+    return repository;
+}
+
+@Bean
+public SimpleXsdSchema travelAgencySchema() {
+    return new SimpleXsdSchema(
+            new ClassPathResource("classpath:citrus/flightbooking/TravelAgencySchema.xsd"));
+}
+
+@Bean
+public SimpleXsdSchema royalArilineSchema() {
+    return new SimpleXsdSchema(
+            new ClassPathResource("classpath:citrus/flightbooking/RoyalAirlineSchema.xsd"));
+}
+
+@Bean
+public SimpleXsdSchema smartArilineSchema() {
+    return new SimpleXsdSchema(
+            new ClassPathResource("classpath:citrus/flightbooking/SmartAirlineSchema.xsd"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:schema-repository id="schemaRepository">
     <citrus:schemas>
@@ -567,7 +852,7 @@ receiving test actions at runtime. The receiving test action consolidates the re
 definition file in order to validate the incoming XML document structure.
 
 The connection between incoming XML messages and xsd schema files in the repository is done by a mapping strategy which
-we will discuss later in this chapter. By default Citrus picks the right schema based on the target namespace that is
+we will discuss later in this chapter. By default, Citrus picks the right schema based on the target namespace that is
 defined inside the schema definition. The target namespace of the schema definition has to match the namespace of the
 root element in the received XML message. With this mapping strategy you will not have to wire XML messages and schema
 files manually all is done automatically by the Citrus schema repository at runtime. All you need to do is to register
@@ -581,9 +866,22 @@ no matching schema definition file is found inside the schema repository. So if 
 the XML schema for some reason you have to disable the validation explicitly in your test with
 *schema-validation="false"*.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="httpMessageEndpoint">
+receive("someEndpoint")
+    .validate(xpath()
+            .expression("//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId", "${messageId}")
+            .expression("//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId", "${correlationId}")
+            .schemaValidation(false)
+            .namespaceContext("ns1", "http://citrus.com/namespace"))
+    .timeout(5000L);
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
     <message schema-validation="false">
       <validate>
         <xpath expression="//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId"
@@ -593,10 +891,6 @@ the XML schema for some reason you have to disable the validation explicitly in 
         <namespace prefix="ns1" value="http://citrus.com/namespace"/>
       </validate>
     </message>
-    <header>
-        <element name="Operation" value="sayHello"/>
-        <element name="MessageId" value="${messageId}"/>
-    </header>
 </receive>
 ----
 
@@ -612,7 +906,18 @@ In SOAP WebServices world the WSDL (WebService Schema Definition Language) defin
 messages exchanged across the interface. Often the WSDL files do hold the XML schema definitions as nested elements.
 In Citrus you can directly set the WSDL file as location of a schema definition like this:
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public WsdlXsdSchema arilineWsdl() {
+    return new WsdlXsdSchema(
+            new ClassPathResource("classpath:citrus/flightbooking/AirlineSchema.wsdl"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:schema id="arilineWsdl"
     location="classpath:citrus/flightbooking/AirlineSchema.wsdl"/>
@@ -620,7 +925,6 @@ In Citrus you can directly set the WSDL file as location of a schema definition 
 
 Citrus is able to find the nested schema definitions inside the WSDL file in order to build a valid schema file for the
 schema repository. So incoming XML messages that refer to the WSDL file can be validated for syntax rules.
-
 
 [[schema-collections]]
 ==== Schema collections
@@ -630,7 +934,20 @@ as the schema mapping strategy then is not able to pick the right file for valid
 target namespace values as key for the schema mapping strategy. As a solution for this problem you have to put all
 schemas with the same target namespace value into a schema collection.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XsdSchemaCollection flightbookingSchemaCollection() {
+    XsdSchemaCollection collection = new XsdSchemaCollection();
+    collection.getSchemas().add("classpath:citrus/flightbooking/BaseTypes.xsd");
+    collection.getSchemas().add("classpath:citrus/flightbooking/AirlineSchema.xsd");
+    return collection;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:schema-collection id="flightbookingSchemaCollection">
   <citrus:schemas>
@@ -644,7 +961,19 @@ Both schema definitions *BaseTypes.xsd* and *AirlineSchema.xsd* share the same t
 be combined in schema collection component. The schema collection can be referenced in any schema repository as normal
 schema definition.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XsdSchemaRepository schemaRepository() {
+    XsdSchemaRepository repository = new XsdSchemaRepository();
+    repository.getSchemas().add(flightbookingSchemaCollection());
+    return repository;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:schema-repository id="schemaRepository">
   <citrus:schemas>
@@ -668,7 +997,31 @@ for all elements and types inside the schema file. The target namespace is also 
 payloads. According to this information Citrus can pick up the right schema definition file in the schema repository.
 You can set the schema mapping strategy as property in the configuration files:
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XsdSchemaRepository schemaRepository() {
+    XsdSchemaRepository repository = new XsdSchemaRepository();
+    repository.setSchemaMappingStrategy(schemaMappingStrategy());
+    repository.getSchemas().add(helloSchema());
+    return repository;
+}
+
+@Bean
+public TargetNamespaceSchemaMappingStrategy schemaMappingStrategy() {
+    return new TargetNamespaceSchemaMappingStrategy();
+}
+
+@Bean
+public SimpleXsdSchema helloSchema() {
+    return new SimpleXsdSchema(
+            new ClassPathResource("classpath:citrus/samples/sayHello.xsd"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:schema-repository id="schemaRepository"
     schema-mapping-strategy="schemaMappingStrategy">
@@ -682,9 +1035,9 @@ You can set the schema mapping strategy as property in the configuration files:
     class="com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy"/>
 ----
 
-The *sayHello.xsd* schema file defines a target namespace
-(http://consol.de/schemas/sayHello.xsd)[http://consol.de/schemas/sayHello.xsd)]:
+The *sayHello.xsd* schema file defines a target namespace (http://consol.de/schemas/sayHello.xsd)[http://consol.de/schemas/sayHello.xsd)]:
 
+.Schema target namespace
 [source,xml]
 ----
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -699,6 +1052,7 @@ The *sayHello.xsd* schema file defines a target namespace
 Incoming request messages should also have the target namespace set in the root element and this is how Citrus matches
 the right schema file in the repository.
 
+.HelloRequest.xml
 [source,xml]
 ----
 <HelloRequest xmlns="http://consol.de/schemas/sayHello.xsd">
@@ -716,7 +1070,42 @@ The next possibility for mapping incoming request messages to a schema definitio
 Each XML message payload starts with a root element that usually declares the type of a XML message. According to this
 root element you can set up mappings in the schema repository.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XsdSchemaRepository schemaRepository() {
+    XsdSchemaRepository repository = new XsdSchemaRepository();
+    repository.setSchemaMappingStrategy(schemaMappingStrategy());
+    repository.getSchemas().add(helloSchema());
+    repository.getSchemas().add(goodbyeSchema());
+    return repository;
+}
+
+@Bean
+public RootQNameSchemaMappingStrategy schemaMappingStrategy() {
+    RootQNameSchemaMappingStrategy rootQnameStrategy = new RootQNameSchemaMappingStrategy();
+    rootQnameStrategy.getMappings().put("HelloRequest", helloSchema());
+    rootQnameStrategy.getMappings().put("GoodbyeRequest", goodbyeSchema());
+
+    return rootQnameStrategy;
+}
+
+@Bean
+public SimpleXsdSchema helloSchema() {
+    return new SimpleXsdSchema(
+            new ClassPathResource("classpath:citrus/samples/sayHello.xsd"));
+}
+
+@Bean
+public SimpleXsdSchema goodbyeSchema() {
+    return new SimpleXsdSchema(
+            new ClassPathResource("classpath:citrus/samples/sayGoodbye.xsd"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:schema-repository id="schemaRepository"
     schema-mapping-strategy="schemaMappingStrategy">
@@ -754,7 +1143,36 @@ Let's discuss the possibility to combine several schema mapping strategies in a 
 one mapping strategy that are evaluated in sequence. The first strategy to find a proper schema definition file in the
 repository wins.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XsdSchemaRepository schemaRepository() {
+    XsdSchemaRepository repository = new XsdSchemaRepository();
+    repository.setSchemaMappingStrategy(schemaMappingStrategy());
+    repository.getSchemas().add(helloSchema());
+    repository.getSchemas().add(goodbyeSchema());
+    return repository;
+}
+
+@Bean
+public SchemaMappingStrategyChain schemaMappingStrategy() {
+    SchemaMappingStrategyChain chain = new SchemaMappingStrategyChain();
+
+    RootQNameSchemaMappingStrategy rootQnameStrategy = new RootQNameSchemaMappingStrategy();
+    rootQnameStrategy.getMappings().put("HelloRequest", helloSchema());
+
+    chain.setStrategies(Arrays.asList(
+        rootQnameStrategy,
+        new TargetNamespaceSchemaMappingStrategy()
+    ));
+
+    return chain;
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
 <citrus:schema-repository id="schemaRepository"
     schema-mapping-strategy="schemaMappingStrategy">
@@ -795,9 +1213,28 @@ we have to deal with DTD validation as well.
 
 First thing you can do about DTD validation is to specify an inline DTD in your expected message template.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="httpMessageEndpoint">
+receive("someEndpoint")
+    .message()
+    .body("<!DOCTYPE root [\n" +
+                "<!ELEMENT root (message)>\n" +
+                "<!ELEMENT message (text)>\n" +
+                "<!ELEMENT text (#PCDATA)>\n" +
+            "]>\n" +
+            "<root>\n" +
+                "<message>\n" +
+                    "<text>Hello from Citrus!</text>\n" +
+                "</message>\n" +
+            "</root>")
+    .timeout(5000L);
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
     <message schema-validation="false">
         <data>
         <![CDATA[
@@ -808,11 +1245,11 @@ First thing you can do about DTD validation is to specify an inline DTD in your 
                 ]>
             <root>
                 <message>
-                    <text>Hello TestFramework!</text>
+                    <text>Hello from Citrus!</text>
                 </message>
             </root>
         ]]>
-        <data/>
+        </data>
     </message>
 </receive>
 ----
@@ -822,17 +1259,31 @@ The system under test may also send the message with a inline DTD definition. So
 In most cases the DTD is referenced as external .dtd file resource. You can do this in your expected message template
 as well.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="httpMessageEndpoint">
+receive("someEndpoint")
+    .message()
+    .body("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">\n" +
+            "<root>\n" +
+                "<message>\n" +
+                    "<text>Hello from Citrus!</text>\n" +
+                "</message>\n" +
+            "</root>")
+    .timeout(5000L);
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
     <message schema-validation="false">
         <data>
         <![CDATA[
-            <!DOCTYPE root SYSTEM
-                         "com/consol/citrus/validation/example.dtd">
+            <!DOCTYPE root SYSTEM "com/consol/citrus/validation/example.dtd">
             <root>
                 <message>
-                    <text>Hello TestFramework!</text>
+                    <text>Hello from Citrus!</text>
                 </message>
             </root>
         ]]>
@@ -840,3 +1291,100 @@ as well.
     </message>
 </receive>
 ----
+
+[[xml-validation-xhtml]]
+=== XHTML validation
+
+Html message content is hard to verify with XML validation capabilities such as XML tree comparison or XPath support.
+Usually Html messages do not follow the XML well-formed rules very strictly. This implies that XML message validation will
+fail because of non-well-formed Html code.
+
+XHTML closes this gap by automatically fixing the most common Html XML incompatible rule violations such as missing end
+tags (e.g. <br>).
+
+Please add a new library dependency to your project. Citrus is using the *jtidy* library in order to prepare the HTML and
+XHTML messages for validation. As this 3rd party dependency is optional in Citrus we have to add it now to our project dependency
+list. Just add the *jtidy* dependency to your Maven project POM.
+
+.Jtidy library
+[source,xml]
+----
+<dependency>
+    <groupId>net.sf.jtidy</groupId>
+    <artifactId>jtidy</artifactId>
+    <version>r938</version>
+  </dependency>
+----
+
+Please refer to the *jtidy* project documentation for the latest versions. Now everything is ready. As usual the Citrus
+message validator for XHTML is active in background by default. You can overwrite this default implementation by placing
+a Spring bean with id *defaultXhtmlMessageValidator* to the Citrus application context.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public XhtmlMessageValidator defaultXhtmlMessageValidator() {
+    return new XhtmlMessageValidator();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<bean id="defaultXhtmlMessageValidator" class="com.consol.citrus.validation.xhtml.XhtmlMessageValidator"/>
+----
+
+Now you can use the XHTML message validation in your test case.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+receive("someEndpoint")
+    .message()
+    .type(MessageType.XHTML)
+    .body("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"org/w3c/xhtml/xhtml1-strict.dtd\">" +
+            "<html xmlns=\"http://www.w3.org/1999/xhtml\">" +
+                "<head>" +
+                    "<title>Citrus Hello World</title>" +
+                "</head>" +
+                "<body>" +
+                    "<h1>Hello World!</h1>" +
+                    "<br/>" +
+                    "<p>This is a test!</p>" +
+                "</body>" +
+            "</html>")
+    .timeout(5000L);
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<receive endpoint="someEndpoint">
+    <message type="xhtml">
+        <data>
+          <![CDATA[
+            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "org/w3c/xhtml/xhtml1-strict.dtd">
+            <html xmlns="http://www.w3.org/1999/xhtml">
+              <head>
+                <title>Citrus Hello World</title>
+              </head>
+              <body>
+                <h1>Hello World!</h1>
+                <br/>
+                <p>This is a test!</p>
+              </body>
+            </html>
+          ]]>
+        </data>
+    </message>
+</receive>
+----
+
+The message receiving action in our test case has to specify a message format type *type="xhtml"* . As you can see the Html
+message payload get XHTML specific DOCTYPE processing instruction. The *xhtml1-strict.dtd* is mandatory in the XHTML message
+validation. For better convenience all XHTML dtd files are packaged within Citrus so you can use this as a relative path.
+
+The incoming Html message is automatically converted into proper XHTML code with well formed XML. So now the XHTML message
+validator can use the XML message validation mechanism of Citrus for comparing received and expected data. You can also use
+test variables, ignore element expressions and XPath expressions.
