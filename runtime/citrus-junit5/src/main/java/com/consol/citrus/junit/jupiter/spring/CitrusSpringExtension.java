@@ -28,14 +28,25 @@ import java.util.stream.Stream;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
+import com.consol.citrus.TestResult;
 import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.junit.jupiter.CitrusExtension;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
-import com.consol.citrus.junit.jupiter.CitrusSupport;
 import com.consol.citrus.util.FileUtils;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -51,19 +62,80 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  *
  * @author Christoph Deppisch
  */
-public class CitrusSpringSupport extends CitrusSupport {
+public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallback, BeforeTestExecutionCallback,
+        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler {
+
+    private static Citrus citrus;
+    private final CitrusExtension delegate = new CitrusExtension();
 
     @Override
-    public void beforeXmlTestExecution(ExtensionContext extensionContext) {
-        CitrusExtensionHelper.getCitrus(extensionContext).run(XmlTestHelper.getXmlTestCase(extensionContext), CitrusExtensionHelper.getTestContext(extensionContext));
+    public void beforeAll(ExtensionContext extensionContext) {
+        if (CitrusExtensionHelper.requiresCitrus(extensionContext)) {
+            CitrusExtensionHelper.setCitrus(getCitrus(), extensionContext);
+        } else {
+            citrus = CitrusExtensionHelper.getCitrus(extensionContext);
+        }
+
+        delegate.beforeAll(extensionContext);
     }
 
     @Override
-    public void beforeEachXml(ExtensionContext extensionContext) {
-        XmlTestHelper.getXmlTestCase(extensionContext);
+    public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
+        delegate.handleTestExecutionException(extensionContext, throwable);
     }
 
     @Override
+    public void afterTestExecution(ExtensionContext extensionContext) {
+        if (!CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+            TestCase testCase = CitrusExtensionHelper.getTestCase(extensionContext);
+
+            extensionContext.getExecutionException()
+                    .ifPresent(e -> testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e)));
+
+            CitrusExtensionHelper.getTestRunner(extensionContext).stop();
+
+            extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE)
+                    .remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCaseRunner.class.getSimpleName());
+        }
+
+        delegate.afterTestExecution(extensionContext);
+    }
+
+    @Override
+    public void beforeTestExecution(ExtensionContext extensionContext) {
+        if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+            CitrusExtensionHelper.getCitrus(extensionContext).run(XmlTestHelper.getXmlTestCase(extensionContext),
+                    CitrusExtensionHelper.getTestContext(extensionContext));
+        } else {
+            delegate.beforeTestExecution(extensionContext);
+        }
+    }
+
+    @Override
+    public void beforeEach(ExtensionContext extensionContext) {
+        if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+            CitrusExtensionHelper.getTestContext(extensionContext);
+            XmlTestHelper.getXmlTestCase(extensionContext);
+        } else {
+            delegate.beforeEach(extensionContext);
+        }
+    }
+
+    @Override
+    public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
+        delegate.postProcessTestInstance(testInstance, extensionContext);
+    }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return delegate.supportsParameter(parameterContext, extensionContext);
+    }
+
+    @Override
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+        return delegate.resolveParameter(parameterContext, extensionContext);
+    }
+
     protected Citrus getCitrus() {
         if (citrus == null) {
             citrus = Citrus.newInstance(CitrusSpringContext.create());

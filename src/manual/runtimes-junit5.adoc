@@ -31,11 +31,11 @@ package com.consol.citrus.samples;
 
 import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.junit.jupiter.CitrusSupport;
+import com.consol.citrus.junit.jupiter.CitrusExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(CitrusSupport.class)
+@ExtendWith(CitrusExtension.class)
 public class Simple_IT {
 
     @Test
@@ -55,7 +55,7 @@ public class Simple_IT {
 ----
 
 The class above is using the JUnit5 `@Test` annotation as a normal unit test would do. In addition to that we extend with
-the `CitrusSupport`. This enables us to use the `@CitrusTest` annotation on the test and adds support for the parameter injection
+the `CitrusExtension`. This enables us to use the `@CitrusTest` annotation on the test and adds support for the parameter injection
 for the `TestActionRunner`.
 
 The Citrus Java DSL runner is the entrance to the Java fluent API provided by Citrus. The sample above uses the Gherkin test runner
@@ -64,7 +64,7 @@ variation for leveraging the Behavior Driven Behavior style Given-When-Then synt
 You can also inject the current `TestContext` in order to get access to the current test variables used by Citrus.
 
 NOTE: You can also combine Citrus with the Spring framework and its dependency injection and IoC capabilities. In order to
-enable Spring support in Citrus add the `citrus-spring` module to your project and use the `CitrusSpringSupport` extension.
+enable Spring support in Citrus add the `citrus-spring` module to your project and use the `CitrusSpringExtension` extension.
 With the Spring support in Citrus the test is able to load components via the Spring application context.
 
 [[junit5-endpoint-injection]]
@@ -80,13 +80,13 @@ package com.consol.citrus.samples;
 
 import com.consol.citrus.annotations.*;
 import com.consol.citrus.GherkinTestActionRunner;
-import com.consol.citrus.junit.jupiter.CitrusSupport;
+import com.consol.citrus.junit.jupiter.CitrusExtension;
 import com.consol.citrus.http.client.HttpClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpStatus;
 
-@ExtendWith(CitrusSupport.class)
+@ExtendWith(CitrusExtension.class)
 public class Simple_IT {
 
     @CitrusEndpoint

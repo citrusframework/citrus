@@ -22,6 +22,7 @@ package com.consol.citrus.junit.jupiter;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.junit.jupiter.spring.CitrusSpringExtension;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
@@ -34,7 +35,7 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
  * After suite automatically includes Citrus report generation.
  *
  * @author Christoph Deppisch
- * @deprecated in favor of using {@link com.consol.citrus.junit.jupiter.spring.CitrusSpringSupport}
+ * @deprecated in favor of using {@link CitrusSpringExtension}
  */
 @Deprecated
 public class CitrusBaseExtension implements BeforeAllCallback, TestInstancePostProcessor {
@@ -49,7 +50,7 @@ public class CitrusBaseExtension implements BeforeAllCallback, TestInstancePostP
     /**
      * {@link ExtensionContext.Namespace} in which Citrus related objects are stored keyed by test class.
      */
-    public static final ExtensionContext.Namespace NAMESPACE = CitrusSupport.NAMESPACE;
+    public static final ExtensionContext.Namespace NAMESPACE = CitrusExtension.NAMESPACE;
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {

@@ -19,7 +19,7 @@ package com.consol.citrus.junit.jupiter.integration;
 import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.junit.jupiter.CitrusSupport;
+import com.consol.citrus.junit.jupiter.CitrusExtension;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +32,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith({CitrusSupport.class, FailJUnit5IT.ShouldFailExtension.class})
+@ExtendWith({CitrusExtension.class, FailJUnit5IT.ShouldFailExtension.class})
 public class FailJUnit5IT {
 
     @Test

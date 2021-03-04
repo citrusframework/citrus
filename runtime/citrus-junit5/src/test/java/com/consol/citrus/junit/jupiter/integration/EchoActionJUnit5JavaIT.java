@@ -20,7 +20,7 @@ import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.junit.jupiter.CitrusSupport;
+import com.consol.citrus.junit.jupiter.CitrusExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -30,7 +30,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusSupport.class)
+@ExtendWith(CitrusExtension.class)
 public class EchoActionJUnit5JavaIT {
 
     @Test

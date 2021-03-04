@@ -42,7 +42,7 @@ public class JavaDslTestGeneratorTest {
         //THEN
         String javaContent = loadTestFile();
         checkMethodParameter(javaContent, "@CitrusResource TestCaseRunner runner");
-        assertContains(javaContent, "@ExtendWith(CitrusSupport.class)");
+        assertContains(javaContent, "@ExtendWith(CitrusExtension.class)");
         assertContains(javaContent, "runner.run(echo(\"TODO: Code the test FooTest\"));");
     }
 

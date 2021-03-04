@@ -25,8 +25,8 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.XmlTestLoader;
+import com.consol.citrus.junit.jupiter.CitrusExtension;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
-import com.consol.citrus.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -80,7 +80,7 @@ public class XmlTestHelper {
      */
     public static TestCase getXmlTestCase(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
-        return extensionContext.getRoot().getStore(CitrusSupport.NAMESPACE)
+        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE)
                 .getOrComputeIfAbsent(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCase.class.getSimpleName(),
                         key -> createTestLoader(extensionContext).load(), TestCase.class);
     }

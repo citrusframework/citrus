@@ -326,7 +326,7 @@ run(http().client(httpClient)
 
 `TestNGCitrusSupport` now is the single base class for all tests that use TestNG as base framework to run tests. This includes XML and Java DSL tests. Former Citrus versions used several different base classes which confused users.
 
-Same approach applies to `JUnit4CitrusSupport` for using JUnit 4. The JUnit 5 support provides a `CitrusSupport` extension.
+Same approach applies to `JUnit4CitrusSupport` for using JUnit 4. The JUnit 5 support provides a `CitrusExtension` extension.
 
 [[changes-3-0-0-action-builder]]
 === TestActionBuilder

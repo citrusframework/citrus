@@ -20,7 +20,7 @@ import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.TestBehavior;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.junit.jupiter.CitrusSupport;
+import com.consol.citrus.junit.jupiter.CitrusExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -31,7 +31,7 @@ import static com.consol.citrus.container.Sequence.Builder.sequential;
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusSupport.class)
+@ExtendWith(CitrusExtension.class)
 public class ApplyTestBehaviorIT {
 
     @Test

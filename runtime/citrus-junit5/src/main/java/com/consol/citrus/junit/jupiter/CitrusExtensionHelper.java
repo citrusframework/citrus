@@ -84,7 +84,7 @@ public final class CitrusExtensionHelper {
     public static TestCaseRunner getTestRunner(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
 
-        return extensionContext.getRoot().getStore(CitrusSupport.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCaseRunner.class.getSimpleName(), key -> {
+        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCaseRunner.class.getSimpleName(), key -> {
             String testName = extensionContext.getRequiredTestClass().getSimpleName() + "." + extensionContext.getRequiredTestMethod().getName();
 
             if (extensionContext.getRequiredTestMethod().getAnnotation(CitrusTest.class) != null) {
@@ -105,7 +105,7 @@ public final class CitrusExtensionHelper {
      */
     public static TestCase getTestCase(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
-        return extensionContext.getRoot().getStore(CitrusSupport.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCase.class.getSimpleName(), key -> {
+        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCase.class.getSimpleName(), key -> {
             if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
                 return XmlTestHelper.getXmlTestCase(extensionContext);
             } else {
@@ -121,7 +121,7 @@ public final class CitrusExtensionHelper {
      */
     public static TestContext getTestContext(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
-        return extensionContext.getRoot().getStore(CitrusSupport.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestContext.class.getSimpleName(), key -> getCitrus(extensionContext).getCitrusContext().createTestContext(), TestContext.class);
+        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestContext.class.getSimpleName(), key -> getCitrus(extensionContext).getCitrusContext().createTestContext(), TestContext.class);
     }
 
     /**
@@ -140,7 +140,7 @@ public final class CitrusExtensionHelper {
      */
     public static Citrus getCitrus(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
-        Citrus citrus = extensionContext.getRoot().getStore(CitrusSupport.NAMESPACE).get(Citrus.class.getName(), Citrus.class);
+        Citrus citrus = extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).get(Citrus.class.getName(), Citrus.class);
 
         if (citrus == null) {
             throw new CitrusRuntimeException("Missing Citrus instance in JUnit5 extension context");
@@ -157,23 +157,34 @@ public final class CitrusExtensionHelper {
      */
     public static void setCitrus(Citrus citrus, ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
-        extensionContext.getRoot().getStore(CitrusSupport.NAMESPACE).put(Citrus.class.getName(), citrus);
+        extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).put(Citrus.class.getName(), citrus);
     }
 
     public static Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         TestCaseRunner storedBuilder = CitrusExtensionHelper.getTestRunner(extensionContext);
         if (TestCaseRunner.class.isAssignableFrom(parameterContext.getParameter().getType())) {
             return storedBuilder;
-        } else if (TestActionRunner.class.isAssignableFrom(parameterContext.getParameter().getType())
-                && storedBuilder instanceof TestActionRunner) {
-            return storedBuilder;
         } else if (GherkinTestActionRunner.class.isAssignableFrom(parameterContext.getParameter().getType())
                 && storedBuilder instanceof GherkinTestActionRunner) {
+            return storedBuilder;
+        } else if (TestActionRunner.class.isAssignableFrom(parameterContext.getParameter().getType())
+                && storedBuilder instanceof TestActionRunner) {
             return storedBuilder;
         } else if (TestContext.class.isAssignableFrom(parameterContext.getParameter().getType())) {
             return CitrusExtensionHelper.getTestContext(extensionContext);
         }
 
         throw new CitrusRuntimeException(String.format("Failed to resolve parameter %s", parameterContext.getParameter()));
+    }
+
+    /**
+     * Checks if Citrus instance is present in given extension context.
+     * @param extensionContext
+     * @return
+     */
+    public static boolean requiresCitrus(ExtensionContext extensionContext) {
+        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+        Citrus citrus = extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).get(Citrus.class.getName(), Citrus.class);
+        return citrus == null;
     }
 }
