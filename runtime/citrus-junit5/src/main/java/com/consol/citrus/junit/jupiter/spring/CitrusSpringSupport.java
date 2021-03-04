@@ -33,6 +33,7 @@ import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
 import com.consol.citrus.junit.jupiter.CitrusSupport;
+import com.consol.citrus.util.FileUtils;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.core.io.Resource;
@@ -92,7 +93,7 @@ public class CitrusSpringSupport extends CitrusSupport {
 
                         filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
-                        String testName = fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length());
+                        String testName = FileUtils.getBaseName(fileResource.getFilename());
 
                         XmlTestLoader testLoader = new XmlTestLoader(DynamicTest.class, testName, filePath, citrus.getCitrusContext());
                         tests.add(DynamicTest.dynamicTest(testName, () -> citrus.run(testLoader.load())));

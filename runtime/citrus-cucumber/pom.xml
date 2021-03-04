@@ -28,7 +28,7 @@
         <configuration>
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
-          <catalog>src/main/resources/catalog.cat</catalog>
+          <catalog>src/main/resources/catalog.xml</catalog>
           <sources>
             <source>src/main/resources/com/consol/citrus/schema/citrus-cucumber-testcase.xsd</source>
           </sources>
@@ -127,6 +127,11 @@
       <artifactId>cucumber-spring</artifactId>
       <scope>provided</scope>
       <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
     </dependency>
 
     <!-- Test scoped dependencies -->

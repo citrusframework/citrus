@@ -31,6 +31,7 @@ import com.consol.citrus.generate.TestGenerator;
 import com.consol.citrus.generate.javadsl.JavaTestGenerator;
 import com.consol.citrus.model.testcase.core.EchoModel;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.xml.StringResult;
 import com.consol.citrus.xml.namespace.CitrusNamespacePrefixMapper;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
@@ -53,7 +54,7 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
     private NamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
 
     public XmlTestGenerator() {
-        withFileExtension(".xml");
+        withFileExtension(FileUtils.FILE_EXTENSION_XML);
         marshaller.setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-testcase.xsd"));
         List<String> contextPaths = getMarshallerContextPaths();
         marshaller.setContextPaths(contextPaths.toArray(new String[contextPaths.size()]));

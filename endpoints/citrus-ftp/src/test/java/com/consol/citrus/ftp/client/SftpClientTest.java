@@ -149,7 +149,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
 
     @Test
     public void testDeleteGlob() {
-        String remoteFilePathCopy = remoteFilePath.replace(".xml", "_copy.xml");
+        String remoteFilePathCopy = remoteFilePath.replace(FileUtils.FILE_EXTENSION_XML, "_copy.xml");
         FtpMessage ftpMessage = sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
         verifyMessage(ftpMessage, PutCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
         ftpMessage = sftpClient.storeFile(putCommand(localFilePath, remoteFilePathCopy), context);

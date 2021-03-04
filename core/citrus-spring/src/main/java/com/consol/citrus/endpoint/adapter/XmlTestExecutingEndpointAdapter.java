@@ -26,6 +26,7 @@ import com.consol.citrus.endpoint.direct.DirectSyncEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.server.AbstractServer;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
@@ -110,7 +111,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
         try {
             return new ClassPathXmlApplicationContext(
                     new String[] {
-                            packageName.replace('.', '/') + "/" + testName + ".xml",
+                            packageName.replace('.', '/') + "/" + testName + FileUtils.FILE_EXTENSION_XML,
                             "com/consol/citrus/spring/annotation-config-ctx.xml"},
                     true, applicationContext);
         } catch (Exception e) {

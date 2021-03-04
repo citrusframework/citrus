@@ -74,10 +74,12 @@ public class SwaggerXmlTestGeneratorTest {
     }
 
     private void verifyTest(String name) throws IOException {
-        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/" + name + ".java");
+        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/" +
+                name + FileUtils.FILE_EXTENSION_JAVA);
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/" + name + ".xml");
+        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/" +
+                name + FileUtils.FILE_EXTENSION_XML);
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));

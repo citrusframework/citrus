@@ -173,7 +173,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
                     FailureStackElement stackElement = ex.getFailureStack().pop();
                     if (stackElement.getLineNumberStart() > 0) {
                         reader = new BufferedReader(new FileReader(
-                                new ClassPathResource(stackElement.getTestFilePath() + ".xml").getFile()));
+                                new ClassPathResource(stackElement.getTestFilePath() + FileUtils.FILE_EXTENSION_XML).getFile()));
 
                         codeSnippet.append("<div class=\"code-snippet\">");
                         codeSnippet.append("<h2 class=\"code-title\">" + stackElement.getTestFilePath() + ".xml</h2>");

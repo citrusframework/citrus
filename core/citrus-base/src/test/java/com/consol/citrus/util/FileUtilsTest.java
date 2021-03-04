@@ -51,4 +51,13 @@ public class FileUtilsTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(FileUtils.getCharset("/path/to/some/file.txt" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1"), Charset.forName("ISO-8859-1"));
     }
 
+    @Test
+    public void testGetBaseName() throws Exception {
+        Assert.assertNull(FileUtils.getBaseName(null));
+        Assert.assertEquals(FileUtils.getBaseName(""), "");
+        Assert.assertEquals(FileUtils.getBaseName("foo"), "foo");
+        Assert.assertEquals(FileUtils.getBaseName("foo.xml"), "foo");
+        Assert.assertEquals(FileUtils.getBaseName("foo.bar.java"), "foo.bar");
+    }
+
 }

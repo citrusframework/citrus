@@ -39,6 +39,7 @@ import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ReflectionUtils;
@@ -184,7 +185,7 @@ public final class TestNGHelper {
 
                             filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
-                            methodTestLoaders.add(provider.createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
+                            methodTestLoaders.add(provider.createTestLoader(FileUtils.getBaseName(fileResource.getFilename()), filePath));
                         }
                     }
                 } catch (RuntimeException | IOException e) {

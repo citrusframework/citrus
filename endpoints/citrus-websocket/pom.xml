@@ -90,6 +90,11 @@
       <artifactId>jakarta.websocket-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+    </dependency>
+
     <!-- Test scoped dependencies -->
     <dependency>
       <groupId>com.consol.citrus</groupId>

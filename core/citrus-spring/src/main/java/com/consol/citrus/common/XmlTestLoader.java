@@ -22,6 +22,7 @@ import com.consol.citrus.CitrusContext;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -114,7 +115,7 @@ public class XmlTestLoader implements TestLoader {
         if (StringUtils.hasText(contextFile)) {
             return contextFile;
         } else {
-            return packageName.replace('.', File.separatorChar) + File.separator + testName + ".xml";
+            return packageName.replace('.', File.separatorChar) + File.separator + testName + FileUtils.FILE_EXTENSION_XML;
         }
     }
 

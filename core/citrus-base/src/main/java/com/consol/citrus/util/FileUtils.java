@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
 
@@ -53,9 +54,11 @@ import org.springframework.util.ResourceUtils;
 public abstract class FileUtils {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(FileUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileUtils.class);
 
-    public final static String FILE_PATH_CHARSET_PARAMETER = ";charset=";
+    public static final String FILE_EXTENSION_JAVA = ".java";
+    public static final String FILE_EXTENSION_XML = ".xml";
+    public static final String FILE_PATH_CHARSET_PARAMETER = ";charset=";
 
     /** Simulation mode required for Citrus administration UI when loading test cases from Java DSL */
     private static boolean simulationMode = false;
@@ -122,8 +125,8 @@ public abstract class FileUtils {
             }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Reading file resource: '%s' (encoding is '%s')", resource.getFilename(), charset.displayName()));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Reading file resource: '%s' (encoding is '%s')", resource.getFilename(), charset.displayName()));
         }
         return readToString(resource.getInputStream(), charset);
     }
@@ -167,8 +170,8 @@ public abstract class FileUtils {
      * @param file
      */
     public static void writeToFile(String content, File file, Charset charset) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Writing file resource: '%s' (encoding is '%s')", file.getName(), charset.displayName()));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Writing file resource: '%s' (encoding is '%s')", file.getName(), charset.displayName()));
         }
 
         if (!file.getParentFile().exists()) {
@@ -325,5 +328,43 @@ public abstract class FileUtils {
         }
 
         return "";
+    }
+
+    /**
+     * Load properties from file. Supports XML and key-value format.
+     * @param resource
+     * @return
+     */
+    public static Properties loadAsProperties(Resource resource) {
+        Properties properties = new Properties();
+        try (InputStream is = resource.getInputStream()) {
+            String filename = resource.getFilename();
+            if (filename != null && filename.endsWith(FILE_EXTENSION_XML)) {
+                properties.loadFromXML(is);
+            } else {
+                properties.load(is);
+            }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to load properties from file", e);
+        }
+
+        return properties;
+    }
+
+    /**
+     * Remove file extension from file name.
+     * @param fileName
+     * @return
+     */
+    public static String getBaseName(String fileName) {
+        if (fileName == null) {
+            return null;
+        }
+
+        if (fileName.indexOf('.') > 0) {
+            return fileName.substring(0, fileName.lastIndexOf("."));
+        }
+
+        return fileName;
     }
 }

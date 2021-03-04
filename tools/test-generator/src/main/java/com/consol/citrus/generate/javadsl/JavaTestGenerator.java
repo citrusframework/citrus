@@ -30,6 +30,7 @@ import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.generate.AbstractTestGenerator;
 import com.consol.citrus.generate.UnitFramework;
+import com.consol.citrus.util.FileUtils;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -42,13 +43,13 @@ import com.squareup.javapoet.TypeSpec;
 /**
  * @since 2.7.4
  */
-public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTestGenerator<T> {
+public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractTestGenerator<T> {
 
     /** Actor describing which part (client/server) to use */
     private GeneratorMode mode = GeneratorMode.CLIENT;
 
     public JavaTestGenerator() {
-        withFileExtension(".java");
+        withFileExtension(FileUtils.FILE_EXTENSION_JAVA);
     }
 
     @Override

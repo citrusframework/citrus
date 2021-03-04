@@ -25,6 +25,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -62,7 +63,7 @@ public class FailureStackTestListener extends AbstractTestListener {
         try {
             final String testFilePath = test.getPackageName().replace('.', '/') + "/" + test.getName();
 
-            Resource testFileResource = new ClassPathResource(testFilePath + ".xml");
+            Resource testFileResource = new ClassPathResource(testFilePath + FileUtils.FILE_EXTENSION_XML);
             if (!testFileResource.exists()) {
                 return failureStack;
             }

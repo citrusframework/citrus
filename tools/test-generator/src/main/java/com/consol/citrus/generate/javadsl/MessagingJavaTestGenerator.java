@@ -39,7 +39,7 @@ import com.squareup.javapoet.TypeSpec;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator> extends JavaDslTestGenerator<T> {
+public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator<T>> extends JavaDslTestGenerator<T> {
 
     /** Endpoint name to use */
     private String endpoint;

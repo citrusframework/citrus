@@ -26,6 +26,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.junit.CitrusFrameworkMethod;
 import com.consol.citrus.junit.TestSuiteExecutionListener;
+import com.consol.citrus.util.FileUtils;
 import org.junit.Test;
 import org.junit.internal.runners.statements.InvokeMethod;
 import org.junit.runners.model.FrameworkMethod;
@@ -101,7 +102,7 @@ public class CitrusSpringJUnit4Runner extends SpringJUnit4ClassRunner {
                                 filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
                                 interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(),
-                                        fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()),
+                                        FileUtils.getBaseName(fileResource.getFilename()),
                                         filePath));
                             }
                         }

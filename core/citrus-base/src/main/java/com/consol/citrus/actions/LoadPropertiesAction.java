@@ -16,8 +16,8 @@
 
 package com.consol.citrus.actions;
 
-import java.io.IOException;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -28,7 +28,6 @@ import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 /**
  * Action reads property files and creates test variables for every property entry. File
@@ -43,7 +42,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
     private final String filePath;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(LoadPropertiesAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoadPropertiesAction.class);
 
     /**
      * Default constructor.
@@ -58,33 +57,35 @@ public class LoadPropertiesAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         Resource resource = FileUtils.getFileResource(filePath, context);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Reading property file " + resource.getFilename());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Reading property file " + resource.getFilename());
         }
 
-        Properties props;
-        try {
-            props = PropertiesLoaderUtils.loadProperties(resource);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
-        }
+        Properties props = FileUtils.loadAsProperties(resource);
 
-        for (Iterator<Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
-            String key = iter.next().getKey().toString();
+        Map<String, Object> unresolved = new LinkedHashMap<>();
+        for (Entry<Object, Object> entry : props.entrySet()) {
+            String key = entry.getKey().toString();
 
-            if (log.isDebugEnabled()) {
-                log.debug("Loading property: " + key + "=" + props.getProperty(key) + " into variables");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Loading property: " + key + "=" + props.getProperty(key) + " into variables");
             }
 
-            if (log.isDebugEnabled() && context.getVariables().containsKey(key)) {
-                log.debug("Overwriting property " + key + " old value:" + context.getVariable(key)
+            if (LOG.isDebugEnabled() && context.getVariables().containsKey(key)) {
+                LOG.debug("Overwriting property " + key + " old value:" + context.getVariable(key)
                         + " new value:" + props.getProperty(key));
             }
 
-            context.setVariable(key, context.replaceDynamicContentInString(props.getProperty(key)));
+            try {
+                context.setVariable(key, context.replaceDynamicContentInString(props.getProperty(key)));
+            } catch (CitrusRuntimeException e) {
+                unresolved.put(key, props.getProperty(key));
+            }
         }
 
-        log.info("Loaded property file " + resource.getFilename());
+        context.resolveDynamicValuesInMap(unresolved).forEach(context::setVariable);
+
+        LOG.info("Loaded property file " + resource.getFilename());
     }
 
     /**

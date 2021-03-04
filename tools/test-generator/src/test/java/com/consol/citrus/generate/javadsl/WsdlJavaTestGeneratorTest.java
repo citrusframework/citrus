@@ -63,7 +63,7 @@ public class WsdlJavaTestGeneratorTest {
     }
 
     private void verifyTest(String name, String requestName, String responseName) throws IOException {
-        File javaFile = new File(testDir + name + ".java");
+        File javaFile = new File(testDir + name + FileUtils.FILE_EXTENSION_JAVA);
         Assert.assertTrue(javaFile.exists());
 
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
