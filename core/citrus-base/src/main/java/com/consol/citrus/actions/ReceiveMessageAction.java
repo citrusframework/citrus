@@ -730,6 +730,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B process(MessageProcessor processor) {
             if (processor instanceof VariableExtractor) {
                 this.variableExtractors.add((VariableExtractor) processor);
+            } else if (processor instanceof ValidationProcessor) {
+                validate((ValidationProcessor) processor);
             } else {
                 this.messageProcessors.add(processor);
             }
