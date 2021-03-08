@@ -16,6 +16,26 @@ public interface TestActionRunner {
     }
 
     /**
+     * Runs given test action.
+     * @param action
+     * @param <T>
+     * @return
+     */
+    default <T extends TestAction> T $(T action) {
+        return run((TestActionBuilder<T>) () -> action);
+    }
+
+    /**
+     * Builds and runs given test action.
+     * @param builder
+     * @param <T>
+     * @return
+     */
+    default <T extends TestAction> T $(TestActionBuilder<T> builder) {
+        return run(builder);
+    }
+
+    /**
      * Builds and runs given test action.
      * @param builder
      * @param <T>
