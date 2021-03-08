@@ -115,6 +115,16 @@ public class SendMessageBuilderSupport<T extends SendMessageAction, B extends Se
      * @param payloadBuilder
      * @return The modified send message action builder
      */
+    public S body(final MessagePayloadBuilder.Builder<?, ?> payloadBuilder) {
+        body(payloadBuilder.build());
+        return self;
+    }
+
+    /**
+     * Sets the payload data on the message builder implementation.
+     * @param payloadBuilder
+     * @return The modified send message action builder
+     */
     public S body(final MessagePayloadBuilder payloadBuilder) {
         if (messageBuilder instanceof WithPayloadBuilder) {
             ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(payloadBuilder);

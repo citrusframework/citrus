@@ -33,4 +33,18 @@ public interface MessagePayloadBuilder {
      * @return
      */
     Object buildPayload(TestContext context);
+
+    /**
+     * Fluent builder
+     * @param <T> payload builder type
+     * @param <B> builder reference to self
+     */
+    interface Builder<T extends MessagePayloadBuilder, B extends MessagePayloadBuilder.Builder<T, B>> {
+
+        /**
+         * Builds new message payload builder instance.
+         * @return the built processor.
+         */
+        T build();
+    }
 }

@@ -129,6 +129,17 @@ public class ReceiveMessageBuilderSupport<T extends ReceiveMessageAction, B exte
      * @param payloadBuilder
      * @return The modified receive message action builder
      */
+    public S body(final MessagePayloadBuilder.Builder<?, ?> payloadBuilder) {
+        body(payloadBuilder.build());
+        return self;
+    }
+
+    /**
+     * Expect this message payload data in received message.
+     *
+     * @param payloadBuilder
+     * @return The modified receive message action builder
+     */
     public S body(final MessagePayloadBuilder payloadBuilder) {
         if (messageBuilder instanceof WithPayloadBuilder) {
             ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(payloadBuilder);

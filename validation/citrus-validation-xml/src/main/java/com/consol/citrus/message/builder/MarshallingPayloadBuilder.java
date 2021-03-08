@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.xml.StringResult;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -111,5 +112,53 @@ public class MarshallingPayloadBuilder extends DefaultPayloadBuilder {
         return context.replaceDynamicContentInString(result.toString());
     }
 
+    public static class Builder implements MessagePayloadBuilder.Builder<MarshallingPayloadBuilder, Builder> {
+
+        private Object model;
+        private Marshaller marshaller;
+        private String marshallerName;
+
+        public static Builder marshal(Object  model) {
+            Builder builder = new Builder();
+            builder.model = model;
+            return builder;
+        }
+
+        public static Builder marshal(Object  model, String marshaller) {
+            Builder builder = new Builder();
+            builder.model = model;
+            builder.marshallerName = marshaller;
+            return builder;
+        }
+
+        public static Builder marshal(Object  model, Marshaller marshaller) {
+            Builder builder = new Builder();
+            builder.model = model;
+            builder.marshaller = marshaller;
+            return builder;
+        }
+
+        public Builder marshaller(String marshallerName) {
+            this.marshallerName = marshallerName;
+            return this;
+        }
+
+        public Builder marshaller(Marshaller marshaller) {
+            this.marshaller = marshaller;
+            return this;
+        }
+
+        @Override
+        public MarshallingPayloadBuilder build() {
+            if (marshaller != null) {
+                return new MarshallingPayloadBuilder(model, marshaller);
+            } else if (marshallerName != null) {
+                return new MarshallingPayloadBuilder(model, marshallerName);
+            } else {
+                return new MarshallingPayloadBuilder(model);
+            }
+        }
+
+    }
 
 }
