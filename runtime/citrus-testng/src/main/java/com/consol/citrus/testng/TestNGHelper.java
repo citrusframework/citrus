@@ -92,22 +92,22 @@ public final class TestNGHelper {
      * @param target
      * @param testResult
      * @param method
-     * @param testCaseBuilder
+     * @param runner
      * @param context
      * @param invocationCount
      */
     public static void invokeTestMethod(Object target, ITestResult testResult, Method method,
-                                        TestCaseRunner testCaseBuilder, TestContext context, int invocationCount) {
-        final TestCase testCase = testCaseBuilder.getTestCase();
+                                        TestCaseRunner runner, TestContext context, int invocationCount) {
+        final TestCase testCase = runner.getTestCase();
         try {
             Object[] params = TestNGParameterHelper.resolveParameter(target, testResult, method, testCase, context, invocationCount);
-            testCaseBuilder.start();
+            runner.start();
             ReflectionUtils.invokeMethod(method, target, params);
         } catch (Exception | AssertionError e) {
             testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
             throw new TestCaseFailedException(e);
         } finally {
-            testCaseBuilder.stop();
+            runner.stop();
         }
     }
 

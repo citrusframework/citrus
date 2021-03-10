@@ -46,20 +46,20 @@ public final class JUnit4Helper {
      * Invokes test method based on designer or runner environment.
      * @param target
      * @param frameworkMethod
-     * @param testCaseBuilder
+     * @param runner
      * @param context
      */
-    public static void invokeTestMethod(Object target, CitrusFrameworkMethod frameworkMethod, TestCaseRunner testCaseBuilder, TestContext context) {
-        final TestCase testCase = testCaseBuilder.getTestCase();
+    public static void invokeTestMethod(Object target, CitrusFrameworkMethod frameworkMethod, TestCaseRunner runner, TestContext context) {
+        final TestCase testCase = runner.getTestCase();
         try {
             Object[] params = JUnit4ParameterHelper.resolveParameter(frameworkMethod, testCase, context);
-            testCaseBuilder.start();
+            runner.start();
             ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), target, params);
         } catch (Exception | AssertionError e) {
             testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
             throw new TestCaseFailedException(e);
         } finally {
-            testCaseBuilder.stop();
+            runner.stop();
         }
     }
 

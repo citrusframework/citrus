@@ -56,13 +56,11 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final String BUILDER_ATTRIBUTE = "builder";
-
     /** Citrus instance */
     protected Citrus citrus;
 
     /** Test builder delegate */
-    private TestCaseRunner testCaseRunner;
+    private TestCaseRunner delegate;
 
     @Override
     public void run(CitrusFrameworkMethod frameworkMethod) {
@@ -78,11 +76,14 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
 
             citrus.run(testCase, ctx);
         } else if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
-            testCaseRunner = JUnit4Helper.createTestRunner(frameworkMethod, this.getClass(), ctx);
-            frameworkMethod.setAttribute(BUILDER_ATTRIBUTE, testCaseRunner);
+            TestCaseRunner runner = JUnit4Helper.createTestRunner(frameworkMethod, this.getClass(), ctx);
+            frameworkMethod.setAttribute(JUnit4Helper.BUILDER_ATTRIBUTE, runner);
+
+            delegate = runner;
+
             CitrusAnnotations.injectAll(this, citrus, ctx);
 
-            JUnit4Helper.invokeTestMethod(this, frameworkMethod, testCaseRunner, ctx);
+            JUnit4Helper.invokeTestMethod(this, frameworkMethod, runner, ctx);
         }
     }
 
@@ -120,35 +121,35 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
 
     @Override
     public <T extends TestAction> T run(TestActionBuilder<T> builder) {
-        return testCaseRunner.run(builder);
+        return delegate.run(builder);
     }
 
     @Override
     public <T extends TestAction> TestActionBuilder<T> applyBehavior(TestBehavior behavior) {
-        return testCaseRunner.applyBehavior(behavior);
+        return delegate.applyBehavior(behavior);
     }
 
     public <T> T variable(String name, T value) {
-        return testCaseRunner.variable(name, value);
+        return delegate.variable(name, value);
     }
 
     public void name(String name) {
-        testCaseRunner.name(name);
+        delegate.name(name);
     }
 
     public void description(String description) {
-        testCaseRunner.description(description);
+        delegate.description(description);
     }
 
     public void author(String author) {
-        testCaseRunner.author(author);
+        delegate.author(author);
     }
 
     public void status(TestCaseMetaInfo.Status status) {
-        testCaseRunner.status(status);
+        delegate.status(status);
     }
 
     public void creationDate(Date date) {
-        testCaseRunner.creationDate(date);
+        delegate.creationDate(date);
     }
 }

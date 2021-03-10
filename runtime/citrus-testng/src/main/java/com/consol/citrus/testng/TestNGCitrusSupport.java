@@ -58,7 +58,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGSuiteListener, Gher
     protected Citrus citrus;
 
     /** Test builder delegate */
-    private TestCaseRunner testCaseRunner;
+    private TestCaseRunner delegate;
 
     @Override
     public void run(final IHookCallBack callBack, ITestResult testResult) {
@@ -103,13 +103,15 @@ public class TestNGCitrusSupport implements IHookable, TestNGSuiteListener, Gher
 
                 TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
-                testCaseRunner = TestNGHelper.createTestCaseRunner(this, method, ctx);
-                testCaseRunner.groups(testResult.getMethod().getGroups());
-                testResult.setAttribute(TestNGHelper.BUILDER_ATTRIBUTE, testCaseRunner);
+                TestCaseRunner runner = TestNGHelper.createTestCaseRunner(this, method, ctx);
+                runner.groups(testResult.getMethod().getGroups());
+                testResult.setAttribute(TestNGHelper.BUILDER_ATTRIBUTE, runner);
+
+                delegate = runner;
 
                 CitrusAnnotations.injectAll(this, citrus, ctx);
 
-                TestNGHelper.invokeTestMethod(this, testResult, method, testCaseRunner, ctx, invocationCount);
+                TestNGHelper.invokeTestMethod(this, testResult, method, runner, ctx, invocationCount);
             } finally {
                 testResult.removeAttribute(TestNGHelper.BUILDER_ATTRIBUTE);
             }
@@ -159,35 +161,35 @@ public class TestNGCitrusSupport implements IHookable, TestNGSuiteListener, Gher
 
     @Override
     public <T extends TestAction> T run(TestActionBuilder<T> builder) {
-        return testCaseRunner.run(builder);
+        return delegate.run(builder);
     }
 
     @Override
     public <T extends TestAction> TestActionBuilder<T> applyBehavior(TestBehavior behavior) {
-        return testCaseRunner.applyBehavior(behavior);
+        return delegate.applyBehavior(behavior);
     }
 
     public <T> T variable(String name, T value) {
-        return testCaseRunner.variable(name, value);
+        return delegate.variable(name, value);
     }
 
     public void name(String name) {
-        testCaseRunner.name(name);
+        delegate.name(name);
     }
 
     public void description(String description) {
-        testCaseRunner.description(description);
+        delegate.description(description);
     }
 
     public void author(String author) {
-        testCaseRunner.author(author);
+        delegate.author(author);
     }
 
     public void status(TestCaseMetaInfo.Status status) {
-        testCaseRunner.status(status);
+        delegate.status(status);
     }
 
     public void creationDate(Date date) {
-        testCaseRunner.creationDate(date);
+        delegate.creationDate(date);
     }
 }
