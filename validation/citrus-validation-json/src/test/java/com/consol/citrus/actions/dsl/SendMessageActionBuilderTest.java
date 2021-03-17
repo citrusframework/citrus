@@ -29,8 +29,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
-import static com.consol.citrus.dsl.JsonSupport.JsonPathSupport.jsonPath;
-import static com.consol.citrus.dsl.JsonSupport.json;
+import static com.consol.citrus.dsl.JsonPathSupport.jsonPath;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
@@ -175,8 +174,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
                 .message()
                 .type(MessageType.JSON)
                 .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .process(json()
-                        .extract()
+                .extract(jsonPath()
                         .expression("$.text", "text")
                         .expression("$.person", "person")));
 
@@ -219,7 +217,6 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
                 .type(MessageType.JSON)
                 .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
                 .process(jsonPath()
-                            .process()
                             .expression("$.TestRequest.Message", "Hello World!")));
 
         final TestCase test = runner.getTestCase();

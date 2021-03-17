@@ -72,7 +72,7 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
     public static final class Builder implements ValidationContext.Builder<JsonMessageValidationContext, Builder>,
             SchemaValidationContext.Builder<Builder> {
 
-        private Set<String> ignoreExpressions = new HashSet<>();
+        private final Set<String> ignoreExpressions = new HashSet<>();
         private boolean schemaValidation = true;
         private String schemaRepository;
         private String schema;

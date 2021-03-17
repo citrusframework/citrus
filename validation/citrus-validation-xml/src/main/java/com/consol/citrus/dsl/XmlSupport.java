@@ -19,11 +19,9 @@
 
 package com.consol.citrus.dsl;
 
+import com.consol.citrus.validation.GenericValidationProcessor;
 import com.consol.citrus.validation.xml.XmlMarshallingValidationProcessor;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageProcessor;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 
 /**
  * @author Christoph Deppisch
@@ -31,48 +29,20 @@ import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 public class XmlSupport {
 
     /**
-     * Static entrance for all Xml related Java DSL functionalities.
+     * Entrance for all Xml related validation functionalities.
      * @return
      */
-    public static XmlSupport xml() {
-        return new XmlSupport();
+    public static XmlMessageValidationContext.Builder xml() {
+        return XmlMessageValidationContext.Builder.xml();
     }
 
-    public XpathSupport xpath() {
-        return new XpathSupport();
-    }
-
-    public XpathPayloadVariableExtractor.Builder extract() {
-        return new XpathPayloadVariableExtractor.Builder();
-    }
-
-    public XmlMessageValidationContext.Builder validate() {
-        return new XmlMessageValidationContext.Builder();
-    }
-
-    public <T> XmlMarshallingValidationProcessor.Builder<T> validate(Class<T> type) {
-        return XmlMarshallingValidationProcessor.Builder.validate(type);
-    }
-
-    public static final class XpathSupport {
-        /**
-         * Static entrance for all Xpath related Java DSL functionalities.
-         * @return
-         */
-        public static XpathSupport xpath() {
-            return new XpathSupport();
-        }
-
-        public XpathMessageProcessor.Builder process() {
-            return new XpathMessageProcessor.Builder();
-        }
-
-        public XpathPayloadVariableExtractor.Builder extract() {
-            return new XpathPayloadVariableExtractor.Builder();
-        }
-
-        public XpathMessageValidationContext.Builder validate() {
-            return new XpathMessageValidationContext.Builder();
-        }
+    /**
+     * Marshalling validation processor builder entrance.
+     * @param validationProcessor
+     * @param <T>
+     * @return
+     */
+    public static <T> XmlMarshallingValidationProcessor.Builder<T> validate(GenericValidationProcessor<T> validationProcessor) {
+        return XmlMarshallingValidationProcessor.Builder.validate(validationProcessor);
     }
 }

@@ -29,7 +29,6 @@ import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dictionary.SimpleMappingDictionary;
-import com.consol.citrus.dsl.MessageSupport;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
@@ -61,7 +60,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
-import static com.consol.citrus.dsl.MessageSupport.MessageHeaderSupport.headers;
+import static com.consol.citrus.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
+import static com.consol.citrus.dsl.MessageSupport.message;
 import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -883,7 +883,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderExtractFromPayload() {
+    public void testReceiveBuilderExtractor() {
         VariableExtractor extractor = (message, context) -> context.setVariable("messageId", message.getId());
 
         Message received = new DefaultMessage("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
@@ -940,8 +940,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         runner.run(receive(messageEndpoint)
                                 .message()
                                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .process(headers()
-                                        .extract()
+                                .extract(fromHeaders()
                                         .header("operation", "operationHeader")
                                         .header("requestId", "id")));
 
@@ -986,9 +985,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         runner.run(receive(messageEndpoint)
                                 .message()
                                 .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .process(new MessageSupport()
+                                .extract(message()
                                         .headers()
-                                        .extract()
                                         .header("operation", "operationHeader")
                                         .header("requestId", "id"))
                                 .process(extractor));

@@ -40,7 +40,7 @@ import org.springframework.util.CollectionUtils;
 public class DelegatingPayloadVariableExtractor implements VariableExtractor {
 
     /** Map defines path expressions and target variable names */
-    private Map<String, String> pathExpressions;
+    private Map<String, Object> pathExpressions;
 
     private Map<String, String> namespaces;
 
@@ -65,12 +65,12 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
             LOG.debug("Reading path elements.");
         }
 
-        Map<String, String> jsonPathExpressions = new LinkedHashMap<>();
-        Map<String, String> xpathExpressions = new LinkedHashMap<>();
+        Map<String, Object> jsonPathExpressions = new LinkedHashMap<>();
+        Map<String, Object> xpathExpressions = new LinkedHashMap<>();
 
-        for (Map.Entry<String, String> pathExpression : pathExpressions.entrySet()) {
+        for (Map.Entry<String, Object> pathExpression : pathExpressions.entrySet()) {
             final String path = context.replaceDynamicContentInString(pathExpression.getKey());
-            final String variable = pathExpression.getValue();
+            final Object variable = pathExpression.getValue();
 
             if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
                 jsonPathExpressions.put(path, variable);
@@ -111,8 +111,16 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
      */
     public static final class Builder implements VariableExtractor.Builder<DelegatingPayloadVariableExtractor, Builder> {
 
-        private final Map<String, String> expressions = new HashMap<>();
+        private final Map<String, Object> expressions = new LinkedHashMap<>();
         private final Map<String, String> namespaces = new HashMap<>();
+
+        /**
+         * Static entry method for builder.
+         * @return
+         */
+        public static Builder fromBody() {
+            return new Builder();
+        }
 
         public Builder namespaces(Map<String, String> namespaces) {
             this.namespaces.putAll(namespaces);
@@ -125,13 +133,13 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
         }
 
         @Override
-        public Builder expressions(Map<String, String> expressions) {
+        public Builder expressions(Map<String, Object> expressions) {
             this.expressions.putAll(expressions);
             return this;
         }
 
         @Override
-        public Builder expression(final String path, final String variableName) {
+        public Builder expression(final String path, final Object variableName) {
             this.expressions.put(path, variableName);
             return this;
         }
@@ -146,7 +154,7 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
      * Sets the JSONPath / XPath expressions.
      * @param pathExpressions
      */
-    public void setPathExpressions(Map<String, String> pathExpressions) {
+    public void setPathExpressions(Map<String, Object> pathExpressions) {
         this.pathExpressions = pathExpressions;
     }
 
@@ -154,7 +162,7 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
      * Gets the JSONPath / XPath expressions.
      * @return
      */
-    public Map<String, String> getPathExpressions() {
+    public Map<String, Object> getPathExpressions() {
         return pathExpressions;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2021 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -17,25 +17,18 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.validation;
 
-import com.consol.citrus.validation.json.JsonMappingValidationProcessor;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 
 /**
- * @author Christoph Deppisch
+ * Adapter interface marks that a class is able to act as a validation context.
  */
-public class JsonSupport {
-
+@FunctionalInterface
+public interface ValidationContextAdapter {
     /**
-     * Static entrance for all Json related Java DSL functionalities.
+     * Adapt as validation context
      * @return
      */
-    public static JsonMessageValidationContext.Builder json() {
-        return new JsonMessageValidationContext.Builder();
-    }
-
-    public <T> JsonMappingValidationProcessor.Builder<T> validate(Class<T> type) {
-        return JsonMappingValidationProcessor.Builder.validate(type);
-    }
+    ValidationContext asValidationContext();
 }

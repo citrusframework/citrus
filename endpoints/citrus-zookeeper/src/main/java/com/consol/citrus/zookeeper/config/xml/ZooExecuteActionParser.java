@@ -18,6 +18,7 @@ package com.consol.citrus.zookeeper.config.xml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -113,7 +114,7 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
 
     private List<VariableExtractor> getVariableExtractors(Element extractElement) {
         List<VariableExtractor> variableExtractors = new ArrayList<>();
-        Map<String, String> extractJsonPath = new HashMap<>();
+        Map<String, Object> extractJsonPath = new LinkedHashMap<>();
         List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
         VariableExtractorParserUtil.parseMessageElement(messageValueElements, extractJsonPath);
         if (!CollectionUtils.isEmpty(extractJsonPath)) {

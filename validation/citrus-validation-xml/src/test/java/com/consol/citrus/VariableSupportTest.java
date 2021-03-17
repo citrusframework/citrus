@@ -422,7 +422,7 @@ public class VariableSupportTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractMessageElements = new HashMap<String, String>();
+        HashMap<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("//root/element/sub-elementA", "${variableA}");
         extractMessageElements.put("//root/element/sub-elementB", "${variableB}");
 
@@ -477,7 +477,7 @@ public class VariableSupportTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractHeaderValues = new HashMap<String, String>();
+        HashMap<String, String> extractHeaderValues = new HashMap<>();
         extractHeaderValues.put("header-valueA", "${variableA}");
         extractHeaderValues.put("header-valueB", "${variableB}");
 

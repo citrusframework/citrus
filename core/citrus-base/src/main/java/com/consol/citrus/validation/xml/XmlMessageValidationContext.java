@@ -89,6 +89,21 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
             return new Builder();
         }
 
+        /**
+         * Convert to Xpath message validation context builder.
+         * @return
+         */
+        public XpathMessageValidationContext.Builder xpath() {
+            return new XpathMessageValidationContext.Builder()
+                        .namespaceContext(namespaces)
+                        .namespaces(controlNamespaces)
+                        .schemaValidation(schemaValidation)
+                        .schemaRepository(schemaRepository)
+                        .schema(schema)
+                        .dtd(dtdResource)
+                        .ignore(ignoreExpressions);
+        }
+
         @Override
         public XmlMessageValidationContext build() {
             return new XmlMessageValidationContext(this);
@@ -103,13 +118,13 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
 
         protected final S self;
 
-        private Set<String> ignoreExpressions = new HashSet<>();
-        private Map<String, String> namespaces = new HashMap<>();
-        private Resource dtdResource;
-        private Map<String, String> controlNamespaces = new HashMap<>();
-        private boolean schemaValidation = true;
-        private String schemaRepository;
-        private String schema;
+        protected final Set<String> ignoreExpressions = new HashSet<>();
+        protected Map<String, String> namespaces = new HashMap<>();
+        protected Resource dtdResource;
+        protected final Map<String, String> controlNamespaces = new HashMap<>();
+        protected boolean schemaValidation = true;
+        protected String schemaRepository;
+        protected String schema;
 
         protected XmlValidationContextBuilder() {
             this.self = (S) this;

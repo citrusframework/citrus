@@ -35,6 +35,7 @@ import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.message.MessageProcessorAdapter;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.message.WithPayloadBuilder;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
@@ -46,6 +47,7 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContextAdapter;
 import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -595,6 +597,15 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
+         * Adds an expression based validation context.
+         * @param adapter
+         * @return
+         */
+        public B validate(final ValidationContextAdapter adapter) {
+            return validate(adapter.asValidationContext());
+        }
+
+        /**
          * Sets validation contexts.
          * @param validationContexts
          * @return
@@ -713,6 +724,15 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
+         * Adds message processor on the received message.
+         * @param adapter
+         * @return
+         */
+        public B transform(MessageProcessorAdapter adapter) {
+            return process(adapter);
+        }
+
+        /**
          * Adds message processor on the received message as fluent builder.
          * @param builder
          * @return
@@ -720,7 +740,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B transform(MessageProcessor.Builder<?, ?> builder) {
             return transform(builder.build());
         }
-
 
         /**
          * Adds message processor on the received message.
@@ -746,6 +765,15 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public B process(MessageProcessor.Builder<?, ?> builder) {
             return process(builder.build());
+        }
+
+        /**
+         * Adds message processor on the received message as fluent builder.
+         * @param adapter
+         * @return
+         */
+        public B process(MessageProcessorAdapter adapter) {
+            return process(adapter.asProcessor());
         }
 
         /**

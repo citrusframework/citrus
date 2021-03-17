@@ -538,8 +538,7 @@ http().server("httpServer")
           "</testRequestMessage>")
     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
     .header("X-CustomHeaderId", "${custom_header_id}")
-    .process(headers()
-                .extract()
+    .extract(fromHeaders()
                 .header("X-MessageId", "message_id"));
 
 http().server("httpServer")

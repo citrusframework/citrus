@@ -10,9 +10,9 @@ import java.util.Map;
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.dsl.JsonSupport;
+import com.consol.citrus.dsl.JsonPathSupport;
 import com.consol.citrus.dsl.MessageSupport;
-import com.consol.citrus.dsl.XmlSupport;
+import com.consol.citrus.dsl.XpathSupport;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -667,7 +667,6 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
     public B extractFromHeader(final String headerName, final String variable) {
         variableExtractor(new MessageSupport()
                     .headers()
-                    .extract()
                     .header(headerName, variable)
                 .build());
         return self;
@@ -682,15 +681,13 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      */
     public B extractFromPayload(final String path, final String variable) {
         if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
-            variableExtractor(new JsonSupport()
-                    .extract()
+            variableExtractor(new JsonPathSupport()
                     .expression(path, variable)
-                .build());
+                    .asExtractor());
         } else {
-            variableExtractor(new XmlSupport()
-                    .extract()
+            variableExtractor(new XpathSupport()
                     .expression(path, variable)
-                .build());
+                    .asExtractor());
         }
         return self;
     }

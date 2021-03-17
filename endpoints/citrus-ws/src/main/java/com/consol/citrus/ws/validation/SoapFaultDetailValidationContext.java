@@ -17,6 +17,7 @@
 package com.consol.citrus.ws.validation;
 
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 
 /**
  * Soap fault detail validation context extends XML validation context.
@@ -50,6 +51,21 @@ public class SoapFaultDetailValidationContext extends XmlMessageValidationContex
          */
         public static Builder faultDetail() {
             return new Builder();
+        }
+
+        /**
+         * Convert to Xpath message validation context builder.
+         * @return
+         */
+        public XpathMessageValidationContext.Builder xpath() {
+            return new XpathMessageValidationContext.Builder()
+                    .namespaceContext(namespaces)
+                    .namespaces(controlNamespaces)
+                    .schemaValidation(schemaValidation)
+                    .schemaRepository(schemaRepository)
+                    .schema(schema)
+                    .dtd(dtdResource)
+                    .ignore(ignoreExpressions);
         }
 
         @Override

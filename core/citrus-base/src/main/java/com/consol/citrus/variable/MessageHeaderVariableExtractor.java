@@ -16,11 +16,13 @@
 
 package com.consol.citrus.variable;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.message.Message;
 import org.springframework.util.CollectionUtils;
@@ -33,7 +35,7 @@ import org.springframework.util.CollectionUtils;
 public class MessageHeaderVariableExtractor implements VariableExtractor {
 
     /** Map holding header names and target variable names */
-    private final Map<String, String> headerMappings;
+    private final Map<String, Object> headerMappings;
 
     public MessageHeaderVariableExtractor() {
         this(new Builder());
@@ -53,9 +55,12 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
     public void extractVariables(Message message, TestContext context) {
         if (CollectionUtils.isEmpty(headerMappings)) { return; }
 
-        for (Entry<String, String> entry : headerMappings.entrySet()) {
+        for (Entry<String, Object> entry : headerMappings.entrySet()) {
             String headerElementName = entry.getKey();
-            String targetVariableName = entry.getValue();
+            String targetVariableName = Optional.ofNullable(entry.getValue())
+                    .map(Object::toString)
+                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Variable name must be set for extractor " +
+                            "on header '%s'", headerElementName)));
 
             if (message.getHeader(headerElementName) == null) {
                 throw new UnknownElementException("Could not find header element " + headerElementName + " in received header");
@@ -69,7 +74,16 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
      * Fluent builder.
      */
     public static final class Builder implements VariableExtractor.Builder<MessageHeaderVariableExtractor, Builder> {
-        private final Map<String, String> expressions = new HashMap<>();
+
+        private final Map<String, Object> expressions = new LinkedHashMap<>();
+
+        /**
+         * Static entry method for builder.
+         * @return
+         */
+        public static Builder fromHeaders() {
+            return new Builder();
+        }
 
         /**
          * Evaluate all header name expressions and store values as new variables to the test context.
@@ -93,13 +107,13 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
         }
 
         @Override
-        public Builder expressions(Map<String, String> expressions) {
+        public Builder expressions(Map<String, Object> expressions) {
             this.expressions.putAll(expressions);
             return this;
         }
 
         @Override
-        public Builder expression(final String headerName, final String variableName) {
+        public Builder expression(final String headerName, final Object variableName) {
             this.expressions.put(headerName, variableName);
             return this;
         }
@@ -114,7 +128,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
      * Gets the headerMappings.
      * @return the headerMappings
      */
-    public Map<String, String> getHeaderMappings() {
+    public Map<String, Object> getHeaderMappings() {
         return headerMappings;
     }
 }

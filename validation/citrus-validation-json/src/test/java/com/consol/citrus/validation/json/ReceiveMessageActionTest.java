@@ -117,7 +117,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}"));
 
-        Map<String, String> extractMessageElements = new HashMap<>();
+        Map<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("$.text", "messageVar");
         extractMessageElements.put("$.person", "person");
 

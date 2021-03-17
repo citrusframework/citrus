@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  */
 public class VariableExtractorParserUtil {
 
-    public static void parseMessageElement(List<?> messageElements, Map<String, String> pathMessages) {
+    public static void parseMessageElement(List<?> messageElements, Map<String, Object> pathMessages) {
         for (Object messageElementObject : messageElements) {
             Element messageElement = (Element) messageElementObject;
             String pathExpression = messageElement.getAttribute("path");
@@ -47,7 +47,7 @@ public class VariableExtractorParserUtil {
         }
     }
 
-    public static void addPayloadVariableExtractors(Element element, List<VariableExtractor> variableExtractors, Map<String, String> extractFromPath) {
+    public static void addPayloadVariableExtractors(Element element, List<VariableExtractor> variableExtractors, Map<String, Object> extractFromPath) {
         Map<String, String> namespaces = new HashMap<>();
         if (element != null) {
             Element messageElement = DomUtils.getChildElementByTagName(element, "message");

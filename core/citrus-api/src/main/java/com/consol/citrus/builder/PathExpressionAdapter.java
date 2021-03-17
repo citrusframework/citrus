@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2021 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -17,25 +17,14 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.builder;
 
-import com.consol.citrus.validation.json.JsonMappingValidationProcessor;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.message.MessageProcessorAdapter;
+import com.consol.citrus.validation.ValidationContextAdapter;
+import com.consol.citrus.variable.VariableExtractorAdapter;
 
 /**
  * @author Christoph Deppisch
  */
-public class JsonSupport {
-
-    /**
-     * Static entrance for all Json related Java DSL functionalities.
-     * @return
-     */
-    public static JsonMessageValidationContext.Builder json() {
-        return new JsonMessageValidationContext.Builder();
-    }
-
-    public <T> JsonMappingValidationProcessor.Builder<T> validate(Class<T> type) {
-        return JsonMappingValidationProcessor.Builder.validate(type);
-    }
+public interface PathExpressionAdapter extends MessageProcessorAdapter, VariableExtractorAdapter, ValidationContextAdapter {
 }

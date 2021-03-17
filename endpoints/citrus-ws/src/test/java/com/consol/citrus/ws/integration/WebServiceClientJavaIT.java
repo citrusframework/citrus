@@ -56,6 +56,6 @@ public class WebServiceClientJavaIT extends TestNGCitrusSpringSupport {
                         "</ns0:HelloStandaloneResponse>")
             .header("Request", "HelloRequest")
             .header("Operation", "sayHelloResponse")
-            .validate(xml().validate().schemaValidation(false)));
+            .validate(xml().schemaValidation(false)));
     }
 }

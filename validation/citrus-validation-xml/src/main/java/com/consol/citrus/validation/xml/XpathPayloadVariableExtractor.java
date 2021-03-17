@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.consol.citrus.context.TestContext;
@@ -46,13 +47,13 @@ import org.w3c.dom.Node;
 public class XpathPayloadVariableExtractor implements VariableExtractor {
 
     /** Map defines xpath expressions and target variable names */
-    private final Map<String, String> xPathExpressions;
+    private final Map<String, Object> xPathExpressions;
 
     /** Namespace definitions used in xpath expressions */
     private final Map<String, String> namespaces;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
 
     public XpathPayloadVariableExtractor() {
         this(new Builder());
@@ -75,30 +76,32 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             return;
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Reading XML elements with XPath");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Reading XML elements with XPath");
         }
 
         NamespaceContext nsContext = context.getNamespaceContextBuilder().buildContext(message, namespaces);
 
-        for (Entry<String, String> entry : xPathExpressions.entrySet()) {
+        for (Entry<String, Object> entry : xPathExpressions.entrySet()) {
             String pathExpression = context.replaceDynamicContentInString(entry.getKey());
-            String variableName = entry.getValue();
+            String variableName = Optional.ofNullable(entry.getValue())
+                    .map(Object::toString)
+                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Variable name must be set on " +
+                            "extractor path expression '%s'", pathExpression)));
 
-            if (log.isDebugEnabled()) {
-                log.debug("Evaluating XPath expression: " + pathExpression);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Evaluating XPath expression: " + pathExpression);
             }
 
             Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
 
             if (XPathUtils.isXPathExpression(pathExpression)) {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(pathExpression, XPathExpressionResult.STRING);
-                pathExpression = XPathExpressionResult.cutOffPrefix(pathExpression);
 
-                Object value = XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
+                Object value = XPathUtils.evaluate(doc, XPathExpressionResult.cutOffPrefix(pathExpression), nsContext, resultType);
 
                 if (value == null) {
-                    throw new CitrusRuntimeException("Not able to find value for expression: " + pathExpression);
+                    throw new CitrusRuntimeException("Not able to find value for expression: " + XPathExpressionResult.cutOffPrefix(pathExpression));
                 }
 
                 if (value instanceof List) {
@@ -130,7 +133,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      * Fluent builder.
      */
     public static final class Builder implements VariableExtractor.Builder<XpathPayloadVariableExtractor, Builder>, XmlNamespaceAware {
-        private final Map<String, String> expressions = new HashMap<>();
+        private final Map<String, Object> expressions = new HashMap<>();
         private final Map<String, String> namespaces = new HashMap<>();
 
         /**
@@ -157,13 +160,13 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
         }
 
         @Override
-        public Builder expressions(Map<String, String> expressions) {
+        public Builder expressions(Map<String, Object> expressions) {
             this.expressions.putAll(expressions);
             return this;
         }
 
         @Override
-        public Builder expression(final String expression, final String variableName) {
+        public Builder expression(final String expression, final Object variableName) {
             this.expressions.put(expression, variableName);
             return this;
         }
@@ -183,7 +186,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      * Gets the xPathExpressions.
      * @return the xPathExpressions
      */
-    public Map<String, String> getXpathExpressions() {
+    public Map<String, Object> getXpathExpressions() {
         return xPathExpressions;
     }
 

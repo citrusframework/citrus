@@ -178,13 +178,9 @@ Add this code to your message receiving action.
 public void receiveMessageTest() {
     when(
         receive("helloService")
-            .process(message()
-                    .body()
-                    .extract()
+            .extract(fromBody()
                     .expression("//TestRequest/VersionId", "versionId"))
-            .process(message()
-                    .headers()
-                    .extract()
+            .extract(fromHeaders()
                     .header("Operation", "operation"))
     );
 

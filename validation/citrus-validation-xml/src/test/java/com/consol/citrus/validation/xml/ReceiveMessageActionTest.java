@@ -739,7 +739,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        Map<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("/TestRequest/Message", "messageVar");
 
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
@@ -776,7 +776,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 "<Message>ByeBye</Message>" +
                 "</TestRequest>"));
 
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        Map<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("node-set://TestRequest/Message", "messageVar");
 
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
@@ -814,7 +814,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>"));
 
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        Map<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("/:TestRequest/:Message", "messageVar");
 
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
@@ -855,7 +855,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>"));
 
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        Map<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("/ns0:TestRequest/ns0:Message", "messageVar");
 
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
@@ -896,7 +896,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
                 "<ns1:Message>Hello World!</ns1:Message></TestRequest>"));
 
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        Map<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("/ns0:TestRequest/ns1:Message", "messageVar");
 
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
@@ -937,7 +937,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>"));
 
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        Map<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("/pfx:TestRequest/pfx:Message", "messageVar");
 
         Map<String, String> namespaces = new HashMap<String, String>();

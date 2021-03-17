@@ -1,7 +1,7 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.AbstractTestActionBuilder;
-import com.consol.citrus.dsl.JsonSupport;
+import com.consol.citrus.dsl.JsonPathSupport;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -107,10 +107,9 @@ public class ZooExecuteActionBuilder extends AbstractTestActionBuilder<ZooExecut
     }
 
     public ZooExecuteActionBuilder extract(String jsonPath, String variableName) {
-        return extractor(new JsonSupport()
-                .extract()
+        return extractor(new JsonPathSupport()
                 .expression(jsonPath, variableName)
-                .build());
+                .asExtractor());
     }
 
     public ZooExecuteActionBuilder extractor(VariableExtractor variableExtractor) {

@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 import static com.consol.citrus.container.Parallel.Builder.parallel;
 import static com.consol.citrus.container.Sequence.Builder.sequential;
-import static com.consol.citrus.dsl.MessageSupport.MessageHeaderSupport.headers;
+import static com.consol.citrus.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 /**
@@ -63,8 +63,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
                     .contentType("application/xml")
                     .accept("application/xml")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
-                    .process(headers()
-                                .extract()
+                    .extract(fromHeaders()
                                 .header("citrus_jms_messageId", "correlation_id")),
 
                http().server("httpServerResponseEndpoint")
@@ -118,8 +117,7 @@ public class HttpServerJavaIT extends TestNGCitrusSpringSupport {
                     .contentType("application/xml")
                     .accept("application/xml")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
-                    .process(headers()
-                                .extract()
+                    .extract(fromHeaders()
                                 .header("citrus_jms_messageId", "correlation_id")),
 
                http().server("httpServerResponseEndpoint")

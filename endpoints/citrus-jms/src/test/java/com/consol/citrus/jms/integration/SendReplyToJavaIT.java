@@ -25,7 +25,7 @@ import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.container.Parallel.Builder.parallel;
 import static com.consol.citrus.container.Sequence.Builder.sequential;
-import static com.consol.citrus.dsl.MessageSupport.MessageHeaderSupport.headers;
+import static com.consol.citrus.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 
 /**
  * @author Christoph Deppisch
@@ -52,8 +52,7 @@ public class SendReplyToJavaIT extends TestNGCitrusSpringSupport {
                         "</GetDateRequestMessage>")
                 .header("Operation", "${operation}")
                 .header("ConversationId", "${conversationId}")
-                .process(headers()
-                            .extract()
+                .extract(fromHeaders()
                             .header(MessageHeaders.ID, "syncRequestCorrelatorId")),
 
             sequential().actions(

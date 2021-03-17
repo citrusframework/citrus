@@ -28,7 +28,6 @@ import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dictionary.SimpleMappingDictionary;
-import com.consol.citrus.dsl.MessageSupport;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -51,6 +50,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
+import static com.consol.citrus.dsl.MessageSupport.message;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
@@ -598,9 +598,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
                         .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                         .header("operation", "sayHello")
                         .header("requestId", "123456")
-                        .process(new MessageSupport()
+                        .extract(message()
                                 .headers()
-                                .extract()
                                 .header("operation", "operationHeader")
                                 .header("requestId", "id")));
 

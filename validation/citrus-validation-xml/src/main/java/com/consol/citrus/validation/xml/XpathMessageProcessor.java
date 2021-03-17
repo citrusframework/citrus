@@ -130,17 +130,13 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
     public static final class Builder implements MessageProcessor.Builder<XpathMessageProcessor, Builder>, WithExpressions<Builder> {
         private final Map<String, Object> expressions = new LinkedHashMap<>();
 
-        /**
-         * Sets the expressions to evaluate. Keys are expressions that should be evaluated and values are target
-         * variable names that are stored in the test context with the evaluated result as variable value.
-         * @param expressions
-         * @return
-         */
+        @Override
         public Builder expressions(Map<String, Object> expressions) {
             this.expressions.putAll(expressions);
             return this;
         }
 
+        @Override
         public Builder expression(final String expression, final Object expectedValue) {
             this.expressions.put(expression, expectedValue);
             return this;

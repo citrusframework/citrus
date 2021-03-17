@@ -16,7 +16,7 @@
 
 package com.consol.citrus.validation.json;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,7 +45,7 @@ import org.springframework.util.CollectionUtils;
 public class JsonPathVariableExtractor implements VariableExtractor {
 
     /** Map defines json path expressions and target variable names */
-    private final Map<String, String> jsonPathExpressions;
+    private final Map<String, Object> jsonPathExpressions;
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(JsonPathVariableExtractor.class);
@@ -70,15 +70,17 @@ public class JsonPathVariableExtractor implements VariableExtractor {
             LOG.debug("Reading JSON elements with JSONPath");
         }
 
-        String jsonPathExpression;
         try {
             JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
             Object receivedJson = parser.parse(message.getPayload(String.class));
             ReadContext readerContext = JsonPath.parse(receivedJson);
 
-            for (Map.Entry<String, String> entry : jsonPathExpressions.entrySet()) {
-                jsonPathExpression = context.replaceDynamicContentInString(entry.getKey());
-                String variableName = entry.getValue();
+            for (Map.Entry<String, Object> entry : jsonPathExpressions.entrySet()) {
+                String jsonPathExpression = context.replaceDynamicContentInString(entry.getKey());
+                String variableName = Optional.ofNullable(entry.getValue())
+                        .map(Object::toString)
+                        .orElseThrow(() -> new CitrusRuntimeException(String.format("Variable name must be set on " +
+                                "extractor path expression '%s'", jsonPathExpression)));
 
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Evaluating JSONPath expression: " + jsonPathExpression);
@@ -102,16 +104,16 @@ public class JsonPathVariableExtractor implements VariableExtractor {
      * Fluent builder.
      */
     public static final class Builder implements VariableExtractor.Builder<JsonPathVariableExtractor, Builder> {
-        private final Map<String, String> expressions = new HashMap<>();
+        private final Map<String, Object> expressions = new LinkedHashMap<>();
 
         @Override
-        public Builder expressions(Map<String, String> expressions) {
+        public Builder expressions(Map<String, Object> expressions) {
             this.expressions.putAll(expressions);
             return this;
         }
 
         @Override
-        public Builder expression(final String expression, final String variableName) {
+        public Builder expression(final String expression, final Object variableName) {
             this.expressions.put(expression, variableName);
             return this;
         }
@@ -126,7 +128,7 @@ public class JsonPathVariableExtractor implements VariableExtractor {
      * Gets the JSONPath expressions.
      * @return
      */
-    public Map<String, String> getJsonPathExpressions() {
+    public Map<String, Object> getJsonPathExpressions() {
         return jsonPathExpressions;
     }
 }

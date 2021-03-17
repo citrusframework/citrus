@@ -113,23 +113,17 @@ public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValid
      */
     public static final class Builder<T> implements MessageProcessor.Builder<XmlMarshallingValidationProcessor<T>, Builder<T>>, ReferenceResolverAware {
 
-        private final Class<T> type;
         private Unmarshaller unmarshaller;
-        private GenericValidationProcessor<T> validationProcessor;
+        private final GenericValidationProcessor<T> validationProcessor;
 
         private ReferenceResolver referenceResolver;
 
-        public Builder(Class<T> type) {
-            this.type = type;
-        }
-
-        public static <T> Builder<T> validate(Class<T> type) {
-            return new Builder<>(type);
-        }
-
-        public Builder<T> validator(GenericValidationProcessor<T> validationProcessor) {
+        public Builder(GenericValidationProcessor<T> validationProcessor) {
             this.validationProcessor = validationProcessor;
-            return this;
+        }
+
+        public static <T> Builder<T> validate(GenericValidationProcessor<T> validationProcessor) {
+            return new Builder<>(validationProcessor);
         }
 
         public Builder<T> unmarshaller(Unmarshaller unmarshaller) {
@@ -158,7 +152,7 @@ public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValid
                         "please add proper validation logic");
             }
 
-            return new XmlMarshallingValidationProcessor<T>() {
+            return new XmlMarshallingValidationProcessor<>() {
                 @Override
                 public void validate(T payload, Map<String, Object> headers, TestContext context) {
                     validationProcessor.validate(payload, headers, context);

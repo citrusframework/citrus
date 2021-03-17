@@ -27,7 +27,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
-import static com.consol.citrus.dsl.XmlSupport.XpathSupport.xpath;
+import static com.consol.citrus.dsl.XpathSupport.xpath;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
@@ -178,8 +178,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
                 .message()
                 .body("<TestRequest><Message lang=\"ENG\">?</Message></TestRequest>")
                 .process(xpath()
-                            .process()
-                            .expression("/TestRequest/Message", "Hello World!")));
+                        .expression("/TestRequest/Message", "Hello World!")));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

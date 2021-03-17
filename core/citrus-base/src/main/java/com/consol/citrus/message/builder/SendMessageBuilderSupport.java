@@ -34,6 +34,7 @@ import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageHeaderDataBuilder;
 import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.message.MessageProcessorAdapter;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.WithHeaderBuilder;
 import com.consol.citrus.message.WithPayloadBuilder;
@@ -42,6 +43,8 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
+import com.consol.citrus.variable.VariableExtractor;
+import com.consol.citrus.variable.VariableExtractorAdapter;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.core.io.Resource;
 
@@ -309,6 +312,42 @@ public class SendMessageBuilderSupport<T extends SendMessageAction, B extends Se
      */
     public S process(MessageProcessor.Builder<?, ?> builder) {
         return process(builder.build());
+    }
+
+    /**
+     * Adds message processor on the message to be sent as fluent builder.
+     * @param adapter
+     * @return The modified send message action builder
+     */
+    public S process(MessageProcessorAdapter adapter) {
+        return process(adapter.asProcessor());
+    }
+
+    /**
+     * Adds variable extractor on the received message.
+     * @param extractor
+     * @return
+     */
+    public S extract(VariableExtractor extractor) {
+        return process(extractor);
+    }
+
+    /**
+     * Adds message processor on the received message.
+     * @param adapter
+     * @return
+     */
+    public S extract(VariableExtractorAdapter adapter) {
+        return extract(adapter.asExtractor());
+    }
+
+    /**
+     * Adds message processor on the received message as fluent builder.
+     * @param builder
+     * @return
+     */
+    public S extract(VariableExtractor.Builder<?, ?> builder) {
+        return extract(builder.build());
     }
 
     /**

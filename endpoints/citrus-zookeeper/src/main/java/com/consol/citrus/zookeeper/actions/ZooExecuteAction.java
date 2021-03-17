@@ -35,6 +35,7 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
+import com.consol.citrus.variable.VariableExtractorAdapter;
 import com.consol.citrus.zookeeper.client.ZooClient;
 import com.consol.citrus.zookeeper.command.AbstractZooCommand;
 import com.consol.citrus.zookeeper.command.CommandResultCallback;
@@ -455,6 +456,11 @@ public class ZooExecuteAction extends AbstractTestAction {
 
         public Builder extract(VariableExtractor variableExtractor) {
             this.messageProcessors.add(variableExtractor);
+            return this;
+        }
+
+        public Builder extract(VariableExtractorAdapter adapter) {
+            this.messageProcessors.add(adapter.asExtractor());
             return this;
         }
 

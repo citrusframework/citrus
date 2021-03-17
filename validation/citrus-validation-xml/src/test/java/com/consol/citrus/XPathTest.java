@@ -202,7 +202,7 @@ public class XPathTest extends UnitTestSupport {
 
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
         namespaces.put("ns1", "http://citrus");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
@@ -290,7 +290,7 @@ public class XPathTest extends UnitTestSupport {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        HashMap<String, String> extractMessageElements = new HashMap<String, String>();
+        HashMap<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("node://:element/:sub-elementA", "elementA");
         extractMessageElements.put("node://:element/:sub-elementA/@attribute", "elementAttribute");
         extractMessageElements.put("node://*[.='search-for']", "search");

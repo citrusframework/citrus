@@ -721,7 +721,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractMessageElements = new HashMap<>();
+        HashMap<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("//root/element/sub-elementA", "${valueA}");
         extractMessageElements.put("//root/element/sub-elementB", "${valueB}");
 
@@ -770,7 +770,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractMessageElements = new HashMap<>();
+        HashMap<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("//root/element/sub-elementA/@attribute", "${valueA}");
         extractMessageElements.put("//root/element/sub-elementB/@attribute", "${valueB}");
 
@@ -819,7 +819,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractMessageElements = new HashMap<>();
+        HashMap<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("//root/element/sub-element-wrong", "${valueA}");
         extractMessageElements.put("//element/sub-element-wrong", "${valueB}");
 
@@ -866,7 +866,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, String> extractMessageElements = new HashMap<>();
+        HashMap<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("//root/element/sub-elementA/@attribute-wrong", "${attributeA}");
 
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()

@@ -36,12 +36,12 @@ public class MessageSupport {
         return new MessageSupport();
     }
 
-    public MessageHeaderSupport headers() {
-        return new MessageHeaderSupport();
+    public MessageHeaderVariableExtractor.Builder headers() {
+        return MessageHeaderSupport.fromHeaders();
     }
 
-    public MessageBodySupport body() {
-        return new MessageBodySupport();
+    public DelegatingPayloadVariableExtractor.Builder body() {
+        return MessageBodySupport.fromBody();
     }
 
     /**
@@ -52,12 +52,8 @@ public class MessageSupport {
          * Static entrance for all message header related Java DSL functionalities.
          * @return
          */
-        public static MessageHeaderSupport headers() {
-            return new MessageHeaderSupport();
-        }
-
-        public MessageHeaderVariableExtractor.Builder extract() {
-            return new MessageHeaderVariableExtractor.Builder();
+        public static MessageHeaderVariableExtractor.Builder fromHeaders() {
+            return MessageHeaderVariableExtractor.Builder.fromHeaders();
         }
     }
 
@@ -69,12 +65,8 @@ public class MessageSupport {
          * Static entrance for all message header related Java DSL functionalities.
          * @return
          */
-        public static MessageBodySupport body() {
-            return new MessageBodySupport();
-        }
-
-        public DelegatingPayloadVariableExtractor.Builder extract() {
-            return new DelegatingPayloadVariableExtractor.Builder();
+        public static DelegatingPayloadVariableExtractor.Builder fromBody() {
+            return DelegatingPayloadVariableExtractor.Builder.fromBody();
         }
     }
 }
