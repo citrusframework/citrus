@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusInstanceManager;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
@@ -47,8 +48,10 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * JUnit5 extension adding {@link TestCaseRunner} support as well as Citrus annotation based resource injection
@@ -65,17 +68,13 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallback, BeforeTestExecutionCallback,
         AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler {
 
-    private static Citrus citrus;
+    private Citrus citrus;
+    private ApplicationContext applicationContext;
     private final CitrusExtension delegate = new CitrusExtension();
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-        if (CitrusExtensionHelper.requiresCitrus(extensionContext)) {
-            CitrusExtensionHelper.setCitrus(getCitrus(), extensionContext);
-        } else {
-            citrus = CitrusExtensionHelper.getCitrus(extensionContext);
-        }
-
+        CitrusExtensionHelper.setCitrus(getCitrus(extensionContext), extensionContext);
         delegate.beforeAll(extensionContext);
     }
 
@@ -103,6 +102,8 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
 
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) {
+        CitrusExtensionHelper.setCitrus(getCitrus(extensionContext), extensionContext);
+
         if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
             CitrusExtensionHelper.getCitrus(extensionContext).run(XmlTestHelper.getXmlTestCase(extensionContext),
                     CitrusExtensionHelper.getTestContext(extensionContext));
@@ -136,9 +137,19 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
         return delegate.resolveParameter(parameterContext, extensionContext);
     }
 
-    protected Citrus getCitrus() {
-        if (citrus == null) {
-            citrus = Citrus.newInstance(CitrusSpringContext.create());
+    /**
+     * Create Citrus instance if not set already. Use SpringExtension to load application context.
+     * @param extensionContext
+     * @return
+     */
+    protected Citrus getCitrus(ExtensionContext extensionContext) {
+        ApplicationContext ctx = SpringExtension.getApplicationContext(extensionContext);
+        if (applicationContext == null) {
+            applicationContext = ctx;
+            citrus = Citrus.newInstance(CitrusSpringContext.create(ctx));
+        } else if (!applicationContext.equals(ctx)) {
+            applicationContext = ctx;
+            citrus = Citrus.newInstance(CitrusSpringContext.create(ctx));
         }
 
         return citrus;
@@ -167,8 +178,8 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
 
                         String testName = FileUtils.getBaseName(fileResource.getFilename());
 
-                        XmlTestLoader testLoader = new XmlTestLoader(DynamicTest.class, testName, filePath, citrus.getCitrusContext());
-                        tests.add(DynamicTest.dynamicTest(testName, () -> citrus.run(testLoader.load())));
+                        XmlTestLoader testLoader = new XmlTestLoader(DynamicTest.class, testName, filePath, CitrusInstanceManager.getOrDefault().getCitrusContext());
+                        tests.add(DynamicTest.dynamicTest(testName, () -> CitrusInstanceManager.getOrDefault().run(testLoader.load())));
                     }
                 }
             } catch (IOException e) {
@@ -187,8 +198,8 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
      */
     public static Stream<DynamicTest> dynamicTests(String packageName, String ... testNames) {
         return Stream.of(testNames).map(testName -> {
-            XmlTestLoader testLoader = new XmlTestLoader(DynamicTest.class, testName, packageName, citrus.getCitrusContext());
-            return DynamicTest.dynamicTest(testName, () -> citrus.run(testLoader.load()));
+            XmlTestLoader testLoader = new XmlTestLoader(DynamicTest.class, testName, packageName, CitrusInstanceManager.getOrDefault().getCitrusContext());
+            return DynamicTest.dynamicTest(testName, () -> CitrusInstanceManager.getOrDefault().run(testLoader.load()));
         });
     }
 
@@ -199,8 +210,8 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
      */
     public static Stream<DynamicTest> dynamicTests(Class<?> testClass, String ... testNames) {
         return Stream.of(testNames).map(testName -> {
-            XmlTestLoader testLoader = new XmlTestLoader(DynamicTest.class, testName, testClass.getPackage().getName(), citrus.getCitrusContext());
-            return DynamicTest.dynamicTest(testName, () -> citrus.run(testLoader.load()));
+            XmlTestLoader testLoader = new XmlTestLoader(DynamicTest.class, testName, testClass.getPackage().getName(), CitrusInstanceManager.getOrDefault().getCitrusContext());
+            return DynamicTest.dynamicTest(testName, () -> CitrusInstanceManager.getOrDefault().run(testLoader.load()));
         });
     }
 
@@ -211,7 +222,7 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
      * @return
      */
     public static DynamicTest dynamicTest(String packageName, String testName) {
-        XmlTestLoader testLoader = new XmlTestLoader(DynamicTest.class, testName, packageName, citrus.getCitrusContext());
-        return DynamicTest.dynamicTest(testName, () -> citrus.run(testLoader.load()));
+        XmlTestLoader testLoader = new XmlTestLoader(DynamicTest.class, testName, packageName, CitrusInstanceManager.getOrDefault().getCitrusContext());
+        return DynamicTest.dynamicTest(testName, () -> CitrusInstanceManager.getOrDefault().run(testLoader.load()));
     }
 }

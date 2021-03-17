@@ -20,16 +20,15 @@ import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.junit.jupiter.CitrusExtension;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusExtension.class)
+@CitrusSupport
 public class ContextInjectionJUnit5IT {
 
     @CitrusResource

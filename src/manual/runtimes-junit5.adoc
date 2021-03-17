@@ -19,10 +19,10 @@ project.
 </dependency>
 ----
 
-[[junit5-tests]]
-=== JUnit5 tests
+[[junit5-citrus-support]]
+=== Citrus extension
 
-You can use the Citrus JUnit5 extension on your unit test as follows:
+You can use the Citrus JUnit5 extension on your test as follows:
 
 .JUnit5 Citrus test
 [source,java]
@@ -31,11 +31,11 @@ package com.consol.citrus.samples;
 
 import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.junit.jupiter.CitrusExtension;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-@ExtendWith(CitrusExtension.class)
+@CitrusSupport
 public class Simple_IT {
 
     @Test
@@ -54,18 +54,21 @@ public class Simple_IT {
 }
 ----
 
-The class above is using the JUnit5 `@Test` annotation as a normal unit test would do. In addition to that we extend with
-the `CitrusExtension`. This enables us to use the `@CitrusTest` annotation on the test and adds support for the parameter injection
-for the `TestActionRunner`.
+The class above is using the JUnit5 `@Test` annotation as a normal unit test would do. The `@CitrusSupport` annotation marks
+the test to use the Citrus JUnit5 extension. This enables us to use the `@CitrusTest` annotation on the test and adds
+support for the parameter injection for the `TestActionRunner`.
+
+TIP: You can use the `@CitrusSupport` annotation, or you can use the classic `@ExtendWith(CitrusExtension.class)` annotation
+to enable the Citrus support for JUnit5.
 
 The Citrus Java DSL runner is the entrance to the Java fluent API provided by Citrus. The sample above uses the Gherkin test runner
-variation for leveraging the Behavior Driven Behavior style Given-When-Then syntax.
+variation for leveraging the BDD (Behavior Driven Development) style Given-When-Then syntax.
 
 You can also inject the current `TestContext` in order to get access to the current test variables used by Citrus.
 
 NOTE: You can also combine Citrus with the Spring framework and its dependency injection and IoC capabilities. In order to
-enable Spring support in Citrus add the `citrus-spring` module to your project and use the `CitrusSpringExtension` extension.
-With the Spring support in Citrus the test is able to load components via the Spring application context.
+enable Spring support in Citrus add the `citrus-spring` module to your project and use the `@ExtendsWith(CitrusSpringExtension.class)`
+annotation. With the Spring support in Citrus the test is able to load components via the Spring application context.
 
 [[junit5-endpoint-injection]]
 === Endpoint injection
@@ -80,13 +83,13 @@ package com.consol.citrus.samples;
 
 import com.consol.citrus.annotations.*;
 import com.consol.citrus.GherkinTestActionRunner;
-import com.consol.citrus.junit.jupiter.CitrusExtension;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
 import com.consol.citrus.http.client.HttpClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpStatus;
 
-@ExtendWith(CitrusExtension.class)
+@CitrusSupport
 public class Simple_IT {
 
     @CitrusEndpoint
@@ -105,3 +108,45 @@ public class Simple_IT {
     }
 }
 ----
+
+[[junit5-citrus-spring-support]]
+=== Citrus Spring extension
+
+Spring is a famous dependency injection framework that also provides support for JUnit5. Citrus is able to load its
+components as Spring beans in an application context. The Citrus JUnit5 extension works great with the Spring extension.
+
+The Spring extension loads the application context and Citrus adds all components to the Spring bean configuration.
+
+.JUnit5 Citrus Spring test
+[source, java]
+----
+@CitrusSpringSupport
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public class SpringBean_IT {
+
+    @Autowired
+    private DirectEndpoint direct;
+
+    @Test
+    @CitrusTest
+    void springBeanTest(@CitrusResource TestActionRunner actions) {
+        actions.$(send().endpoint(direct)
+                    .message()
+                    .body("Hello from Citrus!"));
+
+        actions.$(receive().endpoint(direct)
+                    .message()
+                    .body("Hello from Citrus!"));
+    }
+}
+----
+
+The test now uses the `@CitrusSpringSupport` annotation which combines the `@ExtendsWith(CitrusSpringExtension.class)`
+and `@ExtendsWith(SpringExtension.class)` annotation. This way the test combines the Spring application context management with
+the Citrus Java DSL functionality.
+
+You can load Spring beans with `@Autowired` into your test. Also you can use the `@CitrusResource` annotations to inject
+the test action runner fluent Java API.
+
+TIP: The Spring application context should use the basic `CitrusSpringConfig` configuration class to load all Citrus
+components as Spring beans. You can customize the Spring application context by adding more configuration classes.

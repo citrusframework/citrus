@@ -27,10 +27,9 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfig;
 import com.consol.citrus.functions.Functions;
-import com.consol.citrus.junit.jupiter.CitrusExtension;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static com.consol.citrus.DefaultTestActionBuilder.action;
 import static com.consol.citrus.actions.CreateVariablesAction.Builder.createVariable;
@@ -39,7 +38,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusExtension.class)
+@CitrusSupport
 public class ResourceInjectionJUnit5IT {
 
     @CitrusFramework
