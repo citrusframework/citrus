@@ -46,7 +46,7 @@ public BinaryMessageValidator defaultBinaryMessageValidator() {
 You can use the binary message type in a receive action in order to enable this stream comparison during validation.
 
 .Java
-[source,java]
+[source,java,indent=0,role="primary"]
 ----
 .receive("someEndpoint")
     .message(new DefaultMessage(FileCopyUtils.copyToByteArray(new ClassPathResource("templates/foo.png").getFile())))

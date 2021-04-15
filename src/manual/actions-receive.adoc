@@ -215,8 +215,8 @@ Now lets continue with message header validation.
 Message headers are used widely in enterprise messaging. The message headers are part of the message semantics and need
 to be validated, too. Citrus can validate message header by name and value.
 
-.Java DSL designer
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 receive("helloService")
     .message()
@@ -227,7 +227,7 @@ receive("helloService")
 ----
 
 .XML
-[source,xml]
+[source,xml,indent=0,role="secondary"]
 ----
 <receive endpoint="helloService">
     <message>

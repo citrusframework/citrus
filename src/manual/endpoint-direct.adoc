@@ -245,7 +245,6 @@ then(send("helloSyncEndpoint")
 
 A queue can hold multiple messages at the same time. Usually you receive messages using first-in-first-out pattern. Message
 selectors enable you to select messages form that queue so you can pick messages form a queue based on a selector evaluation.
-Message selectors are described in link:#message-selectors[message-selector].
 
 Citrus introduces a special queue message queue implementation that support message selectors.
 
@@ -265,12 +264,12 @@ public MessageSelectingQueueChannel helloChannel() {
 ----
 
 We can add a capacity attribute for this queue. A receive test action makes use of message selectors on header values as described
-in link:#message-selectors[message-selector].
+in link:#receive-message-selectors[message-selector].
 
 In addition to that we have implemented other message filter possibilities on message queues that we discuss in the next
 sections.
 
-[[payload-matching-message-selector]]
+[[payload-matching-message-queue-selector]]
 == Payload matching selector
 
 You can select messages based on the payload content. Either you define the expected payload as an exact match in the selector
@@ -339,7 +338,7 @@ when(receive("orderChannelEndpoint")
 </selector>
 ----
 
-[[root-qname-message-selector]]
+[[root-qname-message-queue-selector]]
 == Root QName selector
 
 As a special payload matching selector you can use the XML root QName of your message as selection criteria when dealing
@@ -429,7 +428,7 @@ when(receive("orderChannelEndpoint")
 </selector>
 ----
 
-[[xpath-message-selector]]
+[[xpath-message-queue-selector]]
 == Xpath selector
 
 It is also possible to evaluate some XPath expression on the message payload in order to select a message from a message
@@ -514,7 +513,7 @@ when(receive("orderChannelEndpoint")
 
 This will match all incoming messages regardless the XML namespace prefix that is used.
 
-[[json-path-message-selector]]
+[[json-path-message-queue-selector]]
 == JsonPath selector
 
 It is also possible to evaluate some JsonPath expression on the message payload in order to select a message from a message
