@@ -21,15 +21,12 @@ import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
+public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
     /** Jdbc server configuration */
     private JdbcServerConfiguration serverConfiguration = new JdbcServerConfiguration();
@@ -55,9 +52,6 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
-
-    /** Spring application context used for method arg object reference evaluation */
-    private ApplicationContext applicationContext;
 
     public MessageCorrelator getCorrelator() {
         return correlator;
@@ -119,15 +113,6 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public void setAutoHandleQueries(String[] autoHandleQueries) {
         this.autoHandleQueries = autoHandleQueries;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
     }
 
     /**

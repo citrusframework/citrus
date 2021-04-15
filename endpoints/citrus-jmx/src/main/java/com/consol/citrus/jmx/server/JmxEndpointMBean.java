@@ -16,18 +16,29 @@
 
 package com.consol.citrus.jmx.server;
 
-import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
-import com.consol.citrus.jmx.model.*;
-import com.consol.citrus.message.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.management.*;
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.DynamicMBean;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ReflectionException;
 import javax.xml.transform.Source;
 import java.util.List;
 import java.util.Map;
+
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
+import com.consol.citrus.jmx.model.ManagedBeanDefinition;
+import com.consol.citrus.jmx.model.ManagedBeanInvocation;
+import com.consol.citrus.jmx.model.ManagedBeanResult;
+import com.consol.citrus.jmx.model.OperationParam;
+import com.consol.citrus.message.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Managed bean implementation based on standard mbean implementation. This managed bean delegates incoming requests for operation calls and
@@ -175,7 +186,7 @@ public class JmxEndpointMBean implements DynamicMBean {
         }
 
         if (serviceResult != null) {
-            return serviceResult.getResultObject(endpointConfiguration.getApplicationContext());
+            return serviceResult.getResultObject(endpointConfiguration.getReferenceResolver());
         } else {
             return null;
         }

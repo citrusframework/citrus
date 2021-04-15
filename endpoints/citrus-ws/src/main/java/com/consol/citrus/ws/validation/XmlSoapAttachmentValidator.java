@@ -23,14 +23,13 @@ import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * Soap attachment validator delegating attachment content validation to a {@link MessageValidator}.
@@ -38,17 +37,17 @@ import org.springframework.context.ApplicationContextAware;
  *
  * @author Christoph Deppisch
  */
-public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator implements ApplicationContextAware {
+public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator implements ReferenceResolverAware {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
 
     private TestContextFactory testContextFactory;
 
     /** Xml message validator */
     private MessageValidator<? extends ValidationContext> messageValidator;
 
-    private ApplicationContext applicationContext;
+    private ReferenceResolver referenceResolver;
 
     public static final String DEFAULT_XML_MESSAGE_VALIDATOR = "defaultXmlMessageValidator";
 
@@ -60,8 +59,8 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
 
     private TestContextFactory getTestContextFactory() {
 	    if (testContextFactory == null) {
-            if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactoryBean.class).isEmpty()) {
-                testContextFactory = applicationContext.getBean(TestContextFactoryBean.class);
+            if (referenceResolver != null && referenceResolver.isResolvable(TestContextFactoryBean.class)) {
+                testContextFactory = referenceResolver.resolve(TestContextFactoryBean.class);
             } else {
                 testContextFactory = TestContextFactory.newInstance();
             }
@@ -78,15 +77,15 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
         // try to find xml message validator in registry
         Optional<MessageValidator<? extends ValidationContext>> defaultMessageValidator = getTestContextFactory().getMessageValidatorRegistry().findMessageValidator(DEFAULT_XML_MESSAGE_VALIDATOR);
 
-        if (!defaultMessageValidator.isPresent()) {
+        if (defaultMessageValidator.isEmpty()) {
             try {
                 defaultMessageValidator = Optional.of(getTestContextFactory().getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
             } catch (CitrusRuntimeException e) {
-                log.warn("Unable to find default XML message validator in message validator registry");
+                LOG.warn("Unable to find default XML message validator in message validator registry");
             }
         }
 
-	    if (!defaultMessageValidator.isPresent()) {
+	    if (defaultMessageValidator.isEmpty()) {
             // try to find xml message validator via resource path lookup
             defaultMessageValidator = MessageValidator.lookup("xml");
         }
@@ -100,7 +99,7 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }

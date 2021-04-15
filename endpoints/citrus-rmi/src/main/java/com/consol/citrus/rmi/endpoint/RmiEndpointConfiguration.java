@@ -25,16 +25,15 @@ import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.rmi.message.RmiMessageConverter;
 import com.consol.citrus.rmi.model.RmiMarshaller;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class RmiEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
+public class RmiEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ReferenceResolverAware {
 
     /** Rmi server url */
     private String serverUrl;
@@ -58,8 +57,8 @@ public class RmiEndpointConfiguration extends AbstractPollableEndpointConfigurat
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
 
-    /** Spring application context used for method arg object reference evaluation */
-    private ApplicationContext applicationContext;
+    /** Reference resolver used for method arg object reference evaluation */
+    private ReferenceResolver referenceResolver;
 
     /**
      * Gets the RMI registry based on host and port settings in this configuration.
@@ -143,12 +142,12 @@ public class RmiEndpointConfiguration extends AbstractPollableEndpointConfigurat
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
+    public ReferenceResolver getReferenceResolver() {
+        return referenceResolver;
     }
 
     public RmiMarshaller getMarshaller() {

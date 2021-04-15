@@ -16,16 +16,24 @@
 
 package com.consol.citrus.jmx.model;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.beans.SimpleTypeConverter;
-import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
-
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ReferenceResolver;
+import org.springframework.beans.ConversionNotSupportedException;
+import org.springframework.beans.SimpleTypeConverter;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -69,7 +77,7 @@ public class ManagedBeanResult {
      * Gets this service result as object casted to target type if necessary.
      * @return
      */
-    public java.lang.Object getResultObject(ApplicationContext applicationContext) {
+    public java.lang.Object getResultObject(ReferenceResolver referenceResolver) {
         if (object == null) {
             return null;
         }
@@ -79,13 +87,13 @@ public class ManagedBeanResult {
         }
 
         try {
-            Class argType = Class.forName(object.getType());
+            Class<?> argType = Class.forName(object.getType());
             java.lang.Object value = null;
 
             if (object.getValue() != null) {
                 value = object.getValue();
-            } else if (StringUtils.hasText(object.getRef()) && applicationContext != null) {
-                value = applicationContext.getBean(object.getRef());
+            } else if (StringUtils.hasText(object.getRef()) && referenceResolver != null) {
+                value = referenceResolver.resolve(object.getRef());
             }
 
             if (value == null) {

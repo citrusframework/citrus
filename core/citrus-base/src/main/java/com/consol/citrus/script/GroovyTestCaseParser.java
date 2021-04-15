@@ -16,40 +16,40 @@
 
 package com.consol.citrus.script;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
-
-import java.io.*;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * Class parsing a groovy script to create a test case instance.
  * @author Christoph Deppisch
  * @since 2009
  */
-public final class GroovyTestCaseParser implements ApplicationContextAware {
+public final class GroovyTestCaseParser implements ReferenceResolverAware {
 
-    /** Application context */
-    private ApplicationContext applicationContext;
+    /** Reference resolver */
+    private ReferenceResolver referenceResolver;
 
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(GroovyTestCaseParser.class);
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(GroovyTestCaseParser.class);
 
     /** Builds a test case using the application context and test context */
     public interface TestCaseBuilder {
-        TestCase build(ApplicationContext applicationContext);
+        TestCase build(ReferenceResolver referenceResolver);
     }
 
     /**
@@ -93,17 +93,11 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
             groovyObject = (GroovyObject) groovyClass.newInstance();
 
             if (groovyObject instanceof TestCaseBuilder) {
-                return ((TestCaseBuilder)groovyObject).build(applicationContext);
+                return ((TestCaseBuilder)groovyObject).build(referenceResolver);
             } else {
                 throw new CitrusRuntimeException("Unable to parse groovy script. Script must implement TestCaseRunner.");
             }
-        } catch (InstantiationException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (CompilationFailedException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IOException e) {
+        } catch (InstantiationException | IllegalAccessException | CompilationFailedException | IOException e) {
             throw new CitrusRuntimeException(e);
         } finally {
             try {
@@ -111,7 +105,7 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
                     templateReader.close();
                 }
             } catch (IOException e) {
-                log.error("Failed to close stream for groovy template resource", e);
+                LOG.error("Failed to close stream for groovy template resource", e);
             }
 
             try {
@@ -119,16 +113,13 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
                     bodyReader.close();
                 }
             } catch (IOException e) {
-                log.error("Failed to close stream for groovy script resource", e);
+                LOG.error("Failed to close stream for groovy script resource", e);
             }
         }
     }
 
-    /**
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
-     */
-    public void setApplicationContext(ApplicationContext applicationContext)
-            throws BeansException {
-        this.applicationContext = applicationContext;
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }

@@ -26,16 +26,15 @@ import com.consol.citrus.jmx.message.JmxMessageConverter;
 import com.consol.citrus.jmx.model.JmxMarshaller;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ApplicationContextAware {
+public class JmxEndpointConfiguration extends AbstractPollableEndpointConfiguration implements ReferenceResolverAware {
 
     /** MBean server url, by default connect to platform MBean server */
     private String serverUrl;
@@ -74,8 +73,8 @@ public class JmxEndpointConfiguration extends AbstractPollableEndpointConfigurat
     /** JMX server environment properties */
     private Map<String, Object> environmentProperties = new HashMap<>();
 
-    /** Spring application context used for method arg object reference evaluation */
-    private ApplicationContext applicationContext;
+    /** Reference resolver used for method arg object reference evaluation */
+    private ReferenceResolver referenceResolver;
 
     /**
      * Gets the value of the protocol property.
@@ -348,11 +347,11 @@ public class JmxEndpointConfiguration extends AbstractPollableEndpointConfigurat
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
+    public ReferenceResolver getReferenceResolver() {
+        return referenceResolver;
     }
 }
