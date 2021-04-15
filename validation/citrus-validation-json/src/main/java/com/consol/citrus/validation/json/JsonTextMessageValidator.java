@@ -26,6 +26,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonSchemaRepository;
+import com.consol.citrus.json.JsonSettings;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.MessageUtils;
@@ -40,9 +41,6 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -58,25 +56,16 @@ import org.springframework.util.StringUtils;
  *
  * @author Christoph Deppisch
  */
-public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessageValidationContext> implements ApplicationContextAware {
+public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessageValidationContext> {
 
     /** Should also check exact amount of object fields */
-    private boolean strict;
+    private boolean strict = JsonSettings.isStrict();
 
-    /** Root application context this validator is defined in */
-    private ApplicationContext applicationContext;
+    /** Permissive mode to use on the Json parser */
+    private int permissiveMode = JsonSettings.getPermissiveMoe();
 
     /** Schema validator */
     private JsonSchemaValidation jsonSchemaValidation = new JsonSchemaValidation();
-
-    /**
-     * Default constructor.
-     */
-    public JsonTextMessageValidator() {
-        strict = Boolean.parseBoolean(
-                System.getProperty("citrus.json.message.validation.strict", System.getenv("CITRUS_JSON_MESSAGE_VALIDATION_STRICT") != null ?
-                        System.getenv("CITRUS_JSON_MESSAGE_VALIDATION_STRICT") : "true"));
-    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -110,7 +99,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                 		"expected message contents, but received empty message!");
             }
 
-            JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
+            JSONParser parser = new JSONParser(permissiveMode);
 
             Object receivedJson = parser.parse(receivedJsonText);
             ReadContext readContext = JsonPath.parse(receivedJson);
@@ -349,14 +338,38 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the json schema validation.
+     * @param jsonSchemaValidation
      */
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
     void setJsonSchemaValidation(JsonSchemaValidation jsonSchemaValidation) {
         this.jsonSchemaValidation = jsonSchemaValidation;
+    }
+
+    /**
+     * Sets the json schema validation.
+     * @param jsonSchemaValidation
+     * @return this object for chaining
+     */
+    public JsonTextMessageValidator jsonSchemaValidation(JsonSchemaValidation jsonSchemaValidation) {
+        setJsonSchemaValidation(jsonSchemaValidation);
+        return this;
+    }
+
+    /**
+     * Sets the permissive mode.
+     * @param permissiveMode
+     */
+    public void setPermissiveMode(int permissiveMode) {
+        this.permissiveMode = permissiveMode;
+    }
+
+    /**
+     * Sets the permissive mode
+     * @param permissiveMode
+     * @return this object for chaining
+     */
+    public JsonTextMessageValidator permissiveMode(int permissiveMode) {
+        setPermissiveMode(permissiveMode);
+        return this;
     }
 }

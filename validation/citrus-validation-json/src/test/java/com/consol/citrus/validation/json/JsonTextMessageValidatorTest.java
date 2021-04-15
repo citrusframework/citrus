@@ -32,6 +32,7 @@ import com.consol.citrus.validation.json.report.GraciousProcessingReport;
 import com.consol.citrus.validation.json.schema.JsonSchemaValidation;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -48,7 +49,7 @@ import static org.mockito.Mockito.when;
  */
 public class JsonTextMessageValidatorTest extends UnitTestSupport {
 
-    private JsonTextMessageValidator validator = new JsonTextMessageValidator();
+    private final JsonTextMessageValidator validator = new JsonTextMessageValidator();
 
     @Test
     public void testJsonValidation() {
@@ -465,5 +466,31 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
         validationContexts.add(new JsonMessageValidationContext());
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
+    }
+
+    @Test
+    public void testPermissiveModeSimple() {
+        JsonTextMessageValidator validator = new JsonTextMessageValidator();
+
+        validator.setPermissiveMode(JSONParser.MODE_JSON_SIMPLE);
+
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\",, \"index\":5, \"id\":\"x123456789x\",}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to parse JSON text")
+    public void testPermissiveModeStrict() {
+        JsonTextMessageValidator validator = new JsonTextMessageValidator();
+
+        validator.setPermissiveMode(JSONParser.MODE_RFC4627);
+
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\",, \"index\":5, \"id\":\"x123456789x\",}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
+        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 }
