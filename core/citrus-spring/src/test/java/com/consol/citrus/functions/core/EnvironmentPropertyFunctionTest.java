@@ -1,11 +1,14 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2021 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,17 +19,19 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.functions.DefaultFunctionLibrary;
+import com.consol.citrus.functions.Function;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.core.env.Environment;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 import static org.mockito.Mockito.when;
 
@@ -63,5 +68,13 @@ public class EnvironmentPropertyFunctionTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.emptyList(), context);
+    }
+
+    @Test
+    public void shouldLookupFunction() {
+        Assert.assertTrue(Function.lookup().containsKey("env"));
+        Assert.assertEquals(Function.lookup().get("env").getClass(), EnvironmentPropertyFunction.class);
+
+        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("env").getClass(), EnvironmentPropertyFunction.class);
     }
 }

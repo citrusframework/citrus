@@ -19,6 +19,8 @@ package com.consol.citrus.functions.core;
 import java.util.Collections;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.functions.DefaultFunctionLibrary;
+import com.consol.citrus.functions.Function;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -29,16 +31,23 @@ import org.testng.annotations.Test;
 public class EscapeXmlFunctionTest extends AbstractTestNGUnitTest {
     EscapeXmlFunction function = new EscapeXmlFunction();
 
-    private String xmlFragment = "<foo><bar>Yes, I like Citrus!</bar></foo>";
-    private String escapedXml = "&lt;foo&gt;&lt;bar&gt;Yes, I like Citrus!&lt;/bar&gt;&lt;/foo&gt;";
-
     @Test
     public void testFunction() {
+        String xmlFragment = "<foo><bar>Yes, I like Citrus!</bar></foo>";
+        String escapedXml = "&lt;foo&gt;&lt;bar&gt;Yes, I like Citrus!&lt;/bar&gt;&lt;/foo&gt;";
         Assert.assertEquals(function.execute(Collections.singletonList(xmlFragment), context), escapedXml);
     }
 
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);
+    }
+
+    @Test
+    public void shouldLookupFunction() {
+        Assert.assertTrue(Function.lookup().containsKey("escapeXml"));
+        Assert.assertEquals(Function.lookup().get("escapeXml").getClass(), EscapeXmlFunction.class);
+
+        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("escapeXml").getClass(), EscapeXmlFunction.class);
     }
 }

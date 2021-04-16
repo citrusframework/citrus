@@ -16,20 +16,26 @@
 
 package com.consol.citrus.main.scan;
 
-import com.consol.citrus.TestClass;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.type.ClassMetadata;
-import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
-import org.springframework.util.ReflectionUtils;
-
+import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+
+import com.consol.citrus.TestClass;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.type.ClassMetadata;
+import org.springframework.core.type.classreading.MetadataReader;
+import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * @author Christoph Deppisch
@@ -38,7 +44,7 @@ import java.util.stream.Collectors;
 public class ClassPathTestScanner extends AbstractTestScanner {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ClassPathTestScanner.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClassPathTestScanner.class);
 
     /** Test annotation marking test classes and methods */
     private final Class<? extends Annotation> annotationType;
@@ -54,35 +60,52 @@ public class ClassPathTestScanner extends AbstractTestScanner {
 
     @Override
     public List<TestClass> findTestsInPackage(String packageName) {
-        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-        provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
-            @Override
-            protected boolean match(ClassMetadata metadata) {
-                if (!isIncluded(metadata.getClassName())) {
-                    return false;
+        try {
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+
+            String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
+                    ClassUtils.convertClassNameToResourcePath(packageName) + "/**/*.class";
+
+            Resource[] resources = resolver.getResources(packageSearchPath);
+
+            List<String> classes = new ArrayList<>();
+            for (Resource resource : resources) {
+                if (!resource.isReadable()) {
+                    continue;
                 }
 
-                try {
-                    Class<?> clazz = Class.forName(metadata.getClassName());
-                    if (clazz.isAnnotationPresent(annotationType)) {
-                        return true;
-                    }
-
-                    AtomicBoolean hasTestMethod = new AtomicBoolean(false);
-                    ReflectionUtils.doWithMethods(clazz, method -> hasTestMethod.set(true), method -> AnnotationUtils.findAnnotation(method, annotationType) != null);
-                    return hasTestMethod.get();
-                } catch (NoClassDefFoundError | ClassNotFoundException e) {
-                    log.warn("Unable to access class: " + metadata.getClassName());
-                    return false;
+                MetadataReader metadataReader = new SimpleMetadataReaderFactory().getMetadataReader(resource);
+                if (isIncluded(metadataReader.getClassMetadata())) {
+                    classes.add(metadataReader.getClassMetadata().getClassName());
                 }
             }
-        });
 
-        return provider.findCandidateComponents(packageName)
-                .stream()
-                .map(BeanDefinition::getBeanClassName)
-                .distinct()
-                .map(TestClass::new)
-                .collect(Collectors.toList());
+            return classes.stream()
+                    .distinct()
+                    .map(TestClass::new)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(String.format("Failed to scan classpath package '%s'", packageName), e);
+        }
+    }
+
+    protected boolean isIncluded(ClassMetadata metadata) {
+        if (!isIncluded(metadata.getClassName())) {
+            return false;
+        }
+
+        try {
+            Class<?> clazz = Class.forName(metadata.getClassName());
+            if (clazz.isAnnotationPresent(annotationType)) {
+                return true;
+            }
+
+            AtomicBoolean hasTestMethod = new AtomicBoolean(false);
+            ReflectionUtils.doWithMethods(clazz, method -> hasTestMethod.set(true), method -> AnnotationUtils.findAnnotation(method, annotationType) != null);
+            return hasTestMethod.get();
+        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+            LOG.warn("Unable to access class: " + metadata.getClassName());
+            return false;
+        }
     }
 }

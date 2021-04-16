@@ -23,18 +23,16 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.AbstractTestActionBuilder;
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.util.StringUtils;
 
 /**
@@ -154,11 +152,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
      * @return the Endpoint object
      */
     protected Endpoint resolveEndpointName(String endpointName) {
-        try {
-            return referenceResolver.resolve(endpointName, Endpoint.class);
-        } catch (BeansException e) {
-            throw new CitrusRuntimeException(String.format("Unable to resolve endpoint for name '%s'", endpointName), e);
-        }
+        return referenceResolver.resolve(endpointName, Endpoint.class);
     }
 
     /**

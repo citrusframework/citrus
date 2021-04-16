@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.DefaultFunctionLibrary;
+import com.consol.citrus.functions.Function;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,10 +32,9 @@ import org.testng.annotations.Test;
  */
 public class XpathFunctionTest extends AbstractTestNGUnitTest {
 
-    private XpathFunction function = new XpathFunction();
+    private final XpathFunction function = new XpathFunction();
 
-    private String xmlSource = "<person><name>Sheldon</name><age>29</age></person>";
-    private String xmlSourceNamespace = "<person xmlns=\"http://citrus.sample.org/person\"><name>Sheldon</name><age>29</age></person>";
+    private final String xmlSource = "<person><name>Sheldon</name><age>29</age></person>";
 
     @Test
     public void testExecuteXpath() throws Exception {
@@ -46,6 +47,7 @@ public class XpathFunctionTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecuteXpathWithNamespaces() throws Exception {
         List<String> parameters = new ArrayList<>();
+        String xmlSourceNamespace = "<person xmlns=\"http://citrus.sample.org/person\"><name>Sheldon</name><age>29</age></person>";
         parameters.add(xmlSourceNamespace);
         parameters.add("/p:person/p:name");
 
@@ -60,5 +62,13 @@ public class XpathFunctionTest extends AbstractTestNGUnitTest {
         parameters.add(xmlSource);
         parameters.add("/person/unknown");
         function.execute(parameters, context);
+    }
+
+    @Test
+    public void shouldLookupFunction() {
+        Assert.assertTrue(Function.lookup().containsKey("xpath"));
+        Assert.assertEquals(Function.lookup().get("xpath").getClass(), XpathFunction.class);
+
+        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("xpath").getClass(), XpathFunction.class);
     }
 }

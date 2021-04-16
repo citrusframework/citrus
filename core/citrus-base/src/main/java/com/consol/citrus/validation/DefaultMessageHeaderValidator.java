@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.validation.context.HeaderValidationContext;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -84,7 +84,7 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Head
                                 .map(beanName -> {
                                     try {
                                         return context.getReferenceResolver().resolve(beanName, HeaderValidator.class);
-                                    } catch (NoSuchBeanDefinitionException e) {
+                                    } catch (CitrusRuntimeException e) {
                                         log.warn("Failed to resolve header validator for name: " + beanName);
                                         return null;
                                     }

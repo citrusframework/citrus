@@ -9,7 +9,6 @@ import com.consol.citrus.functions.core.CurrentDateFunction;
 import com.consol.citrus.functions.core.DecodeBase64Function;
 import com.consol.citrus.functions.core.DigestAuthHeaderFunction;
 import com.consol.citrus.functions.core.EncodeBase64Function;
-import com.consol.citrus.functions.core.EnvironmentPropertyFunction;
 import com.consol.citrus.functions.core.FloorFunction;
 import com.consol.citrus.functions.core.LoadMessageFunction;
 import com.consol.citrus.functions.core.LocalHostAddressFunction;
@@ -41,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultFunctionLibrary extends FunctionLibrary {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DefaultFunctionLibrary.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultFunctionLibrary.class);
 
     /**
      * Default constructor adding default function implementations.
@@ -80,7 +79,6 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
         getMembers().put("readFile", new ReadFileResourceFunction());
         getMembers().put("message", new LoadMessageFunction());
         getMembers().put("systemProperty", new SystemPropertyFunction());
-        getMembers().put("env", new EnvironmentPropertyFunction());
 
         lookupFunctions();
     }
@@ -91,8 +89,8 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
     private void lookupFunctions() {
         Function.lookup().forEach((k, m) -> {
             getMembers().put(k, m);
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Register function '%s' as %s", k, m.getClass()));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(String.format("Register function '%s' as %s", k, m.getClass()));
             }
         });
     }

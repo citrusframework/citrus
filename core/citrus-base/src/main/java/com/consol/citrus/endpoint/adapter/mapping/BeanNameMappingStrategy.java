@@ -16,10 +16,8 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import com.consol.citrus.spi.ReferenceResolver;
 
 /**
  * Endpoint adapter mapping strategy uses bean reference resolver and tries to find appropriate endpoint adapter
@@ -44,11 +42,6 @@ public class BeanNameMappingStrategy implements EndpointAdapterMappingStrategy {
 
     @Override
     public EndpointAdapter getEndpointAdapter(String mappingKey) {
-        try {
-            return referenceResolver.resolve(mappingKey, EndpointAdapter.class);
-        } catch (NoSuchBeanDefinitionException e) {
-            throw new CitrusRuntimeException("Unable to find matching endpoint adapter with bean name '" +
-                    mappingKey + "' in Spring bean application context", e);
-        }
+        return referenceResolver.resolve(mappingKey, EndpointAdapter.class);
     }
 }

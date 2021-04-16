@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.DefaultFunctionLibrary;
+import com.consol.citrus.functions.Function;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,9 +32,9 @@ import org.testng.annotations.Test;
  */
 public class JsonPathFunctionTest extends AbstractTestNGUnitTest {
 
-    private JsonPathFunction function = new JsonPathFunction();
+    private final JsonPathFunction function = new JsonPathFunction();
 
-    private String jsonSource = "{ \"person\": { \"name\": \"Sheldon\", \"age\": \"29\" } }";
+    private final String jsonSource = "{ \"person\": { \"name\": \"Sheldon\", \"age\": \"29\" } }";
 
     @Test
     public void testExecuteJsonPath() throws Exception {
@@ -56,5 +58,13 @@ public class JsonPathFunctionTest extends AbstractTestNGUnitTest {
         parameters.add(jsonSource);
         parameters.add("$.person.unknown");
         function.execute(parameters, context);
+    }
+
+    @Test
+    public void shouldLookupFunction() {
+        Assert.assertTrue(Function.lookup().containsKey("jsonPath"));
+        Assert.assertEquals(Function.lookup().get("jsonPath").getClass(), JsonPathFunction.class);
+
+        Assert.assertEquals(new DefaultFunctionLibrary().getFunction("jsonPath").getClass(), JsonPathFunction.class);
     }
 }
