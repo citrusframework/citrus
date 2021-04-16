@@ -194,6 +194,11 @@
         <artifactId>citrus-kubernetes</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-sql</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <!-- Tools -->
       <dependency>

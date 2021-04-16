@@ -48,6 +48,7 @@
         <include>com.consol.citrus:citrus-docker</include>
         <include>com.consol.citrus:citrus-selenium</include>
         <include>com.consol.citrus:citrus-kubernetes</include>
+        <include>com.consol.citrus:citrus-sql</include>
 
         <include>com.consol.citrus:citrus-restdocs</include>
         <include>com.consol.citrus:citrus-maven-plugin</include>
@@ -307,6 +308,13 @@
     </fileSet>
     <fileSet>
       <directory>connectors/citrus-kubernetes/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>connectors/citrus-sql/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

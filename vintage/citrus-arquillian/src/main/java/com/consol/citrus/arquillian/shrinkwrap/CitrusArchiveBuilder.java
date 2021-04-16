@@ -121,6 +121,7 @@ public final class CitrusArchiveBuilder {
         vertx();
         docker();
         kubernetes();
+        sql();
         selenium();
         cucumber();
         zookeeper();
@@ -238,6 +239,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder kubernetes() {
         artifactCoordinates.add(getCoordinates("citrus-kubernetes"));
+        return this;
+    }
+
+    /**
+     * Gets the sql Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder sql() {
+        artifactCoordinates.add(getCoordinates("citrus-sql"));
         return this;
     }
 

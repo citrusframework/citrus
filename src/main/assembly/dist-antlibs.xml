@@ -52,6 +52,7 @@
         <include>com.consol.citrus:citrus-docker</include>
         <include>com.consol.citrus:citrus-selenium</include>
         <include>com.consol.citrus:citrus-kubernetes</include>
+        <include>com.consol.citrus:citrus-sql</include>
 
         <include>com.consol.citrus:citrus-restdocs</include>
         <include>com.consol.citrus:citrus-maven-plugin</include>
