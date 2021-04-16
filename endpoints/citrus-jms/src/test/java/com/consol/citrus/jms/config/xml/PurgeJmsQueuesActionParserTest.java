@@ -16,12 +16,12 @@
 
 package com.consol.citrus.jms.config.xml;
 
+import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.testng.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +32,7 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
     public void testPurgeJmsQueuesActionParser() {
         assertActionCount(3);
         assertActionClassAndName(PurgeJmsQueuesAction.class, "purge-queue");
-        
+
         PurgeJmsQueuesAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getReceiveTimeout());
         Assert.assertNotNull(action.getConnectionFactory());
@@ -41,7 +41,7 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
         Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
         Assert.assertEquals(action.getQueueNames().get(1), "JMS.Queue.2");
         Assert.assertEquals(action.getQueueNames().get(2), "JMS.Queue.3");
-        
+
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getReceiveTimeout());
         Assert.assertEquals(action.getReceiveTimeout(), 125);
@@ -51,13 +51,13 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
         Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
         Assert.assertEquals(action.getQueueNames().get(1), "JMS.Queue.2");
         Assert.assertEquals(action.getQueueNames().get(2), "JMS.Queue.3");
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getQueues().size(), 1);
         Assert.assertEquals(action.getQueueNames().size(), 1);
         Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
     }
-    
+
     @Test
     public void testPurgeJmsQueuesActionParserFailed() {
         try {
@@ -66,5 +66,13 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
         } catch (BeanDefinitionStoreException e) {
             Assert.assertTrue(e.getMessage().startsWith("Configuration problem: Attribute 'connection-factory' must not be empty"));
         }
+    }
+
+    @Test
+    public void shouldLookupTestActionParser() {
+        Assert.assertTrue(TestActionRegistry.lookupActionParser().containsKey("purge-jms-queues"));
+        Assert.assertEquals(TestActionRegistry.lookupActionParser().get("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
+
+        Assert.assertEquals(TestActionRegistry.getActionParser("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
     }
 }

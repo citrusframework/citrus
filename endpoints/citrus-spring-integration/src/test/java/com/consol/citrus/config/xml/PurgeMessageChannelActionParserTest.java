@@ -16,12 +16,12 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.PurgeMessageChannelAction;
+import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.testng.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.actions.PurgeMessageChannelAction;
-import com.consol.citrus.testng.AbstractActionParserTest;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +32,7 @@ public class PurgeMessageChannelActionParserTest extends AbstractActionParserTes
     public void testPurgeMessageChannelActionParser() {
         assertActionCount(3);
         assertActionClassAndName(PurgeMessageChannelAction.class, "purge-channel");
-        
+
         PurgeMessageChannelAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getMessageSelector());
         Assert.assertEquals(action.getChannels().size(), 0);
@@ -40,7 +40,7 @@ public class PurgeMessageChannelActionParserTest extends AbstractActionParserTes
         Assert.assertEquals(action.getChannelNames().get(0), "testChannel1");
         Assert.assertEquals(action.getChannelNames().get(1), "testChannel2");
         Assert.assertEquals(action.getChannelNames().get(2), "testChannel3");
-        
+
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getMessageSelector());
         Assert.assertEquals(action.getChannels().size(), 1);
@@ -48,14 +48,14 @@ public class PurgeMessageChannelActionParserTest extends AbstractActionParserTes
         Assert.assertEquals(action.getChannelNames().get(0), "testChannel1");
         Assert.assertEquals(action.getChannelNames().get(1), "testChannel2");
         Assert.assertEquals(action.getChannelNames().get(2), "testChannel3");
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessageSelector(), beanDefinitionContext.getBean("testMessageSelector"));
         Assert.assertEquals(action.getChannels().size(), 1);
         Assert.assertEquals(action.getChannelNames().size(), 1);
         Assert.assertEquals(action.getChannelNames().get(0), "testChannel1");
     }
-    
+
     @Test
     public void testPurgeMessageChannelActionParserFailed() {
         try {
@@ -64,5 +64,13 @@ public class PurgeMessageChannelActionParserTest extends AbstractActionParserTes
         } catch (BeanDefinitionStoreException e) {
             Assert.assertTrue(e.getMessage().endsWith("Element 'channel' must set one of the attributes 'name' or 'ref'"));
         }
+    }
+
+    @Test
+    public void shouldLookupTestActionParser() {
+        Assert.assertTrue(TestActionRegistry.lookupActionParser().containsKey("purge-channel"));
+        Assert.assertEquals(TestActionRegistry.lookupActionParser().get("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
+
+        Assert.assertEquals(TestActionRegistry.getActionParser("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
     }
 }
