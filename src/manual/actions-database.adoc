@@ -5,7 +5,20 @@ In many cases it is necessary to access the database during a test. This enables
 data in a database. It might also be helpful to prepare the database with some test data before running a test. You can do this
 using the two database actions that are described in the following sections.
 
-In general Citrus handles SELECT statements differently to other statements like INSERT, UPDATE and DELETE. When executing a SQL query with
+IMPORTANT: The SQL test actions live in a separate module.
+You need to add the module to your project to use the actions.
+
+.citrus-sql dependency module
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-sql</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+In general Citrus handles SELECT statements differently to other statements like INSERT, UPDATE and DELETE. When executing an SQL query with
 SELECT you are able to add validation steps on the result sets returned from the database. This is not allowed when executing update statements like
 INSERT, UPDATE, DELETE.
 

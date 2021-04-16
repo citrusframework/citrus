@@ -18,6 +18,7 @@
     <module>citrus-docker</module>
     <module>citrus-kubernetes</module>
     <module>citrus-selenium</module>
+    <module>citrus-sql</module>
   </modules>
 
 </project>

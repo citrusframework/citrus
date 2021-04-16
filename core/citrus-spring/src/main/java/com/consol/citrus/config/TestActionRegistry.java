@@ -28,7 +28,6 @@ import com.consol.citrus.config.xml.CatchParser;
 import com.consol.citrus.config.xml.ConditionalParser;
 import com.consol.citrus.config.xml.CreateVariablesActionParser;
 import com.consol.citrus.config.xml.EchoActionParser;
-import com.consol.citrus.config.xml.ExecutePLSQLActionParser;
 import com.consol.citrus.config.xml.FailActionParser;
 import com.consol.citrus.config.xml.GroovyActionParser;
 import com.consol.citrus.config.xml.InputActionParser;
@@ -41,7 +40,6 @@ import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 import com.consol.citrus.config.xml.ReceiveTimeoutActionParser;
 import com.consol.citrus.config.xml.RepeatOnErrorUntilTrueParser;
 import com.consol.citrus.config.xml.RepeatUntilTrueParser;
-import com.consol.citrus.config.xml.SQLActionParser;
 import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.config.xml.SequenceParser;
 import com.consol.citrus.config.xml.SleepActionParser;
@@ -68,7 +66,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 public final class TestActionRegistry {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TestActionRegistry.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestActionRegistry.class);
 
     /** Resource path where to find custom action parsers via lookup */
     private static final String RESOURCE_PATH = "META-INF/citrus/action/parser";
@@ -82,7 +80,6 @@ public final class TestActionRegistry {
     static {
         registerActionParser("send", new SendMessageActionParser());
         registerActionParser("receive", new ReceiveMessageActionParser());
-        registerActionParser("sql", new SQLActionParser());
         registerActionParser("java", new JavaActionParser());
         registerActionParser("sleep", new SleepActionParser());
         registerActionParser("trace-variables", new TraceVariablesActionParser());
@@ -106,7 +103,6 @@ public final class TestActionRegistry {
         registerActionParser("parallel", new ParallelParser());
         registerActionParser("catch", new CatchParser());
         registerActionParser("assert", new AssertParser());
-        registerActionParser("plsql", new ExecutePLSQLActionParser());
         registerActionParser("groovy", new GroovyActionParser());
         registerActionParser("transform", new TransformActionParser());
         registerActionParser("ant", new AntRunActionParser());
@@ -151,10 +147,19 @@ public final class TestActionRegistry {
             try {
                 ACTION_PARSER.put(name, TYPE_RESOLVER.resolve(name));
             } catch (Exception e) {
-                log.warn(String.format("Unable to locate test action parser for '%s'", name), e);
+                LOG.warn(String.format("Unable to locate test action parser for '%s'", name), e);
             }
         }
 
         return ACTION_PARSER.get(name);
+    }
+
+    /**
+     * Resolves all available action parsers from resource path lookup. Scans classpath for meta information
+     * and instantiates those components.
+     * @return map of custom action parsers
+     */
+    public static Map<String, BeanDefinitionParser> lookupActionParser() {
+        return TYPE_RESOLVER.resolveAll();
     }
 }
