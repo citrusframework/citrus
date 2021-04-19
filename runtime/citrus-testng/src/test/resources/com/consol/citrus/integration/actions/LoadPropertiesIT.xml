@@ -32,27 +32,6 @@
       <echo>
         <message>Variables are: ${user}, ${welcomeText}, ${todayDate}</message>
       </echo>
-
-      <echo>
-        <message>Verify variables support (replacement in properties)</message>
-      </echo>
-
-      <groovy>
-        <![CDATA[
-          import com.consol.citrus.*
-          import com.consol.citrus.variable.*
-          import com.consol.citrus.context.TestContext
-          import com.consol.citrus.script.GroovyAction.ScriptExecutor
-          import org.testng.Assert;
-
-          public class GScript implements ScriptExecutor {
-              public void execute(TestContext context) {
-                  Assert.assertEquals("${welcomeText}", "Hello Mr. X")
-                  Assert.assertEquals("${todayDate}", "${checkDate}")
-              }
-          }
-        ]]>
-      </groovy>
     </actions>
   </testcase>
 </spring:beans>

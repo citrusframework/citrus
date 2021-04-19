@@ -1,9 +1,25 @@
 [[actions-groovy]]
 == Groovy script execution
 
-Groovy is an agile dynamic language for the Java Platform. Groovy ships with a lot of very powerful features and fits perfectly with Java as it is based on Java and runs inside the JVM.
+Groovy is an agile dynamic language for the Java Platform.
+Groovy ships with a lot of very powerful features and fits perfectly with Java as it is based on Java and runs inside the JVM.
 
-The Citrus Groovy support might be the entrance for you to write customized test actions. You can easily execute Groovy code inside a test case, just like a normal test action. The whole test context with all variables is available to the Groovy action. This means someone can change variable values or create new variables very easily.
+IMPORTANT: The Groovy test action support lives in a separate module.
+You need to add the module to your project to use the functionality.
+
+.citrus-groovy dependency module
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-groovy</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+The Citrus Groovy support might be the entrance for you to write customized test actions.
+You can easily execute Groovy code inside a test case, just like a normal test action.
+The whole test context with all variables is available to the Groovy action. This means someone can change variable values or create new variables very easily.
 
 Let's have a look at some examples in order to understand the possible Groovy code interactions in Citrus:
 
@@ -33,7 +49,7 @@ Let's have a look at some examples in order to understand the possible Groovy co
 public void groovyTest() {
     groovy("println 'Hello Citrus'");
     groovy("println 'The variable is: ${time}'");
-    
+
     groovy(new ClassPathResource("com/consol/citrus/script/example.groovy"));
 }
 ----
@@ -119,7 +135,7 @@ The next example deals with advanced Groovy code and writing whole classes. We w
         import com.consol.citrus.variable.*
         import com.consol.citrus.context.TestContext
         import com.consol.citrus.script.GroovyAction.ScriptExecutor
-        
+
         public class GScript implements ScriptExecutor {
             public void execute(TestContext context) {
                 println context.getVariable("time")

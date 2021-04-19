@@ -29,7 +29,6 @@ import com.consol.citrus.config.xml.ConditionalParser;
 import com.consol.citrus.config.xml.CreateVariablesActionParser;
 import com.consol.citrus.config.xml.EchoActionParser;
 import com.consol.citrus.config.xml.FailActionParser;
-import com.consol.citrus.config.xml.GroovyActionParser;
 import com.consol.citrus.config.xml.InputActionParser;
 import com.consol.citrus.config.xml.IterateParser;
 import com.consol.citrus.config.xml.JavaActionParser;
@@ -103,7 +102,6 @@ public final class TestActionRegistry {
         registerActionParser("parallel", new ParallelParser());
         registerActionParser("catch", new CatchParser());
         registerActionParser("assert", new AssertParser());
-        registerActionParser("groovy", new GroovyActionParser());
         registerActionParser("transform", new TransformActionParser());
         registerActionParser("ant", new AntRunActionParser());
         registerActionParser("start", new StartServerActionParser());

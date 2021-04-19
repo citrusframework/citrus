@@ -22,7 +22,6 @@ import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 import static com.consol.citrus.actions.LoadPropertiesAction.Builder.load;
-import static com.consol.citrus.script.GroovyAction.Builder.groovy;
 
 /**
  * @author Christoph Deppisch
@@ -32,26 +31,7 @@ public class LoadPropertiesJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void loadPropertiesAction() {
-        variable("checkDate", "citrus:currentDate('yyyy-MM-dd')");
-
         run(load("classpath:com/consol/citrus/integration/actions/load.properties"));
-
-        run(echo("Use variables coming from property file"));
-
         run(echo("Variables are: ${user}, ${welcomeText}, ${todayDate}"));
-
-        run(echo("Verify variables support (replacement in properties)"));
-
-        run(groovy("import com.consol.citrus.*\n" +
-          "import com.consol.citrus.variable.*\n" +
-          "import com.consol.citrus.context.TestContext\n" +
-          "import com.consol.citrus.script.GroovyAction.ScriptExecutor\n" +
-          "import org.testng.Assert;\n" +
-          "public class GScript implements ScriptExecutor {\n" +
-              "public void execute(TestContext context) {\n" +
-                  "Assert.assertEquals(\"${welcomeText}\", \"Hello Mr. X\")\n" +
-                  "Assert.assertEquals(\"${todayDate}\", \"${checkDate}\")\n" +
-              "}\n" +
-          "}\n"));
     }
 }

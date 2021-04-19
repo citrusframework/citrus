@@ -66,6 +66,7 @@ Test execution modules such as JUnit, TestNG and Cucumber representing different
 |citrus-junit5     | Run tests via JUnit5 unit test framework
 |citrus-main       | Run tests via Java main CLI
 |citrus-arquillian | Run Citrus tests with Arquillian framework
+|citrus-groovy     | Run Groovy scripts as part of the test
 |===
 
 - [Endpoint modules](https://github.com/citrusframework/citrus/tree/3.x/endpoints)
@@ -117,6 +118,7 @@ Connectors are similar to endpoints connecting Citrus to a foreign technology or
 |citrus-docker     | Connect with Docker deamon to manage images and containers
 |citrus-selenium   | Connect with web driver to run web-based UI tests
 |citrus-kubernetes | Connect to Kubernetes cluster managing PODs services and other resources
+|citrus-sql        | Connect to relational databases and verify result sets
 |===
 
 - [Tools](https://github.com/citrusframework/citrus/tree/3.x/tools)

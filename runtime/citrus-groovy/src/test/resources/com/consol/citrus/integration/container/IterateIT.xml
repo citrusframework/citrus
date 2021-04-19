@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="IterateIT">
+    <meta-info>
+      <author>Unknown</author>
+      <creationdate>2008-04-25</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Unknown</last-updated-by>
+      <last-updated-on>2008-04-25T00:00:00</last-updated-on>
+    </meta-info>
+
+    <actions>
+      <create-variables>
+        <variable name="outerLoop" value="0"/>
+        <variable name="innerLoop" value="0"/>
+      </create-variables>
+
+      <iterate condition="i lt= 5" index="i">
+        <create-variables>
+          <variable name="outerLoop">
+            <value>
+              <script type="groovy">(${outerLoop} + 1)</script>
+            </value>
+          </variable>
+        </create-variables>
+        <iterate condition="j lt= 3" index="j">
+          <create-variables>
+            <variable name="innerLoop">
+              <value>
+                <script type="groovy">(${innerLoop} + 1)</script>
+              </value>
+            </variable>
+          </create-variables>
+          <echo>
+            <message>i=${i} j=${j}</message>
+          </echo>
+        </iterate>
+      </iterate>
+
+      <groovy>
+        assert context.getVariable("outerLoop").equals("5")
+        assert context.getVariable("innerLoop").equals("15")
+      </groovy>
+    </actions>
+  </testcase>
+</spring:beans>

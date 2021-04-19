@@ -16,7 +16,7 @@
 		Global variables are loaded in advance to this test. Variables are printed within this test
         to show that global property loader works fine.
 	</description>
-  
+
     <variables>
         <variable name="checkDate" value="citrus:currentDate('yyyy-MM-dd')"/>
     </variables>
@@ -25,11 +25,11 @@
       <echo>
         <message>Value of global variable "globalGreeting": ${globalGreeting}</message>
       </echo>
-      
+
       <echo>
         <message>Value of global variable "globalWelcomingText": ${globalWelcomingText}</message>
       </echo>
-      
+
       <echo>
         <message>Value of global variable "globalDate": ${globalDate}</message>
       </echo>
@@ -37,28 +37,6 @@
       <echo>
         <message>Value of global sum variables: ${globalSum1}, ${globalSum2}</message>
       </echo>
-
-      <echo>
-        <message>Verify variables support (replacement in properties)</message>
-      </echo>
-
-      <groovy>
-        <![CDATA[
-          import com.consol.citrus.*
-          import com.consol.citrus.variable.*
-          import com.consol.citrus.context.TestContext
-          import com.consol.citrus.script.GroovyAction.ScriptExecutor
-          import org.testng.Assert;
-          
-          public class GScript implements ScriptExecutor {
-              public void execute(TestContext context) {
-                  Assert.assertEquals("${globalWelcomingText}", "Hello Citrus!")
-                  Assert.assertEquals("${globalDate}", "Today is ${checkDate}!")
-                  Assert.assertEquals("${globalSum1}", "${globalSum2}")
-              }
-          }
-        ]]>
-      </groovy>
     </actions>
   </testcase>
 </spring:beans>

@@ -35,7 +35,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
     @Test
     public void testSendMessageActionParser() throws IOException {
-        assertActionCount(8);
+        assertActionCount(6);
         assertActionClassAndName(SendMessageAction.class, "send");
 
         DefaultMessageBuilder messageBuilder;
@@ -81,25 +81,6 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         // 4th action
         action = getNextTestActionFromTest();
-        messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
-
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 2);
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("header1"), "Test");
-        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("header2"), "Test");
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
-        Assert.assertNull(action.getEndpointUri());
-
-        // 5th action
-        action = getNextTestActionFromTest();
-        messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
-
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
-        Assert.assertNull(action.getEndpointUri());
-
-        // 6th action
-        action = getNextTestActionFromTest();
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
         MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
@@ -122,7 +103,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         Assert.assertNotNull(action.getDataDictionary());
 
-        // 7th action
+        // 5th action
         action = getNextTestActionFromTest();
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
@@ -142,7 +123,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
 
-        // 8th action
+        // 6th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());

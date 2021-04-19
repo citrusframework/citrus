@@ -87,6 +87,7 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(enterpriseArchive, "/citrus-docker-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-kubernetes-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-sql-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-groovy-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-selenium-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-cucumber-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-zookeeper-.*jar");
@@ -122,6 +123,7 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(enterpriseArchive, "/citrus-docker-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-kubernetes-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-sql-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-groovy-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-selenium-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-cucumber-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-zookeeper-.*jar");
@@ -151,6 +153,7 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-docker-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-kubernetes-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-sql-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-groovy-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-selenium-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-cucumber-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-zookeeper-.*jar");

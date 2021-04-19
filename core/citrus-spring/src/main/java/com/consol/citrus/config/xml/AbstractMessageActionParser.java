@@ -21,7 +21,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import com.consol.citrus.common.Named;
+import com.consol.citrus.config.xml.parser.CitrusXmlConfigParser;
+import com.consol.citrus.config.xml.parser.ScriptMessageBuilderParser;
 import com.consol.citrus.message.DelegatingPathExpressionProcessor;
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.message.MessageProcessor;
@@ -31,8 +35,6 @@ import com.consol.citrus.message.builder.DefaultHeaderDataBuilder;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.message.builder.FileResourceHeaderDataBuilder;
 import com.consol.citrus.message.builder.FileResourcePayloadBuilder;
-import com.consol.citrus.message.builder.script.GroovyFileResourcePayloadBuilder;
-import com.consol.citrus.message.builder.script.GroovyScriptPayloadBuilder;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -76,8 +78,10 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             messageBuilder = new DefaultMessageBuilder();
         }
 
-        if (messageElement != null && messageElement.hasAttribute("name")) {
-            messageBuilder.setName(messageElement.getAttribute("name"));
+        if (messageElement != null
+                && messageElement.hasAttribute("name")
+                && messageBuilder instanceof Named) {
+            ((Named) messageBuilder).setName(messageElement.getAttribute("name"));
         }
 
         return messageBuilder;
@@ -88,38 +92,27 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * @return
      */
     private DefaultMessageBuilder parseScriptBuilder(Element messageElement) {
-        DefaultMessageBuilder scriptMessageBuilder = null;
-
         Element builderElement = DomUtils.getChildElementByTagName(messageElement, "builder");
-        if (builderElement != null) {
-            String builderType = builderElement.getAttribute("type");
-
-            if (!StringUtils.hasText(builderType)) {
-                throw new BeanCreationException("Missing message builder type - please define valid type " +
-                        "attribute for message builder");
-            } else if (builderType.equals("groovy")) {
-                scriptMessageBuilder = new DefaultMessageBuilder();
-            } else {
-                throw new BeanCreationException("Unsupported message builder type: '" + builderType + "'");
-            }
-
-            String scriptResourcePath = builderElement.getAttribute("file");
-            if (StringUtils.hasText(scriptResourcePath)) {
-                if (builderElement.hasAttribute("charset")) {
-                    scriptMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder(scriptResourcePath, builderElement.getAttribute("charset")));
-                } else {
-                    scriptMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder(scriptResourcePath));
-                }
-            } else {
-                scriptMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(DomUtils.getTextValue(builderElement).trim()));
-            }
+        if (builderElement == null) {
+            return null;
         }
 
-        if (scriptMessageBuilder != null && messageElement.hasAttribute("name")) {
-            scriptMessageBuilder.setName(messageElement.getAttribute("name"));
+        String builderType = builderElement.getAttribute("type");
+        if (!StringUtils.hasText(builderType)) {
+            throw new BeanCreationException("Missing message builder type - please define valid type " +
+                    "attribute for message builder");
         }
 
-        return scriptMessageBuilder;
+        Optional<ScriptMessageBuilderParser> scriptMessageBuilderParser = Optional.ofNullable(
+                CitrusXmlConfigParser.lookup("script").get(builderType))
+                .filter(ScriptMessageBuilderParser.class::isInstance)
+                .map(ScriptMessageBuilderParser.class::cast);
+
+        if (scriptMessageBuilderParser.isEmpty()) {
+            throw new BeanCreationException("Unsupported message builder type: '" + builderType + "'");
+        }
+
+        return scriptMessageBuilderParser.get().parse(messageElement);
     }
 
     /**

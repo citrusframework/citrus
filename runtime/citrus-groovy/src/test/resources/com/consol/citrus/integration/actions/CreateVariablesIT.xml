@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2021 the original author or authors.
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements. See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License. You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="CreateVariablesIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2008-04-25</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2008-04-25T00:00:00</last-updated-on>
+    </meta-info>
+
+    <variables>
+      <variable name="myVariable">
+        <value>
+          <script type="groovy">
+            10000 + 2345
+          </script>
+        </value>
+      </variable>
+      <variable name="newValue" value="54321"/>
+    </variables>
+    <actions>
+      <create-variables>
+        <variable name="scriptVariable">
+          <value>
+            <script type="groovy">
+              ${newValue} + 5
+            </script>
+          </value>
+        </variable>
+      </create-variables>
+
+      <groovy>
+        assert ${myVariable} == 12345
+        assert ${scriptVariable} == 54326
+      </groovy>
+    </actions>
+  </testcase>
+</spring:beans>

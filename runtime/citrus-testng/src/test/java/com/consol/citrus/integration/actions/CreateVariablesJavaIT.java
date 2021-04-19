@@ -22,7 +22,6 @@ import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.CreateVariablesAction.Builder.createVariable;
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
-import static com.consol.citrus.script.GroovyAction.Builder.groovy;
 
 /**
  * @author Christoph Deppisch
@@ -43,8 +42,6 @@ public class CreateVariablesJavaIT extends TestNGCitrusSpringSupport {
         run(echo("Current variable value: ${myVariable}"));
 
         run(echo("New variable 'new' has the value: ${new}"));
-
-        run(groovy("assert ${myVariable} == 54321"));
 
         run(createVariable("foo", "bar"));
 

@@ -16,10 +16,13 @@
 
 package com.consol.citrus.integration;
 
+import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
@@ -27,7 +30,6 @@ import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.dsl.XmlSupport.xml;
 import static com.consol.citrus.dsl.XpathSupport.xpath;
-import static com.consol.citrus.script.GroovyAction.Builder.groovy;
 
 /**
  * @author Christoph Deppisch
@@ -190,6 +192,12 @@ public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport {
             .header("CorrelationId", "${correlationId}")
             .extract(xpath().expression("/def:HelloRequest/def:Text", "extractedText")));
 
-        $(groovy("assert context.getVariable('extractedText') == 'Hello ${user}'"));
+        $(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                Assert.assertEquals(context.getVariable("extractedText"),
+                                    context.replaceDynamicContentInString("Hello ${user}"));
+            }
+        });
     }
 }

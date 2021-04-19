@@ -38,7 +38,7 @@ import com.consol.citrus.config.xml.StaticResponseEndpointAdapterParser;
 import com.consol.citrus.config.xml.TestActorParser;
 import com.consol.citrus.config.xml.TimeoutProducingEndpointAdapterParser;
 import com.consol.citrus.config.xml.ValidationMatcherLibraryParser;
-import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.config.xml.parser.CitrusXmlConfigParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -53,9 +53,6 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(CitrusConfigNamespaceHandler.class);
-
-    /** Resource path where to find custom config parsers via lookup */
-    private static final String RESOURCE_PATH = "META-INF/citrus/config/parser/core";
 
     @Override
     public void init() {
@@ -88,8 +85,7 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
      * Lookup custom bean definition parser from resource path.
      */
     private void lookupBeanDefinitionParser() {
-        Map<String, BeanDefinitionParser> actionParserMap = new ResourcePathTypeResolver()
-                .resolveAll(RESOURCE_PATH);
+        Map<String, BeanDefinitionParser> actionParserMap = CitrusXmlConfigParser.lookup("core");
 
         actionParserMap.forEach((k, p) -> {
             registerBeanDefinitionParser(k, p);

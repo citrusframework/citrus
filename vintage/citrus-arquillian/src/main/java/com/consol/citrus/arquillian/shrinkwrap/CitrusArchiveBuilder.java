@@ -130,6 +130,7 @@ public final class CitrusArchiveBuilder {
         jmx();
         restdocs();
         javaDsl();
+        groovy();
 
         return this;
     }
@@ -284,6 +285,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder cucumber() {
         artifactCoordinates.add(getCoordinates("citrus-cucumber"));
+        return this;
+    }
+
+    /**
+     * Gets the groovy Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder groovy() {
+        artifactCoordinates.add(getCoordinates("citrus-groovy"));
         return this;
     }
 

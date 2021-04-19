@@ -9,6 +9,4 @@
 
     <context:property-placeholder location="classpath:com/consol/citrus/context/citrus.properties"/>
 
-    <bean name="testCaseParser" class="com.consol.citrus.script.GroovyTestCaseParser"/>
-
 </beans>

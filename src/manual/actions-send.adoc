@@ -283,7 +283,22 @@ before sending out the message.
 === Groovy XML Markup builder
 
 With the Groovy markup builder you can build XML message body content in a simple way, without having to write the typical
-XML overhead. For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML
+XML overhead.
+
+IMPORTANT: The Groovy test action support lives in a separate module.
+You need to add the module to your project to use the functionality.
+
+.citrus-groovy dependency module
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-groovy</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML
 section or the nested body XML data we write a Groovy script snippet.
 
 .Java

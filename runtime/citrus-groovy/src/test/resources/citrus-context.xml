@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <context:property-placeholder location="classpath:citrus.properties"
+                                ignore-unresolvable="true"/>
+
+  <!-- Global variables -->
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Groovy Integration Testing"/>
+    <citrus:variable name="globalRandomNumber1" value="citrus:randomNumber(5)"/>
+    <citrus:variable name="globalRandomNumber2" value="citrus:randomNumber(5)"/>
+    <citrus:variable name="globalSum1" value="citrus:sum('${globalRandomNumber1}', '${globalRandomNumber2}')"/>
+    <citrus:variable name="globalSum2" value="citrus:sum('${globalRandomNumber1}', '${globalRandomNumber2}')"/>
+    <citrus:file path="classpath:citrus-variable.properties"/>
+  </citrus:global-variables>
+
+  <!-- Test Listeners -->
+  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+</beans>

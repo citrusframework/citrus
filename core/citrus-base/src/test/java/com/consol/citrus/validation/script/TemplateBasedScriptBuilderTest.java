@@ -16,11 +16,9 @@
 
 package com.consol.citrus.validation.script;
 
-import org.springframework.core.io.ClassPathResource;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
@@ -33,25 +31,13 @@ public class TemplateBasedScriptBuilderTest {
                 .withCode("BODY")
                 .build(), "+++HEAD+++BODY+++TAIL+++");
     }
-    
-    @Test
-    public void testTemplateScriptResource() {
-        Assert.assertEquals(TemplateBasedScriptBuilder.fromTemplateResource(
-                new ClassPathResource("com/consol/citrus/validation/script/script-template.groovy"))
-                .withCode("BODY")
-                .build(), "+++HEAD+++" + 
-                System.getProperty("line.separator") + 
-                System.getProperty("line.separator") + "BODY" + 
-                System.getProperty("line.separator") + 
-                System.getProperty("line.separator") + "+++TAIL+++");
-    }
-    
+
     @Test
     public void testMissingScriptBody() {
         Assert.assertEquals(TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")
                 .build(), "+++HEAD++++++TAIL+++");
     }
-    
+
     @Test
     public void testInvalidScriptTemplate() {
         try {
@@ -62,10 +48,10 @@ public class TemplateBasedScriptBuilderTest {
             Assert.assertTrue(e.getMessage().contains("@SCRIPTBODY@"));
             return;
         }
-        
+
         Assert.fail("Missing error due to invalid script template");
     }
-    
+
     @Test
     public void testCustomImports() {
         Assert.assertEquals(TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")

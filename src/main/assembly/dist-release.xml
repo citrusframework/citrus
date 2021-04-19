@@ -21,6 +21,7 @@
         <include>com.consol.citrus:citrus-junit5</include>
         <include>com.consol.citrus:citrus-main</include>
         <include>com.consol.citrus:citrus-arquillian</include>
+        <include>com.consol.citrus:citrus-groovy</include>
 
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-ftp</include>
@@ -137,6 +138,13 @@
     </fileSet>
     <fileSet>
       <directory>runtime/citrus-arquillian/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>runtime/citrus-groovy/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

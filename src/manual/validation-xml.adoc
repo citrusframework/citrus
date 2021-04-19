@@ -664,9 +664,10 @@ NOTE: This configuration is of global nature. All XML processing operations will
 === Groovy XML validation
 
 With the Groovy XmlSlurper you can easily validate XML message payloads without having to deal directly with XML. People
-who do not want to deal with XPath may also like this validation alternative. The tester directly navigates through the
-message elements and uses simple code assertions in order to control the message content. Here is an example how to validate
-messages with Groovy script:
+who do not want to deal with XPath may also like this validation alternative.
+
+The tester directly navigates through the message elements and uses simple code assertions in order to control the message content.
+Here is an example how to validate messages with Groovy script:
 
 .Java
 [source,java,indent=0,role="primary"]

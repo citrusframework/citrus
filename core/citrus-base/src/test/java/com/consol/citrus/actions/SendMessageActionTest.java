@@ -39,8 +39,6 @@ import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.builder.DefaultHeaderBuilder;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.message.builder.FileResourcePayloadBuilder;
-import com.consol.citrus.message.builder.script.GroovyFileResourcePayloadBuilder;
-import com.consol.citrus.message.builder.script.GroovyScriptPayloadBuilder;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
@@ -134,106 +132,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
                 .message(messageBuilder)
-                .build();
-        sendAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings("rawtypes")
-	public void testSendMessageWithMessageBuilderScriptData() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("markupBuilder.TestRequest(){\n");
-		sb.append("Message('Hello World!')\n");
-		sb.append("}");
-
-        DefaultMessageBuilder messageContentBuilder = new DefaultMessageBuilder();
-        messageContentBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(sb.toString()));
-
-		final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
-                "  <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, producer, endpointConfiguration);
-        when(endpoint.createProducer()).thenReturn(producer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-
-        doAnswer(invocation -> {
-            validateMessageToSend(invocation.getArgument(0), controlMessage);
-            return null;
-        }).when(producer).send(any(Message.class), any(TestContext.class));
-
-        when(endpoint.getActor()).thenReturn(null);
-
-        SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(messageContentBuilder)
-                .build();
-		sendAction.execute(context);
-
-	}
-
-    @Test
-    @SuppressWarnings("rawtypes")
-    public void testSendMessageWithMessageBuilderScriptDataVariableSupport() {
-        context.setVariable("text", "Hello World!");
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("markupBuilder.TestRequest(){\n");
-        sb.append("Message('${text}')\n");
-        sb.append("}");
-
-        DefaultMessageBuilder messageContentBuilder = new DefaultMessageBuilder();
-        messageContentBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(sb.toString()));
-
-        final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
-                "  <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, producer, endpointConfiguration);
-        when(endpoint.createProducer()).thenReturn(producer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-
-        doAnswer(invocation -> {
-            validateMessageToSend(invocation.getArgument(0), controlMessage);
-            return null;
-        }).when(producer).send(any(Message.class), any(TestContext.class));
-
-        when(endpoint.getActor()).thenReturn(null);
-
-        SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(messageContentBuilder)
-                .build();
-        sendAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings("rawtypes")
-    public void testSendMessageWithMessageBuilderScriptResource() {
-        DefaultMessageBuilder messageContentBuilder = new DefaultMessageBuilder();
-        messageContentBuilder.setPayloadBuilder(
-                new GroovyFileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload.groovy"));
-
-        final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
-                "  <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, producer, endpointConfiguration);
-        when(endpoint.createProducer()).thenReturn(producer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-
-        doAnswer(invocation -> {
-            validateMessageToSend(invocation.getArgument(0), controlMessage);
-            return null;
-        }).when(producer).send(any(Message.class), any(TestContext.class));
-
-        when(endpoint.getActor()).thenReturn(null);
-
-        SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(messageContentBuilder)
                 .build();
         sendAction.execute(context);
 

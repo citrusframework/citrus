@@ -39,8 +39,6 @@ import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.message.builder.DefaultHeaderBuilder;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.message.builder.FileResourcePayloadBuilder;
-import com.consol.citrus.message.builder.script.GroovyFileResourcePayloadBuilder;
-import com.consol.citrus.message.builder.script.GroovyScriptPayloadBuilder;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
@@ -216,122 +214,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
                 "<TestRequest>" + System.lineSeparator() +
                 "    <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(controlMessageBuilder)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked" })
-    public void testReceiveMessageWithMessageBuilderScriptData() {
-        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        String markup = "markupBuilder.TestRequest(){\n" +
-                    "Message('Hello World!')\n" +
-                "}";
-        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(markup));
-
-        Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
-                "  <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(controlMessageBuilder)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked" })
-    public void testReceiveMessageWithMessageBuilderScriptDataVariableSupport() {
-        context.setVariable("text", "Hello World!");
-
-        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        String markup = "markupBuilder.TestRequest(){\n" +
-                "Message('${text}')\n" +
-                "}";
-        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(markup));
-
-        Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
-                "  <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(controlMessageBuilder)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked" })
-    public void testReceiveMessageWithMessageBuilderScriptResource() {
-        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        controlMessageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:com/consol/citrus/actions/test-request-payload.groovy"));
-
-        final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
-                "  <Message>Hello World!</Message>" + System.lineSeparator() +
                 "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);

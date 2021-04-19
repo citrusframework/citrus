@@ -85,6 +85,13 @@
         <include>*sources.jar</include>
       </includes>
     </fileSet>
+    <fileSet>
+      <directory>runtime/citrus-groovy/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
 
     <fileSet>
       <directory>endpoints/citrus-camel/target</directory>

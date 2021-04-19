@@ -68,6 +68,11 @@
         <artifactId>citrus-arquillian</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-groovy</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <!-- Endpoints -->
       <dependency>

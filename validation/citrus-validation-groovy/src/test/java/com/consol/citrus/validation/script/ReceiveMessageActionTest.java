@@ -33,7 +33,6 @@ import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.message.builder.FileResourcePayloadBuilder;
-import com.consol.citrus.message.builder.script.GroovyScriptPayloadBuilder;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -88,61 +87,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         factory.getReferenceResolver().bind("mockQueue", mockQueue);
         return factory;
-    }
-
-    @Test
-    public void testReceiveMessageWithMessageBuilderScriptData() {
-
-        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        String markup = "markupBuilder.TestRequest(){\n" +
-                "Message('Hello World!')\n" +
-                "}";
-        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(markup));
-
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(controlMessageBuilder)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    public void testReceiveMessageWithMessageBuilderScriptDataVariableSupport() {
-        context.setVariable("text", "Hello World!");
-
-        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
-        String markup = "markupBuilder.TestRequest(){\n" +
-                "Message('${text}')\n" +
-                "}";
-        controlMessageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(markup));
-
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .message(controlMessageBuilder)
-                .build();
-        receiveAction.execute(context);
-
     }
 
     @Test

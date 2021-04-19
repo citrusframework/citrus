@@ -56,26 +56,6 @@
             </receive>
 
             <receive endpoint="myMessageEndpoint">
-                <message>
-                    <builder type="groovy">
-                        <![CDATA[
-                            markupBuilder.TestMessage('Hello Citrus')
-                        ]]>
-                    </builder>
-                </message>
-                <header>
-                    <element name="header1" value="Test"/>
-                    <element name="header2" value="Test"/>
-                </header>
-            </receive>
-
-            <receive endpoint="myMessageEndpoint">
-                <message>
-                    <builder type="groovy" file="classpath:com/consol/citrus/actions/payload.groovy"/>
-                </message>
-            </receive>
-
-            <receive endpoint="myMessageEndpoint">
                 <message data-dictionary="myDataDictionary">
                     <data>
                         <![CDATA[
