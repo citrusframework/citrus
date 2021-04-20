@@ -116,6 +116,12 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
     <!-- Optional -->
     <dependency>
       <groupId>org.apache.ant</groupId>
