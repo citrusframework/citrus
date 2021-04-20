@@ -2,7 +2,6 @@ package com.consol.citrus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
@@ -12,10 +11,15 @@ import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.DefaultFunctionRegistry;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.report.DefaultTestReporters;
+import com.consol.citrus.report.FailureStackTestListener;
 import com.consol.citrus.report.MessageListener;
 import com.consol.citrus.report.MessageListenerAware;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.report.TestActionListener;
+import com.consol.citrus.report.TestActionListenerAware;
+import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListener;
 import com.consol.citrus.report.TestListenerAware;
 import com.consol.citrus.report.TestListeners;
@@ -32,7 +36,6 @@ import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
@@ -43,12 +46,14 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
  *
  * @author Christoph Deppisch
  */
-public class CitrusContext implements TestListenerAware, TestSuiteListenerAware, TestReporterAware, MessageListenerAware, ReferenceRegistry {
+public class CitrusContext implements TestListenerAware, TestActionListenerAware,
+        TestSuiteListenerAware, TestReporterAware, MessageListenerAware, ReferenceRegistry {
 
     /** Test context factory **/
     private final TestContextFactory testContextFactory;
     private final TestSuiteListeners testSuiteListeners;
     private final TestListeners testListeners;
+    private final TestActionListeners testActionListeners;
     private final TestReporters testReporters;
 
     private final List<BeforeSuite> beforeSuite;
@@ -72,6 +77,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     protected CitrusContext(Builder builder) {
         this.testSuiteListeners = builder.testSuiteListeners;
         this.testListeners = builder.testListeners;
+        this.testActionListeners = builder.testActionListeners;
         this.testReporters = builder.testReporters;
 
         this.beforeSuite = builder.beforeSuite;
@@ -88,8 +94,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         this.namespaceContextBuilder = builder.namespaceContextBuilder;
         this.typeConverter = builder.typeConverter;
 
-        this.testContextFactory = Optional.ofNullable(builder.testContextFactory)
-                .orElseGet(TestContextFactory::newInstance);
+        this.testContextFactory = builder.testContextFactory;
     }
 
     /**
@@ -98,7 +103,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
      * @return
      */
     public static CitrusContext create() {
-        return new CitrusContext(new Builder());
+        return Builder.defaultContext().build();
     }
 
     /**
@@ -117,6 +122,12 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     @Override
     public void addTestListener(TestListener testListener) {
         this.testListeners.addTestListener(testListener);
+    }
+
+
+    @Override
+    public void addTestActionListener(TestActionListener testActionListener) {
+        this.testActionListeners.addTestActionListener(testActionListener);
     }
 
     @Override
@@ -157,6 +168,15 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
      */
     public TestListeners getTestListeners() {
         return testListeners;
+    }
+
+
+    /**
+     * Gets the test action listeners in this context.
+     * @return
+     */
+    public TestActionListeners getTestActionListeners() {
+        return testActionListeners;
     }
 
     /**
@@ -269,6 +289,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private TestContextFactory testContextFactory;
         private TestSuiteListeners testSuiteListeners = new TestSuiteListeners();
         private TestListeners testListeners = new TestListeners();
+        private TestActionListeners testActionListeners = new TestActionListeners();
         private TestReporters testReporters = new DefaultTestReporters();
 
         private final List<BeforeSuite> beforeSuite = new ArrayList<>();
@@ -284,6 +305,42 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private MessageProcessors messageProcessors = new MessageProcessors();
         private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
         private TypeConverter typeConverter = new DefaultTypeConverter();
+
+        public static Builder defaultContext() {
+            Builder builder = new Builder();
+
+            builder.testReporters
+                    .getTestReporters()
+                    .stream()
+                    .filter(TestSuiteListener.class::isInstance)
+                    .map(TestSuiteListener.class::cast)
+                    .forEach(builder::testSuiteListener);
+            builder.testSuiteListener(builder.testReporters);
+
+            builder.testReporters
+                    .getTestReporters()
+                    .stream()
+                    .filter(TestListener.class::isInstance)
+                    .map(TestListener.class::cast)
+                    .forEach(builder::testListener);
+            builder.testListener(builder.testReporters);
+            builder.testListener(new FailureStackTestListener());
+
+            builder.testReporters
+                    .getTestReporters()
+                    .stream()
+                    .filter(TestActionListener.class::isInstance)
+                    .map(TestActionListener.class::cast)
+                    .forEach(builder::testActionListener);
+
+            builder.testReporters
+                    .getTestReporters()
+                    .stream()
+                    .filter(MessageListener.class::isInstance)
+                    .map(MessageListener.class::cast)
+                    .forEach(builder::messageListener);
+            return builder;
+        }
 
         public Builder testContextFactory(TestContextFactory testContextFactory) {
             this.testContextFactory = testContextFactory;
@@ -307,6 +364,16 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
 
         public Builder testListener(TestListener testListener) {
             this.testListeners.addTestListener(testListener);
+            return this;
+        }
+
+        public Builder testActionListeners(TestActionListeners testActionListeners) {
+            this.testActionListeners = testActionListeners;
+            return this;
+        }
+
+        public Builder testActionListener(TestActionListener testActionListener) {
+            this.testActionListeners.addTestActionListener(testActionListener);
             return this;
         }
 
@@ -396,6 +463,23 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         }
 
         public CitrusContext build() {
+            if (testContextFactory == null) {
+                testContextFactory = TestContextFactory.newInstance();
+
+                testContextFactory.setFunctionRegistry(this.functionRegistry);
+                testContextFactory.setValidationMatcherRegistry(this.validationMatcherRegistry);
+                testContextFactory.setGlobalVariables(this.globalVariables);
+                testContextFactory.setMessageValidatorRegistry(this.messageValidatorRegistry);
+                testContextFactory.setTestListeners(this.testListeners);
+                testContextFactory.setTestActionListeners(this.testActionListeners);
+                testContextFactory.setMessageListeners(this.messageListeners);
+                testContextFactory.setMessageProcessors(this.messageProcessors);
+                testContextFactory.setEndpointFactory(this.endpointFactory);
+                testContextFactory.setReferenceResolver(this.referenceResolver);
+                testContextFactory.setNamespaceContextBuilder(this.namespaceContextBuilder);
+                testContextFactory.setTypeConverter(this.typeConverter);
+            }
+
             return new CitrusContext(this);
         }
     }

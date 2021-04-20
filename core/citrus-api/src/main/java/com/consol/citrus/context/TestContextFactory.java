@@ -24,6 +24,7 @@ import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -33,12 +34,9 @@ import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Factory bean implementation constructs test context instances. Takes care of adding proper default components
@@ -75,9 +73,6 @@ public class TestContextFactory implements ReferenceResolverAware {
     private NamespaceContextBuilder namespaceContextBuilder;
 
     private TypeConverter typeConverter;
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TestContextFactory.class);
 
     /**
      * Create new empty instance with default components set.

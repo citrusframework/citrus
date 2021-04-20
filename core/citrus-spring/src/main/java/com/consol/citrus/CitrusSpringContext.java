@@ -8,6 +8,7 @@ import com.consol.citrus.container.BeforeSuite;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestReporters;
 import com.consol.citrus.report.TestSuiteListeners;
@@ -101,6 +102,7 @@ public class CitrusSpringContext extends CitrusContext {
             messageValidatorRegistry(applicationContext.getBean(MessageValidatorRegistry.class));
             messageListeners(applicationContext.getBean(MessageListeners.class));
             testListeners(applicationContext.getBean(TestListeners.class));
+            testActionListeners(applicationContext.getBean(TestActionListeners.class));
             testReporters(applicationContext.getBean(TestReporters.class));
             testSuiteListeners(applicationContext.getBean(TestSuiteListeners.class));
             testContextFactory(applicationContext.getBean(TestContextFactoryBean.class));
