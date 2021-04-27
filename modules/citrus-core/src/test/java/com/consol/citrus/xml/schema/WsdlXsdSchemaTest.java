@@ -18,12 +18,15 @@ package com.consol.citrus.xml.schema;
 
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.UrlResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
  * @author Christoph Deppisch
@@ -65,6 +68,21 @@ public class WsdlXsdSchemaTest {
     public void testWsdlSchemaWsdlImports() throws ParserConfigurationException, IOException, SAXException {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceWithWsdlImports.wsdl"));
         wsdl.afterPropertiesSet();
+        Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
+
+        Assert.assertEquals(wsdl.getTargetNamespace(), "http://www.citrusframework.org/SampleService/");
+
+        Assert.assertNotNull(wsdl.getSource());
+    }
+
+    @Test
+    public void testWsdlSchemaWsdlImportsFromJar() throws ParserConfigurationException, IOException, SAXException {
+        ClassPathResource classPathResource = new ClassPathResource("com/consol/citrus/validation/sample.jar");
+        URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[]{classPathResource.getURL()});
+        URL url = urlClassLoader.getResource("SampleServiceWithWsdlImports.wsdl");
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(new UrlResource(url));
+        wsdl.afterPropertiesSet();
+
         Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
 
         Assert.assertEquals(wsdl.getTargetNamespace(), "http://www.citrusframework.org/SampleService/");
