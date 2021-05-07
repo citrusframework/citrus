@@ -136,8 +136,11 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
                 } else {
                     schemaLocation = definition.getDocumentBaseURI().substring(0, definition.getDocumentBaseURI().lastIndexOf('/') + 1) + wsdlImport.getLocationURI();
                 }
-
-                loadSchemas(getWsdlDefinition(new FileSystemResource(schemaLocation)));
+                if (schemaLocation.startsWith("jar:")) {
+                    loadSchemas(getWsdlDefinition(new UrlResource(schemaLocation)));
+                } else {
+                    loadSchemas(getWsdlDefinition(new FileSystemResource(schemaLocation)));
+                }
             }
         }
 
