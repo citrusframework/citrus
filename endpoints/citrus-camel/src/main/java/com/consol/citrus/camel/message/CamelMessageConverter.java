@@ -57,14 +57,7 @@ public class CamelMessageConverter implements MessageConverter<Exchange, Exchang
             return null;
         }
 
-        org.apache.camel.Message camelMessage;
-        if (exchange.hasOut()) {
-            camelMessage = exchange.getOut();
-        } else {
-            camelMessage = exchange.getIn();
-        }
-
-        Message message = new DefaultMessage(camelMessage.getBody(), camelMessage.getHeaders())
+        Message message = new DefaultMessage(exchange.getMessage().getBody(), exchange.getMessage().getHeaders())
                 .setHeader(CamelMessageHeaders.EXCHANGE_ID, exchange.getExchangeId())
                 .setHeader(CamelMessageHeaders.ROUTE_ID, exchange.getFromRouteId())
                 .setHeader(CamelMessageHeaders.EXCHANGE_PATTERN, exchange.getPattern().name())

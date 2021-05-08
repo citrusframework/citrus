@@ -64,13 +64,13 @@ import org.springframework.util.StringUtils;
 public class SeleniumBrowser extends AbstractEndpoint implements Producer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SeleniumBrowser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SeleniumBrowser.class);
 
     /** Selenium web driver */
     private WebDriver webDriver;
 
     /** Temporary storage */
-    private Path temporaryStorage;
+    private final Path temporaryStorage;
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -94,7 +94,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
         SeleniumAction action = message.getPayload(SeleniumAction.class);
         action.execute(context);
 
-        log.info("Selenium action successfully executed");
+        LOG.info("Selenium action successfully executed");
     }
 
     /**
@@ -112,13 +112,13 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
 
             if (!CollectionUtils.isEmpty(getEndpointConfiguration().getEventListeners())) {
                 EventFiringWebDriver wrapper = new EventFiringWebDriver(webDriver);
-                log.info("Add event listeners to web driver: " + getEndpointConfiguration().getEventListeners().size());
+                LOG.info("Add event listeners to web driver: " + getEndpointConfiguration().getEventListeners().size());
                 for (WebDriverEventListener listener : getEndpointConfiguration().getEventListeners()) {
                     wrapper.register(listener);
                 }
             }
         } else {
-            log.debug("Browser already started");
+            LOG.debug("Browser already started");
         }
     }
 
@@ -127,21 +127,21 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
      */
     public void stop() {
         if (isStarted()) {
-            log.info("Stopping browser " + webDriver.getCurrentUrl());
+            LOG.info("Stopping browser " + webDriver.getCurrentUrl());
 
             try {
-                log.info("Trying to close the browser " + webDriver + " ...");
+                LOG.info("Trying to close the browser " + webDriver + " ...");
                 webDriver.quit();
             } catch (UnreachableBrowserException e) {
                 // It happens for Firefox. It's ok: browser is already closed.
-                log.warn("Browser is unreachable", e);
+                LOG.warn("Browser is unreachable", e);
             } catch (WebDriverException e) {
-                log.error("Failed to close browser", e);
+                LOG.error("Failed to close browser", e);
             }
 
             webDriver = null;
         } else {
-            log.warn("Browser already stopped");
+            LOG.warn("Browser already stopped");
         }
     }
 
@@ -167,7 +167,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
         try {
             File newFile = new File(temporaryStorage.toFile(), file.getFilename());
 
-            log.info("Store file " + file + " to " + newFile);
+            LOG.info("Store file " + file + " to " + newFile);
 
             FileUtils.copyFile(file.getFile(), newFile);
 
@@ -225,16 +225,19 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
                 return new ChromeDriver();
             case BrowserType.HTMLUNIT:
                 BrowserVersion browserVersion = null;
-                if (getEndpointConfiguration().getVersion().equals("FIREFOX")) {
-                    browserVersion = BrowserVersion.FIREFOX;
-                } else if (getEndpointConfiguration().getVersion().equals("FIREFOX_60")) {
-                    browserVersion = BrowserVersion.FIREFOX_60;
-                } else if (getEndpointConfiguration().getVersion().equals("FIREFOX_68")) {
-                    browserVersion = BrowserVersion.FIREFOX_68;
-                } else if (getEndpointConfiguration().getVersion().equals("INTERNET_EXPLORER")) {
-                    browserVersion = BrowserVersion.INTERNET_EXPLORER;
-                } else if (getEndpointConfiguration().getVersion().equals("CHROME")) {
-                    browserVersion = BrowserVersion.CHROME;
+                switch (getEndpointConfiguration().getVersion()) {
+                    case "FIREFOX":
+                        browserVersion = BrowserVersion.FIREFOX;
+                        break;
+                    case "FIREFOX_78":
+                        browserVersion = BrowserVersion.FIREFOX_78;
+                        break;
+                    case "INTERNET_EXPLORER":
+                        browserVersion = BrowserVersion.INTERNET_EXPLORER;
+                        break;
+                    case "CHROME":
+                        browserVersion = BrowserVersion.CHROME;
+                        break;
                 }
 
                 HtmlUnitDriver htmlUnitDriver;
@@ -292,7 +295,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
             Path tempDir = Files.createTempDirectory("selenium");
             tempDir.toFile().deleteOnExit();
 
-            log.info("Download storage location is: " + tempDir.toString());
+            LOG.info("Download storage location is: " + tempDir);
             return tempDir;
         } catch (IOException e) {
             throw new CitrusRuntimeException("Could not create temporary storage", e);

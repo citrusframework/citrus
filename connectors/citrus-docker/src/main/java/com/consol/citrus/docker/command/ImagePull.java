@@ -19,9 +19,10 @@ package com.consol.citrus.docker.command;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.github.dockerjava.api.command.PullImageCmd;
+import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.PullResponseItem;
-import com.github.dockerjava.core.command.PullImageResultCallback;
 
 /**
  * @author Christoph Deppisch
@@ -61,7 +62,11 @@ public class ImagePull extends AbstractDockerCommand<PullResponseItem> {
 
         command.exec(imageResult);
 
-        imageResult.awaitSuccess();
+        try {
+            imageResult.awaitCompletion();
+        } catch (InterruptedException e) {
+            throw new CitrusRuntimeException("Failed to wait for command success", e);
+        }
     }
 
     /**

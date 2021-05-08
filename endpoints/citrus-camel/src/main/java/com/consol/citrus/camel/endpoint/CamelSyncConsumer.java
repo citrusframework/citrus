@@ -134,10 +134,8 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
                 if (exceptionMsg != null) {
                     exchange.setException((Throwable) exception.getConstructor(String.class).newInstance(exceptionMsg));
                 } else {
-                    exchange.setException((Throwable) exception.newInstance());
+                    exchange.setException((Throwable) exception.getDeclaredConstructor().newInstance());
                 }
-            } catch (RuntimeException e) {
-                log.warn("Unable to create proper exception instance for exchange!", e);
             } catch (Exception e) {
                 log.warn("Unable to create proper exception instance for exchange!", e);
             }

@@ -66,8 +66,8 @@
       <id>christophd</id>
       <name>Christoph Deppisch</name>
       <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <organization>Red Hat</organization>
+      <organizationUrl>https://www.redhat.com/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -77,7 +77,7 @@
       <name>Sven Hettwer</name>
       <email>citrus-dev-l@consol.de</email>
       <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <organizationUrl>https://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -87,7 +87,7 @@
       <name>Simon Hofmann</name>
       <email>citrus-dev-l@consol.de</email>
       <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <organizationUrl>https://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -97,7 +97,7 @@
       <name>Tim Keiner</name>
       <email>citrus-dev-l@consol.de</email>
       <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
+      <organizationUrl>https://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -140,71 +140,71 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <project.docs.version>${project.version}</project.docs.version>
-    <spring.version>5.3.3</spring.version>
+    <spring.version>5.3.6</spring.version>
     <spring.ws.version>3.0.10.RELEASE</spring.ws.version>
-    <spring.integration.version>5.4.3</spring.integration.version>
+    <spring.integration.version>5.4.6</spring.integration.version>
     <spring.restdocs.version>2.0.5.RELEASE</spring.restdocs.version>
-    <kafka.version>2.7.0</kafka.version>
-    <apache.camel.version>3.7.0</apache.camel.version>
-    <apache.ant.version>1.10.9</apache.ant.version>
-    <activemq.version>5.16.0</activemq.version>
+    <kafka.version>2.8.0</kafka.version>
+    <apache.camel.version>3.9.0</apache.camel.version>
+    <apache.ant.version>1.10.10</apache.ant.version>
+    <activemq.version>5.16.2</activemq.version>
     <ftpserver.version>1.1.1</ftpserver.version>
-    <mockftpserver.version>2.7.1</mockftpserver.version>
-    <vertx.version>3.9.5</vertx.version>
-    <groovy.version>2.5.14</groovy.version>
-    <jetty.version>9.4.36.v20210114</jetty.version>
+    <mockftpserver.version>2.8.0</mockftpserver.version>
+    <vertx.version>3.9.7</vertx.version>
+    <groovy.version>3.0.8</groovy.version>
+    <jetty.version>9.4.40.v20210413</jetty.version>
     <testng.version>7.3.0</testng.version>
-    <junit.version>4.13.1</junit.version>
-    <junit.jupiter.version>5.7.0</junit.jupiter.version>
+    <junit.version>4.13.2</junit.version>
+    <junit.jupiter.version>5.7.1</junit.jupiter.version>
     <slf4j.version>1.7.30</slf4j.version>
-    <log4j2.version>2.14.0</log4j2.version>
-    <jaxb.version>2.3.2</jaxb.version>
-    <jackson.version>2.12.1</jackson.version>
+    <log4j2.version>2.14.1</log4j2.version>
+    <jaxb.version>2.3.4</jaxb.version>
+    <jackson.version>2.12.3</jackson.version>
     <arquillian.version>1.6.0.Final</arquillian.version>
     <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
     <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
-    <cucumber.version>6.9.1</cucumber.version>
-    <zookeeper.version>3.6.1</zookeeper.version>
-    <dropwizard.metrics.version>3.2.5</dropwizard.metrics.version>
-    <snappy.version>1.1.7.7</snappy.version>
+    <cucumber.version>6.10.3</cucumber.version>
+    <zookeeper.version>3.7.0</zookeeper.version>
+    <dropwizard.metrics.version>4.1.21</dropwizard.metrics.version>
+    <snappy.version>1.1.8.4</snappy.version>
     <sshd.version>2.5.1</sshd.version>
-    <bouncycastle.version>1.59</bouncycastle.version>
-    <jsch.version>0.1.54</jsch.version>
+    <bouncycastle.version>1.68</bouncycastle.version>
+    <jsch.version>0.1.55</jsch.version>
     <json.schema.validator.version>2.2.14</json.schema.validator.version>
-    <hamcrest.version>1.3</hamcrest.version>
+    <hamcrest.version>2.2</hamcrest.version>
     <citrus.db.version>0.1.4</citrus.db.version>
     <httpclient.version>4.5.13</httpclient.version>
     <selenium.version>3.141.59</selenium.version>
-    <htmlunit.version>2.38.0</htmlunit.version>
-    <byte.buddy.version>1.10.14</byte.buddy.version>
-    <google.guava.version>29.0-jre</google.guava.version>
+    <htmlunit.version>2.49.1</htmlunit.version>
+    <byte.buddy.version>1.11.0</byte.buddy.version>
+    <google.guava.version>30.1.1-jre</google.guava.version>
     <surefire.version>2.22.2</surefire.version>
-    <mockito.version>3.5.10</mockito.version>
+    <mockito.version>3.9.0</mockito.version>
     <k8s.client.version>1.4.34</k8s.client.version>
     <k8s.model.version>1.0.65</k8s.model.version>
-    <docker-java.version>3.0.14</docker-java.version>
-    <glassfish.jersey.version>2.23.1</glassfish.jersey.version>
-    <jakarta.mail.version>1.6.5</jakarta.mail.version>
+    <docker-java.version>3.2.8</docker-java.version>
+    <glassfish.jersey.version>2.34</glassfish.jersey.version>
+    <jakarta.mail.version>1.6.7</jakarta.mail.version>
     <jakarta.annotation.version>1.3.5</jakarta.annotation.version>
     <jakarta.validation.version>2.0.2</jakarta.validation.version>
-    <jakarta.activation.version>1.2.1</jakarta.activation.version>
+    <jakarta.activation.version>1.2.2</jakarta.activation.version>
     <jakarta.servlet-api.version>4.0.4</jakarta.servlet-api.version>
     <jakarta.jms-api.version>2.0.3</jakarta.jms-api.version>
     <jakarta.ws.rs-api.version>2.1.6</jakarta.ws.rs-api.version>
     <jakarta.websocket-api.version>1.1.2</jakarta.websocket-api.version>
     <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
     <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
-    <junixsocket.version>2.0.4</junixsocket.version>
+    <junixsocket.version>2.3.3</junixsocket.version>
     <jdom.version>2.0.2</jdom.version>
-    <json-smart.version>2.3</json-smart.version>
-    <json-path.version>2.4.0</json-path.version>
-    <hsqldb.version>2.5.1</hsqldb.version>
+    <json-smart.version>2.4.7</json-smart.version>
+    <json-path.version>2.5.0</json-path.version>
+    <hsqldb.version>2.6.0</hsqldb.version>
     <commons.dbcp2.version>2.8.0</commons.dbcp2.version>
     <subethasmtp.version>3.1.7</subethasmtp.version>
-    <saaj.version>1.5.2</saaj.version>
+    <saaj.version>1.5.3</saaj.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
-    <xbean-spring.version>4.18</xbean-spring.version>
-    <xstream.version>1.4.15</xstream.version>
+    <xbean-spring.version>4.19</xbean-spring.version>
+    <xstream.version>1.4.16</xstream.version>
     <xalan.version>2.7.2</xalan.version>
     <xerces.version>2.12.1</xerces.version>
     <skip.integration.tests>false</skip.integration.tests>
@@ -288,7 +288,7 @@
       <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
-        <version>1.11</version>
+        <version>1.15</version>
       </dependency>
       <dependency>
         <groupId>commons-lang</groupId>
@@ -298,7 +298,7 @@
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>2.6</version>
+        <version>2.8.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.sshd</groupId>
@@ -695,6 +695,11 @@
           </exclusion>
         </exclusions>
       </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-xml</artifactId>
+        <version>${apache.camel.version}</version>
+      </dependency>
 
       <!-- Citrus ftp dependencies -->
       <dependency>
@@ -705,7 +710,7 @@
       <dependency>
         <groupId>commons-net</groupId>
         <artifactId>commons-net</artifactId>
-        <version>3.6</version>
+        <version>3.8.0</version>
       </dependency>
 
       <dependency>
@@ -849,7 +854,7 @@
       <dependency>
         <groupId>org.glassfish.jaxb</groupId>
         <artifactId>jaxb-core</artifactId>
-        <version>2.3.0</version>
+        <version>2.3.0.1</version>
         <exclusions>
           <exclusion>
             <groupId>javax.xml.bind</groupId>

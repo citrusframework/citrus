@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
@@ -25,8 +26,8 @@ import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.github.dockerjava.api.command.BuildImageCmd;
+import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.model.BuildResponseItem;
-import com.github.dockerjava.core.command.BuildImageResultCallback;
 import org.springframework.core.io.Resource;
 
 /**
@@ -79,7 +80,7 @@ public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
         }
 
         if (hasParameter("tag")) {
-            command.withTag(getParameter("tag", context));
+            command.withTags(Collections.singleton(getParameter("tag", context)));
         }
 
         BuildImageResultCallback imageResult = new BuildImageResultCallback() {

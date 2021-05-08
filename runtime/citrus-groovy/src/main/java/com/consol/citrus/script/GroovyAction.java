@@ -96,10 +96,10 @@ public class GroovyAction extends AbstractTestAction {
             // load groovy code
             Class<?> groovyClass = loader.parseClass(code);
             // Instantiate an object from groovy code
-            GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
+            GroovyObject groovyObject = (GroovyObject) groovyClass.getDeclaredConstructor().newInstance();
 
             // only apply default script template in case we have feature enabled and code is not a class, too
-            if (useScriptTemplate && groovyObject.getClass().getSimpleName().startsWith("script")) {
+            if (useScriptTemplate && groovyObject.getClass().getSimpleName().startsWith("Script")) {
                 if (StringUtils.hasText(scriptTemplate)) {
                     // build new script with surrounding template
                     code = TemplateBasedScriptBuilder.fromTemplateScript(context.replaceDynamicContentInString(scriptTemplate))
@@ -113,7 +113,7 @@ public class GroovyAction extends AbstractTestAction {
                 }
 
                 groovyClass = loader.parseClass(code);
-                groovyObject = (GroovyObject) groovyClass.newInstance();
+                groovyObject = (GroovyObject) groovyClass.getDeclaredConstructor().newInstance();
             }
 
             if (log.isDebugEnabled()) {

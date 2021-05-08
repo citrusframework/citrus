@@ -26,10 +26,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.StringSource;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.spring.CamelRouteContextFactoryBean;
-import org.apache.camel.spring.SpringModelJAXBContextFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
+import org.apache.camel.spring.xml.SpringModelJAXBContextFactory;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.util.StringUtils;
 
@@ -38,9 +36,6 @@ import org.springframework.util.StringUtils;
  * @since 2.4
  */
 public class CreateCamelRouteAction extends AbstractCamelRouteAction {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CreateCamelRouteAction.class);
 
     /** Camel route */
     private final List<RouteDefinition> routes;

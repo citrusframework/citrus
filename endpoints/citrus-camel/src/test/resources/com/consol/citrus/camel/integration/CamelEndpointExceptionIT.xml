@@ -65,9 +65,6 @@
         <message type="plaintext">
           <data>Something went wrong!</data>
         </message>
-        <header>
-          <element name="CamelExceptionCaught" value="com.consol.citrus.exceptions.CitrusRuntimeException: Something went wrong!"/>
-        </header>
       </receive>
 
       <send endpoint="camel:sync:seda:exceptions">

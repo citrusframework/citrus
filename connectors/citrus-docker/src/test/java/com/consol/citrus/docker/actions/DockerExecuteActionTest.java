@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.actions;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.UUID;
 
 import com.consol.citrus.docker.client.DockerClient;
@@ -36,6 +37,7 @@ import com.consol.citrus.docker.command.Version;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.api.command.BuildImageCmd;
+import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InfoCmd;
@@ -45,21 +47,19 @@ import com.github.dockerjava.api.command.InspectImageCmd;
 import com.github.dockerjava.api.command.InspectImageResponse;
 import com.github.dockerjava.api.command.PingCmd;
 import com.github.dockerjava.api.command.PullImageCmd;
+import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.command.RemoveContainerCmd;
 import com.github.dockerjava.api.command.RemoveImageCmd;
 import com.github.dockerjava.api.command.StartContainerCmd;
 import com.github.dockerjava.api.command.StopContainerCmd;
 import com.github.dockerjava.api.command.VersionCmd;
 import com.github.dockerjava.api.command.WaitContainerCmd;
+import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.model.BuildResponseItem;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import com.github.dockerjava.api.model.WaitResponse;
-import com.github.dockerjava.core.command.BuildImageResultCallback;
-import com.github.dockerjava.core.command.PullImageResultCallback;
-import com.github.dockerjava.core.command.WaitContainerResultCallback;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
@@ -73,9 +73,9 @@ import static org.mockito.Mockito.when;
 
 public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
-    private com.github.dockerjava.api.DockerClient dockerClient = Mockito.mock(com.github.dockerjava.api.DockerClient.class);
+    private final com.github.dockerjava.api.DockerClient dockerClient = Mockito.mock(com.github.dockerjava.api.DockerClient.class);
 
-    private DockerClient client = new DockerClient();
+    private final DockerClient client = new DockerClient();
 
     @BeforeClass
     public void setup() {
@@ -314,16 +314,13 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         reset(dockerClient, command);
 
         when(dockerClient.waitContainerCmd("container_wait")).thenReturn(command);
-        doAnswer(new Answer<WaitContainerResultCallback>() {
-            @Override
-            public WaitContainerResultCallback answer(InvocationOnMock invocation) throws Throwable {
-                WaitContainerResultCallback resultCallback = (WaitContainerResultCallback) invocation.getArguments()[0];
+        doAnswer((Answer<WaitContainerResultCallback>) invocation -> {
+            WaitContainerResultCallback resultCallback = (WaitContainerResultCallback) invocation.getArguments()[0];
 
-                resultCallback.onNext(responseItem);
-                resultCallback.onComplete();
+            resultCallback.onNext(responseItem);
+            resultCallback.onComplete();
 
-                return resultCallback;
-            }
+            return resultCallback;
         }).when(command).exec(any(WaitContainerResultCallback.class));
 
         DockerExecuteAction action = new DockerExecuteAction.Builder()
@@ -344,18 +341,16 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         reset(dockerClient, command, responseItem);
 
         when(dockerClient.pullImageCmd("image_pull")).thenReturn(command);
+        when(responseItem.getStatus()).thenReturn("Success");
         when(responseItem.isPullSuccessIndicated()).thenReturn(true);
         when(command.withTag("image_tag")).thenReturn(command);
-        doAnswer(new Answer<PullImageResultCallback>() {
-            @Override
-            public PullImageResultCallback answer(InvocationOnMock invocation) throws Throwable {
-                PullImageResultCallback resultCallback = (PullImageResultCallback) invocation.getArguments()[0];
+        doAnswer((Answer<PullImageResultCallback>) invocation -> {
+            PullImageResultCallback resultCallback = (PullImageResultCallback) invocation.getArguments()[0];
 
-                resultCallback.onNext(responseItem);
-                resultCallback.onComplete();
+            resultCallback.onNext(responseItem);
+            resultCallback.onComplete();
 
-                return resultCallback;
-            }
+            return resultCallback;
         }).when(command).exec(any(PullImageResultCallback.class));
 
         DockerExecuteAction action = new DockerExecuteAction.Builder()
@@ -379,17 +374,14 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         when(responseItem.isBuildSuccessIndicated()).thenReturn(true);
         when(responseItem.getImageId()).thenReturn("new_image");
         when(command.withDockerfile(any(File.class))).thenReturn(command);
-        when(command.withTag("latest")).thenReturn(command);
-        doAnswer(new Answer<BuildImageResultCallback>() {
-            @Override
-            public BuildImageResultCallback answer(InvocationOnMock invocation) throws Throwable {
-                BuildImageResultCallback resultCallback = (BuildImageResultCallback) invocation.getArguments()[0];
+        when(command.withTags(Collections.singleton("latest"))).thenReturn(command);
+        doAnswer((Answer<BuildImageResultCallback>) invocation -> {
+            BuildImageResultCallback resultCallback = (BuildImageResultCallback) invocation.getArguments()[0];
 
-                resultCallback.onNext(responseItem);
-                resultCallback.onComplete();
+            resultCallback.onNext(responseItem);
+            resultCallback.onComplete();
 
-                return resultCallback;
-            }
+            return resultCallback;
         }).when(command).exec(any(BuildImageResultCallback.class));
 
         DockerExecuteAction action = new DockerExecuteAction.Builder()

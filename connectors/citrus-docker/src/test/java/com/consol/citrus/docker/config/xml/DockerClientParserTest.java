@@ -16,13 +16,13 @@
 
 package com.consol.citrus.docker.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -48,6 +48,6 @@ public class DockerClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryPassword(), "s!cr!t");
         Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryEmail(), "user@consol.de");
         Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryUrl(), "https://index.docker.io/v1/");
-        Assert.assertEquals(((DefaultDockerClientConfig)dockerClient.getEndpointConfiguration().getDockerClientConfig()).getDockerConfig(), "/path/to/some/config/directory");
+        Assert.assertEquals(((DefaultDockerClientConfig)dockerClient.getEndpointConfiguration().getDockerClientConfig()).getDockerConfigPath(), "/path/to/some/config/directory");
     }
 }

@@ -33,10 +33,8 @@ import java.util.stream.Collectors;
 import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.common.ShutdownPhase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import kafka.metrics.KafkaMetricsReporter;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
-import kafka.server.NotRunning;
 import kafka.utils.CoreUtils;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -45,6 +43,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.network.ListenerName;
 import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.kafka.common.utils.Time;
+import org.apache.kafka.metadata.BrokerState;
 import org.apache.zookeeper.server.NIOServerCnxnFactory;
 import org.apache.zookeeper.server.ServerCnxnFactory;
 import org.apache.zookeeper.server.ZooKeeperServer;
@@ -125,7 +124,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
         kafkaServer = new KafkaServer(new KafkaConfig(brokerConfigProperties),
                 Time.SYSTEM,
                 scala.Option.apply(null),
-                scala.collection.JavaConverters.asScalaBufferConverter(Collections.<KafkaMetricsReporter>emptyList()).asScala());
+                false);
         kafkaServer.startup();
         kafkaServer.boundPort(ListenerName.forSecurityProtocol(SecurityProtocol.PLAINTEXT));
 
@@ -138,7 +137,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     public void stop() {
         if (kafkaServer != null) {
             try {
-                if (kafkaServer.brokerState().currentState() != (NotRunning.state())) {
+                if (kafkaServer.brokerState().get() != BrokerState.NOT_RUNNING) {
                     kafkaServer.shutdown();
                     kafkaServer.awaitShutdown();
                 }
