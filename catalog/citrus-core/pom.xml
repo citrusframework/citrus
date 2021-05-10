@@ -44,13 +44,18 @@
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-groovy</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-validation-hamcrest</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-validation-groovy</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
     </dependency>
 
     <!-- Runtime modules -->
