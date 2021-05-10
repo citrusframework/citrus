@@ -16,9 +16,9 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.common.ShutdownPhase;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.messaging.SelectiveConsumer;
-import org.springframework.beans.factory.DisposableBean;
 
 /**
  * Synchronous Jms message endpoint. When sending messages endpoint sets replyTo message header and waits for synchronous response.
@@ -27,7 +27,7 @@ import org.springframework.beans.factory.DisposableBean;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
+public class JmsSyncEndpoint extends JmsEndpoint implements ShutdownPhase {
 
     /** One of producer or consumer for this endpoint */
     private JmsSyncProducer jmsSyncMessageProducer;

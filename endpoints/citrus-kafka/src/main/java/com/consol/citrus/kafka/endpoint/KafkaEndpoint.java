@@ -16,8 +16,8 @@
 
 package com.consol.citrus.kafka.endpoint;
 
+import com.consol.citrus.common.ShutdownPhase;
 import com.consol.citrus.endpoint.AbstractEndpoint;
-import org.springframework.beans.factory.DisposableBean;
 
 /**
  * Kafka message endpoint capable of sending/receiving messages from Kafka message destination. Either uses a Kafka connection factory or
@@ -26,7 +26,7 @@ import org.springframework.beans.factory.DisposableBean;
  * @author Christoph Deppisch
  * @since 2.8
  */
-public class KafkaEndpoint extends AbstractEndpoint implements DisposableBean {
+public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
 
     /** Cached producer or consumer */
     private KafkaProducer kafkaProducer;
@@ -71,7 +71,7 @@ public class KafkaEndpoint extends AbstractEndpoint implements DisposableBean {
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (kafkaConsumer != null) {
             kafkaConsumer.stop();
         }
