@@ -24,6 +24,8 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Bean definition parser for sleep action in test case.
  *
@@ -51,16 +53,16 @@ public class SleepActionParser implements BeanDefinitionParser {
 
         private final SleepAction.Builder builder = new SleepAction.Builder();
 
-        public void setMilliseconds(Long milliseconds) {
-            builder.milliseconds(milliseconds);
+        public void setMilliseconds(String milliseconds) {
+            builder.time(milliseconds);
         }
 
-        public void setSeconds(Double seconds) {
-            builder.seconds(seconds);
+        public void setSeconds(String seconds) {
+            builder.time(seconds, TimeUnit.SECONDS);
         }
 
-        public void setTime(Double time) {
-            builder.seconds(time);
+        public void setTime(String time) {
+            builder.time(time);
         }
 
         @Override

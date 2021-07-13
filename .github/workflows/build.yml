@@ -20,7 +20,7 @@ name: build
 on:
   pull_request:
     branches:
-      - master
+      - main
     paths-ignore:
       - '**.adoc'
       - '**.md'
@@ -29,7 +29,7 @@ on:
       - 'NOTICE'
   push:
     branches:
-      - master
+      - main
     paths-ignore:
       - '**.adoc'
       - '**.md'
