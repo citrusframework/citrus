@@ -16,28 +16,39 @@
 
 package com.consol.citrus.http.controller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.http.server.HttpServerSettings;
 import com.consol.citrus.message.Message;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UrlPathHelper;
 
-import javax.servlet.http.*;
-import java.util.Enumeration;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 /**
- * Message controller implementation handling all incoming requests by forwarding to a message 
+ * Message controller implementation handling all incoming requests by forwarding to a message
  * handler for further processing.
- * 
+ *
  * @author Christoph Deppisch
  */
 @Controller
@@ -50,45 +61,51 @@ public class HttpMessageController {
     /** Endpoint configuration */
     private HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
 
-    /** Hold the latest response message for message tracing reasons */
-    private ConcurrentLinkedQueue<ResponseEntity<?>> responseCache = new ConcurrentLinkedQueue<>();
-    
+    /** Cache response messages for message tracing reasons */
+    private final ConcurrentHashMap<HttpServletRequest, ResponseEntity<?>> responseCache = new ConcurrentHashMap<>();
+
+    /** List of requests used to clear caches when too many requests are in memory */
+    private final ConcurrentLinkedQueue<HttpServletRequest> activeRequests = new ConcurrentLinkedQueue<>();
+
+    /** Maximum number of responses cached on this server for message tracing reasons */
+    private int responseCacheSize = HttpServerSettings.responseCacheSize();
+
     @RequestMapping(value = "**", method = { RequestMethod.GET })
     @ResponseBody
     public ResponseEntity<?> handleGetRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.GET, requestEntity);
     }
-    
+
     @RequestMapping(value= "**", method = { RequestMethod.POST })
     @ResponseBody
     public ResponseEntity<?> handlePostRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.POST, requestEntity);
     }
-    
+
     @RequestMapping(value= "**", method = { RequestMethod.PUT })
     @ResponseBody
     public ResponseEntity<?> handlePutRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.PUT, requestEntity);
     }
-    
+
     @RequestMapping(value= "**", method = { RequestMethod.DELETE })
     @ResponseBody
     public ResponseEntity<?> handleDeleteRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.DELETE, requestEntity);
     }
-    
+
     @RequestMapping(value= "**", method = { RequestMethod.OPTIONS })
     @ResponseBody
     public ResponseEntity<?> handleOptionsRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.OPTIONS, requestEntity);
     }
-    
+
     @RequestMapping(value= "**", method = { RequestMethod.HEAD })
     @ResponseBody
     public ResponseEntity<?> handleHeadRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.HEAD, requestEntity);
     }
-    
+
     @RequestMapping(value= "**", method = { RequestMethod.TRACE })
     @ResponseBody
     public ResponseEntity<?> handleTraceRequest(HttpEntity<Object> requestEntity) {
@@ -100,7 +117,7 @@ public class HttpMessageController {
     public ResponseEntity<?> handlePatchRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.PATCH, requestEntity);
     }
-    
+
     /**
      * Handles requests with endpoint adapter implementation. Previously sets Http request method as header parameter.
      * @param method
@@ -110,10 +127,15 @@ public class HttpMessageController {
     private ResponseEntity<?> handleRequestInternal(HttpMethod method, HttpEntity<?> requestEntity) {
         HttpMessage request = endpointConfiguration.getMessageConverter().convertInbound(requestEntity, endpointConfiguration, null);
 
-        HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            throw new CitrusRuntimeException("Failed to retrieve servlet request");
+        }
+
+        HttpServletRequest servletRequest = ((ServletRequestAttributes) attributes).getRequest();
         UrlPathHelper pathHelper = new UrlPathHelper();
 
-        Enumeration allHeaders = servletRequest.getHeaderNames();
+        Enumeration<String> allHeaders = servletRequest.getHeaderNames();
         for (String headerName : CollectionUtils.toArray(allHeaders, new String[] {})) {
             if (request.getHeader(headerName) == null) {
                 String headerValue = servletRequest.getHeader(headerName);
@@ -164,16 +186,36 @@ public class HttpMessageController {
 
             if (endpointConfiguration.isHandleCookies() && httpResponse.getCookies() != null) {
                 HttpServletResponse servletResponse = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+                if (servletResponse == null) {
+                    throw new CitrusRuntimeException("Failed to retrieve servlet response");
+                }
+
                 for (Cookie cookie : httpResponse.getCookies()) {
                     servletResponse.addCookie(cookie);
                 }
             }
         }
-        responseCache.add(responseEntity);
-        
+        responseCache.put(servletRequest, responseEntity);
+        activeRequests.add(servletRequest);
+
+        clearResponseCacheEntries(activeRequests, responseCache);
+
         return responseEntity;
     }
-    
+
+    /**
+     * Clear cache when max size is reached. Removes the oldest entries according to list of the active requests.
+     * @param activeRequests
+     * @param responseCache
+     */
+    private void clearResponseCacheEntries(ConcurrentLinkedQueue<HttpServletRequest> activeRequests,
+                                                  ConcurrentHashMap<HttpServletRequest, ResponseEntity<?>> responseCache) {
+        while (activeRequests.size() >= responseCacheSize) {
+            Optional.ofNullable(activeRequests.poll())
+                    .ifPresent(responseCache::remove);
+        }
+    }
+
     /**
      * Sets the endpointAdapter.
      * @param endpointAdapter the endpointAdapter to set
@@ -210,7 +252,23 @@ public class HttpMessageController {
      * Gets the responseCache.
      * @return the responseCache the responseCache to get.
      */
-    public ResponseEntity<?> getResponseCache() {
-        return responseCache.poll();
+    public ResponseEntity<?> getResponseCache(HttpServletRequest request) {
+        return responseCache.get(request);
+    }
+
+    /**
+     * Gets the response cache size.
+     * @return
+     */
+    public int getResponseCacheSize() {
+        return responseCacheSize;
+    }
+
+    /**
+     * Sets the response cache size.
+     * @param responseCacheSize
+     */
+    public void setResponseCacheSize(int responseCacheSize) {
+        this.responseCacheSize = responseCacheSize;
     }
 }

@@ -27,6 +27,7 @@ import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.endpoint.adapter.StaticResponseEndpointAdapter;
 import com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.http.server.HttpServerSettings;
 import com.consol.citrus.jms.endpoint.JmsEndpointAdapter;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
@@ -64,6 +65,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isDebugLogging());
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertEquals(server.getDefaultStatusCode(), HttpStatus.OK.value());
+        Assert.assertEquals(server.getResponseCacheSize(), HttpServerSettings.responseCacheSize());
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "httpServer1-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
@@ -85,6 +87,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertTrue(server.isDebugLogging());
         Assert.assertTrue(server.isUseRootContextAsParent());
         Assert.assertEquals(server.getDefaultStatusCode(), HttpStatus.NOT_FOUND.value());
+        Assert.assertEquals(server.getResponseCacheSize(), 1000);
         Assert.assertEquals(server.getContextPath(), "/citrus");
         Assert.assertEquals(server.getServletName(), "citrus-http");
         Assert.assertEquals(server.getServletMappingPath(), "/foo");
