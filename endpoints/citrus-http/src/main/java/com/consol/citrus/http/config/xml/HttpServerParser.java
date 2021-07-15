@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 
 /**
  * Parser for Http server implementation in Citrus http namespace.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class HttpServerParser extends AbstractServerParser {
@@ -54,6 +54,7 @@ public class HttpServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("handle-header-attributes"), "handleAttributeHeaders");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("handle-cookies"), "handleCookies");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("default-status-code"), "defaultStatusCode");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("response-cache-size"), "responseCacheSize");
     }
 
     @Override

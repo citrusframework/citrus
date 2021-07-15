@@ -48,7 +48,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     private static final String NEWLINE = System.getProperty("line.separator");
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(LoggingHandlerInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoggingHandlerInterceptor.class);
 
     private MessageListeners messageListener;
 
@@ -62,7 +62,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        handleResponse(getResponseContent(response, handler));
+        handleResponse(getResponseContent(request, response, handler));
     }
 
     @Override
@@ -76,11 +76,11 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
      */
     public void handleRequest(String request) {
         if (hasMessageListeners()) {
-            log.debug("Received Http request");
+            LOG.debug("Received Http request");
             messageListener.onInboundMessage(new RawMessage(request), null);
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Received Http request:" + NEWLINE + request);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Received Http request:" + NEWLINE + request);
             }
         }
     }
@@ -91,11 +91,11 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
      */
     public void handleResponse(String response) {
         if (hasMessageListeners()) {
-            log.debug("Sending Http response");
+            LOG.debug("Sending Http response");
             messageListener.onOutboundMessage(new RawMessage(response), null);
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Sending Http response:" + NEWLINE + response);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Sending Http response:" + NEWLINE + response);
             }
         }
     }
@@ -151,10 +151,17 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     }
 
     /**
-     * @param response
-     * @return
+     * Retrieve response body content. In case given handler is an instance of the
+     * default message controller the content is retrieved from the internal response cache.
+     *
+     * The servlet request is used as key to retrieve the response from that cache. This makes sure that
+     * multiple logging interceptor handlers get the very same response content.
+     *
+     * @param request the servlet request
+     * @param response the servlet response holding headers
+     * @return the complete response data with headers and body content as String
      */
-    private String getResponseContent(HttpServletResponse response, Object handler) {
+    private String getResponseContent(HttpServletRequest request, HttpServletResponse response, Object handler) {
         StringBuilder builder = new StringBuilder();
 
         builder.append(response);
@@ -162,7 +169,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             if (handlerMethod.getBean() instanceof HttpMessageController) {
-                ResponseEntity<?> responseEntity = ((HttpMessageController) handlerMethod.getBean()).getResponseCache();
+                ResponseEntity<?> responseEntity = ((HttpMessageController) handlerMethod.getBean()).getResponseCache(request);
                 if (responseEntity != null) {
                     builder.append(NEWLINE);
                     builder.append(responseEntity.getBody());

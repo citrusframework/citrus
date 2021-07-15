@@ -26,7 +26,6 @@ import net.minidev.json.parser.JSONParser;
  */
 public final class JsonSettings {
 
-
     private static final String MESSAGE_VALIDATION_STRICT_PROPERTY = "citrus.json.message.validation.strict";
     private static final String MESSAGE_VALIDATION_STRICT_ENV = "CITRUS_JSON_MESSAGE_VALIDATION_STRICT";
     private static final String MESSAGE_VALIDATION_STRICT_DEFAULT = "true";

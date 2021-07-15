@@ -136,6 +136,12 @@ public @interface HttpServerConfig {
     HttpStatus defaultStatus() default HttpStatus.OK;
 
     /**
+     * Server default response cache size.
+     * @return
+     */
+    int responseCacheSize() default 100;
+
+    /**
      * Binary media types.
      * @return
      */
