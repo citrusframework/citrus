@@ -114,6 +114,9 @@ public class HttpServer extends AbstractServer {
     /** Default status code returned by http server */
     private int defaultStatusCode = HttpStatus.OK.value();
 
+    /** Default size of in memory response cahce for message tracing reasons */
+    private int responseCacheSize = HttpServerSettings.responseCacheSize();
+
     /** List of media types that should be handled with binary content processing */
     private List<MediaType> binaryMediaTypes = Arrays.asList(MediaType.APPLICATION_OCTET_STREAM,
                                                                 MediaType.APPLICATION_PDF,
@@ -548,6 +551,22 @@ public class HttpServer extends AbstractServer {
      */
     public void setHandleCookies(boolean handleCookies) {
         this.handleCookies = handleCookies;
+    }
+
+    /**
+     * Gets the response cache size.
+     * @return
+     */
+    public int getResponseCacheSize() {
+        return responseCacheSize;
+    }
+
+    /**
+     * Sets the response cache size.
+     * @param responseCacheSize
+     */
+    public void setResponseCacheSize(int responseCacheSize) {
+        this.responseCacheSize = responseCacheSize;
     }
 
     /**

@@ -107,6 +107,8 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
             endpointConfiguration.setDefaultStatusCode(httpServer.getDefaultStatusCode());
             messageController.setEndpointConfiguration(endpointConfiguration);
 
+            messageController.setResponseCacheSize(httpServer.getResponseCacheSize());
+
             if (endpointAdapter != null) {
                 messageController.setEndpointAdapter(endpointAdapter);
             }

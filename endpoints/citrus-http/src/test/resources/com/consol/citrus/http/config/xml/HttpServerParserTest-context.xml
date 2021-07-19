@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans  xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config" 
+        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
         xmlns:util="http://www.springframework.org/schema/util"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
                             http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-    
+
     <citrus-http:server id="httpServer1"
                         auto-start="false"
                         port="8081"/>
-                        
+
     <citrus-http:server id="httpServer2"
                         auto-start="false"
                         port="8082"
@@ -22,12 +22,13 @@
                         resource-base="src/it/resources"
                         root-parent-context="true"
                         default-status-code="404"
+                        response-cache-size="1000"
                         binary-media-types="binaryMediaTypes"
                         debug-logging="true"
                         context-path="/citrus"
                         servlet-name="citrus-http"
                         servlet-mapping-path="/foo"/>
-                        
+
     <citrus-http:server id="httpServer3"
                         auto-start="false"
                         port="8083"
@@ -39,7 +40,7 @@
                         auto-start="false"
                         port="8084"
                         servlet-handler="servletHandler"/>
-    
+
     <citrus-http:server id="httpServer5"
                         auto-start="false"
                         port="8085"
@@ -54,7 +55,7 @@
         <constructor-arg value="org.springframework.web.servlet.HandlerInterceptor"/>
       </bean>
     </util:list>
-    
+
     <util:list id="connectors">
         <bean id="connector1" class="org.mockito.Mockito" factory-method="mock">
           <constructor-arg value="org.eclipse.jetty.server.Connector"/>
@@ -93,7 +94,7 @@
     <bean id="connector" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.eclipse.jetty.server.Connector"/>
     </bean>
-    
+
     <bean id="securityHandler" class="com.consol.citrus.http.security.SecurityHandlerFactory">
         <property name="users">
             <list>
@@ -114,7 +115,7 @@
             </map>
         </property>
     </bean>
-                
+
     <bean id ="servletHandler" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.eclipse.jetty.servlet.ServletHandler"/>
     </bean>

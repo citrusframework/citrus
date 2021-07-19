@@ -136,6 +136,7 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
         }
 
         builder.defaultStatus(annotation.defaultStatus());
+        builder.responseCacheSize(annotation.responseCacheSize());
 
         return builder.initialize().build();
     }

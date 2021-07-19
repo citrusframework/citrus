@@ -233,6 +233,16 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     }
 
     /**
+     * Sets the default response cache size on this server instance.
+     * @param size
+     * @return
+     */
+    public B responseCacheSize(int size) {
+        endpoint.setResponseCacheSize(size);
+        return self;
+    }
+
+    /**
      * Sets the interceptors.
      * @param interceptors
      * @return
