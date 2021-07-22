@@ -189,7 +189,7 @@ public void kubernetesTest() {
 The Java DSL Kubernetes commands provide an optional *CommandResultCallback* that is automatically called with the unmarshalled command result object.
 In the example above the _InfoResult_ model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.
 
-Java 8 Lambda expressions add some syntactical sugar to the command result validation:
+Java Lambda expressions add some syntactical sugar to the command result validation:
 
 .Java DSL
 [source,java]

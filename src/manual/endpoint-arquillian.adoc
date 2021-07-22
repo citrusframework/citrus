@@ -274,7 +274,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws E
 
 The test logic has not changed significantly. We use the Citrus *TestRunner* as method injected parameter instead of the *TestDesigner* . And this is pretty much the trick. Now the Java DSL methods do execute the Citrus test logic immediately. This is why the syntax of the Citrus Java DSL methods have changed a little bit. We now use a anonymous interface implementation for constructing the send/receive test action logic. As a result we can use the Citrus Java DSL as normal code and we can mix the runtime Java logic as each statement is executed immediately.
 
-With Java 8 lambda expressions our code looks even more straight forward and less verbose as we can skip the anonymous interface implementations. With Java 8 you can write the same test like this:
+With Java lambda expressions our code looks even more straight forward and less verbose as we can skip the anonymous interface implementations. With Java 8 you can write the same test like this:
 
 [source,xml]
 ----
