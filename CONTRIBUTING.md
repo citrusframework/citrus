@@ -168,4 +168,4 @@ that all of the following criteria are met. This helps us to review your changes
 * Automated unit and integration tests have been created and passed
 * The documentation has been updated
 
- [1]: http://www.citrusframework.org/img/brand-logo.png
+ [1]: https://citrusframework.org/img/brand-logo.png
