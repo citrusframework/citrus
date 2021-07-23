@@ -558,8 +558,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 3.0.0-SNAPSHOT,</span>
-<span id="revdate">2021-04-15</span>
+<span id="revnumber">version 3.0.0,</span>
+<span id="revdate">2021-07-23</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -1034,7 +1034,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 3.0.0-SNAPSHOT</strong></p>
+<p><strong>Version: 3.0.0</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -5550,9 +5550,11 @@ This configuration is of global nature. All XML processing operations will be af
 <h4 id="groovy-xml-validation"><a class="anchor" href="#groovy-xml-validation"></a><a class="link" href="#groovy-xml-validation">7.4.8. Groovy XML validation</a></h4>
 <div class="paragraph">
 <p>With the Groovy XmlSlurper you can easily validate XML message payloads without having to deal directly with XML. People
-who do not want to deal with XPath may also like this validation alternative. The tester directly navigates through the
-message elements and uses simple code assertions in order to control the message content. Here is an example how to validate
-messages with Groovy script:</p>
+who do not want to deal with XPath may also like this validation alternative.</p>
+</div>
+<div class="paragraph">
+<p>The tester directly navigates through the message elements and uses simple code assertions in order to control the message content.
+Here is an example how to validate messages with Groovy script:</p>
 </div>
 <div class="listingblock primary">
 <div class="title">Java</div>
@@ -7731,7 +7733,33 @@ before sending out the message.</p>
 <h4 id="send-groovy-markupbuilder"><a class="anchor" href="#send-groovy-markupbuilder"></a><a class="link" href="#send-groovy-markupbuilder">8.1.3. Groovy XML Markup builder</a></h4>
 <div class="paragraph">
 <p>With the Groovy markup builder you can build XML message body content in a simple way, without having to write the typical
-XML overhead. For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML
+XML overhead.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The Groovy test action support lives in a separate module.
+You need to add the module to your project to use the functionality.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">citrus-groovy dependency module</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>citrus-groovy<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>${citrus.version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML
 section or the nested body XML data we write a Groovy script snippet.</p>
 </div>
 <div class="listingblock primary">
@@ -8374,7 +8402,33 @@ tests running at the same time will steal messages from each other when you lack
 <h4 id="receive-groovy-markupbuilder"><a class="anchor" href="#receive-groovy-markupbuilder"></a><a class="link" href="#receive-groovy-markupbuilder">8.2.5. Groovy XML Markup builder</a></h4>
 <div class="paragraph">
 <p>With the Groovy markup builder you can build XML message body content in a simple way, without having to write the typical
-XML overhead. For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML
+XML overhead.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The Groovy test action support lives in a separate module.
+You need to add the module to your project to use the functionality.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">citrus-groovy dependency module</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>citrus-groovy<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>${citrus.version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML
 section or the nested body XML data we write a Groovy script snippet.</p>
 </div>
 <div class="listingblock primary">
@@ -8474,8 +8528,31 @@ elements. For detailed markup builder descriptions please see the official Groov
 data in a database. It might also be helpful to prepare the database with some test data before running a test. You can do this
 using the two database actions that are described in the following sections.</p>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The SQL test actions live in a separate module.
+You need to add the module to your project to use the actions.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">citrus-sql dependency module</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>citrus-sql<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>${citrus.version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>In general Citrus handles SELECT statements differently to other statements like INSERT, UPDATE and DELETE. When executing a SQL query with
+<p>In general Citrus handles SELECT statements differently to other statements like INSERT, UPDATE and DELETE. When executing an SQL query with
 SELECT you are able to add validation steps on the result sets returned from the database. This is not allowed when executing update statements like
 INSERT, UPDATE, DELETE.</p>
 </div>
@@ -9589,10 +9666,36 @@ Current value of variable nextVariable = 54321</code></pre>
 <div class="sect2">
 <h3 id="actions-groovy"><a class="anchor" href="#actions-groovy"></a><a class="link" href="#actions-groovy">8.12. Groovy script execution</a></h3>
 <div class="paragraph">
-<p>Groovy is an agile dynamic language for the Java Platform. Groovy ships with a lot of very powerful features and fits perfectly with Java as it is based on Java and runs inside the JVM.</p>
+<p>Groovy is an agile dynamic language for the Java Platform.
+Groovy ships with a lot of very powerful features and fits perfectly with Java as it is based on Java and runs inside the JVM.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The Groovy test action support lives in a separate module.
+You need to add the module to your project to use the functionality.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">citrus-groovy dependency module</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>citrus-groovy<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>${citrus.version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The Citrus Groovy support might be the entrance for you to write customized test actions. You can easily execute Groovy code inside a test case, just like a normal test action. The whole test context with all variables is available to the Groovy action. This means someone can change variable values or create new variables very easily.</p>
+<p>The Citrus Groovy support might be the entrance for you to write customized test actions.
+You can easily execute Groovy code inside a test case, just like a normal test action.
+The whole test context with all variables is available to the Groovy action. This means someone can change variable values or create new variables very easily.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s have a look at some examples in order to understand the possible Groovy code interactions in Citrus:</p>
@@ -24721,7 +24824,7 @@ Citrus come in here to validate the results.</p>
 In the example above the <em>InfoResult</em> model object is passed as argument to the callback. So the tester can access the command result and validate its properties with assertions.</p>
 </div>
 <div class="paragraph">
-<p>Java 8 Lambda expressions add some syntactical sugar to the command result validation:</p>
+<p>Java Lambda expressions add some syntactical sugar to the command result validation:</p>
 </div>
 <div class="listingblock">
 <div class="title">Java DSL</div>
@@ -26911,7 +27014,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws E
 <p>The test logic has not changed significantly. We use the Citrus <strong>TestRunner</strong> as method injected parameter instead of the <strong>TestDesigner</strong> . And this is pretty much the trick. Now the Java DSL methods do execute the Citrus test logic immediately. This is why the syntax of the Citrus Java DSL methods have changed a little bit. We now use a anonymous interface implementation for constructing the send/receive test action logic. As a result we can use the Citrus Java DSL as normal code and we can mix the runtime Java logic as each statement is executed immediately.</p>
 </div>
 <div class="paragraph">
-<p>With Java 8 lambda expressions our code looks even more straight forward and less verbose as we can skip the anonymous interface implementations. With Java 8 you can write the same test like this:</p>
+<p>With Java lambda expressions our code looks even more straight forward and less verbose as we can skip the anonymous interface implementations. With Java 8 you can write the same test like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -32108,8 +32211,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.0.0-SNAPSHOT<br>
-Last updated 2021-02-16 21:23:18 +0100
+Version 3.0.0<br>
+Last updated 2021-07-21 10:46:56 +0200
 </div>
 </div>
 <style>
