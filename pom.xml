@@ -167,7 +167,7 @@
     <zookeeper.version>3.7.0</zookeeper.version>
     <dropwizard.metrics.version>4.1.21</dropwizard.metrics.version>
     <snappy.version>1.1.8.4</snappy.version>
-    <sshd.version>2.5.1</sshd.version>
+    <sshd.version>2.7.0</sshd.version>
     <bouncycastle.version>1.68</bouncycastle.version>
     <jsch.version>0.1.55</jsch.version>
     <json.schema.validator.version>2.2.14</json.schema.validator.version>
