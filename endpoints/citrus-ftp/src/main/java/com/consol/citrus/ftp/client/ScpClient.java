@@ -33,10 +33,10 @@ import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier;
 import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
 import org.apache.sshd.client.keyverifier.RejectAllServerKeyVerifier;
-import org.apache.sshd.client.scp.DefaultScpClientCreator;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
+import org.apache.sshd.scp.client.DefaultScpClientCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -49,9 +49,9 @@ import org.springframework.core.io.Resource;
 public class ScpClient extends SftpClient {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ScpClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ScpClient.class);
 
-    private org.apache.sshd.client.scp.ScpClient scpClient;
+    private org.apache.sshd.scp.client.ScpClient scpClient;
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -93,7 +93,7 @@ public class ScpClient extends SftpClient {
         try {
             scpClient.upload(FileUtils.getFileResource(command.getFile().getPath(), context).getFile().getAbsolutePath(), command.getTarget().getPath());
         } catch (IOException e) {
-            log.error("Failed to store file via SCP", e);
+            LOG.error("Failed to store file via SCP", e);
             return FtpMessage.error();
 
         }
@@ -105,12 +105,12 @@ public class ScpClient extends SftpClient {
         try {
             Resource target = FileUtils.getFileResource(command.getTarget().getPath(), context);
             if (!Optional.ofNullable(target.getFile().getParentFile()).map(File::mkdirs).orElse(true)) {
-                log.warn("Failed to create target directories in path: " + target.getFile().getAbsolutePath());
+                LOG.warn("Failed to create target directories in path: " + target.getFile().getAbsolutePath());
             }
 
             scpClient.download(command.getFile().getPath(), target.getFile().getAbsolutePath());
         } catch (IOException e) {
-            log.error("Failed to retrieve file via SCP", e);
+            LOG.error("Failed to retrieve file via SCP", e);
             return FtpMessage.error();
         }
 
