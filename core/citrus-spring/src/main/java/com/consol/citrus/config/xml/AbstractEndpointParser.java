@@ -43,6 +43,8 @@ public abstract class AbstractEndpointParser extends AbstractBeanDefinitionParse
         BeanDefinitionBuilder configurationBuilder = BeanDefinitionBuilder.genericBeanDefinition(getEndpointConfigurationClass());
         parseEndpointConfiguration(configurationBuilder, element, parserContext);
 
+        endpointBuilder.addPropertyValue("name", element.getAttribute(ID_ATTRIBUTE));
+
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "Configuration";
         BeanDefinitionParserUtils.registerBean(endpointConfigurationId, configurationBuilder.getBeanDefinition(), parserContext, shouldFireEvents());
 

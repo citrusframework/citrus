@@ -46,6 +46,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
 
         // 1st message sender
         HttpClient httpClient = clients.get("httpClient1");
+        Assert.assertEquals(httpClient.getName(), "httpClient1");
         Assert.assertNotNull(httpClient.getEndpointConfiguration().getRestTemplate());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
