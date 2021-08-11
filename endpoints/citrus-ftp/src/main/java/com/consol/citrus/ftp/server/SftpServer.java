@@ -32,11 +32,11 @@ import com.consol.citrus.ssh.server.SshServer;
 import com.consol.citrus.xml.StringResult;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.ftplet.DataType;
-import org.apache.sshd.common.scp.ScpTransferEventListener;
 import org.apache.sshd.common.session.Session;
+import org.apache.sshd.scp.common.ScpTransferEventListener;
 import org.apache.sshd.server.session.ServerSession;
-import org.apache.sshd.server.subsystem.sftp.FileHandle;
-import org.apache.sshd.server.subsystem.sftp.SftpEventListener;
+import org.apache.sshd.sftp.server.FileHandle;
+import org.apache.sshd.sftp.server.SftpEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 public class SftpServer extends SshServer implements ScpTransferEventListener, SftpEventListener {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SftpServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SftpServer.class);
 
     /**  This servers endpoint configuration */
     private final SftpEndpointConfiguration endpointConfiguration;
@@ -74,8 +74,8 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
             request.setPayload(result.toString());
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Received request on ftp server: '%s':%n%s",
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Received request on ftp server: '%s':%n%s",
                     request.getSignal(),
                     request.getPayload(String.class)));
         }
@@ -113,8 +113,8 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
 
     @Override
     public void initialized(ServerSession session, int version) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Received new SFTP connection: '%s'", Arrays.toString(session.getSessionId())));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Received new SFTP connection: '%s'", Arrays.toString(session.getSessionId())));
         }
 
         if (!endpointConfiguration.isAutoConnect()) {
@@ -152,8 +152,8 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
             }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Closing FTP connection: '%s'", session.getSessionId()));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Closing FTP connection: '%s'", session.getSessionId()));
         }
     }
 

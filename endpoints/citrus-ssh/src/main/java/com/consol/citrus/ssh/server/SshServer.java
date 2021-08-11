@@ -36,13 +36,13 @@ import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
-import org.apache.sshd.common.scp.AbstractScpTransferEventListenerAdapter;
-import org.apache.sshd.common.scp.ScpTransferEventListener;
-import org.apache.sshd.server.scp.ScpCommandFactory;
+import org.apache.sshd.scp.common.AbstractScpTransferEventListenerAdapter;
+import org.apache.sshd.scp.common.ScpTransferEventListener;
+import org.apache.sshd.scp.server.ScpCommandFactory;
 import org.apache.sshd.server.subsystem.SubsystemFactory;
-import org.apache.sshd.server.subsystem.sftp.AbstractSftpEventListenerAdapter;
-import org.apache.sshd.server.subsystem.sftp.SftpEventListener;
-import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
+import org.apache.sshd.sftp.server.AbstractSftpEventListenerAdapter;
+import org.apache.sshd.sftp.server.SftpEventListener;
+import org.apache.sshd.sftp.server.SftpSubsystemFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
@@ -158,6 +158,10 @@ public class SshServer extends AbstractServer {
             ClassLoadableResourceKeyPairProvider resourceKeyPairProvider = new ClassLoadableResourceKeyPairProvider(Collections.singletonList("com/consol/citrus/ssh/citrus.pem"));
             sshd.setKeyPairProvider(resourceKeyPairProvider);
         }
+
+        List<String> availableSignatureFactories = sshd.getSignatureFactoriesNames();
+        availableSignatureFactories.add("ssh-dss");
+        sshd.setSignatureFactoriesNames(availableSignatureFactories);
 
         // Authentication
         boolean authFound = false;

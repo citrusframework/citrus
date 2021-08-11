@@ -38,7 +38,7 @@ import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.subsystem.SubsystemFactory;
-import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
+import org.apache.sshd.sftp.server.SftpSubsystemFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -222,6 +222,10 @@ public class SftpClientTest extends AbstractFtpClientTest {
 
         subsystemFactories.add(sftpSubsystemFactory);
         sshd.setSubsystemFactories(subsystemFactories);
+
+        List<String> availableSignatureFactories = sshd.getSignatureFactoriesNames();
+        availableSignatureFactories.add("ssh-dss");
+        sshd.setSignatureFactoriesNames(availableSignatureFactories);
 
         sshd.start();
 
