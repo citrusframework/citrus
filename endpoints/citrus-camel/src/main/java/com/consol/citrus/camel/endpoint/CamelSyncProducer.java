@@ -17,6 +17,7 @@
 package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ReplyMessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
@@ -61,7 +62,14 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public void send(final Message message, final TestContext context) {
-        String endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
+        String endpointUri;
+        if (endpointConfiguration.getEndpointUri() != null) {
+            endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
+        } else if (endpointConfiguration.getEndpoint() != null){
+            endpointUri = endpointConfiguration.getEndpoint().getEndpointUri();
+        } else {
+            throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel producer");
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Sending message to camel endpoint: '" + endpointUri + "'");
@@ -111,7 +119,16 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ReplyMessageTimeoutException(timeout, endpointConfiguration.getEndpointUri());
+            String endpointUri;
+            if (endpointConfiguration.getEndpointUri() != null) {
+                endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
+            } else if (endpointConfiguration.getEndpoint() != null) {
+                endpointUri = endpointConfiguration.getEndpoint().getEndpointUri();
+            } else {
+                throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel consumer");
+            }
+
+            throw new ReplyMessageTimeoutException(timeout, endpointUri);
         }
 
         return message;

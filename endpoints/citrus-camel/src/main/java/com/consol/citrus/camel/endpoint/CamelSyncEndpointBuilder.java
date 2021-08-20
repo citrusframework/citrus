@@ -23,6 +23,7 @@ import com.consol.citrus.camel.message.CamelMessageConverter;
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.message.MessageCorrelator;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Endpoint;
 
 /**
  * @author Christoph Deppisch
@@ -45,6 +46,16 @@ public class CamelSyncEndpointBuilder extends AbstractEndpointBuilder<CamelSyncE
      */
     public CamelSyncEndpointBuilder endpointUri(String endpointUri) {
         endpoint.getEndpointConfiguration().setEndpointUri(endpointUri);
+        return this;
+    }
+
+    /**
+     * Sets the endpoint property.
+     * @param camelEndpoint
+     * @return
+     */
+    public CamelSyncEndpointBuilder endpoint(Endpoint camelEndpoint) {
+        endpoint.getEndpointConfiguration().setEndpoint(camelEndpoint);
         return this;
     }
 

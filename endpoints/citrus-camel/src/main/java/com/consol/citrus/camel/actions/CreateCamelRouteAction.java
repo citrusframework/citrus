@@ -125,7 +125,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
      */
     public static final class Builder extends AbstractCamelRouteAction.Builder<CreateCamelRouteAction, Builder> {
 
-        private List<RouteDefinition> routes = new ArrayList<>();
+        private final List<RouteDefinition> routes = new ArrayList<>();
         private String routeContext;
 
         public Builder route(RouteBuilder routeBuilder) {

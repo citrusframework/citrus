@@ -17,6 +17,7 @@
 package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
@@ -59,13 +60,25 @@ public class CamelConsumer implements Consumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        String endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
+        String endpointUri;
+        if (endpointConfiguration.getEndpointUri() != null) {
+            endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
+        } else if (endpointConfiguration.getEndpoint() != null) {
+            endpointUri = endpointConfiguration.getEndpoint().getEndpointUri();
+        } else {
+            throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel consumer");
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Receiving message from camel endpoint: '" + endpointUri + "'");
         }
 
-        Exchange exchange = getConsumerTemplate().receive(endpointUri, timeout);
+        Exchange exchange;
+        if (endpointConfiguration.getEndpoint() != null) {
+            exchange = getConsumerTemplate().receive(endpointConfiguration.getEndpoint(), timeout);
+        } else {
+            exchange = getConsumerTemplate().receive(endpointUri, timeout);
+        }
 
         if (exchange == null) {
             throw new MessageTimeoutException(timeout, endpointUri);

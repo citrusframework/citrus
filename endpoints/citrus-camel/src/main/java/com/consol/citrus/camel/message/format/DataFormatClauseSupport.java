@@ -22,6 +22,8 @@ package com.consol.citrus.camel.message.format;
 import java.util.List;
 import java.util.Map;
 
+import com.consol.citrus.camel.dsl.CamelContextAware;
+import org.apache.camel.CamelContext;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.model.DataFormatDefinition;
 import org.apache.camel.model.ProcessDefinition;
@@ -40,9 +42,19 @@ public class DataFormatClauseSupport<T> {
     private final DataFormatClause<InlineProcessDefinition> delegate;
     private final T result;
 
+    private CamelContext camelContext;
+
     public DataFormatClauseSupport(T result, DataFormatClause.Operation operation) {
         this.delegate = new DataFormatClause<>(new InlineProcessDefinition(), operation);
         this.result = result;
+    }
+
+    public DataFormatClauseSupport<T> camelContext(CamelContext camelContext) {
+        this.camelContext = camelContext;
+        if (result instanceof CamelContextAware<?>) {
+            ((CamelContextAware<?>) result).camelContext(camelContext);
+        }
+        return this;
     }
 
     public T any23(String baseuri) {
@@ -700,6 +712,10 @@ public class DataFormatClauseSupport<T> {
             dataFormat = dataFormatType;
             return this;
         }
+    }
+
+    public CamelContext getCamelContext() {
+        return camelContext;
     }
 
     public DataFormatDefinition getDataFormat() {
