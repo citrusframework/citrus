@@ -21,6 +21,7 @@ package com.consol.citrus.camel.message;
 
 import java.util.Map;
 
+import com.consol.citrus.camel.dsl.CamelContextAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -108,7 +109,7 @@ public class CamelMessageProcessor implements MessageProcessor {
     }
 
     public abstract static class CamelMessageProcessorBuilder<T extends CamelMessageProcessor, B extends CamelMessageProcessorBuilder<T, B>>
-            implements MessageProcessor.Builder<T, B>, ReferenceResolverAware {
+            implements MessageProcessor.Builder<T, B>, ReferenceResolverAware, CamelContextAware<B> {
 
         protected CamelContext camelContext;
         protected ReferenceResolver referenceResolver;
@@ -119,6 +120,7 @@ public class CamelMessageProcessor implements MessageProcessor {
             self = (B) this;
         }
 
+        @Override
         public B camelContext(CamelContext camelContext) {
             this.camelContext = camelContext;
             return self;

@@ -1,10 +1,7 @@
 package com.consol.citrus.camel.actions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.camel.message.CamelRouteProcessor;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import org.apache.camel.CamelContext;
@@ -21,7 +18,6 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     private ReferenceResolver referenceResolver;
 
     private CamelContext camelContext;
-    private List<String> routeIds = new ArrayList<>();
 
     private TestActionBuilder<? extends AbstractCamelRouteAction> delegate;
 
@@ -31,6 +27,15 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      */
     public static CamelRouteActionBuilder camel() {
         return new CamelRouteActionBuilder();
+    }
+
+    /**
+     * Processor calling given Camel route as part of the message processing.
+     * @return
+     */
+    public CamelRouteProcessor.Builder processor() {
+        return CamelRouteProcessor.Builder.route()
+                .camelContext(camelContext);
     }
 
     /**
@@ -55,25 +60,6 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     /**
-     * Adds route ids.
-     * @param routeIds
-     * @return
-     */
-    public CamelRouteActionBuilder routes(String... routeIds) {
-        return routes(Arrays.asList(routeIds));
-    }
-
-    /**
-     * Add list of route ids.
-     * @param routeIds
-     * @return
-     */
-    public CamelRouteActionBuilder routes(List<String> routeIds) {
-        this.routeIds.addAll(routeIds);
-        return this;
-    }
-
-    /**
      * Creates new Camel routes in route builder.
      * @param routeBuilder
      * @return
@@ -85,7 +71,6 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
 
         CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder()
                 .context(getCamelContext())
-                .routeIds(routeIds)
                 .route(routeBuilder);
 
         this.delegate = builder;
@@ -100,7 +85,6 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     public CreateCamelRouteAction.Builder create(String routeContext) {
         CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder()
                 .context(getCamelContext())
-                .routeIds(routeIds)
                 .routeContext(routeContext);
 
         this.delegate = builder;
@@ -113,8 +97,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      */
     public CamelControlBusAction.Builder controlBus() {
         CamelControlBusAction.Builder builder = new CamelControlBusAction.Builder()
-                .context(getCamelContext())
-                .routeIds(routeIds);
+                .context(getCamelContext());
 
         this.delegate = builder;
         return builder;
@@ -126,7 +109,6 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     public StartCamelRouteAction.Builder start(String ... routes) {
         StartCamelRouteAction.Builder builder = new StartCamelRouteAction.Builder()
                 .context(getCamelContext())
-                .routeIds(routeIds)
                 .routes(routes);
 
         this.delegate = builder;
@@ -139,7 +121,6 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     public StopCamelRouteAction.Builder stop(String ... routes) {
         StopCamelRouteAction.Builder builder = new StopCamelRouteAction.Builder()
                 .context(getCamelContext())
-                .routeIds(routeIds)
                 .routes(routes);
 
         this.delegate = builder;
@@ -152,7 +133,6 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     public RemoveCamelRouteAction.Builder remove(String ... routes) {
         RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder()
                 .context(getCamelContext())
-                .routeIds(routeIds)
                 .routes(routes);
 
         this.delegate = builder;

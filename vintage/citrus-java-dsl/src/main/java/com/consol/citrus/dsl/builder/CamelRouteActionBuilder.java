@@ -1,5 +1,6 @@
 package com.consol.citrus.dsl.builder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
 
     private final com.consol.citrus.camel.actions.CamelRouteActionBuilder delegate = new com.consol.citrus.camel.actions.CamelRouteActionBuilder();
 
+    private final List<String> routeIds = new ArrayList<>();
 
     public CamelRouteActionBuilder context(String camelContext) {
         delegate.context(camelContext);
@@ -38,7 +40,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     public CamelRouteActionBuilder routes(List<String> routeIds) {
-        delegate.routes(routeIds);
+        this.routeIds.addAll(routeIds);
         return this;
     }
 
@@ -55,15 +57,18 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     public StartCamelRouteAction.Builder start(String ... routes) {
-        return delegate.start(routes);
+        return delegate.start(routes)
+                .routeIds(routeIds);
     }
 
     public StopCamelRouteAction.Builder stop(String ... routes) {
-        return delegate.stop(routes);
+        return delegate.stop(routes)
+                .routeIds(routeIds);
     }
 
     public RemoveCamelRouteAction.Builder remove(String ... routes) {
-        return delegate.remove(routes);
+        return delegate.remove(routes)
+                .routeIds(routeIds);
     }
 
     public CamelRouteActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {

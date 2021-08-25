@@ -19,9 +19,11 @@
 
 package com.consol.citrus.camel.endpoint;
 
+import com.consol.citrus.endpoint.EndpointUriBuilder;
 import com.consol.citrus.camel.message.CamelMessageConverter;
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Endpoint;
 
 /**
  * @author Christoph Deppisch
@@ -43,6 +45,26 @@ public class CamelEndpointBuilder extends AbstractEndpointBuilder<CamelEndpoint>
      */
     public CamelEndpointBuilder endpointUri(String endpointUri) {
         endpoint.getEndpointConfiguration().setEndpointUri(endpointUri);
+        return this;
+    }
+
+    /**
+     * Sets the endpoint uri from given builder.
+     * @param builder
+     * @return
+     */
+    public CamelEndpointBuilder endpoint(EndpointUriBuilder builder) {
+        endpoint.getEndpointConfiguration().setEndpointUri(builder.getUri());
+        return this;
+    }
+
+    /**
+     * Sets the endpoint property.
+     * @param camelEndpoint
+     * @return
+     */
+    public CamelEndpointBuilder endpoint(Endpoint camelEndpoint) {
+        endpoint.getEndpointConfiguration().setEndpoint(camelEndpoint);
         return this;
     }
 
