@@ -52,6 +52,13 @@ public class CamelTransformMessageProcessor extends CamelMessageProcessor {
             return builder.expression;
         }
 
+        public static ExpressionClauseSupport<Builder> transform(CamelContext camelContext) {
+            Builder builder = new Builder();
+            builder.expression = new ExpressionClauseSupport<>(builder);
+            builder.camelContext(camelContext);
+            return builder.expression;
+        }
+
         @Override
         public CamelTransformMessageProcessor doBuild() {
             TransformProcessor processor;

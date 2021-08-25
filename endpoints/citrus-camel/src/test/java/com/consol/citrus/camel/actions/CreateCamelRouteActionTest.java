@@ -38,8 +38,8 @@ import static org.mockito.Mockito.when;
 
 public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
-    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
-    private RouteDefinition route = Mockito.mock(RouteDefinition.class);
+    private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
+    private final RouteDefinition route = Mockito.mock(RouteDefinition.class);
 
     @Test
     public void testCreateRouteContext() throws Exception {

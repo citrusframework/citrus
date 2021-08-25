@@ -35,6 +35,9 @@ public class CamelEndpointConfiguration extends AbstractEndpointConfiguration {
     /** Camel endpoint uri */
     private String endpointUri;
 
+    /** Camel endpoint as destination */
+    private Endpoint endpoint;
+
     /**
      * Gets the Camel context.
      * @return
@@ -65,6 +68,22 @@ public class CamelEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setEndpointUri(String endpointUri) {
         this.endpointUri = endpointUri;
+    }
+
+    /**
+     * Gets the endpoint.
+     * @return
+     */
+    public Endpoint getEndpoint() {
+        return endpoint;
+    }
+
+    /**
+     * Sets the endpoint.
+     * @param endpoint
+     */
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
 
     /**

@@ -54,19 +54,29 @@ public class CamelProducer implements Producer {
 
     @Override
     public void send(final Message message, final TestContext context) {
-        String endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
+        String endpointUri;
+        if (endpointConfiguration.getEndpointUri() != null) {
+            endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
+        } else if (endpointConfiguration.getEndpoint() != null) {
+            endpointUri = endpointConfiguration.getEndpoint().getEndpointUri();
+        } else {
+            throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel producer");
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Sending message to camel endpoint: '" + endpointUri + "'");
         }
 
-        Exchange camelExchange = getProducerTemplate()
-                .send(endpointUri, new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context);
-                    }
-                });
+        Exchange camelExchange;
+        if (endpointConfiguration.getEndpoint() != null) {
+            camelExchange = getProducerTemplate()
+                    .send(endpointConfiguration.getEndpoint(), exchange ->
+                            endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context));
+        } else {
+            camelExchange = getProducerTemplate()
+                    .send(endpointUri, exchange ->
+                            endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context));
+        }
 
         if (camelExchange.getException() != null) {
             throw new CitrusRuntimeException("Sending message to camel endpoint resulted in exception", camelExchange.getException());

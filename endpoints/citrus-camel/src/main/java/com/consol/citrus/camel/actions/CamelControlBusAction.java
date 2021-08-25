@@ -37,7 +37,7 @@ import org.springframework.util.StringUtils;
 public class CamelControlBusAction extends AbstractCamelRouteAction {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CamelControlBusAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CamelControlBusAction.class);
 
     /** The control bus action */
     private final String action;
@@ -90,12 +90,12 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
         if (StringUtils.hasText(result)) {
             String expectedResult = context.replaceDynamicContentInString(result);
 
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Validating Camel controlbus response = '%s'", expectedResult));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(String.format("Validating Camel controlbus response = '%s'", expectedResult));
             }
 
             ValidationUtils.validateValues(response.getPayload(String.class), expectedResult, "camelControlBusResult", context);
-            log.info("Validation of Camel controlbus response successful - All values OK");
+            LOG.info("Validation of Camel controlbus response successful - All values OK");
         }
     }
 
@@ -149,6 +149,23 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
         private String languageType = "simple";
         private String languageExpression = "";
         private String result;
+
+        /**
+         * Static entry method for the fluent API.
+         * @return
+         */
+        public static Builder controlBus() {
+            return new Builder();
+        }
+
+        /**
+         * Sets route action to execute.
+         * @param id
+         */
+        public ControlBusRouteActionBuilder route(String id) {
+            this.routeId = id;
+            return new ControlBusRouteActionBuilder(this);
+        }
 
         /**
          * Sets route action to execute.
@@ -207,6 +224,55 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
         @Override
         public CamelControlBusAction build() {
             return new CamelControlBusAction(this);
+        }
+
+        /**
+         * Route action builder
+         */
+        public static class ControlBusRouteActionBuilder {
+
+            private final Builder parent;
+
+            public ControlBusRouteActionBuilder(Builder builder) {
+                this.parent = builder;
+            }
+
+            /**
+             * Performs generic action on the given route.
+             * @param action
+             * @return
+             */
+            public Builder action(String action) {
+                parent.action = action;
+                return parent;
+            }
+
+            /**
+             * Start given route.
+             * @return
+             */
+            public Builder start() {
+                parent.action = "start";
+                return parent;
+            }
+
+            /**
+             * Stop given route.
+             * @return
+             */
+            public Builder stop() {
+                parent.action = "stop";
+                return parent;
+            }
+
+            /**
+             * Retrieve status of given route.
+             * @return
+             */
+            public Builder status() {
+                parent.action = "status";
+                return parent;
+            }
         }
     }
 }
