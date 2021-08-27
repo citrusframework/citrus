@@ -134,7 +134,7 @@ update_docs_version() {
         return
     fi
 
-    echo "Updating to version: $version"
+    echo "Update docs to version: $version"
 
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sed -i "17p" $file
