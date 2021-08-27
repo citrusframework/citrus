@@ -30,17 +30,17 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.repository == 'citrusframework/citrus'
 
     steps:
-    - uses: radcortez/project-metadata-action@main
-      name: Retrieve project metadata
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Retrieve project metadata
       id: metadata
+      uses: radcortez/project-metadata-action@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         metadata-file-path: '.github/project.yml'
-    - name: Checkout code
-      uses: actions/checkout@v2
     - name: Prepare Release Environment
       run: |
-        VERSION=${{ steps.metadata.outputs.current-version }}
+        VERSION=v${{ steps.metadata.outputs.current-version }}
         echo "Using VERSION=$VERSION"
         echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Create Release
@@ -52,6 +52,6 @@ jobs:
         tag_name: ${{ env.VERSION }}
         release_name: ${{ env.VERSION }}
         body: |
-          Citrus release {{ env.VERSION }}
+          Citrus release ${{ env.VERSION }}
         draft: false
         prerelease: false
