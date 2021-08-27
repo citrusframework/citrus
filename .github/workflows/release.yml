@@ -38,6 +38,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         metadata-file-path: '.github/project.yml'
+        local-file: true
     - name: Prepare Release Environment
       run: |
         VERSION=v${{ steps.metadata.outputs.current-version }}
