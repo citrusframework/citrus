@@ -558,8 +558,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 3.0.0,</span>
-<span id="revdate">2021-07-23</span>
+<span id="revnumber">version 3.1.0,</span>
+<span id="revdate">2021-08-30</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -753,6 +753,9 @@ $(addBlockSwitches);
 <li><a href="#camel-context-handling">16.5. Camel context handling</a></li>
 <li><a href="#camel-route-actions">16.6. Camel route actions</a></li>
 <li><a href="#camel-controlbus-actions">16.7. Camel controlbus actions</a></li>
+<li><a href="#camel-endpoint-dsl">16.8. Camel endpoint DSL</a></li>
+<li><a href="#camel-processor-support">16.9. Camel processor support</a></li>
+<li><a href="#camel-data-format-support">16.10. Camel data format support</a></li>
 </ul>
 </li>
 <li><a href="#message-channels">17. Message channel support</a>
@@ -1034,7 +1037,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 3.0.0</strong></p>
+<p><strong>Version: 3.1.0</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -18872,7 +18875,14 @@ It is highly recommended to use a proper <strong>"timeout"</strong> setting on t
 <h2 id="apache-camel"><a class="anchor" href="#apache-camel"></a><a class="link" href="#apache-camel">16. Apache Camel support</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Apache Camel project implements the enterprise integration patterns for building mediation and routing rules in your enterprise application. With the Citrus Camel support you are able to directly interact with the Apache Camel components and route definitions. You can call Camel routes and receive synchronous response messages. You can also simulate the Camel route endpoint with receiving messages and providing simulated response messages.</p>
+<p>[Apache Camel](<a href="https://camel.apache.org" class="bare">https://camel.apache.org</a>) is a fantastic Open Source integration framework that empowers you to quickly
+and easily integrate various systems consuming or producing data.</p>
+</div>
+<div class="paragraph">
+<p>Camel implements the enterprise integration patterns for building mediation and routing rules in your software.
+With the Camel support in Citrus you are able to directly interact with the 300+ Camel components through route definitions.
+You can call Camel routes and receive synchronous response messages from a Citrus test.
+You can also simulate the Camel route endpoint with receiving messages and providing simulated response messages.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -18881,7 +18891,8 @@ It is highly recommended to use a proper <strong>"timeout"</strong> setting on t
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The camel components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.
+The camel components in Citrus are located in a separate Maven module.
+So you should add the module as Maven dependency to your project accordingly.
 </td>
 </tr>
 </table>
@@ -18896,9 +18907,11 @@ The camel components in Citrus are kept in a separate Maven module. So you shoul
 </div>
 </div>
 <div class="paragraph">
-<p>Citrus provides a special Apache Camel configuration schema that is used in our Spring configuration files. You have to include the citrus-camel namespace in your Spring configuration XML files as follows.</p>
+<p>For XML configurations Citrus provides a special Camel configuration schema that is used in Spring configuration files.
+You have to include the <code>citrus-camel</code> namespace in your Spring configuration XML files as follows.</p>
 </div>
 <div class="listingblock">
+<div class="title">XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span>
       <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
@@ -18918,7 +18931,7 @@ The camel components in Citrus are kept in a separate Maven module. So you shoul
 </div>
 </div>
 <div class="paragraph">
-<p>Now you are ready to use the Citrus Apache Camel configuration elements using the citrus-camel namespace prefix.</p>
+<p>Now you are ready to use the Camel configuration elements using the citrus-camel namespace prefix.</p>
 </div>
 <div class="paragraph">
 <p>The next sections explain the Citrus capabilities while working with Apache Camel.</p>
@@ -18926,60 +18939,138 @@ The camel components in Citrus are kept in a separate Maven module. So you shoul
 <div class="sect2">
 <h3 id="camel-endpoint"><a class="anchor" href="#camel-endpoint"></a><a class="link" href="#camel-endpoint">16.1. Camel endpoint</a></h3>
 <div class="paragraph">
-<p>Camel and Citrus both use the endpoint pattern in order to define message destinations. Users can interact with these endpoints when creating the mediation and routing logic. The Citrus endpoint component for Camel interaction is defined as follows in your Citrus Spring configuration.</p>
+<p>Camel and Citrus both use the endpoint pattern in order to define message destinations.
+Users can interact with these endpoints when creating the mediation and routing logic.
+The Citrus endpoint component for Camel interaction is defined as follows in your Citrus Spring configuration.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">directCamelEndpoint</span><span class="delimiter">&quot;</span></span>
-      <span class="attribute-name">endpoint-uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:news</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> CamelEndpoint helloCamelEndpoint() {
+    <span class="keyword">return</span> <span class="keyword">new</span> CamelEndpoint()
+        .endpointUri(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span>)
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloCamelEndpoint</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">endpoint-uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Right next to that Citrus endpoint we need the Apache Camel route that is located inside a camel context component.</p>
+<p>The endpoint defines an endpoint uri that will be called when messages are sent/received using the endpoint producer or consumer.
+The endpoint uri refers to a Camel route that is located inside a Camel context.
+The Camel route should use the respective endpoint uri as <code>from</code> definition.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> CamelContext camelContext() {
+    CamelContext context = <span class="keyword">new</span> DefaultCamelContext();
+
+    context.addRoutes(<span class="keyword">new</span> RouteBuilder() {
+        <span class="annotation">@Override</span>
+        <span class="directive">public</span> <span class="type">void</span> configure() <span class="directive">throws</span> <span class="exception">Exception</span> {
+            from(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span>)
+                .routeId(<span class="string"><span class="delimiter">&quot;</span><span class="content">helloRoute</span><span class="delimiter">&quot;</span></span>)
+                .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">log:com.consol.citrus.camel?level=INFO</span><span class="delimiter">&quot;</span></span>)
+                .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:greetings</span><span class="delimiter">&quot;</span></span>);
+        }
+    });
+
+    <span class="keyword">return</span> context;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;camelContext</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelContext</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://camel.apache.org/schema/spring</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="tag">&lt;route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">newsRoute</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;from</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:news</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloRoute</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;from</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">log:com.consol.citrus.camel?level=INFO</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-    <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:news-feed</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:greetings-feed</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
   <span class="tag">&lt;/route&gt;</span>
 <span class="tag">&lt;/camelContext&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>As you can see the Citrus camel endpoint is able to interact with the Camel route. In the example above the Camel context is placed as Spring bean Camel context.</p>
+<p>In the example above the Camel context is placed as Spring bean.
+The context defines a Camel route the Citrus test case can interact with.</p>
 </div>
 <div class="paragraph">
-<p>The Camel context is automatically referenced in the Citrus Camel endpoint. This is because Citrus will automatically look for a Camel context in the
-Spring bean configuration.</p>
+<p>The Camel context is automatically referenced in the Citrus Camel endpoint.
+This is because Citrus will automatically look for a Camel context in the Spring bean configuration.</p>
 </div>
 <div class="paragraph">
-<p>In case you have multiple Camel context instances in your configuration you can explicitly link the endpoint to a context with <code>camel-context=&quot;camelContext&quot;</code>.</p>
+<p>In case you have multiple Camel context instances in your configuration you can explicitly link the endpoint to a
+context with <code>camel-context=&quot;camelContext&quot;</code>.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">directCamelEndpoint</span><span class="delimiter">&quot;</span></span>
-      <span class="attribute-name">camel-contxt</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelContext</span><span class="delimiter">&quot;</span></span>
-      <span class="attribute-name">endpoint-uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:news</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> CamelEndpoint helloCamelEndpoint() {
+    <span class="keyword">return</span> <span class="keyword">new</span> CamelEndpoint()
+        .camelContext(specialCamelContext)
+        .endpointUri(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span>)
+        .build();
+}</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>This explicitly binds the endpoint to the context named "<em>camelContext</em>". This configuration would be the easiest setup to use Camel with Citrus as you can add the Camel context straight to the Spring bean application context and interact with it in Citrus. Of course you can also import your Camel context and routes from other Spring bean context files or you can start the Camel context routes with Java code.</p>
-</div>
-<div class="paragraph">
-<p>In the example the Apache Camel route is listening on the route endpoint uri <strong>direct:news</strong> . Incoming messages will be logged to the console using a <strong>log</strong> Camel component. After that the message is forwarded to a <strong>seda</strong> Camel component which is a simple queue in memory. So we have a small Camel routing logic with two different message transports.</p>
-</div>
-<div class="paragraph">
-<p>The Citrus endpoint can interact with this sample route definition. The endpoint configuration holds the endpoint uri information that tells Citrus how to access the Apache Camel route destination. This endpoint uri can be any Camel endpoint uri that is used in a Camel route. Here we just use the direct endpoint uri <strong>direct:news</strong> so the sample Camel route gets called directly. In your test case you can use this endpoint component referenced by its id or name in order to send and receive messages on the route address <strong>direct:news</strong> . The Camel route listening on this direct address will be invoked accordingly.</p>
-</div>
-<div class="paragraph">
-<p>The Apache Camel routes support asynchronous and synchronous message communication patterns. By default Citrus uses asynchronous communication with Camel routes. This means that the Citrus producer sends the exchange message to the route endpoint uri and is finished immediately. There is no synchronous response to await. In contrary to that the synchronous endpoint will send and receive a synchronous message on the Camel destination route. We will discuss this later on in this chapter. For now we have a look on how to use the Citrus camel endpoint in a test case in order to send a message to the Camel route:</p>
-</div>
-<div class="listingblock">
+<div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">directCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloCamelEndpoint</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">camel-contxt</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">specialCamelContext</span><span class="delimiter">&quot;</span></span>
+      <span class="attribute-name">endpoint-uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This explicitly binds the endpoint to the context named "<em>specialCamelContext</em>".
+This configuration would be the easiest setup to use Camel with Citrus as you can add the Camel context straight to the
+Spring bean application context and interact with it in Citrus.
+Of course, you can also import your Camel context and routes from other Spring bean context files,
+or you can start the Camel context routes with Java code.</p>
+</div>
+<div class="paragraph">
+<p>In the example the Camel route is listening on the route endpoint uri <code>direct:hello</code>.
+Incoming messages will be logged to the console using a <code>log</code> Camel component.
+After that the message is forwarded to a <code>seda</code> Camel component which is a simple queue in memory.</p>
+</div>
+<div class="paragraph">
+<p>The Citrus endpoint can interact with this sample route definition sending messages to the <code>direct:hello</code> endpoint.
+The endpoint configuration holds the endpoint uri information that tells Citrus how to access the Camel route.
+This endpoint uri can be any Camel endpoint uri that is used in a Camel route.</p>
+</div>
+<div class="paragraph">
+<p>The Camel routes support asynchronous and synchronous message communication patterns.
+By default, Citrus uses asynchronous communication with Camel routes.
+This means that the Citrus producer sends the exchange message to the route endpoint uri and is finished immediately.
+There is no synchronous response to await.
+In contrary to that the synchronous endpoint will send and receive a synchronous message on the Camel destination route.
+This message exchange pattern is discussed in a later section in this chapter.</p>
+</div>
+<div class="paragraph">
+<p>For now, we have a look on how to use the Citrus Camel endpoint in a test case in order to send a message to the Camel route:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">send(helloCamelEndpoint)
+    .message()
+    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello from Citrus!</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;message</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">plaintext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;payload&gt;</span>Hello from Citrus!<span class="tag">&lt;/payload&gt;</span>
   <span class="tag">&lt;/message&gt;</span>
@@ -18987,20 +19078,49 @@ Spring bean configuration.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The Citrus camel endpoint component can also be used in a receive message action in your test case. In this situation you would receive a message from the route endpoint. This is especially designed for queueing endpoint routes such as the Camel seda component. In our example Camel route above the seda Camel component is called with the endpoint uri <strong>seda:news-feed</strong> . This means that the Camel route is sending a message to the seda component. Citrus is able to receive this route message with a endpoint component like this:</p>
+<p>You can use the very same Citrus Camel endpoint component to receive messages in your test case, too.
+In this situation you would receive a message from the route endpoint.
+This is especially designed for queueing endpoint routes such as the Camel seda component.
+In our example Camel route above the seda Camel component is called with the endpoint uri <strong>seda:greetings-feed</strong>.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
+<p>This means that the Camel route is sending a message to the <code>seda</code> component.
+Citrus is able to receive this route message with an endpoint component like this:</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sedaCamelEndpoint</span><span class="delimiter">&quot;</span></span>
-    <span class="attribute-name">endpoint-uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:news-feed</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> CamelEndpoint greetingsFeed() {
+    <span class="keyword">return</span> <span class="keyword">new</span> CamelEndpoint()
+        .endpointUri(<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:greetings-feed</span><span class="delimiter">&quot;</span></span>)
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greetingsFeed</span><span class="delimiter">&quot;</span></span>
+    <span class="attribute-name">endpoint-uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:greetings-feed</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>You can use the Citrus camel endpoint in your test case receive action in order to consume the message on the seda component.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sedaCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="java">receive(greetingsFeed)
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello from Citrus!</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greetingsFeed</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;message</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">plaintext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;payload&gt;</span>Hello from Citrus!<span class="tag">&lt;/payload&gt;</span>
   <span class="tag">&lt;/message&gt;</span>
@@ -19014,43 +19134,85 @@ Spring bean configuration.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Instead of defining a static Citrus camel component you could also use the dynamic endpoint components in Citrus. This would enable you to send your message directly using the endpoint uri <strong>direct:news</strong> in your test case. Read more about this in <a href="#dynamic-endpoint-components">dynamic-endpoint-components</a>.
+Instead of defining a static Citrus camel component you could also use the dynamic endpoint components in Citrus.
+This would enable you to send your message directly using the endpoint uri <strong>direct:news</strong> in your test case.
+Read more about this in <a href="#dynamic-endpoint-components">dynamic-endpoint-components</a>.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Citrus is able to send and receive messages with Camel route endpoint uri. This enables you to invoke a Camel route. The Camel components used is defined by the endpoint uri as usual. When interacting with Camel routes you might need to send back some response messages in order to simulate boundary applications. We will discuss the synchronous communication in the next section.</p>
+<p>Citrus is able to send and receive messages with Camel route endpoint uri.
+This enables you to invoke a Camel route.
+The Camel components used is defined by the endpoint uri as usual.
+When interacting with Camel routes you might need to send back some response messages in order to simulate boundary applications.
+We will discuss the synchronous communication in the next section.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="synchronous-camel-endpoint"><a class="anchor" href="#synchronous-camel-endpoint"></a><a class="link" href="#synchronous-camel-endpoint">16.2. Synchronous Camel endpoint</a></h3>
 <div class="paragraph">
-<p>The synchronous Apache Camel producer sends a message to some route and waits synchronously for the response to arrive. In Camel this communication is represented with the exchange pattern <strong>InOut</strong> . The basic configuration for a synchronous Apache Camel endpoint component looks like follows:</p>
+<p>The synchronous Camel producer sends a message to a route and waits synchronously for the response to arrive.
+In Camel this communication is represented with the exchange pattern <strong>InOut</strong>.
+The basic configuration for a synchronous Camel endpoint component looks like follows:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:sync-endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelSyncEndpoint</span><span class="delimiter">&quot;</span></span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> CamelSyncEndpoint helloCamelEndpoint() {
+    <span class="keyword">return</span> <span class="keyword">new</span> CamelEndpoint()
+        .endpointUri(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span>)
+        .timeout(<span class="integer">1000L</span>)
+        .pollingInterval(<span class="integer">300L</span>)
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:sync-endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloCamelEndpoint</span><span class="delimiter">&quot;</span></span>
       <span class="attribute-name">endpoint-uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span>
       <span class="attribute-name">timeout</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1000</span><span class="delimiter">&quot;</span></span>
       <span class="attribute-name">polling-interval</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">300</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Synchronous endpoints poll for synchronous reply messages to arrive. The poll interval is an optional setting in order to manage the amount of reply message handshake attempts. Once the endpoint was able to receive the reply message synchronously the test case can receive the reply. In case the reply message is not available in time we raise some timeout error and the test will fail.</p>
+<p>Synchronous endpoints poll for synchronous reply messages to arrive.
+The poll interval is an optional setting in order to manage the amount of reply message handshake attempts.
+Once the endpoint was able to receive the reply message synchronously the test case can receive the reply.
+In case the reply message is not available in time we raise some timeout error and the test will fail.</p>
 </div>
 <div class="paragraph">
-<p>In a first test scenario we write a test case the sends a message to the synchronous endpoint and waits for the synchronous reply message to arrive. So we have two actions on the same Citrus endpoint, first send then receive.</p>
+<p>In a first test scenario we write a test case the sends a message to the synchronous endpoint and waits for the synchronous
+reply message to arrive.
+So we have two actions on the same Citrus endpoint, first send then receive.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelSyncEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="java">send(helloCamelEndpoint)
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello from Citrus!</span><span class="delimiter">&quot;</span></span>);
+
+receive(helloCamelEndpoint)
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">This is the reply from Apache Camel!</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;message</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">plaintext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;payload&gt;</span>Hello from Citrus!<span class="tag">&lt;/payload&gt;</span>
   <span class="tag">&lt;/message&gt;</span>
 <span class="tag">&lt;/send&gt;</span>
 
-<span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelSyncEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;message</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">plaintext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;payload&gt;</span>This is the reply from Apache Camel!<span class="tag">&lt;/payload&gt;</span>
   <span class="tag">&lt;/message&gt;</span>
@@ -19058,17 +19220,38 @@ Instead of defining a static Citrus camel component you could also use the dynam
 </div>
 </div>
 <div class="paragraph">
-<p>The next variation deals with the same synchronous communication, but send and receive roles are switched. Now Citrus receives a message from a Camel route and has to provide a reply message. We handle this synchronous communication with the same synchronous Apache Camel endpoint component. Only difference is that we initially start the communication by receiving a message from the endpoint. Knowing this Citrus is able to send a synchronous response back. Again just use the same endpoint reference in your test case. So we have again two actions in our test case, but this time first receive then send.</p>
+<p>The next variation deals with the same synchronous communication, but send and receive roles are switched.
+Now Citrus receives a message from a Camel route and has to provide a reply message.
+We handle this synchronous communication with the same synchronous Apache Camel endpoint component.
+Only difference is that we initially start the communication by receiving a message from the endpoint.
+Knowing this Citrus is able to send a synchronous response back.
+Again just use the same endpoint reference in your test case.
+So we have again two actions in our test case, but this time first receive then send.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelSyncEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="java">receive(helloCamelEndpoint)
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello from Apache Camel!</span><span class="delimiter">&quot;</span></span>);
+
+send(helloCamelEndpoint)
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">This is the reply from Citrus!</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;message</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">plaintext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;payload&gt;</span>Hello from Apache Camel!<span class="tag">&lt;/payload&gt;</span>
   <span class="tag">&lt;/message&gt;</span>
 <span class="tag">&lt;/receive&gt;</span>
 
-<span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelSyncEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;message</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">plaintext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;payload&gt;</span>This is the reply from Citrus!<span class="tag">&lt;/payload&gt;</span>
   <span class="tag">&lt;/message&gt;</span>
@@ -19076,33 +19259,55 @@ Instead of defining a static Citrus camel component you could also use the dynam
 </div>
 </div>
 <div class="paragraph">
-<p>This is pretty simple. Citrus takes care on setting the Apache Camel exchange pattern <strong>InOut</strong> while using synchronous communications. The Camel routes do respond and Citrus is able to receive the synchronous messages accordingly. With this pattern you can interact with Apache Camel routes where Citrus simulates synchronous clients and consumers.</p>
+<p>This is pretty simple. Citrus takes care on setting the Camel exchange pattern <strong>InOut</strong> while using synchronous communications.
+The Camel routes do respond and Citrus is able to receive the synchronous messages accordingly.
+With this pattern you can interact with Camel routes where Citrus simulates synchronous clients and consumers.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="camel-exchange-headers"><a class="anchor" href="#camel-exchange-headers"></a><a class="link" href="#camel-exchange-headers">16.3. Camel exchange headers</a></h3>
 <div class="paragraph">
-<p>Apache Camel uses exchanges when sending and receiving messages to and from routes. These exchanges hold specific information on the communication outcome. Citrus automatically converts these exchange information to special message header entries. You can validate those exchange headers then easily in your test case:</p>
+<p>Camel uses exchanges when sending and receiving messages to and from routes.
+These exchanges hold specific information on the communication outcome.
+Citrus automatically converts these exchange information to special message header entries.
+You can validate those exchange headers then easily in your test case:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sedaCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="java">receive(greetingsFeed)
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello from Camel!</span><span class="delimiter">&quot;</span></span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_route_id</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">greetings</span><span class="delimiter">&quot;</span></span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_id</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">ID-local-50532-1402653725341-0-3</span><span class="delimiter">&quot;</span></span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_failed</span><span class="delimiter">&quot;</span></span>, <span class="predefined-constant">false</span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_pattern</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">InOnly</span><span class="delimiter">&quot;</span></span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelCorrelationId</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">ID-local-50532-1402653725341-0-1</span><span class="delimiter">&quot;</span></span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelToEndpoint</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">seda://greetings-feed</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greetingsFeed</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;message</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">plaintext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;payload&gt;</span>Hello from Camel!<span class="tag">&lt;/payload&gt;</span>
   <span class="tag">&lt;/message&gt;</span>
   <span class="tag">&lt;header&gt;</span>
-    <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_route_id</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">newsRoute</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_route_id</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greetings</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_id</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ID-local-50532-1402653725341-0-3</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_failed</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">false</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_pattern</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">InOnly</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelCorrelationId</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">ID-local-50532-1402653725341-0-1</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-    <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelToEndpoint</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda://news-feed</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelToEndpoint</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda://greetings-feed</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
   <span class="tag">&lt;/header&gt;</span>
 <span class="tag">&lt;/receive&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Besides the Camel specific exchange information the Camel exchange does also hold some custom properties. These properties such as <strong>CamelToEndpoint</strong> or <strong>CamelCorrelationId</strong> are also added automatically to the Citrus message header so can expect them in a receive message action.</p>
+<p>In addition to the Camel specific exchange information the Camel exchange does also hold some custom properties.
+These properties such as <strong>CamelToEndpoint</strong> or <strong>CamelCorrelationId</strong> are also added automatically to the Citrus message header so can expect them in a <code>receive</code> message action.</p>
 </div>
 </div>
 <div class="sect2">
@@ -19110,13 +19315,37 @@ Instead of defining a static Citrus camel component you could also use the dynam
 <div class="paragraph">
 <p>Let us suppose following route definition:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> CamelContext camelContext() {
+    CamelContext context = <span class="keyword">new</span> DefaultCamelContext();
+
+    context.addRoutes(<span class="keyword">new</span> RouteBuilder() {
+        <span class="annotation">@Override</span>
+        <span class="directive">public</span> <span class="type">void</span> configure() <span class="directive">throws</span> <span class="exception">Exception</span> {
+            from(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span>)
+                .routeId(<span class="string"><span class="delimiter">&quot;</span><span class="content">helloRoute</span><span class="delimiter">&quot;</span></span>)
+                .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">log:com.consol.citrus.camel?level=INFO</span><span class="delimiter">&quot;</span></span>)
+                .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:greetings-feed</span><span class="delimiter">&quot;</span></span>)
+                .onException(CitrusRuntimeException.class)
+                    .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:exceptions</span><span class="delimiter">&quot;</span></span>);
+        }
+    });
+
+    <span class="keyword">return</span> context;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;camelContext</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelContext</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://camel.apache.org/schema/spring</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="tag">&lt;route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">newsRoute</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;from</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:news</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloRoute</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;from</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">log:com.consol.citrus.camel?level=INFO</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-    <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:news-feed</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:greetings-feed</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;onException&gt;</span>
       <span class="tag">&lt;exception&gt;</span>com.consol.citrus.exceptions.CitrusRuntimeException<span class="tag">&lt;/exception&gt;</span>
       <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:exceptions</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
@@ -19126,11 +19355,25 @@ Instead of defining a static Citrus camel component you could also use the dynam
 </div>
 </div>
 <div class="paragraph">
-<p>The route has an exception handling block defined that is called as soon as the exchange processing ends up in some error or exception. With Citrus you can also simulate a exchange exception when sending back a synchronous response to a calling route.</p>
+<p>The route has an exception handling block defined that is called as soon as the exchange processing ends up in some error or exception.
+With Citrus you can also simulate a exchange exception when sending back a synchronous response to a calling route.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sedaCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="java">send(helloCamelEndpoint)
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Something went wrong!</span><span class="delimiter">&quot;</span></span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_exception</span><span class="delimiter">&quot;</span></span>, CitrusRuntimeException.class)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_exception_message</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Something went wrong!</span><span class="delimiter">&quot;</span></span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_failed</span><span class="delimiter">&quot;</span></span>, <span class="predefined-constant">true</span>);</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;send</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">greetingsFeed</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;message</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">plaintext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;payload&gt;</span>Something went wrong!<span class="tag">&lt;/payload&gt;</span>
   <span class="tag">&lt;/message&gt;</span>
@@ -19144,19 +19387,35 @@ Instead of defining a static Citrus camel component you could also use the dynam
 </div>
 </div>
 <div class="paragraph">
-<p>This message as response to the <strong>seda:news-feed</strong> route would cause Camel to enter the exception handling in the route definition. The exception handling is activated and calls the error handling route endpoint <strong>seda:exceptions</strong> . Of course Citrus would be able to receive such an exception exchange validating the exception handling outcome.</p>
+<p>This message as response to the <strong>seda:greetings-feed</strong> route would cause Camel to enter the exception handling in the route definition.
+The exception handling is activated and calls the error handling route endpoint <strong>seda:exceptions</strong> .
+Of course Citrus would be able to receive such an exception exchange validating the exception handling outcome.</p>
 </div>
 <div class="paragraph">
-<p>In such failure scenarios the Apache Camel exchange holds the exception information (<strong>CamelExceptionCaught</strong>) such as causing exception class and error message. These headers are present in an error scenario and can be validated in Citrus when receiving error messages as follows:</p>
+<p>In such failure scenarios the Camel exchange holds the exception information (<strong>CamelExceptionCaught</strong>) such as causing exception class and error message.
+These headers are present in an error scenario and can be validated in Citrus when receiving error messages as follows:</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">receive(errorCamelEndpoint)
+    .message()
+    .type(MessageType.PLAINTEXT)
+    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Something went wrong!</span><span class="delimiter">&quot;</span></span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_route_id</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">helloRoute</span><span class="delimiter">&quot;</span></span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_failed</span><span class="delimiter">&quot;</span></span>, <span class="predefined-constant">true</span>)
+    .header(<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelExceptionCaught</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">com.consol.citrus.exceptions.CitrusRuntimeException: Something went wrong!</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;receive</span> <span class="attribute-name">endpoint</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">errorCamelEndpoint</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;message</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">plaintext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;payload&gt;</span>Something went wrong!<span class="tag">&lt;/payload&gt;</span>
   <span class="tag">&lt;/message&gt;</span>
   <span class="tag">&lt;header&gt;</span>
-    <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_route_id</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">newsRoute</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_route_id</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloRoute</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus_camel_exchange_failed</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;element</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelExceptionCaught</span><span class="delimiter">&quot;</span></span>
         <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">com.consol.citrus.exceptions.CitrusRuntimeException: Something went wrong!</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
@@ -19165,17 +19424,67 @@ Instead of defining a static Citrus camel component you could also use the dynam
 </div>
 </div>
 <div class="paragraph">
-<p>This completes the basic exception handling in Citrus when using the Apache Camel endpoints.</p>
+<p>This completes the basic exception handling in Citrus when using the Camel endpoints.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="camel-context-handling"><a class="anchor" href="#camel-context-handling"></a><a class="link" href="#camel-context-handling">16.5. Camel context handling</a></h3>
 <div class="paragraph">
-<p>In the previous samples we have used the Apache Camel context as Spring bean context that is automatically loaded when Citrus starts up. Now when using a single Camel context instance Citrus is able to automatically pick this Camel context for route interaction. If you use more that one Camel context you have to tell the Citrus endpoint component which context to use. The endpoint offers an optional attribute called <strong>camel-context</strong> .</p>
+<p>In the previous samples we have used the Camel context as Spring bean context that is automatically loaded when Citrus starts up.
+Now when using a single Camel context instance Citrus is able to automatically pick this Camel context for route interaction.
+If you use more than one Camel context you have to tell the Citrus endpoint component which context to use.
+The endpoint offers an optional attribute called <code>camel-context</code>.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">directCamelEndpoint</span><span class="delimiter">&quot;</span></span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> CamelEndpoint newsCamelEndpoint() {
+    <span class="keyword">return</span> <span class="keyword">new</span> CamelEndpoint()
+        .camelContext(newsContext)
+        .endpointUri(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:news</span><span class="delimiter">&quot;</span></span>)
+        .build();
+}
+
+<span class="annotation">@Bean</span>
+<span class="directive">public</span> CamelContext newsContext() {
+    CamelContext context = <span class="keyword">new</span> DefaultCamelContext();
+
+    context.addRoutes(<span class="keyword">new</span> RouteBuilder() {
+        <span class="annotation">@Override</span>
+        <span class="directive">public</span> <span class="type">void</span> configure() <span class="directive">throws</span> <span class="exception">Exception</span> {
+            from(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:news</span><span class="delimiter">&quot;</span></span>)
+                .routeId(<span class="string"><span class="delimiter">&quot;</span><span class="content">newsRoute</span><span class="delimiter">&quot;</span></span>)
+                .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">log:com.consol.citrus.camel?level=INFO</span><span class="delimiter">&quot;</span></span>)
+                .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:news-feed</span><span class="delimiter">&quot;</span></span>);
+        }
+    });
+
+    <span class="keyword">return</span> context;
+}
+
+<span class="annotation">@Bean</span>
+<span class="directive">public</span> CamelContext helloContext() {
+    CamelContext context = <span class="keyword">new</span> DefaultCamelContext();
+
+    context.addRoutes(<span class="keyword">new</span> RouteBuilder() {
+        <span class="annotation">@Override</span>
+        <span class="directive">public</span> <span class="type">void</span> configure() <span class="directive">throws</span> <span class="exception">Exception</span> {
+            from(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span>)
+                .routeId(<span class="string"><span class="delimiter">&quot;</span><span class="content">helloRoute</span><span class="delimiter">&quot;</span></span>)
+                .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">log:com.consol.citrus.camel?level=INFO</span><span class="delimiter">&quot;</span></span>)
+                .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:greetings</span><span class="delimiter">&quot;</span></span>);
+        }
+    });
+
+    <span class="keyword">return</span> context;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-camel:endpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">newsCamelEndpoint</span><span class="delimiter">&quot;</span></span>
     <span class="attribute-name">camel-context</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">newsContext</span><span class="delimiter">&quot;</span></span>
     <span class="attribute-name">endpoint-uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:news</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
 
@@ -19191,21 +19500,36 @@ Instead of defining a static Citrus camel component you could also use the dynam
   <span class="tag">&lt;route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">helloRoute</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;from</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:hello</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">log:com.consol.citrus.camel?level=INFO</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-    <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:hello</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:greetings</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
   <span class="tag">&lt;/route&gt;</span>
 <span class="tag">&lt;/camelContext&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In the example abpove we have two Camel context instances loaded. The endpoint has to pick the context to use with the attribute <strong>camel-context</strong> which resides to the Spring bean id of the Camel context.</p>
+<p>In the example above we have two Camel context instances loaded.
+The endpoint has to pick the context to use with the attribute <strong>camel-context</strong> which resides to the Spring bean id of the Camel context.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="camel-route-actions"><a class="anchor" href="#camel-route-actions"></a><a class="link" href="#camel-route-actions">16.6. Camel route actions</a></h3>
 <div class="paragraph">
-<p>Since Citrus 2.4 we introduced some Camel specific test actions that enable easy interaction with Camel routes and the Camel context. The test actions do follow a specific XML namespace so we have to add this namespace to the test case when using the actions.</p>
+<p>Since Citrus 2.4 we introduced some Camel specific test actions that enable easy interaction with Camel routes and the Camel context.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In XML the Camel route test actions do follow a specific XML namespace.
+This means you have to add this namespace to the test case when using the actions.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
+<div class="title">XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span>
       <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">&quot;</span></span>
@@ -19222,32 +19546,52 @@ Instead of defining a static Citrus camel component you could also use the dynam
 </div>
 </div>
 <div class="paragraph">
-<p>We added a special camel namespace with prefix <strong>camel:</strong> so now we can start to add Camel test actions to the test case:</p>
+<p>Once you have added the special Camel namespace with prefix <code>camel</code> you are ready to start using the Camel test actions in your test case.</p>
 </div>
-<div class="listingblock">
-<div class="title">XML DSL</div>
+<div class="sect3">
+<h4 id="create-camel-routes"><a class="anchor" href="#create-camel-routes"></a><a class="link" href="#create-camel-routes">Create Camel routes</a></h4>
+<div class="paragraph">
+<p>You can create a new Camel route as part of the test using this test action.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelRouteActionIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> createCamelRoute() {
+        <span class="error">$</span>(camel().camelContext(camelContext)
+            .route()
+            .create(<span class="keyword">new</span> RouteBuilder() {
+                <span class="annotation">@Override</span>
+                <span class="directive">public</span> <span class="type">void</span> configure() <span class="directive">throws</span> <span class="exception">Exception</span> {
+                    from(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:messages</span><span class="delimiter">&quot;</span></span>)
+                        .routeId(<span class="string"><span class="delimiter">&quot;</span><span class="content">message-tokenizer</span><span class="delimiter">&quot;</span></span>)
+                        .split().tokenize(<span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span>)
+                        .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:words</span><span class="delimiter">&quot;</span></span>);
+                }
+            }));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;testcase</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelRouteIT</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;actions&gt;</span>
       <span class="tag">&lt;camel:create-routes&gt;</span>
         <span class="tag">&lt;routeContext</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://camel.apache.org/schema/spring</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-          <span class="tag">&lt;route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-            <span class="tag">&lt;from</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:test1</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-            <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">mock:test1</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-          <span class="tag">&lt;/route&gt;</span>
-
-          <span class="tag">&lt;route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">route_2</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-              <span class="tag">&lt;from</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:test2</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-              <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">mock:test2</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-          <span class="tag">&lt;/route&gt;</span>
-        <span class="tag">&lt;/routeContext&gt;</span>
-      <span class="tag">&lt;/camel:create-routes&gt;</span>
-
-      <span class="tag">&lt;camel:create-routes</span> <span class="attribute-name">camel-context</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelContext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-        <span class="tag">&lt;routeContext</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://camel.apache.org/schema/spring</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-          <span class="tag">&lt;route&gt;</span>
-            <span class="tag">&lt;from</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:test3</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-            <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">mock:test3</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+          <span class="tag">&lt;route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">message-tokenizer</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;from</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:messages</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+            <span class="tag">&lt;split&gt;</span>
+              <span class="tag">&lt;tokenize</span> <span class="attribute-name">token</span>=<span class="string"><span class="delimiter">&quot;</span> <span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+              <span class="tag">&lt;to</span> <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">seda:words</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+            <span class="tag">&lt;/split&gt;</span>
           <span class="tag">&lt;/route&gt;</span>
         <span class="tag">&lt;/routeContext&gt;</span>
       <span class="tag">&lt;/camel:create-routes&gt;</span>
@@ -19256,18 +19600,54 @@ Instead of defining a static Citrus camel component you could also use the dynam
 </div>
 </div>
 <div class="paragraph">
-<p>In the example above we have used the <strong>camel:create-route</strong> test action that will create new Camel routes at runtime in the Camel context. The target Camel context is referenced with an automatically context lookup. The default Camel context name in this lookup is "<em>citrusCamelContext</em>".
-If no specific settings are set Citrus will automatically try to look up the Camel context with name "<em>citrusCamelContext</em>" in the Spring bean configuration. All
-route operations will target this Camel context then.</p>
+<p>In the example above we have used the <strong>camel:create-route</strong> test action that will create new Camel routes at runtime in the Camel context.
+The target Camel context is referenced with an automatic context lookup.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The default Camel context name in this lookup is "<em>citrusCamelContext</em>".
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If no specific settings are set Citrus will automatically try to look up the Camel context with name "<em>citrusCamelContext</em>" in the Spring bean configuration.
+All route operations will target this Camel context then.</p>
 </div>
 <div class="paragraph">
 <p>In addition to that you can skip this lookup and directly reference a target Camel context with the action attribute <strong>camel-context</strong> (used in the second action above).</p>
 </div>
-<div class="paragraph">
-<p>Removing routes at runtime is also supported.</p>
 </div>
-<div class="listingblock">
-<div class="title">XML DSL</div>
+<div class="sect3">
+<h4 id="remove-camel-routes"><a class="anchor" href="#remove-camel-routes"></a><a class="link" href="#remove-camel-routes">Remove Camel routes</a></h4>
+<div class="paragraph">
+<p>You can remove routes from the Camel context as part of the test.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelRouteActionIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> createCamelRoute() {
+        <span class="error">$</span>(camel().camelContext(camelContext)
+            .route()
+            .remove(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">route_2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">route_3</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;testcase</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelRouteIT</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;actions&gt;</span>
@@ -19280,11 +19660,36 @@ route operations will target this Camel context then.</p>
 <span class="tag">&lt;/testcase&gt;</span></code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="startstop-routes"><a class="anchor" href="#startstop-routes"></a><a class="link" href="#startstop-routes">Start/stop routes</a></h4>
 <div class="paragraph">
 <p>Next operation we will discuss is the start and stop of existing Camel routes:</p>
 </div>
-<div class="listingblock">
-<div class="title">XML DSL</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelRouteActionIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> createCamelRoute() {
+        <span class="error">$</span>(camel().camelContext(camelContext)
+            .route()
+            .start(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span>));
+
+        <span class="error">$</span>(camel().camelContext(camelContext)
+            .route()
+            .stop(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">route_3</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;testcase</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelRouteIT</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;actions&gt;</span>
@@ -19301,65 +19706,66 @@ route operations will target this Camel context then.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Starting and stopping Camel routes at runtime is important when temporarily Citrus need to receive a message on a Camel endpoint URI. We can stop a route, use a Citrus camel endpoint instead for validation and start the route after the test is done. This way wen can also simulate errors and failure scenarios in a Camel route interaction.</p>
+<p>Starting and stopping Camel routes at runtime is important when temporarily Citrus need to receive a message on a Camel endpoint URI.
+We can stop a route, use a Citrus camel endpoint instead for validation and start the route after the test is done.
+This way wen can also simulate errors and failure scenarios in a Camel route interaction.</p>
 </div>
-<div class="paragraph">
-<p>Of course all Camel route actions are also available in Java DSL.</p>
-</div>
-<div class="listingblock">
-<div class="title">Java DSL</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Autowired</span>
-<span class="directive">private</span> CamelContext camelContext;
-
-<span class="annotation">@CitrusTest</span>
-<span class="directive">public</span> <span class="type">void</span> camelRouteTest() {
-    camel().context(camelContext).create(<span class="keyword">new</span> RouteBuilder(camelContext) {
-          <span class="annotation">@Override</span>
-          <span class="directive">public</span> <span class="type">void</span> configure() <span class="directive">throws</span> <span class="exception">Exception</span> {
-              from(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:news</span><span class="delimiter">&quot;</span></span>)
-                  .routeId(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span>)
-                  .autoStartup(<span class="predefined-constant">false</span>)
-                  .setHeader(<span class="string"><span class="delimiter">&quot;</span><span class="content">headline</span><span class="delimiter">&quot;</span></span>, simple(<span class="string"><span class="delimiter">&quot;</span><span class="content">This is BIG news!</span><span class="delimiter">&quot;</span></span>))
-                  .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">mock:news</span><span class="delimiter">&quot;</span></span>);
-
-              from(<span class="string"><span class="delimiter">&quot;</span><span class="content">direct:rumors</span><span class="delimiter">&quot;</span></span>)
-                  .routeId(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_2</span><span class="delimiter">&quot;</span></span>)
-                  .autoStartup(<span class="predefined-constant">false</span>)
-                  .setHeader(<span class="string"><span class="delimiter">&quot;</span><span class="content">headline</span><span class="delimiter">&quot;</span></span>, simple(<span class="string"><span class="delimiter">&quot;</span><span class="content">This is just a rumor!</span><span class="delimiter">&quot;</span></span>))
-                  .to(<span class="string"><span class="delimiter">&quot;</span><span class="content">mock:rumors</span><span class="delimiter">&quot;</span></span>);
-          }
-      });
-
-    camel().context(camelContext).start(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">route_2</span><span class="delimiter">&quot;</span></span>);
-
-    camel().context(camelContext).stop(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_2</span><span class="delimiter">&quot;</span></span>);
-
-    camel().context(camelContext).remove(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_2</span><span class="delimiter">&quot;</span></span>);
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>As you can see we have access to the Camel route builder that adds <code>n-1</code> new Camel routes to the context. After that we can start, stop and remove the routes within the test case.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="camel-controlbus-actions"><a class="anchor" href="#camel-controlbus-actions"></a><a class="link" href="#camel-controlbus-actions">16.7. Camel controlbus actions</a></h3>
 <div class="paragraph">
-<p>The Camel controlbus component is a good way to access route statistics and route status information within a Camel context. Citrus provides controlbus test actions to easily access the controlbus operations at runtime.</p>
+<p>The Camel controlbus component is a good way to access route statistics and route status information within a Camel context.
+Citrus provides controlbus test actions to easily access the controlbus operations at runtime.</p>
 </div>
-<div class="listingblock">
-<div class="title">XML DSL</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelControlBusIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> createCamelRoute() {
+        <span class="error">$</span>(camel().camelContext(camelContext)
+            .controlbus()
+            .route(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span>)
+            .status()
+            .result(ServiceStatus.Stopped));
+
+        <span class="error">$</span>(camel().camelContext(camelContext)
+            .controlbus()
+            .route(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span>)
+            .start());
+
+        <span class="error">$</span>(camel().camelContext(camelContext)
+            .controlbus()
+            .route(<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span>)
+            .status()
+            .result(ServiceStatus.Started));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;testcase</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelControlBusIT</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
   <span class="tag">&lt;actions&gt;</span>
+    <span class="tag">&lt;camel:control-bus</span> <span class="attribute-name">camel-context</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelContext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+      <span class="tag">&lt;camel:route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">status</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;camel:result&gt;</span>Stopped<span class="tag">&lt;/camel:result&gt;</span>
+    <span class="tag">&lt;/camel:control-bus&gt;</span>
+
     <span class="tag">&lt;camel:control-bus&gt;</span>
       <span class="tag">&lt;camel:route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">start</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;/camel:control-bus&gt;</span>
 
     <span class="tag">&lt;camel:control-bus</span> <span class="attribute-name">camel-context</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelContext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-      <span class="tag">&lt;camel:route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">route_2</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">status</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-      <span class="tag">&lt;camel:result&gt;</span>Stopped<span class="tag">&lt;/camel:result&gt;</span>
+      <span class="tag">&lt;camel:route</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">route_1</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">action</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">status</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+      <span class="tag">&lt;camel:result&gt;</span>Started<span class="tag">&lt;/camel:result&gt;</span>
     <span class="tag">&lt;/camel:control-bus&gt;</span>
 
     <span class="tag">&lt;camel:control-bus&gt;</span>
@@ -19375,36 +19781,279 @@ route operations will target this Camel context then.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The example test case shows the controlbus access. As already mentioned you can explicitly reference a target Camel context with <code>camel-context=&quot;camelContext&quot;</code>. In case no specific context is referenced Citrus will automatically lookup a target Camel context with the default context name "<em>citrusCamelContext</em>".</p>
+<p>The example test case shows the controlbus access.
+As already mentioned you can explicitly reference a target Camel context with <code>camel-context=&quot;camelContext&quot;</code>.
+In case no specific context is referenced Citrus will automatically lookup a target Camel context with the default context name "<em>citrusCamelContext</em>".</p>
 </div>
 <div class="paragraph">
-<p>Camel provides two different ways to specify operations and parameters. The first option is the use of an <strong>action</strong> attribute. The Camel route id has to be specified as mandatory attribute. As a result the controlbus action will be executed on the target route during test runtime. This way we can also start and stop Camel routes in a Camel context.</p>
+<p>Camel provides two different ways to specify operations and parameters.
+The first option is the use of an <strong>action</strong> attribute.
+The Camel route id has to be specified as mandatory attribute.
+As a result the controlbus action will be executed on the target route during test runtime.
+This way we can also start and stop Camel routes in a Camel context.</p>
 </div>
 <div class="paragraph">
-<p>In case an controlbus operation has a result such as the <strong>status</strong> action we can specify a control result that is compared. Citrus will raise validation exceptions when the results differ. The second option for executing a controlbus action is the language expression. We can use Camel language expressions on the Camel context for accessing a controlbus operation. Also here we can define an optional outcome as expected result.</p>
+<p>In case a controlbus operation has a result such as the <strong>status</strong> action we can specify a control result that is compared.
+Citrus will raise validation exceptions when the results differ.</p>
 </div>
 <div class="paragraph">
-<p>The Java DSL also supports these controlbus operations as the next example shows:</p>
+<p>The second option for executing a controlbus action is the language expression.
+We can use Camel language expressions on the Camel context for accessing a controlbus operation.
+Also, here we can define an optional outcome as expected result.</p>
 </div>
-<div class="listingblock">
-<div class="title">Java DSL</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Autowired</span>
-<span class="directive">private</span> CamelContext camelContext;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelControlBusIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
 
-<span class="annotation">@CitrusTest</span>
-<span class="directive">public</span> <span class="type">void</span> camelRouteTest() {
-      camel().controlBus()
-              .route(<span class="string"><span class="delimiter">&quot;</span><span class="content">my_route</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">start</span><span class="delimiter">&quot;</span></span>);
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
 
-      camel().controlBus()
-              .language(SimpleBuilder.simple(<span class="string"><span class="delimiter">&quot;</span><span class="content">${camelContext.getRouteStatus('my_route')}</span><span class="delimiter">&quot;</span></span>))
-              .result(ServiceStatus.Started);
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> createCamelRoute() {
+        <span class="error">$</span>(camel().camelContext(camelContext)
+            .controlbus()
+            .language(SimpleBuilder.simple(<span class="string"><span class="delimiter">&quot;</span><span class="content">${camelContext.getRouteStatus('my_route')}</span><span class="delimiter">&quot;</span></span>))
+            .result(ServiceStatus.Stopped));
+
+        <span class="error">$</span>(camel().camelContext(camelContext)
+            .controlbus()
+            .language(SimpleBuilder.simple(<span class="string"><span class="delimiter">&quot;</span><span class="content">${camelContext.stop()}</span><span class="delimiter">&quot;</span></span>)));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;testcase</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">CamelControlBusIT</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;actions&gt;</span>
+    <span class="tag">&lt;camel:control-bus</span> <span class="attribute-name">camel-context</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">camelContext</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+      <span class="tag">&lt;camel:language</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">simple</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>${camelContext.getRouteStatus('my_route')}<span class="tag">&lt;/camel:language&gt;</span>
+      <span class="tag">&lt;camel:result&gt;</span>Started<span class="tag">&lt;/camel:result&gt;</span>
+    <span class="tag">&lt;/camel:control-bus&gt;</span>
+
+    <span class="tag">&lt;camel:control-bus&gt;</span>
+      <span class="tag">&lt;camel:language</span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">simple</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>${camelContext.stop()}<span class="tag">&lt;/camel:language&gt;</span>
+    <span class="tag">&lt;/camel:control-bus&gt;</span>
+  <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/testcase&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="camel-endpoint-dsl"><a class="anchor" href="#camel-endpoint-dsl"></a><a class="link" href="#camel-endpoint-dsl">16.8. Camel endpoint DSL</a></h3>
+<div class="paragraph">
+<p>Since Camel 3 the endpoint DSL provides a convenient way to construct an endpoint uri.
+In Citrus you can use the Camel endpoint DSL to send/receive messages in a test.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="error">$</span>(send(camel().endpoint(seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span>)::getUri))
+        .message()
+        .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span>));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The fluent endpoint DSL in Camel allows to build the endpoint uri.
+The <code>camel().endpoint(seda("test")::getUri)</code> builds the endpoint uri <code>seda:test</code>.
+The endpoint DSL provides all settings and properties that you can set for a Camel endpoint component.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="camel-processor-support"><a class="anchor" href="#camel-processor-support"></a><a class="link" href="#camel-processor-support">16.9. Camel processor support</a></h3>
+<div class="paragraph">
+<p>Camel implements the concept of processors as enterprise integration pattern.
+A processor is able to add custom logic to a Camel route.
+Each processor is able to access the Camel exchange that is being processed in the current route.
+The processor is able to change the message content (body, headers) as well as the exchange information.</p>
+</div>
+<div class="paragraph">
+<p>The send/receive operations in Citrus also implement the processor concept.
+With the Citrus Camel support you can use the very same Camel processor also in a Citrus test action.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Message processor on send</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelMessageProcessorIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> shouldProcessMessages() {
+        <span class="error">$</span>(send(camel().endpoint(seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span>)::getUri))
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span>)
+                .process(camel(camelContext)
+                    .process(exchange -&gt; exchange
+                            .getMessage()
+                            .setBody(exchange.getMessage().getBody(<span class="predefined-type">String</span>.class).toUpperCase())))
+        );
+    }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The Java DSL works with Camel language expression builders as well as <strong>ServiceStatus</strong> enum values as expected result.</p>
+<p>The example above uses a Camel processor to change the exchange and the message content before the message is sent to the endpoint.
+This way you can apply custom changes to the message as part of the test action.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Message processor on receive</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelMessageProcessorIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> shouldProcessMessages() {
+        <span class="error">$</span>(send(camel().endpoint(seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span>)::getUri))
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span>));
+
+        <span class="error">$</span>(receive(camel().endpoint(seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span>)::getUri))
+                .process(camel(camelContext)
+                        .process(exchange -&gt; exchange
+                                .getMessage()
+                                .setBody(exchange.getMessage().getBody(<span class="predefined-type">String</span>.class).toUpperCase())))
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">CITRUS ROCKS!</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Camel processors are very powerful.
+In particular, you can apply transformations of multiple kind.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Transform processor</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelTransformIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> shouldTransformMessageReceived() {
+        <span class="error">$</span>(send(camel().endpoint(seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">hello</span><span class="delimiter">&quot;</span></span>)::getUri))
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">{</span><span class="char">\&quot;</span><span class="content">message</span><span class="char">\&quot;</span><span class="content">: </span><span class="char">\&quot;</span><span class="content">Citrus rocks!</span><span class="char">\&quot;</span><span class="content">}</span><span class="delimiter">&quot;</span></span>)
+        );
+
+        <span class="error">$</span>(receive(camel().endpoint(seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">hello</span><span class="delimiter">&quot;</span></span>)::getUri))
+                .transform(
+                    camel()
+                        .camelContext(camelContext)
+                        .transform()
+                        .jsonpath(<span class="string"><span class="delimiter">&quot;</span><span class="content">$.message</span><span class="delimiter">&quot;</span></span>))
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The transform pattern is able to change the message content before a message is received/sent in Citrus.
+The example above applies a JsonPath expression as part of the message processing.
+The JsonPath expression evaluates <code>$.message</code> on the Json payload and saves the result as new message body content.
+The following message validation expects the plaintext value <code>Citrus rocks!</code>.</p>
+</div>
+<div class="paragraph">
+<p>The message processor is also able to apply a complete route logic as part of the test action.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Route processor</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelRouteProcessorIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> shouldProcessRoute() {
+        CamelRouteProcessor.Builder beforeReceive = camel(camelContext).route(route -&gt;
+                route.choice()
+                    .when(jsonpath(<span class="string"><span class="delimiter">&quot;</span><span class="content">$.greeting[?(@.language == 'EN')]</span><span class="delimiter">&quot;</span></span>))
+                        .setBody(constant(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello!</span><span class="delimiter">&quot;</span></span>))
+                    .when(jsonpath(<span class="string"><span class="delimiter">&quot;</span><span class="content">$.greeting[?(@.language == 'DE')]</span><span class="delimiter">&quot;</span></span>))
+                        .setBody(constant(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hallo!</span><span class="delimiter">&quot;</span></span>))
+                    .otherwise()
+                        .setBody(constant(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hi!</span><span class="delimiter">&quot;</span></span>)));
+
+        <span class="error">$</span>(send(camel().endpoint(seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">greetings</span><span class="delimiter">&quot;</span></span>)::getUri))
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">{</span><span class="delimiter">&quot;</span></span> +
+                        <span class="string"><span class="delimiter">&quot;</span><span class="char">\&quot;</span><span class="content">greeting</span><span class="char">\&quot;</span><span class="content">: {</span><span class="delimiter">&quot;</span></span> +
+                            <span class="string"><span class="delimiter">&quot;</span><span class="char">\&quot;</span><span class="content">language</span><span class="char">\&quot;</span><span class="content">: </span><span class="char">\&quot;</span><span class="content">EN</span><span class="char">\&quot;</span><span class="delimiter">&quot;</span></span> +
+                        <span class="string"><span class="delimiter">&quot;</span><span class="content">}</span><span class="delimiter">&quot;</span></span> +
+                      <span class="string"><span class="delimiter">&quot;</span><span class="content">}</span><span class="delimiter">&quot;</span></span>)
+        );
+
+        <span class="error">$</span>(receive(<span class="string"><span class="delimiter">&quot;</span><span class="content">camel:</span><span class="delimiter">&quot;</span></span> + camel().endpoints().seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">greetings</span><span class="delimiter">&quot;</span></span>).getUri())
+                .process(beforeReceive)
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello!</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the complete route logic you have the full power of Camel ready to be used in your send/receive test action.
+This enables many capabilities as Camel implements the enterprise integration patterns such as split, choice, enrich and many more.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="camel-data-format-support"><a class="anchor" href="#camel-data-format-support"></a><a class="link" href="#camel-data-format-support">16.10. Camel data format support</a></h3>
+<div class="paragraph">
+<p>Camel uses the concept of data format to transform message content in form of marshal/unmarshal operations.
+You can use the data formats supported in Camel in Citrus, too.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Data format marshal/unmarshal</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CamelDataFormatIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
+
+    <span class="annotation">@Autowired</span>
+    <span class="directive">private</span> CamelContext camelContext;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> shouldApplyDataFormat() {
+        when(send(camel().endpoint(seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">data</span><span class="delimiter">&quot;</span></span>)::getUri))
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span>)
+                .transform(camel(camelContext)
+                        .marshal()
+                        .base64())
+        );
+
+        then(receive(<span class="string"><span class="delimiter">&quot;</span><span class="content">camel:</span><span class="delimiter">&quot;</span></span> + camel().endpoints().seda(<span class="string"><span class="delimiter">&quot;</span><span class="content">data</span><span class="delimiter">&quot;</span></span>).getUri())
+                .transform(camel(camelContext)
+                        .unmarshal()
+                        .base64())
+                .transform(camel(camelContext)
+                        .convertBodyTo(<span class="predefined-type">String</span>.class))
+                .message()
+                .type(MessageType.PLAINTEXT)
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example above uses the <code>base64</code> data format provided in Camel to marshal/unmarshal the message content to/from a base64 encoded String.
+Camel provides support for many data formats as you can see in the [documentation on data formats](<a href="https://camel.apache.org/components/latest/dataformats/index.html" class="bare">https://camel.apache.org/components/latest/dataformats/index.html</a>).</p>
 </div>
 </div>
 </div>
@@ -32211,8 +32860,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.0.0<br>
-Last updated 2021-07-21 10:46:56 +0200
+Version 3.1.0<br>
+Last updated 2021-08-27 21:33:20 +0200
 </div>
 </div>
 <style>
