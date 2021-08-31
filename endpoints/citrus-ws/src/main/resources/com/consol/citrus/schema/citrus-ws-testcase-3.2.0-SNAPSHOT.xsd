@@ -22,7 +22,7 @@
      attributeFormDefault="unqualified">
 
     <xs:import namespace="http://www.citrusframework.org/schema/testcase"
-               schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-3.1.0-SNAPSHOT.xsd" />
+               schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-3.2.0-SNAPSHOT.xsd" />
 
     <xs:complexType name="SoapAttachmentType">
         <xs:choice>
