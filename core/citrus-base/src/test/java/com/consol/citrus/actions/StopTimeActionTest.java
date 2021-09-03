@@ -16,15 +16,14 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class StopTimeActionTest extends AbstractTestNGUnitTest {
+public class StopTimeActionTest extends UnitTestSupport {
 
 	@Test
 	public void testDefaultTimeline() throws InterruptedException {

@@ -17,7 +17,6 @@
 package com.consol.citrus.message;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.util.TypeConversionUtils;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Default message implementation holds message payload and message headers. Also provides access methods for special
@@ -111,11 +109,7 @@ public class DefaultMessage implements Message {
 
     @Override
     public String toString() {
-        if (CollectionUtils.isEmpty(headerData)) {
-            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + getPayload(String.class).trim() + "][headers: " + Collections.unmodifiableMap(headers) + "]";
-        } else {
-            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + getPayload(String.class).trim() + "][headers: " + Collections.unmodifiableMap(headers) + "][header-data: " + Collections.unmodifiableList(headerData) + "]";
-        }
+        return print();
     }
 
     @Override

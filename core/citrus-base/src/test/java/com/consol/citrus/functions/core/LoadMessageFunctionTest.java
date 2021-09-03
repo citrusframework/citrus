@@ -18,10 +18,10 @@ package com.consol.citrus.functions.core;
 
 import java.util.Collections;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.6.2
  */
-public class LoadMessageFunctionTest extends AbstractTestNGUnitTest {
+public class LoadMessageFunctionTest extends UnitTestSupport {
 
     private LoadMessageFunction function = new LoadMessageFunction();
 

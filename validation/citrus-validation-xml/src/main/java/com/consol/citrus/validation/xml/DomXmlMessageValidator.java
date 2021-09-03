@@ -347,8 +347,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         XMLUtils.stripWhitespaceNodes(source);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Received message:\n" + XMLUtils.serialize(received));
-            LOG.debug("Control message:\n" + XMLUtils.serialize(source));
+            log.debug("Received message:\n" + context.getLogModifier().mask(XMLUtils.serialize(received)));
+            log.debug("Control message:\n" + context.getLogModifier().mask(XMLUtils.serialize(source)));
         }
 
         validateXmlTree(received, source, validationContext, getNamespaceContextBuilder(context)

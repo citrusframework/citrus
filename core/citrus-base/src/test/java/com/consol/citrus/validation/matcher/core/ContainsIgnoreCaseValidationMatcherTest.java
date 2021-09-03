@@ -16,19 +16,18 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-
 import java.util.Arrays;
 import java.util.List;
 
-public class ContainsIgnoreCaseValidationMatcherTest extends AbstractTestNGUnitTest {
-    
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.ValidationException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class ContainsIgnoreCaseValidationMatcherTest extends UnitTestSupport {
+
 	private ContainsIgnoreCaseValidationMatcher matcher = new ContainsIgnoreCaseValidationMatcher();
-    
+
     @Test
     public void testValidateSuccess() {
         matcher.validate("field", "This is a test", Arrays.asList("is a"), context);
@@ -38,7 +37,7 @@ public class ContainsIgnoreCaseValidationMatcherTest extends AbstractTestNGUnitT
         matcher.validate("field", "This is a test", Arrays.asList(" "), context);
         matcher.validate("field", "This is a test", Arrays.asList(" IS A "), context);
     }
-    
+
     @Test
     public void testValidateError() {
     	assertException("field", "This is a test", Arrays.asList("0815"));

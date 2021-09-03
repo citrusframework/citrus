@@ -16,34 +16,36 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
  */
-public class MaxFunctionTest extends AbstractTestNGUnitTest {
+public class MaxFunctionTest extends UnitTestSupport {
     MaxFunction function = new MaxFunction();
-    
+
     @Test
     public void testFunction() {
         List<String> params = new ArrayList<String>();
         params.add("3");
         params.add("5.2");
         params.add("4.7");
-        
+
         Assert.assertEquals(function.execute(params, context), "5.2");
     }
-    
+
     @Test(expectedExceptions = {NumberFormatException.class})
     public void testWrongParameterUsage() {
         function.execute(Collections.singletonList("no digit"), context);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);

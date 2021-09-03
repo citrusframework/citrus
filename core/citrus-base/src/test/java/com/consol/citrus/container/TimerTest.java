@@ -17,11 +17,13 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
@@ -34,7 +36,10 @@ import static org.testng.Assert.assertNotNull;
  * @author Martin Maher
  * @since 2.5
  */
-public class TimerTest extends AbstractTestNGUnitTest {
+public class TimerTest extends UnitTestSupport {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(TimerTest.class);
 
     private TestAction action = Mockito.mock(TestAction.class);
     private int defaultRepeatCount = 3;
@@ -129,7 +134,7 @@ public class TimerTest extends AbstractTestNGUnitTest {
         try {
             Thread.currentThread().sleep(sleepTime + 1000L);
         } catch (InterruptedException e) {
-            log.error("Interrupted while waiting for forked timer", e);
+            LOG.error("Interrupted while waiting for forked timer", e);
         }
     }
 

@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.util.XMLUtils;
@@ -46,6 +47,8 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private MessageListeners messageListener;
+
+    private final TestContextFactory testContextFactory = TestContextFactory.newInstance();
 
     /**
      * Prevent instantiation.
@@ -136,9 +139,9 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
             log.debug(logMessage);
 
             if (incoming) {
-                messageListener.onInboundMessage(new RawMessage(message), null);
+                messageListener.onInboundMessage(new RawMessage(message), testContextFactory.getObject());
             } else {
-                messageListener.onOutboundMessage(new RawMessage(message), null);
+                messageListener.onOutboundMessage(new RawMessage(message), testContextFactory.getObject());
             }
         } else {
             if (log.isDebugEnabled()) {

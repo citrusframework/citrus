@@ -16,16 +16,15 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class FailActionTest extends AbstractTestNGUnitTest {
+public class FailActionTest extends UnitTestSupport {
 
 	@Test
 	public void testFailStandardMessage() {

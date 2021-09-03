@@ -16,19 +16,18 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-
 import java.util.Arrays;
 import java.util.List;
 
-public class IsNumberValidationMatcherTest extends AbstractTestNGUnitTest {
-    
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.ValidationException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class IsNumberValidationMatcherTest extends UnitTestSupport {
+
 	private IsNumberValidationMatcher matcher = new IsNumberValidationMatcher();
-    
+
     @Test
     public void testValidateSuccess() {
     	// control is irrelevant here
@@ -39,7 +38,7 @@ public class IsNumberValidationMatcherTest extends AbstractTestNGUnitTest {
         matcher.validate("field", "1E+07", Arrays.asList("aaa"), context);
         matcher.validate("field", "1E-7", Arrays.asList("aaa"), context);
     }
-    
+
     @Test
     public void testValidateError() {
     	assertException("field", "NaN", Arrays.asList("2"));

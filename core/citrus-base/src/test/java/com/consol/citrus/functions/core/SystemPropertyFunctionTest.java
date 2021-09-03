@@ -16,22 +16,22 @@
 
 package com.consol.citrus.functions.core;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.util.Arrays;
 import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class SystemPropertyFunctionTest extends AbstractTestNGUnitTest {
+public class SystemPropertyFunctionTest extends UnitTestSupport {
 
-    private SystemPropertyFunction function = new SystemPropertyFunction();
+    private final SystemPropertyFunction function = new SystemPropertyFunction();
 
     @Test
     public void testFunction() {

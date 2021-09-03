@@ -19,6 +19,7 @@ package com.consol.citrus.validation.builder;
 import java.util.Collections;
 import java.util.Map;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
@@ -26,14 +27,13 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.DefaultHeaderBuilder;
 import com.consol.citrus.message.builder.DefaultHeaderDataBuilder;
 import com.consol.citrus.message.builder.FileResourceHeaderDataBuilder;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class StaticMessageBuilderTest extends AbstractTestNGUnitTest {
+public class StaticMessageBuilderTest extends UnitTestSupport {
 
     private StaticMessageBuilder messageBuilder;
 

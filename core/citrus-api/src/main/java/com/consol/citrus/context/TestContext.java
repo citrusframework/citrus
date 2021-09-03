@@ -44,6 +44,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
+import com.consol.citrus.log.LogModifier;
 import com.consol.citrus.message.DefaultMessageStore;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
@@ -164,12 +165,17 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     /**
      * List of exceptions that actions raised during execution of forked operations
      */
-    private List<CitrusRuntimeException> exceptions = new ArrayList<>();
+    private final List<CitrusRuntimeException> exceptions = new ArrayList<>();
 
     /**
      * Type converter.
      */
     private TypeConverter typeConverter = new DefaultTypeConverter();
+
+    /**
+     * Log modifier.
+     */
+    private LogModifier logModifier;
 
     /**
      * Default constructor
@@ -783,6 +789,22 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      */
     public void setTypeConverter(TypeConverter typeConverter) {
         this.typeConverter = typeConverter;
+    }
+
+    /**
+     * Gets the logModifier.
+     * @return
+     */
+    public LogModifier getLogModifier() {
+        return logModifier;
+    }
+
+    /**
+     * Sets the logModifier.
+     * @param logModifier
+     */
+    public void setLogModifier(LogModifier logModifier) {
+        this.logModifier = logModifier;
     }
 
     /**

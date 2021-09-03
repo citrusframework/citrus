@@ -16,21 +16,21 @@
 
 package com.consol.citrus.functions.core;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
-public class RandomUUIDFunctionTest extends AbstractTestNGUnitTest {
+public class RandomUUIDFunctionTest extends UnitTestSupport {
     RandomUUIDFunction function = new RandomUUIDFunction();
-    
+
     @Test
     public void testFunction() {
         Assert.assertNotNull(function.execute(Collections.<String>emptyList(), context));
     }
-    
+
 }

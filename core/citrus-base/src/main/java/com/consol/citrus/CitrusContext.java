@@ -11,6 +11,8 @@ import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.DefaultFunctionRegistry;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.log.DefaultLogModifier;
+import com.consol.citrus.log.LogModifier;
 import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.report.DefaultTestReporters;
 import com.consol.citrus.report.FailureStackTestListener;
@@ -69,6 +71,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
     private final MessageProcessors messageProcessors;
     private final NamespaceContextBuilder namespaceContextBuilder;
     private final TypeConverter typeConverter;
+    private final LogModifier logModifier;
 
     /**
      * Protected constructor using given builder to construct this instance.
@@ -93,6 +96,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         this.messageProcessors = builder.messageProcessors;
         this.namespaceContextBuilder = builder.namespaceContextBuilder;
         this.typeConverter = builder.typeConverter;
+        this.logModifier = builder.logModifier;
 
         this.testContextFactory = builder.testContextFactory;
     }
@@ -268,6 +272,14 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
     }
 
     /**
+     * Gets the logModifier.
+     * @return
+     */
+    public LogModifier getLogModifier() {
+        return logModifier;
+    }
+
+    /**
      * Obtains the testContextFactory.
      * @return
      */
@@ -305,6 +317,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         private MessageProcessors messageProcessors = new MessageProcessors();
         private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
         private TypeConverter typeConverter = new DefaultTypeConverter();
+        private LogModifier logModifier = new DefaultLogModifier();
 
         public static Builder defaultContext() {
             Builder builder = new Builder();
@@ -462,6 +475,11 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
             return this;
         }
 
+        public Builder logModifier(LogModifier modifier) {
+            this.logModifier = modifier;
+            return this;
+        }
+
         public CitrusContext build() {
             if (testContextFactory == null) {
                 testContextFactory = TestContextFactory.newInstance();
@@ -478,6 +496,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
                 testContextFactory.setReferenceResolver(this.referenceResolver);
                 testContextFactory.setNamespaceContextBuilder(this.namespaceContextBuilder);
                 testContextFactory.setTypeConverter(this.typeConverter);
+                testContextFactory.setLogModifier(this.logModifier);
             }
 
             return new CitrusContext(this);

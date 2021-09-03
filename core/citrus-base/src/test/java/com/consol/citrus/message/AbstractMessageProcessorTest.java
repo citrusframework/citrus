@@ -16,15 +16,15 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class AbstractMessageProcessorTest extends AbstractTestNGUnitTest {
+public class AbstractMessageProcessorTest extends UnitTestSupport {
 
     @Test
     public void testProcessMessage() {

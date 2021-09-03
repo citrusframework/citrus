@@ -45,8 +45,8 @@ public class DefaultEmptyMessageValidator extends DefaultMessageValidator {
         log.debug("Start to verify empty message payload ...");
 
         if (log.isDebugEnabled()) {
-            log.debug("Received message:\n" + receivedMessage);
-            log.debug("Control message:\n" + controlMessage);
+            log.debug("Received message:\n" + receivedMessage.print(context));
+            log.debug("Control message:\n" + controlMessage.print(context));
         }
 
         if (StringUtils.hasText(receivedMessage.getPayload(String.class))) {

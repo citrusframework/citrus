@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -37,7 +38,6 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -59,7 +59,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
+public class SendMessageActionBuilderTest extends UnitTestSupport {
 
     private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);

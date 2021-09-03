@@ -16,19 +16,19 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
-public class RoundFunctionTest extends AbstractTestNGUnitTest {
+public class RoundFunctionTest extends UnitTestSupport {
     RoundFunction function = new RoundFunction();
-    
+
     @Test
     public void testFunction() {
         Assert.assertEquals(function.execute(Collections.singletonList("5.0"), context), "5");
@@ -41,12 +41,12 @@ public class RoundFunctionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(function.execute(Collections.singletonList("-5"), context), "-5");
         Assert.assertEquals(function.execute(Collections.singletonList("5.5"), context), "6");
     }
-    
+
     @Test(expectedExceptions = {NumberFormatException.class})
     public void testWrongParameterUsage() {
         function.execute(Collections.singletonList("no digit"), context);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);

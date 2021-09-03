@@ -25,12 +25,12 @@ import java.util.Map;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
@@ -40,12 +40,10 @@ import com.consol.citrus.message.builder.DefaultHeaderBuilder;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.message.builder.FileResourcePayloadBuilder;
 import com.consol.citrus.messaging.SelectiveConsumer;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
@@ -66,7 +64,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
+public class ReceiveMessageActionTest extends UnitTestSupport {
 
     @Mock
     private Endpoint endpoint;
@@ -95,9 +93,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
 
         TestContextFactory factory = super.createTestContextFactory();
-        factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
-        factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
-
         factory.getMessageValidatorRegistry().addMessageValidator("validator", validator);
 
         factory.getReferenceResolver().bind("mockQueue", mockQueue);

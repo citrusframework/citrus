@@ -38,7 +38,7 @@ public class TraceVariablesAction extends AbstractTestAction {
     private final List<String> variableNames;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TraceVariablesAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TraceVariablesAction.class);
 
     /**
      * Default constructor.
@@ -51,7 +51,7 @@ public class TraceVariablesAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        log.info("Trace variables");
+        LOG.info("Trace variables");
 
         Iterator<String> it;
         if (variableNames != null && variableNames.size() > 0) {
@@ -64,7 +64,7 @@ public class TraceVariablesAction extends AbstractTestAction {
             String key = it.next();
             String value = context.getVariable(key);
 
-            log.info("Variable " + key + " = " + value);
+            LOG.info("Variable " + context.getLogModifier().mask(key + " = " + value));
         }
     }
 

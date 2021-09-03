@@ -16,25 +16,25 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
-public class StringLengthFunctionTest extends AbstractTestNGUnitTest {
+public class StringLengthFunctionTest extends UnitTestSupport {
     StringLengthFunction function = new StringLengthFunction();
-    
+
     @Test
     public void testFunction() {
         Assert.assertEquals(function.execute(Collections.singletonList("Hallo"), context), "5");
         Assert.assertEquals(function.execute(Collections.singletonList("Hallo TestFramework!"), context), "20");
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);

@@ -18,8 +18,8 @@ package com.consol.citrus.util;
 
 import javax.script.ScriptException;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.variable.VariableUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 /**
  * @author Jan Lipphaus
  */
-public class VariableUtilsTest extends AbstractTestNGUnitTest {
+public class VariableUtilsTest extends UnitTestSupport {
     private String validGroovyScript = "a = 1";
     private String groovyScriptResult = "1";
     private String invalidGroovyScript = "a";

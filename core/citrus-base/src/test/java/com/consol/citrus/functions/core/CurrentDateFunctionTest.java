@@ -16,20 +16,20 @@
 
 package com.consol.citrus.functions.core;
 
-import com.consol.citrus.functions.FunctionParameterHelper;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.util.Calendar;
 import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.functions.FunctionParameterHelper;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class CurrentDateFunctionTest extends AbstractTestNGUnitTest {
+public class CurrentDateFunctionTest extends UnitTestSupport {
     CurrentDateFunction function = new CurrentDateFunction();
-    
+
     @Test
     public void testFunction() {
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd'"), context), String.format("%1$tY-%1$tm-%1$td", Calendar.getInstance()));
@@ -39,23 +39,23 @@ public class CurrentDateFunctionTest extends AbstractTestNGUnitTest {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.YEAR, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1y'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.MONTH, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1M'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_YEAR, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1d'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.HOUR, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1h'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.MINUTE, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1m'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.SECOND, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1s'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
@@ -63,44 +63,44 @@ public class CurrentDateFunctionTest extends AbstractTestNGUnitTest {
         c = Calendar.getInstance();
         c.add(Calendar.YEAR, 10);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+10y'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.YEAR, 1);
         c.add(Calendar.MONTH, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1y+1M'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c.add(Calendar.DAY_OF_YEAR, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1y+1M+1d'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c.add(Calendar.HOUR, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1y+1M+1d+1h'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c.add(Calendar.MINUTE, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1y+1M+1d+1h+1m'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c.add(Calendar.SECOND, 1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1y+1M+1d+1h+1m+1s'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
         c = Calendar.getInstance();
         c.add(Calendar.YEAR, -1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '-1y'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.MONTH, -1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '-1M'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_YEAR, -1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '-1d'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.HOUR, -1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '-1h'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.MINUTE, -1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '-1m'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.SECOND, -1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '-1s'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
@@ -110,19 +110,19 @@ public class CurrentDateFunctionTest extends AbstractTestNGUnitTest {
         c.add(Calendar.MONTH, 1);
         c.add(Calendar.DAY_OF_YEAR, -1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '-1y+1M-1d'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
-        
+
         c = Calendar.getInstance();
         c.add(Calendar.YEAR, 1);
         c.add(Calendar.MONTH, -1);
         c.add(Calendar.DAY_OF_YEAR, -1);
         Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'yyyy-MM-dd HH:mm:ss', '+1y-1M-1d'"), context), String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
     }
-    
+
     @Test(expectedExceptions = {IllegalArgumentException.class})
     public void testWrongParameterUsage() {
         function.execute(Collections.singletonList("no date format string"), context);
     }
-    
+
 	@Test
 	@SuppressWarnings("unchecked")
     public void testNoParameters() {

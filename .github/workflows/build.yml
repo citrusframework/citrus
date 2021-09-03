@@ -39,7 +39,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Set up JDK 11
@@ -54,6 +54,10 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      - name: Info
+        run: |
+          java -version
+          ./mvnw -version
       - name: Build Citrus
         run: |
           ./mvnw --no-transfer-progress install

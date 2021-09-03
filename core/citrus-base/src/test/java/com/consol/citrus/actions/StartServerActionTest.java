@@ -18,8 +18,8 @@ package com.consol.citrus.actions;
 
 import java.util.Collections;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class StartServerActionTest extends AbstractTestNGUnitTest {
+public class StartServerActionTest extends UnitTestSupport {
 
     @Test
     public void testEmpty() {

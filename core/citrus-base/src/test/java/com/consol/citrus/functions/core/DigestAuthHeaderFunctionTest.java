@@ -15,35 +15,35 @@
  */
 package com.consol.citrus.functions.core;
 
+import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.FunctionParameterHelper;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
-public class DigestAuthHeaderFunctionTest extends AbstractTestNGUnitTest {
+public class DigestAuthHeaderFunctionTest extends UnitTestSupport {
 
     DigestAuthHeaderFunction function = new DigestAuthHeaderFunction();
-    
+
     @Test
     public void testFunction() {
         String digestHeader = function.execute(FunctionParameterHelper.getParameterList("'username', 'password', 'authRealm', 'acegi', 'POST', 'http://localhost:8080', 'citrus', 'md5'"), context);
-        
+
         Assert.assertTrue(digestHeader.startsWith("Digest username=username,realm=authRealm,nonce="));
         Assert.assertTrue(digestHeader.contains("uri=http://localhost:8080,response="));
         Assert.assertTrue(digestHeader.contains("algorithm=md5"));
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testMissingParameters() {
         function.execute(FunctionParameterHelper.getParameterList("'username', 'password', 'authRealm', 'http://localhost:8080', 'citrus', 'md5'"), context);

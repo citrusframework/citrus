@@ -16,96 +16,98 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
  */
-public class RandomNumberFunctionTest extends AbstractTestNGUnitTest {
-    private RandomNumberFunction function = new RandomNumberFunction();
-    
+public class RandomNumberFunctionTest extends UnitTestSupport {
+    private final RandomNumberFunction function = new RandomNumberFunction();
+
     @Test
     public void testFunction() {
         List<String> params = new ArrayList<String>();
         params.add("3");
-        
+
         Assert.assertTrue(Integer.valueOf(function.execute(params, context)) < 1000);
-        
+
         params = new ArrayList<String>();
         params.add("3");
         params.add("false");
-        
+
         String generated = function.execute(params, context);
         Assert.assertTrue(generated.length() <= 3);
         Assert.assertTrue(generated.length() > 0);
     }
-    
+
     @Test
     public void testLeadingZeroNumbers() {
         String generated = RandomNumberFunction.checkLeadingZeros("0001", true);
         Assert.assertTrue(Integer.valueOf(generated.substring(0, 1)) > 0);
-        
+
         generated = RandomNumberFunction.checkLeadingZeros("0009", true);
         Assert.assertEquals(generated.length(), 4);
-        
+
         generated = RandomNumberFunction.checkLeadingZeros("00000", true);
         Assert.assertEquals(generated.length(), 5);
         Assert.assertTrue(Integer.valueOf(generated.substring(0, 1)) > 0);
         Assert.assertTrue(generated.endsWith("0000"));
-        
+
         generated = RandomNumberFunction.checkLeadingZeros("009809", true);
         Assert.assertEquals(generated.length(), 6);
         Assert.assertTrue(Integer.valueOf(generated.substring(0, 1)) > 0);
         Assert.assertTrue(generated.endsWith("09809"));
-        
+
         generated = RandomNumberFunction.checkLeadingZeros("01209", true);
         Assert.assertEquals(generated.length(), 5);
         Assert.assertTrue(Integer.valueOf(generated.substring(0, 1)) > 0);
         Assert.assertTrue(generated.endsWith("1209"));
-        
+
         generated = RandomNumberFunction.checkLeadingZeros("1209", true);
         Assert.assertEquals(generated.length(), 4);
         Assert.assertEquals(generated, "1209");
-        
+
         generated = RandomNumberFunction.checkLeadingZeros("00000", false);
         Assert.assertEquals(generated.length(), 1);
         Assert.assertEquals(generated, "0");
-        
+
         generated = RandomNumberFunction.checkLeadingZeros("0009", false);
         Assert.assertEquals(generated.length(), 1);
         Assert.assertEquals(generated, "9");
-        
+
         generated = RandomNumberFunction.checkLeadingZeros("01209", false);
         Assert.assertEquals(generated.length(), 4);
         Assert.assertEquals(generated, "1209");
-        
+
         generated = RandomNumberFunction.checkLeadingZeros("1209", false);
         Assert.assertEquals(generated.length(), 4);
         Assert.assertEquals(generated, "1209");
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testWrongParameterUsage() {
         function.execute(Collections.singletonList("-1"), context);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testTooManyParameters() {
         List<String> params = new ArrayList<String>();
         params.add("3");
         params.add("true");
         params.add("too much");
-        
+
         function.execute(params, context);
     }
 }

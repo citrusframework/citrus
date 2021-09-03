@@ -19,8 +19,8 @@ package com.consol.citrus.functions;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.functions.core.RandomStringFunction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -33,7 +33,7 @@ import static com.consol.citrus.functions.Functions.randomNumber;
 import static com.consol.citrus.functions.Functions.randomString;
 import static com.consol.citrus.functions.Functions.randomUUID;
 
-public class FunctionsTest extends AbstractTestNGUnitTest {
+public class FunctionsTest extends UnitTestSupport {
 
     @Test
     public void testCurrentDate() throws Exception {

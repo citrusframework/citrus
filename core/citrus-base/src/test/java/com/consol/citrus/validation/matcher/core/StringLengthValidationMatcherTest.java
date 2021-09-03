@@ -16,17 +16,17 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
-
 import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.ValidationException;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.6
  */
-public class StringLengthValidationMatcherTest extends AbstractTestNGUnitTest {
+public class StringLengthValidationMatcherTest extends UnitTestSupport {
 
     private StringLengthValidationMatcher matcher = new StringLengthValidationMatcher();
 

@@ -16,19 +16,19 @@
 
 package com.consol.citrus.functions.core;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.util.Arrays;
 import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class ReadFileResourceFunctionTest extends AbstractTestNGUnitTest {
+public class ReadFileResourceFunctionTest extends UnitTestSupport {
 
     /** Class under test */
     private ReadFileResourceFunction function = new ReadFileResourceFunction();

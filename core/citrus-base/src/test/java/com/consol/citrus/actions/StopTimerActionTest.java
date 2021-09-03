@@ -16,9 +16,9 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.container.StopTimer;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
  * @author Martin Maher
  * @since 2.5
  */
-public class StopTimerActionTest extends AbstractTestNGUnitTest {
+public class StopTimerActionTest extends UnitTestSupport {
 
     @Test
     public void shouldStopSpecificTimer() {

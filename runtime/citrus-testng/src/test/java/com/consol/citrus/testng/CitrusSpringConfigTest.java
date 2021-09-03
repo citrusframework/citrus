@@ -8,6 +8,8 @@ import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.functions.FunctionLibrary;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.log.DefaultLogModifier;
+import com.consol.citrus.log.LogModifier;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.report.FailureStackTestListener;
@@ -89,6 +91,9 @@ public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
     private TypeConverter typeConverter;
 
     @Autowired
+    private LogModifier logModifier;
+
+    @Autowired
     private TestContextFactoryBean testContextFactory;
 
     @Autowired
@@ -141,6 +146,7 @@ public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
 
         Assert.assertEquals(referenceResolver.getClass(), SpringBeanReferenceResolver.class);
         Assert.assertEquals(typeConverter.getClass(), SpringBeanTypeConverter.class);
+        Assert.assertEquals(logModifier.getClass(), DefaultLogModifier.class);
 
         Assert.assertEquals(testContextFactory.getTestListeners(), testListeners);
         Assert.assertEquals(testContextFactory.getMessageListeners(), messageListeners);
@@ -151,6 +157,7 @@ public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
         Assert.assertEquals(testContextFactory.getEndpointFactory(), endpointFactory);
         Assert.assertEquals(testContextFactory.getReferenceResolver(), referenceResolver);
         Assert.assertEquals(testContextFactory.getTypeConverter(), typeConverter);
+        Assert.assertEquals(testContextFactory.getLogModifier(), logModifier);
     }
 
     @Configuration

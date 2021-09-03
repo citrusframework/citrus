@@ -16,32 +16,34 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
  */
-public class SubstringFunctionTest extends AbstractTestNGUnitTest {
+public class SubstringFunctionTest extends UnitTestSupport {
     SubstringFunction function = new SubstringFunction();
-    
+
     @Test
     public void testFunction() {
         List<String> params = new ArrayList<String>();
         params.add("Hallo,TestFramework");
         params.add("6");
         Assert.assertEquals(function.execute(params, context), "TestFramework");
-        
+
         params.clear();
         params.add("This is a test");
         params.add("0");
         Assert.assertEquals(function.execute(params, context), "This is a test");
     }
-    
+
     @Test
     public void testEndIndex() {
         List<String> params = new ArrayList<String>();
@@ -49,7 +51,7 @@ public class SubstringFunctionTest extends AbstractTestNGUnitTest {
         params.add("6");
         params.add("10");
         Assert.assertEquals(function.execute(params, context), "Test");
-        
+
         params.clear();
         params.add("This is a test");
         params.add("0");
@@ -64,12 +66,12 @@ public class SubstringFunctionTest extends AbstractTestNGUnitTest {
         params.add("-1");
         function.execute(params, context);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testMissingBeginIndex() {
         function.execute(Collections.singletonList("This is a test"), context);
     }
-    
+
     @Test(expectedExceptions = {NumberFormatException.class})
     public void testNotANumber() {
         List<String> params = new ArrayList<String>();
@@ -77,7 +79,7 @@ public class SubstringFunctionTest extends AbstractTestNGUnitTest {
         params.add("one");
         function.execute(params, context);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);

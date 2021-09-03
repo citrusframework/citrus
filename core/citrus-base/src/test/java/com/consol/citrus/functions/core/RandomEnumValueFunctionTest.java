@@ -16,24 +16,27 @@
 
 package com.consol.citrus.functions.core;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
-import java.util.*;
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
  * Test the {@link RandomEnumValueFunction} function.
- * 
+ *
  * @author Dimo Velev (dimo.velev@gmail.com)
  *
  */
-public class RandomEnumValueFunctionTest extends AbstractTestNGUnitTest {
-	private Random random = new Random(System.currentTimeMillis());
-	
+public class RandomEnumValueFunctionTest extends UnitTestSupport {
+	private final Random random = new Random(System.currentTimeMillis());
+
 	private List<String> generateRandomValues() {
 		final int valueCount = random.nextInt(15) + 5;
 		final List<String> values = new ArrayList<String>(valueCount);
@@ -42,7 +45,7 @@ public class RandomEnumValueFunctionTest extends AbstractTestNGUnitTest {
 		}
 		return values;
 	}
-	
+
 	@Test
 	public void testWithParameters() {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();
@@ -53,20 +56,20 @@ public class RandomEnumValueFunctionTest extends AbstractTestNGUnitTest {
 			assertTrue(values.contains(value));
 		}
 	}
-	
+
 	@Test
 	public void testWithValues() {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();
 		testee.setValues(generateRandomValues());
 		final List<String> noParameters = Collections.emptyList();
-		
+
 		for (int i=0; i<100; i++) {
 			final String value = testee.execute(noParameters, context);
 			assertNotNull(value);
 			assertTrue(testee.getValues().contains(value));
 		}
 	}
-	
+
 	@Test(expectedExceptions = {InvalidFunctionUsageException.class})
 	public void testWithBoth() {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();
@@ -74,7 +77,7 @@ public class RandomEnumValueFunctionTest extends AbstractTestNGUnitTest {
 		final List<String> params = generateRandomValues();
 		testee.execute(params, context);
 	}
-	
+
 	@Test(expectedExceptions = {InvalidFunctionUsageException.class})
 	public void testWithNone() {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();

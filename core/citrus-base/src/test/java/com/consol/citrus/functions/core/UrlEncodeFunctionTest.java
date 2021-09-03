@@ -16,32 +16,32 @@
 
 package com.consol.citrus.functions.core;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collections;
 
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 /**
  * @author Christoph Deppisch
  */
-public class UrlEncodeFunctionTest extends AbstractTestNGUnitTest {
-    private UrlEncodeFunction function = new UrlEncodeFunction();
-    
+public class UrlEncodeFunctionTest extends UnitTestSupport {
+    private final UrlEncodeFunction function = new UrlEncodeFunction();
+
     @Test
     public void testFunction() {
         Assert.assertEquals(function.execute(Collections.singletonList("foo@citrusframework"), context), "foo%40citrusframework");
     }
-    
+
     @Test
     public void testCustomCharset() {
         Assert.assertEquals(function.execute(Arrays.asList("foo@citrusframework", "UTF-8"), context), "foo%40citrusframework");
     }
-    
+
     @Test
     public void testUnsupportedCharset() {
         try {
@@ -51,7 +51,7 @@ public class UrlEncodeFunctionTest extends AbstractTestNGUnitTest {
             Assert.assertTrue(e.getCause().getClass().equals(UnsupportedEncodingException.class));
         }
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.emptyList(), context);

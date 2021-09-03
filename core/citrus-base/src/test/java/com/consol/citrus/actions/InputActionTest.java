@@ -19,7 +19,7 @@ package com.consol.citrus.actions;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class InputActionTest extends AbstractTestNGUnitTest {
+public class InputActionTest extends UnitTestSupport {
 
     private BufferedReader inputReader = Mockito.mock(BufferedReader.class);
 

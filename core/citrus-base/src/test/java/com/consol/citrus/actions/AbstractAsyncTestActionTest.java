@@ -20,9 +20,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -30,7 +32,10 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class AbstractAsyncTestActionTest extends AbstractTestNGUnitTest {
+public class AbstractAsyncTestActionTest extends UnitTestSupport {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractAsyncTestActionTest.class);
 
     @Test
     public void testOnSuccess() throws Exception {
@@ -39,7 +44,7 @@ public class AbstractAsyncTestActionTest extends AbstractTestNGUnitTest {
         new AbstractAsyncTestAction() {
             @Override
             public void doExecuteAsync(TestContext context) {
-                log.info("Success!");
+                LOG.info("Success!");
             }
 
             @Override

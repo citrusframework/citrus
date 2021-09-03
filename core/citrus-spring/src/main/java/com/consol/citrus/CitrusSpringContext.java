@@ -7,6 +7,7 @@ import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.log.LogModifier;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -108,6 +109,7 @@ public class CitrusSpringContext extends CitrusContext {
             testContextFactory(applicationContext.getBean(TestContextFactoryBean.class));
             referenceResolver(applicationContext.getBean(ReferenceResolver.class));
             typeConverter(applicationContext.getBean(TypeConverter.class));
+            logModifier(applicationContext.getBean(LogModifier.class));
             beforeSuite(new ArrayList<>(applicationContext.getBeansOfType(BeforeSuite.class).values()));
             afterSuite(new ArrayList<>(applicationContext.getBeansOfType(AfterSuite.class).values()));
 

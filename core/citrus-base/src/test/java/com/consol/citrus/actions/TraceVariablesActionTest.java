@@ -16,14 +16,14 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class TraceVariablesActionTest extends AbstractTestNGUnitTest {
+public class TraceVariablesActionTest extends UnitTestSupport {
 
 	@Test
 	public void testTraceVariables() {

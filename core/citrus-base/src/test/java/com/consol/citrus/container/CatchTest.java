@@ -17,10 +17,10 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Christoph Deppisch
  */
-public class CatchTest extends AbstractTestNGUnitTest {
+public class CatchTest extends UnitTestSupport {
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })

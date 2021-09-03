@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Christoph Deppisch
  */
-public class ParallelTest extends AbstractTestNGUnitTest {
+public class ParallelTest extends UnitTestSupport {
 
     private TestAction action = Mockito.mock(TestAction.class);
 

@@ -83,8 +83,8 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Received message:\n" + receivedMessage);
-            log.debug("Control message:\n" + controlMessage);
+            log.debug("Received message:\n" + receivedMessage.print(context));
+            log.debug("Control message:\n" + controlMessage.print(context));
         }
 
         String receivedJsonText = receivedMessage.getPayload(String.class);

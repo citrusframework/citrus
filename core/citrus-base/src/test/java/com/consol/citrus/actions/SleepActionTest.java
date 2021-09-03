@@ -19,14 +19,13 @@ package com.consol.citrus.actions;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+import com.consol.citrus.UnitTestSupport;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class SleepActionTest extends AbstractTestNGUnitTest {
+public class SleepActionTest extends UnitTestSupport {
 
 	@Test
 	public void testSleepDuration() {

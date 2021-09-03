@@ -103,7 +103,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     public void onInboundMessage(Message message, TestContext context) {
         if (message instanceof RawMessage) {
             synchronized (lockObject) {
-                messages.add("INBOUND_MESSAGE:" + newLine() + newLine() + message);
+                messages.add("INBOUND_MESSAGE:" + newLine() + newLine() + message.print(context));
             }
         }
     }
@@ -112,7 +112,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     public void onOutboundMessage(Message message, TestContext context) {
         if (message instanceof RawMessage) {
             synchronized (lockObject) {
-                messages.add("OUTBOUND_MESSAGE:" + newLine() + newLine() + message);
+                messages.add("OUTBOUND_MESSAGE:" + newLine() + newLine() + message.print(context));
             }
         }
     }

@@ -52,8 +52,7 @@ public class EchoAction extends AbstractTestAction {
         if (message == null) {
             log.info("Citrus test " + new Date(System.currentTimeMillis()));
         } else {
-            log.info(context.replaceDynamicContentInString(message));
-
+            log.info(context.getLogModifier().mask(context.replaceDynamicContentInString(message)));
         }
     }
 

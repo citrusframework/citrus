@@ -37,10 +37,10 @@ import org.springframework.util.StringUtils;
 public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener {
 
     /** Inbound message logger */
-    private static Logger inboundMsgLogger = LoggerFactory.getLogger("Logger.Message_IN");
+    private static final Logger INBOUND_MSG_LOGGER = LoggerFactory.getLogger("Logger.Message_IN");
 
     /** Outbound message logger */
-    private static Logger outboundMsgLogger = LoggerFactory.getLogger("Logger.Message_OUT");
+    private static final Logger OUTBOUND_MSG_LOGGER = LoggerFactory.getLogger("Logger.Message_OUT");
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
@@ -228,12 +228,12 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onInboundMessage(Message message, TestContext context) {
-        inboundMsgLogger.debug(message.toString());
+        INBOUND_MSG_LOGGER.debug(message.print(context));
     }
 
     @Override
     public void onOutboundMessage(Message message, TestContext context) {
-        outboundMsgLogger.debug(message.toString());
+        INBOUND_MSG_LOGGER.debug(message.print(context));
     }
 
     /**
