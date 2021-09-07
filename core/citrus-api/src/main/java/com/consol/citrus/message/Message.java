@@ -17,14 +17,59 @@
 package com.consol.citrus.message;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.log.LogMessageModifier;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.0
  */
 public interface Message extends Serializable {
+
+    /**
+     * Prints message content to String representation.
+     * @return
+     */
+    default String print() {
+        return print(getPayload(String.class).trim(), getHeaders(), getHeaderData());
+    }
+
+    /**
+     * Prints given message content (body, headers, headerData) to String representation.
+     * @param body
+     * @param headers
+     * @param headerData
+     * @return
+     */
+    default String print(String body, Map<String, Object> headers, List<String> headerData) {
+        if (CollectionUtils.isEmpty(headerData)) {
+            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + body + "][headers: " + Collections.unmodifiableMap(headers) + "]";
+        } else {
+            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + body + "][headers: " + Collections.unmodifiableMap(headers) + "][header-data: " + Collections.unmodifiableList(headerData) + "]";
+        }
+    }
+
+    /**
+     * Prints message content and applies log modifier provided in given test context.
+     * @return
+     */
+    default String print(TestContext context) {
+        if (context == null) {
+            return print();
+        }
+
+        if (context.getLogModifier() instanceof LogMessageModifier) {
+            LogMessageModifier modifier = ((LogMessageModifier) context.getLogModifier());
+            return print(modifier.maskBody(this), modifier.maskHeaders(this), modifier.maskHeaderData(this));
+        }
+
+        return print(context.getLogModifier().mask(getPayload(String.class).trim()), getHeaders(), getHeaderData());
+    }
 
     /**
      * Gets the unique message id;

@@ -19,7 +19,7 @@ package com.consol.citrus.condition;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,9 +33,9 @@ import static org.mockito.Mockito.when;
  * @author Martin Maher
  * @since 2.4
  */
-public class HttpConditionTest extends AbstractTestNGUnitTest {
+public class HttpConditionTest extends UnitTestSupport {
 
-    private HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
+    private final HttpURLConnection connection = Mockito.mock(HttpURLConnection.class);
 
     @Test
     public void testValidUrl() throws Exception {

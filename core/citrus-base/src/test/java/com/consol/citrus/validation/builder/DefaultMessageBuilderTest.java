@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.DefaultHeaderBuilder;
@@ -28,14 +29,13 @@ import com.consol.citrus.message.builder.DefaultHeaderDataBuilder;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.message.builder.FileResourceHeaderDataBuilder;
 import com.consol.citrus.message.builder.FileResourcePayloadBuilder;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-public class DefaultMessageBuilderTest extends AbstractTestNGUnitTest {
+public class DefaultMessageBuilderTest extends UnitTestSupport {
 
     private final String variablePayloadResource = "classpath:com/consol/citrus/validation/builder/variable-data-resource.txt";
     private final String initialVariableTestPayload = "{ \"person\": { \"name\": \"${name}\", \"age\": 20} }";

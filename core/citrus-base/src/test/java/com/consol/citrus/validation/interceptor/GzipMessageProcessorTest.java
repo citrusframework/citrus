@@ -7,10 +7,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -24,7 +24,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Christoph Deppisch
  */
-public class GzipMessageProcessorTest extends AbstractTestNGUnitTest {
+public class GzipMessageProcessorTest extends UnitTestSupport {
 
     private GzipMessageProcessor processor = new GzipMessageProcessor();
 

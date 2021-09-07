@@ -19,10 +19,11 @@ package com.consol.citrus.http.interceptor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
@@ -48,9 +49,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
     private static final String NEWLINE = System.getProperty("line.separator");
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(LoggingClientInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoggingClientInterceptor.class);
 
     private MessageListeners messageListener;
+
+    private final TestContextFactory contextFactory = TestContextFactory.newInstance();
 
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body,
@@ -70,11 +73,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      */
     public void handleRequest(String request) {
         if (hasMessageListeners()) {
-            log.debug("Sending Http request message");
-            messageListener.onOutboundMessage(new RawMessage(request), null);
+            LOG.debug("Sending Http request message");
+            messageListener.onOutboundMessage(new RawMessage(request), contextFactory.getObject());
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Sending Http request message:" + NEWLINE + request);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Sending Http request message:" + NEWLINE + request);
             }
         }
     }
@@ -85,11 +88,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      */
     public void handleResponse(String response) {
         if (hasMessageListeners()) {
-            log.debug("Received Http response message");
-            messageListener.onInboundMessage(new RawMessage(response), null);
+            LOG.debug("Received Http response message");
+            messageListener.onInboundMessage(new RawMessage(response), contextFactory.getObject());
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Received Http response message:" + NEWLINE + response);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Received Http response message:" + NEWLINE + response);
             }
         }
     }
@@ -211,7 +214,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
                 getBody();
             }
 
-            return new String(body, Charset.forName("UTF-8"));
+            return new String(body, StandardCharsets.UTF_8);
         }
 
         public void close() {
@@ -226,4 +229,5 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
     public void setMessageListener(MessageListeners messageListener) {
         this.messageListener = messageListener;
     }
+
 }

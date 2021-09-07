@@ -16,7 +16,7 @@
 
 package com.consol.citrus.condition;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.UnitTestSupport;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
@@ -26,9 +26,9 @@ import static org.testng.Assert.assertTrue;
  * @author Martin Maher
  * @since 2.4
  */
-public class FileConditionTest extends AbstractTestNGUnitTest {
+public class FileConditionTest extends UnitTestSupport {
 
-    private FileCondition condition = new FileCondition();
+    private final FileCondition condition = new FileCondition();
 
     @Test
     public void testValidFilename() {

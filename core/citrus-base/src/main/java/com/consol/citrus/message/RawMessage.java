@@ -38,7 +38,7 @@ public class RawMessage extends DefaultMessage {
     }
 
     @Override
-    public String toString() {
+    public String print() {
         return getPayload(String.class);
     }
 }

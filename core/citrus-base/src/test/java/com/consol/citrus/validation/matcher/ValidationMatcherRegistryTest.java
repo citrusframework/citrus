@@ -18,9 +18,9 @@ package com.consol.citrus.validation.matcher;
 
 import java.util.Collections;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.NoSuchValidationMatcherLibraryException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class ValidationMatcherRegistryTest extends AbstractTestNGUnitTest {
+public class ValidationMatcherRegistryTest extends UnitTestSupport {
 
     private ValidationMatcherLibrary validationMatcherLibrary = new ValidationMatcherLibrary();
 

@@ -19,7 +19,7 @@ package com.consol.citrus.util;
 import java.nio.charset.Charset;
 
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.UnitTestSupport;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class FileUtilsTest extends AbstractTestNGUnitTest {
+public class FileUtilsTest extends UnitTestSupport {
     @Test
     public void testGetFileResource() throws Exception {
         Resource resource = FileUtils.getFileResource("classpath:citrus-context.xml", context);

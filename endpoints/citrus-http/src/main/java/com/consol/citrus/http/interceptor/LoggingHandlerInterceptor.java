@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
 
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.report.MessageListeners;
@@ -52,6 +53,8 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
 
     private MessageListeners messageListener;
 
+    private final TestContextFactory contextFactory = TestContextFactory.newInstance();
+
     @Override
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler) throws Exception {
@@ -77,7 +80,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     public void handleRequest(String request) {
         if (hasMessageListeners()) {
             LOG.debug("Received Http request");
-            messageListener.onInboundMessage(new RawMessage(request), null);
+            messageListener.onInboundMessage(new RawMessage(request), contextFactory.getObject());
         } else {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Received Http request:" + NEWLINE + request);
@@ -92,7 +95,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     public void handleResponse(String response) {
         if (hasMessageListeners()) {
             LOG.debug("Sending Http response");
-            messageListener.onOutboundMessage(new RawMessage(response), null);
+            messageListener.onOutboundMessage(new RawMessage(response), contextFactory.getObject());
         } else {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Sending Http response:" + NEWLINE + response);

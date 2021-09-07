@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  * @author Dimo Velev (dimo.velev@gmail.com)
  *
  */
-public class MapValueFunctionTest extends AbstractTestNGUnitTest {
+public class MapValueFunctionTest extends UnitTestSupport {
 	private final Map<String, String> map = new HashMap<>();
 
 	@BeforeClass

@@ -16,9 +16,11 @@
 
 package com.consol.citrus.validation.interceptor;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.*;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,7 +28,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Deprecated
-public class AbstractMessageConstructionInterceptorTest extends AbstractTestNGUnitTest {
+public class AbstractMessageConstructionInterceptorTest extends UnitTestSupport {
 
     @Test
     public void testInterceptMessageConstruction() throws Exception {

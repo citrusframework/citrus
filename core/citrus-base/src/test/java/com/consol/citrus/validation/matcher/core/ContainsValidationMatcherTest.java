@@ -16,19 +16,18 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-
 import java.util.Arrays;
 import java.util.List;
 
-public class ContainsValidationMatcherTest extends AbstractTestNGUnitTest {
-    
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.ValidationException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class ContainsValidationMatcherTest extends UnitTestSupport {
+
     private ContainsValidationMatcher matcher = new ContainsValidationMatcher();
-    
+
     @Test
     public void testValidateSuccess() {
         matcher.validate("field", "This is a test", Arrays.asList("is a"), context);
@@ -37,7 +36,7 @@ public class ContainsValidationMatcherTest extends AbstractTestNGUnitTest {
         matcher.validate("field", "This is a 0815test", Arrays.asList("0815"), context);
         matcher.validate("field", "This is a test", Arrays.asList(" "), context);
     }
-    
+
     @Test
     public void testValidateError() {
     	assertException("field", "This is a test", Arrays.asList("0815"));

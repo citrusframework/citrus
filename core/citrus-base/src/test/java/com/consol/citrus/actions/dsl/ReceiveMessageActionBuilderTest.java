@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -40,7 +41,6 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.consol.citrus.validation.TextEqualsMessageValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
@@ -74,7 +74,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
+public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
     @Mock
     private Endpoint messageEndpoint;

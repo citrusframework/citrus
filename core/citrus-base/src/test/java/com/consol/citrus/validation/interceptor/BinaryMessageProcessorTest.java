@@ -3,10 +3,10 @@ package com.consol.citrus.validation.interceptor;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class BinaryMessageProcessorTest extends AbstractTestNGUnitTest {
+public class BinaryMessageProcessorTest extends UnitTestSupport {
 
     private BinaryMessageProcessor processor = new BinaryMessageProcessor();
 

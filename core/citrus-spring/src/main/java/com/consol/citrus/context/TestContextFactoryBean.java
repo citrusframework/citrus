@@ -23,6 +23,7 @@ import com.consol.citrus.container.AfterTest;
 import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.log.LogModifier;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -84,6 +85,9 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
 
     @Autowired
     private TypeConverter typeConverter;
+
+    @Autowired
+    private LogModifier logModifier;
 
     @Autowired
     private MessageProcessors messageProcessors;
@@ -160,6 +164,10 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
             factory.setTypeConverter(applicationContext.getBean(TypeConverter.class));
         }
 
+        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(LogModifier.class))) {
+            factory.setLogModifier(applicationContext.getBean(LogModifier.class));
+        }
+
         if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(NamespaceContextBuilder.class))) {
             factory.setNamespaceContextBuilder(applicationContext.getBean(NamespaceContextBuilder.class));
         }
@@ -234,6 +242,10 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
 
         if (typeConverter != null) {
             delegate.setTypeConverter(typeConverter);
+        }
+
+        if (logModifier != null) {
+            delegate.setLogModifier(logModifier);
         }
 
         if (namespaceContextBuilder != null) {
@@ -317,6 +329,11 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     @Override
     public TypeConverter getTypeConverter() {
         return delegate.getTypeConverter();
+    }
+
+    @Override
+    public LogModifier getLogModifier() {
+        return delegate.getLogModifier();
     }
 
     @Override

@@ -16,34 +16,36 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
  */
-public class AvgFunctionTest extends AbstractTestNGUnitTest {
+public class AvgFunctionTest extends UnitTestSupport {
     AvgFunction function = new AvgFunction();
-    
+
     @Test
     public void testFunction() {
         List<String> params = new ArrayList<String>();
         params.add("3");
         params.add("3");
         params.add("3");
-        
+
         Assert.assertEquals(function.execute(params, context), "3.0");
     }
-    
+
     @Test(expectedExceptions = {NumberFormatException.class})
     public void testWrongParameterUsage() {
         function.execute(Collections.singletonList("no digit"), context);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);

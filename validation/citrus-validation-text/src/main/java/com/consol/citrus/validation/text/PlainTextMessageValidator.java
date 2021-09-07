@@ -58,8 +58,8 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         log.debug("Start text message validation");
 
         if (log.isDebugEnabled()) {
-            log.debug("Received message:\n" + receivedMessage);
-            log.debug("Control message:\n" + controlMessage);
+            log.debug("Received message:\n" + receivedMessage.print(context));
+            log.debug("Control message:\n" + controlMessage.print(context));
         }
 
         try {

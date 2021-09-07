@@ -16,16 +16,16 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
-
 import java.util.Arrays;
 
-public class TrimAllWhitespacesValidationMatcherTest extends AbstractTestNGUnitTest {
-    
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.ValidationException;
+import org.testng.annotations.Test;
+
+public class TrimAllWhitespacesValidationMatcherTest extends UnitTestSupport {
+
     private TrimAllWhitespacesValidationMatcher matcher = new TrimAllWhitespacesValidationMatcher();
-    
+
     @Test
     public void testValidateSuccess() {
         matcher.validate("field", "This is a value", Arrays.asList("Thisisavalue"), context);
@@ -33,7 +33,7 @@ public class TrimAllWhitespacesValidationMatcherTest extends AbstractTestNGUnitT
         matcher.validate("field", "    This is a value    ", Arrays.asList("Thisisavalue"), context);
         matcher.validate("field", "    This is a value    ", Arrays.asList("This is a value    "), context);
     }
-    
+
     @Test(expectedExceptions = ValidationException.class)
     public void testValidateError() {
         matcher.validate("field", " This is a value ", Arrays.asList("This is a wrong value"), context);

@@ -16,32 +16,32 @@
 
 package com.consol.citrus.functions.core;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collections;
 
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 /**
  * @author Christoph Deppisch
  */
-public class DecodeBase64FunctionTest extends AbstractTestNGUnitTest {
-    private DecodeBase64Function function = new DecodeBase64Function();
-    
+public class DecodeBase64FunctionTest extends UnitTestSupport {
+    private final DecodeBase64Function function = new DecodeBase64Function();
+
     @Test
     public void testFunction() {
         Assert.assertEquals(function.execute(Collections.singletonList("Zm9v"), context), "foo");
     }
-    
+
     @Test
     public void testCustomCharset() {
         Assert.assertEquals(function.execute(Arrays.asList("Zm9v", "UTF-8"), context), "foo");
     }
-    
+
     @Test
     public void testUnsupportedCharset() {
         try {
@@ -51,7 +51,7 @@ public class DecodeBase64FunctionTest extends AbstractTestNGUnitTest {
             Assert.assertTrue(e.getCause().getClass().equals(UnsupportedEncodingException.class));
         }
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.emptyList(), context);

@@ -16,19 +16,22 @@
 
 package com.consol.citrus.actions;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
-import org.apache.tools.ant.*;
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class AntRunActionTest extends AbstractTestNGUnitTest {
+public class AntRunActionTest extends UnitTestSupport {
 
 	@Test
 	public void testRunTarget() {

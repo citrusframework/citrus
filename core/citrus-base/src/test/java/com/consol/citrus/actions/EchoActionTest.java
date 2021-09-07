@@ -16,15 +16,14 @@
 
 package com.consol.citrus.actions;
 
-import org.testng.annotations.Test;
-
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class EchoActionTest extends AbstractTestNGUnitTest {
+public class EchoActionTest extends UnitTestSupport {
 
 	@Test
 	public void testEchoMessage() {

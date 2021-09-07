@@ -109,6 +109,8 @@ public class Template extends AbstractTestAction {
             innerContext.setEndpointFactory(context.getEndpointFactory());
             innerContext.setNamespaceContextBuilder(context.getNamespaceContextBuilder());
             innerContext.setReferenceResolver(context.getReferenceResolver());
+            innerContext.setTypeConverter(context.getTypeConverter());
+            innerContext.setLogModifier(context.getLogModifier());
         }
 
         for (Entry<String, String> entry : parameter.entrySet()) {

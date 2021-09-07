@@ -16,23 +16,24 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.SelectiveConsumer;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
+public class ReceiveTimeoutActionTest extends UnitTestSupport {
 
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);

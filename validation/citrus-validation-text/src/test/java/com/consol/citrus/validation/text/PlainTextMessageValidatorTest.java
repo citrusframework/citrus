@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
 public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
     private PlainTextMessageValidator validator = new PlainTextMessageValidator();
-    private ValidationContext validationContext = new DefaultValidationContext();
+    private final ValidationContext validationContext = new DefaultValidationContext();
 
     @Override
     protected TestContextFactory createTestContextFactory() {

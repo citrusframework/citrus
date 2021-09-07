@@ -36,7 +36,7 @@
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-api</artifactId>
+      <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
     </dependency>
 

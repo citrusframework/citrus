@@ -1,11 +1,14 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2021 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,6 +27,8 @@ import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.log.DefaultLogModifier;
+import com.consol.citrus.log.LogModifier;
 import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestActionListeners;
@@ -74,6 +79,8 @@ public class TestContextFactory implements ReferenceResolverAware {
 
     private TypeConverter typeConverter;
 
+    private LogModifier logModifier;
+
     /**
      * Create new empty instance with default components set.
      * @return
@@ -93,6 +100,7 @@ public class TestContextFactory implements ReferenceResolverAware {
         factory.setReferenceResolver(new SimpleReferenceResolver());
         factory.setNamespaceContextBuilder(new NamespaceContextBuilder());
         factory.setTypeConverter(new DefaultTypeConverter());
+        factory.setLogModifier(new DefaultLogModifier());
 
         return factory;
     }
@@ -122,6 +130,10 @@ public class TestContextFactory implements ReferenceResolverAware {
 
         if (typeConverter != null) {
             context.setTypeConverter(typeConverter);
+        }
+
+        if (logModifier != null) {
+            context.setLogModifier(logModifier);
         }
 
         return context;
@@ -342,5 +354,21 @@ public class TestContextFactory implements ReferenceResolverAware {
      */
     public void setTypeConverter(TypeConverter typeConverter) {
         this.typeConverter = typeConverter;
+    }
+
+    /**
+     * Gets the logModifier.
+     * @return
+     */
+    public LogModifier getLogModifier() {
+        return logModifier;
+    }
+
+    /**
+     * Sets the logModifier.
+     * @param logModifier
+     */
+    public void setLogModifier(LogModifier logModifier) {
+        this.logModifier = logModifier;
     }
 }

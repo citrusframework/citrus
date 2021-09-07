@@ -16,26 +16,25 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-
 import java.util.Arrays;
 import java.util.List;
 
-public class DatePatternValidationMatcherTest extends AbstractTestNGUnitTest {
-    
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.ValidationException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class DatePatternValidationMatcherTest extends UnitTestSupport {
+
 	private DatePatternValidationMatcher matcher = new DatePatternValidationMatcher();
-    
+
     @Test
     public void testValidateSuccess() {
     	matcher.validate("field", "2011-10-10", Arrays.asList("yyyy-MM-dd"), context);
         matcher.validate("field", "10.10.2011", Arrays.asList("dd.MM.yyyy"), context);
         matcher.validate("field", "2011-01-01T01:02:03", Arrays.asList("yyyy-MM-dd'T'HH:mm:ss"), context);
     }
-    
+
     @Test
     public void testValidateError() {
     	assertException("field", "201110-10", Arrays.asList("yy-MM-dd"));

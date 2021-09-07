@@ -49,7 +49,7 @@ import static org.testng.Assert.fail;
  */
 public class TestContextTest extends UnitTestSupport {
 
-    private GlobalVariables globalVariables = new GlobalVariables();
+    private final GlobalVariables globalVariables = new GlobalVariables();
 
     @Test
     public void testDefaultVariables() {
@@ -60,7 +60,7 @@ public class TestContextTest extends UnitTestSupport {
 
         testcase.setVariableDefinitions(Collections.singletonMap("test1Var", "456"));
 
-        TestContext testContext = createTestContext();
+        TestContext testContext = testContextFactory.getObject();
         testContext.setGlobalVariables(globalVariables);
         testcase.execute(testContext);
 
@@ -77,7 +77,7 @@ public class TestContextTest extends UnitTestSupport {
 
         testcase2.setVariableDefinitions(Collections.singletonMap("test2Var", "456"));
 
-        testContext = createTestContext();
+        testContext = testContextFactory.getObject();
         testContext.setGlobalVariables(globalVariables);
         testcase2.execute(testContext);
 
@@ -102,7 +102,7 @@ public class TestContextTest extends UnitTestSupport {
                 .build();
         testcase.addTestAction(varSetting);
 
-        TestContext testContext = createTestContext();
+        TestContext testContext = testContextFactory.getObject();
         testContext.setGlobalVariables(globalVariables);
         testcase.execute(testContext);
 
@@ -112,7 +112,7 @@ public class TestContextTest extends UnitTestSupport {
         TestCase testcase2 = new DefaultTestCase();
         testcase2.setName("MyTestCase2");
 
-        testContext = createTestContext();
+        testContext = testContextFactory.getObject();
         testContext.setGlobalVariables(globalVariables);
         testcase2.execute(testContext);
 

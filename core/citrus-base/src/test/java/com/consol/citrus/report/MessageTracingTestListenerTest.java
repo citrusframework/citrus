@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.message.RawMessage;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -33,9 +34,9 @@ import static org.mockito.Mockito.when;
  * @author Martin Maher
  * @since 2.5
  */
-public class MessageTracingTestListenerTest {
+public class MessageTracingTestListenerTest extends UnitTestSupport {
 
-    private MessageTracingTestListener testling = new MessageTracingTestListener();
+    private final MessageTracingTestListener testling = new MessageTracingTestListener();
 
     @BeforeClass
     public void setupTestling() {
@@ -59,8 +60,8 @@ public class MessageTracingTestListenerTest {
         RawMessage outboundMessageMock = setupRawMessageMock(outboundPayload);
 
         testling.onTestStart(testCaseMock);
-        testling.onInboundMessage(inboundMessageMock, null);
-        testling.onOutboundMessage(outboundMessageMock, null);
+        testling.onInboundMessage(inboundMessageMock, context);
+        testling.onOutboundMessage(outboundMessageMock, context);
         testling.onTestFinish(testCaseMock);
 
         assertFileExistsWithContent(testname, inboundPayload);
@@ -75,7 +76,7 @@ public class MessageTracingTestListenerTest {
 
     private RawMessage setupRawMessageMock(String payload) {
         RawMessage mock = mock(RawMessage.class);
-        when(mock.toString()).thenReturn(payload);
+        when(mock.print(context)).thenReturn(payload);
         return mock;
     }
 

@@ -3,7 +3,7 @@ package com.consol.citrus.actions;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.TestBehavior;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.UnitTestSupport;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Christoph Deppisch
  */
-public class ApplyTestBehaviorActionTest extends AbstractTestNGUnitTest {
+public class ApplyTestBehaviorActionTest extends UnitTestSupport {
 
     @Mock
     private TestActionRunner runner;

@@ -16,16 +16,16 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
-
 import java.util.Arrays;
 
-public class TrimValidationMatcherTest extends AbstractTestNGUnitTest {
-    
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.ValidationException;
+import org.testng.annotations.Test;
+
+public class TrimValidationMatcherTest extends UnitTestSupport {
+
     private TrimValidationMatcher matcher = new TrimValidationMatcher();
-    
+
     @Test
     public void testValidateSuccess() {
         matcher.validate("field", "value", Arrays.asList("value"), context);
@@ -33,7 +33,7 @@ public class TrimValidationMatcherTest extends AbstractTestNGUnitTest {
         matcher.validate("field", "    value    ", Arrays.asList("value"), context);
         matcher.validate("field", "    value    ", Arrays.asList("value    "), context);
     }
-    
+
     @Test(expectedExceptions = ValidationException.class)
     public void testValidateError() {
         matcher.validate("field", " value ", Arrays.asList("wrong"), context);

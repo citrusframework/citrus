@@ -16,20 +16,20 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
-
 import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.ValidationException;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.6
  */
-public class IgnoreNewLineValidationMatcherTest extends AbstractTestNGUnitTest {
-    
+public class IgnoreNewLineValidationMatcherTest extends UnitTestSupport {
+
     private IgnoreNewLineValidationMatcher matcher = new IgnoreNewLineValidationMatcher();
-    
+
     @Test
     public void testValidateSuccess() {
         matcher.validate("field", "value", Collections.singletonList("value"), context);
@@ -42,7 +42,7 @@ public class IgnoreNewLineValidationMatcherTest extends AbstractTestNGUnitTest {
         matcher.validate("field", "value1 \n\n\nvalue2 \n\nvalue3!", Collections.singletonList("value1 \nvalue2 \nvalue3!"), context);
         matcher.validate("field", "value1 \r\n\r\n\r\nvalue2 \r\n\r\nvalue3!", Collections.singletonList("value1 \r\nvalue2 \r\nvalue3!"), context);
     }
-    
+
     @Test(expectedExceptions = ValidationException.class)
     public void testValidateError() {
         matcher.validate("field", "value1 \nvalue2 \nvalue3!", Collections.singletonList("value1! value2! value3!"), context);

@@ -16,10 +16,10 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.direct.DirectEndpoint;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,9 +27,9 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class DefaultMessageStoreTest extends AbstractTestNGUnitTest {
+public class DefaultMessageStoreTest extends UnitTestSupport {
 
-    private MessageStore messageStore = new DefaultMessageStore();
+    private final MessageStore messageStore = new DefaultMessageStore();
 
     @Test
     public void testStoreAndGetMessage() throws Exception {

@@ -27,7 +27,7 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     if: github.ref == 'refs/heads/main' && github.repository == 'citrusframework/citrus'
 
     steps:

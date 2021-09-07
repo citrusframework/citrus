@@ -16,19 +16,19 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
-public class AbsoluteFunctionTest extends AbstractTestNGUnitTest {
+public class AbsoluteFunctionTest extends UnitTestSupport {
     AbsoluteFunction function = new AbsoluteFunction();
-    
+
     @Test
     public void testFunction() {
         Assert.assertEquals(function.execute(Collections.singletonList("-0.0"), context), "0.0");
@@ -40,12 +40,12 @@ public class AbsoluteFunctionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(function.execute(Collections.singletonList("-2"), context), "2");
         Assert.assertEquals(function.execute(Collections.singletonList("-2.5"), context), "2.5");
     }
-    
+
     @Test(expectedExceptions = {NumberFormatException.class})
     public void testWrongParameterUsage() {
         function.execute(Collections.singletonList("no digit"), context);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);

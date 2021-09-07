@@ -16,19 +16,18 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-
 import java.util.Arrays;
 import java.util.List;
 
-public class GreaterThanValidationMatcherTest extends AbstractTestNGUnitTest {
-    
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.ValidationException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class GreaterThanValidationMatcherTest extends UnitTestSupport {
+
 	private LowerThanValidationMatcher matcher = new LowerThanValidationMatcher();
-    
+
     @Test
     public void testValidateSuccess() {
         matcher.validate("field", "2", Arrays.asList("3"), context);
@@ -36,7 +35,7 @@ public class GreaterThanValidationMatcherTest extends AbstractTestNGUnitTest {
         matcher.validate("field", "-0.000000001", Arrays.asList("0"), context);
         matcher.validate("field", "0", Arrays.asList("0.000000001"), context);
     }
-    
+
     @Test
     public void testValidateError() {
     	assertException("field", "NaN", Arrays.asList("2"));

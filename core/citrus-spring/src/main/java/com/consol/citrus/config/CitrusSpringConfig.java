@@ -21,6 +21,8 @@ import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionConfig;
+import com.consol.citrus.log.DefaultLogModifier;
+import com.consol.citrus.log.LogModifier;
 import com.consol.citrus.report.FailureStackTestListener;
 import com.consol.citrus.report.MessageListenersFactory;
 import com.consol.citrus.report.TestActionListenersFactory;
@@ -69,6 +71,11 @@ public class CitrusSpringConfig {
     @Bean
     public TypeConverter typeConverter() {
         return SpringBeanTypeConverter.INSTANCE;
+    }
+
+    @Bean
+    public LogModifier logModifier() {
+        return new DefaultLogModifier();
     }
 
     @Bean

@@ -16,26 +16,26 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.Collections;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
-public class UpperCaseFunctionTest extends AbstractTestNGUnitTest {
+public class UpperCaseFunctionTest extends UnitTestSupport {
     UpperCaseFunction function = new UpperCaseFunction();
-    
+
     @Test
     public void testFunction() {
         Assert.assertEquals(function.execute(Collections.singletonList("1000"), context), "1000");
         Assert.assertEquals(function.execute(Collections.singletonList("Hallo TestFramework!"), context), "HALLO TESTFRAMEWORK!");
         Assert.assertEquals(function.execute(Collections.singletonList("Today is: 09.02.2009"), context), "TODAY IS: 09.02.2009");
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);

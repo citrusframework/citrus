@@ -23,11 +23,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,7 +43,10 @@ import static org.mockito.Mockito.verify;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class AsyncTest extends AbstractTestNGUnitTest {
+public class AsyncTest extends UnitTestSupport {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(AsyncTest.class);
 
     private TestAction action = Mockito.mock(TestAction.class);
     private TestAction success = Mockito.mock(TestAction.class);
@@ -158,7 +163,7 @@ public class AsyncTest extends AbstractTestNGUnitTest {
             if (container.isDone(context)) {
                 done.complete(true);
             } else {
-                log.debug("Async action execution not finished yet ...");
+                LOG.debug("Async action execution not finished yet ...");
             }
         }, 100, timeout / 10, TimeUnit.MILLISECONDS);
 

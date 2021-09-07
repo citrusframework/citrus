@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,9 +34,9 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Christoph Deppisch
  */
-public class TemplateTest extends AbstractTestNGUnitTest {
+public class TemplateTest extends UnitTestSupport {
 
-    private TestAction action = Mockito.mock(TestAction.class);
+    private final TestAction action = Mockito.mock(TestAction.class);
 
     @Test
     public void testTemplateExecution() {

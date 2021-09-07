@@ -16,21 +16,21 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
 /**
  * @author Christoph Deppisch
  */
-public class WeekdayValidationMatcherTest extends AbstractTestNGUnitTest {
+public class WeekdayValidationMatcherTest extends UnitTestSupport {
 
     private WeekdayValidationMatcher matcher = new WeekdayValidationMatcher();
 

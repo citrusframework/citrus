@@ -16,32 +16,34 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
  */
-public class SubstringAfterFunctionTest extends AbstractTestNGUnitTest {
+public class SubstringAfterFunctionTest extends UnitTestSupport {
     SubstringAfterFunction function = new SubstringAfterFunction();
-    
+
     @Test
     public void testFunction() {
         List<String> params = new ArrayList<String>();
         params.add("Hallo,TestFramework");
         params.add(",");
         Assert.assertEquals(function.execute(params, context), "TestFramework");
-        
+
         params.clear();
         params.add("This is a test");
         params.add("a");
         Assert.assertEquals(function.execute(params, context), " test");
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);

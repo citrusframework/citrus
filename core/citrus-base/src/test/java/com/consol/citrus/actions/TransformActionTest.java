@@ -16,15 +16,14 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Philipp Komninos
  */
-public class TransformActionTest extends AbstractTestNGUnitTest {
+public class TransformActionTest extends UnitTestSupport {
 
 	@Test
 	public void testTransform() {

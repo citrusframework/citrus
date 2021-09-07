@@ -16,13 +16,13 @@
 
 package com.consol.citrus.validation.matcher.core;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.Arrays;
+
+import com.consol.citrus.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-
-public class CreateVariableValidationMatcherTest extends AbstractTestNGUnitTest {
+public class CreateVariableValidationMatcherTest extends UnitTestSupport {
 
     private CreateVariableValidationMatcher matcher = new CreateVariableValidationMatcher();
 

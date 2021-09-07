@@ -16,26 +16,25 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
  */
-public class MessageTypeTest extends AbstractTestNGUnitTest {
+public class MessageTypeTest extends UnitTestSupport {
 
     @Test
     public void testKnowsMessageType() {
         Assert.assertEquals(MessageType.knows("xml"), true);
         Assert.assertEquals(MessageType.knows("XML"), true);
-        
+
         Assert.assertEquals(MessageType.knows("PLAINTEXT"), true);
         Assert.assertEquals(MessageType.knows("plaintext"), true);
         Assert.assertEquals(MessageType.knows("json"), true);
         Assert.assertEquals(MessageType.knows("csv"), true);
-        
+
         Assert.assertEquals(MessageType.knows("msexcel"), false);
         Assert.assertEquals(MessageType.knows(""), false);
     }
