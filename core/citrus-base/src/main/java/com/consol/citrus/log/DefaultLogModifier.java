@@ -39,10 +39,12 @@ public class DefaultLogModifier implements LogMessageModifier {
     private boolean maskXml = true;
     private boolean maskJson = true;
     private boolean maskKeyValue = true;
+    private boolean maskFormUrlEncoded = true;
 
     private Pattern keyValuePattern;
     private Pattern xmlPattern;
     private Pattern jsonPattern;
+    private Pattern formUrlEncodedPattern;
 
     @Override
     public String mask(String source) {
@@ -52,6 +54,7 @@ public class DefaultLogModifier implements LogMessageModifier {
 
         boolean xml = maskXml && source.startsWith("<");
         boolean json = maskJson && !xml && (source.startsWith("{") || source.startsWith("["));
+        boolean formUrlEncoded = maskFormUrlEncoded && !json && source.contains("&") && source.contains("=");
 
         String masked = source;
         if (xml) {
@@ -62,8 +65,10 @@ public class DefaultLogModifier implements LogMessageModifier {
             }
         } else if (json) {
             masked = createJsonPattern(keywords).matcher(masked).replaceAll("$1\"" + logMaskValue + "\"");
+        } else if (formUrlEncoded) {
+            masked = createFormUrlEncodedPattern(keywords).matcher(masked).replaceAll("$1" + logMaskValue);
         } else if (maskKeyValue) {
-            masked = createKeyValuePattern(keywords).matcher(masked).replaceAll("$1" + logMaskValue + "");
+            masked = createKeyValuePattern(keywords).matcher(masked).replaceAll("$1" + logMaskValue);
         }
 
         return masked;
@@ -76,11 +81,25 @@ public class DefaultLogModifier implements LogMessageModifier {
                 return null;
             }
 
-            String regex = "((?>" + keywordExpression + ")\\s*=\\s*['\"]?)([^\\s,&'\"}\\]]+)";
-            keyValuePattern = Pattern.compile(regex);
+            String regex = "((?>" + keywordExpression + ")\\s*=\\s*['\"]?)([^,'\"]+)";
+            keyValuePattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         }
 
         return keyValuePattern;
+    }
+
+    protected Pattern createFormUrlEncodedPattern(Set<String> keywords) {
+        if (formUrlEncodedPattern == null) {
+            String keywordExpression = createKeywordsExpression(keywords);
+            if (keywordExpression.isEmpty()) {
+                return null;
+            }
+
+            String regex = "((?>" + keywordExpression + ")\\s*=\\s*)([^&]*)";
+            formUrlEncodedPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        }
+
+        return formUrlEncodedPattern;
     }
 
     protected Pattern createXmlPattern(Set<String> keywords) {
@@ -91,7 +110,7 @@ public class DefaultLogModifier implements LogMessageModifier {
             }
 
             String regex = "(<(?>" + keywordExpression + ")>)[^<]*(</(?>" + keywordExpression + ")>)";
-            xmlPattern = Pattern.compile(regex);
+            xmlPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         }
 
         return xmlPattern;
@@ -104,8 +123,8 @@ public class DefaultLogModifier implements LogMessageModifier {
                 return null;
             }
 
-            String regex = "(\"(?>" + keywordExpression + ")\"\\s*:\\s*)(\"?[^\\s\",}]*[\",}])";
-            jsonPattern = Pattern.compile(regex);
+            String regex = "(\"(?>" + keywordExpression + ")\"\\s*:\\s*)(\"?[^\",]*[\",])";
+            jsonPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         }
 
         return jsonPattern;
