@@ -46,6 +46,23 @@ public class DefaultMessageTest extends UnitTestSupport {
 
     @Test
     public void testPrintMaskKeyValue() {
+        DefaultMessage message = new DefaultMessage("password=foo,secret=bar");
+
+        message.setHeader("operation", "getCredentials");
+        message.setHeader("password", "foo");
+        message.setHeader("secret", "bar");
+
+        String output = message.print(context);
+        Assert.assertEquals(output, String.format("DEFAULTMESSAGE [" +
+                    "id: %s, " +
+                    "payload: password=****,secret=****" +
+                "][headers: {" +
+                    "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secret=****" +
+                "}]", message.getId(), message.getId(), message.getTimestamp()));
+    }
+
+    @Test
+    public void testPrintMaskFormUrlEncoded() {
         DefaultMessage message = new DefaultMessage("password=foo&secret=bar");
 
         message.setHeader("operation", "getCredentials");
