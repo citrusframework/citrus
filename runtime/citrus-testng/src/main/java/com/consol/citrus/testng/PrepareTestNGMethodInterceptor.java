@@ -57,7 +57,7 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
                 if (citrusXmlTestAnnotation != null) {
                     if (citrusXmlTestAnnotation.name().length > 1) {
                         for (int i = 0; i < citrusXmlTestAnnotation.name().length; i++) {
-                            if (i == 0 && !baseMethodAdded) {
+                            if (i == 0) {
                                 baseMethodAdded = true;
                                 interceptedMethods.add(method);
                             } else {

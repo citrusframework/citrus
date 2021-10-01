@@ -62,4 +62,9 @@ public class SpringBeanXml_IT {
     public Stream<DynamicTest> SpringBeanXml_3_IT() {
         return CitrusSpringExtension.packageScan("com.consol.citrus.junit.jupiter.simple");
     }
+
+    @Test
+    @CitrusXmlTest(sources = "classpath:com/consol/citrus/junit/jupiter/integration/spring/SampleIT.xml")
+    public void SpringBeanXml_4_IT() {
+    }
 }

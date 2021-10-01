@@ -19,6 +19,7 @@
 
 package com.consol.citrus.junit.jupiter.spring;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import com.consol.citrus.TestCase;
@@ -27,7 +28,9 @@ import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.junit.jupiter.CitrusExtension;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
+import com.consol.citrus.util.FileUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -54,6 +57,7 @@ public class XmlTestHelper {
         Method method = extensionContext.getRequiredTestMethod();
         String testName = extensionContext.getRequiredTestClass().getSimpleName();
         String packageName = method.getDeclaringClass().getPackage().getName();
+        String source = "";
 
         if (method.getAnnotation(CitrusXmlTest.class) != null) {
             CitrusXmlTest citrusXmlTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
@@ -65,13 +69,24 @@ public class XmlTestHelper {
 
             if (citrusXmlTestAnnotation.name().length > 0) {
                 testName = citrusXmlTestAnnotation.name()[0];
-            } else if (packagesToScan.length == 0) {
+            } else if (packagesToScan.length == 0 && citrusXmlTestAnnotation.sources().length == 0) {
                 testName = method.getName();
+            }
+
+            if (citrusXmlTestAnnotation.sources().length > 0) {
+                source = citrusXmlTestAnnotation.sources()[0];
+
+                Resource file = FileUtils.getFileResource(source);
+                testName = FileUtils.getBaseName(file.getFilename());
+                packageName = source.substring(0, source.lastIndexOf(File.pathSeparator));
             }
         }
 
-        return new XmlTestLoader(extensionContext.getRequiredTestClass(), testName,
+        XmlTestLoader testLoader = new XmlTestLoader(extensionContext.getRequiredTestClass(), testName,
                 packageName, CitrusExtensionHelper.getCitrus(extensionContext).getCitrusContext());
+        testLoader.setSource(source);
+
+        return testLoader;
     }
 
     /**

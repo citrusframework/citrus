@@ -50,9 +50,14 @@ public class JUnit4AnnotationIT extends JUnit4CitrusSpringSupport {
     public void JUnit4Annotation_3_IT() {
     }
 
+    @Test
+    @CitrusXmlTest(sources = "classpath:com/consol/citrus/junit/integration/actions/CreateVariablesIT.xml")
+    public void JUnit4Annotation_4_IT() {
+    }
+
     @Test(expected = TestCaseFailedException.class)
     @Category( ShouldFailGroup.class )
     @CitrusXmlTest(name = "FailJUnit4IT")
-    public void JUnit4Annotation_4_IT() {
+    public void JUnit4Annotation_5_IT() {
     }
 }
