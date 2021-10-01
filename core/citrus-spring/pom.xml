@@ -46,6 +46,11 @@
       <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-xml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Spring Framework -->
     <dependency>

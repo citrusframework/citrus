@@ -19,6 +19,7 @@
     <module>citrus-junit5</module>
     <module>citrus-testng</module>
     <module>citrus-cucumber</module>
+    <module>citrus-xml</module>
     <module>citrus-groovy</module>
     <module>citrus-main</module>
   </modules>
