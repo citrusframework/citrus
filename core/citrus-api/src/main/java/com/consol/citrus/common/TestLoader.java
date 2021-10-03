@@ -23,6 +23,7 @@ import com.consol.citrus.TestCase;
  * @author Christoph Deppisch
  * @since 2.1
  */
+@FunctionalInterface
 public interface TestLoader {
 
     /**

@@ -36,14 +36,14 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.1
  */
-public class XmlTestLoader implements TestLoader {
+public class XmlTestLoader implements TestLoader, TestSourceAware {
 
     private TestCase testCase;
-    private Class<?> testClass;
-    private String testName;
-    private String packageName;
-    private CitrusContext citrusContext;
-    private String contextFile;
+    private final Class<?> testClass;
+    private final String testName;
+    private final String packageName;
+    private final CitrusContext citrusContext;
+    private String source;
 
     /**
      * Default constructor with context file and parent application context field.
@@ -89,7 +89,7 @@ public class XmlTestLoader implements TestLoader {
         try {
             return new ClassPathXmlApplicationContext(
                     new String[]{
-                            getContextFile(),
+                            getSource(),
                             "com/consol/citrus/spring/annotation-config-ctx.xml"},
                     true, getParentApplicationContext());
         } catch (Exception e) {
@@ -111,9 +111,9 @@ public class XmlTestLoader implements TestLoader {
      * context file path from testName and packageName.
      * @return
      */
-    public String getContextFile() {
-        if (StringUtils.hasText(contextFile)) {
-            return contextFile;
+    public String getSource() {
+        if (StringUtils.hasText(source)) {
+            return source;
         } else {
             return packageName.replace('.', File.separatorChar) + File.separator + testName + FileUtils.FILE_EXTENSION_XML;
         }
@@ -121,9 +121,10 @@ public class XmlTestLoader implements TestLoader {
 
     /**
      * Sets custom Spring application context file for XML test case.
-     * @param contextFile
+     * @param source
      */
-    public void setContextFile(String contextFile) {
-        this.contextFile = contextFile;
+    @Override
+    public void setSource(String source) {
+        this.source = source;
     }
 }

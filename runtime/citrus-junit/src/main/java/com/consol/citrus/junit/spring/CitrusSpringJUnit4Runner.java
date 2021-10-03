@@ -81,11 +81,19 @@ public class CitrusSpringJUnit4Runner extends SpringJUnit4ClassRunner {
                 }
 
                 if (citrusXmlTestAnnotation.name().length > 0) {
-                    for (int i = 0; i < citrusXmlTestAnnotation.name().length; i++) {
-                        interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), citrusXmlTestAnnotation.name()[i], packageName));
+                    for (String name : citrusXmlTestAnnotation.name()) {
+                        interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), name, packageName));
                     }
-                } else if (packagesToScan.length == 0) {
+                } else if (packagesToScan.length == 0 && citrusXmlTestAnnotation.sources().length == 0) {
                     interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), method.getName(), packageName));
+                }
+
+                for (String source : citrusXmlTestAnnotation.sources()) {
+                    Resource file = FileUtils.getFileResource(source);
+                    CitrusFrameworkMethod frameworkMethod = new CitrusFrameworkMethod(method.getMethod(), FileUtils.getBaseName(file.getFilename()),
+                            source.substring(0, source.lastIndexOf(File.pathSeparator)));
+                    frameworkMethod.setSource(source);
+                    interceptedMethods.add(frameworkMethod);
                 }
 
                 for (String packageScan : packagesToScan) {

@@ -35,4 +35,7 @@ public class CitrusXmlAnnotationIT extends TestNGCitrusSpringSupport {
 
     @CitrusXmlTest(packageScan = "com.consol.citrus.integration.functions")
     public void CitrusXmlAnnotation_3_IT() {}
+
+    @CitrusXmlTest(sources = { "classpath:com/consol/citrus/integration/actions/CreateVariablesIT.xml" })
+    public void CitrusXmlAnnotation_4_IT() {}
 }
