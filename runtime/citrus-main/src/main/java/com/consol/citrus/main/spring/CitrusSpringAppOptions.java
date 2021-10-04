@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2021 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -17,30 +17,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.testng;
+package com.consol.citrus.main.spring;
 
-import org.testng.ITestContext;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
+import com.consol.citrus.main.CitrusAppOptions;
 
 /**
  * @author Christoph Deppisch
  */
-public interface TestNGSuiteListener {
-
-    /**
-     * Runs tasks before test suite.
-     * @param testContext the test context.
-     */
-    @BeforeSuite(alwaysRun = true)
-    default void beforeSuite(ITestContext testContext) {
-    }
-
-    /**
-     * Runs tasks after test suite.
-     * @param testContext the test context.
-     */
-    @AfterSuite(alwaysRun = true)
-    default void afterSuite(ITestContext testContext) {
-    }
+public class CitrusSpringAppOptions extends CitrusAppOptions<CitrusSpringAppConfiguration> {
 }

@@ -82,16 +82,10 @@ public final class CitrusSettings {
     public static final String VARIABLE_SUFFIX = "}";
     public static final String VARIABLE_ESCAPE = "//";
 
-    /** Default application context name */
-    public static final String DEFAULT_APPLICATION_CONTEXT_PROPERTY = "citrus.spring.application.context";
-    public static final String DEFAULT_APPLICATION_CONTEXT_ENV = "CITRUS_SPRING_APPLICATION_CONTEXT";
-    public static final String DEFAULT_APPLICATION_CONTEXT = System.getProperty(DEFAULT_APPLICATION_CONTEXT_PROPERTY, System.getenv(DEFAULT_APPLICATION_CONTEXT_ENV) != null ?
-            System.getenv(DEFAULT_APPLICATION_CONTEXT_ENV) : "classpath*:citrus-context.xml");
-
     /** Default application context class */
-    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY = "citrus.spring.java.config";
-    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS_ENV = "CITRUS_SPRING_JAVA_CONFIG";
-    public static final String DEFAULT_APPLICATION_CONTEXT_CLASS = System.getProperty(DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY, System.getenv(DEFAULT_APPLICATION_CONTEXT_CLASS_ENV));
+    public static final String DEFAULT_CONFIG_CLASS_PROPERTY = "citrus.java.config";
+    public static final String DEFAULT_CONFIG_CLASS_ENV = "CITRUS_JAVA_CONFIG";
+    public static final String DEFAULT_CONFIG_CLASS = System.getProperty(DEFAULT_CONFIG_CLASS_PROPERTY, System.getenv(DEFAULT_CONFIG_CLASS_ENV));
 
     /** Default test directories */
     public static final String DEFAULT_TEST_SRC_DIRECTORY_PROPERTY = "citrus.default.src.directory";

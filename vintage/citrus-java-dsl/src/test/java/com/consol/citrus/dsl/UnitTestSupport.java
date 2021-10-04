@@ -1,8 +1,8 @@
 package com.consol.citrus.dsl;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringSettings;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
@@ -25,7 +25,7 @@ import org.testng.annotations.BeforeSuite;
 public class UnitTestSupport extends AbstractTestNGUnitTest {
 
     static {
-        System.setProperty(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:citrus-unit-context.xml");
+        System.setProperty(CitrusSpringSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:citrus-unit-context.xml");
     }
 
     /** Factory bean for test context */

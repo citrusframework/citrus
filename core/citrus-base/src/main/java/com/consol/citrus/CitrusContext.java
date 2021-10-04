@@ -1,14 +1,18 @@
 package com.consol.citrus;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import com.consol.citrus.annotations.CitrusConfiguration;
 import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.DefaultFunctionRegistry;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.log.DefaultLogModifier;
@@ -31,17 +35,22 @@ import com.consol.citrus.report.TestReporters;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListenerAware;
 import com.consol.citrus.report.TestSuiteListeners;
+import com.consol.citrus.spi.BindToRegistry;
 import com.consol.citrus.spi.ReferenceRegistry;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
+import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Default Citrus context implementation holds basic components used in Citrus.
@@ -102,12 +111,82 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
     }
 
     /**
-     * Initializing method loads Spring application context and reads bean definitions
+     * Initializing method loads default configuration class and reads component definitions
      * such as test listeners and test context factory.
      * @return
      */
     public static CitrusContext create() {
-        return Builder.defaultContext().build();
+        CitrusContext context = Builder.defaultContext().build();
+
+        if (StringUtils.hasText(CitrusSettings.DEFAULT_CONFIG_CLASS)) {
+            try {
+                Class<?> configClass = Class.forName(CitrusSettings.DEFAULT_CONFIG_CLASS);
+                context.parseConfiguration(configClass);
+            } catch (ClassNotFoundException e) {
+                throw new CitrusRuntimeException("Failed to instantiate custom configuration class", e);
+            }
+        }
+
+        return context;
+    }
+
+    /**
+     * Parse given configuration class and bind annotated fields, methods to reference registry.
+     * @param configClass
+     */
+    public void parseConfiguration(Class<?> configClass) {
+        try {
+            parseConfiguration(configClass.getConstructor().newInstance());
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new CitrusRuntimeException("Missing or non-accessible default constructor on custom configuration class", e);
+        }
+    }
+
+    /**
+     * Parse given configuration class and bind annotated fields, methods to reference registry.
+     * @param configuration
+     */
+    public void parseConfiguration(Object configuration) {
+        Class<?> configClass = configuration.getClass();
+
+        if (configClass.isAnnotationPresent(CitrusConfiguration.class)) {
+            for (Class<?> type : configClass.getAnnotation(CitrusConfiguration.class).classes()) {
+                parseConfiguration(type);
+            }
+        }
+
+        Arrays.stream(configClass.getDeclaredMethods())
+                .filter(m -> m.getAnnotation(BindToRegistry.class) != null)
+                .forEach(m -> {
+                    try {
+                        String name = ReferenceRegistry.getName(m.getAnnotation(BindToRegistry.class), m.getName());
+                        Object component = m.invoke(configuration);
+                        getReferenceResolver().bind(name, component);
+
+                        if (component instanceof MessageValidator) {
+                            getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
+                        }
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new CitrusRuntimeException("Failed to invoke configuration method", e);
+                    }
+                });
+
+        Arrays.stream(configClass.getDeclaredFields())
+                .filter(f -> f.getAnnotation(BindToRegistry.class) != null)
+                .peek(ReflectionUtils::makeAccessible)
+                .forEach(f -> {
+                    try {
+                        String name = ReferenceRegistry.getName(f.getAnnotation(BindToRegistry.class), f.getName());
+                        Object component = f.get(configuration);
+                        getReferenceResolver().bind(name, component);
+
+                        if (component instanceof MessageValidator) {
+                            getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
+                        }
+                    } catch (IllegalAccessException e) {
+                        throw new CitrusRuntimeException("Failed to access configuration field", e);
+                    }
+                });
     }
 
     /**
@@ -291,6 +370,10 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
     public void bind(String name, Object value) {
         if (this.referenceResolver != null) {
             this.referenceResolver.bind(name, value);
+
+            if (value instanceof MessageValidator) {
+                getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) value);
+            }
         }
     }
 

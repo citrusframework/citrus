@@ -31,7 +31,7 @@ public class CitrusRemoteOptions extends CitrusAppOptions<CitrusRemoteConfigurat
     protected CitrusRemoteOptions() {
         super();
 
-        options.add(new CliOption<CitrusRemoteConfiguration>("P", "port", "Server port") {
+        options.add(new CliOption<>("P", "port", "Server port") {
             @Override
             protected void doProcess(CitrusRemoteConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {

@@ -56,7 +56,9 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport {
 
     @AfterClass(alwaysRun = true)
     public void stopServer() {
-        server.stop(0);
+        if (server != null) {
+            server.stop(0);
+        }
     }
 
     @CitrusTest

@@ -42,7 +42,7 @@ import org.springframework.util.StringUtils;
 public class MessageValidatorRegistry {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MessageValidatorRegistry.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MessageValidatorRegistry.class);
 
     /** The default bean id in Spring application context*/
     public static final String BEAN_NAME = "citrusMessageValidatorRegistry";
@@ -54,7 +54,7 @@ public class MessageValidatorRegistry {
     private MessageValidator<? extends ValidationContext> defaultMessageHeaderValidator;
 
     /** Default empty message validator */
-    private DefaultEmptyMessageValidator defaultEmptyMessageValidator = new DefaultEmptyMessageValidator();
+    private final DefaultEmptyMessageValidator defaultEmptyMessageValidator = new DefaultEmptyMessageValidator();
 
     /**
      * Finds matching message validators for this message type.
@@ -93,12 +93,12 @@ public class MessageValidatorRegistry {
         }
 
         if (isEmptyOrDefault(matchingValidators)) {
-            log.warn(String.format("Unable to find proper message validator. Message type is '%s' and message payload is '%s'", messageType, message.getPayload(String.class)));
+            LOG.warn(String.format("Unable to find proper message validator. Message type is '%s' and message payload is '%s'", messageType, message.getPayload(String.class)));
             throw new CitrusRuntimeException("Failed to find proper message validator for message");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Found %s message validators for message", matchingValidators.size()));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Found %s message validators for message", matchingValidators.size()));
         }
 
         return matchingValidators;
@@ -171,8 +171,8 @@ public class MessageValidatorRegistry {
      * @param messageValidator
      */
     public void addMessageValidator(String name, MessageValidator<? extends ValidationContext> messageValidator) {
-        if (this.messageValidators.containsKey(name) && log.isDebugEnabled()) {
-            log.debug(String.format("Overwriting message validator '%s' in registry", name));
+        if (this.messageValidators.containsKey(name) && LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Overwriting message validator '%s' in registry", name));
         }
 
         this.messageValidators.put(name, messageValidator);

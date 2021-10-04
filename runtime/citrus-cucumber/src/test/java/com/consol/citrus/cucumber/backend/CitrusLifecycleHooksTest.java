@@ -37,7 +37,7 @@ public class CitrusLifecycleHooksTest extends UnitTestSupport {
 
     @BeforeMethod
     public void setupMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         citrusLifecycleHooks = new CitrusLifecycleHooks();
         CitrusAnnotations.injectTestContext(citrusLifecycleHooks, context);
         CitrusAnnotations.injectTestRunner(citrusLifecycleHooks, runner);
