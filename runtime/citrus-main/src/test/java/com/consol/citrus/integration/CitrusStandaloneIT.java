@@ -17,7 +17,7 @@
 package com.consol.citrus.integration;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
@@ -62,7 +62,7 @@ public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests {
 
     @BeforeClass
     public void beforeAll() {
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+        citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
     }
 
     @BeforeMethod

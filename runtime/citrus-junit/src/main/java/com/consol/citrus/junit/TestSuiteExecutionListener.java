@@ -17,7 +17,7 @@
 package com.consol.citrus.junit;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
@@ -39,7 +39,7 @@ public class TestSuiteExecutionListener extends AbstractTestExecutionListener {
         if (TestSuiteState.shouldExecuteBeforeSuite()) {
             ApplicationContext ctx = testContext.getApplicationContext();
 
-            Citrus citrus = Citrus.newInstance(CitrusSpringContext.create(ctx));
+            Citrus citrus = Citrus.newInstance(new CitrusSpringContextProvider(ctx));
             citrus.beforeSuite(SUITE_NAME);
 
             Runtime.getRuntime().addShutdownHook(new Thread(new AfterSuiteShutdownHook(citrus)));

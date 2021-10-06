@@ -39,7 +39,7 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     public void beforeSuite(ITestContext testContext) throws Exception {
         super.beforeSuite(testContext);
 
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+        citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
     }
 

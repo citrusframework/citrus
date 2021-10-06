@@ -27,6 +27,7 @@ import java.util.Optional;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusContext;
 import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
@@ -45,8 +46,8 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.PrepareTestNGMethodInterceptor;
 import com.consol.citrus.testng.TestNGHelper;
-import com.consol.citrus.testng.TestNGTestListener;
 import com.consol.citrus.testng.TestNGSuiteListener;
+import com.consol.citrus.testng.TestNGTestListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -137,7 +138,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
      */
     protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
         if (citrus == null) {
-            citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
             CitrusAnnotations.injectCitrusFramework(this, citrus);
         }
 
@@ -172,7 +173,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
     @Override
     public final void before() {
         if (citrus == null) {
-            citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
             CitrusAnnotations.injectCitrusFramework(this, citrus);
         }
 
@@ -209,7 +210,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
         }
         Assert.notNull(applicationContext, "Missing proper application context in before suite initialization");
 
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+        citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         CitrusAnnotations.injectCitrusFramework(this, citrus);
         beforeSuite(citrus.getCitrusContext());
         citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());

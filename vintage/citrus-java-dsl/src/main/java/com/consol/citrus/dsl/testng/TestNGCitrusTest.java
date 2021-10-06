@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.testng;
 import java.lang.reflect.Method;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseBuilder;
 import com.consol.citrus.TestResult;
@@ -44,7 +44,9 @@ import org.testng.ITestResult;
 /**
  * @author Christoph Deppisch
  * @since 2.5
+ * @deprecated in favor of using {@link com.consol.citrus.testng.spring.TestNGCitrusSpringSupport}
  */
+@Deprecated
 public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
     private static final String DESIGNER_ATTRIBUTE = "designer";
@@ -87,7 +89,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
             try {
                 if (citrus == null) {
-                    citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+                    citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
                 }
 
                 TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());

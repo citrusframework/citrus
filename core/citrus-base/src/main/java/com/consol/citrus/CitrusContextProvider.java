@@ -41,7 +41,11 @@ public interface CitrusContextProvider {
 
         if (provider.isEmpty()) {
             LOG.debug("Using default Citrus context provider");
-            return CitrusContext::create;
+            return new DefaultCitrusContextProvider();
+        }
+
+        if (provider.size() > 1) {
+            LOG.warn(String.format("Found %d Citrus context provider implementations. Please choose one of them.", provider.size()));
         }
 
         if (LOG.isDebugEnabled()) {

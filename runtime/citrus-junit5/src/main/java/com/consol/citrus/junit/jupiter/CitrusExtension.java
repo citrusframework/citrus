@@ -18,6 +18,7 @@ package com.consol.citrus.junit.jupiter;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusContext;
+import com.consol.citrus.CitrusInstanceManager;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.TestResult;
@@ -66,7 +67,7 @@ public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, B
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         if (CitrusExtensionHelper.requiresCitrus(extensionContext)) {
-            CitrusExtensionHelper.setCitrus(CitrusCache.getCitrus(), extensionContext);
+            CitrusExtensionHelper.setCitrus(CitrusInstanceManager.getOrDefault(), extensionContext);
         }
 
         if (beforeSuite) {
@@ -147,25 +148,6 @@ public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, B
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return CitrusExtensionHelper.resolveParameter(parameterContext, extensionContext);
-    }
-
-    /**
-     * Static cache of Citrus instance.
-     */
-    private static class CitrusCache {
-        private static Citrus citrus;
-
-        /**
-         * Initialize and get Citrus instance.
-         * @return
-         */
-        static Citrus getCitrus() {
-            if (citrus == null) {
-                citrus = Citrus.newInstance();
-            }
-
-            return citrus;
-        }
     }
 
     /**

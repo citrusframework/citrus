@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusInstanceManager;
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.TestResult;
@@ -146,10 +146,10 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
         ApplicationContext ctx = SpringExtension.getApplicationContext(extensionContext);
         if (applicationContext == null) {
             applicationContext = ctx;
-            citrus = Citrus.newInstance(CitrusSpringContext.create(ctx));
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(ctx));
         } else if (!applicationContext.equals(ctx)) {
             applicationContext = ctx;
-            citrus = Citrus.newInstance(CitrusSpringContext.create(ctx));
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(ctx));
         }
 
         return citrus;

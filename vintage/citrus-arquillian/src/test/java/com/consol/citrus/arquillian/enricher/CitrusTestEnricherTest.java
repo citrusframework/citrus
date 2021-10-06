@@ -19,7 +19,7 @@ package com.consol.citrus.arquillian.enricher;
 import java.net.URL;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
@@ -39,7 +39,7 @@ public class CitrusTestEnricherTest {
 
     private CitrusTestEnricher testEnricher = new CitrusTestEnricher();
 
-    private Citrus citrusFramework = Citrus.newInstance(CitrusSpringContext.create(ArquillianTestConfig.class));
+    private Citrus citrusFramework = Citrus.newInstance(new CitrusSpringContextProvider(ArquillianTestConfig.class));
 
     @Mock
     private Instance<Citrus> citrusInstance;

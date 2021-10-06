@@ -30,7 +30,9 @@ import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -38,7 +40,6 @@ import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,11 +48,17 @@ import static org.mockito.Mockito.when;
  */
 public class TestSuiteTest extends AbstractTestNGUnitTest {
 
+    @Mock
     private TestSuiteListeners testSuiteListeners;
-    private TestSuiteListener testSuiteListener = Mockito.mock(TestSuiteListener.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
-    private TestContextFactoryBean testContextFactory = Mockito.mock(TestContextFactoryBean.class);
-    private TestAction actionMock = Mockito.mock(TestAction.class);
+    @Mock
+    private TestSuiteListener testSuiteListener;
+    @Mock
+    private ApplicationContext applicationContextMock;
+    @Mock
+    private TestContextFactoryBean testContextFactory;
+    @Mock
+    private TestAction actionMock;
+
     private Citrus citrus;
 
     private BeforeSuite beforeActions;
@@ -59,9 +66,7 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void resetMocks() {
-        reset(testSuiteListener);
-        reset(applicationContextMock);
-        reset(actionMock);
+        MockitoAnnotations.openMocks(this);
 
         testSuiteListeners = new TestSuiteListeners();
         testSuiteListeners.addTestSuiteListener(testSuiteListener);
@@ -75,7 +80,7 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBean(TestSuiteListeners.class)).thenReturn(testSuiteListeners);
         when(applicationContextMock.getBean(TestListeners.class)).thenReturn(new TestListeners());
 
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContextMock));
+        citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContextMock));
     }
 
     @Test

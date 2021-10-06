@@ -32,27 +32,17 @@ public class CitrusInstanceManager {
      * @return
      */
     public static Citrus newInstance() {
-        if (strategy.equals(CitrusInstanceStrategy.NEW) || citrus == null) {
-            CitrusContextProvider contextProvider = CitrusContextProvider.lookup();
-            citrus = newInstance(contextProvider.create());
-        }
-
-        return citrus;
+        return newInstance(CitrusContextProvider.lookup());
     }
 
     /**
      * Create new Citrus instance with given context.
-     * @param citrusContext
+     * @param contextProvider
      * @return
      */
-    public static Citrus newInstance(CitrusContext citrusContext) {
-        if (strategy.equals(CitrusInstanceStrategy.NEW)) {
-            Citrus instance = new Citrus(citrusContext);
-            instanceProcessors.forEach(processor -> processor.process(instance));
-            citrus = instance;
-            return instance;
-        } else if (citrus == null) {
-            citrus = new Citrus(citrusContext);
+    public static Citrus newInstance(CitrusContextProvider contextProvider) {
+        if (strategy.equals(CitrusInstanceStrategy.NEW) || citrus == null) {
+            citrus = new Citrus(contextProvider.create());
             instanceProcessors.forEach(processor -> processor.process(citrus));
         }
 

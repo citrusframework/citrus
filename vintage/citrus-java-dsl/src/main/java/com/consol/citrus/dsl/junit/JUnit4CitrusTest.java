@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.junit;
 import java.lang.reflect.Method;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseBuilder;
 import com.consol.citrus.TestResult;
@@ -38,7 +38,9 @@ import org.springframework.util.ReflectionUtils;
 /**
  * @author Christoph Deppisch
  * @since 2.5
+ * @deprecated in favor of using {@link com.consol.citrus.junit.spring.JUnit4CitrusSpringSupport}
  */
+@Deprecated
 public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
 
     private static final String DESIGNER_ATTRIBUTE = "designer";
@@ -47,7 +49,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
     @Override
     public void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
-            citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         }
 
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());

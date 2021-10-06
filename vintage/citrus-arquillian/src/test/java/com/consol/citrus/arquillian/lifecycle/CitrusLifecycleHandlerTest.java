@@ -19,7 +19,7 @@ package com.consol.citrus.arquillian.lifecycle;
 import java.util.Properties;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
 import org.jboss.arquillian.container.spi.client.container.DeployableContainer;
@@ -41,7 +41,7 @@ public class CitrusLifecycleHandlerTest {
 
     private CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
 
-    private Citrus citrusFramework = Citrus.newInstance(CitrusSpringContext.create());
+    private Citrus citrusFramework = Citrus.newInstance(new CitrusSpringContextProvider());
 
     @Mock
     private Instance<Citrus> citrusInstance;

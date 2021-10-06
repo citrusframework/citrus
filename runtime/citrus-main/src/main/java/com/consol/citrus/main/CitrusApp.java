@@ -89,7 +89,7 @@ public class CitrusApp {
 
         if (citrusApp.configuration.isSkipTests()) {
             citrusApp.configuration.setDefaultProperties();
-            Citrus.newInstance();
+            CitrusInstanceManager.getOrDefault();
         } else {
             try {
                 citrusApp.run();
