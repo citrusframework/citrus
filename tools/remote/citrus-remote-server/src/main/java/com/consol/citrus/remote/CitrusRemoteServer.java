@@ -16,12 +16,15 @@
 
 package com.consol.citrus.remote;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import com.consol.citrus.remote.controller.RunController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Spark;
-
-import java.util.concurrent.*;
 
 import static spark.Spark.port;
 
@@ -57,7 +60,7 @@ public class CitrusRemoteServer {
     }
 
     public CitrusRemoteServer(String[] args) {
-        this(CitrusRemoteOptions.apply(new CitrusRemoteConfiguration(), args));
+        this(new CitrusRemoteOptions().apply(new CitrusRemoteConfiguration(), args));
     }
 
     /**

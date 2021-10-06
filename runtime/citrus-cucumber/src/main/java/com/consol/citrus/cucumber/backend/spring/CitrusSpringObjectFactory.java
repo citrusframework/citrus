@@ -20,6 +20,7 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusContext;
 import com.consol.citrus.CitrusInstanceManager;
 import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
@@ -120,7 +121,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
             }
         }
 
-        Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+        Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
     }
 
     @Override

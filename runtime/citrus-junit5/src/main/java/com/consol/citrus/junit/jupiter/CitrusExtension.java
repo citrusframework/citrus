@@ -17,6 +17,8 @@
 package com.consol.citrus.junit.jupiter;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusContext;
+import com.consol.citrus.CitrusInstanceManager;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.TestResult;
@@ -24,6 +26,7 @@ import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestCaseFailedException;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -48,13 +51,11 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
  * @author Christoph Deppisch
  */
 public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, BeforeTestExecutionCallback,
-        AfterTestExecutionCallback, ParameterResolver,
-        TestInstancePostProcessor, TestExecutionExceptionHandler {
+        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterAllCallback {
 
     /** Test suite name */
     private static final String SUITE_NAME = "citrus-junit5-suite";
 
-    private static Citrus citrus;
     private static boolean beforeSuite = true;
     private static boolean afterSuite = true;
 
@@ -66,19 +67,20 @@ public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, B
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
         if (CitrusExtensionHelper.requiresCitrus(extensionContext)) {
-            CitrusExtensionHelper.setCitrus(getCitrus(), extensionContext);
-        } else {
-            citrus = CitrusExtensionHelper.getCitrus(extensionContext);
+            CitrusExtensionHelper.setCitrus(CitrusInstanceManager.getOrDefault(), extensionContext);
         }
 
         if (beforeSuite) {
             beforeSuite = false;
             CitrusExtensionHelper.getCitrus(extensionContext).beforeSuite(SUITE_NAME);
         }
+    }
 
+    @Override
+    public void afterAll(ExtensionContext extensionContext) throws Exception {
         if (afterSuite) {
             afterSuite = false;
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> CitrusExtensionHelper.getCitrus(extensionContext).afterSuite(SUITE_NAME)));
+            CitrusExtensionHelper.getCitrus(extensionContext).afterSuite(SUITE_NAME);
         }
     }
 
@@ -96,14 +98,26 @@ public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, B
     public void afterTestExecution(ExtensionContext extensionContext) {
         extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestContext.class.getSimpleName());
         extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCase.class.getSimpleName());
+
+        Object testInstance = extensionContext.getRequiredTestInstance();
+        if (testInstance instanceof TestListener) {
+            ((TestListener) testInstance).after(CitrusExtensionHelper.getCitrus(extensionContext).getCitrusContext());
+        }
     }
 
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) {
+        Object testInstance = extensionContext.getRequiredTestInstance();
+        Citrus citrus = CitrusExtensionHelper.getCitrus(extensionContext);
+
         TestCaseRunner testRunner = CitrusExtensionHelper.getTestRunner(extensionContext);
-        CitrusAnnotations.injectTestRunner(extensionContext.getRequiredTestInstance(), testRunner);
-        CitrusAnnotations.injectTestContext(extensionContext.getRequiredTestInstance(), CitrusExtensionHelper.getTestContext(extensionContext));
-        CitrusAnnotations.injectEndpoints(extensionContext.getRequiredTestInstance(), CitrusExtensionHelper.getTestContext(extensionContext));
+        CitrusAnnotations.injectTestRunner(testInstance, testRunner);
+
+        if (testInstance instanceof TestListener) {
+            ((TestListener) testInstance).before(citrus.getCitrusContext());
+        }
+
+        CitrusAnnotations.injectAll(testInstance, citrus, CitrusExtensionHelper.getTestContext(extensionContext));
     }
 
     @Override
@@ -137,14 +151,20 @@ public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, B
     }
 
     /**
-     * Initialize and get Citrus instance.
-     * @return
+     * Listener able to perform changes on Citrus context before/after a test.
      */
-    protected Citrus getCitrus() {
-        if (citrus == null) {
-            citrus = Citrus.newInstance();
+    public interface TestListener {
+
+        /**
+         * Runs tasks on given Citrus context before test.
+         */
+        default void before(CitrusContext context) {
         }
 
-        return citrus;
+        /**
+         * Runs tasks on given Citrus context after test.
+         */
+        default void after(CitrusContext context) {
+        }
     }
 }

@@ -13,7 +13,7 @@ public class CitrusInstanceManager {
     private static Citrus citrus;
 
     /** List of instance resolvers capable of taking part in Citrus instance creation process */
-    private static List<CitrusInstanceProcessor> instanceProcessors = new ArrayList<>();
+    private static final List<CitrusInstanceProcessor> instanceProcessors = new ArrayList<>();
 
     /** Strategy decides which instances are created */
     protected static CitrusInstanceStrategy strategy = CitrusInstanceStrategy.NEW;
@@ -32,24 +32,17 @@ public class CitrusInstanceManager {
      * @return
      */
     public static Citrus newInstance() {
-        CitrusContextProvider contextProvider = CitrusContextProvider.lookup();
-        citrus = newInstance(contextProvider.create());
-        return citrus;
+        return newInstance(CitrusContextProvider.lookup());
     }
 
     /**
      * Create new Citrus instance with given context.
-     * @param citrusContext
+     * @param contextProvider
      * @return
      */
-    public static Citrus newInstance(CitrusContext citrusContext) {
-        if (strategy.equals(CitrusInstanceStrategy.NEW)) {
-            Citrus instance = new Citrus(citrusContext);
-            instanceProcessors.forEach(processor -> processor.process(instance));
-            citrus = instance;
-            return instance;
-        } else if (citrus == null) {
-            citrus = new Citrus(citrusContext);
+    public static Citrus newInstance(CitrusContextProvider contextProvider) {
+        if (strategy.equals(CitrusInstanceStrategy.NEW) || citrus == null) {
+            citrus = new Citrus(contextProvider.create());
             instanceProcessors.forEach(processor -> processor.process(citrus));
         }
 

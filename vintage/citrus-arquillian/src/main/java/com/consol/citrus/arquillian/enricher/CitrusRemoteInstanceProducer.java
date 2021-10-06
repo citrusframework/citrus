@@ -17,12 +17,14 @@
 package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
-import org.jboss.arquillian.core.api.annotation.*;
+import org.jboss.arquillian.core.api.annotation.ApplicationScoped;
+import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.core.api.annotation.Observes;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ public class CitrusRemoteInstanceProducer {
     public void beforeSuite(@Observes(precedence = CitrusExtensionConstants.INSTANCE_REMOTE_PRECEDENCE) BeforeSuite event) {
         try {
             log.info("Producing Citrus framework instance");
-            citrusInstance.set(Citrus.newInstance(CitrusSpringContext.create(configurationInstance.get().getConfigurationClass())));
+            citrusInstance.set(Citrus.newInstance(new CitrusSpringContextProvider(configurationInstance.get().getConfigurationClass())));
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
             throw e;

@@ -1,7 +1,7 @@
 package com.consol.citrus.cucumber;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
@@ -38,7 +38,7 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
 
     @BeforeClass(alwaysRun = true)
     public void beforeSuite(ITestContext testContext) throws Exception {
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+        citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
     }
 

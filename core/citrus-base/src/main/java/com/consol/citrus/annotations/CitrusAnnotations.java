@@ -68,6 +68,9 @@ public abstract class CitrusAnnotations {
      */
     public static void injectAll(final Object target, final Citrus citrusFramework, final TestContext context) {
         injectCitrusFramework(target, citrusFramework);
+
+        citrusFramework.getCitrusContext().parseConfiguration(target);
+
         injectEndpoints(target, context);
         injectTestContext(target, context);
     }

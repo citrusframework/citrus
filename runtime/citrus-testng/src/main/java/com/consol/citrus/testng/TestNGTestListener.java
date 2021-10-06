@@ -19,28 +19,25 @@
 
 package com.consol.citrus.testng;
 
-import org.testng.ITestContext;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
 /**
  * @author Christoph Deppisch
  */
-public interface TestNGSuiteListener {
+public interface TestNGTestListener {
 
     /**
-     * Runs tasks before test suite.
-     * @param testContext the test context.
+     * Runs tasks before test class.
      */
-    @BeforeSuite(alwaysRun = true)
-    default void beforeSuite(ITestContext testContext) {
+    @BeforeClass(alwaysRun = true)
+    default void before() {
     }
 
     /**
-     * Runs tasks after test suite.
-     * @param testContext the test context.
+     * Runs tasks after test class.
      */
-    @AfterSuite(alwaysRun = true)
-    default void afterSuite(ITestContext testContext) {
+    @AfterClass(alwaysRun = true)
+    default void after() {
     }
 }

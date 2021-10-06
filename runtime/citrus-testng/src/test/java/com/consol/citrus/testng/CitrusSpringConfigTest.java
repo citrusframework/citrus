@@ -1,6 +1,6 @@
 package com.consol.citrus.testng;
 
-import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.CitrusSpringSettings;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
@@ -51,7 +51,7 @@ import org.testng.annotations.Test;
 public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
 
     static {
-        System.setProperty(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:citrus-unit-context.xml");
+        System.setProperty(CitrusSpringSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:citrus-unit-context.xml");
     }
 
     @Autowired

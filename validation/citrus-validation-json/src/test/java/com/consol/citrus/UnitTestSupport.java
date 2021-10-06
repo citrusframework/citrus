@@ -31,7 +31,7 @@ public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
         factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("json", new JsonTextMessageValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("jsonPath", new JsonPathMessageValidator());
-        factory.getMessageValidatorRegistry().addMessageValidator("plaintext", new MessageValidator<ValidationContext>() {
+        factory.getMessageValidatorRegistry().addMessageValidator("plaintext", new MessageValidator<>() {
             @Override
             public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
                 Assert.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload());

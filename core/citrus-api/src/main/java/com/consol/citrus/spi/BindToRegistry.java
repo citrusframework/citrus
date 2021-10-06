@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2021 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -17,30 +17,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.testng;
+package com.consol.citrus.spi;
 
-import org.testng.ITestContext;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
+ * Used to bind an object to the Citrus context reference registry for dependency injection reasons.
+ *
+ * Object is bound with given name. In case no explicit name is given the registry will auto compute the name from given
+ * Class name, method name or field name.
+ *
  * @author Christoph Deppisch
  */
-public interface TestNGSuiteListener {
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({ ElementType.FIELD, ElementType.METHOD })
+public @interface BindToRegistry {
 
-    /**
-     * Runs tasks before test suite.
-     * @param testContext the test context.
-     */
-    @BeforeSuite(alwaysRun = true)
-    default void beforeSuite(ITestContext testContext) {
-    }
-
-    /**
-     * Runs tasks after test suite.
-     * @param testContext the test context.
-     */
-    @AfterSuite(alwaysRun = true)
-    default void afterSuite(ITestContext testContext) {
-    }
+    String name() default "";
 }

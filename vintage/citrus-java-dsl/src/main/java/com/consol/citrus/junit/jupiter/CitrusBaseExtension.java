@@ -20,6 +20,7 @@
 package com.consol.citrus.junit.jupiter;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusInstanceManager;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.junit.jupiter.spring.CitrusSpringExtension;
@@ -43,7 +44,6 @@ public class CitrusBaseExtension implements BeforeAllCallback, TestInstancePostP
     /** Test suite name */
     private static final String SUITE_NAME = "citrus-junit5-suite";
 
-    protected static Citrus citrus;
     private static boolean beforeSuite = true;
     private static boolean afterSuite = true;
 
@@ -77,10 +77,6 @@ public class CitrusBaseExtension implements BeforeAllCallback, TestInstancePostP
      * @return
      */
     protected Citrus getCitrus() {
-        if (citrus == null) {
-            citrus = Citrus.newInstance();
-        }
-
-        return citrus;
+        return CitrusInstanceManager.getOrDefault();
     }
 }

@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Optional;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusContext;
 import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
@@ -45,6 +47,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.PrepareTestNGMethodInterceptor;
 import com.consol.citrus.testng.TestNGHelper;
 import com.consol.citrus.testng.TestNGSuiteListener;
+import com.consol.citrus.testng.TestNGTestListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -66,7 +69,8 @@ import org.testng.annotations.Listeners;
  */
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 @Listeners( { PrepareTestNGMethodInterceptor.class } )
-public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests implements GherkinTestActionRunner, TestNGSuiteListener {
+public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
+        implements GherkinTestActionRunner, TestNGTestListener, TestNGSuiteListener {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -133,11 +137,12 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests 
      * @param invocationCount
      */
     protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
-        if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
-            if (citrus == null) {
-                citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
-            }
+        if (citrus == null) {
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
+            CitrusAnnotations.injectCitrusFramework(this, citrus);
+        }
 
+        if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
             TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
             TestCase testCase = testLoader.load();
 
@@ -148,10 +153,6 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests 
             TestNGHelper.invokeTestMethod(citrus, this, testResult, method, testCase, ctx, invocationCount);
         } else {
             try {
-                if (citrus == null) {
-                    citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
-                }
-
                 TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
                 TestCaseRunner runner = TestNGHelper.createTestCaseRunner(this, method, ctx);
@@ -170,7 +171,38 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests 
     }
 
     @Override
-    public void beforeSuite(ITestContext testContext) {
+    public final void before() {
+        if (citrus == null) {
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
+            CitrusAnnotations.injectCitrusFramework(this, citrus);
+        }
+
+        before(citrus.getCitrusContext());
+    }
+
+    /**
+     * Subclasses may add before test actions on the provided context.
+     * @param context the Citrus context.
+     */
+    protected void before(CitrusContext context) {
+    }
+
+    @Override
+    public final void after() {
+        if (citrus != null) {
+            after(citrus.getCitrusContext());
+        }
+    }
+
+    /**
+     * Subclasses may add after test actions on the provided context.
+     * @param context the Citrus context.
+     */
+    protected void after(CitrusContext context) {
+    }
+
+    @Override
+    public final void beforeSuite(ITestContext testContext) {
         try {
             springTestContextPrepareTestInstance();
         } catch (Exception e) {
@@ -178,15 +210,32 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests 
         }
         Assert.notNull(applicationContext, "Missing proper application context in before suite initialization");
 
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+        citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
+        CitrusAnnotations.injectCitrusFramework(this, citrus);
+        beforeSuite(citrus.getCitrusContext());
         citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
     }
 
+    /**
+     * Subclasses may add before suite actions on the provided context.
+     * @param context the Citrus context.
+     */
+    protected void beforeSuite(CitrusContext context) {
+    }
+
     @Override
-    public void afterSuite(ITestContext testContext) {
+    public final void afterSuite(ITestContext testContext) {
         if (citrus != null) {
+            afterSuite(citrus.getCitrusContext());
             citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
         }
+    }
+
+    /**
+     * Subclasses may add after suite actions on the provided context.
+     * @param context the Citrus context.
+     */
+    protected void afterSuite(CitrusContext context) {
     }
 
     /**

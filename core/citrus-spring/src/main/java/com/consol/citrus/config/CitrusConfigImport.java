@@ -16,7 +16,7 @@
 
 package com.consol.citrus.config;
 
-import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.CitrusSpringSettings;
 import org.springframework.context.annotation.DeferredImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.StringUtils;
@@ -29,8 +29,8 @@ public class CitrusConfigImport implements DeferredImportSelector {
 
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-        if (StringUtils.hasText(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_CLASS)) {
-            return new String[] { CitrusSettings.DEFAULT_APPLICATION_CONTEXT_CLASS };
+        if (StringUtils.hasText(CitrusSpringSettings.DEFAULT_APPLICATION_CONTEXT_CLASS)) {
+            return new String[] { CitrusSpringSettings.DEFAULT_APPLICATION_CONTEXT_CLASS };
         } else {
             return new String[] {};
         }

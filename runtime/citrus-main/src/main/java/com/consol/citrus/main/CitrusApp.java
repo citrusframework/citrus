@@ -16,7 +16,6 @@
 
 package com.consol.citrus.main;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -25,7 +24,6 @@ import java.util.concurrent.TimeoutException;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusInstanceManager;
-import com.consol.citrus.CitrusSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +66,7 @@ public class CitrusApp {
      * @param args
      */
     public CitrusApp(String[] args) {
-        this(CitrusAppOptions.apply(args));
+        this(new CitrusAppOptions<>().apply(args));
     }
 
     /**
@@ -90,8 +88,8 @@ public class CitrusApp {
         }
 
         if (citrusApp.configuration.isSkipTests()) {
-            setDefaultProperties(citrusApp.configuration);
-            Citrus.newInstance();
+            citrusApp.configuration.setDefaultProperties();
+            CitrusInstanceManager.getOrDefault();
         } else {
             try {
                 citrusApp.run();
@@ -123,7 +121,7 @@ public class CitrusApp {
         }
 
         LOG.info(String.format("Running Citrus %s", Citrus.getVersion()));
-        setDefaultProperties(configuration);
+        configuration.setDefaultProperties();
         TestEngine.lookup(configuration).run();
     }
 
@@ -158,23 +156,6 @@ public class CitrusApp {
         if (citrus.isPresent()) {
             LOG.info("Closing Citrus and its context");
             citrus.get().close();
-        }
-    }
-
-    /**
-     * Reads default properties in configuration and sets them as system properties.
-     * @param configuration
-     */
-    private static void setDefaultProperties(TestRunConfiguration configuration) {
-        for (Map.Entry<String, String> entry : configuration.getDefaultProperties().entrySet()) {
-            LOG.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
-            System.setProperty(entry.getKey(), Optional.ofNullable(entry.getValue()).orElse(""));
-        }
-
-        if (configuration instanceof CitrusAppConfiguration &&
-                ((CitrusAppConfiguration)configuration).getConfigClass() != null) {
-            System.setProperty(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_CLASS_PROPERTY,
-                                ((CitrusAppConfiguration)configuration).getConfigClass());
         }
     }
 

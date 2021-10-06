@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestGroupAware;
 import com.consol.citrus.TestResult;
@@ -108,7 +109,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
         if (citrus == null) {
-            citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         }
 
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
@@ -230,7 +231,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         springTestContextPrepareTestInstance();
         Assert.notNull(applicationContext, "Missing proper application context in before suite initialization");
 
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+        citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
     }
 

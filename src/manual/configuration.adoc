@@ -22,11 +22,8 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 | citrus.application.properties
 | File location for application property file that holds other settings. These properties get loaded as system properties on startup. (default="classpath:citrus-application.properties")
 
-| citrus.spring.application.context
-| File location for Spring XML configurations (default="classpath*:citrus-context.xml")
-
-| citrus.spring.java.config
-| Class name for Spring Java config (default=null)
+| citrus.java.config
+| Class name for custom Java configuration (default=null)
 
 | citrus.file.encoding
 | Default file encoding used in Citrus when reading and writing file content (default=Charset.defaultCharset())
@@ -59,11 +56,8 @@ Same properties are settable via environment variables.
 | CITRUS_APPLICATION_PROPERTIES
 | File location for application property file that holds other settings. These properties get loaded as system properties on startup. (default="classpath:citrus-application.properties")
 
-| CITRUS_SPRING_APPLICATION_CONTEXT
-| File location for Spring XML configurations (default="classpath*:citrus-context.xml")
-
-| CITRUS_SPRING_JAVA_CONFIG
-| Class name for Spring Java config (default=null)
+| CITRUS_JAVA_CONFIG
+| Class name for custom Java configuration (default=null)
 
 | CITRUS_FILE_ENCODING
 | Default file encoding used in Citrus when reading and writing file content (default=Charset.defaultCharset())
@@ -85,6 +79,36 @@ Same properties are settable via environment variables.
 
 | CITRUS_JAVA_FILE_NAME_PATTERN
 | File name patterns used for Java test sources package scan (default="/\\**/*Test.java,/**/*IT.java")
+|===
+
+[[configuration-spring]]
+== Spring configuration settings
+
+When spring framework is enabled in Citrus you can set specific settings regarding the Spring
+application context.
+
+.System properties
+|===
+|System properties |Description
+
+| citrus.spring.application.context
+| File location for Spring XML configurations (default="classpath*:citrus-context.xml")
+
+| citrus.spring.java.config
+| Class name for Spring Java config (default=null)
+
+|===
+
+.Environment variables
+|===
+|Environment variable |Description
+
+| CITRUS_SPRING_APPLICATION_CONTEXT
+| File location for Spring XML configurations (default="classpath*:citrus-context.xml")
+
+| CITRUS_SPRING_JAVA_CONFIG
+| Class name for Spring Java config (default=null)
+
 |===
 
 [[configuration-property-file]]

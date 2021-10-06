@@ -20,6 +20,7 @@ import java.util.Date;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
@@ -66,7 +67,7 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
     @Override
     public void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
-            citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         }
 
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());

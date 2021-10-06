@@ -16,7 +16,7 @@
 
 package com.consol.citrus.config;
 
-import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.CitrusSpringSettings;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -39,6 +39,6 @@ public class CitrusBeanDefinitionReader extends XmlBeanDefinitionReader {
 
     @Override
     public int loadBeanDefinitions(String location) throws BeanDefinitionStoreException {
-        return super.loadBeanDefinitions(CitrusSettings.DEFAULT_APPLICATION_CONTEXT);
+        return super.loadBeanDefinitions(CitrusSpringSettings.DEFAULT_APPLICATION_CONTEXT);
     }
 }

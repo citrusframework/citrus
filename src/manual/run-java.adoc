@@ -352,6 +352,143 @@ current test context which holds the list of test variables as well as many othe
 This is why you should wrap custom code in a test action an run that code via the test action runner methods. You can also put your custom code in
 a test action implementation and reference the logic from multiple tests.
 
+[[java-bind-to-registry]]
+== Bind objects to registry
+
+The Citrus context is a place where objects can register themselves in order to enable dependency injection and instance sharing
+in multiple tests. Once you register the object in the context others can resolve the reference with its given name.
+
+In a simple example the context can register a new endpoint that is injected in several tests.
+
+You can access the Citrus context within the provided before/after methods on the test.
+
+.Register endpoint in Citrus context
+[source,java]
+----
+public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport {
+
+    @Override
+    public void beforeSuite(CitrusContext context) {
+        context.bind("foo", new FooEndpoint());
+    }
+}
+----
+
+With the CitrusContext you can bind objects to the registry. Each binding receives a name so others can resolve the instance
+reference for injection.
+
+.Inject endpoint in other tests
+[source,java]
+----
+public class InjectEndpoint_IT extends TestNGCitrusSupport {
+
+    @CitrusEndpoint
+    private FooEndpoint foo;
+
+    @Test
+    @CitrusTest
+    public void injectEndpointTest() {
+        $(send(foo)
+                .message()
+                .body("Hello foo!"));
+
+        $(receive(foo)
+                .message()
+                .body("Hello Citrus!"));
+    }
+}
+----
+
+The `@CitrusEndpoint` annotation injects the endpoint resolving the instance with the given name `foo`.
+Test methods can use this endpoint in the following in send and receive actions.
+
+[[java-bind-to-registry-annotation]]
+=== @BindToRegistry
+
+An alternative to using the `bind()` method on the CitrusContext is to use the `@BindToRegistry` annotation.
+Methods and fields annotated will automatically register in the CitrusContext registry.
+
+.@BindToRegistry annotation
+[source,java]
+----
+public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport {
+
+    @CitrusFramework
+    private Citrus citrus;
+
+    @BindToRegistry(name = "fooQueue")
+    private MessageQueue queue = new DefaultMessageQueue("fooQueue");
+
+    @BindToRegistry
+    public void foo() {
+        return new FooEndpoint();
+    }
+}
+----
+
+The annotation is able to specify an explicit binding name.
+The annotation works with public methods and fields in tests.
+
+[[java-configuration-class]]
+=== Configuration classes
+
+As an alternative to adding the registry binding configuration directly to the test you can load configuration classes.
+
+Configuration classes are automatically loaded before a test suite run and all methods and fields are parsed for potential bindings.
+You can use the environment settings `citrus.java.config` and/or `CITRUS_JAVA_CONFIG` to set a default configuration class.
+
+.citrus-application.properties
+[source,properties]
+----
+citrus.java.config=MyConfig.class
+----
+
+.MyConfig.class
+[source,java]
+----
+public class MyConfig {
+
+    @BindToRegistry(name = "fooQueue")
+    private MessageQueue queue = new DefaultMessageQueue("fooQueue");
+
+    @BindToRegistry
+    public void foo() {
+        return new FooEndpoint();
+    }
+}
+----
+
+[[java-configuration-class-annotation]]
+=== @CitrusConfiguration
+
+Each test is able to use the `@CitrusConfiguration` annotation to add registry bindings, too.
+
+.@CitrusConfiguration annotation
+[source,java]
+----
+@CitrusConfiguration(classes = MyConfig.class)
+public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport {
+
+    @CitrusEndpoint
+    private FooEndpoint foo;
+
+    @Test
+    @CitrusTest
+    public void injectEndpointTest() {
+        $(send(foo)
+                .message()
+                .body("Hello foo!"));
+
+        $(receive(foo)
+                .message()
+                .body("Hello Citrus!"));
+    }
+}
+----
+
+The `@CitrusConfiguration` annotation is able to load configuration classes and bind all components to the registry for later usage.
+The test can inject endpoints and other components using the `@CitrusEndpoint` and `@CitrusResource` annotation on fields.
+
 [[java-resource-injection]]
 == Resource injection
 

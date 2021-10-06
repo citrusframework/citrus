@@ -49,7 +49,7 @@ import org.testng.ITestResult;
  *
  * @author Christoph Deppisch
  */
-public class TestNGCitrusSupport implements IHookable, TestNGSuiteListener, GherkinTestActionRunner {
+public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestNGSuiteListener, GherkinTestActionRunner {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -119,8 +119,40 @@ public class TestNGCitrusSupport implements IHookable, TestNGSuiteListener, Gher
     }
 
     @Override
-    public void beforeSuite(ITestContext testContext) {
+    public final void before() {
+        if (citrus == null) {
+            citrus = Citrus.newInstance();
+            CitrusAnnotations.injectCitrusFramework(this, citrus);
+        }
+
+        before(citrus.getCitrusContext());
+    }
+
+    /**
+     * Subclasses may add before test actions on the provided context.
+     * @param context the Citrus context.
+     */
+    protected void before(CitrusContext context) {
+    }
+
+    @Override
+    public final void after() {
+        if (citrus != null) {
+            after(citrus.getCitrusContext());
+        }
+    }
+
+    /**
+     * Subclasses may add after test actions on the provided context.
+     * @param context the Citrus context.
+     */
+    protected void after(CitrusContext context) {
+    }
+
+    @Override
+    public final void beforeSuite(ITestContext testContext) {
         citrus = Citrus.newInstance();
+        CitrusAnnotations.injectCitrusFramework(this, citrus);
         beforeSuite(citrus.getCitrusContext());
         citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
     }
@@ -133,7 +165,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGSuiteListener, Gher
     }
 
     @Override
-    public void afterSuite(ITestContext testContext) {
+    public final void afterSuite(ITestContext testContext) {
         if (citrus != null) {
             afterSuite(citrus.getCitrusContext());
             citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());

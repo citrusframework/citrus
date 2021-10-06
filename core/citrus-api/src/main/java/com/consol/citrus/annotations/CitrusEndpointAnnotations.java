@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.spi.BindToRegistry;
+import com.consol.citrus.spi.ReferenceRegistry;
 import com.consol.citrus.spi.ReferenceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,7 @@ import org.springframework.util.StringUtils;
 public abstract class CitrusEndpointAnnotations {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusEndpointAnnotations.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CitrusEndpointAnnotations.class);
 
     /**
      * Prevent instantiation.
@@ -36,42 +38,43 @@ public abstract class CitrusEndpointAnnotations {
      * @param context
      */
     public static void injectEndpoints(final Object target, final TestContext context) {
-        ReflectionUtils.doWithFields(target.getClass(), new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                log.debug(String.format("Injecting Citrus endpoint on test class field '%s'", field.getName()));
-                CitrusEndpoint endpointAnnotation = field.getAnnotation(CitrusEndpoint.class);
+        ReflectionUtils.doWithFields(target.getClass(), field -> {
+            LOG.debug(String.format("Injecting Citrus endpoint on test class field '%s'", field.getName()));
+            CitrusEndpoint endpointAnnotation = field.getAnnotation(CitrusEndpoint.class);
 
-                for (Annotation annotation : field.getAnnotations()) {
-                    if (annotation.annotationType().getAnnotation(CitrusEndpointConfig.class) != null) {
-                        ReflectionUtils.setField(field, target, context.getEndpointFactory().create(getEndpointName(field), annotation, context));
-                        return;
+            for (Annotation annotation : field.getAnnotations()) {
+                if (annotation.annotationType().getAnnotation(CitrusEndpointConfig.class) != null) {
+                    Endpoint endpoint = context.getEndpointFactory().create(getEndpointName(field), annotation, context);
+                    ReflectionUtils.setField(field, target, endpoint);
+
+                    if (field.isAnnotationPresent(BindToRegistry.class)) {
+                        context.getReferenceResolver().bind(ReferenceRegistry.getName(field.getAnnotation(BindToRegistry.class), endpoint.getName()), endpoint);
                     }
-                }
-
-                ReferenceResolver referenceResolver = context.getReferenceResolver();
-                if (endpointAnnotation.properties().length > 0) {
-                    ReflectionUtils.setField(field, target, context.getEndpointFactory().create(getEndpointName(field), endpointAnnotation, field.getType(), context));
-                } else if (StringUtils.hasText(endpointAnnotation.name()) && referenceResolver.isResolvable(endpointAnnotation.name())) {
-                    ReflectionUtils.setField(field, target, referenceResolver.resolve(endpointAnnotation.name(), field.getType()));
-                } else {
-                    ReflectionUtils.setField(field, target, referenceResolver.resolve(field.getType()));
+                    return;
                 }
             }
-        }, new ReflectionUtils.FieldFilter() {
-            @Override
-            public boolean matches(Field field) {
-                if (field.isAnnotationPresent(CitrusEndpoint.class) &&
-                        Endpoint.class.isAssignableFrom(field.getType())) {
-                    if (!field.isAccessible()) {
-                        ReflectionUtils.makeAccessible(field);
-                    }
 
-                    return true;
+            ReferenceResolver referenceResolver = context.getReferenceResolver();
+            if (endpointAnnotation.properties().length > 0) {
+                ReflectionUtils.setField(field, target, context.getEndpointFactory().create(getEndpointName(field), endpointAnnotation, field.getType(), context));
+            } else if (StringUtils.hasText(endpointAnnotation.name()) && referenceResolver.isResolvable(endpointAnnotation.name())) {
+                ReflectionUtils.setField(field, target, referenceResolver.resolve(endpointAnnotation.name(), field.getType()));
+            } else if (referenceResolver.isResolvable(field.getName())) {
+                ReflectionUtils.setField(field, target, referenceResolver.resolve(field.getName(), field.getType()));
+            } else {
+                ReflectionUtils.setField(field, target, referenceResolver.resolve(field.getType()));
+            }
+        }, field -> {
+            if (field.isAnnotationPresent(CitrusEndpoint.class) &&
+                    Endpoint.class.isAssignableFrom(field.getType())) {
+                if (!field.canAccess(target)) {
+                    ReflectionUtils.makeAccessible(field);
                 }
 
-                return false;
+                return true;
             }
+
+            return false;
         });
     }
 

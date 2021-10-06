@@ -23,6 +23,7 @@ import java.lang.annotation.Annotation;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.common.TestLoader;
@@ -58,7 +59,7 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
     @Override
     public void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
-            citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         }
 
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());

@@ -42,7 +42,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
     protected final List<CliOption<T>> options = new ArrayList<>();
 
     protected CitrusAppOptions() {
-        options.add(new CliOption<T>("h", "help", "Displays cli option usage") {
+        options.add(new CliOption<>("h", "help", "Displays cli option usage") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 StringBuilder builder = new StringBuilder();
@@ -57,7 +57,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("d", "duration", "Maximum time in milliseconds the server should be up and running - server will terminate automatically when time exceeds") {
+        options.add(new CliOption<>("d", "duration", "Maximum time in milliseconds the server should be up and running - server will terminate automatically when time exceeds") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (value != null && value.length() > 0) {
@@ -68,7 +68,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("c", "config", "Custom Spring configuration class") {
+        options.add(new CliOption<>("c", "config", "Custom configuration class") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
@@ -84,7 +84,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("s", "skipTests", "Skip test execution") {
+        options.add(new CliOption<>("s", "skipTests", "Skip test execution") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
@@ -95,7 +95,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("p", "package", "Test package to execute") {
+        options.add(new CliOption<>("p", "package", "Test package to execute") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
@@ -106,7 +106,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("D", "properties", "Default system properties to set") {
+        options.add(new CliOption<>("D", "properties", "Default system properties to set") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
@@ -120,7 +120,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("", "exit", "Force system exit when finished") {
+        options.add(new CliOption<>("", "exit", "Force system exit when finished") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
@@ -131,7 +131,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("e", "engine", "Set test engine name used to run the tests") {
+        options.add(new CliOption<>("e", "engine", "Set test engine name used to run the tests") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
@@ -142,7 +142,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("t", "test", "Test class/method to execute") {
+        options.add(new CliOption<>("t", "test", "Test class/method to execute") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
@@ -166,7 +166,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             }
         });
 
-        options.add(new CliOption<T>("j", "jar", "External test jar to load tests from") {
+        options.add(new CliOption<>("j", "jar", "External test jar to load tests from") {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
@@ -182,8 +182,8 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
      * Apply options based on given argument line.
      * @param arguments
      */
-    public static CitrusAppConfiguration apply(String[] arguments) {
-        return apply(new CitrusAppConfiguration(), arguments);
+    public T apply(String[] arguments) {
+        return apply((T) new CitrusAppConfiguration(), arguments);
     }
 
     /**
@@ -191,7 +191,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
      * @param configuration
      * @param arguments
      */
-    public static <T extends CitrusAppConfiguration> T apply(T configuration, String[] arguments) {
+    public T apply(T configuration, String[] arguments) {
         LinkedList<String> args = new LinkedList<>(Arrays.asList(arguments));
 
         CitrusAppOptions<T> options = new CitrusAppOptions<>();
