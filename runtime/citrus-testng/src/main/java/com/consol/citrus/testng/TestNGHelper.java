@@ -36,10 +36,13 @@ import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
+import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ReflectionUtils;
@@ -53,6 +56,9 @@ import org.testng.ITestResult;
 public final class TestNGHelper {
 
     public static final String BUILDER_ATTRIBUTE = "builder";
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(TestNGHelper.class);
 
     /**
      * Prevent instantiation of utility class
@@ -155,7 +161,7 @@ public final class TestNGHelper {
             String[] testNames = new String[] {};
             if (citrusTestAnnotation.name().length > 0) {
                 testNames = citrusTestAnnotation.name();
-            } else if (citrusTestAnnotation.packageScan().length == 0) {
+            } else if (citrusTestAnnotation.packageScan().length == 0 && citrusTestAnnotation.sources().length == 0) {
                 // only use default method name as test in case no package scan is set
                 testNames = new String[] { method.getName() };
             }
@@ -169,6 +175,19 @@ public final class TestNGHelper {
 
             for (String testName : testNames) {
                 methodTestLoaders.add(provider.createTestLoader(testName, testPackage));
+            }
+
+            for (String source : citrusTestAnnotation.sources()) {
+                Resource file = FileUtils.getFileResource(source);
+                TestLoader testLoader = provider.createTestLoader(FileUtils.getBaseName(file.getFilename()),
+                        source.substring(0, source.lastIndexOf(File.pathSeparator)));
+
+                if (testLoader instanceof TestSourceAware) {
+                    ((TestSourceAware) testLoader).setSource(source);
+                    methodTestLoaders.add(testLoader);
+                } else {
+                    LOG.warn(String.format("Test loader %s is not able to handle test source %s", testLoader.getClass(), source));
+                }
             }
 
             String[] packagesToScan = citrusTestAnnotation.packageScan();

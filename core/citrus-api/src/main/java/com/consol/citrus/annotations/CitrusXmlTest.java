@@ -29,13 +29,16 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 public @interface CitrusXmlTest {
 
-    /** Test name optional -  by default method name is used as test name */
+    /** Test name optional - by default method name is used as test name */
     String[] name() default {};
 
-    /** Test package name optional -  by default package of declaring test class is used */
+    /** Test package name optional - by default package of declaring test class is used */
     String packageName() default "";
 
     /** Test packages to scan for XML test case definitions */
     String[] packageScan() default {};
+
+    /** Test sources optional list of file resources to load */
+    String[] sources() default {};
 
 }

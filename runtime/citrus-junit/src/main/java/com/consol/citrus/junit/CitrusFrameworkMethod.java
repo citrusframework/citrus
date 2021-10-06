@@ -25,6 +25,7 @@ import java.util.Map;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.TestSourceAware;
 import org.junit.runners.model.FrameworkMethod;
 
 /**
@@ -32,10 +33,12 @@ import org.junit.runners.model.FrameworkMethod;
  * execution can decide which test to invoke when annotation has more than one test name defined or package scan is
  * used in annotation.
  */
-public class CitrusFrameworkMethod extends FrameworkMethod {
+public class CitrusFrameworkMethod extends FrameworkMethod implements TestSourceAware {
 
     private final String testName;
     private final String packageName;
+
+    private String source;
 
     private final Map<String, Object> attributes = new HashMap<>();
 
@@ -72,6 +75,19 @@ public class CitrusFrameworkMethod extends FrameworkMethod {
      */
     public String getPackageName() {
         return packageName;
+    }
+
+    @Override
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    /**
+     * Gets the test source.
+     * @return
+     */
+    public String getSource() {
+        return source;
     }
 
     /**
