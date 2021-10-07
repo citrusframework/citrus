@@ -64,9 +64,6 @@
   </citrus:after-test>
 
   <citrus:after-test id="afterTest5">
-    <citrus:env>
-      <citrus:property name="USER"/>
-    </citrus:env>
     <citrus:system>
       <citrus:property name="after-test" value="true"/>
     </citrus:system>

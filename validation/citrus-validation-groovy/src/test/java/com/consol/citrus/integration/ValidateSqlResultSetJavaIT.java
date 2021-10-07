@@ -54,7 +54,7 @@ public class ValidateSqlResultSetJavaIT extends TestNGCitrusSpringSupport {
 
         run(query(dataSource)
             .statement("SELECT REQUEST_TAG AS RTAG, DESCRIPTION AS DESC FROM ORDERS")
-            .validateScript("assert rows.size == ${rowsCount}\n" +
+            .validateScript("assert rows.size() == ${rowsCount}\n" +
                     "assert rows[0].RTAG == '${rtag}'\n" +
                     "assert rows[0].DESC == '${desc}'\n", ScriptTypes.GROOVY));
     }

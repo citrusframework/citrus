@@ -30,9 +30,6 @@
   </citrus:after-suite>
 
   <citrus:after-suite id="afterSuite3">
-    <citrus:env>
-      <citrus:property name="USER"/>
-    </citrus:env>
     <citrus:system>
       <citrus:property name="after-suite" value="true"/>
     </citrus:system>

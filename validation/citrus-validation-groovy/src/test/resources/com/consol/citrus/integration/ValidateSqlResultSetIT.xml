@@ -24,7 +24,7 @@
       <sql datasource="testDataSource">
         <statement>SELECT REQUEST_TAG AS RTAG, DESCRIPTION AS DESC FROM ORDERS</statement>
         <validate-script type="groovy">
-          assert rows.size == 2
+          assert rows.size() == 2
           assert rows[0].RTAG == 'requestTag'
           assert rows[0].DESC == 'Migrate'
         </validate-script>
@@ -33,7 +33,7 @@
       <sql datasource="testDataSource">
         <statement>SELECT REQUEST_TAG AS RTAG, DESCRIPTION AS DESC FROM ORDERS</statement>
         <validate-script type="groovy">
-          assert rows.size == ${rowsCount}
+          assert rows.size() == ${rowsCount}
           assert rows[0].RTAG == '${rtag}'
           assert rows[0].DESC == '${desc}'
         </validate-script>

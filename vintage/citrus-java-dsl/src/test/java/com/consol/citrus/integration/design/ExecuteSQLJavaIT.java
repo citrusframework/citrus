@@ -77,7 +77,7 @@ public class ExecuteSQLJavaIT extends TestNGCitrusTestDesigner {
 
         query(dataSource)
             .statement("select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS")
-            .validateScript("assert rows.size == 2\n" +
+            .validateScript("assert rows.size() == 2\n" +
                     "assert rows[0].RTAG == 'requestTag'\n" +
                     "assert rows[0].DESC == 'Migrate'\n", ScriptTypes.GROOVY);
     }

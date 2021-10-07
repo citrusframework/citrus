@@ -30,9 +30,6 @@
   </citrus:before-suite>
 
   <citrus:before-suite id="beforeSuite3">
-    <citrus:env>
-      <citrus:property name="USER"/>
-    </citrus:env>
     <citrus:system>
       <citrus:property name="before-suite" value="true"/>
     </citrus:system>
