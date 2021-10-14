@@ -97,6 +97,7 @@ public class JmsEndpointConfigParser implements AnnotationConfigParser<JmsEndpoi
         }
 
         builder.useObjectMessages(annotation.useObjectMessages());
+        builder.filterInternalHeaders(annotation.filterInternalHeaders());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
             builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), JmsMessageConverter.class));

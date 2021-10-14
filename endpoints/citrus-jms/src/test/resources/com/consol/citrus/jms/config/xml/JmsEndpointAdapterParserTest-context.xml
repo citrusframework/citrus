@@ -16,6 +16,7 @@
                                    connection-factory="connectionFactory"
                                    fallback-adapter="mockEndpointAdapter"
                                    use-object-messages="true"
+                                   filter-internal-headers="false"
                                    timeout="2500"/>
 
     <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">

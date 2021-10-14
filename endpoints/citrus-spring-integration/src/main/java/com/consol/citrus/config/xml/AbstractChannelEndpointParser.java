@@ -44,5 +44,8 @@ public abstract class AbstractChannelEndpointParser extends AbstractEndpointPars
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration,
                 element.getAttribute("use-object-messages"), "useObjectMessages");
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration,
+                element.getAttribute("filter-internal-headers"), "filterInternalHeaders");
     }
 }

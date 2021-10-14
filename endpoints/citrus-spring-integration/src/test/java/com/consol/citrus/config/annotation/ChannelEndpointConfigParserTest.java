@@ -58,6 +58,7 @@ public class ChannelEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint
     @ChannelEndpointConfig(useObjectMessages=true,
+            filterInternalHeaders=false,
             messagingTemplate="messagingTemplate")
     private ChannelEndpoint channelEndpoint3;
 
@@ -107,7 +108,8 @@ public class ChannelEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(channelEndpoint1.getEndpointConfiguration().getChannelName(), "testChannel");
         Assert.assertNull(channelEndpoint1.getEndpointConfiguration().getChannel());
         Assert.assertEquals(channelEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(channelEndpoint1.getEndpointConfiguration().isUseObjectMessages(), false);
+        Assert.assertFalse(channelEndpoint1.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertTrue(channelEndpoint1.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
         Assert.assertEquals(channelEndpoint2.getEndpointConfiguration().getMessageConverter(), messageConverter);
@@ -119,7 +121,8 @@ public class ChannelEndpointConfigParserTest extends AbstractTestNGUnitTest {
         // 3rd message receiver
         Assert.assertNull(channelEndpoint3.getEndpointConfiguration().getChannelName());
         Assert.assertNull(channelEndpoint3.getEndpointConfiguration().getChannel());
-        Assert.assertEquals(channelEndpoint3.getEndpointConfiguration().isUseObjectMessages(), true);
+        Assert.assertTrue(channelEndpoint3.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertFalse(channelEndpoint3.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 4th message receiver
         Assert.assertNotNull(channelEndpoint4.getActor());

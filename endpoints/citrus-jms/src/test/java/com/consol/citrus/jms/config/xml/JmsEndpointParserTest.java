@@ -16,14 +16,14 @@
 
 package com.consol.citrus.jms.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -44,10 +44,11 @@ public class JmsEndpointParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDestinationName(), "JMS.Queue.Test");
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isPubSubDomain(), false);
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isAutoStart(), false);
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isDurableSubscription(), false);
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages(), false);
+        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isPubSubDomain());
+        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isAutoStart());
+        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isDurableSubscription());
+        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
         jmsEndpoint = endpoints.get("jmsEndpoint2");
@@ -65,11 +66,12 @@ public class JmsEndpointParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestinationName());
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isPubSubDomain(), true);
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isAutoStart(), true);
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isDurableSubscription(), true);
+        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isPubSubDomain());
+        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isAutoStart());
+        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isDurableSubscription());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDurableSubscriberName(), "durableSubscriber");
-        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages(), true);
+        Assert.assertTrue(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertFalse(jmsEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 4th message receiver
         jmsEndpoint = endpoints.get("jmsEndpoint4");

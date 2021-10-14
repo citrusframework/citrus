@@ -16,13 +16,13 @@
 
 package com.consol.citrus.jms.message;
 
-import org.springframework.jms.support.JmsHeaders;
-import org.springframework.jms.support.SimpleJmsHeaderMapper;
-import org.springframework.messaging.MessageHeaders;
-
 import javax.jms.Message;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.jms.support.JmsHeaders;
+import org.springframework.jms.support.SimpleJmsHeaderMapper;
+import org.springframework.messaging.MessageHeaders;
 
 /**
  * Citrus JMS header mapper translates internal message headers to Spring integration message headers and
@@ -33,9 +33,11 @@ import java.util.Map;
  */
 public class JmsMessageHeaderMapper extends SimpleJmsHeaderMapper {
 
+    private boolean filterInternalHeaders = true;
+
     @Override
     public void fromHeaders(MessageHeaders headers, Message jmsMessage) {
-        Map<String, Object> integrationHeaders = new HashMap<String, Object>();
+        Map<String, Object> integrationHeaders = new HashMap<>();
 
         if (headers.get(JmsMessageHeaders.CORRELATION_ID) != null) {
             integrationHeaders.put(JmsHeaders.CORRELATION_ID, headers.get(JmsMessageHeaders.CORRELATION_ID));
@@ -78,10 +80,15 @@ public class JmsMessageHeaderMapper extends SimpleJmsHeaderMapper {
         }
 
         for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
-            if (!headerEntry.getKey().startsWith(JmsMessageHeaders.JMS_PREFIX)
-                    && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.ID)
-                    && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.TIMESTAMP)) {
-                integrationHeaders.put(headerEntry.getKey(), headerEntry.getValue());
+            if (filterInternalHeaders) {
+                if (!headerEntry.getKey().startsWith(com.consol.citrus.message.MessageHeaders.PREFIX)) {
+                    integrationHeaders.put(headerEntry.getKey(), headerEntry.getValue());
+                }
+            } else {
+                if (!headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.ID)
+                        && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.TIMESTAMP)) {
+                    integrationHeaders.put(headerEntry.getKey(), headerEntry.getValue());
+                }
             }
         }
 
@@ -140,5 +147,9 @@ public class JmsMessageHeaderMapper extends SimpleJmsHeaderMapper {
         }
 
         return new MessageHeaders(internalHeaders);
+    }
+
+    public void setFilterInternalHeaders(boolean filterInternalHeaders) {
+        this.filterInternalHeaders = filterInternalHeaders;
     }
 }

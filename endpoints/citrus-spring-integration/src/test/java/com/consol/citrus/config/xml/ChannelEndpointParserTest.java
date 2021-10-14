@@ -16,13 +16,13 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -41,7 +41,8 @@ public class ChannelEndpointParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertNull(channelEndpoint.getEndpointConfiguration().getChannel());
         Assert.assertEquals(channelEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertNotNull(channelEndpoint.getEndpointConfiguration().getChannelResolver());
-        Assert.assertEquals(channelEndpoint.getEndpointConfiguration().isUseObjectMessages(), false);
+        Assert.assertFalse(channelEndpoint.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertTrue(channelEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
         channelEndpoint = endpoints.get("channelEndpoint2");
@@ -59,7 +60,8 @@ public class ChannelEndpointParserTest extends AbstractBeanDefinitionParserTest 
         // 4th message receiver
         channelEndpoint = endpoints.get("channelEndpoint4");
         Assert.assertNotNull(channelEndpoint.getActor());
-        Assert.assertEquals(channelEndpoint.getEndpointConfiguration().isUseObjectMessages(), true);
+        Assert.assertTrue(channelEndpoint.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertFalse(channelEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
         Assert.assertEquals(channelEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
 }

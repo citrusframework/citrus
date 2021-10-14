@@ -36,14 +36,14 @@ import org.springframework.beans.factory.BeanFactory;
 public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
 
     /** Endpoint handling incoming requests */
-    private ChannelSyncEndpoint endpoint;
-    private ChannelSyncProducer producer;
+    private final ChannelSyncEndpoint endpoint;
+    private final ChannelSyncProducer producer;
 
     /** Endpoint configuration */
     private final ChannelSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ChannelEndpointAdapter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChannelEndpointAdapter.class);
 
     /**
      * Default constructor using endpoint configuration.
@@ -52,6 +52,8 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
     public ChannelEndpointAdapter(ChannelSyncEndpointConfiguration endpointConfiguration) {
         this.endpointConfiguration = endpointConfiguration;
 
+        this.endpointConfiguration.setFilterInternalHeaders(false);
+
         endpoint = new ChannelSyncEndpoint(endpointConfiguration);
         endpoint.setName(getName());
         producer = new ChannelSyncProducer(endpoint.getProducerName(), endpointConfiguration);
@@ -59,7 +61,7 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
 
     @Override
     public Message handleMessageInternal(Message request) {
-        log.debug("Forwarding request to message channel ...");
+        LOG.debug("Forwarding request to message channel ...");
 
         TestContext context = getTestContext();
         Message replyMessage = null;
@@ -71,7 +73,7 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
                 replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
             }
         } catch (ActionTimeoutException e) {
-            log.warn(e.getMessage());
+            LOG.warn(e.getMessage());
         }
 
         return replyMessage;

@@ -97,6 +97,16 @@ public class ChannelSyncEndpointBuilder extends AbstractEndpointBuilder<ChannelS
     }
 
     /**
+     * Sets the filterInternalHeaders property.
+     * @param filterInternalHeaders
+     * @return
+     */
+    public ChannelSyncEndpointBuilder filterInternalHeaders(boolean filterInternalHeaders) {
+        endpoint.getEndpointConfiguration().setFilterInternalHeaders(filterInternalHeaders);
+        return this;
+    }
+
+    /**
      * Sets the polling interval.
      * @param pollingInterval
      * @return

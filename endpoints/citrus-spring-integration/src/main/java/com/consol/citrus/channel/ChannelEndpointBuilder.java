@@ -96,6 +96,16 @@ public class ChannelEndpointBuilder extends AbstractEndpointBuilder<ChannelEndpo
     }
 
     /**
+     * Sets the filterInternalHeaders property.
+     * @param filterInternalHeaders
+     * @return
+     */
+    public ChannelEndpointBuilder filterInternalHeaders(boolean filterInternalHeaders) {
+        endpoint.getEndpointConfiguration().setFilterInternalHeaders(filterInternalHeaders);
+        return this;
+    }
+
+    /**
      * Sets the default timeout.
      * @param timeout
      * @return

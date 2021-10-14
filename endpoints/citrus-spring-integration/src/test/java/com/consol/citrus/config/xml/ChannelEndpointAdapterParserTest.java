@@ -16,12 +16,12 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -41,14 +41,16 @@ public class ChannelEndpointAdapterParserTest extends AbstractBeanDefinitionPars
         Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertEquals(adapter.getEndpointConfiguration().getPollingInterval(), 500L);
         Assert.assertEquals((adapter.getEndpointConfiguration()).getChannelName(), "serverChannel");
-        Assert.assertEquals(adapter.getEndpointConfiguration().isUseObjectMessages(), false);
+        Assert.assertFalse(adapter.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
         Assert.assertNull(adapter.getFallbackEndpointAdapter());
 
         adapter = adapters.get("endpointAdapter2");
         Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(adapter.getEndpointConfiguration().getPollingInterval(), 250L);
         Assert.assertEquals((adapter.getEndpointConfiguration()).getChannelName(), "fooChannel");
-        Assert.assertEquals(adapter.getEndpointConfiguration().isUseObjectMessages(), true);
+        Assert.assertTrue(adapter.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertFalse(adapter.getEndpointConfiguration().isFilterInternalHeaders());
         Assert.assertEquals(adapter.getFallbackEndpointAdapter(), beanDefinitionContext.getBean("mockEndpointAdapter"));
     }
 }

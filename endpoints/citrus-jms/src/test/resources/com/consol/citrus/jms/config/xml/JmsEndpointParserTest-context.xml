@@ -24,6 +24,7 @@
                                durable-subscription="true"
                                durable-subscriber-name="durableSubscriber"
                                use-object-messages="true"
+                               filter-internal-headers="false"
                                jms-template="jmsTemplate"/>
 
   <citrus-jms:endpoint id="jmsEndpoint4"
