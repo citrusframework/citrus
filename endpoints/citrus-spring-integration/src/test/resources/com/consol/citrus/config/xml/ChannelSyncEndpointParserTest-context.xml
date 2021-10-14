@@ -19,6 +19,7 @@
   <citrus-si:channel-sync-endpoint id="syncChannelEndpoint3"
                                         actor="testActor"
                                         polling-interval="250"
+                                        filter-internal-headers="false"
                                         messaging-template="messagingTemplate"/>
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>

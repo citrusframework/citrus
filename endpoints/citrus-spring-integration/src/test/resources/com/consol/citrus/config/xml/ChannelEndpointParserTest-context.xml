@@ -22,6 +22,7 @@
                                    channel-resolver="channelResolver"
                                    channel-name="channelName"
                                    use-object-messages="true"
+                                   filter-internal-headers="false"
                                    actor="testActor"/>
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>

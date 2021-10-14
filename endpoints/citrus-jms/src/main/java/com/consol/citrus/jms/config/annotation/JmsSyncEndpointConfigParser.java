@@ -82,6 +82,7 @@ public class JmsSyncEndpointConfigParser implements AnnotationConfigParser<JmsSy
 
         builder.pubSubDomain(annotation.pubSubDomain());
         builder.useObjectMessages(annotation.useObjectMessages());
+        builder.filterInternalHeaders(annotation.filterInternalHeaders());
         builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), JmsMessageConverter.class));
 
         if (StringUtils.hasText(annotation.destinationResolver())) {

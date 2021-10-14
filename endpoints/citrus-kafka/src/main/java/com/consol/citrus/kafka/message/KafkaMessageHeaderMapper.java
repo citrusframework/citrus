@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.MessageHeaders;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 
@@ -43,9 +44,7 @@ public class KafkaMessageHeaderMapper {
         Headers kafkaHeaders = new RecordHeaders();
 
         for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
-            if (!headerEntry.getKey().startsWith(KafkaMessageHeaders.KAFKA_PREFIX)
-                    && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.ID)
-                    && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.TIMESTAMP)) {
+            if (!headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
                 kafkaHeaders.add(headerEntry.getKey(), context.getTypeConverter().convertIfNecessary(headerEntry.getValue(), byte[].class));
             }
         }

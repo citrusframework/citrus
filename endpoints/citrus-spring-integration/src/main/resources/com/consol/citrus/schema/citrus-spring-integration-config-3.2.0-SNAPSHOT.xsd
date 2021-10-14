@@ -55,6 +55,7 @@
     <xs:attribute name="channel-name" type="xs:string"/>
     <xs:attribute name="channel-resolver" type="xs:string"/>
     <xs:attribute name="use-object-messages" type="xs:boolean"/>
+    <xs:attribute name="filter-internal-headers" type="xs:boolean" default="true"/>
     <xs:attribute name="actor" type="xs:string"/>
     <xs:attribute name="timeout" type="xs:string"/>
   </xs:complexType>

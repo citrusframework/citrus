@@ -69,6 +69,12 @@ public @interface ChannelSyncEndpointConfig {
     boolean useObjectMessages() default false;
 
     /**
+     * Should filter internal message headers.
+     * @return
+     */
+    boolean filterInternalHeaders() default true;
+
+    /**
      * Polling interval.
      * @return
      */

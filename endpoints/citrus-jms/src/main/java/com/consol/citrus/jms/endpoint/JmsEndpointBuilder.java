@@ -16,14 +16,14 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 
 /**
  * @author Christoph Deppisch
@@ -156,6 +156,16 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
      */
     public JmsEndpointBuilder useObjectMessages(boolean useObjectMessages) {
         endpoint.getEndpointConfiguration().setUseObjectMessages(useObjectMessages);
+        return this;
+    }
+
+    /**
+     * Sets the filterInternalHeaders property.
+     * @param filterInternalHeaders
+     * @return
+     */
+    public JmsEndpointBuilder filterInternalHeaders(boolean filterInternalHeaders) {
+        endpoint.getEndpointConfiguration().setFilterInternalHeaders(filterInternalHeaders);
         return this;
     }
 

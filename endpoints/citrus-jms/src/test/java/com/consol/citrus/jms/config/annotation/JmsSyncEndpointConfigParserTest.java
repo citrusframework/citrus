@@ -80,6 +80,8 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
             replyDestination="replyQueue",
             destinationResolver="destinationResolver",
             destinationNameResolver="destinationNameResolver",
+            useObjectMessages = true,
+            filterInternalHeaders = false,
             correlator="replyMessageCorrelator")
     private JmsSyncEndpoint jmsSyncEndpoint6;
 
@@ -166,6 +168,8 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(jmsSyncEndpoint3.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsSyncEndpoint3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
         Assert.assertTrue(jmsSyncEndpoint3.getEndpointConfiguration().isPubSubDomain());
+        Assert.assertFalse(jmsSyncEndpoint3.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertTrue(jmsSyncEndpoint3.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 4th message receiver
         Assert.assertNotNull(jmsSyncEndpoint4.getActor());
@@ -193,6 +197,8 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getCorrelator(), messageCorrelator);
         Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getDestinationResolver(), destinationResolver);
         Assert.assertEquals(jmsSyncEndpoint6.getEndpointConfiguration().getDestinationNameResolver(), destinationNameResolver);
+        Assert.assertTrue(jmsSyncEndpoint6.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertFalse(jmsSyncEndpoint6.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 7th message sender
         Assert.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getConnectionFactory());

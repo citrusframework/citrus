@@ -73,6 +73,7 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
     @JmsEndpointConfig(pubSubDomain=true,
             autoStart=true,
             useObjectMessages=true,
+            filterInternalHeaders=false,
             jmsTemplate="jmsTemplate")
     private JmsEndpoint jmsEndpoint3;
 
@@ -164,6 +165,7 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(jmsEndpoint1.getEndpointConfiguration().isAutoStart());
         Assert.assertFalse(jmsEndpoint1.getEndpointConfiguration().isDurableSubscription());
         Assert.assertFalse(jmsEndpoint1.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertTrue(jmsEndpoint1.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
         Assert.assertNotNull(jmsEndpoint2.getEndpointConfiguration().getConnectionFactory());
@@ -183,6 +185,7 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(jmsEndpoint3.getEndpointConfiguration().isPubSubDomain());
         Assert.assertTrue(jmsEndpoint3.getEndpointConfiguration().isAutoStart());
         Assert.assertTrue(jmsEndpoint3.getEndpointConfiguration().isUseObjectMessages());
+        Assert.assertFalse(jmsEndpoint3.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 4th message receiver
         Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().getConnectionFactory(), topicConnectionFactory);

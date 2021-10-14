@@ -57,6 +57,7 @@ public class ChannelEndpointConfigParser implements AnnotationConfigParser<Chann
         }
 
         builder.useObjectMessages(annotation.useObjectMessages());
+        builder.filterInternalHeaders(annotation.filterInternalHeaders());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
             builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), ChannelMessageConverter.class));

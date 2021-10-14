@@ -99,10 +99,12 @@
          message-factory="messageFactory"/>
 
     <citrus-jms:endpoint id="webServiceRequestReceiver"
-                             destination-name="${jms.ws.stub.request}"/>
+                         filter-internal-headers="false"
+                         destination-name="${jms.ws.stub.request}"/>
 
     <citrus-jms:endpoint id="webServiceResponseSender"
          use-object-messages="true"
+         filter-internal-headers="false"
          destination-name="${jms.ws.stub.response}"/>
 
     <citrus-ws:client id="webServiceHelloClient"
@@ -205,11 +207,14 @@
          request-method="POST"
          content-type="text/xml"/>
 
-    <citrus-jms:endpoint id="httpServerRequestEndpoint" destination-name="${jms.queue.http.request.forward}"/>
+    <citrus-jms:endpoint id="httpServerRequestEndpoint"
+                         filter-internal-headers="false"
+                         destination-name="${jms.queue.http.request.forward}"/>
 
     <citrus-jms:endpoint id="httpServerResponseEndpoint"
-         destination-name="${jms.queue.http.request.ack}"
-         actor="helloServer"/>
+                         filter-internal-headers="false"
+                         destination-name="${jms.queue.http.request.ack}"
+                         actor="helloServer"/>
 
     <!-- JDBC data sources -->
     <bean id="testDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
@@ -241,7 +246,8 @@
     </bean>
 
     <!-- Citrus JMS Endpoints -->
-    <citrus-jms:endpoint id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
+    <citrus-jms:endpoint id="helloRequestSender"
+         destination-name="${jms.queue.hello.request}"/>
 
     <citrus-jms:endpoint id="helloResponseReceiver"
          timeout="5000"

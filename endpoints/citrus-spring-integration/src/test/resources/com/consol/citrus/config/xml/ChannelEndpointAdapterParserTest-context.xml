@@ -12,6 +12,7 @@
                                    channel-name="fooChannel"
                                    polling-interval="250"
                                    use-object-messages="true"
+                                   filter-internal-headers="false"
                                    fallback-adapter="mockEndpointAdapter"
                                    timeout="10000"/>
 

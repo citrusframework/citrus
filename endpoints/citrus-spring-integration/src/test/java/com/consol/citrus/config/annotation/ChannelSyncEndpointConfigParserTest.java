@@ -75,6 +75,7 @@ public class ChannelSyncEndpointConfigParserTest extends AbstractTestNGUnitTest 
     @ChannelSyncEndpointConfig(timeout=10000L,
             channel="channelQueue",
             channelResolver="channelResolver",
+            filterInternalHeaders = false,
             correlator="replyMessageCorrelator")
     private ChannelSyncEndpoint channelSyncEndpoint6;
 
@@ -133,6 +134,7 @@ public class ChannelSyncEndpointConfigParserTest extends AbstractTestNGUnitTest 
         Assert.assertNull(channelSyncEndpoint1.getEndpointConfiguration().getChannel());
         Assert.assertEquals(channelSyncEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertEquals(channelSyncEndpoint1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        Assert.assertTrue(channelSyncEndpoint1.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
         Assert.assertNull(channelSyncEndpoint2.getEndpointConfiguration().getChannelName());
@@ -162,6 +164,7 @@ public class ChannelSyncEndpointConfigParserTest extends AbstractTestNGUnitTest 
         Assert.assertEquals(channelSyncEndpoint6.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(channelSyncEndpoint6.getEndpointConfiguration().getCorrelator(), messageCorrelator);
         Assert.assertEquals(channelSyncEndpoint6.getEndpointConfiguration().getChannelResolver(), channelResolver);
+        Assert.assertFalse(channelSyncEndpoint6.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 7th message sender
         Assert.assertNull(channelSyncEndpoint7.getEndpointConfiguration().getChannelName());

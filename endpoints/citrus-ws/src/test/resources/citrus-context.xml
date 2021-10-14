@@ -146,10 +146,12 @@
                     resource-base="src/test/resources"/>
 
   <citrus-jms:endpoint id="soapRequestEndpoint"
+                       filter-internal-headers="false"
                        destination-name="SoapServer.inbound"/>
 
   <citrus-jms:endpoint id="soapResponseEndpoint"
                            use-object-messages="true"
+                           filter-internal-headers="false"
                            destination-name="SoapServer.outbound"/>
 
   <citrus-http:client id="echoHttpClient"

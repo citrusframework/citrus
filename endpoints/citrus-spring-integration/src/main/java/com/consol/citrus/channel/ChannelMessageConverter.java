@@ -16,50 +16,71 @@
 
 package com.consol.citrus.channel;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.*;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
-import org.springframework.messaging.support.MessageBuilder;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageConverter;
+import com.consol.citrus.message.MessageHeaders;
+import org.springframework.messaging.support.MessageBuilder;
 
 /**
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class ChannelMessageConverter implements MessageConverter<org.springframework.messaging.Message, org.springframework.messaging.Message, ChannelEndpointConfiguration> {
+public class ChannelMessageConverter implements MessageConverter<org.springframework.messaging.Message<?>, org.springframework.messaging.Message<?>, ChannelEndpointConfiguration> {
 
     @Override
-    public org.springframework.messaging.Message convertOutbound(Message internalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {
+    public org.springframework.messaging.Message<?> convertOutbound(Message internalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {
         if (endpointConfiguration.isUseObjectMessages()) {
             return MessageBuilder.withPayload(internalMessage)
                     .build();
 
-        } else {
-            return MessageBuilder.withPayload(internalMessage.getPayload())
-                    .copyHeaders(internalMessage.getHeaders())
-                    .build();
         }
+
+        Map<String, Object> headers = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> headerEntry: internalMessage.getHeaders().entrySet()) {
+            if (endpointConfiguration.isFilterInternalHeaders()) {
+                if (!headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
+                    headers.put(headerEntry.getKey(), headerEntry.getValue());
+                }
+            } else {
+                if (!headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.ID)
+                        && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.TIMESTAMP)) {
+                    headers.put(headerEntry.getKey(), headerEntry.getValue());
+                }
+            }
+        }
+
+        return MessageBuilder.withPayload(internalMessage.getPayload())
+                .copyHeaders(headers)
+                .build();
     }
 
     @Override
-    public Message convertInbound(org.springframework.messaging.Message externalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {
+    public Message convertInbound(org.springframework.messaging.Message<?> externalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {
         if (externalMessage == null) {
             return null;
         }
 
-        Map<String, Object> messageHeaders = new LinkedHashMap<>();
-        messageHeaders.putAll(externalMessage.getHeaders());
+        Map<String, Object> messageHeaders = new LinkedHashMap<>(externalMessage.getHeaders());
 
         Object payload = externalMessage.getPayload();
         if (payload instanceof Message) {
             Message nestedMessage = (Message) payload;
 
             for (Map.Entry<String, Object> headerEntry : messageHeaders.entrySet()) {
-                if (!headerEntry.getKey().startsWith(MessageHeaders.MESSAGE_PREFIX)) {
-                    nestedMessage.setHeader(headerEntry.getKey(), headerEntry.getValue());
+                if (endpointConfiguration.isFilterInternalHeaders()) {
+                    if (!headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
+                        nestedMessage.setHeader(headerEntry.getKey(), headerEntry.getValue());
+                    }
+                } else {
+                    if (!headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.ID)
+                            && !headerEntry.getKey().equals(MessageHeaders.TIMESTAMP)) {
+                        nestedMessage.setHeader(headerEntry.getKey(), headerEntry.getValue());
+                    }
                 }
             }
 
@@ -70,6 +91,6 @@ public class ChannelMessageConverter implements MessageConverter<org.springframe
     }
 
     @Override
-    public void convertOutbound(org.springframework.messaging.Message externalMessage, Message internalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {
+    public void convertOutbound(org.springframework.messaging.Message<?> externalMessage, Message internalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {
     }
 }

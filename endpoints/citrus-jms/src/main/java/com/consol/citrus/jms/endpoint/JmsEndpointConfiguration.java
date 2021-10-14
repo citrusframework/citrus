@@ -16,6 +16,12 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.Topic;
+
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.jms.endpoint.resolver.DynamicDestinationNameResolver;
@@ -28,8 +34,6 @@ import org.springframework.jms.support.JmsHeaderMapper;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.Assert;
 
-import javax.jms.*;
-
 /**
  * @author Christoph Deppisch
  * @since 1.4
@@ -37,7 +41,7 @@ import javax.jms.*;
 public class JmsEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsEndpointConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JmsEndpointConfiguration.class);
 
     /** The connection factory */
     private ConnectionFactory connectionFactory;
@@ -76,6 +80,9 @@ public class JmsEndpointConfiguration extends AbstractPollableEndpointConfigurat
     /** Should always use object messages */
     private boolean useObjectMessages = false;
 
+    /** Enable/disable filtering of Citrus internal headers */
+    private boolean filterInternalHeaders = true;
+
     /**
      * Get the destination name (either a queue name or a topic name).
      * @param destination
@@ -91,7 +98,7 @@ public class JmsEndpointConfiguration extends AbstractPollableEndpointConfigurat
                 return destination.toString();
             }
         } catch (JMSException e) {
-            log.error("Unable to resolve destination name", e);
+            LOG.error("Unable to resolve destination name", e);
             return "";
         }
     }
@@ -254,7 +261,7 @@ public class JmsEndpointConfiguration extends AbstractPollableEndpointConfigurat
 
     /**
      * Determines weather to convert outbound messages or not. If conversion is disabled endpoint will not convert
-     * the outbound message. Instead the raw message object will be sent over the wire using a JMS object message.
+     * the outbound message. Instead, the raw message object will be sent over the wire using a JMS object message.
      * @return
      */
     public boolean isUseObjectMessages() {
@@ -262,11 +269,31 @@ public class JmsEndpointConfiguration extends AbstractPollableEndpointConfigurat
     }
 
     /**
-     *
+     * Setting to control object message mode.
      * @param useObjectMessages
      */
     public void setUseObjectMessages(boolean useObjectMessages) {
         this.useObjectMessages = useObjectMessages;
+    }
+
+    /**
+     * Determines if internal message headers should be filtered when creating the JMS message.
+     * @return
+     */
+    public boolean isFilterInternalHeaders() {
+        return filterInternalHeaders;
+    }
+
+    /**
+     * Setting to control filtering of internal message headers.
+     * @param filterInternalHeaders
+     */
+    public void setFilterInternalHeaders(boolean filterInternalHeaders) {
+        this.filterInternalHeaders = filterInternalHeaders;
+
+        if (headerMapper instanceof JmsMessageHeaderMapper) {
+            ((JmsMessageHeaderMapper) headerMapper).setFilterInternalHeaders(filterInternalHeaders);
+        }
     }
 
     /**

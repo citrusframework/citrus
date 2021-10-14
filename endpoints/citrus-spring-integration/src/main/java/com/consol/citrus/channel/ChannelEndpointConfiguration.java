@@ -50,6 +50,9 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
     /** Should always use object messages */
     private boolean useObjectMessages = false;
 
+    /** Enable/disable filtering of Citrus internal headers */
+    private boolean filterInternalHeaders = true;
+
     /**
      * Set the message channel.
      * @param channel the channel to set
@@ -156,10 +159,26 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
     }
 
     /**
-     *
+     * Sets the useObjectMessages flag.
      * @param useObjectMessages
      */
     public void setUseObjectMessages(boolean useObjectMessages) {
         this.useObjectMessages = useObjectMessages;
+    }
+
+    /**
+     * Determines if internal message headers should be filtered when creating the JMS message.
+     * @return
+     */
+    public boolean isFilterInternalHeaders() {
+        return filterInternalHeaders;
+    }
+
+    /**
+     * Setting to control filtering of internal message headers.
+     * @param filterInternalHeaders
+     */
+    public void setFilterInternalHeaders(boolean filterInternalHeaders) {
+        this.filterInternalHeaders = filterInternalHeaders;
     }
 }

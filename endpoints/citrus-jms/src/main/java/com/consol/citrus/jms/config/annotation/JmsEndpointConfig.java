@@ -105,6 +105,12 @@ public @interface JmsEndpointConfig {
     boolean useObjectMessages() default false;
 
     /**
+     * Should filter internal message headers.
+     * @return
+     */
+    boolean filterInternalHeaders() default true;
+
+    /**
      * Timeout.
      * @return
      */

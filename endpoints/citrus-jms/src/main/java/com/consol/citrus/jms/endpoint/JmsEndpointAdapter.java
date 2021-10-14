@@ -20,6 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.jms.message.JmsMessageHeaderMapper;
 import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,14 +36,14 @@ import org.slf4j.LoggerFactory;
 public class JmsEndpointAdapter extends AbstractEndpointAdapter {
 
     /** Endpoint handling incoming requests */
-    private JmsSyncEndpoint endpoint;
-    private JmsSyncProducer producer;
+    private final JmsSyncEndpoint endpoint;
+    private final JmsSyncProducer producer;
 
     /** Endpoint configuration */
     private final JmsSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsEndpointAdapter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JmsEndpointAdapter.class);
 
     /**
      * Default constructor using endpoint configuration.
@@ -51,14 +52,18 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
     public JmsEndpointAdapter(JmsSyncEndpointConfiguration endpointConfiguration) {
         this.endpointConfiguration = endpointConfiguration;
 
-        endpoint = new JmsSyncEndpoint(endpointConfiguration);
+        if (this.endpointConfiguration.getHeaderMapper() instanceof JmsMessageHeaderMapper) {
+            this.endpointConfiguration.setFilterInternalHeaders(false);
+        }
+
+        endpoint = new JmsSyncEndpoint(this.endpointConfiguration);
         endpoint.setName(getName());
-        producer = new JmsSyncProducer(endpoint.getProducerName(), endpointConfiguration);
+        producer = new JmsSyncProducer(endpoint.getProducerName(), this.endpointConfiguration);
     }
 
     @Override
     protected Message handleMessageInternal(Message request) {
-        log.debug("Forwarding request to jms destination ...");
+        LOG.debug("Forwarding request to jms destination ...");
 
         TestContext context = getTestContext();
         Message replyMessage = null;
@@ -70,7 +75,7 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
                 replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
             }
         } catch (ActionTimeoutException e) {
-            log.warn(e.getMessage());
+            LOG.warn(e.getMessage());
         }
 
         return replyMessage;

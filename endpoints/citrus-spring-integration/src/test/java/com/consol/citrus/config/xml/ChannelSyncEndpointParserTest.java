@@ -16,6 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.channel.ChannelSyncEndpoint;
 import com.consol.citrus.message.DefaultMessageCorrelator;
@@ -24,8 +26,6 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.springframework.integration.core.MessagingTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -46,6 +46,7 @@ public class ChannelSyncEndpointParserTest extends AbstractBeanDefinitionParserT
         Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getPollingInterval(), 500L);
         Assert.assertNotNull(channelSyncEndpoint.getEndpointConfiguration().getChannelResolver());
         Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        Assert.assertTrue(channelSyncEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
 
         // 2nd message receiver
         channelSyncEndpoint = endpoints.get("syncChannelEndpoint2");
@@ -64,6 +65,7 @@ public class ChannelSyncEndpointParserTest extends AbstractBeanDefinitionParserT
         Assert.assertNotNull(channelSyncEndpoint.getEndpointConfiguration().getMessagingTemplate());
         Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getMessagingTemplate(), beanDefinitionContext.getBean("messagingTemplate", MessagingTemplate.class));
         Assert.assertEquals(channelSyncEndpoint.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assert.assertFalse(channelSyncEndpoint.getEndpointConfiguration().isFilterInternalHeaders());
         Assert.assertNotNull(channelSyncEndpoint.getActor());
         Assert.assertEquals(channelSyncEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }

@@ -137,9 +137,12 @@
     <property name="watchTopicAdvisories" value="false"/>
   </bean>
 
-  <citrus-jms:endpoint id="httpServerRequestEndpoint" destination-name="${jms.queue.http.request.forward}"/>
+  <citrus-jms:endpoint id="httpServerRequestEndpoint"
+                       filter-internal-headers="false"
+                       destination-name="${jms.queue.http.request.forward}"/>
 
   <citrus-jms:endpoint id="httpServerResponseEndpoint"
+                       filter-internal-headers="false"
                        destination-name="${jms.queue.http.request.ack}"
                        actor="helloServer"/>
 
