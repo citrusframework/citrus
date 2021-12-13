@@ -62,6 +62,7 @@ Global options:
 
 -h  --help                    Display this help message
     --verbose                 Verbose script output (set -x)
+    --man                     Open HTML documentation on citrusframework.org
 
 Call "citrus <module> --help" for module specific options.
 
@@ -79,7 +80,8 @@ Usage: citrus $command [... options ...]
 
 EOT
         echo "Options for $command:"
-        echo -e "$($command::usage)
+        echo -e "$($command::usage)"
+        echo "    --man                     Open HTML documentation on citrusframework.org
 "
     fi
 }
@@ -140,7 +142,7 @@ run() {
     fi
 
     if [ -z "${command:-}" ]; then
-        if [ $(hasflag --manual) ]; then
+        if [ $(hasflag --man) ]; then
             open_url "https://citrusframework.org/citrus/reference/html/index.html"
             exit 0
         else

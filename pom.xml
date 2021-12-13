@@ -1399,7 +1399,7 @@
         <plugin>
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
-          <version>0.12</version>
+          <version>0.13</version>
           <configuration>
             <includes>
               <include>**/*.java</include>
@@ -1443,12 +1443,6 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>3.0.0</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-scm-plugin</artifactId>
-          <version>1.9.5</version>
         </plugin>
 
       </plugins>
@@ -1615,6 +1609,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-scm-plugin</artifactId>
+            <version>1.11.2</version>
             <configuration>
               <connectionUrl>scm:git:git@github.com:citrusframework/citrus.git</connectionUrl>
               <developerConnectionUrl>scm:git:git@github.com:citrusframework/citrus.git</developerConnectionUrl>
