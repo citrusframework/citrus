@@ -195,7 +195,6 @@
     <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
     <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
     <junixsocket.version>2.3.3</junixsocket.version>
-    <jdom.version>2.0.2</jdom.version>
     <json-smart.version>2.4.7</json-smart.version>
     <json-path.version>2.5.0</json-path.version>
     <hsqldb.version>2.6.0</hsqldb.version>
@@ -214,11 +213,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>org.jdom</groupId>
-        <artifactId>jdom</artifactId>
-        <version>${jdom.version}</version>
-      </dependency>
       <dependency>
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
