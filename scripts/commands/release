@@ -156,6 +156,8 @@ release::run() {
         fi
 
         if [ ! $(hasflag --no-git-push) ]; then
+            local remote=$(get_git_remote)
+
             # Push changes
             git push ${remote}
         fi
@@ -264,8 +266,6 @@ git_push() {
 update_next_snapshot() {
     local working_dir="$1"
     local next_version="$2"
-
-    local remote=$(get_git_remote)
 
     cd $working_dir
     echo "==== Using next snapshot version $next_version"

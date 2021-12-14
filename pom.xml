@@ -1201,7 +1201,7 @@
           <configuration>
             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
             <serverId>sonatype-nexus-staging</serverId>
-            <stagingProgressTimeoutMinutes>60</stagingProgressTimeoutMinutes>
+            <stagingProgressTimeoutMinutes>120</stagingProgressTimeoutMinutes>
             <keepStagingRepositoryOnCloseRuleFailure>true</keepStagingRepositoryOnCloseRuleFailure>
           </configuration>
         </plugin>
