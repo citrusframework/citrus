@@ -558,8 +558,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 3.1.0,</span>
-<span id="revdate">2021-08-30</span>
+<span id="revnumber">version 3.1.1,</span>
+<span id="revdate">2021-12-14</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -594,7 +594,8 @@ $(addBlockSwitches);
 <li><a href="#java-test-finally">5.4. Finally block</a></li>
 <li><a href="#java-test-behaviors">5.5. Test behaviors</a></li>
 <li><a href="#java-custom-actions">5.6. Run custom code</a></li>
-<li><a href="#java-resource-injection">5.7. Resource injection</a></li>
+<li><a href="#java-bind-to-registry">5.7. Bind objects to registry</a></li>
+<li><a href="#java-resource-injection">5.8. Resource injection</a></li>
 </ul>
 </li>
 <li><a href="#test-variables">6. Test variables</a>
@@ -1011,7 +1012,8 @@ $(addBlockSwitches);
 <li><a href="#configuration">45. Configuration options</a>
 <ul class="sectlevel2">
 <li><a href="#configuration-environment-settings">45.1. Environment settings</a></li>
-<li><a href="#configuration-property-file">45.2. Property file settings</a></li>
+<li><a href="#configuration-spring">45.2. Spring configuration settings</a></li>
+<li><a href="#configuration-property-file">45.3. Property file settings</a></li>
 </ul>
 </li>
 <li><a href="#spring-support">46. Spring support</a>
@@ -1037,7 +1039,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 3.1.0</strong></p>
+<p><strong>Version: 3.1.1</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -3115,13 +3117,161 @@ a test action implementation and reference the logic from multiple tests.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="java-resource-injection"><a class="anchor" href="#java-resource-injection"></a><a class="link" href="#java-resource-injection">5.7. Resource injection</a></h3>
+<h3 id="java-bind-to-registry"><a class="anchor" href="#java-bind-to-registry"></a><a class="link" href="#java-bind-to-registry">5.7. Bind objects to registry</a></h3>
+<div class="paragraph">
+<p>The Citrus context is a place where objects can register themselves in order to enable dependency injection and instance sharing
+in multiple tests. Once you register the object in the context others can resolve the reference with its given name.</p>
+</div>
+<div class="paragraph">
+<p>In a simple example the context can register a new endpoint that is injected in several tests.</p>
+</div>
+<div class="paragraph">
+<p>You can access the Citrus context within the provided before/after methods on the test.</p>
+</div>
+<div class="listingblock">
+<div class="title">Register endpoint in Citrus context</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CitrusRegisterEndpoint_IT</span> <span class="directive">extends</span> TestNGCitrusSupport {
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> beforeSuite(CitrusContext context) {
+        context.bind(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="keyword">new</span> FooEndpoint());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the CitrusContext you can bind objects to the registry. Each binding receives a name so others can resolve the instance
+reference for injection.</p>
+</div>
+<div class="listingblock">
+<div class="title">Inject endpoint in other tests</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">InjectEndpoint_IT</span> <span class="directive">extends</span> TestNGCitrusSupport {
+
+    <span class="annotation">@CitrusEndpoint</span>
+    <span class="directive">private</span> FooEndpoint foo;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> injectEndpointTest() {
+        <span class="error">$</span>(send(foo)
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello foo!</span><span class="delimiter">&quot;</span></span>));
+
+        <span class="error">$</span>(receive(foo)
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello Citrus!</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@CitrusEndpoint</code> annotation injects the endpoint resolving the instance with the given name <code>foo</code>.
+Test methods can use this endpoint in the following in send and receive actions.</p>
+</div>
+<div class="sect3">
+<h4 id="java-bind-to-registry-annotation"><a class="anchor" href="#java-bind-to-registry-annotation"></a><a class="link" href="#java-bind-to-registry-annotation">5.7.1. @BindToRegistry</a></h4>
+<div class="paragraph">
+<p>An alternative to using the <code>bind()</code> method on the CitrusContext is to use the <code>@BindToRegistry</code> annotation.
+Methods and fields annotated will automatically register in the CitrusContext registry.</p>
+</div>
+<div class="listingblock">
+<div class="title">@BindToRegistry annotation</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">CitrusRegisterEndpoint_IT</span> <span class="directive">extends</span> TestNGCitrusSupport {
+
+    <span class="annotation">@CitrusFramework</span>
+    <span class="directive">private</span> Citrus citrus;
+
+    <span class="annotation">@BindToRegistry</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">fooQueue</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> MessageQueue queue = <span class="keyword">new</span> DefaultMessageQueue(<span class="string"><span class="delimiter">&quot;</span><span class="content">fooQueue</span><span class="delimiter">&quot;</span></span>);
+
+    <span class="annotation">@BindToRegistry</span>
+    <span class="directive">public</span> <span class="type">void</span> foo() {
+        <span class="keyword">return</span> <span class="keyword">new</span> FooEndpoint();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The annotation is able to specify an explicit binding name.
+The annotation works with public methods and fields in tests.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="java-configuration-class"><a class="anchor" href="#java-configuration-class"></a><a class="link" href="#java-configuration-class">5.7.2. Configuration classes</a></h4>
+<div class="paragraph">
+<p>As an alternative to adding the registry binding configuration directly to the test you can load configuration classes.</p>
+</div>
+<div class="paragraph">
+<p>Configuration classes are automatically loaded before a test suite run and all methods and fields are parsed for potential bindings.
+You can use the environment settings <code>citrus.java.config</code> and/or <code>CITRUS_JAVA_CONFIG</code> to set a default configuration class.</p>
+</div>
+<div class="listingblock">
+<div class="title">citrus-application.properties</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">citrus.java.config=MyConfig.class</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">MyConfig.class</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">MyConfig</span> {
+
+    <span class="annotation">@BindToRegistry</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">fooQueue</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> MessageQueue queue = <span class="keyword">new</span> DefaultMessageQueue(<span class="string"><span class="delimiter">&quot;</span><span class="content">fooQueue</span><span class="delimiter">&quot;</span></span>);
+
+    <span class="annotation">@BindToRegistry</span>
+    <span class="directive">public</span> <span class="type">void</span> foo() {
+        <span class="keyword">return</span> <span class="keyword">new</span> FooEndpoint();
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="java-configuration-class-annotation"><a class="anchor" href="#java-configuration-class-annotation"></a><a class="link" href="#java-configuration-class-annotation">5.7.3. @CitrusConfiguration</a></h4>
+<div class="paragraph">
+<p>Each test is able to use the <code>@CitrusConfiguration</code> annotation to add registry bindings, too.</p>
+</div>
+<div class="listingblock">
+<div class="title">@CitrusConfiguration annotation</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusConfiguration</span>(classes = MyConfig.class)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">CitrusRegisterEndpoint_IT</span> <span class="directive">extends</span> TestNGCitrusSupport {
+
+    <span class="annotation">@CitrusEndpoint</span>
+    <span class="directive">private</span> FooEndpoint foo;
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@CitrusTest</span>
+    <span class="directive">public</span> <span class="type">void</span> injectEndpointTest() {
+        <span class="error">$</span>(send(foo)
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello foo!</span><span class="delimiter">&quot;</span></span>));
+
+        <span class="error">$</span>(receive(foo)
+                .message()
+                .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello Citrus!</span><span class="delimiter">&quot;</span></span>));
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@CitrusConfiguration</code> annotation is able to load configuration classes and bind all components to the registry for later usage.
+The test can inject endpoints and other components using the <code>@CitrusEndpoint</code> and <code>@CitrusResource</code> annotation on fields.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="java-resource-injection"><a class="anchor" href="#java-resource-injection"></a><a class="link" href="#java-resource-injection">5.8. Resource injection</a></h3>
 <div class="paragraph">
 <p>Resource injection is a convenient mechanism to access Citrus internal objects such as TestRunner or TestContext instances. The following sections
 deal with resource injection of different objects.</p>
 </div>
 <div class="sect3">
-<h4 id="java-resource-injection-citrus"><a class="anchor" href="#java-resource-injection-citrus"></a><a class="link" href="#java-resource-injection-citrus">5.7.1. Inject Citrus framework</a></h4>
+<h4 id="java-resource-injection-citrus"><a class="anchor" href="#java-resource-injection-citrus"></a><a class="link" href="#java-resource-injection-citrus">5.8.1. Inject Citrus framework</a></h4>
 <div class="paragraph">
 <p>You can access the Citrus framework instance in order to access all components and functionalities. Just use the <code>@CitrusFramework</code>
 annotation in your test class.</p>
@@ -3161,7 +3311,7 @@ affect all tests.
 </div>
 </div>
 <div class="sect3">
-<h4 id="java-resource-injection-runner"><a class="anchor" href="#java-resource-injection-runner"></a><a class="link" href="#java-resource-injection-runner">5.7.2. Test action runner injection</a></h4>
+<h4 id="java-resource-injection-runner"><a class="anchor" href="#java-resource-injection-runner"></a><a class="link" href="#java-resource-injection-runner">5.8.2. Test action runner injection</a></h4>
 <div class="paragraph">
 <p>The test action runner is the entry to the fluent Java API. You can inject the runner as a method parameter.</p>
 </div>
@@ -3194,7 +3344,7 @@ the risk of side effects on other tests running at the same time.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="java-resource-injection-test-context"><a class="anchor" href="#java-resource-injection-test-context"></a><a class="link" href="#java-resource-injection-test-context">5.7.3. Test context injection</a></h4>
+<h4 id="java-resource-injection-test-context"><a class="anchor" href="#java-resource-injection-test-context"></a><a class="link" href="#java-resource-injection-test-context">5.8.3. Test context injection</a></h4>
 <div class="paragraph">
 <p>The Citrus test context combines a set of central objects and functionalities that a test is able to make use of. The test context
 holds all variables and is able to resolve functions and validation matchers.</p>
@@ -3265,7 +3415,7 @@ the test context as a class member variable.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="java-resource-injection-endpoint"><a class="anchor" href="#java-resource-injection-endpoint"></a><a class="link" href="#java-resource-injection-endpoint">5.7.4. Endpoint injection</a></h4>
+<h4 id="java-resource-injection-endpoint"><a class="anchor" href="#java-resource-injection-endpoint"></a><a class="link" href="#java-resource-injection-endpoint">5.8.4. Endpoint injection</a></h4>
 <div class="paragraph">
 <p>Endpoints play a significant role when sending/receiving messages over various transports. An endpoint defines how to connect
 to a message transport (e.g. Http endpoint URL, JMS mesage broker connection, Kafka connection and topic selection).</p>
@@ -32065,12 +32215,8 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 <td class="tableblock halign-left valign-top"><p class="tableblock">File location for application property file that holds other settings. These properties get loaded as system properties on startup. (default="classpath:citrus-application.properties")</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.spring.application.context</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">File location for Spring XML configurations (default="classpath*:citrus-context.xml")</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.spring.java.config</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Class name for Spring Java config (default=null)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.java.config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name for custom Java configuration (default=null)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">citrus.file.encoding</p></td>
@@ -32123,12 +32269,8 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 <td class="tableblock halign-left valign-top"><p class="tableblock">File location for application property file that holds other settings. These properties get loaded as system properties on startup. (default="classpath:citrus-application.properties")</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_SPRING_APPLICATION_CONTEXT</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">File location for Spring XML configurations (default="classpath*:citrus-context.xml")</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_SPRING_JAVA_CONFIG</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Class name for Spring Java config (default=null)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_JAVA_CONFIG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name for custom Java configuration (default=null)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_FILE_ENCODING</p></td>
@@ -32162,7 +32304,60 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 </table>
 </div>
 <div class="sect2">
-<h3 id="configuration-property-file"><a class="anchor" href="#configuration-property-file"></a><a class="link" href="#configuration-property-file">45.2. Property file settings</a></h3>
+<h3 id="configuration-spring"><a class="anchor" href="#configuration-spring"></a><a class="link" href="#configuration-spring">45.2. Spring configuration settings</a></h3>
+<div class="paragraph">
+<p>When spring framework is enabled in Citrus you can set specific settings regarding the Spring
+application context.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. System properties</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">System properties</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.spring.application.context</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File location for Spring XML configurations (default="classpath*:citrus-context.xml")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">citrus.spring.java.config</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name for Spring Java config (default=null)</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Environment variables</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Environment variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_SPRING_APPLICATION_CONTEXT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File location for Spring XML configurations (default="classpath*:citrus-context.xml")</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CITRUS_SPRING_JAVA_CONFIG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name for Spring Java config (default=null)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="configuration-property-file"><a class="anchor" href="#configuration-property-file"></a><a class="link" href="#configuration-property-file">45.3. Property file settings</a></h3>
 <div class="paragraph">
 <p>As mentioned in the previous section Citrus as a framework references some basic settings from system environment properties
 or variables. You can overwrite these settings in a central property file which is loaded at the very beginning of the
@@ -32860,8 +33055,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.1.0<br>
-Last updated 2021-08-27 21:33:20 +0200
+Version 3.1.1<br>
+Last updated 2021-12-14 11:11:08 +0100
 </div>
 </div>
 <style>
