@@ -139,6 +139,22 @@ public class TestContextTest extends UnitTestSupport {
     public void testGetVariableFromPathExpression() {
         context.setVariable("helloData", new DataContainer("hello"));
         context.setVariable("container", new DataContainer(new DataContainer("nested")));
+        
+        DataContainer[] subContainerArray = new DataContainer[] {
+                new DataContainer("A"),
+                new DataContainer("B"),
+                new DataContainer("C"),
+                new DataContainer("D"),
+        };
+        
+        DataContainer[] containerArray = new DataContainer[] {
+                new DataContainer("0"),
+                new DataContainer("1"),
+                new DataContainer("2"),
+                new DataContainer(subContainerArray),
+        };
+        
+        context.setVariable("containerArray", containerArray);
 
         Assert.assertEquals(context.getVariable("${helloData}"), DataContainer.class.getName());
         Assert.assertEquals(context.getVariable("${helloData.data}"), "hello");
@@ -148,6 +164,8 @@ public class TestContextTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("${container.data.data}"), "nested");
         Assert.assertEquals(context.getVariable("${container.data.number}"), "99");
         Assert.assertEquals(context.getVariable("${container.data.CONSTANT}"), "FOO");
+        Assert.assertEquals(context.getVariable("${container.intVals[1]}"), "1");
+        Assert.assertEquals(context.getVariable("${containerArray[3].data[1].data}"), "B");
     }
 
     @Test
@@ -172,6 +190,13 @@ public class TestContextTest extends UnitTestSupport {
             context.getVariable("${something.else}");
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Unknown variable 'something.else'");
+        }
+        
+        try {
+            context.getVariable("${helloData[1]}");
+            Assert.fail("Missing exception due to indexed access to non array variable");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().endsWith(""));
         }
     }
 
@@ -388,6 +413,8 @@ public class TestContextTest extends UnitTestSupport {
         private int number = 99;
         private Object data;
 
+        private int[] intVals =  new int[] {0, 1, 2, 3, 4};
+        
         private static final String CONSTANT = "FOO";
 
         /**
