@@ -19,7 +19,7 @@ http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-3.0.0-M1
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-3.0.0-M2.xsd=com/consol/citrus/schema/citrus-kafka-config-3.0.0-M2.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-3.0.0-M3.xsd=com/consol/citrus/schema/citrus-kafka-config-3.0.0-M3.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-3.0.0.xsd=com/consol/citrus/schema/citrus-kafka-config-3.0.0.xsd
-http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-3.2.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-kafka-config-3.2.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-3.1.1.xsd=com/consol/citrus/schema/citrus-kafka-config-3.1.1.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-3.1.0.xsd=com/consol/citrus/schema/citrus-kafka-config-3.1.0.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config.xsd=com/consol/citrus/schema/citrus-kafka-config.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-2.8.0.xsd=com/consol/citrus/schema/citrus-kafka-testcase-2.8.0.xsd
@@ -27,6 +27,6 @@ http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-3.0.
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-3.0.0-M2.xsd=com/consol/citrus/schema/citrus-kafka-testcase-3.0.0-M2.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-3.0.0-M3.xsd=com/consol/citrus/schema/citrus-kafka-testcase-3.0.0-M3.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-3.0.0.xsd=com/consol/citrus/schema/citrus-kafka-testcase-3.0.0.xsd
-http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-3.2.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-kafka-testcase-3.2.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-3.1.1.xsd=com/consol/citrus/schema/citrus-kafka-testcase-3.1.1.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-3.1.0.xsd=com/consol/citrus/schema/citrus-kafka-testcase-3.1.0.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase.xsd=com/consol/citrus/schema/citrus-kafka-testcase.xsd
