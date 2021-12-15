@@ -50,6 +50,11 @@ docs::run() {
     check_error $next_version
 
     if [ ! $(hasflag --local) ]; then
+        if [ ! $(hasflag --dry-run -n) ]; then
+            # Verify that there are no modified file in git repo
+            check_git_clean "$working_dir"
+        fi
+
         set_docs_version "$working_dir" "$release_version" "$snapshot_version"
     fi
 
@@ -79,14 +84,6 @@ docs::run() {
         echo "==== Generate and release dry-run"
         ./mvnw ${maven_opts} package -Dproject.docs.version=${release_version}
     else
-        if [[ "$release_version" != "$snapshot_version" ]]; then
-            # Commit overview.adoc for new version
-            git_commit "$working_dir" overview.adoc "Add docs version for $release_version"
-        fi
-
-        # Verify that there are no modified file in git repo
-        check_git_clean "$working_dir"
-
         echo "==== Generate and release to GitHub pages"
         ./mvnw ${maven_opts} verify -Dproject.docs.version=${release_version}
     fi
@@ -97,7 +94,14 @@ docs::run() {
         else
             update_docs_version "$working_dir" "$release_version" "$snapshot_version"
         fi
+
+        if [[ "$release_version" != "$snapshot_version" ]]; then
+            # Commit overview.adoc for new version
+            git_commit "$working_dir" overview.adoc "Add docs version for $release_version"
+        fi
     fi
+
+    echo "==== Finished docs release $release_version"
 }
 
 # =======================================================================
@@ -143,13 +147,6 @@ update_docs_version() {
         # Mac OSX
         sed -i '' "17p" $file
         sed -i '' "17s/$version/$snapshot_version/g" $file
-    fi
-
-    if [ ! $(hasflag --dry-run -n) ]; then
-        if [[ "$release_version" != "$snapshot_version" ]]; then
-            # Commit overview.adoc for new version
-            git_commit "$working_dir" overview.adoc "Add docs version for $snapshot_version"
-        fi
     fi
 }
 
