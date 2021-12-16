@@ -95,7 +95,7 @@ release::run() {
     # Set release version in sources
     set_version "$working_dir" "$release_version" "$snapshot_version"
 
-    if [ ! $(hasflag --local-release) ]; then
+    if [ ! $(hasflag --local-release) ] && [ ! $(hasflag --snapshot-release) ]; then
         # Commit spring.schemas for new version
         git_commit "$working_dir" spring.schemas "Add Spring schemas for $release_version"
     fi
@@ -108,7 +108,7 @@ release::run() {
     fi
 
 
-    if [ ! $(hasflag --local-release) ]; then
+    if [ ! $(hasflag --local-release) ] && [ ! $(hasflag --snapshot-release) ]; then
         # Commit project metadata for new version
         git_commit "$working_dir" project.yml "Update project metadata for $release_version"
     fi
@@ -131,15 +131,13 @@ release::run() {
     # Commit, tag, release, push
     # --------------------------
 
-    if [ ! $(hasflag --snapshot-release) ] && [ ! $(hasflag --local-release) ]; then
+    if [ ! $(hasflag --local-release) ] && [ ! $(hasflag --snapshot-release) ]; then
         # Release staging repo
         release_staging_repo "$working_dir" "$maven_opts"
-    fi
 
-    # Push everything (if configured)
-    git_push "$working_dir" "$release_version"
+        # Push everything (if configured)
+        git_push "$working_dir" "$release_version"
 
-    if [ ! $(hasflag --local-release) ]; then
         # Add SNAPSHOT version to spring.schemas
         update_spring_schemas "$working_dir" "$release_version" "$snapshot_version"
 
@@ -147,7 +145,7 @@ release::run() {
         git_commit "$working_dir" spring.schemas "Use $snapshot_version version in Spring schemas"
 
         # Use next snapshot version for major release only
-        if [ $(hasflag --major-release) ] && [ ! $(hasflag --snapshot-release) ]; then
+        if [ $(hasflag --major-release) ]; then
             # Set next snapshot version in sources
             set_version "$working_dir" "$next_version" "$snapshot_version"
 

@@ -41,7 +41,7 @@ release:
 	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --release-version $(VERSION) --skip-tests
 
 release-snapshot:
-	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --snapshot-release
+	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --snapshot-release --no-git-push
 
 release-local:
 	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --local-release --no-git-push --release-version $(VERSION)
