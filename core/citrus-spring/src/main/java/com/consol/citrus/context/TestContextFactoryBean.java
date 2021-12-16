@@ -33,6 +33,7 @@ import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
+import com.consol.citrus.variable.SegmentVariableExtractorRegistry;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.lang.NonNullApi;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -94,6 +96,9 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
 
     @Autowired(required=false)
     private NamespaceContextBuilder namespaceContextBuilder;
+
+    @Autowired
+    private SegmentVariableExtractorRegistry segmentVariableExtractorRegistry;
 
     /** Spring bean application context that created this factory */
     private ApplicationContext applicationContext;
@@ -170,6 +175,10 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
 
         if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(NamespaceContextBuilder.class))) {
             factory.setNamespaceContextBuilder(applicationContext.getBean(NamespaceContextBuilder.class));
+        }
+
+        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(SegmentVariableExtractorRegistry.class))) {
+            factory.setSegmentVariableExtractorRegistry(applicationContext.getBean(SegmentVariableExtractorRegistry.class));
         }
 
         return factory;
@@ -250,6 +259,10 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
 
         if (namespaceContextBuilder != null) {
             delegate.setNamespaceContextBuilder(namespaceContextBuilder);
+        }
+
+        if (segmentVariableExtractorRegistry != null) {
+            delegate.setSegmentVariableExtractorRegistry(segmentVariableExtractorRegistry);
         }
     }
 
@@ -340,4 +353,10 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     public NamespaceContextBuilder getNamespaceContextBuilder() {
         return delegate.getNamespaceContextBuilder();
     }
+
+    @Override
+    public SegmentVariableExtractorRegistry getSegmentVariableExtractorRegistry() {
+        return delegate.getSegmentVariableExtractorRegistry();
+    }
+
 }

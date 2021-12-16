@@ -35,6 +35,7 @@ import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorConfig;
 import com.consol.citrus.validation.interceptor.MessageProcessorsFactory;
 import com.consol.citrus.validation.matcher.ValidationMatcherConfig;
+import com.consol.citrus.variable.SegmentVariableExtractorRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -111,5 +112,10 @@ public class CitrusSpringConfig {
     @Bean
     public ComponentLifecycleProcessor componentInitializer() {
         return new ComponentLifecycleProcessor();
+    }
+
+    @Bean
+    public SegmentVariableExtractorRegistry segmentVariableExtractorRegistry() {
+        return new SegmentVariableExtractorRegistry();
     }
 }

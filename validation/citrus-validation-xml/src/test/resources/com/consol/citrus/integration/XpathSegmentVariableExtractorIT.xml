@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="XpathSegmentVariableExtractorIT">
+        <meta-info>
+            <author>Thorsten Schlathoelter</author>
+            <creationdate>2021-12-16</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Thorsten Schlathoelter</last-updated-by>
+            <last-updated-on>2021-12-16T00:00:00</last-updated-on>
+        </meta-info>
+
+        <description>Extract value from a xml stored as variable and send it with a different payload.</description>
+
+        <variables>
+            <variable name="xmlVar" value="&lt;Person&gt;&lt;Name&gt;Peter&lt;/Name&gt;&lt;/Person&gt;"/>
+        </variables>
+
+        <actions>
+            <send endpoint="helloEndpoint">
+                <message>
+                    <data>
+                        <![CDATA[
+                        <OtherPerson><Name>${xmlVar.xpath(//Person/Name)}</Name></OtherPerson>
+                        ]]>
+                    </data>
+                </message>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <data>
+                        <![CDATA[
+                        <OtherPerson><Name>Peter</Name></OtherPerson>
+                        ]]>
+                    </data>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>

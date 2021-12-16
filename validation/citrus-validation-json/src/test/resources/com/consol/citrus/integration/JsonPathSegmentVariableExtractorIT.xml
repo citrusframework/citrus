@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="JsonPathSegmentVariableExtractorIT">
+        <meta-info>
+            <author>Thorsten Schlathoelter</author>
+            <creationdate>2021-12-16</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Thorsten Schlathoelter</last-updated-by>
+            <last-updated-on>2021-12-16T00:00:00</last-updated-on>
+        </meta-info>
+
+        <description>Extract value from a json stored as variable and send it with a different payload.</description>
+
+        <variables>
+            <variable name="jsonVar" value="{&quot;Person&quot; : &quot;Peter&quot;}"/>
+        </variables>
+
+        <actions>
+            <send endpoint="helloEndpoint">
+                <message>
+                    <data>
+                        {
+                           "Friend" : "${jsonVar.jsonPath($.Person)}"
+                        }
+                    </data>
+                </message>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <data>
+                        {
+                        "Friend" : "Peter"
+                        }
+                    </data>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>

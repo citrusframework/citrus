@@ -59,10 +59,11 @@ import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
-import com.consol.citrus.util.VariableExpressionIterator;
+import com.consol.citrus.variable.VariableExpressionIterator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
+import com.consol.citrus.variable.SegmentVariableExtractorRegistry;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
@@ -176,6 +177,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     private LogModifier logModifier;
 
     /**
+     * SegmentVariableExtractorRegistry
+     */
+    private SegmentVariableExtractorRegistry segmentVariableExtractorRegistry = new SegmentVariableExtractorRegistry();
+
+    /**
      * Default constructor
      */
     public TestContext() {
@@ -225,7 +231,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         } else if (variables.containsKey(variableName)) {
             return variables.get(variableName);
         } else { 
-            return VariableExpressionIterator.getLastExpressionValue(variableName, this);
+            return VariableExpressionIterator.getLastExpressionValue(variableName, this, segmentVariableExtractorRegistry.getSegmentValueExtractors());
         }
 
     }
@@ -236,7 +242,6 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      *
      * @param variableName the name of the new variable
      * @param value        the new variable value
-     * @return
      * @throws CitrusRuntimeException
      */
     public void setVariable(final String variableName, Object value) {
@@ -650,6 +655,22 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      */
     public void setAfterTest(List<AfterTest> afterTest) {
         this.afterTest = afterTest;
+    }
+
+    /**
+     * Obtains the segmentVariableExtractorRegistry
+     * @return
+     */
+    public SegmentVariableExtractorRegistry getSegmentVariableExtractorRegistry() {
+        return segmentVariableExtractorRegistry;
+    }
+
+    /**
+     * Specifies the segmentVariableExtractorRegistry
+     * @param segmentVariableExtractorRegistry
+     */
+    public void setSegmentVariableExtractorRegistry(SegmentVariableExtractorRegistry segmentVariableExtractorRegistry) {
+        this.segmentVariableExtractorRegistry = segmentVariableExtractorRegistry;
     }
 
     /**
