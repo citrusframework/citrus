@@ -2,6 +2,7 @@ package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -26,7 +27,7 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
         return new HttpClientActionBuilder(delegate.client(httpClient));
     }
 
-    public HttpServerActionBuilder server(HttpServer httpServer) {
+    public HttpServerActionBuilder server(Endpoint httpServer) {
         return new HttpServerActionBuilder(delegate.server(httpServer));
     }
 
