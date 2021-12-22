@@ -16,8 +16,10 @@
 
 package com.consol.citrus.functions.core;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
@@ -31,35 +33,56 @@ import org.testng.annotations.Test;
  */
 public class ReadFileResourceFunctionTest extends UnitTestSupport {
 
-    /** Class under test */
-    private ReadFileResourceFunction function = new ReadFileResourceFunction();
+    /**
+     * Class under test
+     */
+    private final ReadFileResourceFunction function = new ReadFileResourceFunction();
 
     @Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         context.setVariable("filename", "file.txt");
         context.setVariable("user", "Christoph");
 
         String path = "classpath:com/consol/citrus/functions/${filename}";
-        String result = function.execute(Arrays.asList(path), context);
+        String result = function.execute(List.of(path), context);
 
         Assert.assertTrue(result.startsWith("This is a sample file content!"));
         Assert.assertTrue(result.contains("'Christoph'"));
     }
 
     @Test
-    public void testExecuteBase64() throws Exception {
+    public void testExecuteBase64() {
         context.setVariable("filename", "file.txt");
         context.setVariable("user", "Christoph");
 
         String path = "classpath:com/consol/citrus/functions/${filename}";
-        String result = function.execute(Arrays.asList(path, "true"), context);
+        String result = function.execute(List.of(path, "true", "true"), context);
 
-        Assert.assertTrue(Base64.isBase64(result));
+        // Note that the file content should result in a constant and should not contain newline characters to run smoothly on linux and windows.
+        String resolvedFileContent = "This is a sample file content! We can also use variables 'Christoph' and functions 1999-12-09";
+
+        String expected = Base64.encodeBase64String(resolvedFileContent.getBytes(StandardCharsets.UTF_8));
+        Assert.assertEquals(result, expected);
+    }
+
+    @Test
+    public void testExecuteBase64NoReplace() {
+
+        // By default variable replacement should not be performed on base64 encoding.
+        String expectedBase64WithoutReplacement = "VGhpcyBpcyBhIHNhbXBsZSBmaWxlIGNvbnRlbnQhIFdlIGNhbiBhbHNvIHVzZSB2YXJpYWJsZXMgJyR7dXNlcn0nIGFuZCBmdW5jdGlvbnMgY2l0cnVzOmNoYW5nZURhdGUoJzIwMDAtMDEtMTAnLCAnLTFNLTFkJywgJ3l5eXktTU0tZGQnKQ==";
+
+        context.setVariable("filename", "file.txt");
+        context.setVariable("user", "Christoph");
+
+        String path = "classpath:com/consol/citrus/functions/${filename}";
+        String result = function.execute(List.of(path, "true"), context);
+
+        Assert.assertEquals(result, expectedBase64WithoutReplacement);
     }
 
     @Test(expectedExceptions = InvalidFunctionUsageException.class)
     public void testInvalidFunctionUsage() {
-        function.execute(Collections.<String>emptyList(), context);
+        function.execute(Collections.emptyList(), context);
     }
 
 }
