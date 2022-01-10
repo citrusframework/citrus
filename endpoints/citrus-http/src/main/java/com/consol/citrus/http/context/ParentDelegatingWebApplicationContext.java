@@ -172,6 +172,12 @@ public final class ParentDelegatingWebApplicationContext implements WebApplicati
             Class<A> annotationType) {
         return delegate.findAnnotationOnBean(beanName, annotationType);
     }
+
+    @Override
+    public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException {
+        return delegate.findAnnotationOnBean(beanName, annotationType, allowFactoryBeanInit);
+    }
+
     @Override
     public <T> T getBean(String name, Class<T> requiredType)
             throws BeansException {
