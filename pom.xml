@@ -157,7 +157,7 @@
     <junit.version>4.13.2</junit.version>
     <junit.jupiter.version>5.7.1</junit.jupiter.version>
     <slf4j.version>1.7.30</slf4j.version>
-    <log4j2.version>2.17.0</log4j2.version>
+    <log4j2.version>2.17.1</log4j2.version>
     <jaxb.version>2.3.4</jaxb.version>
     <jackson.version>2.12.3</jackson.version>
     <arquillian.version>1.6.0.Final</arquillian.version>
