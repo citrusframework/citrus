@@ -89,7 +89,7 @@ public class SequenceAfterSuiteParserTest extends AbstractBeanDefinitionParserTe
         Assert.assertEquals(sequenceAfter.getName(), "afterSuite3");
         Assert.assertEquals(sequenceAfter.getSuiteNames().size(), 0L);
         Assert.assertEquals(sequenceAfter.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceAfter.getEnv().size(), 1L);
+        Assert.assertEquals(sequenceAfter.getEnv().size(), 0L);
         Assert.assertEquals(sequenceAfter.getSystemProperties().size(), 1L);
         Assert.assertEquals(sequenceAfter.getActionCount(), 1L);
 

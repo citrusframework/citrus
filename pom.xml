@@ -136,9 +136,12 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.release>11</maven.compiler.release>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <java.version>11</java.version>
+    <maven.version>3.8.1</maven.version>
+    <maven.compiler.version>3.8.1</maven.compiler.version>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.docs.version>${project.version}</project.docs.version>
     <spring.version>5.3.14</spring.version>
     <spring.ws.version>3.1.2</spring.ws.version>
@@ -178,6 +181,7 @@
     <htmlunit.version>2.49.1</htmlunit.version>
     <byte.buddy.version>1.11.0</byte.buddy.version>
     <google.guava.version>30.1.1-jre</google.guava.version>
+    <failsafe.version>2.22.2</failsafe.version>
     <surefire.version>2.22.2</surefire.version>
     <mockito.version>3.12.4</mockito.version>
     <k8s.client.version>1.4.34</k8s.client.version>
@@ -1137,6 +1141,36 @@
         <version>${mockito.version}</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-plugin-api</artifactId>
+        <version>${maven.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-core</artifactId>
+        <version>${maven.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model</artifactId>
+        <version>${maven.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-artifact</artifactId>
+        <version>${maven.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.plugin-tools</groupId>
+        <artifactId>maven-plugin-annotations</artifactId>
+        <version>3.6.2</version>
+        <scope>provided</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1223,11 +1257,11 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>${maven.compiler.version}</version>
           <configuration>
             <encoding>${project.build.sourceEncoding}</encoding>
-            <source>${maven.compiler.source}</source>
-            <target>${maven.compiler.target}</target>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
             <compilerArgs>
               <arg>-Xlint:deprecation</arg>
               <arg>-Xlint:unchecked</arg>
@@ -1252,7 +1286,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.5</version>
+          <version>3.6.2</version>
         </plugin>
 
         <plugin>
@@ -1269,7 +1303,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${surefire.version}</version>
+          <version>${failsafe.version}</version>
           <executions>
             <execution>
               <id>integration-tests</id>
@@ -1303,7 +1337,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.8</version>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -1323,7 +1357,7 @@
           <configuration>
             <downloadSources>true</downloadSources>
             <linkModules>true</linkModules>
-            <jdkLevel>1.8</jdkLevel>
+            <jdkLevel>${java.version}</jdkLevel>
           </configuration>
         </plugin>
         <plugin>
@@ -1350,9 +1384,9 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.10.4</version>
+          <version>3.3.1</version>
           <configuration>
-            <additionalparam>-Xdoclint:none</additionalparam>
+            <doclint>none</doclint>
           </configuration>
           <executions>
             <execution>

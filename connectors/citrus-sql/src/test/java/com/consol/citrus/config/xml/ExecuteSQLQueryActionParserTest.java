@@ -98,7 +98,7 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         
         Assert.assertNotNull(action.getScriptValidationContext());
         Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScript().trim(), "assert rows.size == 2");
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript().trim(), "assert rows.size() == 2");
         
         // 5th action
         action = getNextTestActionFromTest();

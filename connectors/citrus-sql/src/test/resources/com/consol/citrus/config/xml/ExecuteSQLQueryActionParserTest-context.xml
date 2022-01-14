@@ -41,7 +41,7 @@
             <sql datasource="testDataSource">
                 <statement>select A as A_COLUMN, B as B_COLUMN from C</statement>
                 <validate-script type="groovy">
-                    assert rows.size == 2
+                    assert rows.size() == 2
                 </validate-script>
             </sql>
             

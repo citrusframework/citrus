@@ -45,7 +45,7 @@ public class DirectEndpointAdapterTest {
     public void setup() {
         endpointConfiguration = new DirectSyncEndpointConfiguration();
         endpointConfiguration.setQueue(queue);
-        endpointConfiguration.setTimeout(250L);
+        endpointConfiguration.setTimeout(10000L);
 
         endpointAdapter = new DirectEndpointAdapter(endpointConfiguration);
         endpointAdapter.setTestContextFactory(testContextFactory);
@@ -61,15 +61,12 @@ public class DirectEndpointAdapterTest {
     public void testEndpointAdapter() {
         final Message request = new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>");
 
-        new SimpleAsyncTaskExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(context, endpointConfiguration.getTimeout());
-                Assert.assertNotNull(receivedMessage);
-                Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
+        new SimpleAsyncTaskExecutor().execute(() -> {
+            Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(context, endpointConfiguration.getTimeout());
+            Assert.assertNotNull(receivedMessage);
+            Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
 
-                endpointAdapter.getEndpoint().createProducer().send(new DefaultMessage("OK"), context);
-            }
+            endpointAdapter.getEndpoint().createProducer().send(new DefaultMessage("OK"), context);
         });
 
         Message response = endpointAdapter.handleMessage(request);

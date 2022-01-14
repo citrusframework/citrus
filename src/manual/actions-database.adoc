@@ -312,7 +312,7 @@ Groovy provides great support for accessing Java list objects and maps. As a Jav
 ----
 query(dataSource)
     .statement("select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'")
-    .validateScript("assert rows.size == 2;" +
+    .validateScript("assert rows.size() == 2;" +
             "assert rows[0].ID == '1';" +
             "assert rows[0].STATUS == 'in progress';", "groovy");
 ----
@@ -322,7 +322,7 @@ query(dataSource)
 ----
 query(action -> action.dataSource(dataSource)
     .statement("select ORDERTYPE, STATUS from ORDERS where ID='${orderId}'")
-    .validateScript("assert rows.size == 2;" +
+    .validateScript("assert rows.size() == 2;" +
             "assert rows[0].ID == '1';" +
             "assert rows[0].STATUS == 'in progress';", "groovy"));
 ----

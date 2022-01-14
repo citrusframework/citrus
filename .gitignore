@@ -16,4 +16,4 @@ test-output/
 logs/
 .externalToolBuilders/
 maven-eclipse.xml
-
+.mvn/wrapper/maven-wrapper.jar
