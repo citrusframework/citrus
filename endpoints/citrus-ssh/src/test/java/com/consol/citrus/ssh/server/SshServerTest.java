@@ -16,15 +16,18 @@
 
 package com.consol.citrus.ssh.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URI;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ssh.SshCommand;
+import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
 import org.apache.sshd.common.session.SessionContext;
@@ -32,7 +35,9 @@ import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.command.CommandFactory;
 import org.mockito.Mockito;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.ResourceUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

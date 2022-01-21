@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -43,7 +44,7 @@ import static org.mockito.Mockito.when;
  */
 public class SoapAttachmentTest {
 
-    private Attachment attachment = Mockito.mock(Attachment.class);
+    private final Attachment attachment = Mockito.mock(Attachment.class);
 
     @Test
     public void testFromAttachment() throws Exception {
@@ -65,7 +66,7 @@ public class SoapAttachmentTest {
     }
 
     @Test
-    public void testFromBinaryAttachment() throws Exception {
+    public void testFromBinaryAttachment() {
         reset(attachment);
 
         when(attachment.getContentId()).thenReturn("img");
@@ -91,14 +92,16 @@ public class SoapAttachmentTest {
     }
 
     @Test
-    public void testFileResourceTextContent() throws Exception {
+    public void testFileResourceTextContent() {
         SoapAttachment soapAttachment = new SoapAttachment();
         soapAttachment.setContentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
         soapAttachment.setContentType("text/xml");
 
         Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
         Assert.assertNotNull(soapAttachment.getDataHandler());
-        Assert.assertEquals(soapAttachment.getSize(), 65L);
+
+        // Respect additional CR on win32 platforms
+        Assert.assertTrue(soapAttachment.getSize() == 65L || soapAttachment.getSize() == 66L);
     }
 
     @Test

@@ -17,7 +17,9 @@
 package com.consol.citrus.ftp.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.testng.TestNGUtils;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -26,6 +28,11 @@ import org.testng.annotations.Test;
  */
 @Test
 public class FtpFileActionIT extends TestNGCitrusSpringSupport {
+
+    @BeforeClass
+    public static void setup() {
+        TestNGUtils.skipForOs("win", "Flaky on win.");
+    }
 
     @CitrusXmlTest(name = "FtpFileActionIT")
     public void testFileAction() {}

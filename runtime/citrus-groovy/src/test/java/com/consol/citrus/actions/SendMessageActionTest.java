@@ -27,6 +27,7 @@ import com.consol.citrus.message.builder.script.GroovyFileResourcePayloadBuilder
 import com.consol.citrus.message.builder.script.GroovyScriptPayloadBuilder;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.TestUtils;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -158,8 +159,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     private void validateMessageToSend(Message toSend, Message controlMessage) {
-        Assert.assertEquals(toSend.getPayload(String.class).trim(), controlMessage.getPayload(String.class).trim());
+        Assert.assertEquals(TestUtils.normalizeLineEndings(toSend.getPayload(String.class).trim()), TestUtils.normalizeLineEndings(controlMessage.getPayload(String.class).trim()));
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
         validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext());
     }
+
 }

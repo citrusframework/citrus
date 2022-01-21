@@ -61,7 +61,7 @@ public class ReadFileResourceFunction implements Function {
                 if (parameterList.size() > 2 && Boolean.parseBoolean(parameterList.get(2))) {
                     return Base64.encodeBase64String(readFileContent(parameterList.get(0), context, true).getBytes(FileUtils.getCharset(parameterList.get(0))));
                 } else {
-                    return Base64.encodeBase64String(readFileContent(parameterList.get(0), context, false).getBytes(FileUtils.getCharset(parameterList.get(0))));
+                    return Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(parameterList.get(0), context).getInputStream()));
                 }
             } else {
                 return readFileContent(parameterList.get(0), context, true);

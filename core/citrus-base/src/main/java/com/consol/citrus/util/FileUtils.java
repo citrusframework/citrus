@@ -281,7 +281,7 @@ public abstract class FileUtils {
         }
 
         if (path.startsWith(ResourceUtils.FILE_URL_PREFIX)) {
-            return new FileSystemResource(path.substring(ResourceUtils.FILE_URL_PREFIX.length() - 1));
+            return new FileSystemResource(path.substring(ResourceUtils.FILE_URL_PREFIX.length()));
         } else if (path.startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {
             return new PathMatchingResourcePatternResolver().getResource(path);
         }

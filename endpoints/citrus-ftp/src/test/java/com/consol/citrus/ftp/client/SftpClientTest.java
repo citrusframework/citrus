@@ -23,10 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.consol.citrus.ftp.message.FtpMessage;
 import com.consol.citrus.ftp.model.DeleteCommand;
@@ -34,6 +31,7 @@ import com.consol.citrus.ftp.model.DeleteCommandResult;
 import com.consol.citrus.ftp.model.GetCommandResult;
 import com.consol.citrus.ftp.model.ListCommandResult;
 import com.consol.citrus.ftp.model.PutCommandResult;
+import com.consol.citrus.testng.TestNGUtils;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.server.SshServer;
@@ -66,6 +64,9 @@ public class SftpClientTest extends AbstractFtpClientTest {
 
     @BeforeClass
     public void setUp() throws Exception {
+
+        TestNGUtils.skipForOs("win", "Cannot handle win specific file paths.");
+
         targetPath = System.getProperty("project.build.directory");
         localFilePath = "classpath:ftp/input/hello.xml";
         remoteFilePath = targetPath + "/hello.xml";

@@ -43,7 +43,9 @@ import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -179,8 +181,18 @@ public final class TestNGHelper {
 
             for (String source : citrusTestAnnotation.sources()) {
                 Resource file = FileUtils.getFileResource(source);
+
+                String methodPackageName  = "";
+                if (source.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX)) {
+                    methodPackageName = source.substring(ResourceLoader.CLASSPATH_URL_PREFIX.length());
+                }
+
+                if (StringUtils.hasLength(methodPackageName) && methodPackageName.contains("/")) {
+                    methodPackageName = methodPackageName.substring(0, methodPackageName.lastIndexOf("/"));
+                }
+
                 TestLoader testLoader = provider.createTestLoader(FileUtils.getBaseName(file.getFilename()),
-                        source.substring(0, source.lastIndexOf(File.pathSeparator)));
+                        methodPackageName.replace("/","."));
 
                 if (testLoader instanceof TestSourceAware) {
                     ((TestSourceAware) testLoader).setSource(source);

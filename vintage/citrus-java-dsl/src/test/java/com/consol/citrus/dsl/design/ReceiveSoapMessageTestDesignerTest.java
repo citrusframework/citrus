@@ -18,8 +18,10 @@ package com.consol.citrus.dsl.design;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
@@ -29,6 +31,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.dsl.UnitTestSupport;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -199,7 +202,7 @@ public class ReceiveSoapMessageTestDesignerTest extends UnitTestSupport {
                 soap().server(server)
                     .receive()
                     .payload(resource)
-                    .attachment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource);
+                    .attachment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource, Charset.forName("UTF-8"));
             }
         };
 

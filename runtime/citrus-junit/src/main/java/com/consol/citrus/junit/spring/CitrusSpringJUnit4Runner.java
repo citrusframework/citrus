@@ -18,6 +18,7 @@ package com.consol.citrus.junit.spring;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,9 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.StringUtils;
@@ -90,8 +93,18 @@ public class CitrusSpringJUnit4Runner extends SpringJUnit4ClassRunner {
 
                 for (String source : citrusXmlTestAnnotation.sources()) {
                     Resource file = FileUtils.getFileResource(source);
+
+                    String methodPackageName  = "";
+                    if (source.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX)) {
+                        methodPackageName = source.substring(ResourceLoader.CLASSPATH_URL_PREFIX.length());
+                    }
+
+                    if (StringUtils.hasLength(methodPackageName) && methodPackageName.contains("/")) {
+                        methodPackageName = methodPackageName.substring(0, methodPackageName.lastIndexOf("/"));
+                    }
+
                     CitrusFrameworkMethod frameworkMethod = new CitrusFrameworkMethod(method.getMethod(), FileUtils.getBaseName(file.getFilename()),
-                            source.substring(0, source.lastIndexOf(File.pathSeparator)));
+                            methodPackageName.replace("/","."));
                     frameworkMethod.setSource(source);
                     interceptedMethods.add(frameworkMethod);
                 }

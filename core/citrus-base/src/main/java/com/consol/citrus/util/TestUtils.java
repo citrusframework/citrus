@@ -30,6 +30,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * Utility class for test cases providing several utility
@@ -128,6 +129,15 @@ public abstract class TestUtils {
                 scheduledExecutor.shutdownNow();
             }
         }
+    }
+
+    /**
+     * Normalize the text by trimming whitespace and replacing line endings by a linux representation.
+     * @param text
+     * @return
+     */
+    public static String normalizeLineEndings(String text) {
+        return text != null ? StringUtils.trimAllWhitespace(text.replace("\r\n", "\n").replace("&#13;\n", "\n") ): null;
     }
 
     private static Thread createWaitingThread(final Runnable runnable, TestContext context) {
