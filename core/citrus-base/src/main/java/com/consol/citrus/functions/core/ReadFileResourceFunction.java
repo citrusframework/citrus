@@ -26,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -33,6 +34,14 @@ import java.util.List;
  * File content is automatically parsed for test variables.
  *
  * File path can also have test variables as part of the file name or path.
+ *
+ * The function accepts the following parameters:
+ *
+ * <ol>
+ *     <li>File path of the file resource to read</li>
+ *     <li>Boolean value to indicate that the returned value should be base64 encoded. Defaults to false.</li>
+ *     <li>Boolean value to indicate that a dynamic replacement should be performed before the content is base64 encoded. Defaults to false.</li>
+ * </ol>
  *
  * @author Christoph Deppisch
  * @since 2.4
@@ -45,16 +54,32 @@ public class ReadFileResourceFunction implements Function {
             throw new InvalidFunctionUsageException("Missing file path function parameter");
         }
 
-        boolean base64 = parameterList.size() > 1 ? Boolean.valueOf(parameterList.get(1)) : false;
+        boolean base64 = parameterList.size() > 1 && Boolean.parseBoolean(parameterList.get(1));
 
         try {
             if (base64) {
-                return Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(parameterList.get(0), context).getInputStream()));
+                if (parameterList.size() > 2 && Boolean.parseBoolean(parameterList.get(2))) {
+                    return Base64.encodeBase64String(readFileContent(parameterList.get(0), context, true).getBytes(FileUtils.getCharset(parameterList.get(0))));
+                } else {
+                    return Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(parameterList.get(0), context).getInputStream()));
+                }
             } else {
-                return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(parameterList.get(0), context), FileUtils.getCharset(parameterList.get(0))));
+                return readFileContent(parameterList.get(0), context, true);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read file", e);
         }
+    }
+
+    /**
+     * Read the file content replacing dynamic content in the file content
+     * @param filePath
+     * @param context
+     * @return
+     * @throws IOException
+     */
+    private String readFileContent(String filePath, TestContext context, boolean replace) throws IOException {
+        String content = FileUtils.readToString(FileUtils.getFileResource(filePath, context), FileUtils.getCharset(filePath));
+        return replace ? context.replaceDynamicContentInString(content) : content;
     }
 }

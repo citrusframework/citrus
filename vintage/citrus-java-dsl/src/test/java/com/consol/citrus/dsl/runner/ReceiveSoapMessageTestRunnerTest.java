@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 
 import com.consol.citrus.TestCase;
@@ -234,7 +235,7 @@ public class ReceiveSoapMessageTestRunnerTest extends UnitTestSupport {
                 soap(action -> action.server(server)
                         .receive()
                         .payload(resource)
-                        .attachment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource));
+                        .attachment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource, Charset.forName("UTF-8")));
             }
         };
 

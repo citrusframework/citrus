@@ -41,6 +41,7 @@ import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
+import com.consol.citrus.variable.SegmentVariableExtractorRegistry;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 
 /**
@@ -81,6 +82,8 @@ public class TestContextFactory implements ReferenceResolverAware {
 
     private LogModifier logModifier;
 
+    private SegmentVariableExtractorRegistry segmentVariableExtractorRegistry;
+
     /**
      * Create new empty instance with default components set.
      * @return
@@ -101,6 +104,7 @@ public class TestContextFactory implements ReferenceResolverAware {
         factory.setNamespaceContextBuilder(new NamespaceContextBuilder());
         factory.setTypeConverter(new DefaultTypeConverter());
         factory.setLogModifier(new DefaultLogModifier());
+        factory.setSegmentVariableExtractorRegistry(new SegmentVariableExtractorRegistry());
 
         return factory;
     }
@@ -123,6 +127,7 @@ public class TestContextFactory implements ReferenceResolverAware {
         context.setMessageProcessors(messageProcessors);
         context.setEndpointFactory(endpointFactory);
         context.setReferenceResolver(referenceResolver);
+        context.setSegmentVariableExtractorRegistry(segmentVariableExtractorRegistry);
 
         if (namespaceContextBuilder != null) {
             context.setNamespaceContextBuilder(namespaceContextBuilder);
@@ -371,4 +376,21 @@ public class TestContextFactory implements ReferenceResolverAware {
     public void setLogModifier(LogModifier logModifier) {
         this.logModifier = logModifier;
     }
+
+    /**
+     * Gets the segmentVariableExtractorRegistry
+     * @return
+     */
+    public SegmentVariableExtractorRegistry getSegmentVariableExtractorRegistry() {
+        return segmentVariableExtractorRegistry;
+    }
+
+    /**
+     * Sets the segmentVariableExtractorRegistry
+     * @param segmentVariableExtractorRegistry
+     */
+    public void setSegmentVariableExtractorRegistry(SegmentVariableExtractorRegistry segmentVariableExtractorRegistry) {
+        this.segmentVariableExtractorRegistry = segmentVariableExtractorRegistry;
+    }
+
 }

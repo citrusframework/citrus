@@ -1,2 +1,1 @@
-This is a sample file content!
-We can also use variables '${user}' and functions citrus:currentDate()
+This is a sample file content! We can also use variables '${user}' and functions citrus:changeDate('2000-01-10', '-1M-1d', 'yyyy-MM-dd')

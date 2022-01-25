@@ -87,7 +87,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
             LOG.info("Running all tests in project");
         } else if (StringUtils.hasText(packagesToRun.get(0))) {
             LOG.info(String.format("Running tests in package %s", packagesToRun.get(0)));
-            args.add(ClasspathSupport.CLASSPATH_SCHEME_PREFIX + packagesToRun.get(0).replaceAll("\\.", File.separator));
+            args.add(ClasspathSupport.CLASSPATH_SCHEME_PREFIX + packagesToRun.get(0).replaceAll("\\.", "/"));
 
             args.add("--glue");
             args.add(packagesToRun.get(0));

@@ -47,7 +47,7 @@ public class MessageUtils {
 
         return Optional.ofNullable(message.getPayload(String.class))
                 .map(String::trim)
-                .map(payload -> payload.length() == 0 || payload.startsWith("<"))
+                .map(payload -> IsXmlPredicate.getInstance().test(payload))
                 .orElse(true);
     }
 
@@ -63,7 +63,8 @@ public class MessageUtils {
 
         return Optional.ofNullable(message.getPayload(String.class))
                 .map(String::trim)
-                .map(payload -> payload.length() == 0 || payload.startsWith("{") || payload.startsWith("["))
+                .map(payload->IsJsonPredicate.getInstance().test(payload))
                 .orElse(true);
     }
+
 }

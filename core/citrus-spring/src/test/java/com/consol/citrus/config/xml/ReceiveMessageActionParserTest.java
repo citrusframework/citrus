@@ -88,11 +88,11 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"+System.getProperty("line.separator")+"<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "Test");
         Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<Header xmlns=\"http://citrusframework.org/test\">\n  <operation>hello</operation>\n</Header>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"+System.getProperty("line.separator")+"<Header xmlns=\"http://citrusframework.org/test\">"+System.getProperty("line.separator")+"  <operation>hello</operation>"+System.getProperty("line.separator")+"</Header>");
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
 

@@ -34,6 +34,8 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.variable.GlobalVariables;
+import com.consol.citrus.variable.VariableExpressionSegmentMatcher;
+import com.consol.citrus.variable.SegmentVariableExtractor;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -140,6 +142,22 @@ public class TestContextTest extends UnitTestSupport {
         context.setVariable("helloData", new DataContainer("hello"));
         context.setVariable("container", new DataContainer(new DataContainer("nested")));
 
+        DataContainer[] subContainerArray = new DataContainer[] {
+                new DataContainer("A"),
+                new DataContainer("B"),
+                new DataContainer("C"),
+                new DataContainer("D"),
+        };
+
+        DataContainer[] containerArray = new DataContainer[] {
+                new DataContainer("0"),
+                new DataContainer("1"),
+                new DataContainer("2"),
+                new DataContainer(subContainerArray),
+        };
+
+        context.setVariable("containerArray", containerArray);
+
         Assert.assertEquals(context.getVariable("${helloData}"), DataContainer.class.getName());
         Assert.assertEquals(context.getVariable("${helloData.data}"), "hello");
         Assert.assertEquals(context.getVariable("${helloData.number}"), "99");
@@ -148,31 +166,84 @@ public class TestContextTest extends UnitTestSupport {
         Assert.assertEquals(context.getVariable("${container.data.data}"), "nested");
         Assert.assertEquals(context.getVariable("${container.data.number}"), "99");
         Assert.assertEquals(context.getVariable("${container.data.CONSTANT}"), "FOO");
+        Assert.assertEquals(context.getVariable("${container.intVals[1]}"), "1");
+        Assert.assertEquals(context.getVariable("${containerArray[3].data[1].data}"), "B");
+     }
+
+    @Test
+    public void testGetVariableFromJsonPathExpression() {
+        String json = "{\"name\": \"Peter\"}";
+        context.setVariable("jsonVar", json);
+
+        String variableExpression = "jsonVar.jsonPath($.name)";
+
+        SegmentVariableExtractor jsonExtractorMock = Mockito.mock(SegmentVariableExtractor.class);
+        context.getSegmentVariableExtractorRegistry().getSegmentValueExtractors().add(jsonExtractorMock);
+        
+        Mockito.doReturn(true).when(jsonExtractorMock).canExtract(Mockito.eq(context), Mockito.eq(json), Mockito.any());
+        Mockito.doReturn("Peter").when(jsonExtractorMock).extractValue(Mockito.eq(context), Mockito.eq(json), Mockito.any());
+
+        Assert.assertEquals(context.getVariable(String.format("${%s}", variableExpression)), "Peter");
     }
 
+    @Test
+    public void testGetVariableFromJsonPathExpressionNoMatch() {
+        String json = "{\"name\": \"Peter\"}";
+        context.setVariable("jsonVar", json);
+
+        String variableExpression = "jsonVar.jsonPath($.othername)";
+
+        SegmentVariableExtractor jsonExtractorMock = Mockito.mock(SegmentVariableExtractor.class);
+        context.getSegmentVariableExtractorRegistry().getSegmentValueExtractors().add(jsonExtractorMock);
+
+        Mockito.doReturn(true).when(jsonExtractorMock).canExtract(Mockito.eq(context), Mockito.eq(json), Mockito.any());
+        Mockito.doThrow(new CitrusRuntimeException()).when(jsonExtractorMock).extractValue(Mockito.eq(context), Mockito.eq(json), Mockito.any());
+
+        Assert.assertThrows(() -> context.getVariable(String.format("${%s}", variableExpression)));
+    }
+
+    @Test
+    public void testGetVariableFromXpathExpression() {
+        String xml = "<person><name>Peter</name><person>";
+        context.setVariable("xpathVar", xml);
+
+        String variableExpression = "xpathVar.xpath(//person/name)";
+
+        SegmentVariableExtractor xpathExtractorMock = Mockito.mock(SegmentVariableExtractor.class);
+        context.getSegmentVariableExtractorRegistry().getSegmentValueExtractors().add(xpathExtractorMock);
+
+        Mockito.doReturn(true).when(xpathExtractorMock).canExtract(Mockito.eq(context), Mockito.eq(xml), Mockito.any());
+        Mockito.doReturn("Peter").when(xpathExtractorMock).extractValue(Mockito.eq(context), Mockito.eq(xml), Mockito.any());
+
+        Assert.assertEquals(context.getVariable(String.format("${%s}", variableExpression)), "Peter");
+    }
+
+    @Test
+    public void testGetVariableFromXpathExpressionNoMatch() {
+        String xml = "<person><name>Peter</name><person>";
+        context.setVariable("xpathVar", xml);
+
+        String variableExpression = "xpathVar.xpath(//person/name)";
+
+        SegmentVariableExtractor xpathExtractorMock = Mockito.mock(SegmentVariableExtractor.class);
+        context.getSegmentVariableExtractorRegistry().getSegmentValueExtractors().add(xpathExtractorMock);
+
+        Mockito.doReturn(true).when(xpathExtractorMock).canExtract(Mockito.eq(context), Mockito.eq(xml), Mockito.any());
+        Mockito.doThrow(new CitrusRuntimeException()).when(xpathExtractorMock).extractValue(Mockito.eq(context), Mockito.eq(xml), Mockito.any());
+
+        Assert.assertThrows(() -> context.getVariable(String.format("${%s}", variableExpression)));
+    }
+    
     @Test
     public void testUnknownFromPathExpression() {
         context.setVariable("helloData", new DataContainer("hello"));
         context.setVariable("container", new DataContainer(new DataContainer("nested")));
 
-        try {
-            context.getVariable("${helloData.unknown}");
-            Assert.fail("Missing exception due to unknown field in variable path");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().endsWith(""));
-        }
+        Assert.assertThrows(() ->context.getVariable("${helloData.unknown}")) ;
+        Assert.assertThrows(() ->context.getVariable("${container.data.unknown}")) ;
+        Assert.assertThrows(() ->context.getVariable("${something.else}")) ;
+        Assert.assertThrows(() ->context.getVariable("${helloData[1]}")) ;
 
-        try {
-            context.getVariable("${container.data.unknown}");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().endsWith(""));
-        }
-
-        try {
-            context.getVariable("${something.else}");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Unknown variable 'something.else'");
-        }
     }
 
     @Test
@@ -301,7 +372,7 @@ public class TestContextTest extends UnitTestSupport {
         testMap = context.resolveDynamicValuesInMap(testMap);
 
         // Should be null due to variable substitution
-        Assert.assertEquals(testMap.get("${test}"), null);
+        Assert.assertNull(testMap.get("${test}"));
         // Should return "test" after variable substitution
         Assert.assertEquals(testMap.get("123"), "value");
     }
@@ -385,9 +456,11 @@ public class TestContextTest extends UnitTestSupport {
      * Data container for test variable object access.
      */
     private static class DataContainer {
-        private int number = 99;
-        private Object data;
+        private final int number = 99;
+        private final Object data;
 
+        private final int[] intVals =  new int[] {0, 1, 2, 3, 4};
+        
         private static final String CONSTANT = "FOO";
 
         /**

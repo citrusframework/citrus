@@ -30,7 +30,9 @@ import com.consol.citrus.junit.jupiter.CitrusExtension;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
 import com.consol.citrus.util.FileUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -78,7 +80,18 @@ public class XmlTestHelper {
 
                 Resource file = FileUtils.getFileResource(source);
                 testName = FileUtils.getBaseName(file.getFilename());
-                packageName = source.substring(0, source.lastIndexOf(File.pathSeparator));
+
+                packageName = source;
+                if (packageName.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX)) {
+                    packageName = source.substring(ResourceLoader.CLASSPATH_URL_PREFIX.length());
+                }
+
+                if (StringUtils.hasLength(packageName) && packageName.contains("/")) {
+                    packageName = packageName.substring(0, packageName.lastIndexOf("/"));
+                }
+
+                packageName = packageName.replace("/", ".");
+
             }
         }
 

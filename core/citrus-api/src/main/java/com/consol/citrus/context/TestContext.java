@@ -16,7 +16,6 @@
 
 package com.consol.citrus.context;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +26,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
@@ -61,15 +59,16 @@ import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
+import com.consol.citrus.variable.VariableExpressionIterator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
+import com.consol.citrus.variable.SegmentVariableExtractorRegistry;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -178,6 +177,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     private LogModifier logModifier;
 
     /**
+     * SegmentVariableExtractorRegistry
+     */
+    private SegmentVariableExtractorRegistry segmentVariableExtractorRegistry = new SegmentVariableExtractorRegistry();
+
+    /**
      * Default constructor
      */
     public TestContext() {
@@ -221,50 +225,15 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     public Object getVariableObject(final String variableExpression) {
         String variableName = VariableUtils.cutOffVariablesPrefix(variableExpression);
 
+                
         if (variableName.startsWith(CitrusSettings.VARIABLE_ESCAPE) && variableName.endsWith(CitrusSettings.VARIABLE_ESCAPE)) {
             return CitrusSettings.VARIABLE_PREFIX + VariableUtils.cutOffVariablesEscaping(variableName) + CitrusSettings.VARIABLE_SUFFIX;
         } else if (variables.containsKey(variableName)) {
             return variables.get(variableName);
-        } else if (variableName.contains(".")) {
-            String objectName = variableName.substring(0, variableName.indexOf('.'));
-            if (variables.containsKey(objectName)) {
-                return getVariable(variables.get(objectName), variableName.substring(variableName.indexOf('.') + 1));
-            }
+        } else { 
+            return VariableExpressionIterator.getLastExpressionValue(variableName, this, segmentVariableExtractorRegistry.getSegmentValueExtractors());
         }
 
-        throw new CitrusRuntimeException("Unknown variable '" + variableName + "'");
-    }
-
-    /**
-     * Gets variable from path expression. Variable paths are translated to reflection fields on object instances.
-     * Path separators are '.'. Each separator is handled as object hierarchy.
-     *
-     * @param instance
-     * @param pathExpression
-     */
-    private Object getVariable(Object instance, String pathExpression) {
-        String leftOver = null;
-        String fieldName;
-        if (pathExpression.contains(".")) {
-            fieldName = pathExpression.substring(0, pathExpression.indexOf('.'));
-            leftOver = pathExpression.substring(pathExpression.indexOf('.') + 1);
-        } else {
-            fieldName = pathExpression;
-        }
-
-        Field field = ReflectionUtils.findField(instance.getClass(), fieldName);
-        if (field == null) {
-            throw new CitrusRuntimeException(String.format("Failed to get variable - unknown field '%s' on type %s", fieldName, instance.getClass().getName()));
-        }
-
-        ReflectionUtils.makeAccessible(field);
-        Object fieldValue = ReflectionUtils.getField(field, instance);
-
-        if (StringUtils.hasText(leftOver)) {
-            return getVariable(fieldValue, leftOver);
-        }
-
-        return fieldValue;
     }
 
     /**
@@ -273,7 +242,6 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      *
      * @param variableName the name of the new variable
      * @param value        the new variable value
-     * @return
      * @throws CitrusRuntimeException
      */
     public void setVariable(final String variableName, Object value) {
@@ -690,6 +658,22 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     }
 
     /**
+     * Obtains the segmentVariableExtractorRegistry
+     * @return
+     */
+    public SegmentVariableExtractorRegistry getSegmentVariableExtractorRegistry() {
+        return segmentVariableExtractorRegistry;
+    }
+
+    /**
+     * Specifies the segmentVariableExtractorRegistry
+     * @param segmentVariableExtractorRegistry
+     */
+    public void setSegmentVariableExtractorRegistry(SegmentVariableExtractorRegistry segmentVariableExtractorRegistry) {
+        this.segmentVariableExtractorRegistry = segmentVariableExtractorRegistry;
+    }
+
+    /**
      * Gets the global message processors for given direction.
      * @return
      */
@@ -1081,4 +1065,5 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
             return this.getClass();
         }
     }
+
 }
