@@ -18,7 +18,6 @@ package com.consol.citrus.http.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -69,8 +68,8 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
 	/**
 	 * Initiate http server action.
 	 */
-	public HttpServerActionBuilder server(Endpoint endpoint) {
-		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder(endpoint)
+	public HttpServerActionBuilder server(HttpServer httpServer) {
+		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder(httpServer)
 				.withReferenceResolver(referenceResolver);
 		this.delegate = serverActionBuilder;
 		return serverActionBuilder;
