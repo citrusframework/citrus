@@ -33,10 +33,13 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.SchemaValidator;
 import com.consol.citrus.validation.context.HeaderValidationContext;
+import com.consol.citrus.validation.context.SchemaValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
+import com.consol.citrus.validation.xml.schema.XmlSchemaValidation;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -1003,6 +1006,19 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         validationContexts.add(new ScriptValidationContext(MessageType.PLAINTEXT.name()));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
+    }
+
+    @Test
+    public void testLookup() {
+        Map<String, SchemaValidator<? extends SchemaValidationContext>> validators = SchemaValidator.lookup();
+        Assert.assertEquals(validators.size(), 1L);
+        Assert.assertNotNull(validators.get("defaultXmlSchemaValidator"));
+        Assert.assertEquals(validators.get("defaultXmlSchemaValidator").getClass(), XmlSchemaValidation.class);
+    }
+
+    @Test
+    public void testTestLookup() {
+        Assert.assertTrue(SchemaValidator.lookup("xml").isPresent());
     }
 
 }

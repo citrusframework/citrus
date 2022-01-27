@@ -42,6 +42,7 @@ import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import com.consol.citrus.validation.xml.schema.XmlSchemaValidation;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
@@ -80,8 +81,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
     private NamespaceContextBuilder namespaceContextBuilder;
 
-    /** Transformer factory */
-    private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    /** Default schema validator */
+    private XmlSchemaValidation schemaValidator = new XmlSchemaValidation();
 
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
@@ -90,8 +91,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         try {
             if (validationContext.isSchemaValidationEnabled()) {
-                validateXMLSchema(receivedMessage, context, validationContext);
-                validateDTD(validationContext.getDTDResource(), receivedMessage);
+                schemaValidator.validate(receivedMessage, context, validationContext);
             }
 
             validateNamespaces(validationContext.getControlNamespaces(), receivedMessage);
@@ -118,111 +118,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         } catch (ValidationException ex) {
             LOG.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
             throw ex;
-        }
-    }
-
-    /**
-     * Validate message with a DTD.
-     *
-     * @param dtdResource
-     * @param receivedMessage
-     */
-    protected void validateDTD(Resource dtdResource, Message receivedMessage) {
-        //TODO implement this
-    }
-
-    /**
-     * Validate message with a XML schema.
-     *
-     * @param receivedMessage
-     * @param context
-     * @param validationContext
-     */
-    protected void validateXMLSchema(Message receivedMessage, TestContext context, XmlMessageValidationContext validationContext) {
-        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
-            return;
-        }
-
-        try {
-            Document doc = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
-
-            if (!StringUtils.hasText(doc.getFirstChild().getNamespaceURI())) {
-                return;
-            }
-
-            LOG.debug("Starting XML schema validation ...");
-
-            XmlValidator validator = null;
-            XsdSchemaRepository schemaRepository = null;
-            List<XsdSchemaRepository> schemaRepositories = XmlValidationHelper.getSchemaRepositories(context);
-            if (validationContext.getSchema() != null) {
-                validator = context.getReferenceResolver().resolve(validationContext.getSchema(), XsdSchema.class).createValidator();
-            } else if (validationContext.getSchemaRepository() != null) {
-                schemaRepository = context.getReferenceResolver().resolve(validationContext.getSchemaRepository(), XsdSchemaRepository.class);
-            } else if (schemaRepositories.size() == 1) {
-                schemaRepository = schemaRepositories.get(0);
-            } else if (schemaRepositories.size() > 0) {
-                schemaRepository = schemaRepositories.stream()
-                        .filter(repository -> repository.canValidate(doc))
-                        .findFirst()
-                        .orElseThrow(() -> new CitrusRuntimeException(String.format("Failed to find proper schema " +
-                                        "repository for validating element '%s(%s)'",
-                                        doc.getFirstChild().getLocalName(), doc.getFirstChild().getNamespaceURI())));
-            } else {
-                LOG.warn("Neither schema instance nor schema repository defined - skipping XML schema validation");
-                return;
-            }
-
-            if (schemaRepository != null) {
-                if (!schemaRepository.canValidate(doc)) {
-                    throw new CitrusRuntimeException(String.format("Unable to find proper XML schema definition for element '%s(%s)' in schema repository '%s'",
-                            doc.getFirstChild().getLocalName(),
-                            doc.getFirstChild().getNamespaceURI(),
-                            schemaRepository.getName()));
-                }
-
-                List<Resource> schemas = new ArrayList<>();
-                for (XsdSchema xsdSchema : schemaRepository.getSchemas()) {
-                    if (xsdSchema instanceof XsdSchemaCollection) {
-                        schemas.addAll(((XsdSchemaCollection) xsdSchema).getSchemaResources());
-                    } else if (xsdSchema instanceof WsdlXsdSchema) {
-                        schemas.addAll(((WsdlXsdSchema) xsdSchema).getSchemaResources());
-                    } else {
-                        synchronized (transformerFactory) {
-                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                            try {
-                                transformerFactory.newTransformer().transform(xsdSchema.getSource(), new StreamResult(bos));
-                            } catch (TransformerException e) {
-                                throw new CitrusRuntimeException("Failed to read schema " + xsdSchema.getTargetNamespace(), e);
-                            }
-                            schemas.add(new ByteArrayResource(bos.toByteArray()));
-                        }
-                    }
-                }
-
-                validator = XmlValidatorFactory.createValidator(schemas.toArray(new Resource[schemas.size()]), WsdlXsdSchema.W3C_XML_SCHEMA_NS_URI);
-            }
-
-            SAXParseException[] results = validator.validate(new DOMSource(doc));
-            if (results.length == 0) {
-                LOG.info("XML schema validation successful: All values OK");
-            } else {
-                LOG.error("XML schema validation failed for message:\n" +
-                        XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
-
-                // Report all parsing errors
-                LOG.debug("Found " + results.length + " schema validation errors");
-                StringBuilder errors = new StringBuilder();
-                for (SAXParseException e : results) {
-                    errors.append(e.toString());
-                    errors.append("\n");
-                }
-                LOG.debug(errors.toString());
-
-                throw new ValidationException("XML schema validation failed:", results[0]);
-            }
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
         }
     }
 
@@ -740,5 +635,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
         this.namespaceContextBuilder = namespaceContextBuilder;
+    }
+
+    public void validateXMLSchema(Message message, TestContext context, XmlMessageValidationContext xmlMessageValidationContext) {
+        schemaValidator.validate(message, context, xmlMessageValidationContext);
     }
 }

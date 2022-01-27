@@ -18,6 +18,7 @@ package com.consol.citrus.validation.xml;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
@@ -27,10 +28,14 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.TestUtils;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.SchemaValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
@@ -38,10 +43,7 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -237,6 +239,48 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         sendAction.execute(context);
 
+    }
+
+    @Test
+    public void testSendXmlMessageWithValidation() {
+
+        AtomicBoolean  validated = new AtomicBoolean(false);
+
+        SchemaValidator schemaValidator = mock(SchemaValidator.class);
+        when(schemaValidator.supportsMessageType(eq("XML"), any())).thenReturn(true);
+        doAnswer(invocation-> {
+
+            Object argument = invocation.getArgument(2);
+
+            Assert.assertTrue(argument instanceof XmlMessageValidationContext);
+            Assert.assertEquals(((XmlMessageValidationContext)argument).getSchema(), "fooSchema");
+            Assert.assertEquals(((XmlMessageValidationContext)argument).getSchemaRepository(), "fooRepository");
+
+            validated.set(true);
+            return null;
+        }).when(schemaValidator).validate(any(), any(), any());
+
+        context.getMessageValidatorRegistry().addSchemaValidator("XML", schemaValidator);
+
+        DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
+
+        reset(endpoint, producer, endpointConfiguration);
+        when(endpoint.createProducer()).thenReturn(producer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+
+        when(endpoint.getActor()).thenReturn(null);
+
+        SendMessageAction sendAction = new SendMessageAction.Builder()
+                .endpoint(endpoint)
+                .message(messageBuilder)
+                    .schemaValidation(true)
+                    .schema("fooSchema")
+                    .schemaRepository("fooRepository")
+                .build();
+        sendAction.execute(context);
+
+        Assert.assertTrue(validated.get());
     }
 
     private void validateMessageToSend(Message toSend, Message controlMessage) {

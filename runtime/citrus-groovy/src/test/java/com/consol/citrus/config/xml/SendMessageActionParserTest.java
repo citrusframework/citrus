@@ -32,7 +32,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
     @Test
     public void testSendMessageActionParser() throws IOException {
-        assertActionCount(2);
+        assertActionCount(3);
         assertActionClassAndName(SendMessageAction.class, "send");
 
         DefaultMessageBuilder messageBuilder;
@@ -55,5 +55,12 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
+
+        // 3nd action
+        action = getNextTestActionFromTest();
+
+        Assert.assertTrue(action.isSchemaValidation());
+        Assert.assertEquals(action.getSchema(), "fooSchema");
+        Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
     }
 }

@@ -85,6 +85,26 @@
                 </message>
             </send>
 
+            <send endpoint="myMessageEndpoint">
+                <message type="json" schema-validation="true" schema="fooSchema" schema-repository="fooRepository">
+                    <data>
+                        <![CDATA[
+                            { "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}
+                        ]]>
+                    </data>
+                </message>
+            </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message type="xml" schema-validation="true" schema="fooSchema" schema-repository="fooRepository">
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+            </send>
+
         </actions>
     </testcase>
 

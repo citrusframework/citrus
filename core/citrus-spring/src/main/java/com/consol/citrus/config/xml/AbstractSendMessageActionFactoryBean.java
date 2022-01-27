@@ -32,6 +32,35 @@ public abstract class AbstractSendMessageActionFactoryBean<T extends SendMessage
     }
 
     /**
+     * Sets schema validation enabled/disabled for this message.
+     *
+     * @param enabled
+     * @return
+     */
+    public void setSchemaValidation(final boolean enabled) {
+        getBuilder().getMessageBuilderSupport().schemaValidation(enabled);
+    }
+
+    /**
+     * Sets explicit schema instance name to use for schema validation.
+     *
+     * @param schemaName
+     * @return
+     */
+    public void setSchema(final String schemaName) {
+        getBuilder().getMessageBuilderSupport().schema(schemaName);
+    }
+
+    /**
+     * Sets explicit schema repository instance to use for validation.
+     *
+     * @param schemaRepository
+     * @return
+     */
+    public void setSchemaRepository(final String schemaRepository) {
+        getBuilder().getMessageBuilderSupport().schemaRepository(schemaRepository);
+    }
+    /**
      * The variable extractors for this message sending action.
      * @param variableExtractors the variableExtractors to set
      */
