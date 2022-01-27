@@ -8,7 +8,7 @@
     <testcase name="SendMessageActionParserTest">
         <actions>
             <send endpoint="myMessageEndpoint">
-                <message>
+                <message >
                     <builder type="groovy">
                         <![CDATA[
                             markupBuilder.TestMessage('Hello Citrus')
@@ -24,6 +24,16 @@
             <send endpoint="myMessageEndpoint">
                 <message>
                     <builder type="groovy" file="classpath:com/consol/citrus/actions/payload.groovy"/>
+                </message>
+            </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message schema-validation="true" schema="fooSchema" schema-repository="fooRepository">
+                    <builder type="groovy">
+                        <![CDATA[
+                            markupBuilder.TestMessage('Hello Citrus')
+                        ]]>
+                    </builder>
                 </message>
             </send>
         </actions>

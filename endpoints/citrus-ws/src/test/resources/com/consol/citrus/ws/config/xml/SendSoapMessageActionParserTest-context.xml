@@ -63,6 +63,16 @@
                 </data>
               </message>
             </ws:send>
+
+            <ws:send endpoint="mySoapClient" fork="true">
+                <message schema-validation="true" schema="fooSchema" schema-repository="fooRepository">
+                    <data>
+                        <![CDATA[
+                      <TestMessage>Hello Citrus</TestMessage>
+                  ]]>
+                    </data>
+                </message>
+            </ws:send>
         </actions>
     </testcase>
     

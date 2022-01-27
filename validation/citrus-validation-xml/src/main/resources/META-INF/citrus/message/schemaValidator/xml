@@ -1,0 +1,2 @@
+name=defaultXmlSchemaValidator
+type=com.consol.citrus.validation.xml.schema.XmlSchemaValidation

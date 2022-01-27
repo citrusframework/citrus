@@ -19,18 +19,22 @@ package com.consol.citrus.validation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.MessageUtils;
+import com.consol.citrus.validation.context.SchemaValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import javax.xml.validation.Schema;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -67,6 +71,10 @@ public class MessageValidatorRegistryTest {
     private MessageValidator<?> binaryBase64MessageValidator;
     @Mock
     private MessageValidator<?> gzipBinaryBase64MessageValidator;
+    @Mock
+    private SchemaValidator<?> jsonSchemaValidator;
+    @Mock
+    private SchemaValidator<?> xmlSchemaValidator;
 
     private MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
 
@@ -88,6 +96,10 @@ public class MessageValidatorRegistryTest {
         when(binaryBase64MessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.BINARY_BASE64.name()));
         when(gzipBinaryBase64MessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.GZIP_BASE64.name()));
 
+        // Schema validators
+        when(jsonSchemaValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.JSON.name()));
+        when(xmlSchemaValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()));
+
         messageValidatorRegistry.addMessageValidator("xmlMessageValidator", xmlMessageValidator);
         messageValidatorRegistry.addMessageValidator("xPathMessageValidator", xPathMessageValidator);
         messageValidatorRegistry.addMessageValidator("groovyXmlMessageValidator", groovyXmlMessageValidator);
@@ -103,6 +115,10 @@ public class MessageValidatorRegistryTest {
         messageValidatorRegistry.addMessageValidator("groovyScriptMessageValidator", groovyScriptMessageValidator);
         messageValidatorRegistry.addMessageValidator("xhtmlMessageValidator", xhtmlMessageValidator);
         messageValidatorRegistry.addMessageValidator("xhtmlXpathMessageValidator", xhtmlXpathMessageValidator);
+
+        messageValidatorRegistry.addSchemaValidator("jsonSchemaValidator", jsonSchemaValidator);
+        messageValidatorRegistry.addSchemaValidator("xmlSchemaValidator", xmlSchemaValidator);
+
     }
 
     @Test
@@ -319,4 +335,27 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
         Assert.assertEquals(matchingValidators.get(1), plainTextMessageValidator);
     }
+
+    @Test
+    public void testSchemaValidators() throws Exception {
+        MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
+
+        Map<String, SchemaValidator<? extends SchemaValidationContext>> schemaValidators = new HashMap<>();
+        schemaValidators.put("jsonSchema", jsonSchemaValidator);
+        schemaValidators.put("xmlSchema", xmlSchemaValidator);
+
+        messageValidatorRegistry.setSchemaValidators(schemaValidators);
+
+        List<SchemaValidator<? extends SchemaValidationContext>> matchingValidators = messageValidatorRegistry.findSchemaValidators(MessageType.JSON.name(), new DefaultMessage(""));
+
+        Assert.assertNotNull(matchingValidators);
+        Assert.assertEquals(matchingValidators.size(), 1L);
+        Assert.assertEquals(matchingValidators.get(0), jsonSchemaValidator);
+
+        Optional<SchemaValidator<? extends SchemaValidationContext>> jsonSchema = messageValidatorRegistry.findSchemaValidator("jsonSchema");
+
+        Assert.assertTrue(jsonSchema.isPresent());
+        Assert.assertEquals(jsonSchema.get(), jsonSchemaValidator);
+    }
+
 }

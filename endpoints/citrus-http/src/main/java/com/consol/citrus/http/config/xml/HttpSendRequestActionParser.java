@@ -27,6 +27,7 @@ import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -122,6 +123,23 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             String dataDictionary = body.getAttribute("data-dictionary");
             if (StringUtils.hasText(dataDictionary)) {
                 builder.addPropertyReference("dataDictionary", dataDictionary);
+            }
+
+            String schemaValidation = body.getAttribute("schema-validation");
+            if (StringUtils.hasText(schemaValidation)) {
+                builder.addPropertyValue("schemaValidation", Boolean.valueOf(schemaValidation));
+            }
+
+            String schema = body.getAttribute("schema");
+            if (StringUtils.hasText(schema)) {
+                builder.addPropertyValue("schemaValidation", true);
+                builder.addPropertyValue("schema", schema);
+            }
+
+            String schemaRepository = body.getAttribute("schema-repository");
+            if (StringUtils.hasText(schemaRepository)) {
+                builder.addPropertyValue("schemaValidation", true);
+                builder.addPropertyValue("schemaRepository", schemaRepository);
             }
         }
 

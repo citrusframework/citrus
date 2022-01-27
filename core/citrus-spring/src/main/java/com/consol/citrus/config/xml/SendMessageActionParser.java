@@ -16,14 +16,16 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
+import com.consol.citrus.validation.context.SchemaValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -72,6 +74,24 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
             if (StringUtils.hasText(dataDictionary)) {
                 builder.addPropertyReference("dataDictionary", dataDictionary);
             }
+
+            String schemaValidation = messageElement.getAttribute("schema-validation");
+            if (StringUtils.hasText(schemaValidation)) {
+                builder.addPropertyValue("schemaValidation", Boolean.valueOf(schemaValidation));
+            }
+
+            String schema = messageElement.getAttribute("schema");
+            if (StringUtils.hasText(schema)) {
+                builder.addPropertyValue("schemaValidation", Boolean.valueOf(schemaValidation));
+                builder.addPropertyValue("schema", schema);
+            }
+
+            String schemaRepository = messageElement.getAttribute("schema-repository");
+            if (StringUtils.hasText(schemaRepository)) {
+                builder.addPropertyValue("schemaValidation", Boolean.valueOf(schemaValidation));
+                builder.addPropertyValue("schemaRepository", schemaRepository);
+            }
+
         }
 
         DefaultMessageBuilder messageBuilder = constructMessageBuilder(messageElement, builder);

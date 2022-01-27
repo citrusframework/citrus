@@ -79,7 +79,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         log.debug("Start JSON message validation ...");
 
         if (validationContext.isSchemaValidationEnabled()) {
-            performSchemaValidation(receivedMessage, context, validationContext);
+            jsonSchemaValidation.validate(receivedMessage, context, validationContext);
         }
 
         if (log.isDebugEnabled()) {
@@ -123,28 +123,6 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         }
 
         log.info("JSON message validation successful: All values OK");
-    }
-
-    /**
-     * Performs the schema validation for the given message under consideration of the given validation context
-     * @param receivedMessage The message to be validated
-     * @param context The current test context.
-     * @param validationContext The validation context of the current test
-     */
-    private void performSchemaValidation(Message receivedMessage, TestContext context, JsonMessageValidationContext validationContext) {
-        log.debug("Starting Json schema validation ...");
-
-        ProcessingReport report = jsonSchemaValidation.validate(receivedMessage,
-                                                                findSchemaRepositories(context),
-                                                                validationContext,
-                                                                context.getReferenceResolver());
-        if (!report.isSuccess()) {
-            log.error("Failed to validate Json schema for message:\n" + receivedMessage.getPayload(String.class));
-
-            throw new ValidationException(constructErrorMessage(report));
-        }
-
-        log.info("Json schema validation successful: All values OK");
     }
 
     /**
@@ -324,18 +302,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         return this;
     }
 
-    /**
-     * Constructs the error message of a failed validation based on the processing report passed from
-     * com.github.fge.jsonschema.core.report
-     * @param report The report containing the error message
-     * @return A string representation of all messages contained in the report
-     */
-    private String constructErrorMessage(ProcessingReport report) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Json validation failed: ");
-        report.forEach(processingMessage -> stringBuilder.append(processingMessage.getMessage()));
-        return stringBuilder.toString();
-    }
+
 
     /**
      * Sets the json schema validation.

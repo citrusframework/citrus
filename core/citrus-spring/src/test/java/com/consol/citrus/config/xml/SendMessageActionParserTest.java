@@ -24,9 +24,15 @@ import com.consol.citrus.message.DelegatingPathExpressionProcessor;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -35,7 +41,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
     @Test
     public void testSendMessageActionParser() throws IOException {
-        assertActionCount(6);
+        assertActionCount(8);
         assertActionClassAndName(SendMessageAction.class, "send");
 
         DefaultMessageBuilder messageBuilder;
@@ -138,5 +144,18 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         Assert.assertEquals(jsonMessageProcessor.getPathExpressions().size(), 1);
         Assert.assertEquals(jsonMessageProcessor.getPathExpressions().get("$.FooMessage.foo"), "newValue");
+
+        // 7th action
+        action = getNextTestActionFromTest();
+        Assert.assertTrue(action.isSchemaValidation());
+        Assert.assertEquals(action.getSchema(), "fooSchema");
+        Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
+
+        // 8th action
+        action = getNextTestActionFromTest();
+        Assert.assertTrue(action.isSchemaValidation());
+        Assert.assertEquals(action.getSchema(), "fooSchema");
+        Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
+
     }
 }

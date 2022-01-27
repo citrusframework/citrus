@@ -16,8 +16,10 @@
 
 package com.consol.citrus.validation.json;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
@@ -25,24 +27,34 @@ import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
+import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.testng.UnitTestConfig;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.TestUtils;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.SchemaValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
+import com.consol.citrus.validation.json.schema.JsonSchemaValidation;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import org.mockito.Mockito;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -58,7 +70,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         TestContextFactory factory = super.createTestContextFactory();
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
-        return factory;
+     return factory;
     }
 
     @Test
@@ -97,9 +109,54 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     }
 
+    @Test
+    public void testSendJsonMessageWithValidation() {
+
+        AtomicBoolean  validated = new AtomicBoolean(false);
+
+        SchemaValidator schemaValidator = mock(SchemaValidator.class);
+        when(schemaValidator.supportsMessageType(eq("JSON"), any())).thenReturn(true);
+        doAnswer(invocation-> {
+            Object argument = invocation.getArgument(2);
+
+            Assert.assertTrue(argument instanceof JsonMessageValidationContext);
+            Assert.assertEquals(((JsonMessageValidationContext)argument).getSchema(), "fooSchema");
+            Assert.assertEquals(((JsonMessageValidationContext)argument).getSchemaRepository(), "fooRepository");
+
+            validated.set(true);
+            return null;
+        }).when(schemaValidator).validate(any(), any(), any());
+
+        context.getMessageValidatorRegistry().addSchemaValidator("JSON", schemaValidator);
+
+        DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("{ \"TestRequest\": { \"Message\": \"?\" }}"));
+
+        reset(endpoint, producer, endpointConfiguration);
+        when(endpoint.createProducer()).thenReturn(producer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+
+        when(endpoint.getActor()).thenReturn(null);
+
+        SendMessageAction sendAction = new SendMessageAction.Builder()
+                .endpoint(endpoint)
+                .message(messageBuilder)
+                .schemaValidation(true)
+                .schema("fooSchema")
+                .schemaRepository("fooRepository")
+                .type(MessageType.JSON)
+                .build();
+        sendAction.execute(context);
+
+        Assert.assertTrue(validated.get());
+    }
+
+
+
     private void validateMessageToSend(Message toSend, Message controlMessage) {
         Assert.assertEquals(toSend.getPayload(String.class).trim(), controlMessage.getPayload(String.class).trim());
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
         validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext());
     }
+
 }
