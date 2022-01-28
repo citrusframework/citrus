@@ -209,7 +209,7 @@
     <xbean-spring.version>4.20</xbean-spring.version>
     <xstream.version>1.4.18</xstream.version>
     <xalan.version>2.7.2</xalan.version>
-    <xerces.version>2.12.1</xerces.version>
+    <xerces.version>2.12.2</xerces.version>
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
     <skip.gpg>false</skip.gpg>
