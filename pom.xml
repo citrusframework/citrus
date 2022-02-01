@@ -207,7 +207,7 @@
     <saaj.version>1.5.3</saaj.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
     <xbean-spring.version>4.20</xbean-spring.version>
-    <xstream.version>1.4.18</xstream.version>
+    <xstream.version>1.4.19</xstream.version>
     <xalan.version>2.7.2</xalan.version>
     <xerces.version>2.12.2</xerces.version>
     <skip.integration.tests>false</skip.integration.tests>
