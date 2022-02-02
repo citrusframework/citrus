@@ -448,7 +448,7 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
 
         //THEN
-        verify(jsonSchemaValidation).validate(eq(receivedMessage), anyList(), eq(validationContext), eq(context.getReferenceResolver()));
+        verify(jsonSchemaValidation).validate(eq(receivedMessage), eq(context), eq(validationContext));
     }
 
     @Test

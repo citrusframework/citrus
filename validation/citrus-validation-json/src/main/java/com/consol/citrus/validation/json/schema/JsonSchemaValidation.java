@@ -17,14 +17,20 @@
 package com.consol.citrus.validation.json.schema;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.util.IsJsonPredicate;
+import com.consol.citrus.validation.SchemaValidator;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.report.GraciousProcessingReport;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,12 +38,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.DevNullProcessingReport;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is responsible for the validation of json messages against json schemas / json schema repositories.
  * @since 2.7.3
  */
-public class JsonSchemaValidation {
+public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidationContext> {
+
+    /** The logger */
+    private Logger log = LoggerFactory.getLogger(JsonSchemaValidation.class);
 
     private final JsonSchemaFilter jsonSchemaFilter;
 
@@ -57,6 +68,45 @@ public class JsonSchemaValidation {
      */
     public JsonSchemaValidation(JsonSchemaFilter jsonSchemaFilter) {
         this.jsonSchemaFilter = jsonSchemaFilter;
+    }
+
+    @Override
+    public void validate(Message message, TestContext context, JsonMessageValidationContext validationContext) {
+        log.debug("Starting Json schema validation ...");
+
+        ProcessingReport report = validate(message,
+                findSchemaRepositories(context),
+                validationContext,
+                context.getReferenceResolver());
+        if (!report.isSuccess()) {
+            log.error("Failed to validate Json schema for message:\n" + message.getPayload(String.class));
+
+            throw new ValidationException(constructErrorMessage(report));
+        }
+
+        log.info("Json schema validation successful: All values OK");
+    }
+
+    /**
+     * Constructs the error message of a failed validation based on the processing report passed from
+     * com.github.fge.jsonschema.core.report
+     * @param report The report containing the error message
+     * @return A string representation of all messages contained in the report
+     */
+    private String constructErrorMessage(ProcessingReport report) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Json validation failed: ");
+        report.forEach(processingMessage -> stringBuilder.append(processingMessage.getMessage()));
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Find json schema repositories in test context.
+     * @param context
+     * @return
+     */
+    private List<JsonSchemaRepository> findSchemaRepositories(TestContext context) {
+        return new ArrayList<>(context.getReferenceResolver().resolveAll(JsonSchemaRepository.class).values());
     }
 
     /**
@@ -108,5 +158,17 @@ public class JsonSchemaValidation {
         } catch (IOException | ProcessingException e) {
             throw new CitrusRuntimeException("Failed to validate Json schema", e);
         }
+    }
+
+
+    /**
+     *
+     * @param messageType
+     * @param message
+     * @return true if the message or message type is supported by this validator
+     */
+    @Override
+    public boolean supportsMessageType(String messageType, Message message) {
+        return "JSON".equals(messageType) || (message != null && IsJsonPredicate.getInstance().test(message.getPayload(String.class)));
     }
 }

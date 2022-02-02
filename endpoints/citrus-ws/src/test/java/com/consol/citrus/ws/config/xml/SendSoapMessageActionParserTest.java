@@ -29,7 +29,7 @@ public class SendSoapMessageActionParserTest extends AbstractActionParserTest<Se
 
     @Test
     public void testSendMessageActionParser() {
-        assertActionCount(4);
+        assertActionCount(5);
         assertActionClassAndName(SendSoapMessageAction.class, "send");
         
         // 1st action
@@ -67,5 +67,12 @@ public class SendSoapMessageActionParserTest extends AbstractActionParserTest<Se
         action = getNextTestActionFromTest();
         Assert.assertTrue(action.isForkMode());
         Assert.assertEquals(action.getAttachments().size(), 0L);
+
+        // 5th action
+        action = getNextTestActionFromTest();
+
+        Assert.assertTrue(action.isSchemaValidation());
+        Assert.assertEquals(action.getSchema(), "fooSchema");
+        Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
     }
 }

@@ -28,6 +28,7 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.dictionary.SimpleMappingDictionary;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.DefaultMessage;
@@ -38,12 +39,15 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
@@ -65,6 +69,20 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private Producer messageProducer = Mockito.mock(Producer.class);
     private Resource resource = Mockito.mock(Resource.class);
+
+    @Mock
+    private MessageValidator<?> validator;
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        MockitoAnnotations.openMocks(this);
+        when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
+
+        TestContextFactory factory = super.createTestContextFactory();
+        factory.getMessageValidatorRegistry().addMessageValidator("validator", validator);
+
+        return factory;
+    }
 
     @Test
     public void testSendBuilderWithMessageInstance() {

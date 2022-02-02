@@ -34,6 +34,15 @@ public final class CitrusSettings {
     private static final String APPLICATION_PROPERTY_FILE = System.getProperty(APPLICATION_PROPERTY_FILE_PROPERTY, System.getenv(APPLICATION_PROPERTY_FILE_ENV) != null ?
             System.getenv(APPLICATION_PROPERTY_FILE_ENV) : "classpath:citrus-application.properties");
 
+    public  static final String OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY = "citrus.validation.outbound.schema.enabled";
+    public static final String OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV = "CITRUS_VALIDATION_OUTBOUND_SCHEMA_ENABLED";
+
+    public  static final String OUTBOUND_JSON_SCHEMA_VALIDATION_ENABLED_PROPERTY = "citrus.validation.outbound.json.schema.enabled";
+    public static final String OUTBOUND_JSON_SCHEMA_VALIDATION_ENABLED_ENV = "CITRUS_VALIDATION_OUTBOUND_JSON_SCHEMA_ENABLED";
+
+    public  static final String OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_PROPERTY = "citrus.validation.outbound.xml.schema.enabled";
+    public static final String OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_ENV = "CITRUS_VALIDATION_OUTBOUND_XML_SCHEMA_ENABLED";
+
     /* Load application properties */
     static {
         Resource appPropertiesResource = new PathMatchingResourcePatternResolver().getResource(APPLICATION_PROPERTY_FILE);

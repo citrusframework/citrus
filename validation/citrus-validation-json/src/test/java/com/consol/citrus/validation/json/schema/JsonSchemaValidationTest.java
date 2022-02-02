@@ -19,13 +19,21 @@ package com.consol.citrus.validation.json.schema;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.validation.DefaultMessageHeaderValidator;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.SchemaValidator;
+import com.consol.citrus.validation.context.SchemaValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageValidator;
+import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -247,4 +255,16 @@ public class JsonSchemaValidationTest {
         verify(jsonSchemaFilterMock).filter(repositoryList, jsonMessageValidationContext, referenceResolverMock);
     }
 
+    @Test
+    public void testLookup() {
+        Map<String, SchemaValidator<? extends SchemaValidationContext>> validators = SchemaValidator.lookup();
+        Assert.assertEquals(validators.size(), 1L);
+        Assert.assertNotNull(validators.get("defaultJsonSchemaValidator"));
+        Assert.assertEquals(validators.get("defaultJsonSchemaValidator").getClass(), JsonSchemaValidation.class);
+    }
+
+    @Test
+    public void testTestLookup() {
+        Assert.assertTrue(SchemaValidator.lookup("json").isPresent());
+    }
 }

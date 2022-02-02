@@ -1,0 +1,2 @@
+name=defaultJsonSchemaValidator
+type=com.consol.citrus.validation.json.schema.JsonSchemaValidation
