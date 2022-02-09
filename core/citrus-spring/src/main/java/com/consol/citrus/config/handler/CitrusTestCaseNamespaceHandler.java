@@ -29,7 +29,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * @author Christoph Deppisch, Thorsten Schlathoelter
  * @since 2007
  */
-public class CitrusTestcaseNamespaceHandler extends NamespaceHandlerSupport {
+public class CitrusTestCaseNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
     public void init() {
