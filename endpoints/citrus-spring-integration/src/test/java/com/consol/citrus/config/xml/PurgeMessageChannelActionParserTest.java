@@ -17,7 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.actions.PurgeMessageChannelAction;
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;
@@ -68,9 +68,9 @@ public class PurgeMessageChannelActionParserTest extends AbstractActionParserTes
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("purge-channel"));
-        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
+        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("purge-channel"));
+        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getBeanParser("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
+        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
     }
 }

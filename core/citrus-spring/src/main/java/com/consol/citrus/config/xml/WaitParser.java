@@ -22,7 +22,7 @@ import com.consol.citrus.condition.Condition;
 import com.consol.citrus.condition.FileCondition;
 import com.consol.citrus.condition.HttpCondition;
 import com.consol.citrus.condition.MessageCondition;
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -136,7 +136,7 @@ public class WaitParser implements BeanDefinitionParser {
         if (action != null) {
             BeanDefinitionParser parser = null;
             if (action.getNamespaceURI().equals(element.getNamespaceURI())) {
-                parser = TestActionRegistry.getBeanParser(action.getLocalName());
+                parser = CitrusNamespaceParserRegistry.getBeanParser(action.getLocalName());
             }
 
             if (parser == null) {
