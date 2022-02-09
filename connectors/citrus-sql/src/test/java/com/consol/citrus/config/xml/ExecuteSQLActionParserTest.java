@@ -74,9 +74,9 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupActionParser().containsKey("sql"));
-        Assert.assertEquals(TestActionRegistry.lookupActionParser().get("sql").getClass(), SQLActionParser.class);
+        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("sql"));
+        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("sql").getClass(), SQLActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getActionParser("sql").getClass(), SQLActionParser.class);
+        Assert.assertEquals(TestActionRegistry.getBeanParser("sql").getClass(), SQLActionParser.class);
     }
 }

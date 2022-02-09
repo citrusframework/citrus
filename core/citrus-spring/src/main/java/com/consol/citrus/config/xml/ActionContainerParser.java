@@ -61,7 +61,7 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
 
             BeanDefinitionParser parser = null;
             if (action.getNamespaceURI().equals(element.getNamespaceURI())) {
-                parser = TestActionRegistry.getActionParser(action.getLocalName());
+                parser = TestActionRegistry.getBeanParser(action.getLocalName());
             }
 
             if (parser == null) {

@@ -58,9 +58,9 @@ public class GroovyActionParserTest extends AbstractActionParserTest<GroovyActio
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupActionParser().containsKey("groovy"));
-        Assert.assertEquals(TestActionRegistry.lookupActionParser().get("groovy").getClass(), GroovyActionParser.class);
+        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("groovy"));
+        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("groovy").getClass(), GroovyActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getActionParser("groovy").getClass(), GroovyActionParser.class);
+        Assert.assertEquals(TestActionRegistry.getBeanParser("groovy").getClass(), GroovyActionParser.class);
     }
 }

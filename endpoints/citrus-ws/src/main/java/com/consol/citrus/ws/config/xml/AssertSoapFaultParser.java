@@ -109,7 +109,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         if (action != null) {
             BeanDefinitionParser parser = null;
             if (action.getNamespaceURI().equals("http://www.citrusframework.org/schema/testcase")) {
-                parser = TestActionRegistry.getActionParser(action.getLocalName());
+                parser = TestActionRegistry.getBeanParser(action.getLocalName());
             }
 
             if (parser == null) {

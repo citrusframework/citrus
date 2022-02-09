@@ -68,9 +68,9 @@ public class PurgeMessageChannelActionParserTest extends AbstractActionParserTes
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupActionParser().containsKey("purge-channel"));
-        Assert.assertEquals(TestActionRegistry.lookupActionParser().get("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
+        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("purge-channel"));
+        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getActionParser("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
+        Assert.assertEquals(TestActionRegistry.getBeanParser("purge-channel").getClass(), PurgeMessageChannelActionParser.class);
     }
 }
