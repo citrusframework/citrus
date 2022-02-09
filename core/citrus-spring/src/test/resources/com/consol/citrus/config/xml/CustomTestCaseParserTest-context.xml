@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="CustomTestCaseParserTest">
+
+        <meta-info>
+            <author>T. Schlathoelter</author>
+            <creationdate>2022-02-01</creationdate>
+            <status>FINAL</status>
+            <spring:description>Foo bar: F#!$§ed up beyond all repair</spring:description>
+        </meta-info>
+
+        <actions>
+          <echo>
+            <message>This test should have a custom test case type and a custom meta info type</message>
+          </echo>
+        </actions>
+    </testcase>
+</spring:beans>

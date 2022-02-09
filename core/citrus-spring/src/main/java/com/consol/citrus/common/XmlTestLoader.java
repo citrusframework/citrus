@@ -17,13 +17,17 @@
 package com.consol.citrus.common;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 import com.consol.citrus.CitrusContext;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.StringUtils;
@@ -87,6 +91,8 @@ public class XmlTestLoader implements TestLoader, TestSourceAware {
      */
     private ApplicationContext loadApplicationContext() {
         try {
+            configureCustomParsers();
+
             return new ClassPathXmlApplicationContext(
                     new String[]{
                             getSource(),
@@ -95,6 +101,26 @@ public class XmlTestLoader implements TestLoader, TestSourceAware {
         } catch (Exception e) {
             throw citrusContext.getTestContextFactory().getObject()
                     .handleError(testName, packageName, "Failed to load test case", e);
+        }
+    }
+
+    /**
+     * Configures the CitrusNamespaceParserRegistry with custom parsers
+     */
+    private void configureCustomParsers() {
+        XmlTestLoaderConfiguration loaderConfiguration = testClass.getAnnotation(XmlTestLoaderConfiguration.class);
+        if (loaderConfiguration != null) {
+            for (TestCaseParserConfiguration testCaseParserConfiguration : loaderConfiguration.parserConfigurations()) {
+                Class<? extends BeanDefinitionParser> parserClass = testCaseParserConfiguration.parser();
+                try {
+                    if (parserClass != null) {
+                        BeanDefinitionParser parserOverride = parserClass.getDeclaredConstructor().newInstance();
+                        TestActionRegistry.registerParser(testCaseParserConfiguration.name(), parserOverride);
+                    }
+                } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                    throw new CitrusRuntimeException(String.format("Could not install custom BeanDefinitionParser '%s'", parserClass), e);
+                }
+            };
         }
     }
 

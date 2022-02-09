@@ -58,9 +58,9 @@ public class ExecutePLSQLActionParserTest extends AbstractActionParserTest<Execu
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupActionParser().containsKey("plsql"));
-        Assert.assertEquals(TestActionRegistry.lookupActionParser().get("plsql").getClass(), ExecutePLSQLActionParser.class);
+        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("plsql"));
+        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("plsql").getClass(), ExecutePLSQLActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getActionParser("plsql").getClass(), ExecutePLSQLActionParser.class);
+        Assert.assertEquals(TestActionRegistry.getBeanParser("plsql").getClass(), ExecutePLSQLActionParser.class);
     }
 }

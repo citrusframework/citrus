@@ -19,8 +19,6 @@ package com.consol.citrus.config.handler;
 import java.util.Map;
 
 import com.consol.citrus.config.TestActionRegistry;
-import com.consol.citrus.config.xml.TemplateParser;
-import com.consol.citrus.config.xml.TestCaseParser;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
@@ -28,22 +26,21 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  * Namespace handler registers bean definition parser
  * for Citrus testcase schema elements.
  *
- * @author Christoph Deppisch
+ * @author Christoph Deppisch, Thorsten Schlathoelter
  * @since 2007
  */
 public class CitrusTestcaseNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
     public void init() {
-        registerBeanDefinitionParser("testcase", new TestCaseParser());
-        registerBeanDefinitionParser("template", new TemplateParser());
 
-        for (Map.Entry<String, BeanDefinitionParser> actionParserEntry : TestActionRegistry.getRegisteredActionParser().entrySet()) {
+        for (Map.Entry<String, BeanDefinitionParser> actionParserEntry : TestActionRegistry.getRegisteredBeanParser().entrySet()) {
             registerBeanDefinitionParser(actionParserEntry.getKey(), actionParserEntry.getValue());
         }
 
-        for (Map.Entry<String, BeanDefinitionParser> actionParserEntry : TestActionRegistry.lookupActionParser().entrySet()) {
+        for (Map.Entry<String, BeanDefinitionParser> actionParserEntry : TestActionRegistry.lookupBeanParser().entrySet()) {
             registerBeanDefinitionParser(actionParserEntry.getKey(), actionParserEntry.getValue());
         }
     }
+
 }

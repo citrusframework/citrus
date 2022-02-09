@@ -19,45 +19,15 @@ package com.consol.citrus.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.consol.citrus.config.xml.ActionParser;
-import com.consol.citrus.config.xml.AntRunActionParser;
-import com.consol.citrus.config.xml.AssertParser;
-import com.consol.citrus.config.xml.AsyncParser;
-import com.consol.citrus.config.xml.CallTemplateParser;
-import com.consol.citrus.config.xml.CatchParser;
-import com.consol.citrus.config.xml.ConditionalParser;
-import com.consol.citrus.config.xml.CreateVariablesActionParser;
-import com.consol.citrus.config.xml.EchoActionParser;
-import com.consol.citrus.config.xml.FailActionParser;
-import com.consol.citrus.config.xml.InputActionParser;
-import com.consol.citrus.config.xml.IterateParser;
-import com.consol.citrus.config.xml.JavaActionParser;
-import com.consol.citrus.config.xml.LoadPropertiesActionParser;
-import com.consol.citrus.config.xml.ParallelParser;
-import com.consol.citrus.config.xml.PurgeEndpointActionParser;
-import com.consol.citrus.config.xml.ReceiveMessageActionParser;
-import com.consol.citrus.config.xml.ReceiveTimeoutActionParser;
-import com.consol.citrus.config.xml.RepeatOnErrorUntilTrueParser;
-import com.consol.citrus.config.xml.RepeatUntilTrueParser;
-import com.consol.citrus.config.xml.SendMessageActionParser;
-import com.consol.citrus.config.xml.SequenceParser;
-import com.consol.citrus.config.xml.SleepActionParser;
-import com.consol.citrus.config.xml.StartServerActionParser;
-import com.consol.citrus.config.xml.StopServerActionParser;
-import com.consol.citrus.config.xml.StopTimeActionParser;
-import com.consol.citrus.config.xml.StopTimerParser;
-import com.consol.citrus.config.xml.TemplateParser;
-import com.consol.citrus.config.xml.TimerParser;
-import com.consol.citrus.config.xml.TraceVariablesActionParser;
-import com.consol.citrus.config.xml.TransformActionParser;
-import com.consol.citrus.config.xml.WaitParser;
+import com.consol.citrus.config.handler.CitrusTestcaseNamespaceHandler;
+import com.consol.citrus.config.xml.*;
 import com.consol.citrus.spi.ResourcePathTypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 
 /**
- * Registers bean definition parser for actions in test case.
+ * Registers bean definition parser for beans in test case, handled by {@link CitrusTestcaseNamespaceHandler}
  *
  * @author Christoph Deppisch
  * @since 2007
@@ -67,48 +37,52 @@ public final class TestActionRegistry {
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(TestActionRegistry.class);
 
-    /** Resource path where to find custom action parsers via lookup */
+    /** Resource path where to find custom parsers via lookup */
     private static final String RESOURCE_PATH = "META-INF/citrus/action/parser";
 
-    /** Type resolver for dynamic action parser lookup via resource path */
+    /** Type resolver for dynamic parser lookup via resource path */
     private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /** Parser registry as map */
-    private static final Map<String, BeanDefinitionParser> ACTION_PARSER = new HashMap<>();
+    private static final Map<String, BeanDefinitionParser> BEAN_PARSER = new HashMap<>();
 
     static {
-        registerActionParser("send", new SendMessageActionParser());
-        registerActionParser("receive", new ReceiveMessageActionParser());
-        registerActionParser("java", new JavaActionParser());
-        registerActionParser("sleep", new SleepActionParser());
-        registerActionParser("trace-variables", new TraceVariablesActionParser());
-        registerActionParser("create-variables", new CreateVariablesActionParser());
-        registerActionParser("trace-time", new StopTimeActionParser());
-        registerActionParser("echo", new EchoActionParser());
-        registerActionParser("expect-timeout", new ReceiveTimeoutActionParser());
-        registerActionParser("purge-endpoint", new PurgeEndpointActionParser());
-        registerActionParser("action", new ActionParser());
-        registerActionParser("template", new TemplateParser());
-        registerActionParser("call-template", new CallTemplateParser());
-        registerActionParser("conditional", new ConditionalParser());
-        registerActionParser("sequential", new SequenceParser());
-        registerActionParser("async", new AsyncParser());
-        registerActionParser("iterate", new IterateParser());
-        registerActionParser("repeat-until-true", new RepeatUntilTrueParser());
-        registerActionParser("repeat-onerror-until-true", new RepeatOnErrorUntilTrueParser());
-        registerActionParser("fail", new FailActionParser());
-        registerActionParser("input", new InputActionParser());
-        registerActionParser("load", new LoadPropertiesActionParser());
-        registerActionParser("parallel", new ParallelParser());
-        registerActionParser("catch", new CatchParser());
-        registerActionParser("assert", new AssertParser());
-        registerActionParser("transform", new TransformActionParser());
-        registerActionParser("ant", new AntRunActionParser());
-        registerActionParser("start", new StartServerActionParser());
-        registerActionParser("stop", new StopServerActionParser());
-        registerActionParser("wait", new WaitParser());
-        registerActionParser("timer", new TimerParser());
-        registerActionParser("stop-timer", new StopTimerParser());
+        registerParser("testcase", new TestCaseParser());
+        registerParser("meta-info", new TestCaseMetaInfoParser());
+        registerParser("template", new TemplateParser());
+        registerParser("send", new SendMessageActionParser());
+        registerParser("receive", new ReceiveMessageActionParser());
+        registerParser("java", new JavaActionParser());
+        registerParser("sleep", new SleepActionParser());
+        registerParser("trace-variables", new TraceVariablesActionParser());
+        registerParser("create-variables", new CreateVariablesActionParser());
+        registerParser("trace-time", new StopTimeActionParser());
+        registerParser("echo", new EchoActionParser());
+        registerParser("expect-timeout", new ReceiveTimeoutActionParser());
+        registerParser("purge-endpoint", new PurgeEndpointActionParser());
+        registerParser("action", new ActionParser());
+        registerParser("template", new TemplateParser());
+        registerParser("call-template", new CallTemplateParser());
+        registerParser("conditional", new ConditionalParser());
+        registerParser("sequential", new SequenceParser());
+        registerParser("async", new AsyncParser());
+        registerParser("iterate", new IterateParser());
+        registerParser("repeat-until-true", new RepeatUntilTrueParser());
+        registerParser("repeat-onerror-until-true", new RepeatOnErrorUntilTrueParser());
+        registerParser("fail", new FailActionParser());
+        registerParser("input", new InputActionParser());
+        registerParser("load", new LoadPropertiesActionParser());
+        registerParser("parallel", new ParallelParser());
+        registerParser("catch", new CatchParser());
+        registerParser("assert", new AssertParser());
+        registerParser("transform", new TransformActionParser());
+        registerParser("ant", new AntRunActionParser());
+        registerParser("start", new StartServerActionParser());
+        registerParser("stop", new StopServerActionParser());
+        registerParser("wait", new WaitParser());
+        registerParser("timer", new TimerParser());
+        registerParser("stop-timer", new StopTimerParser());
+        registerParser("stop-timer", new StopTimerParser());
     }
 
     /**
@@ -119,45 +93,45 @@ public final class TestActionRegistry {
 
     /**
      * Register method to add new action parser.
-     * @param actionName
+     * @param beanName
      * @param parserObject
      */
-    public static void registerActionParser(String actionName, BeanDefinitionParser parserObject) {
-        ACTION_PARSER.put(actionName, parserObject);
+    public static void registerParser(String beanName, BeanDefinitionParser parserObject) {
+        BEAN_PARSER.put(beanName, parserObject);
     }
 
     /**
      * Getter for parser.
      * @return
      */
-    public static Map<String, BeanDefinitionParser> getRegisteredActionParser() {
-        return ACTION_PARSER;
+    public static Map<String, BeanDefinitionParser> getRegisteredBeanParser() {
+        return BEAN_PARSER;
     }
 
     /**
-     * Resolve test action parser for given action name. If not already present in the local parser cache try to locate
+     * Resolve test bean parser for given bean name. If not already present in the local parser cache try to locate
      * the parser through resource lookup.
      * @param name
      * @return
      */
-    public static BeanDefinitionParser getActionParser(String name) {
-        if (!ACTION_PARSER.containsKey(name)) {
+    public static BeanDefinitionParser getBeanParser(String name) {
+        if (!BEAN_PARSER.containsKey(name)) {
             try {
-                ACTION_PARSER.put(name, TYPE_RESOLVER.resolve(name));
+                BEAN_PARSER.put(name, TYPE_RESOLVER.resolve(name));
             } catch (Exception e) {
-                LOG.warn(String.format("Unable to locate test action parser for '%s'", name), e);
+                LOG.warn(String.format("Unable to locate bean parser for '%s'", name), e);
             }
         }
 
-        return ACTION_PARSER.get(name);
+        return BEAN_PARSER.get(name);
     }
 
     /**
-     * Resolves all available action parsers from resource path lookup. Scans classpath for meta information
+     * Resolves all available bean  parsers from resource path lookup. Scans classpath for meta information
      * and instantiates those components.
-     * @return map of custom action parsers
+     * @return map of custom bean parsers
      */
-    public static Map<String, BeanDefinitionParser> lookupActionParser() {
+    public static Map<String, BeanDefinitionParser> lookupBeanParser() {
         return TYPE_RESOLVER.resolveAll();
     }
 }

@@ -21,7 +21,9 @@ package com.consol.citrus.message.builder;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
@@ -41,8 +43,10 @@ import com.consol.citrus.message.WithPayloadBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.ValidationContextAdapter;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.VariableExtractorAdapter;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -59,6 +63,10 @@ public class SendMessageBuilderSupport<T extends SendMessageAction, B extends Se
 
     private DataDictionary<?> dataDictionary;
     private String dataDictionaryName;
+
+    protected boolean schemaValidation;
+    protected String  schema;
+    protected String  schemaRepository;
 
     private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
     protected final B delegate;
@@ -275,6 +283,63 @@ public class SendMessageBuilderSupport<T extends SendMessageAction, B extends Se
     public S type(final String messageType) {
         this.messageType = messageType;
         return self;
+    }
+
+    /**
+     * Sets schema validation enabled/disabled for this message.
+     *
+     * @param enabled
+     * @return
+     */
+    public S schemaValidation(final boolean enabled) {
+        this.schemaValidation = enabled;
+        return self;
+    }
+
+    /**
+     * Get the is schema validation flag
+     * @return the schema validation flag
+     */
+    public boolean isSchemaValidation() {
+        return schemaValidation;
+    }
+
+    /**
+     * Sets explicit schema instance name to use for schema validation.
+     *
+     * @param schemaName
+     * @return
+     */
+    public S schema(final String schemaName) {
+        this.schema = schemaName;
+        return self;
+    }
+
+    /**
+     * Get the schema
+     * @return the schema
+     */
+    public String getSchema() {
+        return schema;
+    }
+
+    /**
+     * Sets explicit schema repository instance to use for validation.
+     *
+     * @param schemaRepository
+     * @return
+     */
+    public S schemaRepository(final String schemaRepository) {
+        this.schemaRepository = schemaRepository;
+        return self;
+    }
+
+    /**
+     * Get the schema repository
+     * @return the schema-repository
+     */
+    public String getSchemaRepository() {
+        return schemaRepository;
     }
 
     /**

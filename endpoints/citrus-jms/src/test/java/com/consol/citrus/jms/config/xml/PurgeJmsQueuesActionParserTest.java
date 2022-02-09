@@ -70,9 +70,9 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupActionParser().containsKey("purge-jms-queues"));
-        Assert.assertEquals(TestActionRegistry.lookupActionParser().get("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
+        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("purge-jms-queues"));
+        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getActionParser("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
+        Assert.assertEquals(TestActionRegistry.getBeanParser("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
     }
 }
