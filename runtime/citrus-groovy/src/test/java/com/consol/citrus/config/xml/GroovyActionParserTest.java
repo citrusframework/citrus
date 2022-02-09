@@ -19,7 +19,7 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.testng.Assert;
@@ -58,9 +58,9 @@ public class GroovyActionParserTest extends AbstractActionParserTest<GroovyActio
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("groovy"));
-        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("groovy").getClass(), GroovyActionParser.class);
+        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("groovy"));
+        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("groovy").getClass(), GroovyActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getBeanParser("groovy").getClass(), GroovyActionParser.class);
+        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("groovy").getClass(), GroovyActionParser.class);
     }
 }

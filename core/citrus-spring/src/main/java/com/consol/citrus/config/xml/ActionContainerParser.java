@@ -18,7 +18,7 @@ package com.consol.citrus.config.xml;
 
 import java.util.List;
 
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
@@ -61,7 +61,7 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
 
             BeanDefinitionParser parser = null;
             if (action.getNamespaceURI().equals(element.getNamespaceURI())) {
-                parser = TestActionRegistry.getBeanParser(action.getLocalName());
+                parser = CitrusNamespaceParserRegistry.getBeanParser(action.getLocalName());
             }
 
             if (parser == null) {

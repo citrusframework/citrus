@@ -23,7 +23,7 @@ import com.consol.citrus.CitrusContext;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -115,7 +115,7 @@ public class XmlTestLoader implements TestLoader, TestSourceAware {
                 try {
                     if (parserClass != null) {
                         BeanDefinitionParser parserOverride = parserClass.getDeclaredConstructor().newInstance();
-                        TestActionRegistry.registerParser(testCaseParserConfiguration.name(), parserOverride);
+                        CitrusNamespaceParserRegistry.registerParser(testCaseParserConfiguration.name(), parserOverride);
                     }
                 } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
                     throw new CitrusRuntimeException(String.format("Could not install custom BeanDefinitionParser '%s'", parserClass), e);

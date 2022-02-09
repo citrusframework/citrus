@@ -1,7 +1,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.config.TestCaseFactory;
 import com.consol.citrus.variable.VariableUtils;
 import org.springframework.beans.factory.BeanCreationException;
@@ -89,7 +89,7 @@ public class BaseTestCaseParser<T extends TestCase> implements BeanDefinitionPar
             for (Element action : actionList) {
                 BeanDefinitionParser parser = null;
                 if (action.getNamespaceURI().equals(actionsContainerElement.getNamespaceURI())) {
-                    parser = TestActionRegistry.getBeanParser(action.getLocalName());
+                    parser = CitrusNamespaceParserRegistry.getBeanParser(action.getLocalName());
                 }
 
                 if (parser == null) {
@@ -146,7 +146,7 @@ public class BaseTestCaseParser<T extends TestCase> implements BeanDefinitionPar
     private void parseMetaInfo(BeanDefinitionBuilder testCase, Element element, ParserContext parserContext) {
         Element metaInfoElement = DomUtils.getChildElementByTagName(element, "meta-info");
         if (metaInfoElement != null) {
-            BeanDefinition metaInfoDefinition = TestActionRegistry.getBeanParser("meta-info").parse(metaInfoElement, parserContext);
+            BeanDefinition metaInfoDefinition = CitrusNamespaceParserRegistry.getBeanParser("meta-info").parse(metaInfoElement, parserContext);
             testCase.addPropertyValue("metaInfo", metaInfoDefinition);
         }
     }

@@ -17,7 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.container.Assert;
 import org.apache.xerces.util.DOMUtil;
@@ -48,7 +48,7 @@ public class AssertParser implements BeanDefinitionParser {
         if (action != null) {
             BeanDefinitionParser parser = null;
             if (action.getNamespaceURI().equals(element.getNamespaceURI())) {
-                parser = TestActionRegistry.getBeanParser(action.getLocalName());
+                parser = CitrusNamespaceParserRegistry.getBeanParser(action.getLocalName());
             }
 
             if (parser == null) {

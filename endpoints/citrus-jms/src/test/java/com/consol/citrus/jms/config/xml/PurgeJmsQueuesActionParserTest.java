@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms.config.xml;
 
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
@@ -70,9 +70,9 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("purge-jms-queues"));
-        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
+        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("purge-jms-queues"));
+        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getBeanParser("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
+        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("purge-jms-queues").getClass(), PurgeJmsQueuesActionParser.class);
     }
 }

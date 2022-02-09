@@ -32,10 +32,10 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
  * @author Christoph Deppisch
  * @since 2007
  */
-public final class TestActionRegistry {
+public final class CitrusNamespaceParserRegistry {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(TestActionRegistry.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CitrusNamespaceParserRegistry.class);
 
     /** Resource path where to find custom parsers via lookup */
     private static final String RESOURCE_PATH = "META-INF/citrus/action/parser";
@@ -88,7 +88,7 @@ public final class TestActionRegistry {
     /**
      * Prevent instantiation.
      */
-    private TestActionRegistry() {
+    private CitrusNamespaceParserRegistry() {
     }
 
     /**

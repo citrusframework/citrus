@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.DescriptionElementParser;
@@ -109,7 +109,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         if (action != null) {
             BeanDefinitionParser parser = null;
             if (action.getNamespaceURI().equals("http://www.citrusframework.org/schema/testcase")) {
-                parser = TestActionRegistry.getBeanParser(action.getLocalName());
+                parser = CitrusNamespaceParserRegistry.getBeanParser(action.getLocalName());
             }
 
             if (parser == null) {

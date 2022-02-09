@@ -20,7 +20,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -74,9 +74,9 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("sql"));
-        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("sql").getClass(), SQLActionParser.class);
+        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("sql"));
+        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("sql").getClass(), SQLActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getBeanParser("sql").getClass(), SQLActionParser.class);
+        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("sql").getClass(), SQLActionParser.class);
     }
 }

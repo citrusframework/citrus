@@ -20,7 +20,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.actions.ExecutePLSQLAction;
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
@@ -58,9 +58,9 @@ public class ExecutePLSQLActionParserTest extends AbstractActionParserTest<Execu
 
     @Test
     public void shouldLookupTestActionParser() {
-        Assert.assertTrue(TestActionRegistry.lookupBeanParser().containsKey("plsql"));
-        Assert.assertEquals(TestActionRegistry.lookupBeanParser().get("plsql").getClass(), ExecutePLSQLActionParser.class);
+        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("plsql"));
+        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("plsql").getClass(), ExecutePLSQLActionParser.class);
 
-        Assert.assertEquals(TestActionRegistry.getBeanParser("plsql").getClass(), ExecutePLSQLActionParser.class);
+        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("plsql").getClass(), ExecutePLSQLActionParser.class);
     }
 }

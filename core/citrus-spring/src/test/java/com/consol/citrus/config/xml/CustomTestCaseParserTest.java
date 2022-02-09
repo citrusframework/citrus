@@ -19,7 +19,7 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.util.xml.DomUtils;
@@ -38,15 +38,15 @@ public class CustomTestCaseParserTest extends AbstractActionParserTest<EchoActio
 
     @BeforeClass
     public void parseBeanDefinitions() {
-        TestActionRegistry.registerParser("testcase", new CustomTestCaseParser());
-        TestActionRegistry.registerParser("meta-info", new CustomTestCaseMetaInfoParser());
+        CitrusNamespaceParserRegistry.registerParser("testcase", new CustomTestCaseParser());
+        CitrusNamespaceParserRegistry.registerParser("meta-info", new CustomTestCaseMetaInfoParser());
         super.parseBeanDefinitions();
     }
 
     @AfterClass
     public static void cleanup() {
-        TestActionRegistry.registerParser("testcase", new TestCaseParser());
-        TestActionRegistry.registerParser("meta-info", new TestCaseMetaInfoParser());
+        CitrusNamespaceParserRegistry.registerParser("testcase", new TestCaseParser());
+        CitrusNamespaceParserRegistry.registerParser("meta-info", new TestCaseMetaInfoParser());
     }
 
     @Test
