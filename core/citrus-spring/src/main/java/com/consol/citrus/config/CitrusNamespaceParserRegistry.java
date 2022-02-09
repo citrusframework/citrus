@@ -19,7 +19,7 @@ package com.consol.citrus.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.consol.citrus.config.handler.CitrusTestcaseNamespaceHandler;
+import com.consol.citrus.config.handler.CitrusTestCaseNamespaceHandler;
 import com.consol.citrus.config.xml.*;
 import com.consol.citrus.spi.ResourcePathTypeResolver;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 
 /**
- * Registers bean definition parser for beans in test case, handled by {@link CitrusTestcaseNamespaceHandler}
+ * Registers bean definition parser for beans in test case, handled by {@link CitrusTestCaseNamespaceHandler}
  *
  * @author Christoph Deppisch
  * @since 2007
