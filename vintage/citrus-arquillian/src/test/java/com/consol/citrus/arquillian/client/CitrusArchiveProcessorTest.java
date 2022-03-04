@@ -56,7 +56,7 @@ public class CitrusArchiveProcessorTest {
     public void setCitrusVersion() {
         Field version = ReflectionUtils.findField(CitrusVersion.class, "version");
         ReflectionUtils.makeAccessible(version);
-        ReflectionUtils.setField(version, CitrusVersion.class, "3.2.0-SNAPSHOT");
+        ReflectionUtils.setField(version, CitrusVersion.class, "3.3.0-SNAPSHOT");
     }
 
     @BeforeMethod
