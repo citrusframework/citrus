@@ -189,7 +189,7 @@ build_and_stage_artifacts() {
         ./mvnw ${maven_opts} install
     else
         echo "==== Release to Maven central and stage artifacts to Sonatype"
-        ./mvnw ${maven_opts} install deploy -Prelease-central -DstagingDescription="Staging Citrus for v$release_version"
+        ./mvnw ${maven_opts} install deploy -DfailIfNoTests=false -Dtest -Dit.test -Prelease-central -DstagingDescription="Staging Citrus for v$release_version"
     fi
 }
 
