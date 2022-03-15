@@ -38,6 +38,7 @@ import com.consol.citrus.junit.jupiter.CitrusExtension;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
 import com.consol.citrus.util.FileUtils;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -66,7 +67,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * @author Christoph Deppisch
  */
 public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallback, BeforeTestExecutionCallback,
-        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler {
+        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterAllCallback {
 
     private Citrus citrus;
     private ApplicationContext applicationContext;
@@ -76,6 +77,11 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
     public void beforeAll(ExtensionContext extensionContext) {
         CitrusExtensionHelper.setCitrus(getCitrus(extensionContext), extensionContext);
         delegate.beforeAll(extensionContext);
+    }
+
+    @Override
+    public void afterAll(ExtensionContext extensionContext) throws Exception {
+        delegate.afterAll(extensionContext);
     }
 
     @Override
