@@ -143,7 +143,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.docs.version>${project.version}</project.docs.version>
-    <spring.version>5.3.16</spring.version>
+    <spring.version>5.3.18</spring.version>
     <spring.ws.version>3.1.2</spring.ws.version>
     <spring.integration.version>5.5.9</spring.integration.version>
     <spring.restdocs.version>2.0.5.RELEASE</spring.restdocs.version>
