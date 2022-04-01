@@ -162,7 +162,7 @@
     <slf4j.version>1.7.36</slf4j.version>
     <log4j2.version>2.17.2</log4j2.version>
     <jaxb.version>2.3.5</jaxb.version>
-    <jackson.version>2.12.6</jackson.version>
+    <jackson.version>2.12.6.1</jackson.version>
     <arquillian.version>1.6.0.Final</arquillian.version>
     <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
     <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
