@@ -879,9 +879,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 // if still no Json or Xml message validation context is set check the message payload and set proper context
                 Optional<String> payload = getMessagePayload();
                 if (payload.isPresent()) {
-                    if (payload.get().startsWith("<")) {
+                    if (payload.get().trim().startsWith("<")) {
                         validate(new XmlMessageValidationContext());
-                    } else if ((payload.get().startsWith("{") || payload.get().startsWith("["))) {
+                    } else if ((payload.get().trim().startsWith("{") || payload.get().trim().startsWith("["))) {
                         validate(new JsonMessageValidationContext());
                     }
                 }
