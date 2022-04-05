@@ -233,7 +233,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onOutboundMessage(Message message, TestContext context) {
-        INBOUND_MSG_LOGGER.debug(message.print(context));
+        OUTBOUND_MSG_LOGGER.debug(message.print(context));
     }
 
     /**
