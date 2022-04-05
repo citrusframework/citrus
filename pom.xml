@@ -65,7 +65,7 @@
     <developer>
       <id>christophd</id>
       <name>Christoph Deppisch</name>
-      <email>citrus-dev-l@consol.de</email>
+      <email>citrus-dev@googlegroups.com</email>
       <organization>Red Hat</organization>
       <organizationUrl>https://www.redhat.com/</organizationUrl>
       <roles>
@@ -75,9 +75,9 @@
     <developer>
       <id>svettwer</id>
       <name>Sven Hettwer</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>https://www.consol.de/</organizationUrl>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>IBM Deutschland Research and Development GmbH</organization>
+      <organizationUrl>https://www.ibm.com/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -85,9 +85,9 @@
     <developer>
       <id>s1hofmann</id>
       <name>Simon Hofmann</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>https://www.consol.de/</organizationUrl>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>Instana</organization>
+      <organizationUrl>https://www.instana.com/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -95,9 +95,9 @@
     <developer>
       <id>tnobody</id>
       <name>Tim Keiner</name>
-      <email>citrus-dev-l@consol.de</email>
+      <email>citrus-dev@googlegroups.com</email>
       <organization>ConSol Software GmbH</organization>
-      <organizationUrl>https://www.consol.de/</organizationUrl>
+      <organizationUrl>https://www.consol.com/</organizationUrl>
       <roles>
         <role>Developer</role>
       </roles>
@@ -112,7 +112,7 @@
 
   <organization>
     <name>ConSol Software GmbH</name>
-    <url>http://www.consol.com/</url>
+    <url>https://www.consol.com/</url>
   </organization>
 
   <mailingLists>
