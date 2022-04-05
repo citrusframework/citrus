@@ -15,8 +15,9 @@ http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config-3.
 http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config-3.1.0.xsd=com/consol/citrus/schema/citrus-selenium-config-3.1.0.xsd
 http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config-3.1.1.xsd=com/consol/citrus/schema/citrus-selenium-config-3.1.1.xsd
 http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config-3.1.2.xsd=com/consol/citrus/schema/citrus-selenium-config-3.1.2.xsd
-http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config-3.2.1.xsd=com/consol/citrus/schema/citrus-selenium-config-3.2.1.xsd
 http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config-3.2.0.xsd=com/consol/citrus/schema/citrus-selenium-config-3.2.0.xsd
+http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config-3.2.1.xsd=com/consol/citrus/schema/citrus-selenium-config-3.2.1.xsd
+http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config-3.3.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-selenium-config-3.3.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd=com/consol/citrus/schema/citrus-selenium-config.xsd
 http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-2.7.1.xsd=com/consol/citrus/schema/citrus-selenium-testcase-2.7.1.xsd
 http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-2.7.2.xsd=com/consol/citrus/schema/citrus-selenium-testcase-2.7.2.xsd
@@ -35,6 +36,7 @@ http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcas
 http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-3.1.0.xsd=com/consol/citrus/schema/citrus-selenium-testcase-3.1.0.xsd
 http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-3.1.1.xsd=com/consol/citrus/schema/citrus-selenium-testcase-3.1.1.xsd
 http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-3.1.2.xsd=com/consol/citrus/schema/citrus-selenium-testcase-3.1.2.xsd
-http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-3.2.1.xsd=com/consol/citrus/schema/citrus-selenium-testcase-3.2.1.xsd
 http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-3.2.0.xsd=com/consol/citrus/schema/citrus-selenium-testcase-3.2.0.xsd
+http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-3.2.1.xsd=com/consol/citrus/schema/citrus-selenium-testcase-3.2.1.xsd
+http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase-3.3.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-selenium-testcase-3.3.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd=com/consol/citrus/schema/citrus-selenium-testcase.xsd
