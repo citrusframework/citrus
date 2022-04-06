@@ -44,7 +44,7 @@
     <notifiers>
       <notifier>
         <type>mail</type>
-        <address>citrus-dev-l@consol.de</address>
+        <address>citrus-dev@googlegroups.com</address>
       </notifier>
     </notifiers>
   </ciManagement>
@@ -121,15 +121,11 @@
     </mailingList>
     <mailingList>
       <name>Project Development List</name>
-      <post>dev@citrusframework.org</post>
+      <post>citrus-dev@googlegroups.com</post>
     </mailingList>
     <mailingList>
       <name>Project User List</name>
-      <post>user@citrusframework.org</post>
-    </mailingList>
-    <mailingList>
-      <name>Internal Project Development List</name>
-      <post>citrus-dev-l@consol.de</post>
+      <post>citrus-users@googlegroups.com</post>
     </mailingList>
   </mailingLists>
 
