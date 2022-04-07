@@ -73,12 +73,10 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      */
     public void handleRequest(String request) {
         if (hasMessageListeners()) {
-            LOG.debug("Sending Http request message");
             messageListener.onOutboundMessage(new RawMessage(request), contextFactory.getObject());
-        } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Sending Http request message:" + NEWLINE + request);
-            }
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Sending Http request message:" + NEWLINE + request);
         }
     }
 
@@ -88,12 +86,10 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      */
     public void handleResponse(String response) {
         if (hasMessageListeners()) {
-            LOG.debug("Received Http response message");
             messageListener.onInboundMessage(new RawMessage(response), contextFactory.getObject());
-        } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Received Http response message:" + NEWLINE + response);
-            }
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Received Http response message:" + NEWLINE + response);
         }
     }
 
