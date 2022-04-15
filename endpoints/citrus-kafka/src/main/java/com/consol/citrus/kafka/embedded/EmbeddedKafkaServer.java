@@ -137,7 +137,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     public void stop() {
         if (kafkaServer != null) {
             try {
-                if (kafkaServer.brokerState().get() != BrokerState.NOT_RUNNING) {
+                if (kafkaServer.brokerState() != BrokerState.NOT_RUNNING) {
                     kafkaServer.shutdown();
                     kafkaServer.awaitShutdown();
                 }

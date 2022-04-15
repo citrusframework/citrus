@@ -19,6 +19,7 @@ package com.consol.citrus.validation.json;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -82,8 +83,22 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
 
         JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()
                 .expressions(jsonPathExpressions)
+                .ignoreNotFound(true)
                 .build();
         processor.processMessage(message, context);
         Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello World!\"}}");
+    }
+
+    @Test(expectedExceptions = UnknownElementException.class)
+    public void testConstructFailOnUnknownJsonPath() {
+        Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\" }}");
+
+        Map<String, Object> jsonPathExpressions = new HashMap<>();
+        jsonPathExpressions.put("$.TestMessage.Unknown", "Hello!");
+
+        JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()
+                .expressions(jsonPathExpressions)
+                .build();
+        processor.processMessage(message, context);
     }
 }
