@@ -44,7 +44,7 @@ import org.springframework.util.StringUtils;
 public class JsonPathMessageProcessor extends AbstractMessageProcessor {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JsonPathMessageProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(JsonPathMessageProcessor.class);
 
     /** Overwrites message elements before validating (via JSONPath expressions) */
     private final Map<String, Object> jsonPathExpressions;

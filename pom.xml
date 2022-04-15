@@ -133,42 +133,43 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
-    <maven.version>3.8.1</maven.version>
+    <maven.version>3.8.4</maven.version>
     <maven.compiler.version>3.8.1</maven.compiler.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.docs.version>${project.version}</project.docs.version>
-    <spring.version>5.3.18</spring.version>
+    <spring.version>5.3.19</spring.version>
     <spring.ws.version>3.1.3</spring.ws.version>
     <spring.integration.version>5.5.10</spring.integration.version>
-    <spring.restdocs.version>2.0.5.RELEASE</spring.restdocs.version>
-    <kafka.version>2.8.1</kafka.version>
+    <spring.restdocs.version>2.0.6.RELEASE</spring.restdocs.version>
+    <kafka.version>3.1.0</kafka.version>
     <apache.camel.version>3.16.0</apache.camel.version>
-    <apache.ant.version>1.10.11</apache.ant.version>
-    <activemq.version>5.16.3</activemq.version>
-    <ftpserver.version>1.1.1</ftpserver.version>
-    <mockftpserver.version>2.8.0</mockftpserver.version>
+    <apache.ant.version>1.10.12</apache.ant.version>
+    <activemq.version>5.17.0</activemq.version>
+    <ftpserver.version>1.2.0</ftpserver.version>
+    <mockftpserver.version>3.0.0</mockftpserver.version>
     <vertx.version>3.9.11</vertx.version>
-    <groovy.version>3.0.9</groovy.version>
-    <jetty.version>9.4.44.v20210927</jetty.version>
+    <groovy.version>3.0.10</groovy.version>
+    <jetty.version>9.4.46.v20220331</jetty.version>
     <testng.version>7.3.0</testng.version>
     <junit.version>4.13.2</junit.version>
     <junit.jupiter.version>5.7.2</junit.jupiter.version>
     <slf4j.version>1.7.36</slf4j.version>
     <log4j2.version>2.17.2</log4j2.version>
-    <jaxb.version>2.3.5</jaxb.version>
-    <jackson.version>2.12.6</jackson.version>
-    <jackson.databind.version>2.12.6.1</jackson.databind.version>
+    <jaxb.version>2.3.0.1</jaxb.version>
+    <jaxb.runtime.version>2.3.6</jaxb.runtime.version>
+    <jackson.version>2.13.2</jackson.version>
+    <jackson.databind.version>2.13.2.2</jackson.databind.version>
     <arquillian.version>1.6.0.Final</arquillian.version>
     <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
     <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
     <cucumber.version>6.11.0</cucumber.version>
-    <zookeeper.version>3.7.0</zookeeper.version>
-    <dropwizard.metrics.version>4.1.21</dropwizard.metrics.version>
+    <zookeeper.version>3.8.0</zookeeper.version>
+    <dropwizard.metrics.version>4.2.9</dropwizard.metrics.version>
     <snappy.version>1.1.8.4</snappy.version>
-    <sshd.version>2.7.0</sshd.version>
-    <bouncycastle.version>1.69</bouncycastle.version>
+    <sshd.version>2.8.0</sshd.version>
+    <bouncycastle.version>1.70</bouncycastle.version>
     <jsch.version>0.1.55</jsch.version>
     <json.schema.validator.version>2.2.14</json.schema.validator.version>
     <hamcrest.version>2.2</hamcrest.version>
@@ -176,8 +177,8 @@
     <httpclient.version>4.5.13</httpclient.version>
     <selenium.version>3.141.59</selenium.version>
     <htmlunit.version>2.49.1</htmlunit.version>
-    <byte.buddy.version>1.11.0</byte.buddy.version>
-    <google.guava.version>30.1.1-jre</google.guava.version>
+    <byte.buddy.version>1.12.9</byte.buddy.version>
+    <google.guava.version>31.1-jre</google.guava.version>
     <failsafe.version>2.22.2</failsafe.version>
     <surefire.version>2.22.2</surefire.version>
     <mockito.version>3.12.4</mockito.version>
@@ -188,6 +189,7 @@
     <jakarta.mail.version>1.6.7</jakarta.mail.version>
     <jakarta.annotation.version>1.3.5</jakarta.annotation.version>
     <jakarta.validation.version>2.0.2</jakarta.validation.version>
+    <jakarta.activation.api.version>1.2.2</jakarta.activation.api.version>
     <jakarta.activation.version>1.2.2</jakarta.activation.version>
     <jakarta.servlet-api.version>4.0.4</jakarta.servlet-api.version>
     <jakarta.jms-api.version>2.0.3</jakarta.jms-api.version>
@@ -195,15 +197,17 @@
     <jakarta.websocket-api.version>1.1.2</jakarta.websocket-api.version>
     <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
     <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
-    <junixsocket.version>2.3.3</junixsocket.version>
-    <json-smart.version>2.4.7</json-smart.version>
-    <json-path.version>2.5.0</json-path.version>
+    <junixsocket.version>2.4.0</junixsocket.version>
+    <json-smart.version>2.4.8</json-smart.version>
+    <json-path.version>2.7.0</json-path.version>
     <hsqldb.version>2.6.1</hsqldb.version>
-    <commons.dbcp2.version>2.8.0</commons.dbcp2.version>
+    <commons.dbcp2.version>2.9.0</commons.dbcp2.version>
+    <commons.io.version>2.11.0</commons.io.version>
+    <commons.cli.version>1.5.0</commons.cli.version>
     <subethasmtp.version>3.1.7</subethasmtp.version>
     <saaj.version>1.5.3</saaj.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
-    <xbean-spring.version>4.20</xbean-spring.version>
+    <xbean-spring.version>4.21</xbean-spring.version>
     <xstream.version>1.4.19</xstream.version>
     <xalan.version>2.7.2</xalan.version>
     <xerces.version>2.12.2</xerces.version>
@@ -235,7 +239,7 @@
       <dependency>
         <groupId>jakarta.activation</groupId>
         <artifactId>jakarta.activation-api</artifactId>
-        <version>${jakarta.activation.version}</version>
+        <version>${jakarta.activation.api.version}</version>
       </dependency>
       <dependency>
         <groupId>com.sun.activation</groupId>
@@ -278,7 +282,7 @@
       <dependency>
         <groupId>commons-cli</groupId>
         <artifactId>commons-cli</artifactId>
-        <version>1.4</version>
+        <version>${commons.cli.version}</version>
       </dependency>
       <dependency>
         <groupId>commons-codec</groupId>
@@ -293,7 +297,7 @@
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>2.8.0</version>
+        <version>${commons.io.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.sshd</groupId>
@@ -638,6 +642,11 @@
         <artifactId>kafka-clients</artifactId>
         <version>${kafka.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-metadata</artifactId>
+        <version>${kafka.version}</version>
+      </dependency>
 
       <!-- Citrus mail dependencies -->
       <dependency>
@@ -859,7 +868,7 @@
       <dependency>
         <groupId>org.glassfish.jaxb</groupId>
         <artifactId>jaxb-core</artifactId>
-        <version>2.3.0.1</version>
+        <version>${jaxb.version}</version>
         <exclusions>
           <exclusion>
             <groupId>javax.xml.bind</groupId>
@@ -870,7 +879,7 @@
       <dependency>
         <groupId>org.glassfish.jaxb</groupId>
         <artifactId>jaxb-runtime</artifactId>
-        <version>${jaxb.version}</version>
+        <version>${jaxb.runtime.version}</version>
       </dependency>
 
       <!-- JSON jackson binding -->
@@ -1456,6 +1465,9 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jaxb2-maven-plugin</artifactId>
           <version>2.5.0</version>
+          <configuration>
+            <createJavaDocAnnotations>false</createJavaDocAnnotations>
+          </configuration>
           <dependencies>
             <dependency>
               <groupId>xerces</groupId>
