@@ -144,7 +144,7 @@
     <spring.integration.version>5.5.10</spring.integration.version>
     <spring.restdocs.version>2.0.5.RELEASE</spring.restdocs.version>
     <kafka.version>2.8.1</kafka.version>
-    <apache.camel.version>3.14.0</apache.camel.version>
+    <apache.camel.version>3.16.0</apache.camel.version>
     <apache.ant.version>1.10.11</apache.ant.version>
     <activemq.version>5.16.3</activemq.version>
     <ftpserver.version>1.1.1</ftpserver.version>

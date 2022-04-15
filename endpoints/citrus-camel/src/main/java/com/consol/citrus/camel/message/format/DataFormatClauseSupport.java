@@ -39,6 +39,7 @@ import org.apache.camel.support.jsse.KeyStoreParameters;
 public class DataFormatClauseSupport<T> {
 
     private DataFormatDefinition dataFormat;
+    private boolean allowNullBody;
     private final DataFormatClause<InlineProcessDefinition> delegate;
     private final T result;
 
@@ -237,43 +238,43 @@ public class DataFormatClauseSupport<T> {
         return result;
     }
 
-    public T jacksonxml() {
-        delegate.jacksonxml();
+    public T jacksonXml() {
+        delegate.jacksonXml();
         return result;
     }
 
-    public T jacksonxml(Class<?> unmarshalType) {
-        delegate.jacksonxml(unmarshalType);
+    public T jacksonXml(Class<?> unmarshalType) {
+        delegate.jacksonXml(unmarshalType);
         return result;
     }
 
-    public T jacksonxml(Class<?> unmarshalType, Class<?> jsonView) {
-        delegate.jacksonxml(unmarshalType, jsonView);
+    public T jacksonXml(Class<?> unmarshalType, Class<?> jsonView) {
+        delegate.jacksonXml(unmarshalType, jsonView);
         return result;
     }
 
-    public T jacksonxml(boolean prettyPrint) {
-        delegate.jacksonxml(prettyPrint);
+    public T jacksonXml(boolean prettyPrint) {
+        delegate.jacksonXml(prettyPrint);
         return result;
     }
 
-    public T jacksonxml(Class<?> unmarshalType, boolean prettyPrint) {
-        delegate.jacksonxml(unmarshalType, prettyPrint);
+    public T jacksonXml(Class<?> unmarshalType, boolean prettyPrint) {
+        delegate.jacksonXml(unmarshalType, prettyPrint);
         return result;
     }
 
-    public T jacksonxml(Class<?> unmarshalType, Class<?> jsonView, boolean prettyPrint) {
-        delegate.jacksonxml(unmarshalType, jsonView, prettyPrint);
+    public T jacksonXml(Class<?> unmarshalType, Class<?> jsonView, boolean prettyPrint) {
+        delegate.jacksonXml(unmarshalType, jsonView, prettyPrint);
         return result;
     }
 
-    public T jacksonxml(Class<?> unmarshalType, Class<?> jsonView, String include) {
-        delegate.jacksonxml(unmarshalType, jsonView, include);
+    public T jacksonXml(Class<?> unmarshalType, Class<?> jsonView, String include) {
+        delegate.jacksonXml(unmarshalType, jsonView, include);
         return result;
     }
 
-    public T jacksonxml(Class<?> unmarshalType, Class<?> jsonView, String include, boolean prettyPrint) {
-        delegate.jacksonxml(unmarshalType, jsonView, include, prettyPrint);
+    public T jacksonXml(Class<?> unmarshalType, Class<?> jsonView, String include, boolean prettyPrint) {
+        delegate.jacksonXml(unmarshalType, jsonView, include, prettyPrint);
         return result;
     }
 
@@ -377,43 +378,43 @@ public class DataFormatClauseSupport<T> {
         return result;
     }
 
-    public T soapjaxb() {
-        delegate.soapjaxb();
+    public T soap() {
+        delegate.soap();
         return result;
     }
 
-    public T soapjaxb(String contextPath) {
-        delegate.soapjaxb(contextPath);
+    public T soap(String contextPath) {
+        delegate.soap(contextPath);
         return result;
     }
 
-    public T soapjaxb(String contextPath, String elementNameStrategyRef) {
-        delegate.soapjaxb(contextPath, elementNameStrategyRef);
+    public T soap(String contextPath, String elementNameStrategyRef) {
+        delegate.soap(contextPath, elementNameStrategyRef);
         return result;
     }
 
-    public T soapjaxb(String contextPath, Object elementNameStrategy) {
-        delegate.soapjaxb(contextPath, elementNameStrategy);
+    public T soap(String contextPath, Object elementNameStrategy) {
+        delegate.soap(contextPath, elementNameStrategy);
         return result;
     }
 
-    public T soapjaxb12() {
-        delegate.soapjaxb12();
+    public T soap12() {
+        delegate.soap12();
         return result;
     }
 
-    public T soapjaxb12(String contextPath) {
-        delegate.soapjaxb12(contextPath);
+    public T soap12(String contextPath) {
+        delegate.soap12(contextPath);
         return result;
     }
 
-    public T soapjaxb12(String contextPath, String elementNameStrategyRef) {
-        delegate.soapjaxb12(contextPath, elementNameStrategyRef);
+    public T soap12(String contextPath, String elementNameStrategyRef) {
+        delegate.soap12(contextPath, elementNameStrategyRef);
         return result;
     }
 
-    public T soapjaxb12(String contextPath, Object elementNameStrategy) {
-        delegate.soapjaxb12(contextPath, elementNameStrategy);
+    public T soap12(String contextPath, Object elementNameStrategy) {
+        delegate.soap12(contextPath, elementNameStrategy);
         return result;
     }
 
@@ -492,132 +493,132 @@ public class DataFormatClauseSupport<T> {
         return result;
     }
 
-    public T secureXML(byte[] passPhraseByte) {
-        delegate.secureXML(passPhraseByte);
+    public T xmlSecurity(byte[] passPhraseByte) {
+        delegate.xmlSecurity(passPhraseByte);
         return result;
     }
 
-    public T secureXML(String secureTag, boolean secureTagContents, String passPhrase) {
-        delegate.secureXML(secureTag, secureTagContents, passPhrase);
+    public T xmlSecurity(String secureTag, boolean secureTagContents, String passPhrase) {
+        delegate.xmlSecurity(secureTag, secureTagContents, passPhrase);
         return result;
     }
 
-    public T secureXML(String secureTag, Map<String, String> namespaces, boolean secureTagContents, String passPhrase) {
-        delegate.secureXML(secureTag, namespaces, secureTagContents, passPhrase);
+    public T xmlSecurity(String secureTag, Map<String, String> namespaces, boolean secureTagContents, String passPhrase) {
+        delegate.xmlSecurity(secureTag, namespaces, secureTagContents, passPhrase);
         return result;
     }
 
-    public T secureXML(String secureTag, boolean secureTagContents, String passPhrase, String xmlCipherAlgorithm) {
-        delegate.secureXML(secureTag, secureTagContents, passPhrase, xmlCipherAlgorithm);
+    public T xmlSecurity(String secureTag, boolean secureTagContents, String passPhrase, String xmlCipherAlgorithm) {
+        delegate.xmlSecurity(secureTag, secureTagContents, passPhrase, xmlCipherAlgorithm);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, Map<String, String> namespaces, boolean secureTagContents, String passPhrase,
             String xmlCipherAlgorithm) {
-        delegate.secureXML(secureTag, namespaces, secureTagContents, passPhrase, xmlCipherAlgorithm);
+        delegate.xmlSecurity(secureTag, namespaces, secureTagContents, passPhrase, xmlCipherAlgorithm);
         return result;
     }
 
-    public T secureXML(String secureTag, boolean secureTagContents, byte[] passPhraseByte) {
-        delegate.secureXML(secureTag, secureTagContents, passPhraseByte);
+    public T xmlSecurity(String secureTag, boolean secureTagContents, byte[] passPhraseByte) {
+        delegate.xmlSecurity(secureTag, secureTagContents, passPhraseByte);
         return result;
     }
 
-    public T secureXML(String secureTag, Map<String, String> namespaces, boolean secureTagContents, byte[] passPhraseByte) {
-        delegate.secureXML(secureTag, namespaces, secureTagContents, passPhraseByte);
+    public T xmlSecurity(String secureTag, Map<String, String> namespaces, boolean secureTagContents, byte[] passPhraseByte) {
+        delegate.xmlSecurity(secureTag, namespaces, secureTagContents, passPhraseByte);
         return result;
     }
 
-    public T secureXML(String secureTag, boolean secureTagContents, byte[] passPhraseByte, String xmlCipherAlgorithm) {
-        delegate.secureXML(secureTag, secureTagContents, passPhraseByte, xmlCipherAlgorithm);
+    public T xmlSecurity(String secureTag, boolean secureTagContents, byte[] passPhraseByte, String xmlCipherAlgorithm) {
+        delegate.xmlSecurity(secureTag, secureTagContents, passPhraseByte, xmlCipherAlgorithm);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, Map<String, String> namespaces, boolean secureTagContents, byte[] passPhraseByte,
             String xmlCipherAlgorithm) {
-        delegate.secureXML(secureTag, namespaces, secureTagContents, passPhraseByte, xmlCipherAlgorithm);
+        delegate.xmlSecurity(secureTag, namespaces, secureTagContents, passPhraseByte, xmlCipherAlgorithm);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, boolean secureTagContents, String recipientKeyAlias, String xmlCipherAlgorithm,
             String keyCipherAlgorithm,
             String keyOrTrustStoreParametersId) {
-        delegate.secureXML(secureTag, secureTagContents, recipientKeyAlias,
+        delegate.xmlSecurity(secureTag, secureTagContents, recipientKeyAlias,
                 xmlCipherAlgorithm, keyCipherAlgorithm, keyOrTrustStoreParametersId);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, boolean secureTagContents, String recipientKeyAlias, String xmlCipherAlgorithm,
             String keyCipherAlgorithm,
             String keyOrTrustStoreParametersId, String keyPassword) {
-        delegate.secureXML(secureTag, secureTagContents, recipientKeyAlias,
+        delegate.xmlSecurity(secureTag, secureTagContents, recipientKeyAlias,
                 xmlCipherAlgorithm, keyCipherAlgorithm, keyOrTrustStoreParametersId, keyPassword);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, boolean secureTagContents, String recipientKeyAlias, String xmlCipherAlgorithm,
             String keyCipherAlgorithm,
             KeyStoreParameters keyOrTrustStoreParameters) {
-        delegate.secureXML(secureTag, secureTagContents, recipientKeyAlias,
+        delegate.xmlSecurity(secureTag, secureTagContents, recipientKeyAlias,
                 xmlCipherAlgorithm, keyCipherAlgorithm, keyOrTrustStoreParameters);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, boolean secureTagContents, String recipientKeyAlias, String xmlCipherAlgorithm,
             String keyCipherAlgorithm,
             KeyStoreParameters keyOrTrustStoreParameters, String keyPassword) {
-        delegate.secureXML(secureTag, secureTagContents, recipientKeyAlias,
+        delegate.xmlSecurity(secureTag, secureTagContents, recipientKeyAlias,
                 xmlCipherAlgorithm, keyCipherAlgorithm, keyOrTrustStoreParameters, keyPassword);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, Map<String, String> namespaces, boolean secureTagContents, String recipientKeyAlias,
             String xmlCipherAlgorithm, String keyCipherAlgorithm,
             String keyOrTrustStoreParametersId) {
-        delegate.secureXML(secureTag, namespaces, secureTagContents, recipientKeyAlias,
+        delegate.xmlSecurity(secureTag, namespaces, secureTagContents, recipientKeyAlias,
                 xmlCipherAlgorithm, keyCipherAlgorithm, keyOrTrustStoreParametersId);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, Map<String, String> namespaces, boolean secureTagContents, String recipientKeyAlias,
             String xmlCipherAlgorithm, String keyCipherAlgorithm,
             String keyOrTrustStoreParametersId, String keyPassword) {
-        delegate.secureXML(secureTag, namespaces, secureTagContents, recipientKeyAlias,
+        delegate.xmlSecurity(secureTag, namespaces, secureTagContents, recipientKeyAlias,
                 xmlCipherAlgorithm, keyCipherAlgorithm, keyOrTrustStoreParametersId, keyPassword);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, Map<String, String> namespaces, boolean secureTagContents, String recipientKeyAlias,
             String xmlCipherAlgorithm, String keyCipherAlgorithm,
             KeyStoreParameters keyOrTrustStoreParameters) {
-        delegate.secureXML(secureTag, namespaces, secureTagContents, recipientKeyAlias,
+        delegate.xmlSecurity(secureTag, namespaces, secureTagContents, recipientKeyAlias,
                 xmlCipherAlgorithm, keyCipherAlgorithm, keyOrTrustStoreParameters);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, Map<String, String> namespaces, boolean secureTagContents, String recipientKeyAlias,
             String xmlCipherAlgorithm, String keyCipherAlgorithm,
             KeyStoreParameters keyOrTrustStoreParameters, String keyPassword) {
-        delegate.secureXML(secureTag, namespaces, secureTagContents, recipientKeyAlias,
+        delegate.xmlSecurity(secureTag, namespaces, secureTagContents, recipientKeyAlias,
                 xmlCipherAlgorithm, keyCipherAlgorithm, keyOrTrustStoreParameters, keyPassword);
         return result;
     }
 
-    public T secureXML(
+    public T xmlSecurity(
             String secureTag, Map<String, String> namespaces, boolean secureTagContents, String recipientKeyAlias,
             String xmlCipherAlgorithm, String keyCipherAlgorithm,
             KeyStoreParameters keyOrTrustStoreParameters, String keyPassword, String digestAlgorithm) {
-        delegate.secureXML(secureTag, namespaces, secureTagContents, recipientKeyAlias, xmlCipherAlgorithm,
+        delegate.xmlSecurity(secureTag, namespaces, secureTagContents, recipientKeyAlias, xmlCipherAlgorithm,
                 keyCipherAlgorithm, keyOrTrustStoreParameters, keyPassword, digestAlgorithm);
         return result;
     }
@@ -700,6 +701,17 @@ public class DataFormatClauseSupport<T> {
         return result;
     }
 
+    public T allowNullBody() {
+        delegate.allowNullBody();
+        return result;
+    }
+
+    public T allowNullBody(boolean allowNullBody) {
+        this.allowNullBody = allowNullBody;
+        delegate.allowNullBody(allowNullBody);
+        return result;
+    }
+
     public class InlineProcessDefinition extends ProcessDefinition {
         @Override
         public ProcessDefinition marshal(DataFormatDefinition dataFormatType) {
@@ -708,8 +720,9 @@ public class DataFormatClauseSupport<T> {
         }
 
         @Override
-        public ProcessDefinition unmarshal(DataFormatDefinition dataFormatType) {
+        public ProcessDefinition unmarshal(DataFormatDefinition dataFormatType, boolean allowNullBody) {
             dataFormat = dataFormatType;
+            DataFormatClauseSupport.this.allowNullBody = allowNullBody;
             return this;
         }
     }
@@ -720,5 +733,9 @@ public class DataFormatClauseSupport<T> {
 
     public DataFormatDefinition getDataFormat() {
         return dataFormat;
+    }
+
+    public boolean isAllowNullBody() {
+        return allowNullBody;
     }
 }
