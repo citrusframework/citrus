@@ -16,7 +16,7 @@
 
 package com.consol.citrus.mail.model;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 /**
  * Accept request is raised for each mail communication in prior to processing the mail message. If

@@ -1,25 +1,25 @@
 //
-// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.3.2 generiert 
-// Siehe <a href="https://javaee.github.io/jaxb-v2/">https://javaee.github.io/jaxb-v2/</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2020.03.04 um 04:11:49 PM CET 
+// Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.3.2 generiert
+// Siehe <a href="https://javaee.github.io/jaxb-v2/">https://javaee.github.io/jaxb-v2/</a>
+// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren.
+// Generiert: 2020.03.04 um 04:11:49 PM CET
 //
 
 
 package com.consol.citrus.demo.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
  * <p>Java-Klasse für anonymous complex type.
- * 
+ *
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
+ *
  * <pre>
  * &lt;complexType&gt;
  *   &lt;complexContent&gt;
@@ -34,8 +34,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -58,11 +58,11 @@ public class FaultDetail {
 
     /**
      * Ruft den Wert der messageId-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getMessageId() {
         return messageId;
@@ -70,11 +70,11 @@ public class FaultDetail {
 
     /**
      * Legt den Wert der messageId-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setMessageId(String value) {
         this.messageId = value;
@@ -82,11 +82,11 @@ public class FaultDetail {
 
     /**
      * Ruft den Wert der correlationId-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getCorrelationId() {
         return correlationId;
@@ -94,11 +94,11 @@ public class FaultDetail {
 
     /**
      * Legt den Wert der correlationId-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setCorrelationId(String value) {
         this.correlationId = value;
@@ -106,11 +106,11 @@ public class FaultDetail {
 
     /**
      * Ruft den Wert der errorCode-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getErrorCode() {
         return errorCode;
@@ -118,11 +118,11 @@ public class FaultDetail {
 
     /**
      * Legt den Wert der errorCode-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setErrorCode(String value) {
         this.errorCode = value;
@@ -130,11 +130,11 @@ public class FaultDetail {
 
     /**
      * Ruft den Wert der text-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getText() {
         return text;
@@ -142,11 +142,11 @@ public class FaultDetail {
 
     /**
      * Legt den Wert der text-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setText(String value) {
         this.text = value;

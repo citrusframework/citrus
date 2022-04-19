@@ -16,14 +16,14 @@
 
 package com.consol.citrus.jms.integration.service.model;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 
 /**
  * <p>Java-Klasse für anonymous complex type.
- * 
+ *
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -36,8 +36,8 @@ import javax.xml.bind.annotation.*;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -54,11 +54,11 @@ public class RequestHeader {
 
     /**
      * Ruft den Wert der service-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getService() {
         return service;
@@ -66,11 +66,11 @@ public class RequestHeader {
 
     /**
      * Legt den Wert der service-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setService(String value) {
         this.service = value;
@@ -78,11 +78,11 @@ public class RequestHeader {
 
     /**
      * Ruft den Wert der operation-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getOperation() {
         return operation;
@@ -90,11 +90,11 @@ public class RequestHeader {
 
     /**
      * Legt den Wert der operation-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setOperation(String value) {
         this.operation = value;

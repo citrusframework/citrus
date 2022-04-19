@@ -16,7 +16,7 @@
 
 package com.consol.citrus.mail.model;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 /**
  * Response outcome for accept requests. Just says whether accept request is accepted or declined according

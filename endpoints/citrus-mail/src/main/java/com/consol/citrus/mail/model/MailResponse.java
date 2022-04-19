@@ -16,7 +16,7 @@
 
 package com.consol.citrus.mail.model;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 /**
  * Custom mail message response used to respond to SMTP command with a specific code and

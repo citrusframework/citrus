@@ -77,13 +77,13 @@
     <util:map id="filters">
         <entry key="filter1">
             <bean id="filter1" class="org.mockito.Mockito" factory-method="mock">
-                <constructor-arg value="javax.servlet.Filter"/>
+                <constructor-arg value="jakarta.servlet.Filter"/>
                 <constructor-arg value="filter1"/>
             </bean>
         </entry>
         <entry key="filter2">
             <bean id="filter2" class="org.mockito.Mockito" factory-method="mock">
-                <constructor-arg value="javax.servlet.Filter"/>
+                <constructor-arg value="jakarta.servlet.Filter"/>
                 <constructor-arg value="filter2"/>
             </bean>
         </entry>

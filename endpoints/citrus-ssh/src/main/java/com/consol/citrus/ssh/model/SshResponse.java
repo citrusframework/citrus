@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ssh.model;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 /**
  * POJO encapsulate a SSH response. It is immutable.
