@@ -16,10 +16,10 @@
 
 package com.consol.citrus.xml.namespace;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * @author Christoph Deppisch

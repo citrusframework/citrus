@@ -14,49 +14,41 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh.model;
+package com.consol.citrus.generate.xml;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.Jaxb2Marshaller;
 import com.consol.citrus.xml.Marshaller;
-import com.consol.citrus.xml.Unmarshaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
+import com.consol.citrus.xml.namespace.CitrusNamespacePrefixMapper;
+import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch
- * @since 2.1
+ * @since 2.5
  */
-public class SshMarshaller implements Marshaller, Unmarshaller {
-
-    /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(SshMarshaller.class);
+public class TestActionMarshaller implements Marshaller {
 
     private final Jaxb2Marshaller marshaller;
 
-    public SshMarshaller() {
-        this.marshaller = new Jaxb2Marshaller(
-                new ClassPathResource("com/consol/citrus/schema/citrus-ssh-message.xsd"), SshRequest.class, SshResponse.class);
+    public TestActionMarshaller(Resource[] schemas, String... contextPaths) {
+        this.marshaller = new Jaxb2Marshaller(schemas, contextPaths);
+
+        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FRAGMENT, true);
+
+        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new CitrusNamespacePrefixMapper());
     }
 
+    @Override
     public void marshal(Object graph, Result result) {
         try {
             marshaller.marshal(graph, result);
         } catch (JAXBException e) {
             throw new CitrusRuntimeException("Failed to marshal object graph", e);
-        }
-    }
-
-    public Object unmarshal(Source source) {
-        try {
-            return marshaller.unmarshal(source);
-        } catch (JAXBException e) {
-            throw new CitrusRuntimeException("Failed to unmarshal source", e);
         }
     }
 }

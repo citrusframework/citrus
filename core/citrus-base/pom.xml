@@ -29,6 +29,12 @@
       <artifactId>commons-codec</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Optional dependencies -->
     <dependency>
       <groupId>org.apache.ant</groupId>
