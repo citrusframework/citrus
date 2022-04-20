@@ -24,8 +24,9 @@ import java.util.Collections;
 import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.dsl.TestRequest;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.xml.Marshaller;
+import com.consol.citrus.xml.MarshallerAdapter;
 import org.mockito.Mockito;
-import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -50,8 +51,8 @@ public class MarshallingPayloadBuilderTest extends UnitTestSupport {
 
     @Test
     public void shouldBuildPayload() {
-        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.singletonMap("marshaller", marshaller));
-        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
+        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.singletonMap("marshaller", new MarshallerAdapter(marshaller)));
+        when(referenceResolver.resolve(Marshaller.class)).thenReturn(new MarshallerAdapter(marshaller));
 
         context.setReferenceResolver(referenceResolver);
 
@@ -62,7 +63,7 @@ public class MarshallingPayloadBuilderTest extends UnitTestSupport {
 
     @Test
     public void shouldBuildPayloadWithMapper() {
-        MarshallingPayloadBuilder builder = new MarshallingPayloadBuilder(request, marshaller);
+        MarshallingPayloadBuilder builder = new MarshallingPayloadBuilder(request, new MarshallerAdapter(marshaller));
 
         Assert.assertEquals(builder.buildPayload(context), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
     }
@@ -70,7 +71,7 @@ public class MarshallingPayloadBuilderTest extends UnitTestSupport {
     @Test
     public void shouldBuildPayloadWithMapperName() {
         when(referenceResolver.isResolvable("marshaller")).thenReturn(true);
-        when(referenceResolver.resolve("marshaller", Marshaller.class)).thenReturn(marshaller);
+        when(referenceResolver.resolve("marshaller", Marshaller.class)).thenReturn(new MarshallerAdapter(marshaller));
 
         context.setReferenceResolver(referenceResolver);
 
@@ -82,7 +83,7 @@ public class MarshallingPayloadBuilderTest extends UnitTestSupport {
     @Test
     public void shouldBuildPayloadWithVariableSupport() {
         context.setVariable("message", "Hello Citrus!");
-        MarshallingPayloadBuilder builder = new MarshallingPayloadBuilder(new TestRequest("${message}"), marshaller);
+        MarshallingPayloadBuilder builder = new MarshallingPayloadBuilder(new TestRequest("${message}"), new MarshallerAdapter(marshaller));
 
         Assert.assertEquals(builder.buildPayload(context), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
     }

@@ -19,15 +19,13 @@
 
 package com.consol.citrus.message.builder;
 
-import java.io.IOException;
 import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessagePayloadBuilder;
+import com.consol.citrus.xml.Marshaller;
 import com.consol.citrus.xml.StringResult;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.XmlMappingException;
 
 /**
  * @author Christoph Deppisch
@@ -105,7 +103,7 @@ public class MarshallingPayloadBuilder extends DefaultPayloadBuilder {
 
         try {
             marshaller.marshal(model, result);
-        } catch (final XmlMappingException | IOException e) {
+        } catch (final Exception e) {
             throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
         }
 

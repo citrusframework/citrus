@@ -23,54 +23,45 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import java.io.IOException;
 
-import org.springframework.oxm.MarshallingFailureException;
-import org.springframework.oxm.UnmarshallingFailureException;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
 
 /**
- * Spring Oxm marshaller delegates to given internal marshaller.
+ * Marshaller delegates to given Spring Oxm marshaller.
  * @author Christoph Deppisch
  */
-public class SpringOxmMarshaller implements org.springframework.oxm.Marshaller, org.springframework.oxm.Unmarshaller {
+public class MarshallerAdapter implements com.consol.citrus.xml.Marshaller, com.consol.citrus.xml.Unmarshaller {
 
     private final Marshaller marshaller;
     private final Unmarshaller unmarshaller;
 
-    public SpringOxmMarshaller(Marshaller marshaller) {
+    public MarshallerAdapter(Marshaller marshaller) {
         this.marshaller = marshaller;
 
         if (marshaller instanceof Unmarshaller) {
             this.unmarshaller = (Unmarshaller) marshaller;
         } else {
-            throw new IllegalArgumentException("Failed to initialize Spring Oxm marshaller - missing proper unmarshaller delegate");
+            throw new IllegalArgumentException("Failed to initialize marshaller - missing proper Spring Oxm unmarshaller delegate");
         }
     }
 
-    public SpringOxmMarshaller(Marshaller marshaller, Unmarshaller unmarshaller) {
+    public MarshallerAdapter(Marshaller marshaller, Unmarshaller unmarshaller) {
         this.marshaller = marshaller;
         this.unmarshaller = unmarshaller;
     }
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return true;
+    public static MarshallerAdapter marshaller(Marshaller marshaller) {
+        return new MarshallerAdapter(marshaller);
     }
 
     @Override
     public Object unmarshal(Source source) throws IOException, XmlMappingException {
-        try {
-            return unmarshaller.unmarshal(source);
-        } catch (Exception e) {
-            throw new UnmarshallingFailureException("Failed to unmarshal source", e.getCause());
-        }
+        return unmarshaller.unmarshal(source);
     }
 
     @Override
     public void marshal(Object graph, Result result) throws IOException, XmlMappingException {
-        try {
-            marshaller.marshal(graph, result);
-        } catch (Exception e) {
-            throw new MarshallingFailureException("Failed to marshal object graph", e.getCause());
-        }
+        marshaller.marshal(graph, result);
     }
 }

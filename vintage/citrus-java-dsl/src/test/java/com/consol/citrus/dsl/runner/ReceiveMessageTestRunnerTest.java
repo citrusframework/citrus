@@ -42,9 +42,9 @@ import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
-import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -59,6 +59,8 @@ import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
+import com.consol.citrus.xml.Marshaller;
+import com.consol.citrus.xml.MarshallerAdapter;
 import com.consol.citrus.xml.StringSource;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
@@ -66,7 +68,6 @@ import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.XsdSchema;
@@ -187,8 +188,8 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
-        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
+        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", new MarshallerAdapter(marshaller)));
+        when(referenceResolver.resolve(Marshaller.class)).thenReturn(new MarshallerAdapter(marshaller));
 
         context.setReferenceResolver(referenceResolver);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
@@ -272,7 +273,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(marshaller);
+        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(new MarshallerAdapter(marshaller));
 
         context.setReferenceResolver(referenceResolver);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
@@ -633,8 +634,8 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
-        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
+        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", new MarshallerAdapter(marshaller)));
+        when(referenceResolver.resolve(Marshaller.class)).thenReturn(new MarshallerAdapter(marshaller));
 
         context.setReferenceResolver(referenceResolver);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
@@ -722,7 +723,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(marshaller);
+        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(new MarshallerAdapter(marshaller));
 
         context.setReferenceResolver(referenceResolver);
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {

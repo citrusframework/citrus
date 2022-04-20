@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -17,23 +17,20 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation.xml;
-
-import com.consol.citrus.xml.MarshallerAdapter;
-import org.springframework.oxm.Unmarshaller;
+package com.consol.citrus.context.resolver;
 
 /**
- * @deprecated in favor of using {@link XmlMarshallingValidationProcessor}
+ * Type resolver able to adapt an alias type to a given source type. Used in {@link com.consol.citrus.spi.ReferenceResolver} to
+ * auto resolve types that can act as an alias interchangeably to a given type.
+ *
  * @author Christoph Deppisch
  */
-@Deprecated
-public abstract class XmlMarshallingValidationCallback<T> extends XmlMarshallingValidationProcessor<T> {
+public interface TypeAliasResolver<S, A> {
 
-    public XmlMarshallingValidationCallback() {
-        super();
-    }
+    boolean isAliasFor(Class<?> sourceType);
 
-    public XmlMarshallingValidationCallback(Unmarshaller unmarshaller) {
-        super(new MarshallerAdapter(null, unmarshaller));
-    }
+    S adapt(Object alias);
+
+    Class<A> getAliasType();
+
 }

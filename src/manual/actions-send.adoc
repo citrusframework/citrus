@@ -180,7 +180,7 @@ send("helloService")
 ----
 
 The model object requires a proper message marshaller that should be available as bean in the project context (e.g. the
-Spring application context). By default, Citrus is searching for a bean of type *org.springframework.oxm.Marshaller*.
+Spring application context). By default, Citrus is searching for a bean of type *com.consol.cirus.xml.Marshaller*.
 
 In case you have multiple message marshallers in the application context you have to tell Citrus which one to use in this
 particular send message action.
