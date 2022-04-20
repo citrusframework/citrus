@@ -16,95 +16,80 @@
 
 package com.consol.citrus.mail.model;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.xml.Jaxb2Marshaller;
+import com.consol.citrus.xml.Marshaller;
 import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.Unmarshaller;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 /**
  * @author Christoph Deppisch
  * @since 2.1
  */
-public class MailMarshaller extends ObjectMapper implements Marshaller, Unmarshaller {
+public class MailMarshaller implements Marshaller, Unmarshaller {
+
+    /** Logger */
+    private static final Logger log = LoggerFactory.getLogger(MailMarshaller.class);
 
     /** System property defining message format to marshal to */
     private static final String MAIL_MARSHALLER_TYPE_PROPERTY = "citrus.mail.marshaller.type";
 
-    /** XML marshalling delegate */
-    private Jaxb2Marshaller jaxbDelegate = new Jaxb2Marshaller();
-
     /** Message type format: XML or JSON */
-    private String type = MessageType.XML.name();
+    private String type;
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MailMarshaller.class);
+    private final ObjectMapper mapper;
+    private final Jaxb2Marshaller marshaller;
+
+    private final Class<?>[] classesToBeBound = new Class[] {AcceptRequest.class, AcceptResponse.class, MailRequest.class, MailResponse.class};
 
     /**
      * Default constructor
      */
     public MailMarshaller() {
-        jaxbDelegate.setClassesToBeBound(MailRequest.class,
-                MailResponse.class,
-                AcceptRequest.class,
-                AcceptResponse.class);
+        this.mapper = new ObjectMapper();
+        this.marshaller = new Jaxb2Marshaller(new ClassPathResource("com/consol/citrus/schema/citrus-mail-message.xsd"), classesToBeBound);
 
-        jaxbDelegate.setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-mail-message.xsd"));
-
-        type = System.getProperty(MAIL_MARSHALLER_TYPE_PROPERTY, type);
-
-        try {
-            jaxbDelegate.afterPropertiesSet();
-        } catch (Exception e) {
-            log.warn("Failed to setup mail message marshaller", e);
-        }
+        type = System.getProperty(MAIL_MARSHALLER_TYPE_PROPERTY, MessageType.XML.name());
     }
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return jaxbDelegate.supports(clazz);
-    }
-
-    @Override
     public Object unmarshal(Source source) {
         if (type.equalsIgnoreCase(MessageType.XML.name())) {
             try {
-                return jaxbDelegate.unmarshal(source);
-            } catch (XmlMappingException e) {
+                return marshaller.unmarshal(source);
+            } catch (JAXBException e) {
                 if (source instanceof StreamSource) {
-                    for (Class<?> type : Arrays.asList(AcceptRequest.class, AcceptResponse.class, MailRequest.class, MailResponse.class)) {
+                    for (Class<?> type : classesToBeBound) {
                         try {
-                            return readValue(((StreamSource) source).getReader(), type);
+                            return mapper.readValue(((StreamSource) source).getReader(), type);
                         } catch (JsonParseException | JsonMappingException e2) {
                             continue;
                         } catch (IOException io) {
                             log.warn("Unable to read mail JSON object from source", io);
-                            throw e;
+                            throw new CitrusRuntimeException("Failed to unmarshal source", io);
                         }
                     }
                 }
 
-                throw e;
+                throw new CitrusRuntimeException("Failed to unmarshal source", e);
             }
         } else if (type.equalsIgnoreCase(MessageType.JSON.name())) {
-            for (Class<?> type : Arrays.asList(AcceptRequest.class, AcceptResponse.class, MailRequest.class, MailResponse.class)) {
+            for (Class<?> type : classesToBeBound) {
                 try {
-                    return readValue(((StreamSource) source).getReader(), type);
+                    return mapper.readValue(((StreamSource) source).getReader(), type);
                 } catch (JsonParseException | JsonMappingException e2) {
                     continue;
                 } catch (IOException io) {
@@ -117,20 +102,23 @@ public class MailMarshaller extends ObjectMapper implements Marshaller, Unmarsha
         }
     }
 
-    @Override
     public void marshal(Object graph, Result result) {
         if (type.equalsIgnoreCase(MessageType.JSON.name())) {
             if (result instanceof StringResult) {
                 StringWriter writer = new StringWriter();
                 ((StringResult) result).setWriter(writer);
                 try {
-                    writer().writeValue(writer, graph);
+                    mapper.writer().writeValue(writer, graph);
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to write mail object graph to result", e);
                 }
             }
         } else if (type.equalsIgnoreCase(MessageType.XML.name())) {
-            jaxbDelegate.marshal(graph, result);
+            try {
+                marshaller.marshal(graph, result);
+            } catch (JAXBException e) {
+                throw new CitrusRuntimeException("Failed to marshal object graph", e);
+            }
         } else {
             throw new CitrusRuntimeException("Unsupported mail marshaller type: " + type);
         }

@@ -16,12 +16,9 @@
 
 package com.consol.citrus.generate.xml;
 
-import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -33,10 +30,8 @@ import com.consol.citrus.model.testcase.core.EchoModel;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.xml.StringResult;
-import com.consol.citrus.xml.namespace.CitrusNamespacePrefixMapper;
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch
@@ -48,25 +43,10 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
     private GeneratorMode mode = GeneratorMode.CLIENT;
 
     /** XML fragment marshaller for test actions */
-    private Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-
-    /** Namespace prefix mapper */
-    private NamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
+    private volatile TestActionMarshaller marshaller;
 
     public XmlTestGenerator() {
         withFileExtension(FileUtils.FILE_EXTENSION_XML);
-        marshaller.setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-testcase.xsd"));
-        List<String> contextPaths = getMarshallerContextPaths();
-        marshaller.setContextPaths(contextPaths.toArray(new String[contextPaths.size()]));
-
-        Map<String, Object> marshallerProperties = new HashMap<>();
-        marshallerProperties.put(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshallerProperties.put(Marshaller.JAXB_ENCODING, "UTF-8");
-        marshallerProperties.put(Marshaller.JAXB_FRAGMENT, true);
-
-        marshallerProperties.put("com.sun.xml.bind.namespacePrefixMapper", namespacePrefixMapper);
-
-        marshaller.setMarshallerProperties(marshallerProperties);
     }
 
     /**
@@ -89,6 +69,16 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
         return contextPaths;
     }
 
+    /**
+     * Marshaller schema. Subclasses may overwrite schema or set to null to disable schema validation of marshalled data.
+     * @return
+     */
+    protected List<Resource> getMarshallerSchemas() {
+        List<Resource> schemas = new ArrayList<>();
+        schemas.add(new ClassPathResource("com/consol/citrus/schema/citrus-testcase.xsd"));
+        return schemas;
+    }
+
     @Override
     public void create() {
         super.create();
@@ -101,11 +91,21 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
 
         properties.put("test.actions", getActions().stream().map(action -> {
             StringResult result = new StringResult();
-            marshaller.marshal(action, result);
+            createMarshaller().marshal(action, result);
             return Pattern.compile("^", Pattern.MULTILINE).matcher(result.toString()).replaceAll("        ");
         }).collect(Collectors.joining("\n\n")));
 
         return properties;
+    }
+
+    private TestActionMarshaller createMarshaller() {
+        if (marshaller == null) {
+            synchronized (this) {
+                marshaller = new TestActionMarshaller(getMarshallerSchemas().toArray(new Resource[0]), getMarshallerContextPaths().toArray(new String[0]));
+            }
+        }
+
+        return marshaller;
     }
 
     /**
@@ -150,7 +150,7 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
      *
      * @param marshaller
      */
-    public void setMarshaller(Jaxb2Marshaller marshaller) {
+    public void setMarshaller(TestActionMarshaller marshaller) {
         this.marshaller = marshaller;
     }
 
@@ -159,26 +159,8 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
      *
      * @return
      */
-    public Jaxb2Marshaller getMarshaller() {
+    public TestActionMarshaller getMarshaller() {
         return marshaller;
-    }
-
-    /**
-     * Gets the namespacePrefixMapper.
-     *
-     * @return
-     */
-    public NamespacePrefixMapper getNamespacePrefixMapper() {
-        return namespacePrefixMapper;
-    }
-
-    /**
-     * Sets the namespacePrefixMapper.
-     *
-     * @param namespacePrefixMapper
-     */
-    public void setNamespacePrefixMapper(NamespacePrefixMapper namespacePrefixMapper) {
-        this.namespacePrefixMapper = namespacePrefixMapper;
     }
 
     /**

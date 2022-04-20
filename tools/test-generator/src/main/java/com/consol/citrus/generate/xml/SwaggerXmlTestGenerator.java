@@ -54,6 +54,8 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.models.properties.StringProperty;
 import io.swagger.parser.SwaggerParser;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
@@ -171,6 +173,13 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
         List<String> contextPaths = super.getMarshallerContextPaths();
         contextPaths.add(ObjectFactory.class.getPackage().getName());
         return contextPaths;
+    }
+
+    @Override
+    protected List<Resource> getMarshallerSchemas() {
+        List<Resource> schemas = super.getMarshallerSchemas();
+        schemas.add(new ClassPathResource("com/consol/citrus/schema/citrus-http-testcase.xsd"));
+        return schemas;
     }
 
     /**
