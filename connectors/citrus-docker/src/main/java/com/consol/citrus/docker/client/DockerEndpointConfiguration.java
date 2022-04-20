@@ -19,8 +19,10 @@ package com.consol.citrus.docker.client;
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
-import com.github.dockerjava.core.*;
-import com.github.dockerjava.jaxrs.JerseyDockerCmdExecFactory;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.okhttp.OkDockerHttpClient;
 
 /**
  * @author Christoph Deppisch
@@ -42,8 +44,9 @@ public class DockerEndpointConfiguration extends AbstractPollableEndpointConfigu
      * @return
      */
     private com.github.dockerjava.api.DockerClient createDockerClient() {
-        return DockerClientImpl.getInstance(getDockerClientConfig())
-                .withDockerCmdExecFactory(new JerseyDockerCmdExecFactory());
+        return DockerClientImpl.getInstance(getDockerClientConfig(), new OkDockerHttpClient.Builder()
+                        .dockerHost(getDockerClientConfig().getDockerHost())
+                .build());
     }
 
     /**
