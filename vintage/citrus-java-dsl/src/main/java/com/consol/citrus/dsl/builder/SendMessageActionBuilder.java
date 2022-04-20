@@ -26,6 +26,7 @@ import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
+import com.consol.citrus.xml.MarshallerAdapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
@@ -154,7 +155,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B payload(Object payload, Marshaller marshaller) {
-        delegate.message().body(new MarshallingPayloadBuilder(payload, marshaller));
+        delegate.message().body(new MarshallingPayloadBuilder(payload, new MarshallerAdapter(marshaller)));
         return self;
     }
 
@@ -258,7 +259,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B headerFragment(Object model, Marshaller marshaller) {
-        delegate.message().header(new MarshallingHeaderDataBuilder(model, marshaller));
+        delegate.message().header(new MarshallingHeaderDataBuilder(model, new MarshallerAdapter(marshaller)));
         return self;
     }
 

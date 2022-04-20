@@ -29,10 +29,6 @@
       <groupId>org.springframework.ws</groupId>
       <artifactId>spring-xml</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-oxm</artifactId>
-    </dependency>
 
     <!-- JAXB -->
     <dependency>
@@ -72,6 +68,11 @@
     </dependency>
 
     <!-- Test scoped dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-oxm</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-jsr223</artifactId>

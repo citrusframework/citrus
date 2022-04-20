@@ -17,7 +17,7 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
     @Override
     public <T> T resolve(Class<T> type) {
         return objectStore.values().stream()
-                .filter(type::isInstance)
+                .filter(v -> v != null && type.isAssignableFrom(v.getClass()))
                 .map(type::cast)
                 .findFirst()
                 .orElseThrow(() -> new CitrusRuntimeException(String.format("Unable to find bean reference for type '%s'", type)));
@@ -35,7 +35,8 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
     @Override
     public <T> T resolve(String name, Class<T> type) {
         return objectStore.entrySet().stream()
-                .filter(entry -> name.equals(entry.getKey()) && type.isInstance(entry.getValue()))
+                .filter(entry -> entry.getValue() != null)
+                .filter(entry -> name.equals(entry.getKey()) && type.isAssignableFrom(entry.getValue().getClass()))
                 .map(Map.Entry::getValue)
                 .map(type::cast)
                 .findFirst()
@@ -45,7 +46,8 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
     @Override
     public <T> Map<String, T> resolveAll(Class<T> type) {
         return objectStore.entrySet().stream()
-                .filter(entry -> type.isInstance(entry.getValue()))
+                .filter(entry -> entry.getValue() != null)
+                .filter(entry -> type.isAssignableFrom(entry.getValue().getClass()))
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> type.cast(entry.getValue())));
     }
 
@@ -57,12 +59,13 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
     @Override
     public boolean isResolvable(Class<?> type) {
         return objectStore.entrySet().stream()
-                .anyMatch(entry -> type.isInstance(entry.getValue()));
+                .filter(entry -> entry.getValue() != null)
+                .anyMatch(entry -> type.isAssignableFrom(entry.getValue().getClass()));
     }
 
     @Override
     public boolean isResolvable(String name, Class<?> type) {
-        return objectStore.containsKey(name) && type.equals(objectStore.get(name).getClass());
+        return objectStore.containsKey(name) && type.isAssignableFrom(objectStore.get(name).getClass());
     }
 
     @Override
