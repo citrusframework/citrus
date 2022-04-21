@@ -41,7 +41,7 @@ public class KafkaEmbeddedServerParserTest extends AbstractBeanDefinitionParserT
         Assert.assertEquals(kafkaServer.getPartitions(), 1);
         Assert.assertTrue(kafkaServer.isAutoDeleteLogs());
         Assert.assertNull(kafkaServer.getLogDirPath());
-        Assert.assertEquals(kafkaServer.getKafkaServerPort(), 9092);
+        Assert.assertTrue(kafkaServer.getKafkaServerPort() >= 9092);
         Assert.assertTrue(kafkaServer.getZookeeperPort() > 0);
         Assert.assertEquals(kafkaServer.getBrokerProperties().size(), 0L);
 
