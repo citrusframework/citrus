@@ -32,22 +32,26 @@ import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.selenium.actions.SeleniumAction;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
-import org.openqa.selenium.support.events.WebDriverEventListener;
+import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.WebDriverListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -111,11 +115,8 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
             }
 
             if (!CollectionUtils.isEmpty(getEndpointConfiguration().getEventListeners())) {
-                EventFiringWebDriver wrapper = new EventFiringWebDriver(webDriver);
                 LOG.info("Add event listeners to web driver: " + getEndpointConfiguration().getEventListeners().size());
-                for (WebDriverEventListener listener : getEndpointConfiguration().getEventListeners()) {
-                    wrapper.register(listener);
-                }
+                webDriver = new EventFiringDecorator(getEndpointConfiguration().getEventListeners().toArray(new WebDriverListener[0])).decorate(webDriver);
             }
         } else {
             LOG.debug("Browser already started");
@@ -203,53 +204,49 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
      * @return
      */
     private WebDriver createLocalWebDriver(String browserType) {
-        switch (browserType) {
-            case BrowserType.FIREFOX:
-                FirefoxProfile firefoxProfile = getEndpointConfiguration().getFirefoxProfile();
+        if (Browser.FIREFOX.is(browserType)) {
+            FirefoxProfile firefoxProfile = getEndpointConfiguration().getFirefoxProfile();
 
-                /* set custom download folder */
-                firefoxProfile.setPreference("browser.download.dir", temporaryStorage.toFile().getAbsolutePath());
+            /* set custom download folder */
+            firefoxProfile.setPreference("browser.download.dir", temporaryStorage.toFile().getAbsolutePath());
 
-                DesiredCapabilities defaults = DesiredCapabilities.firefox();
-                defaults.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
-                return new FirefoxDriver(defaults);
-            case BrowserType.IE:
-                return new InternetExplorerDriver();
-            case BrowserType.EDGE:
-                return new EdgeDriver();
-            case BrowserType.SAFARI:
-                return new SafariDriver();
-            case BrowserType.CHROME:
-                return new ChromeDriver();
-            case BrowserType.GOOGLECHROME:
-                return new ChromeDriver();
-            case BrowserType.HTMLUNIT:
-                BrowserVersion browserVersion = null;
-                switch (getEndpointConfiguration().getVersion()) {
-                    case "FIREFOX":
-                        browserVersion = BrowserVersion.FIREFOX;
-                        break;
-                    case "FIREFOX_78":
-                        browserVersion = BrowserVersion.FIREFOX_78;
-                        break;
-                    case "INTERNET_EXPLORER":
-                        browserVersion = BrowserVersion.INTERNET_EXPLORER;
-                        break;
-                    case "CHROME":
-                        browserVersion = BrowserVersion.CHROME;
-                        break;
-                }
+            return new FirefoxDriver(new FirefoxOptions().setProfile(firefoxProfile));
+        } else if (Browser.IE.is(browserType)) {
+            return new InternetExplorerDriver();
+        } else if (Browser.EDGE.is(browserType)) {
+            return new EdgeDriver();
+        } else if (Browser.SAFARI.is(browserType)) {
+            return new SafariDriver();
+        } else if (Browser.CHROME.is(browserType)) {
+            return new ChromeDriver();
+        } else if (Browser.HTMLUNIT.is(browserType)) {
+            BrowserVersion browserVersion = null;
+            switch (getEndpointConfiguration().getVersion()) {
+                case "FIREFOX":
+                    browserVersion = BrowserVersion.FIREFOX;
+                    break;
+                case "FIREFOX_78":
+                case "FIREFOX_ESR":
+                    browserVersion = BrowserVersion.FIREFOX_ESR;
+                    break;
+                case "INTERNET_EXPLORER":
+                    browserVersion = BrowserVersion.INTERNET_EXPLORER;
+                    break;
+                case "CHROME":
+                    browserVersion = BrowserVersion.CHROME;
+                    break;
+            }
 
-                HtmlUnitDriver htmlUnitDriver;
-                if (browserVersion != null) {
-                    htmlUnitDriver = new HtmlUnitDriver(browserVersion, getEndpointConfiguration().isJavaScript());
-                } else {
-                    htmlUnitDriver = new HtmlUnitDriver(getEndpointConfiguration().isJavaScript());
-                }
-                return htmlUnitDriver;
-            default:
-                throw new CitrusRuntimeException("Unsupported local browser type: " + browserType);
+            HtmlUnitDriver htmlUnitDriver;
+            if (browserVersion != null) {
+                htmlUnitDriver = new HtmlUnitDriver(browserVersion, getEndpointConfiguration().isJavaScript());
+            } else {
+                htmlUnitDriver = new HtmlUnitDriver(getEndpointConfiguration().isJavaScript());
+            }
+            return htmlUnitDriver;
         }
+
+        throw new CitrusRuntimeException("Unsupported local browser type: " + browserType);
     }
 
     /**
@@ -261,26 +258,25 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
      */
     private RemoteWebDriver createRemoteWebDriver(String browserType, String serverAddress) {
         try {
-            switch (browserType) {
-                case BrowserType.FIREFOX:
-                    DesiredCapabilities defaultsFF = DesiredCapabilities.firefox();
-                    defaultsFF.setCapability(FirefoxDriver.PROFILE, getEndpointConfiguration().getFirefoxProfile());
-                    return new RemoteWebDriver(new URL(serverAddress), defaultsFF);
-                case BrowserType.IE:
-                    DesiredCapabilities defaultsIE = DesiredCapabilities.internetExplorer();
-                    defaultsIE.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-                    return new RemoteWebDriver(new URL(serverAddress), defaultsIE);
-                case BrowserType.CHROME:
-                    DesiredCapabilities defaultsChrome = DesiredCapabilities.chrome();
-                    defaultsChrome.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-                    return new RemoteWebDriver(new URL(serverAddress), defaultsChrome);
-                case BrowserType.GOOGLECHROME:
-                    DesiredCapabilities defaultsGoogleChrome = DesiredCapabilities.chrome();
-                    defaultsGoogleChrome.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-                    return new RemoteWebDriver(new URL(serverAddress), defaultsGoogleChrome);
-                default:
-                    throw new CitrusRuntimeException("Unsupported remote browser type: " + browserType);
+            MutableCapabilities options;
+            if (Browser.FIREFOX.is(browserType)) {
+                options = new FirefoxOptions().setProfile(getEndpointConfiguration().getFirefoxProfile());
+            } else if (Browser.IE.is(browserType)) {
+                options = new InternetExplorerOptions();
+                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                return new RemoteWebDriver(new URL(serverAddress), options);
+            } else if (Browser.EDGE.is(browserType)) {
+                options = new EdgeOptions();
+                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                return new RemoteWebDriver(new URL(serverAddress), options);
+            } else if (Browser.CHROME.is(browserType)) {
+                options = new ChromeOptions();
+                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+            } else {
+                throw new CitrusRuntimeException("Unsupported remote browser type: " + browserType);
             }
+
+            return new RemoteWebDriver(new URL(serverAddress), options);
         } catch (MalformedURLException e) {
             throw new CitrusRuntimeException("Failed to access remote server", e);
         }

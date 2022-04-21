@@ -141,7 +141,7 @@
     <project.docs.version>${project.version}</project.docs.version>
     <spring.version>5.3.19</spring.version>
     <spring.ws.version>3.1.3</spring.ws.version>
-    <spring.integration.version>5.5.10</spring.integration.version>
+    <spring.integration.version>5.5.11</spring.integration.version>
     <spring.restdocs.version>2.0.6.RELEASE</spring.restdocs.version>
     <kafka.version>3.1.0</kafka.version>
     <apache.camel.version>3.16.0</apache.camel.version>
@@ -175,8 +175,8 @@
     <hamcrest.version>2.2</hamcrest.version>
     <citrus.db.version>0.1.4</citrus.db.version>
     <httpclient.version>4.5.13</httpclient.version>
-    <selenium.version>3.141.59</selenium.version>
-    <htmlunit.version>2.49.1</htmlunit.version>
+    <selenium.version>4.1.0</selenium.version>
+    <htmlunit.version>3.60.0</htmlunit.version>
     <byte.buddy.version>1.12.9</byte.buddy.version>
     <google.guava.version>31.1-jre</google.guava.version>
     <failsafe.version>2.22.2</failsafe.version>

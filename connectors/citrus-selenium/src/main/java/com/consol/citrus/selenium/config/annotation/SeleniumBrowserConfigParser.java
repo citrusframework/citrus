@@ -22,7 +22,7 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.support.events.WebDriverEventListener;
+import org.openqa.selenium.support.events.WebDriverListener;
 import org.springframework.util.StringUtils;
 
 /**
@@ -63,7 +63,7 @@ public class SeleniumBrowserConfigParser implements AnnotationConfigParser<Selen
             builder.profile(referenceResolver.resolve(annotation.firefoxProfile(), FirefoxProfile.class));
         }
 
-        builder.eventListeners(referenceResolver.resolve(annotation.eventListeners(), WebDriverEventListener.class));
+        builder.eventListeners(referenceResolver.resolve(annotation.eventListeners(), WebDriverListener.class));
 
         builder.javaScript(annotation.javaScript());
 

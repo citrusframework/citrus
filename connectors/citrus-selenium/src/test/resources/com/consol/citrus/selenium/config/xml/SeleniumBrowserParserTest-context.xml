@@ -39,7 +39,7 @@
   </bean>
 
   <bean id="eventListener" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.openqa.selenium.support.events.WebDriverEventListener"/>
+    <constructor-arg value="org.openqa.selenium.support.events.WebDriverListener"/>
   </bean>
 
 </beans>

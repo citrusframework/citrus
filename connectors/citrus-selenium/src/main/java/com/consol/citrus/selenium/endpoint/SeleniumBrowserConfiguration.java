@@ -23,7 +23,7 @@ import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.BrowserType;
-import org.openqa.selenium.support.events.WebDriverEventListener;
+import org.openqa.selenium.support.events.WebDriverListener;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -47,7 +47,7 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
     private String version = "FIREFOX";
 
     /** Web driver event listeners */
-    private List<WebDriverEventListener> eventListeners = new ArrayList<>();
+    private List<WebDriverListener> eventListeners = new ArrayList<>();
 
     /** Custom web driver instance */
     private WebDriver webDriver;
@@ -123,7 +123,7 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
      * Gets the event listeners.
      * @return
      */
-    public List<WebDriverEventListener> getEventListeners() {
+    public List<WebDriverListener> getEventListeners() {
         return eventListeners;
     }
 
@@ -131,7 +131,7 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
      * Sets the event listeners.
      * @param eventListeners
      */
-    public void setEventListeners(List<WebDriverEventListener> eventListeners) {
+    public void setEventListeners(List<WebDriverListener> eventListeners) {
         this.eventListeners = eventListeners;
     }
 
