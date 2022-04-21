@@ -86,7 +86,7 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
         when(referenceResolver.resolve("sessionConfig", Map.class)).thenReturn(Collections.singletonMap("PreferredAuthentications", "gssapi-with-mic"));

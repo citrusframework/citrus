@@ -54,7 +54,7 @@ public class CitrusLifecycleHandlerTest {
 
     @BeforeClass
     public void setupMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

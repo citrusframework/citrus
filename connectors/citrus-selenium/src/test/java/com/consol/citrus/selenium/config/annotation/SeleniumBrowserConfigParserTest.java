@@ -83,7 +83,7 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("webDriver", WebDriver.class)).thenReturn(webDriver);
         when(referenceResolver.resolve("firefoxProfile", FirefoxProfile.class)).thenReturn(firefoxProfile);

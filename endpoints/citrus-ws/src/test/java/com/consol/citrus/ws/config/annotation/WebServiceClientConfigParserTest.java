@@ -118,7 +118,7 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("messageFactory", WebServiceMessageFactory.class)).thenReturn(messageFactory);
         when(referenceResolver.resolve("soapMessageFactory", WebServiceMessageFactory.class)).thenReturn(messageFactory);

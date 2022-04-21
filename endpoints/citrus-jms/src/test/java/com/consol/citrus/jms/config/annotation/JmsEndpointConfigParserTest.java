@@ -123,7 +123,7 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() throws JMSException {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
 

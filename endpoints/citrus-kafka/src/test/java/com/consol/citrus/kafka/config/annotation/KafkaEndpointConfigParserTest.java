@@ -91,7 +91,7 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("messageConverter", KafkaMessageConverter.class)).thenReturn(messageConverter);
         when(referenceResolver.resolve("headerMapper", KafkaMessageHeaderMapper.class)).thenReturn(headerMapper);

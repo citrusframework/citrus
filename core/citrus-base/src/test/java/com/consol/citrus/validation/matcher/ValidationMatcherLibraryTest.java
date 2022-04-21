@@ -37,7 +37,7 @@ public class ValidationMatcherLibraryTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         validationMatcherLibrary.setName("fooValidationMatcherLibrary");
         validationMatcherLibrary.setPrefix("foo:");

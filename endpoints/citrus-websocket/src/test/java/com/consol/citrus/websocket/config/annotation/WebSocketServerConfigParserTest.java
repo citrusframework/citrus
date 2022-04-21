@@ -59,7 +59,7 @@ public class WebSocketServerConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("messageConverter", WebSocketMessageConverter.class)).thenReturn(messageConverter);
         when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
