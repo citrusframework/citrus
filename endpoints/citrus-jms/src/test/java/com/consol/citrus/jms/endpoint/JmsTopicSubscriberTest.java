@@ -74,7 +74,7 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() throws JMSException {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(applicationContext.getBean("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
 

@@ -79,7 +79,7 @@ public class VertxEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("vertxInstanceFactory", VertxInstanceFactory.class)).thenReturn(vertxInstanceFactory);
         when(referenceResolver.resolve("specialVertxInstanceFactory", VertxInstanceFactory.class)).thenReturn(specialVertxInstanceFactory);

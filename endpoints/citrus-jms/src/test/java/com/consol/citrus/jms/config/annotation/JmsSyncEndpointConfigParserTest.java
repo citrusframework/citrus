@@ -123,7 +123,7 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
         when(referenceResolver.resolve("jmsQueue", Destination.class)).thenReturn(jmsQueue);

@@ -109,7 +109,7 @@ public class ChannelSyncEndpointConfigParserTest extends AbstractTestNGUnitTest 
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("messagingTemplate", MessagingTemplate.class)).thenReturn(messagingTemplate);
         when(referenceResolver.resolve("channelQueue", MessageChannel.class)).thenReturn(channelQueue);

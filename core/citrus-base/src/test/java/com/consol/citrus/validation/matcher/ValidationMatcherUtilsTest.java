@@ -41,7 +41,7 @@ public class ValidationMatcherUtilsTest extends UnitTestSupport {
 
     @BeforeClass
     public void setupMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         validationMatcherLibrary.setName("fooValidationMatcherLibrary");
         validationMatcherLibrary.setPrefix("foo:");

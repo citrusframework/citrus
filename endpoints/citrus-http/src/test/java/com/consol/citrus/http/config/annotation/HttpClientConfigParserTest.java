@@ -114,7 +114,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("soapRequestFactory", ClientHttpRequestFactory.class)).thenReturn(requestFactory);
         when(referenceResolver.resolve("messageConverter", HttpMessageConverter.class)).thenReturn(messageConverter);

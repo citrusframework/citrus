@@ -67,7 +67,7 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
         when(referenceResolver.resolve("objectMapper", ObjectMapper.class)).thenReturn(objectMapper);

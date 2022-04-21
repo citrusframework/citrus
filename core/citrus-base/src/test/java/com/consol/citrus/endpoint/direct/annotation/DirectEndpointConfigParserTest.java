@@ -71,7 +71,7 @@ public class DirectEndpointConfigParserTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("myQueue", MessageQueue.class)).thenReturn(myQueue);
         when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
