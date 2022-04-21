@@ -20,7 +20,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -33,9 +36,9 @@ import static org.mockito.Mockito.*;
  */
 public class WaitUntilActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
-    private WebDriver webDriver = Mockito.mock(WebDriver.class);
-    private WebElement element = Mockito.mock(WebElement.class);
+    private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
+    private final WebDriver webDriver = Mockito.mock(WebDriver.class);
+    private final WebElement element = Mockito.mock(WebElement.class);
 
     @BeforeMethod
     public void setup() {
