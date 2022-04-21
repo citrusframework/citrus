@@ -19,7 +19,6 @@
 
 package com.consol.citrus.cucumber;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -97,8 +96,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
         RuntimeOptions runtimeOptions = commandlineOptionsParser.parse(args.toArray(new String[0]))
                 .addDefaultGlueIfAbsent()
                 .addDefaultFeaturePathIfAbsent()
-                .addDefaultFormatterIfAbsent()
-                .addDefaultSummaryPrinterIfAbsent()
+                .addDefaultSummaryPrinterIfNotDisabled()
                 .build(systemOptions);
 
         Runtime runtime = Runtime.builder()
@@ -135,11 +133,6 @@ public class CucumberTestEngine extends AbstractTestEngine {
         @Override
         public boolean dryRun() {
             return getOptionValue("dryRun");
-        }
-
-        @Override
-        public boolean strict() {
-            return getOptionValue("strict");
         }
 
         @Override
