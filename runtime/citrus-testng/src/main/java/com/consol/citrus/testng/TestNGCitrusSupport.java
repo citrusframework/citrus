@@ -41,6 +41,10 @@ import org.testng.IHookCallBack;
 import org.testng.IHookable;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 
 /**
  * Basic Citrus TestNG support base class automatically handles test case runner creation. Also provides method parameter resolution
@@ -49,7 +53,7 @@ import org.testng.ITestResult;
  *
  * @author Christoph Deppisch
  */
-public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestNGSuiteListener, GherkinTestActionRunner {
+public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -118,7 +122,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
         }
     }
 
-    @Override
+    @BeforeClass(alwaysRun = true)
     public final void before() {
         if (citrus == null) {
             citrus = Citrus.newInstance();
@@ -135,7 +139,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
     protected void before(CitrusContext context) {
     }
 
-    @Override
+    @AfterClass(alwaysRun = true)
     public final void after() {
         if (citrus != null) {
             after(citrus.getCitrusContext());
@@ -149,7 +153,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
     protected void after(CitrusContext context) {
     }
 
-    @Override
+    @BeforeSuite(alwaysRun = true)
     public final void beforeSuite(ITestContext testContext) {
         citrus = Citrus.newInstance();
         CitrusAnnotations.injectCitrusFramework(this, citrus);
@@ -164,7 +168,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
     protected void beforeSuite(CitrusContext context) {
     }
 
-    @Override
+    @AfterSuite(alwaysRun = true)
     public final void afterSuite(ITestContext testContext) {
         if (citrus != null) {
             afterSuite(citrus.getCitrusContext());

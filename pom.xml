@@ -152,7 +152,7 @@
     <vertx.version>3.9.11</vertx.version>
     <groovy.version>3.0.10</groovy.version>
     <jetty.version>9.4.46.v20220331</jetty.version>
-    <testng.version>7.3.0</testng.version>
+    <testng.version>7.5</testng.version>
     <junit.version>4.13.2</junit.version>
     <junit.jupiter.version>5.8.2</junit.jupiter.version>
     <slf4j.version>1.7.36</slf4j.version>

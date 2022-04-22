@@ -46,8 +46,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.PrepareTestNGMethodInterceptor;
 import com.consol.citrus.testng.TestNGHelper;
-import com.consol.citrus.testng.TestNGSuiteListener;
-import com.consol.citrus.testng.TestNGTestListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -57,6 +55,10 @@ import org.springframework.util.CollectionUtils;
 import org.testng.IHookCallBack;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 
 /**
@@ -70,7 +72,7 @@ import org.testng.annotations.Listeners;
 @ContextConfiguration(classes = CitrusSpringConfig.class)
 @Listeners( { PrepareTestNGMethodInterceptor.class } )
 public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
-        implements GherkinTestActionRunner, TestNGTestListener, TestNGSuiteListener {
+        implements GherkinTestActionRunner {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -170,7 +172,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
         }
     }
 
-    @Override
+    @BeforeClass(alwaysRun = true)
     public final void before() {
         if (citrus == null) {
             citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
@@ -187,7 +189,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
     protected void before(CitrusContext context) {
     }
 
-    @Override
+    @AfterClass(alwaysRun = true)
     public final void after() {
         if (citrus != null) {
             after(citrus.getCitrusContext());
@@ -201,7 +203,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
     protected void after(CitrusContext context) {
     }
 
-    @Override
+    @BeforeSuite(alwaysRun = true)
     public final void beforeSuite(ITestContext testContext) {
         try {
             springTestContextPrepareTestInstance();
@@ -223,7 +225,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
     protected void beforeSuite(CitrusContext context) {
     }
 
-    @Override
+    @AfterSuite(alwaysRun = true)
     public final void afterSuite(ITestContext testContext) {
         if (citrus != null) {
             afterSuite(citrus.getCitrusContext());
