@@ -1037,12 +1037,12 @@
         <version>${zookeeper.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
           </exclusion>
           <exclusion>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
