@@ -26,7 +26,7 @@ import com.consol.citrus.xml.Unmarshaller;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -42,7 +42,7 @@ public class SpringBeanReferenceResolverTest extends UnitTestSupport {
     @Mock
     private org.springframework.oxm.Unmarshaller unmarshaller;
 
-    @BeforeTest
+    @BeforeMethod
     public void setup() {
         MockitoAnnotations.openMocks(this);
         resolver = new SpringBeanReferenceResolver(applicationContext);
