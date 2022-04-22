@@ -23,9 +23,9 @@ import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.xml.Marshaller;
 import com.consol.citrus.xml.MarshallerAdapter;
 import com.consol.citrus.xml.Unmarshaller;
-import org.junit.Assert;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
