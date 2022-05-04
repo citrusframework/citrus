@@ -81,7 +81,7 @@ public class TraceVariablesAction extends AbstractTestAction {
      */
     public static final class Builder extends AbstractTestActionBuilder<TraceVariablesAction, Builder> {
 
-        private List<String> variableNames = new ArrayList<>();
+        private final List<String> variableNames = new ArrayList<>();
 
         /**
          * Fluent API action building entry method used in Java DSL.

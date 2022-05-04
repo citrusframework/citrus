@@ -34,7 +34,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.junit.jupiter.CitrusBaseExtension;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
-import com.consol.citrus.junit.jupiter.spring.XmlTestHelper;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
@@ -99,7 +98,7 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
         if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            CitrusExtensionHelper.getCitrus(extensionContext).run(XmlTestHelper.getXmlTestCase(extensionContext), CitrusExtensionHelper.getTestContext(extensionContext));
+            CitrusExtensionHelper.getCitrus(extensionContext).run(CitrusExtensionHelper.getXmlTestCase(extensionContext), CitrusExtensionHelper.getTestContext(extensionContext));
         } else {
             CitrusDslAnnotations.injectTestDesigner(extensionContext.getRequiredTestInstance(), getTestDesigner(extensionContext));
             CitrusDslAnnotations.injectTestRunner(extensionContext.getRequiredTestInstance(), getTestRunner(extensionContext));
@@ -113,7 +112,7 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
         CitrusExtensionHelper.getTestContext(extensionContext);
 
         if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            XmlTestHelper.getXmlTestCase(extensionContext);
+            CitrusExtensionHelper.getXmlTestCase(extensionContext);
         } else {
             TestCase testCase = getTestCase(extensionContext);
 
@@ -208,7 +207,7 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
             } else if (isRunnerMethod(extensionContext.getRequiredTestMethod())) {
                 return getTestRunner(extensionContext).getTestCase();
             } else if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-                return XmlTestHelper.getXmlTestCase(extensionContext);
+                return CitrusExtensionHelper.getXmlTestCase(extensionContext);
             } else if (isDesignerClass(extensionContext.getRequiredTestClass())) {
                 return getTestDesigner(extensionContext).getTestCase();
             } else if (Stream.of(extensionContext.getRequiredTestClass().getDeclaredFields()).anyMatch(field -> TestRunner.class.isAssignableFrom(field.getType()))) {

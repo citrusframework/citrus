@@ -33,9 +33,9 @@ public class TypeConverterTest {
     public void testLookup() {
         Map<String, TypeConverter> converters = TypeConverter.lookup();
         Assert.assertEquals(converters.size(), 1L);
-        Assert.assertEquals(converters.get("default").getClass(), DefaultTypeConverter.class);
-        Assert.assertEquals(converters.get("default"), TypeConverter.lookupDefault());
+        Assert.assertEquals(converters.get(TypeConverter.DEFAULT).getClass(), DefaultTypeConverter.class);
+        Assert.assertEquals(converters.get(TypeConverter.DEFAULT), TypeConverter.lookupDefault());
 
-        Assert.assertFalse(TypeConverter.lookup().containsKey("spring"));
+        Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.SPRING));
     }
 }

@@ -2,6 +2,7 @@ package com.consol.citrus.junit.integration;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestCaseParserConfiguration;
 import com.consol.citrus.common.TestLoader;
@@ -40,14 +41,22 @@ public class XMlTestLoaderIT extends JUnit4CitrusSpringSupport {
      * @param packageName
      * @return
      */
-    protected TestLoader createTestLoader(String testName, String packageName) {
-        return new XmlTestLoader(getClass(), testName, packageName, CitrusSpringContext.create(applicationContext)) {
+    @Override
+    protected TestLoader createTestLoader(String testName, String packageName, String source, String type) {
+        XmlTestLoader testLoader = new XmlTestLoader() {
             @Override
             public TestCase load() {
                 loadedTestCase = super.load();
                 return loadedTestCase;
             }
         };
+
+        testLoader.setTestClass(getClass());
+        testLoader.setTestName(testName);
+        testLoader.setPackageName(packageName);
+
+        CitrusAnnotations.injectCitrusContext(testLoader, CitrusSpringContext.create(applicationContext));
+        return testLoader;
     }
 
     /**

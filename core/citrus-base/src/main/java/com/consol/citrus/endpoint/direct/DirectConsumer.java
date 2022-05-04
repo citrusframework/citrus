@@ -18,10 +18,10 @@ import org.springframework.util.StringUtils;
 public class DirectConsumer extends AbstractSelectiveMessageConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DirectConsumer.class);
+    private static final Logger log = LoggerFactory.getLogger(DirectConsumer.class);
 
     /** Endpoint configuration */
-    private DirectEndpointConfiguration endpointConfiguration;
+    private final DirectEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using endpoint configuration.
@@ -45,7 +45,7 @@ public class DirectConsumer extends AbstractSelectiveMessageConsumer {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Receiving message from: " + destinationQueueName);
+            log.debug(String.format("Receiving message from queue: '%s'", destinationQueueName));
         }
 
         Message message;
@@ -69,7 +69,7 @@ public class DirectConsumer extends AbstractSelectiveMessageConsumer {
             throw new MessageTimeoutException(timeout, destinationQueueName);
         }
 
-        log.debug("Received message from: " + destinationQueueName);
+        log.info(String.format("Received message from queue: '%s'", destinationQueueName));
         return message;
     }
 

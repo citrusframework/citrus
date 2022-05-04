@@ -109,6 +109,11 @@ public final class CitrusSettings {
     public static final String VALIDATION_MATCHER_PREFIX = "@";
     public static final String VALIDATION_MATCHER_SUFFIX = "@";
 
+    public static final String GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.groovy.file.name.pattern";
+    public static final String GROOVY_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_GROOVY_FILE_NAME_PATTERN";
+    public static final String GROOVY_TEST_FILE_NAME_PATTERN = System.getProperty(GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(GROOVY_TEST_FILE_NAME_PATTERN_ENV) != null ?
+            System.getenv(GROOVY_TEST_FILE_NAME_PATTERN_ENV) : "/**/*test.groovy,/**/*it.groovy");
+
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
     public static final String XML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_XML_FILE_NAME_PATTERN";
     public static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) != null ?
@@ -149,6 +154,14 @@ public final class CitrusSettings {
     public static final String LOG_MASK_KEYWORDS_PROPERTY = "citrus.log.mask.keywords";
     public static final String LOG_MASK_KEYWORDS_ENV = "CITRUS_LOG_MASK_KEYWORDS";
     public static final String LOG_MASK_KEYWORDS_DEFAULT = "password,secret,secretKey";
+
+    /**
+     * Gets set of file name patterns for Groovy test files.
+     * @return
+     */
+    public static Set<String> getGroovyTestFileNamePattern() {
+        return StringUtils.commaDelimitedListToSet(GROOVY_TEST_FILE_NAME_PATTERN);
+    }
 
     /**
      * Gets set of file name patterns for XML test files.

@@ -63,6 +63,9 @@ public class Template extends AbstractTestAction {
     /** Should variables effect the global variables scope? */
     private final boolean globalContext;
 
+    /** Logger */
+    private static final Logger log = LoggerFactory.getLogger(Template.class);
+
     /**
      * Default constructor
      * @param builder
@@ -74,11 +77,6 @@ public class Template extends AbstractTestAction {
         this.parameter = builder.parameter;
         this.globalContext = builder.globalContext;
     }
-
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(Template.class);
 
     @Override
     public void doExecute(TestContext context) {

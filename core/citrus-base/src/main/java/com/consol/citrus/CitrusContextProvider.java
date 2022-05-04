@@ -24,6 +24,8 @@ public interface CitrusContextProvider {
     /** Default Citrus context provider from classpath resource properties */
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
+    String SPRING = "spring";
+
     /**
      * Create Citrus context with this provider.
      * @return

@@ -35,7 +35,7 @@ import org.springframework.util.StringUtils;
  */
 public class Timer extends AbstractActionContainer implements StopTimer {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Timer.class);
+    private static final Logger log = LoggerFactory.getLogger(Timer.class);
 
     private final static AtomicInteger nextSerialNumber = new AtomicInteger(0);
 

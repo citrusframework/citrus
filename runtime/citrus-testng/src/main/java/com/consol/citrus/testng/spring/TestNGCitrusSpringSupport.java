@@ -37,10 +37,11 @@ import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.TestGroupAware;
 import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.annotations.CitrusGroovyTest;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
-import com.consol.citrus.common.XmlTestLoader;
+import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -51,7 +52,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.testng.IHookCallBack;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -82,39 +82,26 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
     /** Test builder delegate */
     private TestCaseRunner delegate;
+    private TestCase testCase;
 
     @Override
     public void run(final IHookCallBack callBack, ITestResult testResult) {
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
 
-        if (method != null && method.getAnnotation(CitrusTest.class) != null) {
+        if (method == null) {
+            super.run(callBack, testResult);
+            return;
+        }
+
+        List<TestLoader> methodTestLoaders = TestNGHelper.createMethodTestLoaders(method, this::createTestLoader);
+        if (method.getAnnotation(CitrusTest.class) != null ||
+                method.getAnnotation(CitrusGroovyTest.class) != null ||
+                method.getAnnotation(CitrusXmlTest.class) != null) {
             try {
-                run(testResult, method, null, testResult.getMethod().getCurrentInvocationCount());
+                run(testResult, method, methodTestLoaders, testResult.getMethod().getCurrentInvocationCount());
             } catch (Exception e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
-            }
-
-            super.run(new TestNGHelper.FakeExecutionCallBack(callBack.getParameters()), testResult);
-
-            if (testResult.getThrowable() != null) {
-                if (testResult.getThrowable() instanceof RuntimeException) {
-                    throw (RuntimeException) testResult.getThrowable();
-                } else {
-                    throw new CitrusRuntimeException(testResult.getThrowable());
-                }
-            }
-        } else if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
-            List<TestLoader> methodTestLoaders = TestNGHelper.createTestLoadersForMethod(method, this::createTestLoader);
-
-            if (!CollectionUtils.isEmpty(methodTestLoaders)) {
-                try {
-                    run(testResult, method, methodTestLoaders.get(testResult.getMethod().getCurrentInvocationCount() % methodTestLoaders.size()),
-                            testResult.getMethod().getCurrentInvocationCount());
-                } catch (Exception e) {
-                    testResult.setThrowable(e);
-                    testResult.setStatus(ITestResult.FAILURE);
-                }
             }
 
             super.run(new TestNGHelper.FakeExecutionCallBack(callBack.getParameters()), testResult);
@@ -135,24 +122,26 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
      * Run method prepares and executes test case.
      * @param testResult
      * @param method
-     * @param testLoader
+     * @param methodTestLoaders
      * @param invocationCount
      */
-    protected void run(ITestResult testResult, Method method, TestLoader testLoader, int invocationCount) {
+    protected void run(ITestResult testResult, Method method, List<TestLoader> methodTestLoaders, int invocationCount) {
         if (citrus == null) {
             citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
             CitrusAnnotations.injectCitrusFramework(this, citrus);
         }
 
-        if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
-            TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
-            TestCase testCase = testLoader.load();
+        if (method.getAnnotation(CitrusXmlTest.class) != null) {
+            if (!methodTestLoaders.isEmpty()) {
+                TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
+                testCase = methodTestLoaders.get(invocationCount % methodTestLoaders.size()).load();
 
-            if (testCase instanceof TestGroupAware) {
-                ((TestGroupAware) testCase).setGroups(testResult.getMethod().getGroups());
+                if (testCase instanceof TestGroupAware) {
+                    ((TestGroupAware) testCase).setGroups(testResult.getMethod().getGroups());
+                }
+
+                TestNGHelper.invokeTestMethod(citrus, this, testResult, method, testCase, ctx, invocationCount);
             }
-
-            TestNGHelper.invokeTestMethod(citrus, this, testResult, method, testCase, ctx, invocationCount);
         } else {
             try {
                 TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
@@ -164,6 +153,22 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
                 delegate = runner;
 
                 CitrusAnnotations.injectAll(this, citrus, ctx);
+
+                if (method.getAnnotation(CitrusGroovyTest.class) != null && !methodTestLoaders.isEmpty()) {
+                    TestLoader testLoader = methodTestLoaders.get(invocationCount % methodTestLoaders.size());
+
+                    if (testLoader instanceof TestSourceAware) {
+                        String[] sources = method.getAnnotation(CitrusGroovyTest.class).sources();
+                        if (sources.length > 0) {
+                            ((TestSourceAware) testLoader).setSource(sources[0]);
+                        }
+                    }
+
+                    CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+                    CitrusAnnotations.injectTestRunner(testLoader, runner);
+
+                    testCase = testLoader.load();
+                }
 
                 TestNGHelper.invokeTestMethod(this, testResult, method, runner, ctx, invocationCount);
             } finally {
@@ -260,11 +265,18 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
      * @param packageName
      * @return
      */
-    protected TestLoader createTestLoader(String testName, String packageName) {
-        return new XmlTestLoader(getClass(), testName, packageName,
-                Optional.ofNullable(citrus)
-                        .map(Citrus::getCitrusContext)
-                        .orElseGet(() -> CitrusSpringContext.create(applicationContext)));
+    protected TestLoader createTestLoader(String testName, String packageName, String type) {
+        TestLoader testLoader = TestLoader.lookup(type)
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", type)));
+
+        testLoader.setTestClass(getClass());
+        testLoader.setTestName(testName);
+        testLoader.setPackageName(packageName);
+
+        CitrusAnnotations.injectCitrusContext(testLoader, Optional.ofNullable(citrus)
+                .map(Citrus::getCitrusContext)
+                .orElseGet(() -> CitrusSpringContext.create(applicationContext)));
+        return testLoader;
     }
 
     /**
@@ -272,7 +284,15 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
      * @return
      */
     protected TestCase getTestCase() {
-        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()).load();
+        if (testCase != null) {
+            return testCase;
+        }
+
+        if (delegate != null) {
+            return delegate.getTestCase();
+        }
+
+        return null;
     }
 
     @Override

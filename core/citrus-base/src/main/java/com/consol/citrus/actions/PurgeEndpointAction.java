@@ -228,6 +228,14 @@ public class PurgeEndpointAction extends AbstractTestAction {
          * Fluent API action building entry method used in Java DSL.
          * @return
          */
+        public static Builder purge() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
         public static Builder purgeEndpoints() {
             return new Builder();
         }

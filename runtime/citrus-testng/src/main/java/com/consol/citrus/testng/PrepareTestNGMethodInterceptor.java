@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.annotations.CitrusGroovyTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ import org.testng.internal.MethodInstance;
 public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(PrepareTestNGMethodInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(PrepareTestNGMethodInterceptor.class);
 
     @Override
     public List<IMethodInstance> intercept(List<IMethodInstance> methods, ITestContext context) {
@@ -53,8 +54,39 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
         for (IMethodInstance method : methods) {
             boolean baseMethodAdded = false;
             if (method.getInstance() instanceof TestNGCitrusSpringSupport) {
-                CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class);
-                if (citrusXmlTestAnnotation != null) {
+                if (method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusGroovyTest.class) != null) {
+                    CitrusGroovyTest citrusTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusGroovyTest.class);
+                    if (citrusTestAnnotation.name().length > 1) {
+                        for (int i = 0; i < citrusTestAnnotation.name().length; i++) {
+                            if (i == 0) {
+                                baseMethodAdded = true;
+                                interceptedMethods.add(method);
+                            } else {
+                                interceptedMethods.add(new MethodInstance(method.getMethod()));
+                            }
+                        }
+                    }
+
+                    String[] packagesToScan = citrusTestAnnotation.packageScan();
+                    for (String packageName : packagesToScan) {
+                        try {
+                            for (String fileNamePattern : CitrusSettings.getGroovyTestFileNamePattern()) {
+                                Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + fileNamePattern);
+                                for (int i = 0; i < fileResources.length; i++) {
+                                    if (i == 0 && !baseMethodAdded) {
+                                        baseMethodAdded = true;
+                                        interceptedMethods.add(method);
+                                    } else {
+                                        interceptedMethods.add(new MethodInstance(method.getMethod()));
+                                    }
+                                }
+                            }
+                        } catch (IOException e) {
+                            log.error("Unable to locate file resources for test package '" + packageName + "'", e);
+                        }
+                    }
+                } else if (method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class) != null) {
+                    CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class);
                     if (citrusXmlTestAnnotation.name().length > 1) {
                         for (int i = 0; i < citrusXmlTestAnnotation.name().length; i++) {
                             if (i == 0) {

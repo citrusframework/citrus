@@ -367,4 +367,21 @@ public abstract class FileUtils {
 
         return fileName;
     }
+
+    /**
+     * Gets the base path of given file path removing any file name if present.
+     * @param filePath
+     * @return
+     */
+    public static String getBasePath(String filePath) {
+        if (filePath == null) {
+            return null;
+        }
+
+        if (filePath.contains(File.separator)) {
+            return filePath.substring(0, filePath.lastIndexOf(File.separator));
+        }
+
+        return filePath;
+    }
 }

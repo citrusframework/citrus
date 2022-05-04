@@ -42,8 +42,9 @@
 
     <!-- Test scoped dependencies -->
     <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-jsr223</artifactId>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-groovy</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -22,12 +22,11 @@ package com.consol.citrus.junit;
 import java.lang.annotation.Annotation;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.common.TestLoader;
-import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -129,7 +128,16 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * @return
      */
     protected TestLoader createTestLoader(String testName, String packageName) {
-        return new XmlTestLoader(getClass(), testName, packageName, CitrusSpringContext.create(applicationContext));
+        TestLoader testLoader = TestLoader.lookup(TestLoader.SPRING)
+                .orElseThrow(() -> new CitrusRuntimeException("Missing Spring XML test loader in project classpath - " +
+                        "please add citrus-spring module to the project"));
+
+        testLoader.setTestClass(getClass());
+        testLoader.setTestName(testName);
+        testLoader.setPackageName(packageName);
+
+        CitrusAnnotations.injectCitrusContext(testLoader, citrus.getCitrusContext());
+        return testLoader;
     }
 
     /**
