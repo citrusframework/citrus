@@ -16,8 +16,6 @@
 
 package com.consol.citrus.junit.jupiter.integration;
 
-import java.util.List;
-
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.annotations.CitrusConfiguration;
@@ -25,20 +23,15 @@ import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.direct.DirectEndpoint;
 import com.consol.citrus.endpoint.direct.DirectEndpointBuilder;
-import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.junit.jupiter.CitrusSupport;
+import com.consol.citrus.junit.jupiter.integration.validation.TextEqualsMessageValidator;
 import com.consol.citrus.message.DefaultMessageQueue;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.BindToRegistry;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.context.DefaultValidationContext;
-import com.consol.citrus.validation.context.ValidationContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -109,18 +102,8 @@ public class CitrusConfigurationIT {
         private final MessageQueue messages = new DefaultMessageQueue("messages");
 
         @BindToRegistry
-        public MessageValidator<DefaultValidationContext> plaintextValidator() {
-            return new MessageValidator<>() {
-                @Override
-                public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
-                    org.testng.Assert.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload());
-                }
-
-                @Override
-                public boolean supportsMessageType(String messageType, Message message) {
-                    return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.name());
-                }
-            };
+        public TextEqualsMessageValidator plaintextValidator() {
+            return new TextEqualsMessageValidator();
         }
 
         @BindToRegistry

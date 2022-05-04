@@ -73,7 +73,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     public static final String DEFAULT_RESULT_SET_VALIDATOR = "sqlResultSetScriptValidator";
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
+    private static final Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
 
     /**
      * Default constructor.

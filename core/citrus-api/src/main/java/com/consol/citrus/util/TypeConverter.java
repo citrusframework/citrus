@@ -21,6 +21,10 @@ public interface TypeConverter {
 
     Map<String, TypeConverter> converters = new HashMap<>();
 
+    String DEFAULT = "default";
+    String SPRING = "spring";
+    String APACHE_CAMEL = "camel";
+
     /**
      * Resolves all available converters from resource path lookup. Scans classpath for converter meta information
      * and instantiates those converters.
@@ -31,7 +35,7 @@ public interface TypeConverter {
             converters.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
             if (converters.size() == 0) {
-                converters.put("default", new DefaultTypeConverter());
+                converters.put(DEFAULT, new DefaultTypeConverter());
             }
 
             if (LOG.isDebugEnabled()) {

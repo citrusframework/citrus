@@ -27,10 +27,10 @@ import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestGroupAware;
 import com.consol.citrus.TestResult;
+import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
-import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -74,7 +74,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     public void run(IHookCallBack callBack, ITestResult testResult) {
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
         if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
-            List<TestLoader> methodTestLoaders = TestNGHelper.createTestLoadersForMethod(method, this::createTestLoader);
+            List<TestLoader> methodTestLoaders = TestNGHelper.createMethodTestLoaders(method, this::createTestLoader);
 
             if (!CollectionUtils.isEmpty(methodTestLoaders)) {
                 try {
@@ -266,11 +266,19 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @param packageName
      * @return
      */
-    protected TestLoader createTestLoader(String testName, String packageName) {
-        return new XmlTestLoader(getClass(), testName, packageName,
-                Optional.ofNullable(citrus)
+    protected TestLoader createTestLoader(String testName, String packageName, String type) {
+        TestLoader testLoader = TestLoader.lookup(type)
+                .orElseThrow(() -> new CitrusRuntimeException("Missing Spring XML test loader in project classpath - " +
+                        "please add citrus-spring module to the project"));
+
+        testLoader.setTestClass(getClass());
+        testLoader.setTestName(testName);
+        testLoader.setPackageName(packageName);
+
+        CitrusAnnotations.injectCitrusContext(testLoader, Optional.ofNullable(citrus)
                         .map(Citrus::getCitrusContext)
                         .orElseGet(() -> CitrusSpringContext.create(applicationContext)));
+        return testLoader;
     }
 
     /**
@@ -278,6 +286,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @return
      */
     protected TestCase getTestCase() {
-        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()).load();
+        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), TestLoader.SPRING).load();
     }
 }

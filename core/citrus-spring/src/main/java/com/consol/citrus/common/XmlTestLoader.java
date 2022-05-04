@@ -23,6 +23,7 @@ import com.consol.citrus.CitrusContext;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -42,26 +43,16 @@ import org.springframework.util.StringUtils;
  */
 public class XmlTestLoader implements TestLoader, TestSourceAware {
 
-    private TestCase testCase;
-    private final Class<?> testClass;
-    private final String testName;
-    private final String packageName;
-    private final CitrusContext citrusContext;
-    private String source;
+    @CitrusResource
+    private CitrusContext citrusContext;
 
-    /**
-     * Default constructor with context file and parent application context field.
-     * @param testClass
-     * @param testName
-     * @param packageName
-     * @param citrusContext
-     */
-    public XmlTestLoader(Class<?> testClass, String testName, String packageName, CitrusContext citrusContext) {
-        this.testClass = testClass;
-        this.testName = testName;
-        this.packageName = packageName;
-        this.citrusContext = citrusContext;
-    }
+    private TestCase testCase;
+
+    private Class<?> testClass;
+    private String testName;
+    private String packageName;
+
+    private String source;
 
     @Override
     public TestCase load() {
@@ -152,5 +143,20 @@ public class XmlTestLoader implements TestLoader, TestSourceAware {
     @Override
     public void setSource(String source) {
         this.source = source;
+    }
+
+    @Override
+    public void setTestClass(Class<?> testClass) {
+        this.testClass = testClass;
+    }
+
+    @Override
+    public void setTestName(String testName) {
+        this.testName = testName;
+    }
+
+    @Override
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 }

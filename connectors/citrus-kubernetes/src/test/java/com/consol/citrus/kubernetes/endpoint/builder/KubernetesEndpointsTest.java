@@ -33,7 +33,7 @@ public class KubernetesEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
-        Map<String, EndpointBuilder> endpointBuilders = EndpointBuilder.lookup();
+        Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
         Assert.assertTrue(endpointBuilders.containsKey("kubernetes.client"));
         Assert.assertTrue(endpointBuilders.containsKey("k8s.client"));
     }

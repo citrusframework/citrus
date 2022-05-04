@@ -32,7 +32,7 @@ public class CamelEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
-        Map<String, EndpointBuilder> endpointBuilders = EndpointBuilder.lookup();
+        Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
         Assert.assertTrue(endpointBuilders.containsKey("camel.sync"));
         Assert.assertTrue(endpointBuilders.containsKey("camel.inOnly"));
         Assert.assertTrue(endpointBuilders.containsKey("camel.async"));

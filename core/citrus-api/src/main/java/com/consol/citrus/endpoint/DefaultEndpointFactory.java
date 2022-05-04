@@ -77,17 +77,21 @@ public class DefaultEndpointFactory implements EndpointFactory {
                 .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
                 .findFirst();
 
-        if (!builder.isPresent()) {
-            // try to get builder from default Citrus modules
-            builder = EndpointBuilder.lookup()
-                    .values()
-                    .stream()
-                    .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
-                    .findFirst();
-        }
-
         if (builder.isPresent()) {
             Endpoint endpoint = builder.get().build(endpointConfig, context.getReferenceResolver());
+            endpoint.setName(endpointName);
+            return endpoint;
+        }
+
+        // try to get builder from default Citrus modules
+        Optional<EndpointBuilder<?>> lookup = EndpointBuilder.lookup()
+                .values()
+                .stream()
+                .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
+                .findFirst();
+
+        if (lookup.isPresent()) {
+            Endpoint endpoint = lookup.get().build(endpointConfig, context.getReferenceResolver());
             endpoint.setName(endpointName);
             return endpoint;
         }

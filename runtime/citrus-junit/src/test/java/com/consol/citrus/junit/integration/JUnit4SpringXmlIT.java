@@ -28,36 +28,36 @@ import org.junit.experimental.categories.Category;
  * @since 2.2
  */
 @SuppressWarnings("squid:S2699")
-public class JUnit4AnnotationIT extends JUnit4CitrusSpringSupport {
+public class JUnit4SpringXmlIT extends JUnit4CitrusSpringSupport {
 
     @Test
     @CitrusXmlTest
-    public void JUnit4AnnotationIT() {
+    public void JUnit4SpringXmlIT() {
     }
 
     @Test
     @CitrusXmlTest(name = "SampleIT")
-    public void JUnit4Annotation_1_IT() {
+    public void JUnit4SpringXml_1_IT() {
     }
 
     @Test
     @CitrusXmlTest(name = { "EchoActionIT", "FailActionIT", "CreateVariablesIT" }, packageName = "com.consol.citrus.junit.integration.actions")
-    public void JUnit4Annotation_2_IT() {
+    public void JUnit4SpringXml_2_IT() {
     }
 
     @Test
-    @CitrusXmlTest(packageScan = "com.consol.citrus.junit.simple")
-    public void JUnit4Annotation_3_IT() {
+    @CitrusXmlTest(packageScan = "com.consol.citrus.junit.integration.simple")
+    public void JUnit4SpringXml_3_IT() {
     }
 
     @Test
     @CitrusXmlTest(sources = "classpath:com/consol/citrus/junit/integration/actions/CreateVariablesIT.xml")
-    public void JUnit4Annotation_4_IT() {
+    public void JUnit4SpringXml_4_IT() {
     }
 
     @Test(expected = TestCaseFailedException.class)
     @Category( ShouldFailGroup.class )
     @CitrusXmlTest(name = "FailJUnit4IT")
-    public void JUnit4Annotation_5_IT() {
+    public void JUnit4SpringXml_5_IT() {
     }
 }

@@ -32,7 +32,7 @@ public class DirectEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
-        Map<String, EndpointBuilder> endpointBuilders = EndpointBuilder.lookup();
+        Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
         Assert.assertTrue(endpointBuilders.containsKey("direct.sync"));
         Assert.assertTrue(endpointBuilders.containsKey("direct.async"));
     }
