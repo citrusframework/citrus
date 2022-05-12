@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-name: build_jdk11
+name: main_build
 
 on:
   pull_request:
@@ -38,9 +38,8 @@ on:
       - 'NOTICE'
 
 jobs:
-  build:
+  main_build:
     runs-on: ubuntu-20.04
-
     steps:
       - name: Set up JDK 11
         uses: AdoptOpenJDK/install-jdk@v1

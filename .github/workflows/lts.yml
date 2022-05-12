@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-name: build_jdk17
+name: lts_build
 
 on:
   pull_request:
@@ -38,15 +38,19 @@ on:
       - 'NOTICE'
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
-
+  lts_build:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [17, 18]
+        os: [ubuntu-20.04]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: ${{ matrix.version }}
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Cache Maven packages
@@ -61,4 +65,4 @@ jobs:
           ./mvnw -version
       - name: Build Citrus
         run: |
-          ./mvnw --no-transfer-progress -Djava.version=17 install
+          ./mvnw --no-transfer-progress -Djava.version=${{ matrix.version }} install
