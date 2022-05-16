@@ -46,7 +46,8 @@
 
   <!-- Embedded Kafka server with embedded Zookeeper -->
   <citrus-kafka:embedded-server id="embeddedKafkaServer"
-                                topics="hello,test"/>
+                                topics="hello,test"
+                                kafka-server-port="9092"/>
 
   <!-- Kafka endpoints -->
   <citrus-kafka:endpoint id="helloKafkaEndpoint"
