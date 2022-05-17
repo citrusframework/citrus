@@ -54,7 +54,7 @@ public class SleepActionParser implements BeanDefinitionParser {
         private final SleepAction.Builder builder = new SleepAction.Builder();
 
         public void setMilliseconds(String milliseconds) {
-            builder.time(milliseconds);
+            builder.milliseconds(milliseconds);
         }
 
         public void setSeconds(String seconds) {
