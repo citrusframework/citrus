@@ -111,22 +111,42 @@ public class SleepAction extends AbstractTestAction {
             return new Builder();
         }
 
-        public Builder milliseconds(long milliseconds) {
-            this.time = String.valueOf(milliseconds);
-            this.timeUnit = TimeUnit.MILLISECONDS;
+        public Builder milliseconds(Integer milliseconds) {
+            return time(String.valueOf(milliseconds), TimeUnit.MILLISECONDS);
+        }
+
+        public Builder milliseconds(Long milliseconds) {
+            return time(String.valueOf(milliseconds), TimeUnit.MILLISECONDS);
+        }
+
+        public Builder milliseconds(String expression) {
+            time(expression, TimeUnit.MILLISECONDS);
             return this;
         }
 
-        public Builder seconds(double seconds) {
+        public Builder seconds(Double seconds) {
             milliseconds(Math.round(seconds * 1000));
             return this;
         }
+
+        public Builder seconds(Integer milliseconds) {
+            return time(String.valueOf(milliseconds  * 1000), TimeUnit.MILLISECONDS);
+        }
+
+        public Builder seconds(Long milliseconds) {
+            return time(String.valueOf(milliseconds  * 1000), TimeUnit.MILLISECONDS);
+        }
+
 
         public Builder time(Duration duration) {
             milliseconds(duration.toMillis());
             return this;
         }
 
+        /**
+         * @deprecated in favor of using {@link #milliseconds(String)}
+         */
+        @Deprecated
         public Builder time(String expression) {
             time(expression, TimeUnit.MILLISECONDS);
             return this;

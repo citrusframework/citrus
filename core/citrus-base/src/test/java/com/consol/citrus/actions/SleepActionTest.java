@@ -48,7 +48,7 @@ public class SleepActionTest extends UnitTestSupport {
 	@Test
     public void testSleepVariablesSupport() {
         SleepAction sleep = new SleepAction.Builder()
-                .time("${time}")
+                .milliseconds("${time}")
                 .build();
 
         context.setVariable("time", "100");
