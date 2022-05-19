@@ -19,6 +19,16 @@
 
 package com.consol.citrus.context.resolver;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Type resolver able to adapt an alias type to a given source type. Used in {@link com.consol.citrus.spi.ReferenceResolver} to
  * auto resolve types that can act as an alias interchangeably to a given type.
@@ -26,6 +36,51 @@ package com.consol.citrus.context.resolver;
  * @author Christoph Deppisch
  */
 public interface TypeAliasResolver<S, A> {
+
+    /** Logger */
+    Logger LOG = LoggerFactory.getLogger(TypeAliasResolver.class);
+
+    /** Type alias resolver resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/context/resolver";
+
+    /** Type resolver to find custom type alias resolvers on classpath via resource path lookup */
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    Map<String, TypeAliasResolver<?, ?>> resolvers = new HashMap<>();
+
+    /**
+     * Resolves all available type alias resolvers from resource path lookup. Scans classpath for type alias resolver meta information
+     * and instantiates those resolvers.
+     * @return
+     */
+    static Map<String, TypeAliasResolver<?, ?>> lookup() {
+        if (resolvers.isEmpty()) {
+            resolvers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
+
+            if (LOG.isDebugEnabled()) {
+                resolvers.forEach((k, v) -> LOG.debug(String.format("Found type alias resolver '%s' as %s", k, v.getClass())));
+            }
+        }
+        return resolvers;
+    }
+
+    /**
+     * Resolves type alias resolver from resource path lookup with given resource name. Scans classpath for type alias resolver meta information
+     * with given name and returns instance of type alias resolver. Returns optional instead of throwing exception when no type alias resolver
+     * could be found.
+     * @param resolver
+     * @return
+     */
+    static Optional<TypeAliasResolver<?, ?>> lookup(String resolver) {
+        try {
+            TypeAliasResolver<?, ?> instance = TYPE_RESOLVER.resolve(resolver);
+            return Optional.of(instance);
+        } catch (CitrusRuntimeException e) {
+            LOG.warn(String.format("Failed to resolve type alias resolver from resource '%s/%s'", RESOURCE_PATH, resolver));
+        }
+
+        return Optional.empty();
+    }
 
     boolean isAliasFor(Class<?> sourceType);
 
