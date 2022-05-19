@@ -33,9 +33,11 @@ import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.message.SshMessageConverter;
 import com.consol.citrus.ssh.model.SshMarshaller;
 import com.consol.citrus.util.FileUtils;
+import org.apache.sshd.common.config.keys.KeyUtils;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
+import org.apache.sshd.common.keyprovider.KeyPairProvider;
 import org.apache.sshd.scp.common.AbstractScpTransferEventListenerAdapter;
 import org.apache.sshd.scp.common.ScpTransferEventListener;
 import org.apache.sshd.scp.server.ScpCommandFactory;
@@ -160,7 +162,9 @@ public class SshServer extends AbstractServer {
         }
 
         List<String> availableSignatureFactories = sshd.getSignatureFactoriesNames();
-        availableSignatureFactories.add("ssh-dss");
+        availableSignatureFactories.add(KeyPairProvider.SSH_DSS);
+        availableSignatureFactories.add(KeyPairProvider.SSH_RSA);
+        availableSignatureFactories.add(KeyUtils.RSA_SHA256_KEY_TYPE_ALIAS);
         sshd.setSignatureFactoriesNames(availableSignatureFactories);
 
         // Authentication

@@ -132,12 +132,14 @@ public class ScpClient extends SftpClient {
             ClientSession session = client.connect(getEndpointConfiguration().getUser(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()).verify(getEndpointConfiguration().getTimeout()).getSession();
             session.addPasswordIdentity(getEndpointConfiguration().getPassword());
 
-            Resource privateKey = FileUtils.getFileResource(getPrivateKeyPath());
+            if (getPrivateKeyPath() != null) {
+                Resource privateKey = FileUtils.getFileResource(getPrivateKeyPath());
 
-            if (privateKey instanceof ClassPathResource) {
-                new ClassLoadableResourceKeyPairProvider(privateKey.getFile().getPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
-            } else {
-                new FileKeyPairProvider(privateKey.getFile().toPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
+                if (privateKey instanceof ClassPathResource) {
+                    new ClassLoadableResourceKeyPairProvider(privateKey.getFile().getPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
+                } else {
+                    new FileKeyPairProvider(privateKey.getFile().toPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
+                }
             }
 
             session.auth().verify(getEndpointConfiguration().getTimeout());
