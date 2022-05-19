@@ -39,12 +39,8 @@
 
   <bean id="loggingInterceptor" class="com.consol.citrus.integration.service.LoggingInterceptor"/>
 
-  <bean id="marshaller" class="com.consol.citrus.xml.SpringMarshallerAdapter">
-    <constructor-arg>
-      <bean class="com.consol.citrus.xml.Jaxb2Marshaller">
-        <constructor-arg value="com.consol.citrus.integration.service.model"/>
-      </bean>
-    </constructor-arg>
+  <bean id="helloMarshaller" class="com.consol.citrus.xml.Jaxb2Marshaller">
+    <constructor-arg value="com.consol.citrus.integration.service.model"/>
   </bean>
 
 </beans>

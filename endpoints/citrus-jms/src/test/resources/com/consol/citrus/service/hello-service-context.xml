@@ -72,12 +72,8 @@
 
   <bean id="loggingInterceptor" class="com.consol.citrus.jms.integration.service.LoggingInterceptor"/>
 
-  <bean id="marshaller" class="com.consol.citrus.xml.SpringMarshallerAdapter">
-    <constructor-arg>
-      <bean class="com.consol.citrus.xml.Jaxb2Marshaller">
-        <constructor-arg value="com.consol.citrus.jms.integration.service.model"/>
-      </bean>
-    </constructor-arg>
+  <bean id="helloMarshaller" class="com.consol.citrus.xml.Jaxb2Marshaller">
+    <constructor-arg value="com.consol.citrus.jms.integration.service.model"/>
   </bean>
 
   <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>

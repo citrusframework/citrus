@@ -19,10 +19,10 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.xml.XpathMessageProcessor;
+import com.consol.citrus.xml.Jaxb2Marshaller;
 import com.consol.citrus.xml.Marshaller;
-import com.consol.citrus.xml.MarshallerAdapter;
-import org.mockito.Mockito;
-import org.springframework.oxm.xstream.XStreamMarshaller;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -40,15 +40,19 @@ import static org.mockito.Mockito.when;
  */
 public class SendMessageActionBuilderTest extends UnitTestSupport {
 
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
-    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
-    private Producer messageProducer = Mockito.mock(Producer.class);
+    @Mock
+    private ReferenceResolver referenceResolver;
+    @Mock
+    private Endpoint messageEndpoint;
+    @Mock
+    private Producer messageProducer;
 
-    private XStreamMarshaller marshaller = new XStreamMarshaller();
+    private final Marshaller marshaller = new Jaxb2Marshaller(TestRequest.class);
 
     @BeforeClass
     public void prepareMarshaller() {
-        marshaller.getXStream().processAnnotations(TestRequest.class);
+        MockitoAnnotations.openMocks(this);
+        ((Jaxb2Marshaller) marshaller).setProperty(javax.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
     }
 
     @Test
@@ -66,8 +70,8 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.singletonMap("marshaller", new MarshallerAdapter(marshaller)));
-        when(referenceResolver.resolve(Marshaller.class)).thenReturn(new MarshallerAdapter(marshaller));
+        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.singletonMap("marshaller", marshaller));
+        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
@@ -105,7 +109,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
                 .message()
-                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), new MarshallerAdapter(marshaller))));
+                .body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), marshaller)));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -139,7 +143,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
-        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(new MarshallerAdapter(marshaller));
+        when(referenceResolver.resolve("myMarshaller", Marshaller.class)).thenReturn(marshaller);
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
@@ -214,7 +218,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint).message()
                 .schemaValidation(true).schema("fooSchema").schemaRepository("fooRepository")
-                .type(MessageType.JSON).body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), new MarshallerAdapter(marshaller))));
+                .type(MessageType.JSON).body(new MarshallingPayloadBuilder(new TestRequest("Hello Citrus!"), marshaller)));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
