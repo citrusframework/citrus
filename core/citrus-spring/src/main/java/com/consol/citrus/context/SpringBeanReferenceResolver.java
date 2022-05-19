@@ -18,15 +18,12 @@ package com.consol.citrus.context;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.consol.citrus.context.resolver.MarshallerAliasResolver;
 import com.consol.citrus.context.resolver.TypeAliasResolver;
-import com.consol.citrus.context.resolver.UnmarshallerAliasResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.SimpleReferenceResolver;
@@ -52,7 +49,7 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
 
     private ReferenceResolver fallback = new SimpleReferenceResolver();
 
-    private final List<TypeAliasResolver<?, ?>> typeAliasResolvers = Arrays.asList(new MarshallerAliasResolver(), new UnmarshallerAliasResolver());
+    private final Map<String, TypeAliasResolver<?, ?>> typeAliasResolvers = new HashMap<>();
 
     /**
      * Default constructor.
@@ -136,9 +133,15 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         boolean canResolve = applicationContext.getBeanNamesForType(type).length > 0 || fallback.isResolvable(type);
 
         if (!canResolve) {
-            Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.stream()
+            Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.values().stream()
                     .filter(resolver -> resolver.isAliasFor(type))
                     .findFirst();
+
+            if (aliasResolver.isEmpty()) {
+                aliasResolver = TypeAliasResolver.lookup().values().stream()
+                        .filter(resolver -> resolver.isAliasFor(type))
+                        .findFirst();
+            }
 
             if (aliasResolver.isPresent()) {
                 canResolve = applicationContext.getBeanNamesForType(aliasResolver.get().getAliasType()).length > 0 || fallback.isResolvable(aliasResolver.get().getAliasType());
@@ -153,9 +156,19 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         boolean canResolve = Arrays.asList(applicationContext.getBeanNamesForType(type)).contains(name) || fallback.isResolvable(name, type);
 
         if (!canResolve) {
-            Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.stream()
+            if (typeAliasResolvers.containsKey(name) && typeAliasResolvers.get(name).isAliasFor(type)) {
+                canResolve = Arrays.asList(applicationContext.getBeanNamesForType(typeAliasResolvers.get(name).getAliasType())).contains(name) || fallback.isResolvable(name, typeAliasResolvers.get(name).getAliasType());
+            }
+
+            Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.values().stream()
                     .filter(resolver -> resolver.isAliasFor(type))
                     .findFirst();
+
+            if (aliasResolver.isEmpty()) {
+                aliasResolver = TypeAliasResolver.lookup().values().stream()
+                        .filter(resolver -> resolver.isAliasFor(type))
+                        .findFirst();
+            }
 
             if (aliasResolver.isPresent()) {
                 canResolve = Arrays.asList(applicationContext.getBeanNamesForType(aliasResolver.get().getAliasType())).contains(name) || fallback.isResolvable(name, aliasResolver.get().getAliasType());
@@ -181,9 +194,15 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
 
     @SuppressWarnings("unchecked")
     private <T> Optional<T> resolveAlias(Class<T> source, Function<Class<?>, ?> supplier) {
-        Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.stream()
+        Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.values().stream()
                 .filter(resolver -> resolver.isAliasFor(source))
                 .findFirst();
+
+        if (aliasResolver.isEmpty()) {
+            aliasResolver = TypeAliasResolver.lookup().values().stream()
+                    .filter(resolver -> resolver.isAliasFor(source))
+                    .findFirst();
+        }
 
         if (aliasResolver.isPresent()) {
             TypeAliasResolver<T, ?> resolver = (TypeAliasResolver<T, ?>) aliasResolver.get();
@@ -201,9 +220,15 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
 
     @SuppressWarnings("unchecked")
     private <T> Optional<Map<String, T>> resolveAllAlias(Class<T> source, Function<Class<?>, Map<String, ?>> supplier) {
-        Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.stream()
+        Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.values().stream()
                 .filter(resolver -> resolver.isAliasFor(source))
                 .findFirst();
+
+        if (aliasResolver.isEmpty()) {
+            aliasResolver = TypeAliasResolver.lookup().values().stream()
+                    .filter(resolver -> resolver.isAliasFor(source))
+                    .findFirst();
+        }
 
         if (aliasResolver.isPresent()) {
             TypeAliasResolver<T, ?> resolver = (TypeAliasResolver<T, ?>) aliasResolver.get();
@@ -222,8 +247,8 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         return Optional.empty();
     }
 
-    public void registerTypeAliasResolver(TypeAliasResolver<?, ?> aliasResolver) {
-        this.typeAliasResolvers.add(aliasResolver);
+    public void registerTypeAliasResolver(String name, TypeAliasResolver<?, ?> aliasResolver) {
+        this.typeAliasResolvers.put(name, aliasResolver);
     }
 
     @Override

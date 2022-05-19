@@ -102,7 +102,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
             Stream.of(new PathMatchingResourcePatternResolver().getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + path + "/*"))
                     .forEach(file -> {
                         Optional<String> resourceName = Optional.ofNullable(file.getFilename());
-                        if (!resourceName.isPresent()) {
+                        if (resourceName.isEmpty()) {
                             LOG.warn(String.format("Skip unsupported resource '%s' for resource lookup", file));
                             return;
                         }
