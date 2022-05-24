@@ -39,7 +39,6 @@ import com.consol.citrus.spi.BindToRegistry;
 import com.consol.citrus.spi.ReferenceRegistry;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.SimpleReferenceResolver;
-import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
 import com.consol.citrus.validation.MessageValidator;
@@ -399,7 +398,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         private ReferenceResolver referenceResolver = new SimpleReferenceResolver();
         private MessageProcessors messageProcessors = new MessageProcessors();
         private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
-        private TypeConverter typeConverter = new DefaultTypeConverter();
+        private TypeConverter typeConverter = TypeConverter.lookupDefault();
         private LogModifier logModifier = new DefaultLogModifier();
 
         public static Builder defaultContext() {

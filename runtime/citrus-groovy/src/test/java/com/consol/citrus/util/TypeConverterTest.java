@@ -17,15 +17,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.camel.util;
+package com.consol.citrus.util;
 
 import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.util.DefaultTypeConverter;
-import com.consol.citrus.util.SpringBeanTypeConverter;
-import com.consol.citrus.util.TypeConversionUtils;
-import com.consol.citrus.util.TypeConverter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -39,13 +35,13 @@ public class TypeConverterTest {
         try {
             Assert.assertEquals(TypeConverter.lookupDefault().getClass(), DefaultTypeConverter.class);
 
-            System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, TypeConverter.APACHE_CAMEL);
+            System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, TypeConverter.GROOVY);
             TypeConversionUtils.loadDefaultConverter();
 
             Map<String, TypeConverter> converters = TypeConverter.lookup();
             Assert.assertEquals(converters.size(), 2L);
-            Assert.assertEquals(converters.get(TypeConverter.APACHE_CAMEL).getClass(), CamelTypeConverter.class);
-            Assert.assertEquals(converters.get(TypeConverter.APACHE_CAMEL), TypeConverter.lookupDefault());
+            Assert.assertEquals(converters.get(TypeConverter.GROOVY).getClass(), GroovyTypeConverter.class);
+            Assert.assertEquals(converters.get(TypeConverter.GROOVY), TypeConverter.lookupDefault());
 
             Assert.assertEquals(converters.get(TypeConverter.SPRING).getClass(), SpringBeanTypeConverter.class);
 

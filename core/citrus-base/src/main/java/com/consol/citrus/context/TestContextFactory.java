@@ -36,7 +36,6 @@ import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.spi.SimpleReferenceResolver;
-import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
@@ -102,7 +101,7 @@ public class TestContextFactory implements ReferenceResolverAware {
         factory.setEndpointFactory(new DefaultEndpointFactory());
         factory.setReferenceResolver(new SimpleReferenceResolver());
         factory.setNamespaceContextBuilder(new NamespaceContextBuilder());
-        factory.setTypeConverter(new DefaultTypeConverter());
+        factory.setTypeConverter(TypeConverter.lookupDefault());
         factory.setLogModifier(new DefaultLogModifier());
         factory.setSegmentVariableExtractorRegistry(new SegmentVariableExtractorRegistry());
 

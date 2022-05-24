@@ -71,7 +71,7 @@ public class CitrusSpringConfig {
 
     @Bean
     public TypeConverter typeConverter() {
-        return SpringBeanTypeConverter.INSTANCE;
+        return TypeConverter.lookupDefault(SpringBeanTypeConverter.INSTANCE);
     }
 
     @Bean
