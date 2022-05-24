@@ -34,6 +34,10 @@ public class VariablesConfiguration extends GroovyObjectSupport {
     }
 
     public void propertyMissing(String name, Object value) {
-        context.setVariable(name, value);
+        if (value instanceof String) {
+            context.setVariable(name, context.replaceDynamicContentInString((String) value));
+        } else {
+            context.setVariable(name, value);
+        }
     }
 }
