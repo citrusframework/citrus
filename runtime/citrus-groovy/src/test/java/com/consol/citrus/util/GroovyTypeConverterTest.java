@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -19,25 +19,20 @@
 
 package com.consol.citrus.util;
 
-import java.util.Map;
-
+import org.codehaus.groovy.runtime.GStringImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class TypeConverterTest {
+public class GroovyTypeConverterTest {
+
+    private final GroovyTypeConverter converter = GroovyTypeConverter.INSTANCE;
 
     @Test
-    public void testLookup() {
-        Map<String, TypeConverter> converters = TypeConverter.lookup();
-        Assert.assertEquals(converters.size(), 1L);
-        Assert.assertEquals(converters.get(TypeConverter.DEFAULT).getClass(), DefaultTypeConverter.class);
-        Assert.assertEquals(converters.get(TypeConverter.DEFAULT), TypeConverter.lookupDefault());
-
-        Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.SPRING));
-        Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.APACHE_CAMEL));
-        Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.GROOVY));
+    public void testConverter() {
+        Assert.assertEquals(converter.convertIfNecessary(new GStringImpl(new Object[]{ "foo" }, new String[]{ "", "" }), String.class), "foo");
+        Assert.assertEquals(converter.convertIfNecessary(new GStringImpl(new Object[]{ "foo" }, new String[]{ "the message is: ", "!" }), String.class), "the message is: foo!");
     }
 }
