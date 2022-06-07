@@ -34,7 +34,7 @@ import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.TestResult;
-import com.consol.citrus.annotations.CitrusGroovyTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
@@ -158,14 +158,14 @@ public final class TestNGHelper {
     public static List<TestLoader> createMethodTestLoaders(Method method, TestLoaderProvider provider) {
         List<TestLoader> methodTestLoaders = new ArrayList<>();
 
-        if (method.getAnnotation(CitrusGroovyTest.class) != null) {
-            CitrusGroovyTest citrusTestAnnotation = method.getAnnotation(CitrusGroovyTest.class);
+        if (method.getAnnotation(CitrusTestSource.class) != null) {
+            CitrusTestSource citrusTestAnnotation = method.getAnnotation(CitrusTestSource.class);
             methodTestLoaders.addAll(createMethodTestLoaders(method, citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
-                    citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), provider, TestLoader.GROOVY, CitrusSettings.getGroovyTestFileNamePattern()));
+                    citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), provider, citrusTestAnnotation.type(), CitrusSettings.getTestFileNamePattern(citrusTestAnnotation.type())));
         } else if (method.getAnnotation(CitrusXmlTest.class) != null) {
             CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
             methodTestLoaders.addAll(createMethodTestLoaders(method, citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
-                    citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), provider, TestLoader.SPRING, CitrusSettings.getXmlTestFileNamePattern()));
+                    citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), provider, TestLoader.SPRING, CitrusSettings.getTestFileNamePattern(TestLoader.SPRING)));
         }
 
         return methodTestLoaders;

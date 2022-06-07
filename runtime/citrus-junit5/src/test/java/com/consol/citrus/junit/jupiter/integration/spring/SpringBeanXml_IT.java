@@ -21,12 +21,13 @@ package com.consol.citrus.junit.jupiter.integration.spring;
 
 import java.util.stream.Stream;
 
-import com.consol.citrus.annotations.CitrusGroovyTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
+import com.consol.citrus.junit.jupiter.CitrusTestFactorySupport;
 import com.consol.citrus.junit.jupiter.spring.CitrusSpringSupport;
 import com.consol.citrus.junit.jupiter.spring.CitrusSpringXmlTestFactory;
-import com.consol.citrus.junit.jupiter.spring.CitrusSpringXmlTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ public class SpringBeanXml_IT {
     }
 
     @Test
-    @CitrusGroovyTest(name = "echo.test", packageName = "com.consol.citrus.junit.jupiter.simple")
+    @CitrusTestSource(type = TestLoader.GROOVY, name = "echo.test", packageName = "com.consol.citrus.junit.jupiter.simple")
     public void SpringGroovy_IT() {
     }
 
@@ -58,15 +59,15 @@ public class SpringBeanXml_IT {
     @CitrusSpringXmlTestFactory
     public Stream<DynamicTest> SpringBeanXml_2_IT() {
         return Stream.of(
-                CitrusSpringXmlTestSupport.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "EchoActionIT"),
-                CitrusSpringXmlTestSupport.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "FailActionIT"),
-                CitrusSpringXmlTestSupport.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "CreateVariablesIT")
+                CitrusTestFactorySupport.springXml().dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "EchoActionIT"),
+                CitrusTestFactorySupport.springXml().dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "FailActionIT"),
+                CitrusTestFactorySupport.springXml().dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "CreateVariablesIT")
         );
     }
 
     @CitrusSpringXmlTestFactory
     public Stream<DynamicTest> SpringBeanXml_3_IT() {
-        return CitrusSpringXmlTestSupport.packageScan("com.consol.citrus.junit.jupiter.simple");
+        return CitrusTestFactorySupport.springXml().packageScan("com.consol.citrus.junit.jupiter.simple");
     }
 
     @Test

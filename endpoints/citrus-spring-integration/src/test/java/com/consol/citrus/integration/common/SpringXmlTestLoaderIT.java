@@ -4,8 +4,8 @@ import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.common.TestCaseParserConfiguration;
-import com.consol.citrus.common.XmlTestLoaderConfiguration;
+import com.consol.citrus.common.BeanDefinitionParserConfiguration;
+import com.consol.citrus.common.SpringXmlTestLoaderConfiguration;
 import com.consol.citrus.config.xml.BaseTestCaseMetaInfoParser;
 import com.consol.citrus.config.xml.BaseTestCaseParser;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
@@ -18,15 +18,16 @@ import org.w3c.dom.Element;
 /**
  * @author Thorsten Schlathoelter
  */
-@XmlTestLoaderConfiguration(
-        parserConfigurations = {@TestCaseParserConfiguration(name = "testcase", parser = XmlTestLoaderIT.CustomTestCaseParser.class),
-                @TestCaseParserConfiguration(name = "meta-info", parser = XmlTestLoaderIT.CustomTestCaseMetaInfoParser.class)}
-)
-public class XmlTestLoaderIT extends TestNGCitrusSpringSupport {
+@SpringXmlTestLoaderConfiguration(
+        parserConfigurations = {
+                @BeanDefinitionParserConfiguration(name = "testcase", parser = SpringXmlTestLoaderIT.CustomTestCaseParser.class),
+                @BeanDefinitionParserConfiguration(name = "meta-info", parser = SpringXmlTestLoaderIT.CustomTestCaseMetaInfoParser.class)
+        })
+public class SpringXmlTestLoaderIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusXmlTest
-    public void XmlTestLoaderIT() {
+    public void SpringXmlTestLoaderIT() {
 
         TestCase testCase = getTestCase();
         Assert.assertTrue(testCase instanceof CustomTestCase);

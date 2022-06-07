@@ -17,12 +17,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit.jupiter.spring;
+package com.consol.citrus.junit.jupiter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import com.consol.citrus.CitrusInstanceManager;
@@ -38,12 +39,22 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 /**
  * @author Christoph Deppisch
  */
-public final class CitrusSpringXmlTestSupport {
+public final class CitrusTestFactorySupport {
 
-    /**
-     * Prevent instantiation of utility class.
-     */
-    private CitrusSpringXmlTestSupport() {
+    private final String type;
+    private final Consumer<TestLoader> handler;
+
+    public CitrusTestFactorySupport(String type, Consumer<TestLoader> handler) {
+        this.type = type;
+        this.handler = handler;
+    }
+
+    public static CitrusTestFactorySupport groovy() {
+        return new CitrusTestFactorySupport(TestLoader.GROOVY, TestLoader::load);
+    }
+
+    public static CitrusTestFactorySupport springXml() {
+        return new CitrusTestFactorySupport(TestLoader.SPRING, testLoader -> CitrusInstanceManager.getOrDefault().run(testLoader.load()));
     }
 
     /**
@@ -51,12 +62,12 @@ public final class CitrusSpringXmlTestSupport {
      * @param packagesToScan
      * @return
      */
-    public static Stream<DynamicTest> packageScan(String ... packagesToScan) {
+    public Stream<DynamicTest> packageScan(String ... packagesToScan) {
         List<DynamicTest> tests = new ArrayList<>();
 
         for (String packageScan : packagesToScan) {
             try {
-                for (String fileNamePattern : CitrusSettings.getXmlTestFileNamePattern()) {
+                for (String fileNamePattern : CitrusSettings.getTestFileNamePattern(type)) {
                     Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageScan.replace('.', File.separatorChar) + fileNamePattern);
                     for (Resource fileResource : fileResources) {
                         String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
@@ -70,7 +81,7 @@ public final class CitrusSpringXmlTestSupport {
                         String testName = FileUtils.getBaseName(fileResource.getFilename());
 
                         TestLoader testLoader = createTestLoader(testName, filePath);
-                        tests.add(DynamicTest.dynamicTest(testName, () -> CitrusInstanceManager.getOrDefault().run(testLoader.load())));
+                        tests.add(DynamicTest.dynamicTest(testName, () -> handler.accept(testLoader)));
                     }
                 }
             } catch (IOException e) {
@@ -87,22 +98,23 @@ public final class CitrusSpringXmlTestSupport {
      * @param testNames
      * @return
      */
-    public static Stream<DynamicTest> dynamicTests(String packageName, String ... testNames) {
+    public Stream<DynamicTest> dynamicTests(String packageName, String ... testNames) {
         return Stream.of(testNames).map(testName -> {
             TestLoader testLoader = createTestLoader(testName, packageName);
-            return DynamicTest.dynamicTest(testName, () -> CitrusInstanceManager.getOrDefault().run(testLoader.load()));
+            return DynamicTest.dynamicTest(testName, () -> handler.accept(testLoader));
         });
     }
 
     /**
      * Creates dynamic test that executes Xml test given by name and package.
      * @param testClass
+     * @param testNames
      * @return
      */
-    public static Stream<DynamicTest> dynamicTests(Class<?> testClass, String ... testNames) {
+    public Stream<DynamicTest> dynamicTests(Class<?> testClass, String ... testNames) {
         return Stream.of(testNames).map(testName -> {
             TestLoader testLoader = createTestLoader(testName, testClass.getPackage().getName());
-            return DynamicTest.dynamicTest(testName, () -> CitrusInstanceManager.getOrDefault().run(testLoader.load()));
+            return DynamicTest.dynamicTest(testName, () -> handler.accept(testLoader));
         });
     }
 
@@ -112,21 +124,21 @@ public final class CitrusSpringXmlTestSupport {
      * @param testName
      * @return
      */
-    public static DynamicTest dynamicTest(String packageName, String testName) {
+    public DynamicTest dynamicTest(String packageName, String testName) {
         TestLoader testLoader = createTestLoader(testName, packageName);
-        return DynamicTest.dynamicTest(testName, () -> CitrusInstanceManager.getOrDefault().run(testLoader.load()));
+        return DynamicTest.dynamicTest(testName, () -> handler.accept(testLoader));
     }
 
-    private static TestLoader createTestLoader(String testName, String packageName) {
-        TestLoader testLoader = TestLoader.lookup(TestLoader.SPRING)
-                .orElseThrow(() -> new CitrusRuntimeException("Missing Spring XML test loader in project classpath - " +
-                        "please add citrus-spring module to the project"));
+    private TestLoader createTestLoader(String testName, String packageName) {
+        TestLoader testLoader = TestLoader.lookup(type)
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing '%s' test loader in project classpath - " +
+                        "please add proper Citrus module to the project", type)));
 
         testLoader.setTestClass(DynamicTest.class);
         testLoader.setTestName(testName);
         testLoader.setPackageName(packageName);
 
-        CitrusAnnotations.injectCitrusContext(testLoader, CitrusInstanceManager.getOrDefault().getCitrusContext());
+        CitrusAnnotations.injectAll(testLoader, CitrusInstanceManager.getOrDefault());
 
         return testLoader;
     }

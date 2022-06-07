@@ -1,16 +1,16 @@
 package com.consol.citrus.common;
 
 
-import org.springframework.beans.factory.xml.BeanDefinitionParser;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface TestCaseParserConfiguration {
+public @interface BeanDefinitionParserConfiguration {
 
     /**
      * The name of the bean for which to override the parser

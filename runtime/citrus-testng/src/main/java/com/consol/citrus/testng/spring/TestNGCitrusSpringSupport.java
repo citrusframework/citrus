@@ -37,7 +37,7 @@ import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.TestGroupAware;
 import com.consol.citrus.annotations.CitrusAnnotations;
-import com.consol.citrus.annotations.CitrusGroovyTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
@@ -95,7 +95,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
         List<TestLoader> methodTestLoaders = TestNGHelper.createMethodTestLoaders(method, this::createTestLoader);
         if (method.getAnnotation(CitrusTest.class) != null ||
-                method.getAnnotation(CitrusGroovyTest.class) != null ||
+                method.getAnnotation(CitrusTestSource.class) != null ||
                 method.getAnnotation(CitrusXmlTest.class) != null) {
             try {
                 run(testResult, method, methodTestLoaders, testResult.getMethod().getCurrentInvocationCount());
@@ -154,11 +154,11 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
                 CitrusAnnotations.injectAll(this, citrus, ctx);
 
-                if (method.getAnnotation(CitrusGroovyTest.class) != null && !methodTestLoaders.isEmpty()) {
+                if (method.getAnnotation(CitrusTestSource.class) != null && !methodTestLoaders.isEmpty()) {
                     TestLoader testLoader = methodTestLoaders.get(invocationCount % methodTestLoaders.size());
 
                     if (testLoader instanceof TestSourceAware) {
-                        String[] sources = method.getAnnotation(CitrusGroovyTest.class).sources();
+                        String[] sources = method.getAnnotation(CitrusTestSource.class).sources();
                         if (sources.length > 0) {
                             ((TestSourceAware) testLoader).setSource(sources[0]);
                         }

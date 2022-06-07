@@ -26,7 +26,7 @@ import com.consol.citrus.TestBehavior;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
-import com.consol.citrus.annotations.CitrusGroovyTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
@@ -61,7 +61,7 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
         if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null ||
-                frameworkMethod.getMethod().getAnnotation(CitrusGroovyTest.class) != null) {
+                frameworkMethod.getMethod().getAnnotation(CitrusTestSource.class) != null) {
             TestCaseRunner runner = JUnit4Helper.createTestRunner(frameworkMethod, this.getClass(), ctx);
             frameworkMethod.setAttribute(JUnit4Helper.BUILDER_ATTRIBUTE, runner);
 
@@ -69,8 +69,9 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
 
             CitrusAnnotations.injectAll(this, citrus, ctx);
 
-            if (frameworkMethod.getMethod().getAnnotation(CitrusGroovyTest.class) != null) {
-                TestLoader testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName(), frameworkMethod.getSource(), "groovy");
+            if (frameworkMethod.getMethod().getAnnotation(CitrusTestSource.class) != null) {
+                TestLoader testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName(),
+                        frameworkMethod.getSource(), frameworkMethod.getSourceType());
 
                 CitrusAnnotations.injectAll(testLoader, citrus, ctx);
                 CitrusAnnotations.injectTestRunner(testLoader, runner);

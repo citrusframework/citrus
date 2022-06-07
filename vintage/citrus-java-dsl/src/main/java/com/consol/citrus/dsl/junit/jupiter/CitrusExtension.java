@@ -24,6 +24,9 @@ import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTestSource;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
@@ -34,6 +37,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.junit.jupiter.CitrusBaseExtension;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
+import com.consol.citrus.junit.jupiter.spring.CitrusSpringXmlTestFactory;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
@@ -61,7 +65,7 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
 
     @Override
     public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
-        if (!CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod()) &&
+        if (!isSpringXmlTestMethod(extensionContext.getRequiredTestMethod()) &&
                 (isRunnerMethod(extensionContext.getRequiredTestMethod()) || isRunnerClass(extensionContext.getRequiredTestClass()))) {
             TestCase testCase = getTestCase(extensionContext);
             testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), throwable));
@@ -72,7 +76,7 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
 
     @Override
     public void afterTestExecution(ExtensionContext extensionContext) throws Exception {
-        if (!CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+        if (!isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
             TestCase testCase = getTestCase(extensionContext);
 
             extensionContext.getExecutionException()
@@ -97,8 +101,8 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
 
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
-        if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            CitrusExtensionHelper.getCitrus(extensionContext).run(CitrusExtensionHelper.getXmlTestCase(extensionContext), CitrusExtensionHelper.getTestContext(extensionContext));
+        if (isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+            CitrusExtensionHelper.getCitrus(extensionContext).run(getXmlTestCase(extensionContext), CitrusExtensionHelper.getTestContext(extensionContext));
         } else {
             CitrusDslAnnotations.injectTestDesigner(extensionContext.getRequiredTestInstance(), getTestDesigner(extensionContext));
             CitrusDslAnnotations.injectTestRunner(extensionContext.getRequiredTestInstance(), getTestRunner(extensionContext));
@@ -111,8 +115,8 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
         CitrusExtensionHelper.getTestContext(extensionContext);
 
-        if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            CitrusExtensionHelper.getXmlTestCase(extensionContext);
+        if (isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+            getXmlTestCase(extensionContext);
         } else {
             TestCase testCase = getTestCase(extensionContext);
 
@@ -206,8 +210,8 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
                 return getTestDesigner(extensionContext).getTestCase();
             } else if (isRunnerMethod(extensionContext.getRequiredTestMethod())) {
                 return getTestRunner(extensionContext).getTestCase();
-            } else if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-                return CitrusExtensionHelper.getXmlTestCase(extensionContext);
+            } else if (isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+                return getXmlTestCase(extensionContext);
             } else if (isDesignerClass(extensionContext.getRequiredTestClass())) {
                 return getTestDesigner(extensionContext).getTestCase();
             } else if (Stream.of(extensionContext.getRequiredTestClass().getDeclaredFields()).anyMatch(field -> TestRunner.class.isAssignableFrom(field.getType()))) {
@@ -268,5 +272,26 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
      */
     private static boolean isRunnerClass(Class<?> type) {
         return Stream.of(type.getDeclaredFields()).anyMatch(field -> TestRunner.class.isAssignableFrom(field.getType()));
+    }
+
+    /**
+     * Get the {@link TestCase} associated with the supplied {@code ExtensionContext} and its required test class name.
+     * @return the {@code TestCase} (never {@code null})
+     */
+    public static TestCase getXmlTestCase(ExtensionContext extensionContext) {
+        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+        return extensionContext.getRoot().getStore(com.consol.citrus.junit.jupiter.CitrusExtension.NAMESPACE)
+                .getOrComputeIfAbsent(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCase.class.getSimpleName(),
+                        key -> CitrusExtensionHelper.createTestLoader(extensionContext).load(), TestCase.class);
+    }
+
+    /**
+     * Checks for Spring Xml Citrus test annotations on test method.
+     * @param method
+     * @return
+     */
+    private static boolean isSpringXmlTestMethod(Method method) {
+        return method.isAnnotationPresent(CitrusXmlTest.class) || method.isAnnotationPresent(CitrusSpringXmlTestFactory.class) ||
+                (method.isAnnotationPresent(CitrusTestSource.class) && method.getAnnotation(CitrusTestSource.class).type().equals(TestLoader.SPRING));
     }
 }

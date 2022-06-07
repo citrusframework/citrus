@@ -23,8 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
@@ -100,10 +100,9 @@ public final class JUnit4Helper {
      * @param testPackageName
      * @param packagesToScan
      * @param sources
-     * @param testFileNamePattern
      */
-    public static List<FrameworkMethod> findInterceptedMethods(FrameworkMethod method, String[] testNames,
-                                       String testPackageName, String[] packagesToScan, String[] sources, Set<String> testFileNamePattern) {
+    public static List<FrameworkMethod> findInterceptedMethods(FrameworkMethod method, String type, String[] testNames,
+                                       String testPackageName, String[] packagesToScan, String[] sources) {
         List<FrameworkMethod> interceptedMethods = new ArrayList<>();
 
         String packageName = method.getMethod().getDeclaringClass().getPackage().getName();
@@ -113,10 +112,10 @@ public final class JUnit4Helper {
 
         if (testNames.length > 0) {
             for (String name : testNames) {
-                interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), name, packageName));
+                interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), type, name, packageName));
             }
         } else if (packagesToScan.length == 0 && sources.length == 0) {
-            interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), method.getName(), packageName));
+            interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), type, method.getName(), packageName));
         }
 
         for (String source : sources) {
@@ -131,7 +130,7 @@ public final class JUnit4Helper {
                 sourceFilePackageName = sourceFilePackageName.substring(0, sourceFilePackageName.lastIndexOf("/"));
             }
 
-            CitrusFrameworkMethod frameworkMethod = new CitrusFrameworkMethod(method.getMethod(), FileUtils.getBaseName(file.getFilename()),
+            CitrusFrameworkMethod frameworkMethod = new CitrusFrameworkMethod(method.getMethod(), type, FileUtils.getBaseName(file.getFilename()),
                     sourceFilePackageName.replace("/","."));
             frameworkMethod.setSource(source);
             interceptedMethods.add(frameworkMethod);
@@ -139,7 +138,7 @@ public final class JUnit4Helper {
 
         for (String packageScan : packagesToScan) {
             try {
-                for (String fileNamePattern : testFileNamePattern) {
+                for (String fileNamePattern : CitrusSettings.getTestFileNamePattern(type)) {
                     Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageScan.replace('.', File.separatorChar) + fileNamePattern);
                     for (Resource fileResource : fileResources) {
                         String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
@@ -150,14 +149,12 @@ public final class JUnit4Helper {
 
                         filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
-                        interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(),
-                                FileUtils.getBaseName(fileResource.getFilename()),
-                                filePath));
+                        interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), type,
+                                FileUtils.getBaseName(fileResource.getFilename()), filePath));
                     }
                 }
             } catch (RuntimeException | IOException e) {
-                interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(),
-                        method.getName(), packageScan)
+                interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), type, method.getName(), packageScan)
                         .withError(new CitrusRuntimeException(String.format("Unable to locate file resources for test package '%s'", packageScan), e)));
             }
         }

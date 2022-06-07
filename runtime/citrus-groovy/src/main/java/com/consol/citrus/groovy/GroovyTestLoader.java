@@ -53,6 +53,7 @@ public class GroovyTestLoader implements TestLoader, TestSourceAware {
 
     @CitrusResource
     private TestCaseRunner runner;
+    private TestCase testCase;
 
     private Class<?> testClass;
     private String testName;
@@ -61,6 +62,10 @@ public class GroovyTestLoader implements TestLoader, TestSourceAware {
     private String source;
 
     public TestCase load() {
+        if (testCase != null) {
+            return testCase;
+        }
+
         boolean shouldFinish = false;
 
         if (runner == null) {
@@ -106,6 +111,7 @@ public class GroovyTestLoader implements TestLoader, TestSourceAware {
             }
 
             GroovyShellUtils.run(ic, new TestCaseScript(citrus, runner, context, basePath), FileUtils.readToString(scriptSource), citrus, context);
+            testCase = runner.getTestCase();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to load Groovy test source", e);
         } finally {
@@ -114,7 +120,7 @@ public class GroovyTestLoader implements TestLoader, TestSourceAware {
             }
         }
 
-        return this.runner.getTestCase();
+        return testCase;
     }
 
     public String getSource() {

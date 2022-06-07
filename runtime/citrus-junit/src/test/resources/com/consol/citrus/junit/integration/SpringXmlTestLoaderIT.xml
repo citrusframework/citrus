@@ -4,7 +4,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-    <testcase name="XmlTestLoaderIT">
+    <testcase name="SpringXmlTestLoaderIT">
         <meta-info>
             <author>T. Schlathoelter</author>
             <creationdate>2022-02-01</creationdate>
@@ -19,6 +19,6 @@
 
     <spring:bean id="echoAction" class="com.consol.citrus.config.xml.EchoActionParser.EchoActionFactoryBean"/>
 
-    <spring:bean id="validateTestCaseAction" class="com.consol.citrus.junit.integration.XMlTestLoaderIT$ValidateTestCaseAndMetaInfoAction"/>
+    <spring:bean id="validateTestCaseAction" class="com.consol.citrus.junit.integration.SpringXmlTestLoaderIT$ValidateTestCaseAndMetaInfoAction"/>
 
 </spring:beans>

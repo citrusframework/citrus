@@ -29,7 +29,10 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface CitrusGroovyTest {
+public @interface CitrusTestSource {
+
+    /** Test source type required - defines how source is loaded (e.g. as Groovy script, XML file or Spring bean definition*/
+    String type();
 
     /** Test name optional - by default method name is used as test name */
     String[] name() default {};
@@ -37,10 +40,10 @@ public @interface CitrusGroovyTest {
     /** Test package name optional - by default package of declaring test class is used */
     String packageName() default "";
 
-    /** Test packages to scan for Groovy test case definitions */
+    /** Test packages to scan optional - for loading all external test case definitions (e.g. Groovy, Xml) */
     String[] packageScan() default {};
 
-    /** Test sources optional list of file resources to load */
+    /** Test source file optional - fully qualified test source file path */
     String[] sources() default {};
 
 }

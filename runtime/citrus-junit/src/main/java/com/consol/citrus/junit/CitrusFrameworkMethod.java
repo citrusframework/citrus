@@ -36,6 +36,7 @@ public class CitrusFrameworkMethod extends FrameworkMethod implements TestSource
     private final String testName;
     private final String packageName;
 
+    private String sourceType;
     private String source;
 
     private final Map<String, Object> attributes = new HashMap<>();
@@ -56,9 +57,27 @@ public class CitrusFrameworkMethod extends FrameworkMethod implements TestSource
      * @param method
      */
     public CitrusFrameworkMethod(Method method, String testName, String packageName) {
+        this(method, "", testName, packageName);
+    }
+
+    /**
+     * Returns a new {@code FrameworkMethod} for {@code method}
+     *
+     * @param method
+     */
+    public CitrusFrameworkMethod(Method method, String type, String testName, String packageName) {
         super(method);
+        this.sourceType = type;
         this.testName = testName;
         this.packageName = packageName;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String type) {
+        this.sourceType = type;
     }
 
     /**

@@ -19,10 +19,10 @@ package com.consol.citrus.junit.spring;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.annotations.CitrusGroovyTest;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.junit.CitrusFrameworkMethod;
 import com.consol.citrus.junit.JUnit4Helper;
 import com.consol.citrus.junit.TestSuiteExecutionListener;
@@ -73,14 +73,16 @@ public class CitrusSpringJUnit4Runner extends SpringJUnit4ClassRunner {
                     interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), method.getDeclaringClass().getSimpleName() + "." + method.getName(),
                             method.getMethod().getDeclaringClass().getPackage().getName()));
                 }
-            } else if (method.getMethod().getAnnotation(CitrusGroovyTest.class) != null) {
-                CitrusGroovyTest citrusTestAnnotation = method.getMethod().getAnnotation(CitrusGroovyTest.class);
-                interceptedMethods.addAll(JUnit4Helper.findInterceptedMethods(method, citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
-                        citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), CitrusSettings.getGroovyTestFileNamePattern()));
+            } else if (method.getMethod().getAnnotation(CitrusTestSource.class) != null) {
+                CitrusTestSource citrusTestAnnotation = method.getMethod().getAnnotation(CitrusTestSource.class);
+                interceptedMethods.addAll(JUnit4Helper.findInterceptedMethods(method, citrusTestAnnotation.type(),
+                        citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
+                        citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources()));
             } else if (method.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
                 CitrusXmlTest citrusTestAnnotation = method.getMethod().getAnnotation(CitrusXmlTest.class);
-                interceptedMethods.addAll(JUnit4Helper.findInterceptedMethods(method, citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
-                        citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), CitrusSettings.getXmlTestFileNamePattern()));
+                interceptedMethods.addAll(JUnit4Helper.findInterceptedMethods(method, TestLoader.SPRING,
+                        citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
+                        citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources()));
             } else {
                 interceptedMethods.add(method);
             }

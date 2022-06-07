@@ -22,9 +22,11 @@ import java.lang.annotation.*;
  * Citrus test case annotation used for XML test case definition inside a unit test class.
  * Each method annotated with this annotation will result in a separate test execution.
  *
+ * @deprecated in favor of using generic {@link CitrusTestSource} annotation
  * @author Christoph Deppisch
  * @since 1.3.1
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CitrusXmlTest {
