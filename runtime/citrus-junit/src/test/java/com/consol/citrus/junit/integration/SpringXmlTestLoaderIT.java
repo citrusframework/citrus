@@ -4,10 +4,10 @@ import com.consol.citrus.*;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.common.TestCaseParserConfiguration;
+import com.consol.citrus.common.BeanDefinitionParserConfiguration;
 import com.consol.citrus.common.TestLoader;
-import com.consol.citrus.common.XmlTestLoader;
-import com.consol.citrus.common.XmlTestLoaderConfiguration;
+import com.consol.citrus.common.SpringXmlTestLoader;
+import com.consol.citrus.common.SpringXmlTestLoaderConfiguration;
 import com.consol.citrus.config.xml.BaseTestCaseMetaInfoParser;
 import com.consol.citrus.config.xml.BaseTestCaseParser;
 import com.consol.citrus.context.TestContext;
@@ -21,17 +21,18 @@ import org.w3c.dom.Element;
 /**
  * @author Thorsten Schlathoelter
  */
-@XmlTestLoaderConfiguration(
-        parserConfigurations = {@TestCaseParserConfiguration(name = "testcase", parser = XMlTestLoaderIT.CustomTestCaseParser.class),
-                @TestCaseParserConfiguration(name = "meta-info", parser = XMlTestLoaderIT.CustomTestCaseMetaInfoParser.class)}
-)
-public class XMlTestLoaderIT extends JUnit4CitrusSpringSupport {
+@SpringXmlTestLoaderConfiguration(
+        parserConfigurations = {
+                @BeanDefinitionParserConfiguration(name = "testcase", parser = SpringXmlTestLoaderIT.CustomTestCaseParser.class),
+                @BeanDefinitionParserConfiguration(name = "meta-info", parser = SpringXmlTestLoaderIT.CustomTestCaseMetaInfoParser.class)
+        })
+public class SpringXmlTestLoaderIT extends JUnit4CitrusSpringSupport {
 
     private static TestCase loadedTestCase;
 
     @Test
     @CitrusXmlTest
-    public void XmlTestLoaderIT() {
+    public void SpringXmlTestLoaderIT() {
         // Special validation is performed via ValidateTestCaseAndMetaInfoAction.
     }
 
@@ -43,7 +44,7 @@ public class XMlTestLoaderIT extends JUnit4CitrusSpringSupport {
      */
     @Override
     protected TestLoader createTestLoader(String testName, String packageName, String source, String type) {
-        XmlTestLoader testLoader = new XmlTestLoader() {
+        SpringXmlTestLoader testLoader = new SpringXmlTestLoader() {
             @Override
             public TestCase load() {
                 loadedTestCase = super.load();

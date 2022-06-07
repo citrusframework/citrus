@@ -88,8 +88,8 @@ public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, B
 
     @Override
     public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
-        if (!CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            TestCase testCase = CitrusExtensionHelper.getTestCase(extensionContext);
+        TestCase testCase = CitrusExtensionHelper.getTestCase(extensionContext);
+        if (testCase.getTestResult() == null || testCase.getTestResult().isSuccess()) {
             testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), throwable));
         }
 
@@ -98,6 +98,12 @@ public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, B
 
     @Override
     public void afterTestExecution(ExtensionContext extensionContext) {
+        extensionContext.getExecutionException()
+                .ifPresent(e -> {
+                    TestCase testCase = CitrusExtensionHelper.getTestCase(extensionContext);
+                    testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
+                });
+
         extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestContext.class.getSimpleName());
         extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCase.class.getSimpleName());
 
@@ -121,8 +127,8 @@ public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, B
             ((TestListener) testInstance).before(citrus.getCitrusContext());
         }
 
-        if (CitrusExtensionHelper.isGroovyTestMethod(extensionContext.getRequiredTestMethod())) {
-            TestLoader testLoader = CitrusExtensionHelper.createTestLoader(extensionContext, "groovy");
+        if (CitrusExtensionHelper.isTestSourceMethod(extensionContext.getRequiredTestMethod())) {
+            TestLoader testLoader = CitrusExtensionHelper.getTestLoader(extensionContext);
 
             CitrusAnnotations.injectAll(testLoader, citrus, context);
             CitrusAnnotations.injectTestRunner(testLoader, testRunner);
@@ -135,13 +141,13 @@ public class CitrusExtension implements BeforeAllCallback, BeforeEachCallback, B
     public void beforeEach(ExtensionContext extensionContext) {
         CitrusExtensionHelper.getTestContext(extensionContext);
 
-        TestCase testCase = CitrusExtensionHelper.getTestCase(extensionContext);
         TestCaseRunner testRunner = CitrusExtensionHelper.getTestRunner(extensionContext);
 
         try {
             testRunner.start();
         } catch (Exception | AssertionError e) {
-            CitrusExtensionHelper.getTestCase(extensionContext).setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
+            TestCase testCase = CitrusExtensionHelper.getTestCase(extensionContext);
+            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
             throw new TestCaseFailedException(e);
         }
     }

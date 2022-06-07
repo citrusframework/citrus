@@ -21,10 +21,11 @@ package com.consol.citrus.junit.jupiter.integration.groovy;
 
 import java.util.stream.Stream;
 
-import com.consol.citrus.annotations.CitrusGroovyTest;
+import com.consol.citrus.annotations.CitrusTestSource;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.junit.jupiter.CitrusSupport;
-import com.consol.citrus.junit.jupiter.groovy.CitrusGroovyTestSupport;
-import com.consol.citrus.junit.jupiter.groovy.CitrusGroovyTestFactory;
+import com.consol.citrus.junit.jupiter.CitrusTestFactory;
+import com.consol.citrus.junit.jupiter.CitrusTestFactorySupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -37,30 +38,30 @@ public class GroovyScript_IT {
 
     @Test
     @DisplayName("GroovyScript_IT")
-    @CitrusGroovyTest
+    @CitrusTestSource(type = TestLoader.GROOVY)
     public void sample_test() {
     }
 
     @Test
-    @CitrusGroovyTest(name = "sample.it")
+    @CitrusTestSource(type = TestLoader.GROOVY, name = "sample.it")
     public void GroovyScript_1_IT() {
     }
 
-    @CitrusGroovyTestFactory
+    @CitrusTestFactory
     public Stream<DynamicTest> GroovyScript_2_IT() {
         return Stream.of(
-                CitrusGroovyTestSupport.dynamicTest("com.consol.citrus.junit.jupiter.simple", "echo.test.groovy"),
-                CitrusGroovyTestSupport.dynamicTest("com.consol.citrus.junit.jupiter.simple", "delay.test.groovy")
+                CitrusTestFactorySupport.groovy().dynamicTest("com.consol.citrus.junit.jupiter.simple", "echo.test.groovy"),
+                CitrusTestFactorySupport.groovy().dynamicTest("com.consol.citrus.junit.jupiter.simple", "delay.test.groovy")
         );
     }
 
-    @CitrusGroovyTestFactory
+    @CitrusTestFactory
     public Stream<DynamicTest> GroovyScript_3_IT() {
-        return CitrusGroovyTestSupport.packageScan("com.consol.citrus.junit.jupiter.simple");
+        return CitrusTestFactorySupport.groovy().packageScan("com.consol.citrus.junit.jupiter.simple");
     }
 
     @Test
-    @CitrusGroovyTest(sources = "classpath:com/consol/citrus/junit/jupiter/integration/groovy/sample.it.groovy")
+    @CitrusTestSource(type = TestLoader.GROOVY, sources = "classpath:com/consol/citrus/junit/jupiter/integration/groovy/sample.it.groovy")
     public void GroovyScript_4_IT() {
     }
 }

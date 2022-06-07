@@ -4,7 +4,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-    <testcase name="XmlTestLoader_IT">
+    <testcase name="SpringXmlTestLoader_IT">
         <meta-info>
             <author>T. Schlathoelter</author>
             <creationdate>2022-02-01</creationdate>

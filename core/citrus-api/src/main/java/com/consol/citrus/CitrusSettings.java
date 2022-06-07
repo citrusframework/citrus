@@ -3,12 +3,14 @@ package com.consol.citrus;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.message.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,5 +226,21 @@ public final class CitrusSettings {
                 System.getenv(LOG_MASK_KEYWORDS_ENV) : LOG_MASK_KEYWORDS_DEFAULT).split(","))
                     .map(String::trim)
                     .collect(Collectors.toSet());
+    }
+
+    /**
+     * Gets the test file name pattern for given type or empty patterns for unknown type.
+     * @param type
+     * @return
+     */
+    public static Set<String> getTestFileNamePattern(String type) {
+        switch (type) {
+            case TestLoader.SPRING:
+                return CitrusSettings.getXmlTestFileNamePattern();
+            case TestLoader.GROOVY:
+                return CitrusSettings.getGroovyTestFileNamePattern();
+            default:
+                return Collections.emptySet();
+        }
     }
 }

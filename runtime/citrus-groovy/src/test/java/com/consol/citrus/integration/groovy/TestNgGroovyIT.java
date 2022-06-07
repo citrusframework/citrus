@@ -16,7 +16,8 @@
 
 package com.consol.citrus.integration.groovy;
 
-import com.consol.citrus.annotations.CitrusGroovyTest;
+import com.consol.citrus.annotations.CitrusTestSource;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
@@ -27,15 +28,15 @@ import org.testng.annotations.Test;
 @Test
 public class TestNgGroovyIT extends TestNGCitrusSpringSupport {
 
-    @CitrusGroovyTest(name = { "sample.it" })
+    @CitrusTestSource(type = TestLoader.GROOVY, name = { "sample.it" })
     public void TestNgGroovy_1_IT() {}
 
-    @CitrusGroovyTest(name = { "echo.test", "delay.test" }, packageName = "com.consol.citrus.integration.actions")
+    @CitrusTestSource(type = TestLoader.GROOVY, name = { "echo.test", "delay.test" }, packageName = "com.consol.citrus.integration.actions")
     public void TestNgGroovy_2_IT() {}
 
-    @CitrusGroovyTest(packageScan = "com.consol.citrus.integration.groovy")
+    @CitrusTestSource(type = TestLoader.GROOVY, packageScan = "com.consol.citrus.integration.groovy")
     public void TestNgGroovy_3_IT() {}
 
-    @CitrusGroovyTest(sources = { "classpath:com/consol/citrus/integration/actions/createVariables.test.groovy" })
+    @CitrusTestSource(type = TestLoader.GROOVY, sources = { "classpath:com/consol/citrus/integration/actions/createVariables.test.groovy" })
     public void TestNgGroovy_4_IT() {}
 }

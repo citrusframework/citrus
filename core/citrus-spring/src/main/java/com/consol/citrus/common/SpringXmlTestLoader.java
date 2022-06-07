@@ -41,7 +41,7 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.1
  */
-public class XmlTestLoader implements TestLoader, TestSourceAware {
+public class SpringXmlTestLoader implements TestLoader, TestSourceAware {
 
     @CitrusResource
     private CitrusContext citrusContext;
@@ -99,9 +99,9 @@ public class XmlTestLoader implements TestLoader, TestSourceAware {
      * Configures the CitrusNamespaceParserRegistry with custom parsers
      */
     private void configureCustomParsers() {
-        XmlTestLoaderConfiguration loaderConfiguration = testClass.getAnnotation(XmlTestLoaderConfiguration.class);
+        SpringXmlTestLoaderConfiguration loaderConfiguration = testClass.getAnnotation(SpringXmlTestLoaderConfiguration.class);
         if (loaderConfiguration != null) {
-            for (TestCaseParserConfiguration testCaseParserConfiguration : loaderConfiguration.parserConfigurations()) {
+            for (BeanDefinitionParserConfiguration testCaseParserConfiguration : loaderConfiguration.parserConfigurations()) {
                 Class<? extends BeanDefinitionParser> parserClass = testCaseParserConfiguration.parser();
                 try {
                     if (parserClass != null) {

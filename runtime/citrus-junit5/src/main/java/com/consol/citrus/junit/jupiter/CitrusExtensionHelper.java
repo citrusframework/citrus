@@ -29,16 +29,14 @@ import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
-import com.consol.citrus.annotations.CitrusGroovyTest;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.NoopTestLoader;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.junit.jupiter.groovy.CitrusGroovyTestFactory;
-import com.consol.citrus.junit.jupiter.spring.CitrusSpringXmlTestFactory;
 import com.consol.citrus.util.FileUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -66,25 +64,16 @@ public final class CitrusExtensionHelper {
      * @return
      */
     public static boolean isTestFactoryMethod(Method method) {
-        return method.isAnnotationPresent(CitrusSpringXmlTestFactory.class) || method.isAnnotationPresent(CitrusGroovyTestFactory.class);
+        return method.isAnnotationPresent(CitrusTestFactory.class);
     }
 
     /**
-     * Checks for Spring Xml Citrus test annotations on test method.
+     * Checks for Citrus test source annotations on test method.
      * @param method
      * @return
      */
-    public static boolean isXmlTestMethod(Method method) {
-        return method.isAnnotationPresent(CitrusXmlTest.class) || method.isAnnotationPresent(CitrusSpringXmlTestFactory.class);
-    }
-
-    /**
-     * Checks for Groovy Citrus test annotations on test method.
-     * @param method
-     * @return
-     */
-    public static boolean isGroovyTestMethod(Method method) {
-        return method.isAnnotationPresent(CitrusGroovyTest.class);
+    public static boolean isTestSourceMethod(Method method) {
+        return method.isAnnotationPresent(CitrusTestSource.class) || method.isAnnotationPresent(CitrusXmlTest.class);
     }
 
     /**
@@ -125,6 +114,18 @@ public final class CitrusExtensionHelper {
     }
 
     /**
+     * Get the {@link TestLoader} associated with the supplied {@code ExtensionContext} and its required test class name.
+     * @param extensionContext
+     * @return the {@code TestLoader} (never {@code null})
+     */
+    public static TestLoader getTestLoader(ExtensionContext extensionContext) {
+        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+
+        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestLoader.class.getSimpleName(),
+                key -> createTestLoader(extensionContext), TestLoader.class);
+    }
+
+    /**
      * Get the {@link TestCase} associated with the supplied {@code ExtensionContext} and its required test class name.
      * @param extensionContext
      * @return the {@code TestCase} (never {@code null})
@@ -132,8 +133,8 @@ public final class CitrusExtensionHelper {
     public static TestCase getTestCase(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
         return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCase.class.getSimpleName(), key -> {
-            if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-                return getXmlTestCase(extensionContext);
+            if (CitrusExtensionHelper.isTestSourceMethod(extensionContext.getRequiredTestMethod())) {
+                return getTestLoader(extensionContext).load();
             } else {
                 return getTestRunner(extensionContext).getTestCase();
             }
@@ -145,10 +146,9 @@ public final class CitrusExtensionHelper {
      * suitable for tests that get created at runtime through factory method. Subclasses
      * may overwrite this in order to provide custom test loader with custom test annotations set.
      * @param extensionContext
-     * @param type
      * @return
      */
-    public static TestLoader createTestLoader(ExtensionContext extensionContext, String type) {
+    public static TestLoader createTestLoader(ExtensionContext extensionContext) {
         Method method = extensionContext.getRequiredTestMethod();
 
         if (isTestFactoryMethod(method)) {
@@ -157,31 +157,33 @@ public final class CitrusExtensionHelper {
             return testLoader;
         }
 
-        TestLoader testLoader = TestLoader.lookup(type)
-                .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", type)));
-
-        if (method.getAnnotation(CitrusGroovyTest.class) != null) {
-            CitrusGroovyTest citrusTestAnnotation = method.getAnnotation(CitrusGroovyTest.class);
-            configure(testLoader, extensionContext, method, citrusTestAnnotation.name(),
-                    citrusTestAnnotation.packageName(), citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources());
-        } else if (method.getAnnotation(CitrusXmlTest.class) != null) {
+        if (method.getAnnotation(CitrusXmlTest.class) != null) {
             CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
+
+            TestLoader testLoader = TestLoader.lookup(TestLoader.SPRING)
+                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", TestLoader.SPRING)));
+
             configure(testLoader, extensionContext, method, citrusTestAnnotation.name(),
                     citrusTestAnnotation.packageName(), citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources());
+
+            return testLoader;
         }
 
-        return testLoader;
-    }
+        if (CitrusExtensionHelper.isTestSourceMethod(method)) {
+            CitrusTestSource citrusTestAnnotation = method.getAnnotation(CitrusTestSource.class);
 
-    /**
-     * Get the {@link TestCase} associated with the supplied {@code ExtensionContext} and its required test class name.
-     * @return the {@code TestCase} (never {@code null})
-     */
-    public static TestCase getXmlTestCase(ExtensionContext extensionContext) {
-        Assert.notNull(extensionContext, "ExtensionContext must not be null");
-        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE)
-                .getOrComputeIfAbsent(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCase.class.getSimpleName(),
-                        key -> createTestLoader(extensionContext, TestLoader.SPRING).load(), TestCase.class);
+            TestLoader testLoader = TestLoader.lookup(citrusTestAnnotation.type())
+                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", citrusTestAnnotation.type())));
+
+            configure(testLoader, extensionContext, method, citrusTestAnnotation.name(),
+                    citrusTestAnnotation.packageName(), citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources());
+
+            return testLoader;
+        }
+
+        TestLoader testLoader = new NoopTestLoader();
+        configure(testLoader, extensionContext, method, new String[]{}, null, new String[]{}, new String[]{});
+        return testLoader;
     }
 
     /**
@@ -191,7 +193,8 @@ public final class CitrusExtensionHelper {
      */
     public static TestContext getTestContext(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
-        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestContext.class.getSimpleName(), key -> getCitrus(extensionContext).getCitrusContext().createTestContext(), TestContext.class);
+        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestContext.class.getSimpleName(),
+                key -> getCitrus(extensionContext).getCitrusContext().createTestContext(), TestContext.class);
     }
 
     /**

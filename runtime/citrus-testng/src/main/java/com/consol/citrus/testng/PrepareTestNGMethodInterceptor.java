@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.annotations.CitrusGroovyTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,13 +50,13 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
 
     @Override
     public List<IMethodInstance> intercept(List<IMethodInstance> methods, ITestContext context) {
-        List<IMethodInstance> interceptedMethods = new ArrayList<IMethodInstance>();
+        List<IMethodInstance> interceptedMethods = new ArrayList<>();
 
         for (IMethodInstance method : methods) {
             boolean baseMethodAdded = false;
             if (method.getInstance() instanceof TestNGCitrusSpringSupport) {
-                if (method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusGroovyTest.class) != null) {
-                    CitrusGroovyTest citrusTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusGroovyTest.class);
+                if (method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusTestSource.class) != null) {
+                    CitrusTestSource citrusTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusTestSource.class);
                     if (citrusTestAnnotation.name().length > 1) {
                         for (int i = 0; i < citrusTestAnnotation.name().length; i++) {
                             if (i == 0) {
@@ -70,7 +71,7 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
                     String[] packagesToScan = citrusTestAnnotation.packageScan();
                     for (String packageName : packagesToScan) {
                         try {
-                            for (String fileNamePattern : CitrusSettings.getGroovyTestFileNamePattern()) {
+                            for (String fileNamePattern : CitrusSettings.getTestFileNamePattern(citrusTestAnnotation.type())) {
                                 Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + fileNamePattern);
                                 for (int i = 0; i < fileResources.length; i++) {
                                     if (i == 0 && !baseMethodAdded) {
@@ -101,7 +102,7 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
                     String[] packagesToScan = citrusXmlTestAnnotation.packageScan();
                     for (String packageName : packagesToScan) {
                         try {
-                            for (String fileNamePattern : CitrusSettings.getXmlTestFileNamePattern()) {
+                            for (String fileNamePattern : CitrusSettings.getTestFileNamePattern(TestLoader.SPRING)) {
                                 Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + fileNamePattern);
                                 for (int i = 0; i < fileResources.length; i++) {
                                     if (i == 0 && !baseMethodAdded) {

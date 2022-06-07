@@ -19,11 +19,14 @@
 
 package com.consol.citrus.junit.jupiter.spring;
 
+import java.lang.reflect.Method;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContextProvider;
-import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.TestResult;
+import com.consol.citrus.annotations.CitrusTestSource;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.junit.jupiter.CitrusExtension;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -78,38 +81,24 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
 
     @Override
     public void afterTestExecution(ExtensionContext extensionContext) {
-        if (!CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            TestCase testCase = CitrusExtensionHelper.getTestCase(extensionContext);
-
-            extensionContext.getExecutionException()
-                    .ifPresent(e -> testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e)));
-        }
-
         delegate.afterTestExecution(extensionContext);
     }
 
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) {
         CitrusExtensionHelper.setCitrus(getCitrus(extensionContext), extensionContext);
+        delegate.beforeTestExecution(extensionContext);
 
-        if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            CitrusExtensionHelper.getCitrus(extensionContext).run(CitrusExtensionHelper.getXmlTestCase(extensionContext),
+        if (isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+            CitrusExtensionHelper.getCitrus(extensionContext).run(CitrusExtensionHelper.getTestCase(extensionContext),
                     CitrusExtensionHelper.getTestContext(extensionContext));
-
-            Object testInstance = extensionContext.getRequiredTestInstance();
-            if (testInstance instanceof CitrusExtension.TestListener) {
-                ((CitrusExtension.TestListener) testInstance).before(citrus.getCitrusContext());
-            }
-        } else {
-            delegate.beforeTestExecution(extensionContext);
         }
     }
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
-        if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+        if (isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
             CitrusExtensionHelper.getTestContext(extensionContext);
-            CitrusExtensionHelper.getXmlTestCase(extensionContext);
         } else {
             delegate.beforeEach(extensionContext);
         }
@@ -117,7 +106,7 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
 
     @Override
     public void afterEach(ExtensionContext extensionContext) throws Exception {
-        if (!CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
+        if (!isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
             delegate.afterEach(extensionContext);
         }
     }
@@ -153,5 +142,15 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
         }
 
         return citrus;
+    }
+
+    /**
+     * Checks for Spring Xml Citrus test annotations on test method.
+     * @param method
+     * @return
+     */
+    private static boolean isSpringXmlTestMethod(Method method) {
+        return method.isAnnotationPresent(CitrusXmlTest.class) || method.isAnnotationPresent(CitrusSpringXmlTestFactory.class) ||
+                (method.isAnnotationPresent(CitrusTestSource.class) && method.getAnnotation(CitrusTestSource.class).type().equals(TestLoader.SPRING));
     }
 }

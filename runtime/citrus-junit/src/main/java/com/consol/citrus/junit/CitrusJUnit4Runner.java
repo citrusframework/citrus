@@ -19,10 +19,10 @@ package com.consol.citrus.junit;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.annotations.CitrusGroovyTest;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.junit.Test;
 import org.junit.internal.runners.statements.InvokeMethod;
@@ -70,13 +70,13 @@ public class CitrusJUnit4Runner extends BlockJUnit4ClassRunner {
                     interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), method.getDeclaringClass().getSimpleName() + "." + method.getName(),
                             method.getMethod().getDeclaringClass().getPackage().getName()));
                 }
-            } else if (method.getMethod().getAnnotation(CitrusGroovyTest.class) != null) {
-                CitrusGroovyTest citrusTestAnnotation = method.getMethod().getAnnotation(CitrusGroovyTest.class);
-                interceptedMethods.addAll(JUnit4Helper.findInterceptedMethods(method, citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
-                        citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), CitrusSettings.getGroovyTestFileNamePattern()));
+            } else if (method.getMethod().getAnnotation(CitrusTestSource.class) != null) {
+                CitrusTestSource citrusTestAnnotation = method.getMethod().getAnnotation(CitrusTestSource.class);
+                interceptedMethods.addAll(JUnit4Helper.findInterceptedMethods(method, citrusTestAnnotation.type(),
+                        citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
+                        citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources()));
             } else if (method.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-                interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(),
-                        method.getName(),
+                interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), TestLoader.SPRING, method.getName(),
                         method.getMethod().getDeclaringClass().getPackage().getName())
                         .withError(new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support")));
             } else {

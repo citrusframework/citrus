@@ -17,20 +17,20 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.common;
+package com.consol.citrus.junit.jupiter;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.junit.jupiter.api.TestFactory;
 
 /**
  * @author Christoph Deppisch
  */
-public class XmlTestLoaderTest {
-
-    @Test
-    public void shouldLookupTestLoader() {
-        Assert.assertTrue(TestLoader.lookup().containsKey(TestLoader.SPRING));
-        Assert.assertTrue(TestLoader.lookup(TestLoader.SPRING).isPresent());
-        Assert.assertEquals(TestLoader.lookup(TestLoader.SPRING).get().getClass(), XmlTestLoader.class);
-    }
+@Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@TestFactory
+public @interface CitrusTestFactory {
 }
