@@ -167,7 +167,7 @@
     <htmlunit.version>3.60.0</htmlunit.version>
     <httpclient.version>4.5.13</httpclient.version>
     <hsqldb.version>2.6.1</hsqldb.version>
-    <jackson.databind.version>2.13.2.2</jackson.databind.version>
+    <jackson.databind.version>2.9.9</jackson.databind.version>
     <jackson.version>2.13.2</jackson.version>
     <jakarta.activation.api.version>1.2.2</jakarta.activation.api.version>
     <jakarta.activation.version>1.2.2</jakarta.activation.version>
