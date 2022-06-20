@@ -79,8 +79,7 @@ public interface TestLoader {
      */
     static Optional<TestLoader> lookup(String loader) {
         try {
-            TestLoader instance = TYPE_RESOLVER.resolve(loader);
-            return Optional.of(instance);
+            return Optional.of(TYPE_RESOLVER.resolve(loader));
         } catch (CitrusRuntimeException e) {
             LOG.warn(String.format("Failed to resolve test loader from resource '%s/%s'", RESOURCE_PATH, loader));
         }

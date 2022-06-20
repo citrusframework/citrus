@@ -124,13 +124,8 @@ public abstract class CitrusAnnotations {
      */
     public static void injectCitrusContext(final Object target, final CitrusContext context) {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
-            Class<?> type = field.getType();
-            if (CitrusContext.class.isAssignableFrom(type)) {
-                log.trace(String.format("Injecting Citrus context instance on test class field '%s'", field.getName()));
-                ReflectionUtils.setField(field, target, context);
-            } else {
-                throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
-            }
+            log.trace(String.format("Injecting Citrus context instance on test class field '%s'", field.getName()));
+            ReflectionUtils.setField(field, target, context);
         }, field -> {
             if (field.isAnnotationPresent(CitrusResource.class) && CitrusContext.class.isAssignableFrom(field.getType())) {
                 if (!field.isAccessible()) {

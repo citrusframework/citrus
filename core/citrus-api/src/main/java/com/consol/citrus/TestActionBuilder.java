@@ -81,8 +81,7 @@ public interface TestActionBuilder<T extends TestAction> {
      */
     static Optional<TestActionBuilder<?>> lookup(String builder) {
         try {
-            TestActionBuilder<?> instance = TYPE_RESOLVER.resolve(builder);
-            return Optional.of(instance);
+            return Optional.of(TYPE_RESOLVER.resolve(builder));
         } catch (CitrusRuntimeException e) {
             LOG.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, builder));
         }

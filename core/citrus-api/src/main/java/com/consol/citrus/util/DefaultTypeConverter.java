@@ -34,6 +34,8 @@ public class DefaultTypeConverter implements TypeConverter {
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTypeConverter.class);
 
+    public static DefaultTypeConverter INSTANCE = new DefaultTypeConverter();
+
     @Override
     public final <T> T convertIfNecessary(Object target, Class<T> type) {
         if (type.isInstance(target)) {

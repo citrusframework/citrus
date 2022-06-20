@@ -36,7 +36,7 @@ public interface TypeConverter {
             converters.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
             if (converters.size() == 0) {
-                converters.put(DEFAULT, new DefaultTypeConverter());
+                converters.put(DEFAULT, DefaultTypeConverter.INSTANCE);
             }
 
             if (LOG.isDebugEnabled()) {
@@ -56,7 +56,7 @@ public interface TypeConverter {
      * @return type converter to use by default.
      */
     static TypeConverter lookupDefault() {
-        return lookupDefault(new DefaultTypeConverter());
+        return lookupDefault(DefaultTypeConverter.INSTANCE);
     }
 
     /**

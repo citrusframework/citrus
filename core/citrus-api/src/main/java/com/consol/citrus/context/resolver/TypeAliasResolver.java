@@ -73,8 +73,7 @@ public interface TypeAliasResolver<S, A> {
      */
     static Optional<TypeAliasResolver<?, ?>> lookup(String resolver) {
         try {
-            TypeAliasResolver<?, ?> instance = TYPE_RESOLVER.resolve(resolver);
-            return Optional.of(instance);
+            return Optional.of(TYPE_RESOLVER.resolve(resolver));
         } catch (CitrusRuntimeException e) {
             LOG.warn(String.format("Failed to resolve type alias resolver from resource '%s/%s'", RESOURCE_PATH, resolver));
         }

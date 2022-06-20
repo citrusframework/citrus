@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
  */
 public class DefaultTypeConverterTest {
 
-    private final DefaultTypeConverter converter = new DefaultTypeConverter();
+    private final DefaultTypeConverter converter = DefaultTypeConverter.INSTANCE;
 
     @Test
     public void testConvertIfNecessary() {

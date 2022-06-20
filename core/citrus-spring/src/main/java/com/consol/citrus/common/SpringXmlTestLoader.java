@@ -101,12 +101,12 @@ public class SpringXmlTestLoader implements TestLoader, TestSourceAware {
     private void configureCustomParsers() {
         SpringXmlTestLoaderConfiguration loaderConfiguration = testClass.getAnnotation(SpringXmlTestLoaderConfiguration.class);
         if (loaderConfiguration != null) {
-            for (BeanDefinitionParserConfiguration testCaseParserConfiguration : loaderConfiguration.parserConfigurations()) {
-                Class<? extends BeanDefinitionParser> parserClass = testCaseParserConfiguration.parser();
+            for (BeanDefinitionParserConfiguration beanDefinitionParserConfiguration : loaderConfiguration.parserConfigurations()) {
+                Class<? extends BeanDefinitionParser> parserClass = beanDefinitionParserConfiguration.parser();
                 try {
                     if (parserClass != null) {
                         BeanDefinitionParser parserOverride = parserClass.getDeclaredConstructor().newInstance();
-                        CitrusNamespaceParserRegistry.registerParser(testCaseParserConfiguration.name(), parserOverride);
+                        CitrusNamespaceParserRegistry.registerParser(beanDefinitionParserConfiguration.name(), parserOverride);
                     }
                 } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
                     throw new CitrusRuntimeException(String.format("Could not install custom BeanDefinitionParser '%s'", parserClass), e);

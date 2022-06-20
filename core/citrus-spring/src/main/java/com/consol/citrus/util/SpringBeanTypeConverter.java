@@ -18,8 +18,10 @@ public final class SpringBeanTypeConverter extends DefaultTypeConverter {
 
     public static SpringBeanTypeConverter INSTANCE = new SpringBeanTypeConverter();
 
+    /**
+     * Private default constructor. Prevent instantiation users should use INSTANCE
+     */
     private SpringBeanTypeConverter() {
-        // prevent instantiation users should use INSTANCE
     }
 
     @Override
