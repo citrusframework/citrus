@@ -10,8 +10,10 @@ public final class GroovyTypeConverter extends DefaultTypeConverter {
 
     public static GroovyTypeConverter INSTANCE = new GroovyTypeConverter();
 
+    /**
+     * Private default constructor. Prevent instantiation users should use INSTANCE
+     */
     private GroovyTypeConverter() {
-        // prevent instantiation users should use INSTANCE
     }
 
     @Override

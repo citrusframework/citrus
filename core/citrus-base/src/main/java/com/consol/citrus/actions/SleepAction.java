@@ -129,12 +129,12 @@ public class SleepAction extends AbstractTestAction {
             return this;
         }
 
-        public Builder seconds(Integer milliseconds) {
-            return time(String.valueOf(milliseconds  * 1000), TimeUnit.MILLISECONDS);
+        public Builder seconds(Integer seconds) {
+            return time(String.valueOf(seconds  * 1000L), TimeUnit.MILLISECONDS);
         }
 
-        public Builder seconds(Long milliseconds) {
-            return time(String.valueOf(milliseconds  * 1000), TimeUnit.MILLISECONDS);
+        public Builder seconds(Long seconds) {
+            return time(String.valueOf(seconds  * 1000L), TimeUnit.MILLISECONDS);
         }
 
 
