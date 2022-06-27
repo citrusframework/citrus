@@ -110,12 +110,7 @@ set_version() {
 
     if [ "$check" = true ]; then
       #echo "update $file"
-      if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        sed -i "s/$snapshot_version/$version/g" $file
-      elif [[ "$OSTYPE" == "darwin"* ]]; then
-        # Mac OSX
-        sed -i '' "s/$snapshot_version/$version/g" $file
-      fi
+      sed -i "s/$snapshot_version/$version/g" $file
     fi
   done
 

@@ -1,10 +1,10 @@
 # Contributing to Citrus ![Logo][1]
 
 
-:tada::lemon::tada: First off all, thanks for taking the time to contribute! :tada::lemon::tada:
+:tada::lemon::tada: First, thank you for taking the time to contribute! :tada::lemon::tada:
 
 This document contains a set of guidelines for contributing to the Citrus framework ecosystem.
-The intention of these guidelines is to make it easier to work together. Nevertheless these guidelines are just
+The intention of these guidelines is to make it easier to work together. However, these guidelines are just
 suggestions and not set in stone. Use them to the best of your knowledge and feel free to propose changes in a
 pull request. 
 
@@ -65,7 +65,6 @@ issue and include a link to the original issue in the body of your new one.
   to see if the problem has already been reported. If it has **and the issue is still open**, add a comment to the
   existing issue instead of opening a new one.
 
-
 ### Suggesting changes
 
 This section guides you through submitting enhancement suggestions, feature requests or maintenance tasks for Citrus.
@@ -89,6 +88,22 @@ We also highly appreciate contributions to milestones and we love to work closel
 So if you'd like to work on an issue that is scheduled for a release, please make sure to stay in close contact with the
 maintainers and make sure that it's possible for you to propose a [pull request](#pull-requests) before the planned
 release date of the milestone, if specified.  
+
+#### Preconditions
+
+You need following software on your machine in order to start developing:
+
+* Java 11+
+  Installed JDK plus JAVA_HOME environment variable set
+  up and pointing to your Java installation directory. Used to compile and build the Citrus code.
+
+* Maven 3.6.3+
+  Citrus projects will fit best with [Maven](https://maven.apache.org).
+  However, it is not required to use Maven. You can also run tests using [Gradle](https://gradle.org/) for instance.
+
+* Java IDE (optional)
+  A Java IDE will help you to manage your Citrus project (e.g. creating
+  and executing test cases). You can use the Java IDE that you like best like Eclipse or IntelliJ IDEA.
 
 #### Unsure where to begin contributing to Citrus?
 You can start by looking for issues labeled with `good first issue` which should only require a few lines of code, and
@@ -153,7 +168,7 @@ without any further research/reconstruction efforts.
   or [features](https://github.com/citrusframework/citrus/issues/new?template=feature_request.md) has been filled out completely
 * Bigger changes have been transformed to epics and were broken down into smaller issues
 * The context of the issue is understood by at least one maintainer
-  * Therefore it's important to provide as much context as possible
+  * Therefore, it's important to provide as much context as possible
 * Acceptance criteria are given
   * In case of a bug: There is a test to pass
   * In case of a feature/enhancement: There is at least one acceptance criteria derived from the user story
@@ -161,7 +176,7 @@ without any further research/reconstruction efforts.
 ### Definition of done
 The definition of done (DOD) specifies the exit-criteria for an issue that is currently in progress to be passed for
 review. If you're working on an issue which you would like to pass for review, it would be great, if you could ensure
-that all of the following criteria are met. This helps us to review your changes as effective as possible.
+that all the following criteria are met. This helps us to review your changes as effective as possible.
 
 * All requirements of the linked issue have been fulfilled
 * Automated tests for the acceptance criteria have been created and passed
