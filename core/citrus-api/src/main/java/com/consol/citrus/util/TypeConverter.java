@@ -88,7 +88,9 @@ public interface TypeConverter {
             return converters.get(name);
         }
 
-        LOG.warn(String.format("Missing type converter for name '%s' - using default type converter", name));
+        if (!CitrusSettings.TYPE_CONVERTER_DEFAULT.equals(name)) {
+            LOG.warn(String.format("Missing type converter for name '%s' - using default type converter", name));
+        }
 
         return defaultTypeConverter;
     }
