@@ -31,6 +31,7 @@ import com.consol.citrus.functions.core.TranslateFunction;
 import com.consol.citrus.functions.core.UpperCaseFunction;
 import com.consol.citrus.functions.core.UrlDecodeFunction;
 import com.consol.citrus.functions.core.UrlEncodeFunction;
+import com.consol.citrus.functions.core.UnixTimestampFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

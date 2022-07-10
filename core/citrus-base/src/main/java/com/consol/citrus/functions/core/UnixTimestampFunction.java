@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@
 package com.consol.citrus.functions.core;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.List;
@@ -30,23 +27,7 @@ import java.util.List;
  * @author Alexandr Kuznecov
  */
 public class UnixTimestampFunction extends AbstractDateFunction {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(UnixTimestampFunction.class);
-
-    /**
-     * @see com.consol.citrus.functions.Function#execute(List, TestContext)
-     * @throws CitrusRuntimeException
-     */
     public String execute(List<String> parameterList, TestContext context) {
-        long unixTimestamp;
-        try {
-            unixTimestamp = Instant.now().getEpochSecond();
-        } catch (RuntimeException e) {
-            log.error("Error while getting timestamp value ", e);
-            throw new CitrusRuntimeException(e);
-        }
-
-        return Long.toString(unixTimestamp);
+        return Long.toString(Instant.now().getEpochSecond());
     }
 }
