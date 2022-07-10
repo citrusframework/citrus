@@ -21,17 +21,11 @@ import java.text.SimpleDateFormat;
 
 import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.functions.core.RandomStringFunction;
+import com.consol.citrus.functions.core.UnixTimestampFunction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static com.consol.citrus.functions.Functions.changeDate;
-import static com.consol.citrus.functions.Functions.currentDate;
-import static com.consol.citrus.functions.Functions.decodeBase64;
-import static com.consol.citrus.functions.Functions.digestAuthHeader;
-import static com.consol.citrus.functions.Functions.encodeBase64;
-import static com.consol.citrus.functions.Functions.randomNumber;
-import static com.consol.citrus.functions.Functions.randomString;
-import static com.consol.citrus.functions.Functions.randomUUID;
+import static com.consol.citrus.functions.Functions.*;
 
 public class FunctionsTest extends UnitTestSupport {
 
@@ -101,5 +95,10 @@ public class FunctionsTest extends UnitTestSupport {
         Assert.assertEquals(randomString(10L, false, context).length(), 10);
         Assert.assertEquals(randomString(10L, RandomStringFunction.LOWERCASE, context).length(), 10);
         Assert.assertEquals(randomString(10L, RandomStringFunction.UPPERCASE, false, context).length(), 10);
+    }
+
+    @Test
+    public void testUnixTimestamp() throws Exception {
+        Assert.assertEquals(String.valueOf(System.currentTimeMillis() / 1000L), unixTimestamp(context));
     }
 }

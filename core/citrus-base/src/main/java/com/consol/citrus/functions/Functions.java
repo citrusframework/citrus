@@ -21,17 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.functions.core.ChangeDateFunction;
-import com.consol.citrus.functions.core.CurrentDateFunction;
-import com.consol.citrus.functions.core.DecodeBase64Function;
-import com.consol.citrus.functions.core.DigestAuthHeaderFunction;
-import com.consol.citrus.functions.core.EncodeBase64Function;
-import com.consol.citrus.functions.core.RandomNumberFunction;
-import com.consol.citrus.functions.core.RandomStringFunction;
-import com.consol.citrus.functions.core.RandomUUIDFunction;
-import com.consol.citrus.functions.core.ReadFileResourceFunction;
-import com.consol.citrus.functions.core.UrlDecodeFunction;
-import com.consol.citrus.functions.core.UrlEncodeFunction;
+import com.consol.citrus.functions.core.*;
 
 /**
  * @author Christoph Deppisch
@@ -228,5 +218,13 @@ public final class Functions {
      */
     public static String readFile(String filePath, TestContext context) {
         return new ReadFileResourceFunction().execute(Collections.singletonList(filePath), context);
+    }
+
+    /**
+     * Runs unix timestamp function with arguments.
+     * @return
+     */
+    public static String unixTimestamp(TestContext context) {
+        return new UnixTimestampFunction().execute(Collections.<String>emptyList(), context);
     }
 }

@@ -79,6 +79,7 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
         getMembers().put("readFile", new ReadFileResourceFunction());
         getMembers().put("message", new LoadMessageFunction());
         getMembers().put("systemProperty", new SystemPropertyFunction());
+        getMembers().put("unixTimestamp", new UnixTimestampFunction());
 
         lookupFunctions();
     }
