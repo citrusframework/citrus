@@ -19,7 +19,9 @@ package com.consol.citrus.actions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
@@ -43,11 +46,11 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
     @Qualifier(value="mockChannel")
     private QueueChannel mockChannel;
 
-    private QueueChannel emptyChannel = Mockito.mock(QueueChannel.class);
+    private final QueueChannel emptyChannel = Mockito.mock(QueueChannel.class);
 
     @Test
     public void testPurgeWithChannelNames() throws Exception {
-        List<Message<?>> purgedMessages = new ArrayList<Message<?>>();
+        List<Message<?>> purgedMessages = new ArrayList<>();
         purgedMessages.add(MessageBuilder.withPayload("<TestRequest>Hello World!</TestRequest>").build());
 
         reset(mockChannel);
@@ -65,13 +68,13 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
 	@SuppressWarnings("unchecked")
     @Test
     public void testPurgeWithChannelObjects() throws Exception {
-        List<Message<?>> purgedMessages = new ArrayList<Message<?>>();
+        List<Message<?>> purgedMessages = new ArrayList<>();
         purgedMessages.add(MessageBuilder.withPayload("<TestRequest>Hello World!</TestRequest>").build());
 
         reset(mockChannel, emptyChannel);
 
-        when(mockChannel.purge((MessageSelector)any())).thenReturn(purgedMessages);
-        when(emptyChannel.purge((MessageSelector)any())).thenReturn(Collections.EMPTY_LIST);
+        when(mockChannel.purge(any())).thenReturn(purgedMessages);
+        when(emptyChannel.purge(any())).thenReturn(Collections.EMPTY_LIST);
 
         PurgeMessageChannelAction purgeChannelAction = new PurgeMessageChannelAction.Builder()
                 .beanFactory(applicationContext)
@@ -85,7 +88,7 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
     public void testPurgeWithMessageSelector() throws Exception {
         MessageSelector messageSelector = message -> false;
 
-        List<Message<?>> purgedMessages = new ArrayList<Message<?>>();
+        List<Message<?>> purgedMessages = new ArrayList<>();
         purgedMessages.add(MessageBuilder.withPayload("<TestRequest>Hello World!</TestRequest>").build());
 
         reset(mockChannel);
@@ -99,6 +102,15 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
                 .build();
         purgeChannelAction.execute(context);
 
+    }
+
+    @Test
+    public void shouldLookupTestActionBuilder() {
+        Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("purgeChannels"));
+
+        Assert.assertTrue(TestActionBuilder.lookup("purgeChannels").isPresent());
+        Assert.assertEquals(TestActionBuilder.lookup("purgeChannels").get().getClass(), PurgeMessageChannelAction.Builder.class);
     }
 
 }
