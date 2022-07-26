@@ -27,21 +27,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.DefaultTestCaseRunner;
-import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.TestResult;
-import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,53 +67,20 @@ public final class TestNGHelper {
     }
 
     /**
-     * Invokes test method based on designer or runner environment.
-     * @param citrus
-     * @param target
-     * @param testResult
-     * @param method
-     * @param testCase
-     * @param context
-     * @param invocationCount
-     */
-    public static void invokeTestMethod(Citrus citrus, Object target, ITestResult testResult, Method method,
-                                        TestCase testCase, TestContext context, int invocationCount) {
-        try {
-            ReflectionUtils.invokeMethod(method, target,
-                    TestNGParameterHelper.resolveParameter(target, testResult, method, testCase, context, invocationCount));
-        } catch (TestCaseFailedException e) {
-            throw e;
-        } catch (Exception | AssertionError e) {
-            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-            testCase.finish(context);
-            throw new TestCaseFailedException(e);
-        }
-
-        citrus.run(testCase, context);
-    }
-
-    /**
      * Invokes test method.
      * @param target
      * @param testResult
      * @param method
-     * @param runner
+     * @param testLoader
      * @param context
      * @param invocationCount
      */
     public static void invokeTestMethod(Object target, ITestResult testResult, Method method,
-                                        TestCaseRunner runner, TestContext context, int invocationCount) {
-        final TestCase testCase = runner.getTestCase();
-        try {
-            Object[] params = TestNGParameterHelper.resolveParameter(target, testResult, method, testCase, context, invocationCount);
-            runner.start();
-            ReflectionUtils.invokeMethod(method, target, params);
-        } catch (Exception | AssertionError e) {
-            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-            throw new TestCaseFailedException(e);
-        } finally {
-            runner.stop();
-        }
+                                        TestLoader testLoader, TestContext context, int invocationCount) {
+        Object[] params = TestNGParameterHelper.resolveParameter(target, testResult, method, context, invocationCount);
+        testLoader.configureTestCase(t -> TestNGParameterHelper.injectTestParameters(method, t, params));
+        testLoader.doWithTestCase(t -> ReflectionUtils.invokeMethod(method, target, params));
+        testLoader.load();
     }
 
     /**

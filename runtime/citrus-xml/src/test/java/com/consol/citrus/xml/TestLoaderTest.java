@@ -17,35 +17,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.common;
+package com.consol.citrus.xml;
 
-import com.consol.citrus.DefaultTestCase;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.common.TestLoader;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class NoopTestLoader implements TestLoader {
+public class TestLoaderTest {
 
-    private final DefaultTestCase testCase = new DefaultTestCase();
-
-    @Override
-    public TestCase load() {
-        return testCase;
-    }
-
-    @Override
-    public void setTestClass(Class<?> testClass) {
-        testCase.setTestClass(testClass);
-    }
-
-    @Override
-    public void setTestName(String testName) {
-        testCase.setName(testName);
-    }
-
-    @Override
-    public void setPackageName(String packageName) {
-        testCase.setPackageName(packageName);
+    @Test
+    public void shouldLookupTestLoader() {
+        Assert.assertTrue(TestLoader.lookup().containsKey(TestLoader.XML));
+        Assert.assertTrue(TestLoader.lookup(TestLoader.XML).isPresent());
+        Assert.assertEquals(TestLoader.lookup(TestLoader.XML).get().getClass(), XmlTestLoader.class);
     }
 }

@@ -36,7 +36,7 @@ public class Sleep implements TestActionBuilder<SleepAction> {
 
     @XmlAttribute
     public Sleep setTime(String time) {
-        builder.time(time);
+        builder.milliseconds(time);
         return this;
     }
 

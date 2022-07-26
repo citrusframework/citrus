@@ -79,8 +79,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             try {
                 start(context);
                 for (final TestActionBuilder<?> actionBuilder: actions) {
-                    TestAction action = actionBuilder.build();
-                    executeAction(action, context);
+                    executeAction(actionBuilder.build(), context);
                 }
 
                 testResult = TestResult.success(getName(), testClass.getName());

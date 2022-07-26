@@ -31,10 +31,12 @@ import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestBehavior;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseRunner;
+import com.consol.citrus.TestGroupAware;
 import com.consol.citrus.annotations.CitrusAnnotations;
-import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.DefaultTestLoader;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.context.TestContext;
@@ -49,6 +51,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Listeners;
 
 /**
  * Basic Citrus TestNG support base class automatically handles test case runner creation. Also provides method parameter resolution
@@ -57,6 +60,7 @@ import org.testng.annotations.BeforeSuite;
  *
  * @author Christoph Deppisch
  */
+@Listeners( { TestNGCitrusMethodInterceptor.class } )
 public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
     /** Logger */
@@ -128,8 +132,9 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
             CitrusAnnotations.injectAll(this, citrus, ctx);
 
+            TestLoader testLoader;
             if (method.getAnnotation(CitrusTestSource.class) != null && !methodTestLoaders.isEmpty()) {
-                TestLoader testLoader = methodTestLoaders.get(invocationCount % methodTestLoaders.size());
+                testLoader = methodTestLoaders.get(invocationCount % methodTestLoaders.size());
 
                 if (testLoader instanceof TestSourceAware) {
                     String[] sources = method.getAnnotation(CitrusTestSource.class).sources();
@@ -137,14 +142,18 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
                         ((TestSourceAware) testLoader).setSource(sources[0]);
                     }
                 }
-
-                CitrusAnnotations.injectAll(testLoader, citrus, ctx);
-                CitrusAnnotations.injectTestRunner(testLoader, runner);
-
-                testLoader.load();
+            } else {
+                testLoader = new DefaultTestLoader();
             }
 
-            TestNGHelper.invokeTestMethod(this, testResult, method, runner, ctx, invocationCount);
+            CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+            CitrusAnnotations.injectTestRunner(testLoader, runner);
+            testLoader.configureTestCase(t -> {
+                if (t instanceof TestGroupAware) {
+                    ((TestGroupAware) t).setGroups(testResult.getMethod().getGroups());
+                }
+            });
+            TestNGHelper.invokeTestMethod(this, testResult, method, testLoader, ctx, invocationCount);
         } finally {
             testResult.removeAttribute(TestNGHelper.BUILDER_ATTRIBUTE);
         }

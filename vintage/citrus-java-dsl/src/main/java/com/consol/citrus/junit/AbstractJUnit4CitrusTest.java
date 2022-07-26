@@ -55,6 +55,8 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
     /** Citrus instance */
     protected Citrus citrus;
 
+    private TestCase testCase;
+
     @Override
     public void run(CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
@@ -63,9 +65,8 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
 
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
         TestLoader testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName());
-        TestCase testCase = testLoader.load();
-
-        citrus.run(testCase, ctx);
+        CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+        testLoader.load();
     }
 
     /**
@@ -137,6 +138,7 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
         testLoader.setPackageName(packageName);
 
         CitrusAnnotations.injectCitrusContext(testLoader, citrus.getCitrusContext());
+        testLoader.configureTestCase(t -> testCase = t);
         return testLoader;
     }
 
@@ -145,6 +147,6 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * @return
      */
     protected TestCase getTestCase() {
-        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()).load();
+        return testCase;
     }
 }

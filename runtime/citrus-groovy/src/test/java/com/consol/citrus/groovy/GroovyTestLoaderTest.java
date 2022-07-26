@@ -47,7 +47,9 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
     @Test
     public void shouldLoadGroovyTest() {
-        TestCase test = getTestLoader("sample.test").load();
+        TestLoader testLoader = getTestLoader("sample.test");
+        testLoader.load();
+        TestCase test = testLoader.getTestCase();
 
         Assert.assertEquals(test.getName(), "sample.test");
         Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
@@ -58,7 +60,9 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
     @Test
     public void shouldSupportJsonBuilderTest() {
-        TestCase test = getTestLoader("json.test").load();
+        TestLoader testLoader = getTestLoader("json.test");
+        testLoader.load();
+        TestCase test = testLoader.getTestCase();
 
         Assert.assertEquals(test.getName(), "json.test");
         Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
@@ -68,7 +72,9 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
     @Test
     public void shouldSupportXmlMarkupBuilderTest() {
-        TestCase test = getTestLoader("xml.test").load();
+        TestLoader testLoader = getTestLoader("xml.test");
+        testLoader.load();
+        TestCase test = testLoader.getTestCase();
 
         Assert.assertEquals(test.getName(), "xml.test");
         Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");

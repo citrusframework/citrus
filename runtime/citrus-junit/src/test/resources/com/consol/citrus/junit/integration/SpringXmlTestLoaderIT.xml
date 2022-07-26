@@ -13,12 +13,9 @@
         </meta-info>
         <actions>
             <action reference="echoAction"/>
-            <action reference="validateTestCaseAction"/>
         </actions>
     </testcase>
 
     <spring:bean id="echoAction" class="com.consol.citrus.config.xml.EchoActionParser.EchoActionFactoryBean"/>
-
-    <spring:bean id="validateTestCaseAction" class="com.consol.citrus.junit.integration.SpringXmlTestLoaderIT$ValidateTestCaseAndMetaInfoAction"/>
 
 </spring:beans>

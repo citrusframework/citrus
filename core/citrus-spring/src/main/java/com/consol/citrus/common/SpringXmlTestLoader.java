@@ -19,11 +19,9 @@ package com.consol.citrus.common;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-import com.consol.citrus.CitrusContext;
 import com.consol.citrus.CitrusSpringContext;
-import com.consol.citrus.DefaultTestCase;
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.config.CitrusNamespaceParserRegistry;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -41,38 +39,27 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.1
  */
-public class SpringXmlTestLoader implements TestLoader, TestSourceAware {
-
-    @CitrusResource
-    private CitrusContext citrusContext;
-
-    private TestCase testCase;
-
-    private Class<?> testClass;
-    private String testName;
-    private String packageName;
+public class SpringXmlTestLoader extends DefaultTestLoader implements TestSourceAware {
 
     private String source;
 
     @Override
-    public TestCase load() {
-        if (testCase == null) {
-            ApplicationContext ctx = loadApplicationContext();
+    protected void doLoad() {
+        ApplicationContext ctx = loadApplicationContext();
 
-            try {
-                testCase = ctx.getBean(testName, TestCase.class);
-
-                if (testCase instanceof DefaultTestCase) {
-                    testCase.setTestClass(testClass);
-                    testCase.setPackageName(packageName);
-                }
-            } catch (NoSuchBeanDefinitionException e) {
-                throw citrusContext.getTestContextFactory().getObject()
-                        .handleError(testName, packageName, "Could not find test with name '" + testName + "'", e);
+        try {
+            testCase = ctx.getBean(testName, TestCase.class);
+            if (runner instanceof DefaultTestCaseRunner) {
+                ((DefaultTestCaseRunner) runner).setTestCase(testCase);
             }
-        }
 
-        return testCase;
+            configurer.forEach(handler -> handler.accept(testCase));
+            citrus.run(testCase, context);
+            handler.forEach(handler -> handler.accept(testCase));
+        } catch (NoSuchBeanDefinitionException e) {
+            throw citrusContext.getTestContextFactory().getObject()
+                    .handleError(testName, packageName, "Failed to load Spring XML test with name '" + testName + "'", e);
+        }
     }
 
     /**
@@ -132,7 +119,8 @@ public class SpringXmlTestLoader implements TestLoader, TestSourceAware {
         if (StringUtils.hasText(source)) {
             return source;
         } else {
-            return packageName.replace('.', File.separatorChar) + File.separator + testName + FileUtils.FILE_EXTENSION_XML;
+            return packageName.replace('.', File.separatorChar) +
+                    File.separator + testName + FileUtils.FILE_EXTENSION_XML;
         }
     }
 
@@ -143,20 +131,5 @@ public class SpringXmlTestLoader implements TestLoader, TestSourceAware {
     @Override
     public void setSource(String source) {
         this.source = source;
-    }
-
-    @Override
-    public void setTestClass(Class<?> testClass) {
-        this.testClass = testClass;
-    }
-
-    @Override
-    public void setTestName(String testName) {
-        this.testName = testName;
-    }
-
-    @Override
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
     }
 }

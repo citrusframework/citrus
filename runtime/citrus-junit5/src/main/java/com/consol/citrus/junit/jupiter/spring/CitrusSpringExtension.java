@@ -24,21 +24,19 @@ import java.lang.reflect.Method;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.annotations.CitrusTestSource;
-import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.junit.jupiter.CitrusExtension;
 import com.consol.citrus.junit.jupiter.CitrusExtensionHelper;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -56,7 +54,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  *
  * @author Christoph Deppisch
  */
-public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallback, BeforeTestExecutionCallback,
+public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecutionCallback, InvocationInterceptor,
         AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback, AfterAllCallback {
 
     private Citrus citrus;
@@ -87,28 +85,16 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) {
         CitrusExtensionHelper.setCitrus(getCitrus(extensionContext), extensionContext);
-        delegate.beforeTestExecution(extensionContext);
-
-        if (isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            CitrusExtensionHelper.getCitrus(extensionContext).run(CitrusExtensionHelper.getTestCase(extensionContext),
-                    CitrusExtensionHelper.getTestContext(extensionContext));
-        }
     }
 
     @Override
-    public void beforeEach(ExtensionContext extensionContext) {
-        if (isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            CitrusExtensionHelper.getTestContext(extensionContext);
-        } else {
-            delegate.beforeEach(extensionContext);
-        }
+    public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+        delegate.interceptTestMethod(invocation, invocationContext, extensionContext);
     }
 
     @Override
     public void afterEach(ExtensionContext extensionContext) throws Exception {
-        if (!isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            delegate.afterEach(extensionContext);
-        }
+        delegate.afterEach(extensionContext);
     }
 
     @Override
@@ -142,15 +128,5 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeEachCallb
         }
 
         return citrus;
-    }
-
-    /**
-     * Checks for Spring Xml Citrus test annotations on test method.
-     * @param method
-     * @return
-     */
-    private static boolean isSpringXmlTestMethod(Method method) {
-        return method.isAnnotationPresent(CitrusXmlTest.class) || method.isAnnotationPresent(CitrusSpringXmlTestFactory.class) ||
-                (method.isAnnotationPresent(CitrusTestSource.class) && method.getAnnotation(CitrusTestSource.class).type().equals(TestLoader.SPRING));
     }
 }

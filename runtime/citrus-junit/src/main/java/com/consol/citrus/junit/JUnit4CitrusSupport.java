@@ -29,6 +29,7 @@ import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.DefaultTestLoader;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.context.TestContext;
@@ -69,17 +70,19 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
 
             CitrusAnnotations.injectAll(this, citrus, ctx);
 
+            TestLoader testLoader;
             if (frameworkMethod.getMethod().getAnnotation(CitrusTestSource.class) != null) {
-                TestLoader testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName(),
+                testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName(),
                         frameworkMethod.getSource(), frameworkMethod.getSourceType());
 
-                CitrusAnnotations.injectAll(testLoader, citrus, ctx);
                 CitrusAnnotations.injectTestRunner(testLoader, runner);
-
-                testLoader.load();
+            } else {
+                testLoader = new DefaultTestLoader();
             }
 
-            JUnit4Helper.invokeTestMethod(this, frameworkMethod, runner, ctx);
+            CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+            testLoader.doWithTestCase(t -> JUnit4Helper.invokeTestMethod(this, frameworkMethod, ctx));
+            testLoader.load();
         } else if (frameworkMethod.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
             throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
         }

@@ -30,14 +30,12 @@ import org.w3c.dom.Element;
         })
 public class SpringXmlTestLoader_IT {
 
-    private static CustomTestCase testCase;
-
     @Test
     @CitrusXmlTest(name="SpringXmlTestLoader_IT")
     public void SpringXmlTestLoaderIT_0_IT(@CitrusResource TestCaseRunner runner) {
-        Assertions.assertNotNull(testCase);
+        Assertions.assertNotNull(runner.getTestCase());
 
-        TestCaseMetaInfo metaInfo = testCase.getMetaInfo();
+        TestCaseMetaInfo metaInfo = runner.getTestCase().getMetaInfo();
         Assertions.assertTrue(metaInfo instanceof CustomTestCaseMetaInfo);
         Assertions.assertEquals(((CustomTestCaseMetaInfo)metaInfo).getDescription(), "Foo bar: F#!$§ed up beyond all repair");
     }
@@ -46,9 +44,6 @@ public class SpringXmlTestLoader_IT {
      * A custom test case implementation that should be created by the loader
      */
     public static class CustomTestCase extends DefaultTestCase {
-        public CustomTestCase() {
-            testCase = this;
-        }
     }
 
     /**

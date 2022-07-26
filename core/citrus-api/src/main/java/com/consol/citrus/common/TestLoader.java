@@ -18,6 +18,7 @@ package com.consol.citrus.common;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -41,6 +42,7 @@ public interface TestLoader {
     /** Default Citrus test loader from classpath resource properties */
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
+    String XML = "xml";
     String SPRING = "spring";
     String GROOVY = "groovy";
 
@@ -48,13 +50,31 @@ public interface TestLoader {
      * Loads and creates new test case object..
      * @return
      */
-    TestCase load();
+    void load();
+
+    /**
+     * Adds test case handler that is called before test case gets executed.
+     * @param handler
+     */
+    void configureTestCase(Consumer<TestCase> handler);
+
+    /**
+     * Adds test case handler that is called once the test case has been loaded.
+     * @param handler
+     */
+    void doWithTestCase(Consumer<TestCase> handler);
 
     void setTestClass(Class<?> testClass);
 
     void setTestName(String testName);
 
     void setPackageName(String packageName);
+
+    /**
+     * Gets the loaded test case or null if has not been loaded yet.
+     * @return
+     */
+    TestCase getTestCase();
 
     /**
      * Resolves all available test loader from resource path lookup. Scans classpath for test loader meta information
