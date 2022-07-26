@@ -24,8 +24,8 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.common.TestLoader;
+import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.common.DefaultTestLoader;
 import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -40,27 +40,16 @@ import org.springframework.util.StringUtils;
  *
  * @author Christoph Deppisch
  */
-public class XmlTestLoader implements TestLoader, TestSourceAware {
+public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware {
 
-    protected TestCase testCase;
-    protected final Class<?> testClass;
-    protected final String testName;
-    protected final String packageName;
-    protected String source;
+    private String source;
 
-    protected final JAXBContext jaxbContext;
+    private final JAXBContext jaxbContext;
 
     /**
-     * Default constructor with context file and parent application context field.
-     * @param testClass
-     * @param testName
-     * @param packageName
+     * Default constructor.
      */
-    public XmlTestLoader(Class<?> testClass, String testName, String packageName) {
-        this.testClass = testClass;
-        this.testName = testName;
-        this.packageName = packageName;
-
+    public XmlTestLoader() {
         try {
             jaxbContext = JAXBContext.newInstance("com.consol.citrus.xml");
         } catch (JAXBException e) {
@@ -68,21 +57,40 @@ public class XmlTestLoader implements TestLoader, TestSourceAware {
         }
     }
 
-    @Override
-    public TestCase load() {
-        if (testCase == null) {
-            Resource xmlSource = FileUtils.getFileResource(getSource());
-            try {
-                testCase = jaxbContext.createUnmarshaller()
-                                      .unmarshal(new StringSource(FileUtils.readToString(xmlSource)), XmlTestCase.class)
-                                      .getValue()
-                                      .getTestCase();
-            } catch (JAXBException | IOException e) {
-                e.printStackTrace();
-            }
-        }
+    /**
+     * Constructor with context file and parent application context field.
+     * @param testClass
+     * @param testName
+     * @param packageName
+     */
+    public XmlTestLoader(Class<?> testClass, String testName, String packageName) {
+        this();
 
-        return testCase;
+        this.testClass = testClass;
+        this.testName = testName;
+        this.packageName = packageName;
+    }
+
+    @Override
+    public void doLoad() {
+        Resource xmlSource = FileUtils.getFileResource(getSource());
+
+        try {
+            testCase = jaxbContext.createUnmarshaller()
+                                    .unmarshal(new StringSource(FileUtils.readToString(xmlSource)), XmlTestCase.class)
+                                    .getValue()
+                                    .getTestCase();
+            if (runner instanceof DefaultTestCaseRunner) {
+                ((DefaultTestCaseRunner) runner).setTestCase(testCase);
+            }
+
+            configurer.forEach(handler -> handler.accept(testCase));
+            citrus.run(testCase, context);
+            handler.forEach(handler -> handler.accept(testCase));
+        } catch (JAXBException | IOException e) {
+            throw citrusContext.getTestContextFactory().getObject()
+                    .handleError(testName, packageName, "Failed to load XML test with name '" + testName + "'", e);
+        }
     }
 
     /**

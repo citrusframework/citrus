@@ -23,7 +23,6 @@ import java.lang.annotation.Annotation;
 
 import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestActionRunner;
-import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.context.TestContext;
@@ -70,11 +69,10 @@ public final class JUnit4ParameterHelper {
      * {@link CitrusResource} annotated methods.
      *
      * @param frameworkMethod
-     * @param testCase
      * @param context
      * @return
      */
-    public static Object[] resolveParameter(CitrusFrameworkMethod frameworkMethod, TestCase testCase, TestContext context) {
+    public static Object[] resolveParameter(CitrusFrameworkMethod frameworkMethod, TestContext context) {
         Object[] values = new Object[frameworkMethod.getMethod().getParameterTypes().length];
         Class<?>[] parameterTypes = frameworkMethod.getMethod().getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {

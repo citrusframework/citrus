@@ -1,16 +1,13 @@
 package com.consol.citrus.junit.integration;
 
-import com.consol.citrus.*;
-import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.DefaultTestCase;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.BeanDefinitionParserConfiguration;
-import com.consol.citrus.common.TestLoader;
-import com.consol.citrus.common.SpringXmlTestLoader;
 import com.consol.citrus.common.SpringXmlTestLoaderConfiguration;
 import com.consol.citrus.config.xml.BaseTestCaseMetaInfoParser;
 import com.consol.citrus.config.xml.BaseTestCaseParser;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.junit.spring.JUnit4CitrusSpringSupport;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,36 +25,15 @@ import org.w3c.dom.Element;
         })
 public class SpringXmlTestLoaderIT extends JUnit4CitrusSpringSupport {
 
-    private static TestCase loadedTestCase;
-
     @Test
     @CitrusXmlTest
     public void SpringXmlTestLoaderIT() {
-        // Special validation is performed via ValidateTestCaseAndMetaInfoAction.
-    }
+        TestCase testCase = getTestCase();
+        Assert.assertTrue(testCase instanceof CustomTestCase);
 
-    /**
-     * Hack to get a hold on the loadedTestCase. As the test is executed as CitrusXmlTest, it is not possible to add validation in the test method itself
-     * @param testName
-     * @param packageName
-     * @return
-     */
-    @Override
-    protected TestLoader createTestLoader(String testName, String packageName, String source, String type) {
-        SpringXmlTestLoader testLoader = new SpringXmlTestLoader() {
-            @Override
-            public TestCase load() {
-                loadedTestCase = super.load();
-                return loadedTestCase;
-            }
-        };
-
-        testLoader.setTestClass(getClass());
-        testLoader.setTestName(testName);
-        testLoader.setPackageName(packageName);
-
-        CitrusAnnotations.injectCitrusContext(testLoader, CitrusSpringContext.create(applicationContext));
-        return testLoader;
+        TestCaseMetaInfo metaInfo = testCase.getMetaInfo();
+        Assert.assertTrue(metaInfo instanceof CustomTestCaseMetaInfo);
+        Assert.assertEquals(((CustomTestCaseMetaInfo)metaInfo).getDescription(), "Foo bar: F#!$§ed up beyond all repair");
     }
 
     /**
@@ -108,22 +84,6 @@ public class SpringXmlTestLoaderIT extends JUnit4CitrusSpringSupport {
                 String description = DomUtils.getTextValue(descriptionElement);
                 metaInfoBuilder.addPropertyValue("description", description);
             }
-        }
-    }
-
-
-
-    /**
-     * A validation action that asserts, that the correct types of TestCase and TestCaseMetaInfo
-     */
-    public static class ValidateTestCaseAndMetaInfoAction extends AbstractTestAction {
-
-        @Override
-        public void doExecute(TestContext context) {
-            Assert.assertTrue(loadedTestCase instanceof CustomTestCase);
-            TestCaseMetaInfo metaInfo = loadedTestCase.getMetaInfo();
-            Assert.assertTrue(metaInfo instanceof CustomTestCaseMetaInfo);
-            Assert.assertEquals(((CustomTestCaseMetaInfo)metaInfo).getDescription(), "Foo bar: F#!$§ed up beyond all repair");
         }
     }
 }

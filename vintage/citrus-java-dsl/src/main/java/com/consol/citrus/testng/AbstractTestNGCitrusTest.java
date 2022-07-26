@@ -26,7 +26,6 @@ import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.CitrusSpringContextProvider;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestGroupAware;
-import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusXmlTest;
@@ -34,7 +33,6 @@ import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -60,7 +58,7 @@ import org.testng.annotations.Test;
  * @deprecated in favor of using {@link com.consol.citrus.testng.spring.TestNGCitrusSpringSupport}
  */
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-@Listeners( { PrepareTestNGMethodInterceptor.class } )
+@Listeners( { TestNGCitrusMethodInterceptor.class } )
 @Deprecated
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
 
@@ -69,6 +67,8 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
     /** Citrus instance */
     protected Citrus citrus;
+
+    private TestCase testCase;
 
     @Override
     public void run(IHookCallBack callBack, ITestResult testResult) {
@@ -113,36 +113,16 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         }
 
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
-        TestCase testCase = testLoader.load();
+        CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+        testLoader.configureTestCase(t -> {
+            if (t instanceof TestGroupAware) {
+                ((TestGroupAware) t).setGroups(testResult.getMethod().getGroups());
+            }
+        });
 
-        if (testCase instanceof TestGroupAware) {
-            ((TestGroupAware) testCase).setGroups(testResult.getMethod().getGroups());
-        }
-
-        invokeTestMethod(testResult, method, testCase, ctx, invocationCount);
-    }
-
-    /**
-     * Invokes test method based on designer or runner environment.
-     * @param testResult
-     * @param method
-     * @param testCase
-     * @param context
-     * @param invocationCount
-     */
-    protected void invokeTestMethod(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
-        try {
-            ReflectionUtils.invokeMethod(method, this,
-                    resolveParameter(testResult, method, testCase, context, invocationCount));
-        } catch (TestCaseFailedException e) {
-            throw e;
-        } catch (Exception | AssertionError e) {
-            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-            testCase.finish(context);
-            throw new TestCaseFailedException(e);
-        }
-
-        citrus.run(testCase, context);
+        testLoader.doWithTestCase(t ->
+                ReflectionUtils.invokeMethod(method, this, resolveParameter(testResult, method, t, ctx, invocationCount)));
+        testLoader.load();
     }
 
     /**
@@ -278,6 +258,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         CitrusAnnotations.injectCitrusContext(testLoader, Optional.ofNullable(citrus)
                         .map(Citrus::getCitrusContext)
                         .orElseGet(() -> CitrusSpringContext.create(applicationContext)));
+        testLoader.configureTestCase(t -> testCase = t);
         return testLoader;
     }
 
@@ -286,6 +267,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @return
      */
     protected TestCase getTestCase() {
-        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), TestLoader.SPRING).load();
+        return testCase;
     }
 }

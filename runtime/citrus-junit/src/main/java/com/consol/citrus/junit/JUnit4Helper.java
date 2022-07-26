@@ -27,12 +27,9 @@ import java.util.List;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.DefaultTestCaseRunner;
-import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.TestResult;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.util.FileUtils;
 import org.junit.runners.model.FrameworkMethod;
 import org.springframework.core.io.Resource;
@@ -59,21 +56,11 @@ public final class JUnit4Helper {
      * Invokes test method based on designer or runner environment.
      * @param target
      * @param frameworkMethod
-     * @param runner
      * @param context
      */
-    public static void invokeTestMethod(Object target, CitrusFrameworkMethod frameworkMethod, TestCaseRunner runner, TestContext context) {
-        final TestCase testCase = runner.getTestCase();
-        try {
-            Object[] params = JUnit4ParameterHelper.resolveParameter(frameworkMethod, testCase, context);
-            runner.start();
-            ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), target, params);
-        } catch (Exception | AssertionError e) {
-            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-            throw new TestCaseFailedException(e);
-        } finally {
-            runner.stop();
-        }
+    public static void invokeTestMethod(Object target, CitrusFrameworkMethod frameworkMethod, TestContext context) {
+        Object[] params = JUnit4ParameterHelper.resolveParameter(frameworkMethod, context);
+        ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), target, params);
     }
 
     /**

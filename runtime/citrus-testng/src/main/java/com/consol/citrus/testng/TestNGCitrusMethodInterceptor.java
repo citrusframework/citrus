@@ -24,8 +24,7 @@ import java.util.List;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.common.TestLoader;
-import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -43,10 +42,10 @@ import org.testng.internal.MethodInstance;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
+public class TestNGCitrusMethodInterceptor implements IMethodInterceptor {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(PrepareTestNGMethodInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(TestNGCitrusMethodInterceptor.class);
 
     @Override
     public List<IMethodInstance> intercept(List<IMethodInstance> methods, ITestContext context) {
@@ -54,7 +53,7 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
 
         for (IMethodInstance method : methods) {
             boolean baseMethodAdded = false;
-            if (method.getInstance() instanceof TestNGCitrusSpringSupport) {
+            if (method.getInstance() instanceof TestNGCitrusSupport) {
                 if (method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusTestSource.class) != null) {
                     CitrusTestSource citrusTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusTestSource.class);
                     if (citrusTestAnnotation.name().length > 1) {
@@ -87,36 +86,7 @@ public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
                         }
                     }
                 } else if (method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-                    CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class);
-                    if (citrusXmlTestAnnotation.name().length > 1) {
-                        for (int i = 0; i < citrusXmlTestAnnotation.name().length; i++) {
-                            if (i == 0) {
-                                baseMethodAdded = true;
-                                interceptedMethods.add(method);
-                            } else {
-                                interceptedMethods.add(new MethodInstance(method.getMethod()));
-                            }
-                        }
-                    }
-
-                    String[] packagesToScan = citrusXmlTestAnnotation.packageScan();
-                    for (String packageName : packagesToScan) {
-                        try {
-                            for (String fileNamePattern : CitrusSettings.getTestFileNamePattern(TestLoader.SPRING)) {
-                                Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + fileNamePattern);
-                                for (int i = 0; i < fileResources.length; i++) {
-                                    if (i == 0 && !baseMethodAdded) {
-                                        baseMethodAdded = true;
-                                        interceptedMethods.add(method);
-                                    } else {
-                                        interceptedMethods.add(new MethodInstance(method.getMethod()));
-                                    }
-                                }
-                            }
-                        } catch (IOException e) {
-                            log.error("Unable to locate file resources for test package '" + packageName + "'", e);
-                        }
-                    }
+                    throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
                 }
             }
 

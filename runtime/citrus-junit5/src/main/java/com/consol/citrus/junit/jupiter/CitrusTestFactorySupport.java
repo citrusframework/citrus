@@ -49,12 +49,20 @@ public final class CitrusTestFactorySupport {
         this.handler = handler;
     }
 
+    public static CitrusTestFactorySupport factory(String type) {
+        return new CitrusTestFactorySupport(type, TestLoader::load);
+    }
+
+    public static CitrusTestFactorySupport xml() {
+        return factory(TestLoader.XML);
+    }
+
     public static CitrusTestFactorySupport groovy() {
-        return new CitrusTestFactorySupport(TestLoader.GROOVY, TestLoader::load);
+        return factory(TestLoader.GROOVY);
     }
 
     public static CitrusTestFactorySupport springXml() {
-        return new CitrusTestFactorySupport(TestLoader.SPRING, testLoader -> CitrusInstanceManager.getOrDefault().run(testLoader.load()));
+        return factory(TestLoader.SPRING);
     }
 
     /**

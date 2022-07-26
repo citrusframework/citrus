@@ -59,12 +59,11 @@ public final class TestNGParameterHelper {
      *
      * @param testResult
      * @param method
-     * @param testCase
      * @param context
      * @param invocationCount
      * @return
      */
-    public static Object[] resolveParameter(Object target, ITestResult testResult, final Method method, TestCase testCase, TestContext context, int invocationCount) {
+    public static Object[] resolveParameter(Object target, ITestResult testResult, final Method method, TestContext context, int invocationCount) {
         Object[] dataProviderParams = null;
         if (method.getAnnotation(Test.class) != null &&
                 StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
@@ -84,10 +83,9 @@ public final class TestNGParameterHelper {
             }
 
             Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(dataProvider[0], target,
-                    resolveParameter(target, testResult, dataProvider[0], testCase, context, -1));
+                    resolveParameter(target, testResult, dataProvider[0], context, -1));
             if (parameters != null) {
                 dataProviderParams = parameters[invocationCount % parameters.length];
-                injectTestParameters(method, testCase, dataProviderParams);
             }
         }
 

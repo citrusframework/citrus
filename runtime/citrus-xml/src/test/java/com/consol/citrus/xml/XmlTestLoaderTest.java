@@ -21,25 +21,47 @@ package com.consol.citrus.xml;
 
 import java.util.concurrent.TimeUnit;
 
+import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusContext;
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class XmlTestLoaderTest {
+public class XmlTestLoaderTest extends AbstractTestNGUnitTest {
+
+    @Mock
+    private CitrusContext citrusContext;
+
+    private Citrus citrus;
+
+    @BeforeClass
+    public void setupMocks() {
+        MockitoAnnotations.openMocks(this);
+        citrus = Citrus.newInstance(() -> citrusContext);
+    }
 
     @Test
     public void shouldLoadEcho() {
         XmlTestLoader testLoader = new XmlTestLoader(this.getClass(), "Test", this.getClass().getPackageName());
+        CitrusAnnotations.injectAll(testLoader, citrus, context);
+        CitrusAnnotations.injectTestRunner(testLoader, new DefaultTestCaseRunner(context));
         testLoader.setSource("classpath:com/consol/citrus/xml/echo-test.xml");
 
-        TestCase result = testLoader.load();
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
         Assert.assertEquals(result.getName(), "EchoTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
@@ -51,9 +73,12 @@ public class XmlTestLoaderTest {
     @Test
     public void shouldLoadSleep() {
         XmlTestLoader testLoader = new XmlTestLoader(this.getClass(), "Test", this.getClass().getPackageName());
+        CitrusAnnotations.injectAll(testLoader, citrus, context);
+        CitrusAnnotations.injectTestRunner(testLoader, new DefaultTestCaseRunner(context));
         testLoader.setSource("classpath:com/consol/citrus/xml/sleep-test.xml");
 
-        TestCase result = testLoader.load();
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
         Assert.assertEquals(result.getName(), "SleepTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
@@ -66,9 +91,12 @@ public class XmlTestLoaderTest {
     @Test
     public void shouldLoadCreateVariables() {
         XmlTestLoader testLoader = new XmlTestLoader(this.getClass(), "Test", this.getClass().getPackageName());
+        CitrusAnnotations.injectAll(testLoader, citrus, context);
+        CitrusAnnotations.injectTestRunner(testLoader, new DefaultTestCaseRunner(context));
         testLoader.setSource("classpath:com/consol/citrus/xml/create-variables-test.xml");
 
-        TestCase result = testLoader.load();
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
         Assert.assertEquals(result.getName(), "CreateVariablesTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);

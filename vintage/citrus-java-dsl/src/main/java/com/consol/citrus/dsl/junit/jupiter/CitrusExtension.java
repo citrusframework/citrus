@@ -282,7 +282,7 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
         return extensionContext.getRoot().getStore(com.consol.citrus.junit.jupiter.CitrusExtension.NAMESPACE)
                 .getOrComputeIfAbsent(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCase.class.getSimpleName(),
-                        key -> CitrusExtensionHelper.createTestLoader(extensionContext).load(), TestCase.class);
+                        key -> CitrusExtensionHelper.createTestLoader(extensionContext).getTestCase(), TestCase.class);
     }
 
     /**

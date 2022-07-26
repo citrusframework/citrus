@@ -22,15 +22,8 @@ package com.consol.citrus.groovy;
 import java.io.File;
 import java.io.IOException;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.DefaultTestCaseRunner;
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseRunner;
-import com.consol.citrus.annotations.CitrusFramework;
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.common.TestLoader;
+import com.consol.citrus.common.DefaultTestLoader;
 import com.consol.citrus.common.TestSourceAware;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.groovy.dsl.GroovyShellUtils;
 import com.consol.citrus.groovy.dsl.test.TestCaseScript;
@@ -43,64 +36,11 @@ import org.springframework.util.StringUtils;
 /**
  * @author Christoph Deppisch
  */
-public class GroovyTestLoader implements TestLoader, TestSourceAware {
-
-    @CitrusFramework
-    private Citrus citrus;
-
-    @CitrusResource
-    private TestContext context;
-
-    @CitrusResource
-    private TestCaseRunner runner;
-    private TestCase testCase;
-
-    private Class<?> testClass;
-    private String testName;
-    private String packageName;
+public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAware {
 
     private String source;
 
-    public TestCase load() {
-        if (testCase != null) {
-            return testCase;
-        }
-
-        boolean shouldFinish = false;
-
-        if (runner == null) {
-            if (context == null) {
-                if (citrus == null) {
-                    throw new CitrusRuntimeException("Missing Citrus framework instance for loading Groovy test");
-                }
-
-                context = citrus.getCitrusContext().createTestContext();
-            }
-
-            runner = new DefaultTestCaseRunner(context);
-
-            runner.start();
-            shouldFinish = true;
-        }
-
-        if (testClass == null) {
-            testClass = runner.getTestCase().getTestClass();
-        } else {
-            runner.testClass(testClass);
-        }
-
-        if (testName == null) {
-            testName = runner.getTestCase().getName();
-        } else {
-            runner.name(testName);
-        }
-
-        if (packageName == null) {
-            packageName = runner.getTestCase().getPackageName();
-        } else {
-            runner.packageName(packageName);
-        }
-
+    protected void doLoad() {
         try {
             Resource scriptSource = FileUtils.getFileResource(this.getSource(), context);
             ImportCustomizer ic = new ImportCustomizer();
@@ -110,17 +50,18 @@ public class GroovyTestLoader implements TestLoader, TestSourceAware {
                 basePath = FileUtils.getBasePath(((ClassPathResource) scriptSource).getPath());
             }
 
-            GroovyShellUtils.run(ic, new TestCaseScript(citrus, runner, context, basePath), FileUtils.readToString(scriptSource), citrus, context);
             testCase = runner.getTestCase();
+            configurer.forEach(it -> it.accept(testCase));
+            runner.start();
+
+            GroovyShellUtils.run(ic, new TestCaseScript(citrus, runner, context, basePath), FileUtils.readToString(scriptSource), citrus, context);
+
+            handler.forEach(it -> it.accept(testCase));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to load Groovy test source", e);
         } finally {
-            if (shouldFinish) {
-                runner.stop();
-            }
+            runner.stop();
         }
-
-        return testCase;
     }
 
     public String getSource() {
@@ -135,20 +76,5 @@ public class GroovyTestLoader implements TestLoader, TestSourceAware {
 
     public void setSource(String source) {
         this.source = source;
-    }
-
-    @Override
-    public void setTestClass(Class<?> testClass) {
-        this.testClass = testClass;
-    }
-
-    @Override
-    public void setTestName(String testName) {
-        this.testName = testName;
-    }
-
-    @Override
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
     }
 }

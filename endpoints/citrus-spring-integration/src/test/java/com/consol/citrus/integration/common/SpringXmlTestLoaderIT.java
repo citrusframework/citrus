@@ -28,14 +28,12 @@ public class SpringXmlTestLoaderIT extends TestNGCitrusSpringSupport {
     @Test
     @CitrusXmlTest
     public void SpringXmlTestLoaderIT() {
-
         TestCase testCase = getTestCase();
         Assert.assertTrue(testCase instanceof CustomTestCase);
 
         TestCaseMetaInfo metaInfo = testCase.getMetaInfo();
         Assert.assertTrue(metaInfo instanceof CustomTestCaseMetaInfo);
         Assert.assertEquals(((CustomTestCaseMetaInfo)metaInfo).getDescription(), "Foo bar: F#!$§ed up beyond all repair");
-
     }
 
     /**

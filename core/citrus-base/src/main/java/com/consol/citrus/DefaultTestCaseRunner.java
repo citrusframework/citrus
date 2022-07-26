@@ -13,7 +13,7 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 public class DefaultTestCaseRunner implements TestCaseRunner {
 
     /** The test case */
-    private final TestCase testCase;
+    private TestCase testCase;
 
     /** The test context */
     private final TestContext context;
@@ -141,5 +141,10 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
     @Override
     public TestCase getTestCase() {
         return testCase;
+    }
+
+    public void setTestCase(TestCase testCase) {
+        this.testCase = testCase;
+        this.testCase.setIncremental(true);
     }
 }

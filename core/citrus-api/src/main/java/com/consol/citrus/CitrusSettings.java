@@ -119,7 +119,7 @@ public final class CitrusSettings {
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
     public static final String XML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_XML_FILE_NAME_PATTERN";
     public static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) != null ?
-            System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) : "/**/*Test.xml,/**/*IT.xml");
+            System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) : "/**/*Test.xml,/**/*IT.xml,/**/*test.xml,/**/*it.xml");
 
     public static final String JAVA_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.java.file.name.pattern";
     public static final String JAVA_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_JAVA_FILE_NAME_PATTERN";
@@ -235,6 +235,7 @@ public final class CitrusSettings {
      */
     public static Set<String> getTestFileNamePattern(String type) {
         switch (type) {
+            case TestLoader.XML:
             case TestLoader.SPRING:
                 return CitrusSettings.getXmlTestFileNamePattern();
             case TestLoader.GROOVY:

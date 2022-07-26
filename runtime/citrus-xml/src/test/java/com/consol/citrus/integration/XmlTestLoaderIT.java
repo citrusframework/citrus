@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.integration.groovy;
+package com.consol.citrus.integration;
 
 import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.common.TestLoader;
-import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
+import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
 /**
@@ -26,17 +26,17 @@ import org.testng.annotations.Test;
  * @since 2.1
  */
 @Test
-public class TestNgGroovyIT extends TestNGCitrusSpringSupport {
+public class XmlTestLoaderIT extends TestNGCitrusSupport {
 
-    @CitrusTestSource(type = TestLoader.GROOVY, name = { "sample.it" })
-    public void TestNgGroovy_1_IT() {}
+    @CitrusTestSource(type = TestLoader.XML, name = { "sample-test" })
+    public void XmlTestLoader_1_IT() {}
 
-    @CitrusTestSource(type = TestLoader.GROOVY, name = { "echo.test", "delay.test" }, packageName = "com.consol.citrus.integration.actions")
-    public void TestNgGroovy_2_IT() {}
+    @CitrusTestSource(type = TestLoader.XML, name = { "echo-test", "sleep-test" }, packageName = "com.consol.citrus.xml")
+    public void XmlTestLoader_2_IT() {}
 
-    @CitrusTestSource(type = TestLoader.GROOVY, packageScan = "com.consol.citrus.integration.groovy")
-    public void TestNgGroovy_3_IT() {}
+    @CitrusTestSource(type = TestLoader.XML, packageScan = "com.consol.citrus.integration")
+    public void XmlTestLoader_3_IT() {}
 
-    @CitrusTestSource(type = TestLoader.GROOVY, sources = { "classpath:com/consol/citrus/integration/actions/createVariables.test.groovy" })
-    public void TestNgGroovy_4_IT() {}
+    @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:com/consol/citrus/xml/create-variables-test.xml" })
+    public void XmlTestLoader_4_IT() {}
 }
