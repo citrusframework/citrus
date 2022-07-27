@@ -420,20 +420,21 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public Wait.Builder waitFor() {
-        Wait.Builder builder = new Wait.Builder() {
+    public Wait.Builder<ActionCondition> waitFor() {
+        Wait.Builder<ActionCondition> builder = new Wait.Builder<>() {
             @Override
             public WaitActionConditionBuilder execution() {
                 final Sequence.Builder dummy = new Sequence.Builder();
                 DefaultTestDesigner.this.containers.push(dummy);
-                return condition(new WaitActionConditionBuilder(new ActionCondition(), this) {
+                this.condition = new ActionCondition();
+                return new WaitActionConditionBuilder(this) {
                     @Override
                     public WaitActionConditionBuilder action(TestActionBuilder<?> action) {
                         super.action(action);
                         DefaultTestDesigner.this.containers.remove(dummy);
                         return this;
                     }
-                });
+                };
             }
         };
 

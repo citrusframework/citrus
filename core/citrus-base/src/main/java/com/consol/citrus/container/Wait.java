@@ -149,20 +149,20 @@ public class Wait extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestActionBuilder<Wait, Builder> implements TestActionBuilder.DelegatingTestActionBuilder<Wait> {
+    public static class Builder<C extends Condition> extends AbstractTestActionBuilder<Wait, Builder<C>> implements TestActionBuilder.DelegatingTestActionBuilder<Wait> {
 
         protected Condition condition;
-        private String time = "5000";
-        private String interval = "1000";
+        protected String time = "5000";
+        protected String interval = "1000";
 
-        private TestActionBuilder<?> delegate;
+        protected TestActionBuilder<?> delegate;
 
         /**
          * Fluent API action building entry method used in Java DSL.
          * @return
          */
-        public static Builder waitFor() {
-            return new Builder();
+        public static Builder<Condition> waitFor() {
+            return new Builder<>();
         }
 
         /**
@@ -170,7 +170,7 @@ public class Wait extends AbstractTestAction {
          * @param condition The condition to add to the wait action
          * @return The wait action
          */
-        public Builder condition(Condition condition) {
+        public Builder<C> condition(C condition) {
             this.condition = condition;
             this.delegate = this::build;
             return this;
@@ -182,7 +182,7 @@ public class Wait extends AbstractTestAction {
          * @param <T>
          * @return
          */
-        public <T extends WaitConditionBuilder<? extends Condition, T>> T condition(T conditionBuilder) {
+        public <T extends WaitConditionBuilder<C, T>> T condition(T conditionBuilder) {
             this.condition = conditionBuilder.getCondition();
             this.delegate = conditionBuilder;
             return conditionBuilder;
@@ -193,9 +193,8 @@ public class Wait extends AbstractTestAction {
          * @return A WaitMessageConditionBuilder for further configuration
          */
         public WaitMessageConditionBuilder message() {
-            MessageCondition condition = new MessageCondition();
-            this.condition = condition;
-            WaitMessageConditionBuilder builder = new WaitMessageConditionBuilder(condition, this);
+            this.condition = new MessageCondition();
+            WaitMessageConditionBuilder builder = new WaitMessageConditionBuilder((Builder<MessageCondition>) this);
             this.delegate = builder;
             return builder;
         }
@@ -205,9 +204,8 @@ public class Wait extends AbstractTestAction {
          * @return A WaitActionConditionBuilder for further configuration
          */
         public WaitActionConditionBuilder execution() {
-            ActionCondition condition = new ActionCondition();
-            this.condition = condition;
-            WaitActionConditionBuilder builder = new WaitActionConditionBuilder(condition, this);
+            this.condition = new ActionCondition();
+            WaitActionConditionBuilder builder = new WaitActionConditionBuilder((Builder<ActionCondition>) this);
             this.delegate = builder;
             return builder;
         }
@@ -217,9 +215,8 @@ public class Wait extends AbstractTestAction {
          * @return A WaitHttpConditionBuilder for further configuration
          */
         public WaitHttpConditionBuilder http() {
-            HttpCondition condition = new HttpCondition();
-            this.condition = condition;
-            WaitHttpConditionBuilder builder = new WaitHttpConditionBuilder(condition, this);
+            this.condition = new HttpCondition();
+            WaitHttpConditionBuilder builder = new WaitHttpConditionBuilder((Builder<HttpCondition>) this);
             this.delegate = builder;
             return builder;
         }
@@ -229,9 +226,8 @@ public class Wait extends AbstractTestAction {
          * @return A WaitFileConditionBuilder for further configuration
          */
         public WaitFileConditionBuilder file() {
-            FileCondition condition = new FileCondition();
-            this.condition = condition;
-            WaitFileConditionBuilder builder = new WaitFileConditionBuilder(condition, this);
+            this.condition = new FileCondition();
+            WaitFileConditionBuilder builder = new WaitFileConditionBuilder((Builder<FileCondition>) this);
             this.delegate = builder;
             return builder;
         }
@@ -241,7 +237,7 @@ public class Wait extends AbstractTestAction {
          * @param interval The interval to use
          * @return The altered WaitBuilder
          */
-        public Builder interval(Long interval) {
+        public Builder<C> interval(Long interval) {
             return interval(String.valueOf(interval));
         }
 
@@ -250,26 +246,26 @@ public class Wait extends AbstractTestAction {
          * @param interval The interval to use
          * @return The altered WaitBuilder
          */
-        public Builder interval(String interval) {
+        public Builder<C> interval(String interval) {
             this.interval = interval;
             return this;
         }
 
-        public Builder milliseconds(long milliseconds) {
+        public Builder<C> milliseconds(long milliseconds) {
             return milliseconds(String.valueOf(milliseconds));
         }
 
-        public Builder milliseconds(String milliseconds) {
+        public Builder<C> milliseconds(String milliseconds) {
             this.time = milliseconds;
             return this;
         }
 
-        public Builder seconds(double seconds) {
+        public Builder<C> seconds(double seconds) {
             milliseconds(Math.round(seconds * 1000));
             return this;
         }
 
-        public Builder time(Duration duration) {
+        public Builder<C> time(Duration duration) {
             milliseconds(duration.toMillis());
             return this;
         }
@@ -282,6 +278,10 @@ public class Wait extends AbstractTestAction {
         @Override
         public TestActionBuilder<?> getDelegate() {
             return delegate;
+        }
+
+        public C getCondition() {
+            return (C) condition;
         }
     }
 }

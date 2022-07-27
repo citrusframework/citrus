@@ -28,11 +28,10 @@ public class WaitFileConditionBuilder extends WaitConditionBuilder<FileCondition
 
     /**
      * Default constructor using fields.
-     * @param condition
      * @param builder
      */
-    public WaitFileConditionBuilder(FileCondition condition, Wait.Builder builder) {
-        super(condition, builder);
+    public WaitFileConditionBuilder(Wait.Builder<FileCondition> builder) {
+        super(builder);
     }
 
     /**
