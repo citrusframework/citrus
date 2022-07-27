@@ -26,11 +26,10 @@ public class WaitHttpConditionBuilder extends WaitConditionBuilder<HttpCondition
 
     /**
      * Default constructor using fields.
-     * @param condition
      * @param builder
      */
-    public WaitHttpConditionBuilder(HttpCondition condition, Wait.Builder builder) {
-        super(condition, builder);
+    public WaitHttpConditionBuilder(Wait.Builder<HttpCondition> builder) {
+        super(builder);
     }
 
     public WaitHttpConditionBuilder url(String requestUrl) {

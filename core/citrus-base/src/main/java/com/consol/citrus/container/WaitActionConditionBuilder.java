@@ -28,11 +28,10 @@ public class WaitActionConditionBuilder extends WaitConditionBuilder<ActionCondi
 
     /**
      * Default constructor using fields.
-     * @param condition
      * @param builder
      */
-    public WaitActionConditionBuilder(ActionCondition condition, Wait.Builder builder) {
-        super(condition, builder);
+    public WaitActionConditionBuilder(Wait.Builder<ActionCondition> builder) {
+        super(builder);
     }
 
     /**

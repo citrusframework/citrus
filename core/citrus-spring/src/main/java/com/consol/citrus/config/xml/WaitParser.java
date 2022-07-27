@@ -163,9 +163,9 @@ public class WaitParser implements BeanDefinitionParser {
     /**
      * Test action factory bean.
      */
-    public static class WaitFactoryBean extends AbstractTestActionFactoryBean<Wait, Wait.Builder> {
+    public static class WaitFactoryBean extends AbstractTestActionFactoryBean<Wait, Wait.Builder<Condition>> {
 
-        private final Wait.Builder builder = new Wait.Builder();
+        private final Wait.Builder<Condition> builder = new Wait.Builder<>();
 
         public void setCondition(Condition condition) {
             builder.condition(condition);
@@ -202,7 +202,7 @@ public class WaitParser implements BeanDefinitionParser {
          * @return the builder implementation.
          */
         @Override
-        public Wait.Builder getBuilder() {
+        public Wait.Builder<Condition> getBuilder() {
             return builder;
         }
     }

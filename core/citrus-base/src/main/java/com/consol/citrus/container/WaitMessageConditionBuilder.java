@@ -26,11 +26,10 @@ public class WaitMessageConditionBuilder extends WaitConditionBuilder<MessageCon
 
     /**
      * Default constructor using fields.
-     * @param condition
      * @param builder
      */
-    public WaitMessageConditionBuilder(MessageCondition condition, Wait.Builder builder) {
-        super(condition, builder);
+    public WaitMessageConditionBuilder(Wait.Builder<MessageCondition> builder) {
+        super(builder);
     }
 
     public WaitMessageConditionBuilder name(String messageName) {

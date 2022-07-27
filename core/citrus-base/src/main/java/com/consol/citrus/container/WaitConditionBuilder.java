@@ -25,26 +25,20 @@ import com.consol.citrus.condition.Condition;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public abstract class WaitConditionBuilder<T extends Condition, S extends WaitConditionBuilder> implements TestActionBuilder<Wait> {
+public abstract class WaitConditionBuilder<T extends Condition, S extends WaitConditionBuilder<T, S>> implements TestActionBuilder<Wait> {
 
     /** Parent wait action builder */
-    private final Wait.Builder builder;
-
-    /** Condition */
-    private final T condition;
+    private final Wait.Builder<T> builder;
 
     /** Self reference */
     protected S self;
 
     /**
      * Default constructor using fields.
-     * @param condition
      * @param builder
      */
-    public WaitConditionBuilder(T condition, Wait.Builder builder) {
-        this.condition = condition;
+    public WaitConditionBuilder(Wait.Builder<T> builder) {
         this.builder = builder;
-
         this.self = (S) this;
     }
 
@@ -98,14 +92,14 @@ public abstract class WaitConditionBuilder<T extends Condition, S extends WaitCo
      * @return
      */
     public T getCondition() {
-        return condition;
+        return builder.getCondition();
     }
 
     /**
      * Gets the builder.
      * @return
      */
-    public Wait.Builder getBuilder() {
+    public Wait.Builder<T> getBuilder() {
         return builder;
     }
 }
