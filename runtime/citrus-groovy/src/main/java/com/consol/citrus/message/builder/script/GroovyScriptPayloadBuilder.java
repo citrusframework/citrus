@@ -21,7 +21,7 @@ package com.consol.citrus.message.builder.script;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessagePayloadBuilder;
+import com.consol.citrus.message.ScriptPayloadBuilder;
 import com.consol.citrus.validation.script.TemplateBasedScriptBuilder;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
@@ -32,12 +32,20 @@ import org.springframework.core.io.Resource;
 /**
  * @author Christoph Deppisch
  */
-public class GroovyScriptPayloadBuilder implements MessagePayloadBuilder {
+public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
 
     /** Default path to script template */
     private final Resource scriptTemplateResource = new ClassPathResource("com/consol/citrus/script/markup-builder-template.groovy");
 
-    private final String script;
+    private String script;
+
+    private GroovyFileResourcePayloadBuilder delegate;
+
+    /**
+     * Default constructor;
+     */
+    public GroovyScriptPayloadBuilder() {
+    }
 
     /**
      * Default constructor using payload script.
@@ -47,8 +55,20 @@ public class GroovyScriptPayloadBuilder implements MessagePayloadBuilder {
         this.script = script;
     }
 
+    /**
+     * Default constructor using payload file resource.
+     * @param file
+     */
+    public GroovyScriptPayloadBuilder(Resource file) {
+        this.delegate = new GroovyFileResourcePayloadBuilder(file);
+    }
+
     @Override
     public Object buildPayload(TestContext context) {
+        if (delegate != null) {
+            return delegate.buildPayload(context);
+        }
+
         return buildMarkupBuilderScript(context.replaceDynamicContentInString(script));
     }
 
@@ -76,5 +96,15 @@ public class GroovyScriptPayloadBuilder implements MessagePayloadBuilder {
         } catch (CompilationFailedException | InstantiationException | IllegalAccessException e) {
             throw new CitrusRuntimeException(e);
         }
+    }
+
+    @Override
+    public void setScript(String script) {
+        this.script = script;
+    }
+
+    @Override
+    public void setFile(Resource file) {
+        delegate = new GroovyFileResourcePayloadBuilder(file);
     }
 }

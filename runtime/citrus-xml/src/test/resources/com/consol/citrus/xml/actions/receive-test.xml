@@ -1,0 +1,232 @@
+<!--
+  ~ Copyright 2022 the original author or authors.
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements. See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License. You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<test name="ReceiveTest" author="Christoph" status="FINAL">
+  <actions>
+    <receive endpoint="helloEndpoint" timeout="10000">
+      <message>
+        <headers>
+          <header name="operation" value="sayHello"/>
+        </headers>
+        <body>
+          <data>Hello from Citrus!</data>
+        </body>
+      </message>
+    </receive>
+
+    <receive endpoint="helloEndpoint">
+      <message>
+        <headers>
+          <header name="operation" value="sayHello"/>
+        </headers>
+        <body>
+          <data>
+            <![CDATA[
+                <TestMessage>Hello Citrus</TestMessage>
+            ]]>
+          </data>
+        </body>
+      </message>
+    </receive>
+
+    <receive endpoint="helloEndpoint">
+      <message>
+        <headers>
+          <fragment>
+            <Header xmlns="http://citrusframework.org/test"><operation>hello</operation></Header>
+          </fragment>
+          <header name="operation" value="sayHello"/>
+        </headers>
+        <body>
+          <payload>
+            <TestMessage xmlns="http://citrusframework.org/test">Hello Citrus</TestMessage>
+          </payload>
+        </body>
+      </message>
+    </receive>
+
+    <receive endpoint="helloEndpoint" timeout="1000">
+      <selector>
+        <element name="operation" value="sayHello"/>
+      </selector>
+      <message>
+        <body>
+          <resource file="classpath:com/consol/citrus/xml/test-request-payload.xml"/>
+        </body>
+      </message>
+    </receive>
+
+    <receive endpoint="helloEndpoint">
+      <selector>
+        <value>operation = 'sayHello'</value>
+      </selector>
+      <message>
+        <body>
+          <data>
+            <![CDATA[
+                <TestMessage>Hello Citrus</TestMessage>
+            ]]>
+          </data>
+        </body>
+      </message>
+    </receive>
+
+    <receive endpoint="helloEndpoint">
+      <message data-dictionary="myDataDictionary">
+        <body>
+          <data>
+            <![CDATA[
+                <TestMessage>Hello Citrus</TestMessage>
+            ]]>
+          </data>
+        </body>
+      </message>
+      <extract>
+        <header name="operation" variable="operation"/>
+        <body path="/TestMessage/text()" variable="text"/>
+      </extract>
+    </receive>
+
+    <receive endpoint="helloEndpoint">
+      <message schema-validation="false">
+        <body>
+          <data>
+            <![CDATA[
+                <ns:TestMessage xmlns:ns="http://www.consol.com">Hello Citrus</ns:TestMessage>
+            ]]>
+          </data>
+        </body>
+        <expression path="/ns:TestMessage/" value="newValue"/>
+        <ignore path="/ns:TestMessage/ns:ignore"/>
+        <namespace prefix="ns" value="http://www.consol.com"/>
+      </message>
+    </receive>
+
+    <receive endpoint="direct:helloQueue">
+      <message>
+        <validate path="/TestMessage/text" value="Hello Citrus"/>
+        <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
+      </message>
+    </receive>
+
+    <receive endpoint="direct:helloQueue">
+      <message>
+        <validate>
+          <xpath expression="/TestMessage/text" value="Hello Citrus"/>
+          <xpath expression="/TestMessage/foo" value="true" result-type="boolean"/>
+        </validate>
+      </message>
+    </receive>
+
+    <receive endpoint="direct:helloQueue">
+      <message>
+        <validate>
+          <script type="groovy">
+            assert true
+          </script>
+        </validate>
+        <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
+      </message>
+    </receive>
+
+    <receive endpoint="direct:helloQueue">
+      <message>
+        <validate>
+          <script type="groovy" file="classpath:com/consol/citrus/xml/test-validation-script.groovy"/>
+        </validate>
+      </message>
+    </receive>
+
+    <receive endpoint="direct:helloQueue">
+      <message type="json">
+        <validate path="$.json.text" value="Hello Citrus"/>
+        <validate path="$..foo.bar" value="true"/>
+      </message>
+    </receive>
+
+    <receive endpoint="direct:helloQueue">
+      <message type="json">
+        <validate>
+          <json-path expression="$.json.text" value="Hello Citrus"/>
+          <json-path expression="$..foo.bar" value="true"/>
+        </validate>
+      </message>
+    </receive>
+
+    <receive endpoint="helloEndpoint">
+      <message type="json">
+        <body>
+          <data>
+            <![CDATA[
+                { "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}
+            ]]>
+          </data>
+        </body>
+        <expression path="$.FooMessage.foo" value="newValue"/>
+        <ignore path="$.FooMessage.bar"/>
+      </message>
+    </receive>
+
+    <receive endpoint="helloEndpoint">
+      <message type="json">
+        <body>
+          <data>
+            <![CDATA[
+                { "message": { "text": "Hello World!" }, { "bar": "@ignore@" }}
+            ]]>
+          </data>
+        </body>
+      </message>
+      <extract>
+        <header name="operation" variable="operation"/>
+        <body path="$.message.text" variable="text"/>
+      </extract>
+    </receive>
+
+    <receive endpoint="helloEndpoint">
+      <message validator="myValidator" header-validator="myHeaderValidator">
+        <headers>
+          <header name="operation" value="sayHello"/>
+        </headers>
+        <body>
+          <data>
+            <![CDATA[
+                <TestMessage>Hello Citrus</TestMessage>
+            ]]>
+          </data>
+        </body>
+      </message>
+    </receive>
+
+    <receive endpoint="helloEndpoint">
+      <message validators="myValidator,defaultMessageValidator" header-validators="myHeaderValidator,defaultHeaderValidator">
+        <headers>
+          <header name="operation" value="sayHello"/>
+        </headers>
+        <body>
+          <data>
+            <![CDATA[
+                <TestMessage>Hello Citrus</TestMessage>
+            ]]>
+          </data>
+        </body>
+      </message>
+    </receive>
+  </actions>
+</test>

@@ -17,34 +17,9 @@
   ~ limitations under the License.
   -->
 
-<test name="SampleIT" author="Christoph" status="FINAL">
+<test name="PrintTest" author="Christoph" status="FINAL">
   <description>Sample test in XML</description>
-  <variables>
-    <variable name="message" value="Citrus rocks!"/>
-  </variables>
   <actions>
-    <echo message="${message}"/>
-
-    <send endpoint="direct:sayHello">
-      <message>
-        <headers>
-          <header name="operation" value="sayHello"/>
-        </headers>
-        <body>
-          <data>Hello from Citrus!</data>
-        </body>
-      </message>
-    </send>
-
-    <receive endpoint="direct:sayHello">
-      <message>
-        <headers>
-          <header name="operation" value="sayHello"/>
-        </headers>
-        <body>
-          <data>Hello from Citrus!</data>
-        </body>
-      </message>
-    </receive>
+    <print message="Hello from Citrus!"/>
   </actions>
 </test>

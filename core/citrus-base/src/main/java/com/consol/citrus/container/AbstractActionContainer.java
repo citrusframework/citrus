@@ -46,7 +46,7 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     protected List<TestActionBuilder<?>> actions = new ArrayList<>();
 
     /** List of all executed actions during container run  */
-    private List<TestAction> executedActions = new ArrayList<>();
+    private final List<TestAction> executedActions = new ArrayList<>();
 
     /** Last executed action for error reporting reasons */
     private TestAction activeAction;

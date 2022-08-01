@@ -378,6 +378,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     }
 
     @Override
+    public List<TestActionBuilder<?>> getActionBuilders() {
+        return actions;
+    }
+
+    @Override
     public Map<String, Object> getParameters() {
         return parameters;
     }

@@ -28,6 +28,7 @@ import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.common.DefaultTestLoader;
 import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
@@ -83,6 +84,11 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
             if (runner instanceof DefaultTestCaseRunner) {
                 ((DefaultTestCaseRunner) runner).setTestCase(testCase);
             }
+
+            testCase.getActionBuilders().stream()
+                    .filter(action -> ReferenceResolverAware.class.isAssignableFrom(action.getClass()))
+                    .map(ReferenceResolverAware.class::cast)
+                    .forEach(action -> action.setReferenceResolver(context.getReferenceResolver()));
 
             configurer.forEach(handler -> handler.accept(testCase));
             citrus.run(testCase, context);

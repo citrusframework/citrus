@@ -1,11 +1,14 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -65,9 +68,7 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
         }
 
         if (!jsonPathExpressions.isEmpty()) {
-            final Builder<?, ?> jsonPathProcessor = MessageProcessor.lookup("jsonPath")
-                    .orElseThrow(() -> new CitrusRuntimeException("Missing proper Json Path extractor implementation for resource 'jsonPath' - " +
-                            "consider adding proper json validation module to the project"));
+            final MessageProcessor.Builder<?, ?> jsonPathProcessor = lookupMessageProcessor("jsonPath", context);
 
             if (jsonPathProcessor instanceof WithExpressions) {
                 ((WithExpressions<?>) jsonPathProcessor).expressions(jsonPathExpressions);
@@ -77,9 +78,7 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
         }
 
         if (!xpathExpressions.isEmpty()) {
-            final Builder<?, ?> xpathProcessor = MessageProcessor.lookup("xpath")
-                    .orElseThrow(() -> new CitrusRuntimeException("Missing proper Xpath extractor implementation for resource 'xpath' - " +
-                            "consider adding proper xml validation module to the project"));
+            final Builder<?, ?> xpathProcessor = lookupMessageProcessor("xpath", context);
 
             if (xpathProcessor instanceof WithExpressions) {
                 ((WithExpressions<?>) xpathProcessor).expressions(xpathExpressions);
@@ -88,6 +87,22 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
             xpathProcessor.build()
                     .process(message, context);
         }
+    }
+
+    private MessageProcessor.Builder<?, ?> lookupMessageProcessor(String type, TestContext context) {
+        return MessageProcessor.lookup(type)
+                .orElseGet(() -> {
+                    if (context.getReferenceResolver().isResolvable(type, MessageProcessor.Builder.class)) {
+                        return context.getReferenceResolver().resolve(type, MessageProcessor.Builder.class);
+                    }
+
+                    if (context.getReferenceResolver().isResolvable(type + "MessageProcessorBuilder", MessageProcessor.Builder.class)) {
+                        return context.getReferenceResolver().resolve(type + "MessageProcessorBuilder", MessageProcessor.Builder.class);
+                    }
+
+                    throw new CitrusRuntimeException(String.format("Missing proper message processor implementation of type '%s' - " +
+                            "consider adding proper module to the project", type));
+                });
     }
 
     /**

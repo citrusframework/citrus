@@ -18,7 +18,9 @@ package com.consol.citrus.integration;
 
 import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.common.TestLoader;
+import com.consol.citrus.spi.BindToRegistry;
 import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.validation.TextEqualsMessageValidator;
 import org.testng.annotations.Test;
 
 /**
@@ -28,15 +30,18 @@ import org.testng.annotations.Test;
 @Test
 public class XmlTestLoaderIT extends TestNGCitrusSupport {
 
+    @BindToRegistry
+    TextEqualsMessageValidator textEqualsMessageValidator = new TextEqualsMessageValidator();
+
     @CitrusTestSource(type = TestLoader.XML, name = { "sample-test" })
     public void XmlTestLoader_1_IT() {}
 
-    @CitrusTestSource(type = TestLoader.XML, name = { "echo-test", "sleep-test" }, packageName = "com.consol.citrus.xml")
+    @CitrusTestSource(type = TestLoader.XML, name = { "echo-test", "sleep-test" }, packageName = "com.consol.citrus.xml.actions")
     public void XmlTestLoader_2_IT() {}
 
     @CitrusTestSource(type = TestLoader.XML, packageScan = "com.consol.citrus.integration")
     public void XmlTestLoader_3_IT() {}
 
-    @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:com/consol/citrus/xml/create-variables-test.xml" })
+    @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:com/consol/citrus/xml/actions/create-variables-test.xml" })
     public void XmlTestLoader_4_IT() {}
 }
