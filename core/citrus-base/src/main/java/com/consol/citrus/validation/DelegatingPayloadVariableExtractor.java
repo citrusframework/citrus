@@ -80,9 +80,7 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
         }
 
         if (!jsonPathExpressions.isEmpty()) {
-            final VariableExtractor.Builder<?, ?> jsonPathExtractor = VariableExtractor.lookup("jsonPath")
-                    .orElseThrow(() -> new CitrusRuntimeException("Missing proper Json Path extractor implementation for resource 'jsonPath' - " +
-                            "consider adding proper json validation module to the project"));
+            final VariableExtractor.Builder<?, ?> jsonPathExtractor = lookupVariableExtractor("jsonPath", context);
 
             jsonPathExtractor
                     .expressions(jsonPathExpressions)
@@ -91,9 +89,7 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
         }
 
         if (!xpathExpressions.isEmpty()) {
-            final VariableExtractor.Builder<?, ?> xpathExtractor = VariableExtractor.lookup("xpath")
-                    .orElseThrow(() -> new CitrusRuntimeException("Missing proper Xpath extractor implementation for resource 'xpath' - " +
-                            "consider adding proper xml validation module to the project"));
+            final VariableExtractor.Builder<?, ?> xpathExtractor = lookupVariableExtractor("xpath", context);
 
             if (!this.namespaces.isEmpty() && xpathExtractor instanceof XmlNamespaceAware) {
                 ((XmlNamespaceAware) xpathExtractor).setNamespaces(this.namespaces);
@@ -104,6 +100,22 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
                     .build()
                     .extractVariables(message, context);
         }
+    }
+
+    private VariableExtractor.Builder<?, ?> lookupVariableExtractor(String type, TestContext context) {
+        return VariableExtractor.lookup(type)
+                .orElseGet(() -> {
+                    if (context.getReferenceResolver().isResolvable(type, VariableExtractor.Builder.class)) {
+                        return context.getReferenceResolver().resolve(type, VariableExtractor.Builder.class);
+                    }
+
+                    if (context.getReferenceResolver().isResolvable(type + "VariableExtractorBuilder", VariableExtractor.Builder.class)) {
+                        return context.getReferenceResolver().resolve(type + "VariableExtractorBuilder", VariableExtractor.Builder.class);
+                    }
+
+                    throw new CitrusRuntimeException(String.format("Missing proper variable extractor implementation of type '%s' - " +
+                            "consider adding proper validation module to the project", type));
+                });
     }
 
     /**

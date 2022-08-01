@@ -54,6 +54,22 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Send }
+     *
+     */
+    public Send createSend() {
+        return new Send();
+    }
+
+    /**
+     * Create an instance of {@link Receive }
+     *
+     */
+    public Receive createReceive() {
+        return new Receive();
+    }
+
+    /**
      * Create an instance of {@link Print }
      *
      */
@@ -67,6 +83,14 @@ public class ObjectFactory {
      */
     public Sleep createSleep() {
         return new Sleep();
+    }
+
+    /**
+     * Create an instance of {@link Delay }
+     *
+     */
+    public Delay createDelay() {
+        return new Delay();
     }
 
     /**

@@ -16,6 +16,7 @@
 
 package com.consol.citrus;
 
+import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.common.Described;
@@ -146,4 +147,10 @@ public interface TestCase extends TestActionContainer, Named, Described {
      * @param builder
      */
     void addFinalAction(TestActionBuilder<?> builder);
+
+    /**
+     * Provides access to the raw test action builders used to construct the list of actions in this test case.
+     * @return
+     */
+    List<TestActionBuilder<?>> getActionBuilders();
 }
