@@ -75,12 +75,16 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
         return builder.build();
     }
 
-    public void setDescription(String value) {
+    @XmlElement
+    public CreateVariables setDescription(String value) {
         builder.description(value);
+        return this;
     }
 
-    public void setVariables(List<Variable> variables) {
+
+    public CreateVariables setVariables(List<Variable> variables) {
         this.variables = variables;
+        return this;
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

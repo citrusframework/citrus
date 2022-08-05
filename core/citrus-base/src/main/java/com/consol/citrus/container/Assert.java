@@ -163,6 +163,20 @@ public class Assert extends AbstractActionContainer {
         }
 
         /**
+         * Catch exception type during execution.
+         * @param type
+         * @return
+         */
+        public Builder exception(String type) {
+            try {
+                this.exception = (Class<? extends Throwable>) Class.forName(type);
+            } catch (ClassNotFoundException e) {
+                throw new CitrusRuntimeException(String.format("Failed to instantiate exception class of type '%s'", type), e);
+            }
+            return this;
+        }
+
+        /**
          * Expect error message in exception.
          * @param message
          */
