@@ -21,11 +21,8 @@ package com.consol.citrus.xml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
@@ -35,11 +32,6 @@ import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
-import com.consol.citrus.xml.actions.CreateVariables;
-import com.consol.citrus.xml.actions.Echo;
-import com.consol.citrus.xml.actions.Print;
-import com.consol.citrus.xml.actions.Receive;
-import com.consol.citrus.xml.actions.Sleep;
 import com.consol.citrus.xml.actions.script.ScriptDefinitionType;
 
 /**
@@ -89,7 +81,15 @@ public class XmlTestCase {
         actions.getActions().stream()
                 .filter(t -> t instanceof TestActionBuilder<?>)
                 .map(TestActionBuilder.class::cast)
-                .forEach(delegate::addTestActions);
+                .forEach(delegate::addTestAction);
+    }
+
+    @XmlElement
+    public void setFinally(TestActions actions) {
+        actions.getActions().stream()
+                .filter(t -> t instanceof TestActionBuilder<?>)
+                .map(TestActionBuilder.class::cast)
+                .forEach(delegate::addFinalAction);
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
@@ -174,19 +174,4 @@ public class XmlTestCase {
         }
     }
 
-    private static class TestActions {
-        @XmlElementRefs({
-                @XmlElementRef(name = "echo", type = Echo.class, required = false),
-                @XmlElementRef(name = "print", type = Print.class, required = false),
-                @XmlElementRef(name = "sleep", type = Sleep.class, required = false),
-                @XmlElementRef(name = "receive", type = Receive.class, required = false),
-                @XmlElementRef(name = "create-variables", type = CreateVariables.class, required = false),
-        })
-        @XmlAnyElement(lax = true)
-        private List<Object> actions;
-
-        public List<Object> getActions() {
-            return actions;
-        }
-    }
 }
