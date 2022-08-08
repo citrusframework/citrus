@@ -26,10 +26,13 @@ import java.util.List;
 
 import com.consol.citrus.xml.actions.CreateVariables;
 import com.consol.citrus.xml.actions.Echo;
+import com.consol.citrus.xml.actions.ExpectTimeout;
 import com.consol.citrus.xml.actions.Fail;
+import com.consol.citrus.xml.actions.LoadProperties;
 import com.consol.citrus.xml.actions.Print;
 import com.consol.citrus.xml.actions.Receive;
 import com.consol.citrus.xml.actions.Sleep;
+import com.consol.citrus.xml.actions.StopTimer;
 import com.consol.citrus.xml.container.Assert;
 import com.consol.citrus.xml.container.Async;
 import com.consol.citrus.xml.container.Catch;
@@ -52,6 +55,8 @@ public class TestActions {
             @XmlElementRef(name = "sleep", type = Sleep.class, required = false),
             @XmlElementRef(name = "receive", type = Receive.class, required = false),
             @XmlElementRef(name = "create-variables", type = CreateVariables.class, required = false),
+            @XmlElementRef(name = "load", type = LoadProperties.class, required = false),
+            @XmlElementRef(name = "expect-timeout", type = ExpectTimeout.class, required = false),
             @XmlElementRef(name = "fail", type = Fail.class, required = false),
             @XmlElementRef(name = "iterate", type = Iterate.class, required = false),
             @XmlElementRef(name = "sequential", type = Sequential.class, required = false),
@@ -64,6 +69,7 @@ public class TestActions {
             @XmlElementRef(name = "waitFor", type = WaitFor.class, required = false),
             @XmlElementRef(name = "async", type = Async.class, required = false),
             @XmlElementRef(name = "timer", type = Timer.class, required = false),
+            @XmlElementRef(name = "stop-timer", type = StopTimer.class, required = false),
     })
     @XmlAnyElement(lax = true)
     private List<Object> actions;
