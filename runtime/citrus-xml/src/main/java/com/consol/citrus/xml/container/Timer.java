@@ -24,18 +24,26 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.xml.TestActions;
 
 /**
  * @author Christoph Deppisch
  */
 @XmlRootElement(name = "timer")
-public class Timer implements TestActionBuilder<com.consol.citrus.container.Timer> {
+public class Timer implements TestActionBuilder<com.consol.citrus.container.Timer>, ReferenceResolverAware {
 
     private final com.consol.citrus.container.Timer.Builder builder = new com.consol.citrus.container.Timer.Builder();
 
+    private ReferenceResolver referenceResolver;
+
     @Override
     public com.consol.citrus.container.Timer build() {
+        builder.getActions().stream()
+                .filter(builder -> builder instanceof ReferenceResolverAware)
+                .forEach(builder -> ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver));
+
         return builder.build();
     }
 
@@ -83,5 +91,10 @@ public class Timer implements TestActionBuilder<com.consol.citrus.container.Time
                 .toArray(TestActionBuilder<?>[]::new));
 
         return this;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }

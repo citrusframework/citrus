@@ -23,18 +23,26 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.xml.TestActions;
 
 /**
  * @author Christoph Deppisch
  */
 @XmlRootElement(name = "parallel")
-public class Parallel implements TestActionBuilder<com.consol.citrus.container.Parallel> {
+public class Parallel implements TestActionBuilder<com.consol.citrus.container.Parallel>, ReferenceResolverAware {
 
     private final com.consol.citrus.container.Parallel.Builder builder = new com.consol.citrus.container.Parallel.Builder();
 
+    private ReferenceResolver referenceResolver;
+
     @Override
     public com.consol.citrus.container.Parallel build() {
+        builder.getActions().stream()
+                .filter(builder -> builder instanceof ReferenceResolverAware)
+                .forEach(builder -> ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver));
+
         return builder.build();
     }
 
@@ -52,5 +60,10 @@ public class Parallel implements TestActionBuilder<com.consol.citrus.container.P
                 .toArray(TestActionBuilder<?>[]::new));
 
         return this;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }

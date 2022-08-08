@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
 import java.util.List;
 
+import com.consol.citrus.xml.actions.Action;
 import com.consol.citrus.xml.actions.CreateVariables;
 import com.consol.citrus.xml.actions.Echo;
 import com.consol.citrus.xml.actions.ExpectTimeout;
@@ -50,6 +51,7 @@ import com.consol.citrus.xml.container.WaitFor;
  */
 public class TestActions {
     @XmlElementRefs({
+            @XmlElementRef(name = "action", type = Action.class, required = false),
             @XmlElementRef(name = "echo", type = Echo.class, required = false),
             @XmlElementRef(name = "print", type = Print.class, required = false),
             @XmlElementRef(name = "sleep", type = Sleep.class, required = false),
