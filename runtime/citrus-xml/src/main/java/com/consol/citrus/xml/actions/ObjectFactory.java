@@ -117,4 +117,44 @@ public class ObjectFactory {
         return new LoadProperties();
     }
 
+    /**
+     * Create an instance of {@link StopTime }
+     *
+     */
+    public StopTime createStopTime() {
+        return new StopTime();
+    }
+
+    /**
+     * Create an instance of {@link Start }
+     *
+     */
+    public Start createStart() {
+        return new Start();
+    }
+
+    /**
+     * Create an instance of {@link Stop }
+     *
+     */
+    public Stop createStop() {
+        return new Stop();
+    }
+
+    /**
+     * Create an instance of {@link TraceVariables }
+     *
+     */
+    public TraceVariables createTraceVariables() {
+        return new TraceVariables();
+    }
+
+    /**
+     * Create an instance of {@link PurgeEndpoint }
+     *
+     */
+    public PurgeEndpoint createPurgeEndpoint() {
+        return new PurgeEndpoint();
+    }
+
 }

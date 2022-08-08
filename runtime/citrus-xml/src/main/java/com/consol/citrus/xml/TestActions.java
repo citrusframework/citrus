@@ -31,9 +31,14 @@ import com.consol.citrus.xml.actions.ExpectTimeout;
 import com.consol.citrus.xml.actions.Fail;
 import com.consol.citrus.xml.actions.LoadProperties;
 import com.consol.citrus.xml.actions.Print;
+import com.consol.citrus.xml.actions.PurgeEndpoint;
 import com.consol.citrus.xml.actions.Receive;
 import com.consol.citrus.xml.actions.Sleep;
+import com.consol.citrus.xml.actions.Start;
+import com.consol.citrus.xml.actions.Stop;
+import com.consol.citrus.xml.actions.StopTime;
 import com.consol.citrus.xml.actions.StopTimer;
+import com.consol.citrus.xml.actions.TraceVariables;
 import com.consol.citrus.xml.container.Assert;
 import com.consol.citrus.xml.container.Async;
 import com.consol.citrus.xml.container.Catch;
@@ -72,6 +77,11 @@ public class TestActions {
             @XmlElementRef(name = "async", type = Async.class, required = false),
             @XmlElementRef(name = "timer", type = Timer.class, required = false),
             @XmlElementRef(name = "stop-timer", type = StopTimer.class, required = false),
+            @XmlElementRef(name = "stop-time", type = StopTime.class, required = false),
+            @XmlElementRef(name = "start", type = Start.class, required = false),
+            @XmlElementRef(name = "stop", type = Stop.class, required = false),
+            @XmlElementRef(name = "trace-variables", type = TraceVariables.class, required = false),
+            @XmlElementRef(name = "purge-endpoint", type = PurgeEndpoint.class, required = false),
     })
     @XmlAnyElement(lax = true)
     private List<Object> actions;
