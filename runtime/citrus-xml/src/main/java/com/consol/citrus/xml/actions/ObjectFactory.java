@@ -101,6 +101,20 @@ public class ObjectFactory {
         return new CreateVariables();
     }
 
+    /**
+     * Create an instance of {@link StopTimer }
+     *
+     */
+    public StopTimer createStopTimer() {
+        return new StopTimer();
+    }
 
+    /**
+     * Create an instance of {@link LoadProperties }
+     *
+     */
+    public LoadProperties createLoadProperties() {
+        return new LoadProperties();
+    }
 
 }

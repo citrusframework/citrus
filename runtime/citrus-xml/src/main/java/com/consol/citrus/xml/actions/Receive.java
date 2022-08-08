@@ -427,6 +427,12 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         return this;
     }
 
+    @XmlAttribute
+    public Receive setSelect(String value) {
+        builder.selector(value);
+        return this;
+    }
+
     @XmlElement
     public Receive setSelector(Selector selector) {
         if (selector.selectorValue != null) {
