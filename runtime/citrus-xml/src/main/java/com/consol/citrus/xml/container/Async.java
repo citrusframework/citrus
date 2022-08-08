@@ -23,15 +23,23 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.xml.TestActions;
 
 @XmlRootElement(name = "async")
-public class Async implements TestActionBuilder<com.consol.citrus.container.Async> {
+public class Async implements TestActionBuilder<com.consol.citrus.container.Async>, ReferenceResolverAware {
 
     private final com.consol.citrus.container.Async.Builder builder = new com.consol.citrus.container.Async.Builder();
 
+    private ReferenceResolver referenceResolver;
+
     @Override
     public com.consol.citrus.container.Async build() {
+        builder.getActions().stream()
+                .filter(builder -> builder instanceof ReferenceResolverAware)
+                .forEach(builder -> ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver));
+
         return builder.build();
     }
 
@@ -69,5 +77,10 @@ public class Async implements TestActionBuilder<com.consol.citrus.container.Asyn
                 .toArray(TestActionBuilder<?>[]::new));
 
         return this;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }

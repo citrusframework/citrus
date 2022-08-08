@@ -17,50 +17,45 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.xml.container;
+package com.consol.citrus.xml.actions;
 
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.container.Sequence;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
-import com.consol.citrus.xml.TestActions;
 
 /**
  * @author Christoph Deppisch
  */
-@XmlRootElement(name = "sequential")
-public class Sequential implements TestActionBuilder<Sequence>, ReferenceResolverAware {
+@XmlRootElement(name = "action")
+public class Action implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
-    private final Sequence.Builder builder = new Sequence.Builder();
-
+    private String reference;
     private ReferenceResolver referenceResolver;
 
+    @XmlAttribute(required = true)
+    public Action setReference(String reference) {
+        this.reference = reference;
+        return this;
+    }
+
     @Override
-    public Sequence build() {
-        builder.getActions().stream()
-                .filter(builder -> builder instanceof ReferenceResolverAware)
-                .forEach(builder -> ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver));
+    public TestAction build() {
+        if (referenceResolver != null) {
+            if (referenceResolver.isResolvable(reference, TestActionBuilder.class)) {
+                return referenceResolver.resolve(reference, TestActionBuilder.class).build();
+            }
 
-        return builder.build();
-    }
+            if (referenceResolver.isResolvable(reference, TestAction.class)) {
+                return referenceResolver.resolve(reference, TestAction.class);
+            }
+        }
 
-    @XmlElement
-    public Sequential setDescription(String value) {
-        builder.description(value);
-        return this;
-    }
-
-    @XmlElement
-    public Sequential setActions(TestActions actions) {
-        builder.actions(actions.getActions().stream()
-                .filter(t -> t instanceof TestActionBuilder<?>)
-                .map(TestActionBuilder.class::cast)
-                .toArray(TestActionBuilder<?>[]::new));
-
-        return this;
+        throw new CitrusRuntimeException(String.format("Unable to resolve test action with reference '%s'", reference));
     }
 
     @Override

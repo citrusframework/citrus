@@ -24,18 +24,26 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.xml.TestActions;
 
 /**
  * @author Christoph Deppisch
  */
 @XmlRootElement(name = "repeat")
-public class Repeat implements TestActionBuilder<com.consol.citrus.container.RepeatUntilTrue> {
+public class Repeat implements TestActionBuilder<com.consol.citrus.container.RepeatUntilTrue>, ReferenceResolverAware {
 
     private final com.consol.citrus.container.RepeatUntilTrue.Builder builder = new com.consol.citrus.container.RepeatUntilTrue.Builder();
 
+    private ReferenceResolver referenceResolver;
+
     @Override
     public com.consol.citrus.container.RepeatUntilTrue build() {
+        builder.getActions().stream()
+                .filter(builder -> builder instanceof ReferenceResolverAware)
+                .forEach(builder -> ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver));
+
         return builder.build();
     }
 
@@ -71,5 +79,10 @@ public class Repeat implements TestActionBuilder<com.consol.citrus.container.Rep
                 .toArray(TestActionBuilder<?>[]::new));
 
         return this;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }
