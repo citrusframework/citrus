@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlElementRefs;
 import java.util.List;
 
 import com.consol.citrus.xml.actions.Action;
+import com.consol.citrus.xml.actions.ApplyTemplate;
 import com.consol.citrus.xml.actions.CreateVariables;
 import com.consol.citrus.xml.actions.Echo;
 import com.consol.citrus.xml.actions.ExpectTimeout;
@@ -82,6 +83,7 @@ public class TestActions {
             @XmlElementRef(name = "stop", type = Stop.class, required = false),
             @XmlElementRef(name = "trace-variables", type = TraceVariables.class, required = false),
             @XmlElementRef(name = "purge-endpoint", type = PurgeEndpoint.class, required = false),
+            @XmlElementRef(name = "apply-template", type = ApplyTemplate.class, required = false),
     })
     @XmlAnyElement(lax = true)
     private List<Object> actions;

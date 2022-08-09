@@ -41,8 +41,8 @@ public class Catch implements TestActionBuilder<com.consol.citrus.container.Catc
     @Override
     public com.consol.citrus.container.Catch build() {
         builder.getActions().stream()
-                .filter(builder -> builder instanceof ReferenceResolverAware)
-                .forEach(builder -> ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver));
+                .filter(action -> action instanceof ReferenceResolverAware)
+                .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));
 
         return builder.build();
     }

@@ -37,8 +37,8 @@ public class Async implements TestActionBuilder<com.consol.citrus.container.Asyn
     @Override
     public com.consol.citrus.container.Async build() {
         builder.getActions().stream()
-                .filter(builder -> builder instanceof ReferenceResolverAware)
-                .forEach(builder -> ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver));
+                .filter(action -> action instanceof ReferenceResolverAware)
+                .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));
 
         return builder.build();
     }

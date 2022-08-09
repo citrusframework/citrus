@@ -41,8 +41,8 @@ public class Timer implements TestActionBuilder<com.consol.citrus.container.Time
     @Override
     public com.consol.citrus.container.Timer build() {
         builder.getActions().stream()
-                .filter(builder -> builder instanceof ReferenceResolverAware)
-                .forEach(builder -> ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver));
+                .filter(action -> action instanceof ReferenceResolverAware)
+                .forEach(action -> ((ReferenceResolverAware) action).setReferenceResolver(referenceResolver));
 
         return builder.build();
     }

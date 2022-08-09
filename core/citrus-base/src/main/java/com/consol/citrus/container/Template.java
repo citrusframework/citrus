@@ -23,13 +23,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.actions.NoopTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionUtils;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 import org.slf4j.Logger;
@@ -55,7 +58,9 @@ import org.slf4j.LoggerFactory;
 public class Template extends AbstractTestAction {
 
     /** List of actions to be executed */
-    private final List<TestAction> actions;
+    private final List<TestActionBuilder<?>> actions;
+
+    private final String templateName;
 
     /** List of parameters to set before execution */
     private final Map<String, String> parameter;
@@ -71,8 +76,11 @@ public class Template extends AbstractTestAction {
      * @param builder
      */
     public Template(AbstractTemplateBuilder<? extends Template, ?> builder) {
-        super(Optional.ofNullable(builder.templateName).orElse("template"), builder);
+        super(Optional.ofNullable(builder.templateName)
+                .map(name  -> "template:" + name)
+                .orElse("template"), builder);
 
+        this.templateName = builder.templateName;
         this.actions = builder.actions;
         this.parameter = builder.parameter;
         this.globalContext = builder.globalContext;
@@ -127,8 +135,8 @@ public class Template extends AbstractTestAction {
             innerContext.setVariable(param, paramValue);
         }
 
-        for (TestAction action: actions) {
-            action.execute(innerContext);
+        for (TestActionBuilder<?> action: actions) {
+            action.build().execute(innerContext);
         }
 
         log.info("Template was executed successfully");
@@ -155,7 +163,19 @@ public class Template extends AbstractTestAction {
      * @return the actions
      */
     public List<TestAction> getActions() {
+        return actions.stream().map(TestActionBuilder::build).collect(Collectors.toList());
+    }
+
+    /**
+     * Gets the list of action builders.
+     * @return the action builders.
+     */
+    public List<TestActionBuilder<?>> getActionBuilders() {
         return actions;
+    }
+
+    public String getTemplateName() {
+        return templateName;
     }
 
     /**
@@ -186,8 +206,8 @@ public class Template extends AbstractTestAction {
     public static abstract class AbstractTemplateBuilder<T extends Template, B extends AbstractTemplateBuilder<T, B>> extends AbstractTestActionBuilder<T, B> {
 
         private String templateName;
-        private List<TestAction> actions = new ArrayList<>();
-        private Map<String, String> parameter = new LinkedHashMap<>();
+        private final List<TestActionBuilder<?>> actions = new ArrayList<>();
+        private final Map<String, String> parameter = new LinkedHashMap<>();
         private boolean globalContext = true;
 
         private ReferenceResolver referenceResolver;
@@ -241,7 +261,32 @@ public class Template extends AbstractTestAction {
          * @return
          */
         public B actions(List<TestAction> actions) {
-            this.actions = actions;
+            return actions(actions.stream()
+                    .filter(action -> !(action instanceof NoopTestAction))
+                    .map(action -> (TestActionBuilder<?>)() -> action)
+                    .collect(Collectors.toList())
+                    .toArray(new TestActionBuilder<?>[]{}));
+        }
+
+        /**
+         * Adds test action builders to the template.
+         * @param actions
+         * @return
+         */
+        public B actions(TestActionBuilder<?>... actions) {
+            for (int i = 0; i < actions.length; i++) {
+                TestActionBuilder<?> current = actions[i];
+
+                if (current.build() instanceof NoopTestAction) {
+                    continue;
+                }
+
+                if (this.actions.size() == i) {
+                    this.actions.add(current);
+                } else if (!resolveActionBuilder(this.actions.get(i)).equals(resolveActionBuilder(current))) {
+                    this.actions.add(i, current);
+                }
+            }
             return self;
         }
 
@@ -254,17 +299,37 @@ public class Template extends AbstractTestAction {
             return self;
         }
 
+        /**
+         * Gets the list of test actions for this template.
+         * @return
+         */
+        public List<TestActionBuilder<?>> getActions() {
+            return actions;
+        }
+
         protected void onBuild() {
             if (referenceResolver != null && templateName != null) {
                 Template rootTemplate = referenceResolver.resolve(templateName, Template.class);
                 globalContext(rootTemplate.isGlobalContext() && globalContext);
                 actor(Optional.ofNullable(getActor()).orElse(rootTemplate.getActor()));
-                parameters(Optional.ofNullable(rootTemplate.getParameter()).map(rootParams -> {
-                    rootParams.putAll(parameter);
-                    return rootParams;
-                }).orElse(parameter));
-                actions(rootTemplate.getActions());
+                Map<String, String> mergedParameters = new LinkedHashMap<>();
+                mergedParameters.putAll(rootTemplate.getParameter());
+                mergedParameters.putAll(parameter);
+                parameters(mergedParameters);
+                actions(rootTemplate.getActionBuilders().toArray(TestActionBuilder[]::new));
             }
+        }
+
+        /**
+         * Resolve action builder and takes care of delegating builders.
+         * @param builder the builder maybe a delegating builder.
+         * @return the builder itself or the delegate builder if this builder is a delegating builder.
+         */
+        private TestActionBuilder<?> resolveActionBuilder(TestActionBuilder<?> builder) {
+            if (builder instanceof DelegatingTestActionBuilder) {
+                return resolveActionBuilder(((DelegatingTestActionBuilder<?>) builder).getDelegate());
+            }
+            return builder;
         }
     }
 }
