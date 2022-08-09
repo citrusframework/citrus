@@ -86,7 +86,7 @@ public class StepTemplate extends Template {
      */
     public static final class Builder extends Template.AbstractTemplateBuilder<StepTemplate, Builder> {
 
-        private List<String> parameterNames = new ArrayList<>();
+        private final List<String> parameterNames = new ArrayList<>();
         private Pattern pattern;
 
         public Builder parameterNames(String... parameterNames) {

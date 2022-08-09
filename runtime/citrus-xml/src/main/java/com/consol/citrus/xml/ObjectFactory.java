@@ -21,6 +21,8 @@ package com.consol.citrus.xml;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
+import com.consol.citrus.xml.container.Template;
+
 /**
  * This object contains factory methods for each
  * Java content interface and Java element interface
@@ -51,6 +53,14 @@ public class ObjectFactory {
      */
     public XmlTestCase createXmlTestCase() {
         return new XmlTestCase();
+    }
+
+    /**
+     * Create an instance of {@link Template }
+     *
+     */
+    public Template createTemplate() {
+        return new Template();
     }
 
 }
