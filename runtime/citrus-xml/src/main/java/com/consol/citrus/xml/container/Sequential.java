@@ -55,11 +55,7 @@ public class Sequential implements TestActionBuilder<Sequence>, ReferenceResolve
 
     @XmlElement
     public Sequential setActions(TestActions actions) {
-        builder.actions(actions.getActions().stream()
-                .filter(t -> t instanceof TestActionBuilder<?>)
-                .map(TestActionBuilder.class::cast)
-                .toArray(TestActionBuilder<?>[]::new));
-
+        builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
         return this;
     }
 

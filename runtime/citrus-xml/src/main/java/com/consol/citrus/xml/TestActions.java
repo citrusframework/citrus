@@ -19,11 +19,21 @@
 
 package com.consol.citrus.xml;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.actions.Action;
 import com.consol.citrus.xml.actions.ApplyTemplate;
 import com.consol.citrus.xml.actions.CreateVariables;
@@ -40,6 +50,7 @@ import com.consol.citrus.xml.actions.Stop;
 import com.consol.citrus.xml.actions.StopTime;
 import com.consol.citrus.xml.actions.StopTimer;
 import com.consol.citrus.xml.actions.TraceVariables;
+import com.consol.citrus.xml.actions.XmlTestActionBuilder;
 import com.consol.citrus.xml.container.Assert;
 import com.consol.citrus.xml.container.Async;
 import com.consol.citrus.xml.container.Catch;
@@ -51,11 +62,16 @@ import com.consol.citrus.xml.container.RepeatOnError;
 import com.consol.citrus.xml.container.Sequential;
 import com.consol.citrus.xml.container.Timer;
 import com.consol.citrus.xml.container.WaitFor;
+import org.w3c.dom.Node;
 
 /**
  * @author Christoph Deppisch
  */
 public class TestActions {
+
+    /** Unmarshaller cache filled with instances created for custom action Xml element refs */
+    private static final Map<String, Unmarshaller> UNMARSHALLER_CACHE = new HashMap<>();
+
     @XmlElementRefs({
             @XmlElementRef(name = "action", type = Action.class, required = false),
             @XmlElementRef(name = "echo", type = Echo.class, required = false),
@@ -90,5 +106,47 @@ public class TestActions {
 
     public List<Object> getActions() {
         return actions;
+    }
+
+    /**
+     * Converts given XML actions to normal test action builder instances.
+     * @return nested actions as test action builders.
+     */
+    public List<TestActionBuilder<?>> getActionBuilders() {
+        List<TestActionBuilder<?>> builders = new ArrayList<>();
+
+        for (Object object : getActions()) {
+            Object action = object;
+
+            if (object instanceof JAXBElement) {
+                action = ((JAXBElement<?>) object).getValue();
+            }
+
+            if (object instanceof Node) {
+                Node node = (Node) object;
+                Optional<TestActionBuilder<?>> builder = XmlTestActionBuilder.lookup(node.getLocalName());
+                if (builder.isPresent()) {
+                    try {
+                        Unmarshaller unmarshaller;
+                        if (UNMARSHALLER_CACHE.containsKey(builder.get().getClass().getName())) {
+                            unmarshaller = UNMARSHALLER_CACHE.get(builder.get().getClass().getName());
+                        } else {
+                            unmarshaller = JAXBContext.newInstance(builder.get().getClass()).createUnmarshaller();
+                            UNMARSHALLER_CACHE.put(builder.get().getClass().getName(), unmarshaller);
+                        }
+
+                        action = unmarshaller.unmarshal(node, builder.get().getClass()).getValue();
+                    } catch (JAXBException e) {
+                        throw new CitrusRuntimeException("Failed to create XMLTestLoader instance", e);
+                    }
+                }
+            }
+
+            if (action instanceof TestActionBuilder<?>) {
+                builders.add((TestActionBuilder<?>) action);
+            }
+        }
+
+        return builders;
     }
 }

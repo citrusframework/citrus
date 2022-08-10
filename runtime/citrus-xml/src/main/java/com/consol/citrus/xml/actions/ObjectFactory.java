@@ -157,4 +157,10 @@ public class ObjectFactory {
         return new PurgeEndpoint();
     }
 
+    /**
+     * Create an instance of {@link Action }
+     */
+    public Action createAction() {
+        return new Action();
+    }
 }

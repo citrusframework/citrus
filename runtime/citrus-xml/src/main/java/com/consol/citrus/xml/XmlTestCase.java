@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.DefaultTestCase;
-import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.xml.actions.script.ScriptDefinitionType;
@@ -78,18 +77,13 @@ public class XmlTestCase {
 
     @XmlElement
     public void setActions(TestActions actions) {
-        actions.getActions().stream()
-                .filter(t -> t instanceof TestActionBuilder<?>)
-                .map(TestActionBuilder.class::cast)
+        actions.getActionBuilders()
                 .forEach(delegate::addTestAction);
     }
 
     @XmlElement
     public void setFinally(TestActions actions) {
-        actions.getActions().stream()
-                .filter(t -> t instanceof TestActionBuilder<?>)
-                .map(TestActionBuilder.class::cast)
-                .forEach(delegate::addFinalAction);
+        actions.getActionBuilders().forEach(delegate::addFinalAction);
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

@@ -20,6 +20,7 @@
 package com.consol.citrus.xml.actions;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +34,12 @@ import com.consol.citrus.actions.SleepAction;
 public class Sleep implements TestActionBuilder<SleepAction> {
 
     private final SleepAction.Builder builder = new SleepAction.Builder();
+
+    @XmlElement
+    public Sleep setDescription(String value) {
+        builder.description(value);
+        return this;
+    }
 
     @XmlAttribute
     public Sleep setTime(String time) {

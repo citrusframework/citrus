@@ -81,7 +81,6 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
         return this;
     }
 
-
     public CreateVariables setVariables(List<Variable> variables) {
         this.variables = variables;
         return this;
