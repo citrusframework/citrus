@@ -50,6 +50,7 @@ import com.consol.citrus.xml.actions.Stop;
 import com.consol.citrus.xml.actions.StopTime;
 import com.consol.citrus.xml.actions.StopTimer;
 import com.consol.citrus.xml.actions.TraceVariables;
+import com.consol.citrus.xml.actions.Transform;
 import com.consol.citrus.xml.actions.XmlTestActionBuilder;
 import com.consol.citrus.xml.container.Assert;
 import com.consol.citrus.xml.container.Async;
@@ -99,6 +100,7 @@ public class TestActions {
             @XmlElementRef(name = "stop", type = Stop.class, required = false),
             @XmlElementRef(name = "trace-variables", type = TraceVariables.class, required = false),
             @XmlElementRef(name = "purge-endpoint", type = PurgeEndpoint.class, required = false),
+            @XmlElementRef(name = "transform", type = Transform.class, required = false),
             @XmlElementRef(name = "apply-template", type = ApplyTemplate.class, required = false),
     })
     @XmlAnyElement(lax = true)
