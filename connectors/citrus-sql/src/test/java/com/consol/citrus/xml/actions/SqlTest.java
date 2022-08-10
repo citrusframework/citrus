@@ -182,4 +182,13 @@ public class SqlTest extends AbstractXmlActionTest {
         Assert.assertEquals(queryAction.getScriptValidationContext().getValidationScriptResourcePath(), "classpath:com/consol/citrus/xml/validate.groovy");
     }
 
+    @Test
+    public void shouldLookupTestActionBuilder() {
+        Assert.assertTrue(XmlTestActionBuilder.lookup("sql").isPresent());
+        Assert.assertEquals(XmlTestActionBuilder.lookup("sql").get().getClass(), Sql.class);
+
+        Assert.assertTrue(XmlTestActionBuilder.lookup("plsql").isPresent());
+        Assert.assertEquals(XmlTestActionBuilder.lookup("plsql").get().getClass(), Plsql.class);
+    }
+
 }
