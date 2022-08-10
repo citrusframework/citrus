@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -17,50 +17,59 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.xml.actions;
 
-import com.consol.citrus.config.CitrusNamespaceParserRegistry;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.testng.AbstractActionParserTest;
+import com.consol.citrus.xml.XmlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class GroovyActionParserTest extends AbstractActionParserTest<GroovyAction> {
+public class GroovyTest extends AbstractXmlActionTest {
 
     @Test
-    public void testActionParser() {
-        assertActionCount(4);
-        assertActionClassAndName(GroovyAction.class, "groovy");
+    public void shouldLoadGroovy() {
+        XmlTestLoader testLoader = createTestLoader("classpath:com/consol/citrus/xml/actions/groovy-test.xml");
 
-        GroovyAction action = getNextTestActionFromTest();
+        testLoader.load();
+        TestCase result = testLoader.getTestCase();
+        Assert.assertEquals(result.getName(), "GroovyTest");
+        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
+        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
+        Assert.assertEquals(result.getActionCount(), 4L);
+        Assert.assertEquals(result.getTestAction(0).getClass(), GroovyAction.class);
+
+        int actionIndex = 0;
+
+        GroovyAction action = (GroovyAction) result.getTestAction(actionIndex++);
         Assert.assertNull(action.getScriptResourcePath());
         Assert.assertEquals(action.getScriptTemplatePath(), "classpath:com/consol/citrus/script/script-template.groovy");
         Assert.assertEquals(action.getScript().trim(), "println 'Hello Citrus'");
 
-        action = getNextTestActionFromTest();
+        action = (GroovyAction) result.getTestAction(actionIndex++);
         Assert.assertNull(action.getScriptResourcePath());
         Assert.assertNotNull(action.getScript());
         Assert.assertFalse(action.isUseScriptTemplate());
 
-        action = getNextTestActionFromTest();
+        action = (GroovyAction) result.getTestAction(actionIndex++);
         Assert.assertNull(action.getScriptResourcePath());
         Assert.assertEquals(action.getScriptTemplatePath(), "classpath:com/consol/citrus/script/custom-script-template.groovy");
         Assert.assertNotNull(action.getScript());
 
-        action = getNextTestActionFromTest();
+        action = (GroovyAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(action.getScriptResourcePath());
         Assert.assertEquals(action.getScriptResourcePath(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertNull(action.getScript());
     }
 
     @Test
-    public void shouldLookupTestActionParser() {
-        Assert.assertTrue(CitrusNamespaceParserRegistry.lookupBeanParser().containsKey("groovy"));
-        Assert.assertEquals(CitrusNamespaceParserRegistry.lookupBeanParser().get("groovy").getClass(), GroovyActionParser.class);
-
-        Assert.assertEquals(CitrusNamespaceParserRegistry.getBeanParser("groovy").getClass(), GroovyActionParser.class);
+    public void shouldLookupTestActionBuilder() {
+        Assert.assertTrue(XmlTestActionBuilder.lookup("groovy").isPresent());
+        Assert.assertEquals(XmlTestActionBuilder.lookup("groovy").get().getClass(), Groovy.class);
     }
+
 }
