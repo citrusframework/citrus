@@ -74,7 +74,7 @@ public class TemplateTestDesignerTest extends UnitTestSupport {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");
+        Assert.assertEquals(test.getActions().get(0).getName(), "template:fooTemplate");
 
         Template container = (Template)test.getActions().get(0);
         Assert.assertTrue(container.isGlobalContext());
@@ -86,7 +86,7 @@ public class TemplateTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testTemplateBuilderGlobalContext() {
-        List<TestAction> actions = new ArrayList<TestAction>();
+        List<TestAction> actions = new ArrayList<>();
         actions.add(new EchoAction.Builder().build());
         Template rootTemplate = new Template.Builder()
                 .templateName("fooTemplate")
@@ -114,7 +114,7 @@ public class TemplateTestDesignerTest extends UnitTestSupport {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");
+        Assert.assertEquals(test.getActions().get(0).getName(), "template:fooTemplate");
 
         Template container = (Template)test.getActions().get(0);
         Assert.assertFalse(container.isGlobalContext());
