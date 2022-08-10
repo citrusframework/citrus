@@ -54,11 +54,7 @@ public class Parallel implements TestActionBuilder<com.consol.citrus.container.P
 
     @XmlElement
     public Parallel setActions(TestActions actions) {
-        builder.actions(actions.getActions().stream()
-                .filter(t -> t instanceof TestActionBuilder<?>)
-                .map(TestActionBuilder.class::cast)
-                .toArray(TestActionBuilder<?>[]::new));
-
+        builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
         return this;
     }
 

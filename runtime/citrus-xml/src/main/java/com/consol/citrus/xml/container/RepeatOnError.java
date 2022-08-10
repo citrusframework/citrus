@@ -84,11 +84,7 @@ public class RepeatOnError implements TestActionBuilder<com.consol.citrus.contai
 
     @XmlElement
     public RepeatOnError setActions(TestActions actions) {
-        builder.actions(actions.getActions().stream()
-                .filter(t -> t instanceof TestActionBuilder<?>)
-                .map(TestActionBuilder.class::cast)
-                .toArray(TestActionBuilder<?>[]::new));
-
+        builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
         return this;
     }
 

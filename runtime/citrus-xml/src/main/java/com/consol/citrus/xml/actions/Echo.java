@@ -34,6 +34,12 @@ public class Echo implements TestActionBuilder<EchoAction> {
 
     private final EchoAction.Builder builder = new EchoAction.Builder();
 
+    @XmlElement
+    public Echo setDescription(String value) {
+        builder.description(value);
+        return this;
+    }
+
     @XmlAttribute
     public Echo setMessage(String message) {
         builder.message(message);
