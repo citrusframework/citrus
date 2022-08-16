@@ -24,7 +24,6 @@ import com.consol.citrus.http.message.HttpMessageBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractActionParserTest;
-import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;
@@ -37,11 +36,8 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
         assertActionCount(6);
         assertActionClassAndName(SendMessageAction.class, "http:send-request");
 
-        DefaultMessageBuilder messageBuilder;
-        HttpMessageBuilder httpMessageBuilder;
-
         SendMessageAction action = getNextTestActionFromTest();
-        httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
+        HttpMessageBuilder httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 3L);

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.xml.actions;
+package com.consol.citrus.http.xml;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusContext;

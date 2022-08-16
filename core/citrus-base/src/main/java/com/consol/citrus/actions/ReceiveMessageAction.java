@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -35,16 +34,19 @@ import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
-import com.consol.citrus.message.MessageProcessorAdapter;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.message.WithPayloadBuilder;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
+import com.consol.citrus.message.builder.MessageBuilderSupport;
 import com.consol.citrus.message.builder.ReceiveMessageBuilderSupport;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
-import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.DefaultMessageHeaderValidator;
+import com.consol.citrus.validation.HeaderValidator;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.ValidationContextAdapter;
+import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -123,21 +125,21 @@ public class ReceiveMessageAction extends AbstractTestAction {
     public ReceiveMessageAction(ReceiveMessageActionBuilder<?, ?, ?> builder) {
         super("receive", builder);
 
-        this.endpoint = builder.endpoint;
-        this.endpointUri = builder.endpointUri;
+        this.endpoint = builder.getEndpoint();
+        this.endpointUri = builder.getEndpointUri();
         this.receiveTimeout = builder.receiveTimeout;
         this.messageSelector = builder.messageSelector;
         this.messageSelectorMap = builder.messageSelectorMap;
         this.validators = builder.validators;
         this.validationProcessor = builder.validationProcessor;
         this.validationContexts = builder.getValidationContexts();
-        this.variableExtractors = builder.variableExtractors;
-        this.messageProcessors = builder.messageProcessors;
+        this.variableExtractors = builder.getVariableExtractors();
+        this.messageProcessors = builder.getMessageProcessors();
 
-        this.messageBuilder = builder.messageBuilderSupport.getMessageBuilder();
-        this.dataDictionary = builder.messageBuilderSupport.getDataDictionary();
-        this.controlMessageProcessors = builder.messageBuilderSupport.getControlMessageProcessors();
-        this.messageType = builder.messageBuilderSupport.getMessageType();
+        this.messageBuilder = builder.getMessageBuilderSupport().getMessageBuilder();
+        this.dataDictionary = builder.getMessageBuilderSupport().getDataDictionary();
+        this.controlMessageProcessors = builder.getMessageBuilderSupport().getControlMessageProcessors();
+        this.messageType = builder.getMessageBuilderSupport().getMessageType();
     }
 
     /**
@@ -489,51 +491,21 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     public static abstract class ReceiveMessageActionBuilder<T extends ReceiveMessageAction, M extends ReceiveMessageBuilderSupport<T, B, M>, B extends ReceiveMessageActionBuilder<T, M, B>>
-            extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
-        private Endpoint endpoint;
-        private String endpointUri;
+            extends MessageBuilderSupport.MessageActionBuilder<T, M, B> {
+
         private long receiveTimeout = 0L;
+
         private final Map<String, Object> messageSelectorMap = new HashMap<>();
         private String messageSelector;
+
         private final List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<>();
         private ValidationProcessor validationProcessor;
         private final List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
-        private final List<VariableExtractor> variableExtractors = new ArrayList<>();
-        private final List<MessageProcessor> messageProcessors = new ArrayList<>();
-
-        protected M messageBuilderSupport;
 
         /** Validation context used in this action builder */
         private HeaderValidationContext headerValidationContext;
 
         private final List<String> validatorNames = new ArrayList<>();
-
-        /**
-         * Basic bean reference resolver.
-         */
-        private ReferenceResolver referenceResolver;
-
-        /**
-         * Sets the message endpoint to receive messages from.
-         *
-         * @param messageEndpoint
-         * @return
-         */
-        public B endpoint(final Endpoint messageEndpoint) {
-            this.endpoint = messageEndpoint;
-            return self;
-        }
-
-        /**
-         * Sets the message endpoint uri to receive messages from.
-         *
-         * @param messageEndpointUri
-         * @return
-         */
-        public B endpoint(final String messageEndpointUri) {
-            this.endpointUri = messageEndpointUri;
-            return self;
-        }
 
         /**
          * Adds a custom timeout to this message receiving action.
@@ -544,33 +516,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B timeout(final long receiveTimeout) {
             this.receiveTimeout = receiveTimeout;
             return self;
-        }
-
-        /**
-         * Construct the control message for this receive action.
-         * @return
-         */
-        public M message() {
-            return getMessageBuilderSupport();
-        }
-
-        /**
-         * Sets the control message for this receive action.
-         * @param messageBuilder
-         * @return
-         */
-        public M message(MessageBuilder messageBuilder) {
-            return getMessageBuilderSupport().from(messageBuilder);
-        }
-
-        /**
-         * Expect a control message in this receive action.
-         *
-         * @param controlMessage
-         * @return
-         */
-        public M message(final Message controlMessage) {
-            return getMessageBuilderSupport().from(controlMessage);
         }
 
         /**
@@ -710,38 +655,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
             return self;
         }
 
-        /**
-         * Adds message processor on the received message.
-         * @param processor
-         * @return
-         */
-        public B transform(MessageProcessor processor) {
-            return process(processor);
-        }
-
-        /**
-         * Adds message processor on the received message.
-         * @param adapter
-         * @return
-         */
-        public B transform(MessageProcessorAdapter adapter) {
-            return process(adapter);
-        }
-
-        /**
-         * Adds message processor on the received message as fluent builder.
-         * @param builder
-         * @return
-         */
-        public B transform(MessageProcessor.Builder<?, ?> builder) {
-            return transform(builder.build());
-        }
-
-        /**
-         * Adds message processor on the received message.
-         * @param processor
-         * @return
-         */
+        @Override
         public B process(MessageProcessor processor) {
             if (processor instanceof VariableExtractor) {
                 this.variableExtractors.add((VariableExtractor) processor);
@@ -752,48 +666,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
             }
 
             return self;
-        }
-
-        /**
-         * Adds message processor on the received message as fluent builder.
-         * @param builder
-         * @return
-         */
-        public B process(MessageProcessor.Builder<?, ?> builder) {
-            return process(builder.build());
-        }
-
-        /**
-         * Adds message processor on the received message as fluent builder.
-         * @param adapter
-         * @return
-         */
-        public B process(MessageProcessorAdapter adapter) {
-            return process(adapter.asProcessor());
-        }
-
-        /**
-         * Sets the bean reference resolver.
-         *
-         * @param referenceResolver
-         */
-        public B withReferenceResolver(final ReferenceResolver referenceResolver) {
-            this.referenceResolver = referenceResolver;
-            return self;
-        }
-
-        /**
-         * Specifies the referenceResolver.
-         *
-         * @param referenceResolver
-         */
-        @Override
-        public void setReferenceResolver(ReferenceResolver referenceResolver) {
-            this.referenceResolver = referenceResolver;
-        }
-
-        public M getMessageBuilderSupport() {
-            return messageBuilderSupport;
         }
 
         @Override
@@ -829,12 +701,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
             return doBuild();
         }
-
-        /**
-         * Build method implemented by subclasses.
-         * @return
-         */
-        protected abstract T doBuild();
 
         /**
          * Creates new header validation context if not done before and gets the header validation context.
