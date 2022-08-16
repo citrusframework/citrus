@@ -50,11 +50,11 @@ import static org.mockito.Mockito.when;
  */
 public class HttpServerTest extends AbstractTestNGUnitTest {
 
-    private int port = SocketUtils.findAvailableTcpPort(8080);
-    private String uri = "http://localhost:" + port + "/test";
+    private final int port = SocketUtils.findAvailableTcpPort(8080);
+    private final String uri = "http://localhost:" + port + "/test";
 
     private HttpClient client;
-    private HttpServer server = new HttpServer();
+    private final HttpServer server = new HttpServer();
 
     @Autowired
     private EndpointAdapter mockResponseEndpointAdapter;

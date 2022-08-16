@@ -16,14 +16,6 @@
 
 package com.consol.citrus.http.message;
 
-import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
-
 import javax.servlet.http.Cookie;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +30,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
+
 /**
  * @author Christoph Deppisch
  * @since 2.0
@@ -47,14 +47,14 @@ public class HttpMessage extends DefaultMessage {
     /**
      * Http cookies
      */
-    private Map<String, Cookie> cookies = new HashMap<>();
+    private final Map<String, Cookie> cookies = new HashMap<>();
 
     /**
      * Query params
      */
-    private transient Map<String, Collection<String>> queryParams = new HashMap<>();
+    private final transient Map<String, Collection<String>> queryParams = new HashMap<>();
 
-    private CookieConverter cookieConverter = new CookieConverter();
+    private final CookieConverter cookieConverter = new CookieConverter();
 
     /**
      * Empty constructor initializing with empty message payload.

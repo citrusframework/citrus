@@ -113,60 +113,50 @@
           </data>
         </body>
         <expression path="/ns:TestMessage/" value="newValue"/>
-        <ignore path="/ns:TestMessage/ns:ignore"/>
-        <namespace prefix="ns" value="http://www.consol.com"/>
       </message>
+      <ignore path="/ns:TestMessage/ns:ignore"/>
+      <namespace prefix="ns" value="http://www.consol.com"/>
     </receive>
 
     <receive endpoint="direct:helloQueue">
-      <message>
-        <validate path="/TestMessage/text" value="Hello Citrus"/>
-        <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
-      </message>
+      <validate path="/TestMessage/text" value="Hello Citrus"/>
+      <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
     </receive>
 
     <receive endpoint="direct:helloQueue">
-      <message>
-        <validate>
-          <xpath expression="/TestMessage/text" value="Hello Citrus"/>
-          <xpath expression="/TestMessage/foo" value="true" result-type="boolean"/>
-        </validate>
-      </message>
+      <validate>
+        <xpath expression="/TestMessage/text" value="Hello Citrus"/>
+        <xpath expression="/TestMessage/foo" value="true" result-type="boolean"/>
+      </validate>
     </receive>
 
     <receive endpoint="direct:helloQueue">
-      <message>
-        <validate>
-          <script type="groovy">
-            assert true
-          </script>
-        </validate>
-        <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
-      </message>
+      <validate>
+        <script type="groovy">
+          assert true
+        </script>
+      </validate>
+      <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
     </receive>
 
     <receive endpoint="direct:helloQueue">
-      <message>
-        <validate>
-          <script type="groovy" file="classpath:com/consol/citrus/xml/test-validation-script.groovy"/>
-        </validate>
-      </message>
+      <validate>
+        <script type="groovy" file="classpath:com/consol/citrus/xml/test-validation-script.groovy"/>
+      </validate>
     </receive>
 
     <receive endpoint="direct:helloQueue">
-      <message type="json">
-        <validate path="$.json.text" value="Hello Citrus"/>
-        <validate path="$..foo.bar" value="true"/>
-      </message>
+      <message type="json"/>
+      <validate path="$.json.text" value="Hello Citrus"/>
+      <validate path="$..foo.bar" value="true"/>
     </receive>
 
     <receive endpoint="direct:helloQueue">
-      <message type="json">
-        <validate>
-          <json-path expression="$.json.text" value="Hello Citrus"/>
-          <json-path expression="$..foo.bar" value="true"/>
-        </validate>
-      </message>
+      <message type="json"/>
+      <validate>
+        <json-path expression="$.json.text" value="Hello Citrus"/>
+        <json-path expression="$..foo.bar" value="true"/>
+      </validate>
     </receive>
 
     <receive endpoint="helloEndpoint">
@@ -179,8 +169,8 @@
           </data>
         </body>
         <expression path="$.FooMessage.foo" value="newValue"/>
-        <ignore path="$.FooMessage.bar"/>
       </message>
+      <ignore path="$.FooMessage.bar"/>
     </receive>
 
     <receive endpoint="helloEndpoint">
@@ -199,8 +189,8 @@
       </extract>
     </receive>
 
-    <receive endpoint="helloEndpoint">
-      <message validator="myValidator" header-validator="myHeaderValidator">
+    <receive endpoint="helloEndpoint" validator="myValidator" header-validator="myHeaderValidator">
+      <message>
         <headers>
           <header name="operation" value="sayHello"/>
         </headers>
@@ -214,8 +204,8 @@
       </message>
     </receive>
 
-    <receive endpoint="helloEndpoint">
-      <message validators="myValidator,defaultMessageValidator" header-validators="myHeaderValidator,defaultHeaderValidator">
+    <receive endpoint="helloEndpoint" validators="myValidator,defaultMessageValidator" header-validators="myHeaderValidator,defaultHeaderValidator">
+      <message>
         <headers>
           <header name="operation" value="sayHello"/>
         </headers>

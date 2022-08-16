@@ -20,16 +20,20 @@
 package com.consol.citrus.xml.actions;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusContext;
+import com.consol.citrus.CitrusInstanceManager;
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.xml.XmlTestLoader;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
+
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -38,22 +42,22 @@ public class AbstractXmlActionTest extends AbstractTestNGUnitTest {
 
     protected Citrus citrus;
 
+    @Mock
+    protected CitrusContext citrusContext;
+
     @BeforeClass
     public void setupMocks() {
         MockitoAnnotations.openMocks(this);
-        citrus = Citrus.newInstance();
+        citrus = CitrusInstanceManager.newInstance(() -> citrusContext);
     }
 
     @Override
     protected TestContext createTestContext() {
-        TestContext context = citrus.getCitrusContext().createTestContext();
+        TestContext context = super.createTestContext();
+        when(citrusContext.getReferenceResolver()).thenReturn(context.getReferenceResolver());
+        when(citrusContext.getMessageValidatorRegistry()).thenReturn(context.getMessageValidatorRegistry());
         CitrusAnnotations.injectAll(this, citrus, context);
         return context;
-    }
-
-    @Override
-    protected TestContextFactory createTestContextFactory() {
-        return citrus.getCitrusContext().getTestContextFactory();
     }
 
     protected XmlTestLoader createTestLoader(String sourcePath) {
