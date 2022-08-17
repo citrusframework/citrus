@@ -16,15 +16,18 @@
 
 package com.consol.citrus.http.servlet;
 
-import org.springframework.http.HttpHeaders;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
+
+import org.springframework.http.HttpHeaders;
 
 /**
  * Response wrapper wraps response output stream with gzip output stream. Write operations on that stream are
@@ -34,7 +37,7 @@ import java.util.zip.GZIPOutputStream;
  * @since 2.6.2
  */
 public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
-    private HttpServletResponse origResponse;
+    private final HttpServletResponse origResponse;
     private ServletOutputStream outputStream;
     private PrintWriter printWriter;
 
@@ -65,7 +68,9 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
     @Override
     public void flushBuffer() throws IOException {
-        outputStream.flush();
+        if (outputStream != null) {
+            outputStream.flush();
+        }
     }
 
     @Override
