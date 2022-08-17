@@ -18,14 +18,26 @@ import org.slf4j.LoggerFactory;
 public class DirectEndpointAdapter extends AbstractEndpointAdapter {
 
     /** Endpoint handling incoming requests */
-    private DirectSyncEndpoint endpoint;
-    private DirectSyncProducer producer;
+    private final DirectSyncEndpoint endpoint;
+    private final DirectSyncProducer producer;
 
     /** Endpoint configuration */
     private final DirectSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DirectEndpointAdapter.class);
+    private static final Logger log = LoggerFactory.getLogger(DirectEndpointAdapter.class);
+
+    /**
+     * Default constructor using endpoint.
+     * @param endpoint
+     */
+    public DirectEndpointAdapter(DirectSyncEndpoint endpoint) {
+        this.endpointConfiguration = endpoint.getEndpointConfiguration();
+
+        endpoint.setName(getName());
+        producer = new DirectSyncProducer(endpoint.getProducerName(), endpointConfiguration);
+        this.endpoint = endpoint;
+    }
 
     /**
      * Default constructor using endpoint configuration.

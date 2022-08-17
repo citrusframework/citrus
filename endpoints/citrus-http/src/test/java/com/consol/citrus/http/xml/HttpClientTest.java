@@ -46,6 +46,7 @@ import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.spi.BindToRegistry;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
+import com.consol.citrus.validation.DelegatingPayloadVariableExtractor;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -119,7 +120,7 @@ public class HttpClientTest extends AbstractXmlActionTest {
     }
 
     @Test
-    public void shouldLoadHttpClientOperation() {
+    public void shouldLoadHttpClientActions() {
         XmlTestLoader testLoader = createTestLoader("classpath:com/consol/citrus/http/xml/http-client-test.xml");
 
         context.setVariable("port", port);
@@ -166,23 +167,24 @@ public class HttpClientTest extends AbstractXmlActionTest {
         headerValidator.validateMessage(request, controlMessage, context, new HeaderValidationContext());
         validator.validateMessage(request, controlMessage, context, new DefaultValidationContext());
 
-        ReceiveMessageAction action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
+        Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof HeaderValidationContext);
 
-        httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
 
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
+        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().size(), 2L);
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
-        Assert.assertNull(action.getEndpoint());
-        Assert.assertEquals(action.getEndpointUri(), "httpClient");
-        Assert.assertEquals(action.getMessageProcessors().size(), 0);
-        Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
+        Assert.assertNull(receiveMessageAction.getEndpoint());
+        Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
+        Assert.assertEquals(receiveMessageAction.getMessageProcessors().size(), 0);
+        Assert.assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         Assert.assertTrue(sendMessageAction.isForkMode());
@@ -208,15 +210,15 @@ public class HttpClientTest extends AbstractXmlActionTest {
 
         Assert.assertEquals(result.getTestAction(actionIndex++).getClass(), SleepAction.class);
 
-        action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof HeaderValidationContext);
 
-        httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "<order><id>12345</id><item>foo</item></order>");
+        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "<order><id>12345</id><item>foo</item></order>");
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Map<String, Object> responseHeaders = httpMessageBuilder.buildMessageHeaders(context);
@@ -225,8 +227,14 @@ public class HttpClientTest extends AbstractXmlActionTest {
         Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
         Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
         Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/xml");
-        Assert.assertNull(action.getEndpoint());
-        Assert.assertEquals(action.getEndpointUri(), "httpClient");
+        Assert.assertNull(receiveMessageAction.getEndpoint());
+        Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
+
+        Assert.assertEquals(receiveMessageAction.getVariableExtractors().size(), 1L);
+        Assert.assertEquals(((DelegatingPayloadVariableExtractor)receiveMessageAction.getVariableExtractors().get(0)).getPathExpressions().size(), 1L);
+        Assert.assertEquals(((DelegatingPayloadVariableExtractor)receiveMessageAction.getVariableExtractors().get(0)).getPathExpressions().get("/order/id"), "orderId");
+
+        Assert.assertEquals(context.getVariable("orderId"), "12345");
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());
@@ -238,15 +246,16 @@ public class HttpClientTest extends AbstractXmlActionTest {
         Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
 
-        action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
+        Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
+        Assert.assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof HeaderValidationContext);
 
-        httpMessageBuilder = ((HttpMessageBuilder)action.getMessageBuilder());
+        httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());
         Assert.assertNotNull(httpMessageBuilder);
-        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, action.getMessageType()), "");
+        Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         responseHeaders = httpMessageBuilder.buildMessageHeaders(context);
@@ -254,8 +263,8 @@ public class HttpClientTest extends AbstractXmlActionTest {
         Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_STATUS_CODE), "404");
         Assert.assertEquals(responseHeaders.get(HttpMessageHeaders.HTTP_REASON_PHRASE), "NOT_FOUND");
         Assert.assertEquals(responseHeaders.get("userId"), "1001");
-        Assert.assertNull(action.getEndpoint());
-        Assert.assertEquals(action.getEndpointUri(), "httpClient");
+        Assert.assertNull(receiveMessageAction.getEndpoint());
+        Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
         httpMessageBuilder = ((HttpMessageBuilder)sendMessageAction.getMessageBuilder());

@@ -29,10 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.TestActor;
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.actions.HttpActionBuilder;
@@ -46,7 +46,8 @@ import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.xml.actions.Message;
-import com.consol.citrus.xml.actions.MessageSupport;
+import com.consol.citrus.xml.actions.Receive;
+import com.consol.citrus.xml.actions.Send;
 
 /**
  * @author Christoph Deppisch
@@ -55,6 +56,9 @@ import com.consol.citrus.xml.actions.MessageSupport;
 public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private TestActionBuilder<?> builder;
+
+    private Receive receive;
+    private Send send;
 
     private String description;
     private String actor;
@@ -86,7 +90,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     }
 
     @XmlElement(name = "send-request")
-    public Http setSendRequest(Request request) {
+    public Http setSendRequest(ClientRequest request) {
         HttpClientRequestActionBuilder requestBuilder;
         RequestMessage requestMessage;
         if (request.getGet() != null) {
@@ -117,13 +121,26 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             throw new CitrusRuntimeException("Failed to construct proper Http client request action - missing proper Http method (GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH, TRACE)");
         }
 
-        if (request.fork != null) {
-            requestBuilder.fork(request.fork);
-        }
-
         requestBuilder.name("http:send-request");
         requestBuilder.description(description);
-        MessageSupport.configureMessage(requestBuilder, requestMessage);
+
+        send = new Send(requestBuilder) {
+            @Override
+            protected SendMessageAction doBuild() {
+                // do not build inside delegate. the actual build is called directly on the builder.
+                return null;
+            }
+        };
+
+        if (request.fork != null) {
+            send.setFork(request.fork);
+        }
+
+        send.setMessage(requestMessage);
+
+        if (request.extract != null) {
+            send.setExtract(request.extract);
+        }
 
         if (request.uri != null) {
             requestBuilder.message().header(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, request.uri);
@@ -154,24 +171,57 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     }
 
     @XmlElement(name = "receive-response")
-    public Http setReceiveResponse(ResponseMessage response) {
+    public Http setReceiveResponse(ClientResponse response) {
         HttpClientResponseActionBuilder responseBuilder = asClientBuilder().receive().response().name("http:receive-response");
 
         responseBuilder.description(description);
-        MessageSupport.configureMessage(responseBuilder, response);
 
-        responseBuilder.message().header(HttpMessageHeaders.HTTP_STATUS_CODE, response.status);
+        receive = new Receive(responseBuilder) {
+            @Override
+            protected ReceiveMessageAction doBuild() {
+                // do not build inside delegate. the actual build is called directly on the builder.
+                return null;
+            }
+        };
 
-        if (response.reasonPhrase != null) {
-            responseBuilder.message().reasonPhrase(response.reasonPhrase);
-        }
+        if (response.getResponse() !=  null) {
+            responseBuilder.message().header(HttpMessageHeaders.HTTP_STATUS_CODE, response.getResponse().status);
 
-        if (response.contentType != null) {
-            responseBuilder.message().contentType(response.contentType);
-        }
+            if (response.getResponse().reasonPhrase != null) {
+                responseBuilder.message().reasonPhrase(response.getResponse().reasonPhrase);
+            }
 
-        if (response.version != null) {
-            responseBuilder.message().version(response.version);
+            if (response.getResponse().contentType != null) {
+                responseBuilder.message().contentType(response.getResponse().contentType);
+            }
+
+            if (response.getResponse().version != null) {
+                responseBuilder.message().version(response.getResponse().version);
+            }
+
+            receive.setMessage(response.getResponse());
+
+            if (response.timeout != null) {
+                receive.setTimeout(response.timeout);
+            }
+
+            receive.setSelect(response.select);
+            receive.setValidator(response.validator);
+            receive.setValidators(response.validators);
+            receive.setHeaderValidator(response.headerValidator);
+            receive.setHeaderValidators(response.headerValidators);
+
+            if (response.selector != null) {
+                receive.setSelector(response.selector);
+            }
+
+            receive.setSelect(response.select);
+
+            response.getValidates().forEach(receive.getValidates()::add);
+
+            if (response.extract != null) {
+                receive.setExtract(response.extract);
+            }
         }
 
         builder = responseBuilder;
@@ -179,7 +229,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     }
 
     @XmlElement(name = "receive-request")
-    public Http setReceiveRequest(Request request) {
+    public Http setReceiveRequest(ServerRequest request) {
         HttpServerRequestActionBuilder requestBuilder;
         RequestMessage requestMessage;
         if (request.getGet() != null) {
@@ -212,11 +262,6 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
         requestBuilder.name("http:receive-request");
         requestBuilder.description(description);
-        MessageSupport.configureMessage(requestBuilder, requestMessage);
-
-        if (request.uri != null) {
-            requestBuilder.message().header(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, request.uri);
-        }
 
         if (requestMessage.contentType != null) {
             requestBuilder.message().contentType(requestMessage.contentType);
@@ -228,6 +273,36 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
         if (requestMessage.version != null) {
             requestBuilder.message().version(requestMessage.version);
+        }
+
+        receive = new Receive(requestBuilder) {
+            @Override
+            protected ReceiveMessageAction doBuild() {
+                // do not build inside delegate. the actual build is called directly on the builder.
+                return null;
+            }
+        };
+
+        receive.setMessage(requestMessage);
+
+        if (request.selector != null) {
+            receive.setSelector(request.selector);
+        }
+
+        receive.setSelect(request.select);
+        receive.setValidator(request.validator);
+        receive.setValidators(request.validators);
+        receive.setHeaderValidator(request.headerValidator);
+        receive.setHeaderValidators(request.headerValidators);
+
+        if (request.timeout != null) {
+            receive.setTimeout(request.timeout);
+        }
+
+        request.getValidates().forEach(receive.getValidates()::add);
+
+        if (request.extract != null) {
+            receive.setExtract(request.extract);
         }
 
         for (RequestMessage.QueryParameter param : requestMessage.getParameters()) {
@@ -243,24 +318,39 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     }
 
     @XmlElement(name = "send-response")
-    public Http setSendResponse(ResponseMessage response) {
+    public Http setSendResponse(ServerResponse response) {
         HttpServerResponseActionBuilder responseBuilder = asServerBuilder().send().response().name("http:send-response");
 
         responseBuilder.description(description);
-        MessageSupport.configureMessage(responseBuilder, response);
 
-        responseBuilder.message().header(HttpMessageHeaders.HTTP_STATUS_CODE, response.status);
+        send = new Send(responseBuilder) {
+            @Override
+            protected SendMessageAction doBuild() {
+                // do not build inside delegate. the actual build is called directly on the builder.
+                return null;
+            }
+        };
 
-        if (response.reasonPhrase != null) {
-            responseBuilder.message().reasonPhrase(response.reasonPhrase);
-        }
+        if (response.getResponse() !=  null) {
+            send.setMessage(response.getResponse());
 
-        if (response.contentType != null) {
-            responseBuilder.message().contentType(response.contentType);
-        }
+            if (response.extract != null) {
+                send.setExtract(response.extract);
+            }
 
-        if (response.version != null) {
-            responseBuilder.message().version(response.version);
+            responseBuilder.message().header(HttpMessageHeaders.HTTP_STATUS_CODE, response.getResponse().status);
+
+            if (response.getResponse().reasonPhrase != null) {
+                responseBuilder.message().reasonPhrase(response.getResponse().reasonPhrase);
+            }
+
+            if (response.getResponse().contentType != null) {
+                responseBuilder.message().contentType(response.getResponse().contentType);
+            }
+
+            if (response.getResponse().version != null) {
+                responseBuilder.message().version(response.getResponse().version);
+            }
         }
 
         builder = responseBuilder;
@@ -273,14 +363,16 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             throw new CitrusRuntimeException("Missing client or server Http action - please provide proper action details");
         }
 
-        if (referenceResolver != null) {
-            if (builder instanceof ReferenceResolverAware) {
-                ((ReferenceResolverAware) builder).setReferenceResolver(referenceResolver);
-            }
+        if (send != null) {
+            send.setReferenceResolver(referenceResolver);
+            send.setActor(actor);
+            send.build();
+        }
 
-            if (actor != null && builder instanceof AbstractTestActionBuilder) {
-                ((AbstractTestActionBuilder<?, ?>) builder).actor(referenceResolver.resolve(actor, TestActor.class));
-            }
+        if (receive != null) {
+            receive.setReferenceResolver(referenceResolver);
+            receive.setActor(actor);
+            receive.build();
         }
 
         return builder.build();
@@ -327,8 +419,9 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             "options",
             "patch",
             "trace",
+            "extract"
     })
-    public static class Request {
+    public static class ClientRequest {
         @XmlAttribute(name = "uri")
         protected String uri;
         @XmlAttribute(name = "fork")
@@ -350,6 +443,9 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected RequestMessage patch;
         @XmlElement(name = "TRACE")
         protected RequestMessage trace;
+
+        @XmlElement
+        protected Message.Extract extract;
 
         public String getUri() {
             return uri;
@@ -429,6 +525,358 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
         public void setTrace(RequestMessage trace) {
             this.trace = trace;
+        }
+
+        public Message.Extract getExtract() {
+            return extract;
+        }
+
+        public void setExtract(Message.Extract extract) {
+            this.extract = extract;
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "selector",
+            "get",
+            "post",
+            "put",
+            "delete",
+            "head",
+            "options",
+            "patch",
+            "trace",
+            "validates",
+            "extract"
+    })
+    public static class ServerRequest {
+        @XmlAttribute
+        protected Integer timeout;
+
+        @XmlAttribute
+        protected String select;
+
+        @XmlAttribute
+        protected String validator;
+
+        @XmlAttribute
+        protected String validators;
+
+        @XmlAttribute(name = "header-validator")
+        protected String headerValidator;
+
+        @XmlAttribute(name = "header-validators")
+        protected String headerValidators;
+
+        @XmlElement(name = "GET")
+        protected RequestMessage get;
+        @XmlElement(name = "POST")
+        protected RequestMessage post;
+        @XmlElement(name = "PUT")
+        protected RequestMessage put;
+        @XmlElement(name = "DELETE")
+        protected RequestMessage delete;
+        @XmlElement(name = "HEAD")
+        protected RequestMessage head;
+        @XmlElement(name = "OPTIONS")
+        protected RequestMessage options;
+        @XmlElement(name = "PATCH")
+        protected RequestMessage patch;
+        @XmlElement(name = "TRACE")
+        protected RequestMessage trace;
+
+        @XmlElement
+        protected Receive.Selector selector;
+
+        @XmlElement(name = "validate")
+        protected List<Receive.Validate> validates;
+
+        @XmlElement
+        protected Message.Extract extract;
+
+        public Integer getTimeout() {
+            return timeout;
+        }
+
+        public void setTimeout(Integer timeout) {
+            this.timeout = timeout;
+        }
+
+        public String getSelect() {
+            return select;
+        }
+
+        public void setSelect(String select) {
+            this.select = select;
+        }
+
+        public String getValidator() {
+            return validator;
+        }
+
+        public void setValidator(String validator) {
+            this.validator = validator;
+        }
+
+        public String getValidators() {
+            return validators;
+        }
+
+        public void setValidators(String validators) {
+            this.validators = validators;
+        }
+
+        public String getHeaderValidator() {
+            return headerValidator;
+        }
+
+        public void setHeaderValidator(String headerValidator) {
+            this.headerValidator = headerValidator;
+        }
+
+        public String getHeaderValidators() {
+            return headerValidators;
+        }
+
+        public void setHeaderValidators(String headerValidators) {
+            this.headerValidators = headerValidators;
+        }
+
+        public RequestMessage getGet() {
+            return get;
+        }
+
+        public void setGet(RequestMessage get) {
+            this.get = get;
+        }
+
+        public RequestMessage getPost() {
+            return post;
+        }
+
+        public void setPost(RequestMessage post) {
+            this.post = post;
+        }
+
+        public RequestMessage getPut() {
+            return put;
+        }
+
+        public void setPut(RequestMessage put) {
+            this.put = put;
+        }
+
+        public RequestMessage getDelete() {
+            return delete;
+        }
+
+        public void setDelete(RequestMessage delete) {
+            this.delete = delete;
+        }
+
+        public RequestMessage getHead() {
+            return head;
+        }
+
+        public void setHead(RequestMessage head) {
+            this.head = head;
+        }
+
+        public RequestMessage getOptions() {
+            return options;
+        }
+
+        public void setOptions(RequestMessage options) {
+            this.options = options;
+        }
+
+        public RequestMessage getPatch() {
+            return patch;
+        }
+
+        public void setPatch(RequestMessage patch) {
+            this.patch = patch;
+        }
+
+        public RequestMessage getTrace() {
+            return trace;
+        }
+
+        public void setTrace(RequestMessage trace) {
+            this.trace = trace;
+        }
+
+        public Receive.Selector getSelector() {
+            return selector;
+        }
+
+        public void setSelector(Receive.Selector selector) {
+            this.selector = selector;
+        }
+
+        public List<Receive.Validate> getValidates() {
+            if (validates == null) {
+                validates = new ArrayList<>();
+            }
+
+            return validates;
+        }
+
+        public Message.Extract getExtract() {
+            return extract;
+        }
+
+        public void setExtract(Message.Extract extract) {
+            this.extract = extract;
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "response",
+            "extract"
+    })
+    public static class ServerResponse {
+        @XmlElement
+        protected ResponseMessage response;
+
+        @XmlElement
+        protected Message.Extract extract;
+
+        public ResponseMessage getResponse() {
+            return response;
+        }
+
+        public void setResponse(ResponseMessage response) {
+            this.response = response;
+        }
+
+        public Message.Extract getExtract() {
+            return extract;
+        }
+
+        public void setExtract(Message.Extract extract) {
+            this.extract = extract;
+        }
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "selector",
+            "response",
+            "validates",
+            "extract"
+    })
+    public static class ClientResponse {
+        @XmlAttribute
+        protected Integer timeout;
+
+        @XmlAttribute
+        protected String select;
+
+        @XmlAttribute
+        protected String validator;
+
+        @XmlAttribute
+        protected String validators;
+
+        @XmlAttribute(name = "header-validator")
+        protected String headerValidator;
+
+        @XmlAttribute(name = "header-validators")
+        protected String headerValidators;
+
+        @XmlElement
+        protected Receive.Selector selector;
+
+        @XmlElement
+        protected ResponseMessage response;
+
+        @XmlElement(name = "validate")
+        protected List<Receive.Validate> validates;
+
+        @XmlElement
+        protected Message.Extract extract;
+
+        public Integer getTimeout() {
+            return timeout;
+        }
+
+        public void setTimeout(Integer timeout) {
+            this.timeout = timeout;
+        }
+
+        public String getSelect() {
+            return select;
+        }
+
+        public void setSelect(String select) {
+            this.select = select;
+        }
+
+        public Receive.Selector getSelector() {
+            return selector;
+        }
+
+        public void setSelector(Receive.Selector selector) {
+            this.selector = selector;
+        }
+
+        public String getValidator() {
+            return validator;
+        }
+
+        public void setValidator(String validator) {
+            this.validator = validator;
+        }
+
+        public String getValidators() {
+            return validators;
+        }
+
+        public void setValidators(String validators) {
+            this.validators = validators;
+        }
+
+        public String getHeaderValidator() {
+            return headerValidator;
+        }
+
+        public void setHeaderValidator(String headerValidator) {
+            this.headerValidator = headerValidator;
+        }
+
+        public String getHeaderValidators() {
+            return headerValidators;
+        }
+
+        public void setHeaderValidators(String headerValidators) {
+            this.headerValidators = headerValidators;
+        }
+
+        public ResponseMessage getResponse() {
+            return response;
+        }
+
+        public void setResponse(ResponseMessage response) {
+            this.response = response;
+        }
+
+        public List<Receive.Validate> getValidates() {
+            if (validates == null) {
+                validates = new ArrayList<>();
+            }
+
+            return validates;
+        }
+
+        public Message.Extract getExtract() {
+            return extract;
+        }
+
+        public void setExtract(Message.Extract extract) {
+            this.extract = extract;
         }
     }
 

@@ -31,10 +31,18 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 @XmlRootElement(name = "send")
 public class Send implements TestActionBuilder<SendMessageAction>, ReferenceResolverAware {
 
-    private final SendMessageAction.Builder builder = new SendMessageAction.Builder();
+    private final SendMessageAction.SendMessageActionBuilder<?, ?, ?> builder;
 
     private String actor;
     private ReferenceResolver referenceResolver;
+
+    public Send() {
+        this(new SendMessageAction.Builder());
+    }
+
+    public Send(SendMessageAction.SendMessageActionBuilder<?, ?, ?> builder) {
+        this.builder = builder;
+    }
 
     @XmlElement
     public Send setDescription(String value) {
@@ -61,7 +69,6 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
     @XmlElement
     public Send setExtract(Message.Extract value) {
         MessageSupport.configureExtract(builder, value);
-
         return this;
     }
 
@@ -91,6 +98,14 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
             }
         }
 
+        return doBuild();
+    }
+
+    /**
+     * Subclasses may add additional building logic here.
+     * @return
+     */
+    protected SendMessageAction doBuild() {
         return builder.build();
     }
 
