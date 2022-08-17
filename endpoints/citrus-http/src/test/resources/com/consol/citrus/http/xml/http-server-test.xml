@@ -17,51 +17,46 @@
   ~ limitations under the License.
   -->
 
-<test name="HttpClientTest" author="Christoph" status="FINAL">
+<test name="HttpServerTest" author="Christoph" status="FINAL">
   <variables>
     <variable name="id" value="12345"/>
   </variables>
   <actions>
-    <http client="httpClient">
-      <send-request>
+    <http server="httpServer">
+      <receive-request>
         <GET/>
-      </send-request>
+      </receive-request>
     </http>
 
-    <http client="httpClient">
-      <receive-response/>
+    <http server="httpServer">
+      <send-response/>
     </http>
 
-    <http client="httpClient">
-      <send-request uri="http://localhost:${port}/test" fork="true">
-        <GET path="/order/${id}" content-type="application/xml" accept="application/xml" version="HTTP/1.1">
+    <http server="httpServer">
+      <receive-request timeout="2000">
+        <GET path="/test/order/${id}" content-type="application/xml" accept="application/xml" version="HTTP/1.1">
           <param name="id" value="${id}"/>
           <param name="type" value="gold"/>
         </GET>
-      </send-request>
+      </receive-request>
     </http>
 
-    <sleep milliseconds="1000"/>
-
-    <http client="httpClient">
-      <receive-response>
+    <http server="httpServer">
+      <send-response>
         <response status="200" reason-phrase="OK" version="HTTP/1.1" content-type="application/xml">
-           <body>
-             <data>
-               <![CDATA[
-                  <order><id>${id}</id><item>foo</item></order>
-                ]]>
-             </data>
-           </body>
+         <body>
+           <data>
+             <![CDATA[
+                <order><id>${id}</id><item>foo</item></order>
+              ]]>
+           </data>
+         </body>
         </response>
-        <extract>
-          <body variable="orderId" path="/order/id"/>
-        </extract>
-      </receive-response>
+      </send-response>
     </http>
 
-    <http client="httpClient">
-      <send-request>
+    <http server="httpServer">
+      <receive-request>
         <POST path="/user">
           <headers>
             <header name="userId" value="1001"/>
@@ -74,35 +69,38 @@
             </data>
           </body>
         </POST>
-      </send-request>
+        <extract>
+          <body variable="userId" path="/user/id"/>
+        </extract>
+      </receive-request>
     </http>
 
-    <http client="httpClient">
-      <receive-response timeout="2000">
+    <http server="httpServer">
+      <send-response>
         <response status="404" reason-phrase="NOT_FOUND">
           <headers>
             <header name="userId" value="1001"/>
           </headers>
         </response>
-      </receive-response>
+      </send-response>
     </http>
 
-    <http client="httpClient">
-      <send-request>
+    <http server="httpServer">
+      <receive-request>
         <DELETE path="/user/${id}"/>
-      </send-request>
+      </receive-request>
     </http>
 
-    <http client="httpClient">
-      <send-request uri="http://localhost:${port}/test">
+    <http server="httpServer">
+      <receive-request path="/test">
         <HEAD/>
-      </send-request>
+      </receive-request>
     </http>
 
-    <http client="http://localhost:${port}/test" actor="testActor">
-      <send-request>
+    <http server="httpServer" actor="testActor">
+      <receive-request>
         <OPTIONS/>
-      </send-request>
+      </receive-request>
     </http>
   </actions>
 </test>

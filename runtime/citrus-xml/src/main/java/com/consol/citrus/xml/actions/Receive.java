@@ -38,7 +38,6 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
-import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -49,13 +48,12 @@ import org.springframework.util.StringUtils;
 @XmlRootElement(name = "receive")
 public class Receive implements TestActionBuilder<ReceiveMessageAction>, ReferenceResolverAware {
 
-    private final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
+    private final ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?, ?> builder;
 
     private String actor;
     private ReferenceResolver referenceResolver;
     private final List<String> validators = new ArrayList<>();
 
-    private final HeaderValidationContext headerValidationContext = new HeaderValidationContext();
     private final XmlMessageValidationContext.Builder xmlValidationContext = new XmlMessageValidationContext.Builder();
     private final JsonMessageValidationContext.Builder jsonValidationContext = new JsonMessageValidationContext.Builder();
 
@@ -65,6 +63,14 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     protected List<Validate> validates;
     @XmlElement(name = "namespace")
     protected List<Namespace> namespaces;
+
+    public Receive() {
+        this(new ReceiveMessageAction.Builder());
+    }
+
+    public Receive(ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?, ?> builder) {
+        this.builder = builder;
+    }
 
     @XmlElement
     public Receive setDescription(String value) {
@@ -115,7 +121,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     @XmlAttribute(name = "header-validator")
     public Receive setHeaderValidator(String headerValidator) {
         if (StringUtils.hasText(headerValidator)) {
-            headerValidationContext.addHeaderValidator(headerValidator);
+            builder.getHeaderValidationContext().addHeaderValidator(headerValidator);
         }
 
         return this;
@@ -126,7 +132,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         if (StringUtils.hasText(headerValidatorExpression)) {
             Stream.of(headerValidatorExpression.split(","))
                     .map(String::trim)
-                    .forEach(headerValidationContext::addHeaderValidator);
+                    .forEach(builder.getHeaderValidationContext()::addHeaderValidator);
         }
 
         return this;
@@ -290,7 +296,6 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
     @XmlElement
     public Receive setExtract(Message.Extract value) {
         MessageSupport.configureExtract(builder, value);
-
         return this;
     }
 
@@ -344,14 +349,20 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
             }
         }
 
-        builder.message().validate(headerValidationContext);
-
         validators.forEach(builder::validator);
 
         addXmlValidationContext();
         addJsonValidationContext();
         addScriptValidationContext();
 
+        return doBuild();
+    }
+
+    /**
+     * Subclasses may add additional building logic here.
+     * @return
+     */
+    protected ReceiveMessageAction doBuild() {
         return builder.build();
     }
 
