@@ -60,6 +60,20 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
         actions = builder.getActions();
     }
 
+    /**
+     * Runs the give action and makes sure to properly set active and executed action state for this container.
+     * @param action
+     * @param context
+     */
+    protected void executeAction(TestAction action, TestContext context) {
+        try {
+            setActiveAction(action);
+            action.execute(context);
+        } finally {
+            setExecutedAction(action);
+        }
+    }
+
     @Override
     public AbstractActionContainer setActions(List<TestAction> actions) {
         this.actions = actions.stream().map(action -> (TestActionBuilder<?>) () -> action).collect(Collectors.toList());
@@ -79,11 +93,19 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
 
     @Override
     public boolean isDone(TestContext context) {
-        if (isDisabled(context)) {
+        if (actions.isEmpty() || isDisabled(context)) {
             return true;
         }
 
-        for (TestAction action : executedActions) {
+        if (activeAction == null && executedActions.isEmpty()) {
+            return true;
+        }
+
+        if (!executedActions.contains(activeAction)) {
+            return false;
+        }
+
+        for (TestAction action : new ArrayList<>(executedActions)) {
             if (action instanceof Completable && !((Completable) action).isDone(context)) {
                 if (log.isDebugEnabled()) {
                     log.debug(Optional.ofNullable(action.getName()).filter(name -> name.trim().length() > 0)
@@ -130,6 +152,10 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     @Override
     public void setActiveAction(TestAction action) {
         this.activeAction = action;
+    }
+
+    @Override
+    public void setExecutedAction(TestAction action) {
         this.executedActions.add(action);
     }
 

@@ -17,7 +17,6 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.AbstractTestContainerBuilder;
-import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
@@ -59,9 +58,7 @@ public class Conditional extends AbstractActionContainer {
             log.debug("Condition [ {} ] evaluates to true, executing nested actions", condition);
 
             for (TestActionBuilder<?> actionBuilder : actions) {
-                TestAction action = actionBuilder.build();
-                setActiveAction(action);
-                action.execute(context);
+                executeAction(actionBuilder.build(), context);
             }
         } else {
             log.debug("Condition [ {} ] evaluates to false, not executing nested actions", condition);

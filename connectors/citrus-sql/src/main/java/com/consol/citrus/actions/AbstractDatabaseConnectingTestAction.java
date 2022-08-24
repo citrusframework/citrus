@@ -87,7 +87,9 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Do basic logging and delegate execution to subclass.
      */
     public void execute(TestContext context) {
-        doExecute(context);
+        if (!isDisabled(context)) {
+            doExecute(context);
+        }
     }
 
     /**

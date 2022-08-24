@@ -67,9 +67,7 @@ public class Assert extends AbstractActionContainer {
         }
 
         try {
-            TestAction action = this.action.build();
-            setActiveAction(action);
-            action.execute(context);
+            executeAction(this.action.build(), context);
         } catch (Exception e) {
             log.debug("Validating caught exception ...");
 
