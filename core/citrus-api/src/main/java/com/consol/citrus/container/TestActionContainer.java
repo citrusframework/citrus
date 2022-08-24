@@ -70,6 +70,12 @@ public interface TestActionContainer extends TestAction {
     void setActiveAction(TestAction action);
 
     /**
+     * Sets the last action that has been executed.
+     * @param action
+     */
+    void setExecutedAction(TestAction action);
+
+    /**
      * Get the action that was executed most recently.
      * @return
      */

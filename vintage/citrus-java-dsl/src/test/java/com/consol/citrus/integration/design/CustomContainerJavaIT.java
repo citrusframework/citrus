@@ -47,7 +47,7 @@ public class CustomContainerJavaIT extends TestNGCitrusTestDesigner {
         @Override
         public void doExecute(TestContext context) {
             for (int i = getActions().size(); i > 0; i--) {
-                getActions().get(i - 1).execute(context);
+                executeAction(getActions().get(i - 1), context);
             }
         }
     }

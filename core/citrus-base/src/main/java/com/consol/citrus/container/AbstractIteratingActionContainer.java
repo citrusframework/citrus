@@ -20,7 +20,6 @@ import java.util.Properties;
 
 import com.consol.citrus.AbstractIteratingContainerBuilder;
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
@@ -77,9 +76,7 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
         context.setVariable(indexName, String.valueOf(index));
 
         for (TestActionBuilder<?> actionBuilder: actions) {
-            TestAction action = actionBuilder.build();
-            setActiveAction(action);
-            action.execute(context);
+            executeAction(actionBuilder.build(), context);
         }
     }
 
@@ -94,7 +91,7 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
 
         // replace dynamic content with each iteration
         String conditionString = condition;
-        if (conditionString.indexOf(CitrusSettings.VARIABLE_PREFIX + indexName + CitrusSettings.VARIABLE_SUFFIX) != -1) {
+        if (conditionString.contains(CitrusSettings.VARIABLE_PREFIX + indexName + CitrusSettings.VARIABLE_SUFFIX)) {
             Properties props = new Properties();
             props.put(indexName, String.valueOf(index));
             conditionString = new PropertyPlaceholderHelper(CitrusSettings.VARIABLE_PREFIX, CitrusSettings.VARIABLE_SUFFIX).replacePlaceholders(conditionString, props);

@@ -1050,6 +1050,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         @Override
+        public void setExecutedAction(TestAction action) {
+            // do nothing
+        }
+
+        @Override
         public void setTestClass(Class<?> type) {
             // do nothing
         }

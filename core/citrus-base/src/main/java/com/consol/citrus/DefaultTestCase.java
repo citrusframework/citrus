@@ -130,8 +130,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         }
 
         try {
+            setActiveAction(action);
             if (!action.isDisabled(context)) {
-                setActiveAction(action);
                 context.getTestActionListeners().onTestActionStart(this, action);
 
                 action.execute(context);
@@ -142,6 +142,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         } catch (final Exception | AssertionError e) {
             testResult = TestResult.failed(getName(), testClass.getName(), e);
             throw new TestCaseFailedException(e);
+        } finally {
+            setExecutedAction(action);
         }
     }
 

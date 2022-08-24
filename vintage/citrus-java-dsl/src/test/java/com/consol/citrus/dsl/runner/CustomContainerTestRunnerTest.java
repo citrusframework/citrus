@@ -16,7 +16,6 @@
 
 package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
@@ -96,8 +95,7 @@ public class CustomContainerTestRunnerTest extends UnitTestSupport {
                 context.setVariable("index", i);
 
                 for (TestActionBuilder<?> actionBuilder : actions) {
-                    TestAction action = actionBuilder.build();
-                    action.execute(context);
+                    executeAction(actionBuilder.build(), context);
                 }
             }
         }

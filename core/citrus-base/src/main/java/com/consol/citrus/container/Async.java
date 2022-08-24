@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public class Async extends AbstractActionContainer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Async.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Async.class);
 
     private final List<TestActionBuilder<?>> errorActions;
     private final List<TestActionBuilder<?>> successActions;
@@ -51,21 +51,19 @@ public class Async extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        log.debug("Async container forking action execution ...");
+        LOG.debug("Async container forking action execution ...");
 
         AbstractAsyncTestAction asyncTestAction = new AbstractAsyncTestAction() {
             @Override
             public void doExecuteAsync(TestContext context) {
                 for (TestActionBuilder<?> actionBuilder : actions) {
-                    TestAction action = actionBuilder.build();
-                    setActiveAction(action);
-                    action.execute(context);
+                    executeAction(actionBuilder.build(), context);
                 }
             }
 
             @Override
             public void onError(TestContext context, Throwable error) {
-                log.info("Apply error actions after async container ...");
+                LOG.info("Apply error actions after async container ...");
                 for (TestActionBuilder<?> actionBuilder : errorActions) {
                     TestAction action = actionBuilder.build();
                     action.execute(context);
@@ -74,7 +72,7 @@ public class Async extends AbstractActionContainer {
 
             @Override
             public void onSuccess(TestContext context) {
-                log.info("Apply success actions after async container ...");
+                LOG.info("Apply success actions after async container ...");
                 for (TestActionBuilder<?> actionBuilder : successActions) {
                     TestAction action = actionBuilder.build();
                     action.execute(context);
@@ -82,8 +80,7 @@ public class Async extends AbstractActionContainer {
             }
         };
 
-        setActiveAction(asyncTestAction);
-        asyncTestAction.execute(context);
+        executeAction(asyncTestAction, context);
     }
 
     /**
@@ -109,8 +106,8 @@ public class Async extends AbstractActionContainer {
      */
     public static class Builder extends AbstractTestContainerBuilder<Async, Builder> {
 
-        private List<TestActionBuilder<?>> errorActions = new ArrayList<>();
-        private List<TestActionBuilder<?>> successActions = new ArrayList<>();
+        private final List<TestActionBuilder<?>> errorActions = new ArrayList<>();
+        private final List<TestActionBuilder<?>> successActions = new ArrayList<>();
 
         /**
          * Fluent API action building entry method used in Java DSL.
