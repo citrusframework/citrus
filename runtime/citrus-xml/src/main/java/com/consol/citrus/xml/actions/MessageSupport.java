@@ -103,30 +103,42 @@ public final class MessageSupport {
 
         Message.Headers headers = message.getHeaders();
         if (headers != null) {
-            headers.getHeaders().forEach(header -> {
-                Object headerValue;
-                if (StringUtils.hasText(header.type)) {
-                    headerValue = MessageHeaderType.createTypedValue(header.type, header.value);
-                } else {
-                    headerValue = header.value;
+            for (Message.Headers.Header header : headers.getHeaders()) {
+                if (header.value != null) {
+                    Object headerValue;
+                    if (StringUtils.hasText(header.type)) {
+                        headerValue = MessageHeaderType.createTypedValue(header.type, header.value);
+                    } else {
+                        headerValue = header.value;
+                    }
+
+                    builder.message().header(header.name, headerValue);
                 }
 
-                builder.message().header(header.name, headerValue);
-            });
-            headers.getValues().forEach(builder.message()::header);
-
-            headers.getFragments()
-                    .stream()
-                    .filter(fragment -> !fragment.getAnies().isEmpty())
-                    .forEach(fragment -> builder.message().header(PayloadElementParser.parseMessagePayload(fragment.anies.get(0))));
-
-            headers.getResources().forEach(resource -> {
-                if (resource.charset != null) {
-                    builder.message().header(FileUtils.getFileResource(resource.file + FileUtils.FILE_PATH_CHARSET_PARAMETER + resource.charset));
-                } else {
-                    builder.message().header(FileUtils.getFileResource(resource.file));
+                if (header.data != null) {
+                    if (header.name != null) {
+                        builder.message().header(header.name, header.data);
+                    } else {
+                        builder.message().header(header.data);
+                    }
                 }
-            });
+
+                if (header.fragment != null && !header.fragment.getAnies().isEmpty()) {
+                    if (header.name != null) {
+                        builder.message().header(header.name, PayloadElementParser.parseMessagePayload(header.fragment.anies.get(0)));
+                    } else {
+                        builder.message().header(PayloadElementParser.parseMessagePayload(header.fragment.anies.get(0)));
+                    }
+                }
+
+                if (header.resource != null) {
+                    if (header.resource.charset != null) {
+                        builder.message().header(FileUtils.getFileResource(header.resource.file + FileUtils.FILE_PATH_CHARSET_PARAMETER + header.resource.charset));
+                    } else {
+                        builder.message().header(FileUtils.getFileResource(header.resource.file));
+                    }
+                }
+            }
         }
     }
 

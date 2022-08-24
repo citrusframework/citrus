@@ -126,7 +126,8 @@ public class TestActions {
 
             if (object instanceof Node) {
                 Node node = (Node) object;
-                Optional<TestActionBuilder<?>> builder = XmlTestActionBuilder.lookup(node.getLocalName());
+
+                Optional<TestActionBuilder<?>> builder = XmlTestActionBuilder.lookup(node.getLocalName(), node.getNamespaceURI());
                 if (builder.isPresent()) {
                     try {
                         Unmarshaller unmarshaller;

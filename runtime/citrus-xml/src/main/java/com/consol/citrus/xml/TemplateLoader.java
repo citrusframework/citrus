@@ -22,6 +22,7 @@ package com.consol.citrus.xml;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -41,6 +42,8 @@ public class TemplateLoader implements ReferenceResolverAware {
     private Template template;
     private ReferenceResolver referenceResolver;
 
+    private static final Pattern NAMESPACE_IS_SET = Pattern.compile("^\\s*<(\\w+:)?template .*xmlns(:\\w+)?=\\s*\".*>\\s*$", Pattern.DOTALL);
+
     /**
      * Default constructor.
      */
@@ -59,7 +62,7 @@ public class TemplateLoader implements ReferenceResolverAware {
 
             try {
                 template = jaxbContext.createUnmarshaller()
-                        .unmarshal(new StringSource(FileUtils.readToString(xmlSource)), Template.class)
+                        .unmarshal(new StringSource(applyNamespace(FileUtils.readToString(xmlSource))), Template.class)
                         .getValue();
             } catch (JAXBException | IOException e) {
                 throw new CitrusRuntimeException("Failed to load XML template for source '" + source + "'", e);
@@ -69,6 +72,19 @@ public class TemplateLoader implements ReferenceResolverAware {
         }
 
         return template;
+    }
+
+    /**
+     * Automatically applies Citrus test namespace if non is set on the root element.
+     * @param xmlSource
+     * @return
+     */
+    public static String applyNamespace(String xmlSource) {
+        if (NAMESPACE_IS_SET.matcher(xmlSource).matches()) {
+            return xmlSource;
+        }
+
+        return xmlSource.replace("<template ", String.format("<template xmlns=\"%s\" ", XmlTestLoader.TEST_NS));
     }
 
     @Override

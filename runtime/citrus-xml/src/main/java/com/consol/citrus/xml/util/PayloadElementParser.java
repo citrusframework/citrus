@@ -27,6 +27,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.xml.XmlTestLoader;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -59,7 +60,8 @@ public abstract class PayloadElementParser {
 
             String payloadData = serialize(payload);
             // temporary quickfix for unwanted testcase namespace in target payload
-            payloadData = payloadData.replaceAll(" xmlns=\\\"http://www.citrusframework.org/schema/testcase\\\"", "");
+            payloadData = payloadData.replaceAll(String.format(" %s", XmlTestLoader.TEST_NS), "");
+            payloadData = payloadData.replaceAll(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
             return payloadData.trim();
         } catch (DOMException | ParserConfigurationException | TransformerException e) {
             throw new CitrusRuntimeException("Error while constructing message payload", e);

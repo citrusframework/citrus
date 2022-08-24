@@ -26,6 +26,7 @@ import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.context.StaticTestContextFactory;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.xml.XmlTestLoader;
@@ -56,6 +57,7 @@ public class AbstractXmlActionTest extends AbstractTestNGUnitTest {
         TestContext context = super.createTestContext();
         when(citrusContext.getReferenceResolver()).thenReturn(context.getReferenceResolver());
         when(citrusContext.getMessageValidatorRegistry()).thenReturn(context.getMessageValidatorRegistry());
+        when(citrusContext.getTestContextFactory()).thenReturn(new StaticTestContextFactory(context));
         CitrusAnnotations.injectAll(this, citrus, context);
         return context;
     }

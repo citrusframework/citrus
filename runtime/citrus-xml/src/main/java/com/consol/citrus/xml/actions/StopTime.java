@@ -20,6 +20,7 @@
 package com.consol.citrus.xml.actions;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.consol.citrus.TestActionBuilder;
@@ -42,6 +43,12 @@ public class StopTime implements TestActionBuilder<StopTimeAction> {
     @XmlAttribute
     public StopTime setSuffix(String suffix) {
         builder.suffix(suffix);
+        return this;
+    }
+
+    @XmlElement
+    public StopTime setDescription(String value) {
+        builder.description(value);
         return this;
     }
 

@@ -216,8 +216,8 @@ public class PurgeEndpointAction extends AbstractTestAction {
      */
     public static final class Builder extends AbstractTestActionBuilder<PurgeEndpointAction, Builder> {
 
-        private List<String> endpointNames = new ArrayList<>();
-        private List<Endpoint> endpoints = new ArrayList<>();
+        private final List<String> endpointNames = new ArrayList<>();
+        private final List<Endpoint> endpoints = new ArrayList<>();
         private ReferenceResolver referenceResolver;
         private Map<String, Object> messageSelectorMap = new HashMap<>();
         private String messageSelector;

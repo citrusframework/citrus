@@ -134,43 +134,13 @@ public class Message {
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-            "values",
-            "resources",
-            "fragments",
             "headers"
     })
     public static class Headers {
-        @XmlElement(name = "value")
-        protected List<String> values;
-        @XmlElement(name = "resource")
-        protected List<Headers.Resource> resources;
-        @XmlElement(name = "fragment")
-        protected List<Headers.Fragment> fragments;
         @XmlElement(name = "header")
         protected List<Headers.Header> headers;
         @XmlAttribute(name = "ignore-case")
         protected String ignoreCase;
-
-        public List<String> getValues() {
-            if (values == null) {
-                values = new ArrayList<>();
-            }
-            return this.values;
-        }
-
-        public List<Headers.Resource> getResources() {
-            if (resources == null) {
-                resources = new ArrayList<>();
-            }
-            return this.resources;
-        }
-
-        public List<Headers.Fragment> getFragments() {
-            if (fragments == null) {
-                fragments = new ArrayList<>();
-            }
-            return this.fragments;
-        }
 
         public List<Headers.Header> getHeaders() {
             if (headers == null) {
@@ -188,8 +158,19 @@ public class Message {
         }
 
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "")
+        @XmlType(name = "", propOrder = {
+                "data",
+                "resource",
+                "fragment",
+        })
         public static class Header {
+            @XmlElement
+            protected String data;
+            @XmlElement
+            protected Resource resource;
+            @XmlElement
+            protected Fragment fragment;
+
             @XmlAttribute(name = "name", required = true)
             protected String name;
             @XmlAttribute(name = "value", required = true)
@@ -220,46 +201,46 @@ public class Message {
             public void setType(String type) {
                 this.type = type;
             }
-        }
 
-        @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-                "anies"
-        })
-        public static class Fragment {
-            @XmlAnyElement
-            protected List<org.w3c.dom.Element> anies;
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "", propOrder = {
+                    "anies"
+            })
+            public static class Fragment {
+                @XmlAnyElement
+                protected List<org.w3c.dom.Element> anies;
 
-            public List<org.w3c.dom.Element> getAnies() {
-                if (anies == null) {
-                    anies = new ArrayList<>();
+                public List<org.w3c.dom.Element> getAnies() {
+                    if (anies == null) {
+                        anies = new ArrayList<>();
+                    }
+                    return this.anies;
                 }
-                return this.anies;
-            }
-        }
-
-        @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "")
-        public static class Resource {
-            @XmlAttribute(name = "file", required = true)
-            protected String file;
-            @XmlAttribute(name = "charset")
-            protected String charset;
-
-            public String getFile() {
-                return file;
             }
 
-            public void setFile(String value) {
-                this.file = value;
-            }
+            @XmlAccessorType(XmlAccessType.FIELD)
+            @XmlType(name = "")
+            public static class Resource {
+                @XmlAttribute(name = "file", required = true)
+                protected String file;
+                @XmlAttribute(name = "charset")
+                protected String charset;
 
-            public String getCharset() {
-                return charset;
-            }
+                public String getFile() {
+                    return file;
+                }
 
-            public void setCharset(String value) {
-                this.charset = value;
+                public void setFile(String value) {
+                    this.file = value;
+                }
+
+                public String getCharset() {
+                    return charset;
+                }
+
+                public void setCharset(String value) {
+                    this.charset = value;
+                }
             }
         }
     }

@@ -49,7 +49,7 @@ public class Async implements TestActionBuilder<com.consol.citrus.container.Asyn
         return this;
     }
 
-    @XmlElement
+    @XmlElement(required = true)
     public Async setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
         return this;

@@ -23,6 +23,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.common.DefaultTestLoader;
@@ -46,6 +47,9 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
     private String source;
 
     private final JAXBContext jaxbContext;
+
+    public static final String TEST_NS = "http://citrusframework.org/schema/xml/testcase";
+    private static final Pattern NAMESPACE_IS_SET = Pattern.compile(".*<(\\w+:)?test .*xmlns(:\\w+)?=\\s*\".*>.*", Pattern.DOTALL);
 
     /**
      * Default constructor.
@@ -78,7 +82,7 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
 
         try {
             testCase = jaxbContext.createUnmarshaller()
-                                    .unmarshal(new StringSource(FileUtils.readToString(xmlSource)), XmlTestCase.class)
+                                    .unmarshal(new StringSource(applyNamespace(FileUtils.readToString(xmlSource))), XmlTestCase.class)
                                     .getValue()
                                     .getTestCase();
             if (runner instanceof DefaultTestCaseRunner) {
@@ -97,6 +101,19 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
             throw citrusContext.getTestContextFactory().getObject()
                     .handleError(testName, packageName, "Failed to load XML test with name '" + testName + "'", e);
         }
+    }
+
+    /**
+     * Automatically applies Citrus test namespace if non is set on the root element.
+     * @param xmlSource
+     * @return
+     */
+    public static String applyNamespace(String xmlSource) {
+        if (NAMESPACE_IS_SET.matcher(xmlSource).matches()) {
+            return xmlSource;
+        }
+
+        return xmlSource.replace("<test ", String.format("<test xmlns=\"%s\" ", TEST_NS));
     }
 
     /**

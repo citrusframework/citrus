@@ -51,10 +51,32 @@ public interface XmlTestActionBuilder {
      * @return
      */
     static Optional<TestActionBuilder<?>> lookup(String builder) {
+        return lookup(builder, null);
+    }
+
+    /**
+     * Resolves test action builder from resource path lookup with given resource name. Scans classpath for test action builder meta information
+     * with given name and returns instance of the builder. Returns optional instead of throwing exception when no test action builder
+     * could be found.
+     *
+     * Given builder name is a combination of resource file name and type property separated by '.' character.
+     * @param name
+     * @param namespace
+     * @return
+     */
+    static Optional<TestActionBuilder<?>> lookup(String name, String namespace) {
         try {
-            return Optional.of(TYPE_RESOLVER.resolve(builder));
+            TestActionBuilder<?> builder = TYPE_RESOLVER.resolve(name);
+            if (namespace != null && !namespace.equals(TYPE_RESOLVER.resolveProperty(name, "ns"))) {
+                throw new CitrusRuntimeException(String.format("Namespace mismatch for given action builder '%s/%s'", RESOURCE_PATH, name));
+            }
+            return Optional.of(builder);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, builder));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name), e);
+            } else {
+                LOG.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name));
+            }
         }
 
         return Optional.empty();
