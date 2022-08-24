@@ -44,7 +44,7 @@ public class Transform implements TestActionBuilder<TransformAction> {
         return this;
     }
 
-    @XmlElement(name = "source")
+    @XmlElement(required = true)
     public Transform setSource(Source source) {
         if (source.file != null) {
             if (source.charset != null) {
@@ -59,7 +59,7 @@ public class Transform implements TestActionBuilder<TransformAction> {
         return this;
     }
 
-    @XmlElement(name = "xslt")
+    @XmlElement(name = "xslt", required = true)
     public Transform setXslt(Xslt xslt) {
         if (xslt.file != null) {
             if (xslt.charset != null) {

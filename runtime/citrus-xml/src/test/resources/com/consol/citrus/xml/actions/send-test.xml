@@ -17,7 +17,9 @@
   ~ limitations under the License.
   -->
 
-<test name="SendTest" author="Christoph" status="FINAL">
+<test name="SendTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <actions>
     <send endpoint="helloEndpoint">
       <message>
@@ -48,9 +50,11 @@
     <send endpoint="helloEndpoint">
       <message>
         <headers>
-          <fragment>
-            <Header xmlns="http://citrusframework.org/test"><operation>hello</operation></Header>
-          </fragment>
+          <header>
+            <fragment>
+              <Header xmlns="http://citrusframework.org/test"><operation>hello</operation></Header>
+            </fragment>
+          </header>
           <header name="operation" value="sayHello"/>
         </headers>
         <body>

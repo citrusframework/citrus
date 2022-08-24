@@ -92,7 +92,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @XmlElement(name = "send-request")
     public Http setSendRequest(ClientRequest request) {
         HttpClientRequestActionBuilder requestBuilder;
-        RequestMessage requestMessage;
+        HttpRequest requestMessage;
         if (request.getGet() != null) {
             requestMessage = request.getGet();
             requestBuilder = asClientBuilder().send().get(requestMessage.path);
@@ -158,7 +158,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             requestBuilder.message().version(requestMessage.version);
         }
 
-        for (RequestMessage.QueryParameter param : requestMessage.getParameters()) {
+        for (HttpRequest.QueryParameter param : requestMessage.getParameters()) {
             if (param.value != null) {
                 requestBuilder.queryParam(param.name, param.value);
             } else {
@@ -231,7 +231,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @XmlElement(name = "receive-request")
     public Http setReceiveRequest(ServerRequest request) {
         HttpServerRequestActionBuilder requestBuilder;
-        RequestMessage requestMessage;
+        HttpRequest requestMessage;
         if (request.getGet() != null) {
             requestMessage = request.getGet();
             requestBuilder = asServerBuilder().receive().get(requestMessage.path);
@@ -305,7 +305,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             receive.setExtract(request.extract);
         }
 
-        for (RequestMessage.QueryParameter param : requestMessage.getParameters()) {
+        for (HttpRequest.QueryParameter param : requestMessage.getParameters()) {
             if (param.value != null) {
                 requestBuilder.queryParam(param.name, param.value);
             } else {
@@ -428,21 +428,21 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected Boolean fork;
 
         @XmlElement(name = "GET")
-        protected RequestMessage get;
+        protected HttpRequest get;
         @XmlElement(name = "POST")
-        protected RequestMessage post;
+        protected HttpRequest post;
         @XmlElement(name = "PUT")
-        protected RequestMessage put;
+        protected HttpRequest put;
         @XmlElement(name = "DELETE")
-        protected RequestMessage delete;
+        protected HttpRequest delete;
         @XmlElement(name = "HEAD")
-        protected RequestMessage head;
+        protected HttpRequest head;
         @XmlElement(name = "OPTIONS")
-        protected RequestMessage options;
+        protected HttpRequest options;
         @XmlElement(name = "PATCH")
-        protected RequestMessage patch;
+        protected HttpRequest patch;
         @XmlElement(name = "TRACE")
-        protected RequestMessage trace;
+        protected HttpRequest trace;
 
         @XmlElement
         protected Message.Extract extract;
@@ -463,67 +463,67 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             this.fork = fork;
         }
 
-        public RequestMessage getGet() {
+        public HttpRequest getGet() {
             return get;
         }
 
-        public void setGet(RequestMessage get) {
+        public void setGet(HttpRequest get) {
             this.get = get;
         }
 
-        public RequestMessage getPost() {
+        public HttpRequest getPost() {
             return post;
         }
 
-        public void setPost(RequestMessage post) {
+        public void setPost(HttpRequest post) {
             this.post = post;
         }
 
-        public RequestMessage getPut() {
+        public HttpRequest getPut() {
             return put;
         }
 
-        public void setPut(RequestMessage put) {
+        public void setPut(HttpRequest put) {
             this.put = put;
         }
 
-        public RequestMessage getDelete() {
+        public HttpRequest getDelete() {
             return delete;
         }
 
-        public void setDelete(RequestMessage delete) {
+        public void setDelete(HttpRequest delete) {
             this.delete = delete;
         }
 
-        public RequestMessage getHead() {
+        public HttpRequest getHead() {
             return head;
         }
 
-        public void setHead(RequestMessage head) {
+        public void setHead(HttpRequest head) {
             this.head = head;
         }
 
-        public RequestMessage getOptions() {
+        public HttpRequest getOptions() {
             return options;
         }
 
-        public void setOptions(RequestMessage options) {
+        public void setOptions(HttpRequest options) {
             this.options = options;
         }
 
-        public RequestMessage getPatch() {
+        public HttpRequest getPatch() {
             return patch;
         }
 
-        public void setPatch(RequestMessage patch) {
+        public void setPatch(HttpRequest patch) {
             this.patch = patch;
         }
 
-        public RequestMessage getTrace() {
+        public HttpRequest getTrace() {
             return trace;
         }
 
-        public void setTrace(RequestMessage trace) {
+        public void setTrace(HttpRequest trace) {
             this.trace = trace;
         }
 
@@ -570,21 +570,21 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected String headerValidators;
 
         @XmlElement(name = "GET")
-        protected RequestMessage get;
+        protected HttpRequest get;
         @XmlElement(name = "POST")
-        protected RequestMessage post;
+        protected HttpRequest post;
         @XmlElement(name = "PUT")
-        protected RequestMessage put;
+        protected HttpRequest put;
         @XmlElement(name = "DELETE")
-        protected RequestMessage delete;
+        protected HttpRequest delete;
         @XmlElement(name = "HEAD")
-        protected RequestMessage head;
+        protected HttpRequest head;
         @XmlElement(name = "OPTIONS")
-        protected RequestMessage options;
+        protected HttpRequest options;
         @XmlElement(name = "PATCH")
-        protected RequestMessage patch;
+        protected HttpRequest patch;
         @XmlElement(name = "TRACE")
-        protected RequestMessage trace;
+        protected HttpRequest trace;
 
         @XmlElement
         protected Receive.Selector selector;
@@ -643,67 +643,67 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             this.headerValidators = headerValidators;
         }
 
-        public RequestMessage getGet() {
+        public HttpRequest getGet() {
             return get;
         }
 
-        public void setGet(RequestMessage get) {
+        public void setGet(HttpRequest get) {
             this.get = get;
         }
 
-        public RequestMessage getPost() {
+        public HttpRequest getPost() {
             return post;
         }
 
-        public void setPost(RequestMessage post) {
+        public void setPost(HttpRequest post) {
             this.post = post;
         }
 
-        public RequestMessage getPut() {
+        public HttpRequest getPut() {
             return put;
         }
 
-        public void setPut(RequestMessage put) {
+        public void setPut(HttpRequest put) {
             this.put = put;
         }
 
-        public RequestMessage getDelete() {
+        public HttpRequest getDelete() {
             return delete;
         }
 
-        public void setDelete(RequestMessage delete) {
+        public void setDelete(HttpRequest delete) {
             this.delete = delete;
         }
 
-        public RequestMessage getHead() {
+        public HttpRequest getHead() {
             return head;
         }
 
-        public void setHead(RequestMessage head) {
+        public void setHead(HttpRequest head) {
             this.head = head;
         }
 
-        public RequestMessage getOptions() {
+        public HttpRequest getOptions() {
             return options;
         }
 
-        public void setOptions(RequestMessage options) {
+        public void setOptions(HttpRequest options) {
             this.options = options;
         }
 
-        public RequestMessage getPatch() {
+        public HttpRequest getPatch() {
             return patch;
         }
 
-        public void setPatch(RequestMessage patch) {
+        public void setPatch(HttpRequest patch) {
             this.patch = patch;
         }
 
-        public RequestMessage getTrace() {
+        public HttpRequest getTrace() {
             return trace;
         }
 
-        public void setTrace(RequestMessage trace) {
+        public void setTrace(HttpRequest trace) {
             this.trace = trace;
         }
 
@@ -739,16 +739,16 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     })
     public static class ServerResponse {
         @XmlElement
-        protected ResponseMessage response;
+        protected HttpResponse response;
 
         @XmlElement
         protected Message.Extract extract;
 
-        public ResponseMessage getResponse() {
+        public HttpResponse getResponse() {
             return response;
         }
 
-        public void setResponse(ResponseMessage response) {
+        public void setResponse(HttpResponse response) {
             this.response = response;
         }
 
@@ -791,7 +791,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
         protected Receive.Selector selector;
 
         @XmlElement
-        protected ResponseMessage response;
+        protected HttpResponse response;
 
         @XmlElement(name = "validate")
         protected List<Receive.Validate> validates;
@@ -855,11 +855,11 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             this.headerValidators = headerValidators;
         }
 
-        public ResponseMessage getResponse() {
+        public HttpResponse getResponse() {
             return response;
         }
 
-        public void setResponse(ResponseMessage response) {
+        public void setResponse(HttpResponse response) {
             this.response = response;
         }
 
@@ -882,7 +882,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
-    public static class ResponseMessage extends Message {
+    public static class HttpResponse extends Message {
         @XmlAttribute(name = "status")
         protected String status = "200";
         @XmlAttribute(name = "reason-phrase")
@@ -929,7 +929,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     @XmlType(name = "", propOrder = {
             "parameters"
     })
-    public static class RequestMessage extends Message {
+    public static class HttpRequest extends Message {
         @XmlAttribute
         protected String path;
         @XmlAttribute(name = "content-type")

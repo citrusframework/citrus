@@ -257,7 +257,7 @@ public class HttpServerTest extends AbstractXmlActionTest {
         Assert.assertEquals(httpMessageBuilder.buildMessagePayload(context, receiveMessageAction.getMessageType()), "");
         requestHeaders = httpMessageBuilder.buildMessageHeaders(context);
         Assert.assertEquals(requestHeaders.get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.HEAD.name());
-        Assert.assertNull(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assert.assertEquals(requestHeaders.get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
         Assert.assertNull(requestHeaders.get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpServer");
 

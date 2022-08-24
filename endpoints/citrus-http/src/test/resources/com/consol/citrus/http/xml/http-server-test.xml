@@ -17,7 +17,9 @@
   ~ limitations under the License.
   -->
 
-<test name="HttpServerTest" author="Christoph" status="FINAL">
+<test name="HttpServerTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <variables>
     <variable name="id" value="12345"/>
   </variables>
@@ -29,7 +31,9 @@
     </http>
 
     <http server="httpServer">
-      <send-response/>
+      <send-response>
+        <response/>
+      </send-response>
     </http>
 
     <http server="httpServer">
@@ -92,8 +96,8 @@
     </http>
 
     <http server="httpServer">
-      <receive-request path="/test">
-        <HEAD/>
+      <receive-request>
+        <HEAD path="/test"/>
       </receive-request>
     </http>
 

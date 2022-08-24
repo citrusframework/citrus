@@ -1,1 +1,2 @@
-type=com.consol.citrus.xml.actions.Sql
+type=com.consol.citrus.sql.xml.Sql
+ns=http://citrusframework.org/schema/xml/testcase

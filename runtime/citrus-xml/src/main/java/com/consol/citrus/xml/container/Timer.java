@@ -83,7 +83,7 @@ public class Timer implements TestActionBuilder<com.consol.citrus.container.Time
         return this;
     }
 
-    @XmlElement
+    @XmlElement(required = true)
     public Timer setActions(TestActions actions) {
         builder.actions(actions.getActionBuilders().toArray(TestActionBuilder<?>[]::new));
         return this;

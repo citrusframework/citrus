@@ -17,7 +17,9 @@
   ~ limitations under the License.
   -->
 
-<test name="CreateVariablesTest" author="Christoph" status="FINAL">
+<test name="CreateVariablesTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
   <description>Sample test in XML</description>
   <actions>
     <create-variables>
@@ -30,7 +32,7 @@
       </variable>
       <variable name="var4">
         <value>
-          <script>return "test4"</script>
+          <script type="groovy">return "test4"</script>
         </value>
       </variable>
     </create-variables>

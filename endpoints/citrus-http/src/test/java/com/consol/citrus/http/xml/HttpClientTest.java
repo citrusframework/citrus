@@ -52,6 +52,7 @@ import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.xml.XmlTestLoader;
+import com.consol.citrus.xml.actions.XmlTestActionBuilder;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -295,5 +296,11 @@ public class HttpClientTest extends AbstractXmlActionTest {
         Assert.assertNull(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "http://localhost:${port}/test");
         Assert.assertEquals(sendMessageAction.getActor(), testActor);
+    }
+
+    @Test
+    public void shouldLookupTestActionBuilder() {
+        Assert.assertTrue(XmlTestActionBuilder.lookup("http").isPresent());
+        Assert.assertEquals(XmlTestActionBuilder.lookup("http").get().getClass(), Http.class);
     }
 }
