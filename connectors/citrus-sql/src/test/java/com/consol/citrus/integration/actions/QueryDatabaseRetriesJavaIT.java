@@ -43,19 +43,19 @@ public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void sqlQueryRetries() {
+        run(sql(dataSource)
+                .sqlResource("classpath:com/consol/citrus/integration/actions/script.sql"));
+
         run(parallel().actions(
-            sequential().actions(
-                sql(dataSource)
-                    .sqlResource("classpath:com/consol/citrus/integration/actions/script.sql"),
-                repeatOnError()
-                    .autoSleep(100).index("i").until("i = 5")
-                    .actions(query(dataSource)
-                        .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
-                        .validate("CUSTOMER_CNT", "0")
-                )
+            repeatOnError()
+                .autoSleep(1000).index("i").until("i = 5")
+                .actions(query(dataSource)
+                    .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
+                    .validate("CUSTOMER_CNT", "0")
             ),
+
             sequential().actions(
-                sleep().milliseconds(300),
+                sleep().milliseconds(3000),
                 sql(dataSource)
                     .statement("DELETE FROM CUSTOMERS")
             )
