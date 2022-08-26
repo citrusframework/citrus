@@ -21,7 +21,7 @@
       </sql>
 
       <parallel>
-        <repeat-onerror-until-true auto-sleep="1000" condition="i = 5" index="i">
+        <repeat-onerror-until-true auto-sleep="500" condition="i = 10" index="i">
           <sql datasource="testDataSource">
             <statement>select COUNT(*) as customer_cnt from CUSTOMERS</statement>
             <validate column="CUSTOMER_CNT" value="0"/>
@@ -29,7 +29,7 @@
         </repeat-onerror-until-true>
 
         <sequential>
-          <sleep milliseconds="3000"/>
+          <sleep milliseconds="2000"/>
           <sql datasource="testDataSource">
             <statement>DELETE FROM CUSTOMERS</statement>
           </sql>

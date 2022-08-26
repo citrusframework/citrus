@@ -48,14 +48,14 @@ public class QueryDatabaseRetriesJavaIT extends TestNGCitrusSpringSupport {
 
         run(parallel().actions(
             repeatOnError()
-                .autoSleep(1000).index("i").until("i = 5")
+                .autoSleep(500).index("i").until("i = 10")
                 .actions(query(dataSource)
                     .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
                     .validate("CUSTOMER_CNT", "0")
             ),
 
             sequential().actions(
-                sleep().milliseconds(3000),
+                sleep().milliseconds(2000),
                 sql(dataSource)
                     .statement("DELETE FROM CUSTOMERS")
             )
