@@ -59,7 +59,7 @@
   </citrus:namespace-context>
 
   <!-- Embedded ActiveMQ JMS broker -->
-  <amq:broker useJmx="false" persistent="false">
+  <amq:broker useJmx="false" persistent="false" advisorySupport="false" timeBeforePurgeTempDestinations="30000">
     <amq:transportConnectors>
       <amq:transportConnector uri="tcp://localhost:61616" />
     </amq:transportConnectors>
