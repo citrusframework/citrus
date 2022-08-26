@@ -21,7 +21,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
-  <version>3.3.0-SNAPSHOT</version>
+  <version>3.4.0-SNAPSHOT</version>
   <name>Citrus</name>
   <description>Citrus Test Framework</description>
   <url>https://citrusframework.org</url>
