@@ -558,8 +558,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 3.2.1,</span>
-<span id="revdate">2022-04-06</span>
+<span id="revnumber">version 3.3.0,</span>
+<span id="revdate">2022-08-26</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -1001,7 +1001,7 @@ $(addBlockSwitches);
 </li>
 <li><a href="#run-xml-tests">44. XML tests</a>
 <ul class="sectlevel2">
-<li><a href="#xml-test-annotation">44.1. @CitrusXmlTest annotation</a></li>
+<li><a href="#xml-test-annotation">44.1. @CitrusTestSource annotation</a></li>
 <li><a href="#xml-test-meta-info">44.2. Test meta information</a></li>
 <li><a href="#xml-test-finally">44.3. Finally block</a></li>
 <li><a href="#xml-test-variables-cdata">44.4. Variables with CDATA sections</a></li>
@@ -1039,7 +1039,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 3.2.1</strong></p>
+<p><strong>Version: 3.3.0</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -7775,7 +7775,7 @@ from the Citrus context.</p>
 </div>
 <div class="paragraph">
 <p>The model object requires a proper message marshaller that should be available as bean in the project context (e.g. the
-Spring application context). By default, Citrus is searching for a bean of type <strong>org.springframework.oxm.Marshaller</strong>.</p>
+Spring application context). By default, Citrus is searching for a bean of type <strong>com.consol.cirus.xml.Marshaller</strong>.</p>
 </div>
 <div class="paragraph">
 <p>In case you have multiple message marshallers in the application context you have to tell Citrus which one to use in this
@@ -8182,7 +8182,7 @@ from the Citrus context.</p>
 </div>
 <div class="paragraph">
 <p>The model object requires a proper message marshaller that should be available as bean in the project context (e.g. the
-Spring application context). By default, Citrus is searching for a bean of type <strong>org.springframework.oxm.Marshaller</strong>.</p>
+Spring application context). By default, Citrus is searching for a bean of type <strong>com.consol.citrus.xml.Marshaller</strong>.</p>
 </div>
 <div class="paragraph">
 <p>In case you have multiple message marshallers in the application context you have to tell Citrus which one to use in this
@@ -31522,7 +31522,7 @@ such as test name, package, runtime and so on.</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">package</span> <span class="namespace">com.consol.citrus</span>;
 
 <span class="keyword">import</span> <span class="include">com.consol.citrus.annotations.CitrusResource</span>;
-<span class="keyword">import</span> <span class="include">com.consol.citrus.annotations.CitrusXmlTest</span>;
+<span class="keyword">import</span> <span class="include">com.consol.citrus.annotations.CitrusTestSource</span>;
 <span class="keyword">import</span> <span class="include">com.consol.citrus.testng.TestNGCitrusSupport</span>;
 <span class="keyword">import</span> <span class="include">org.testng.annotations.Optional</span>;
 <span class="keyword">import</span> <span class="include">org.testng.annotations.Parameters</span>;
@@ -31531,7 +31531,7 @@ such as test name, package, runtime and so on.</p>
 <span class="directive">public</span> <span class="type">class</span> <span class="class">MyFirstCitrus_IT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
 
     <span class="annotation">@Test</span>
-    <span class="annotation">@CitrusXmlTest</span>(name=<span class="string"><span class="delimiter">&quot;</span><span class="content">MyFirstCitrus_IT</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@CitrusTestSource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">spring</span><span class="delimiter">&quot;</span></span>, name=<span class="string"><span class="delimiter">&quot;</span><span class="content">MyFirstCitrus_IT</span><span class="delimiter">&quot;</span></span>)
     <span class="directive">public</span> <span class="type">void</span> myFirstCitrus_IT() {
     }
 }</code></pre>
@@ -31576,22 +31576,30 @@ test logic to the generated XML file.</p>
 that the Java class is able to find and load the XML file when running the test.</p>
 </div>
 <div class="sect2">
-<h3 id="xml-test-annotation"><a class="anchor" href="#xml-test-annotation"></a><a class="link" href="#xml-test-annotation">44.1. @CitrusXmlTest annotation</a></h3>
+<h3 id="xml-test-annotation"><a class="anchor" href="#xml-test-annotation"></a><a class="link" href="#xml-test-annotation">44.1. @CitrusTestSource annotation</a></h3>
 <div class="paragraph">
-<p>Each XML test in Citrus defines the <code>@CitrusXmlTest</code> annotation in the Java class. This annotation makes Citrus search for the
+<p>Each XML test in Citrus defines the <code>@CitrusTestSource</code> annotation in the Java class. This annotation makes Citrus search for the
 XML file that represents the Citrus test within your classpath.</p>
 </div>
 <div class="paragraph">
 <p>In the basic example above this means that Citrus searches for a XML test file in <strong>com/consol/citrus/MyFirstCitrus_IT.xml</strong> .</p>
 </div>
 <div class="paragraph">
-<p>You can customize this path and tell Citrus to search for another XML file by using the <code>@CitrusXmlTest</code> annotation properties.</p>
+<p>You can customize this path and tell Citrus to search for another XML file by using the <code>@CitrusTestSource</code> annotation properties.</p>
 </div>
 <div class="paragraph">
 <p>Following annotation properties are available:</p>
 </div>
 <div class="hdlist">
 <table>
+<tr>
+<td class="hdlist1">
+type
+</td>
+<td class="hdlist2">
+<p>Type of the test source to load (spring, groovy, xml, &#8230;&#8203;)</p>
+</td>
+</tr>
 <tr>
 <td class="hdlist1">
 name
@@ -31627,7 +31635,7 @@ file name pattern.</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Sample_IT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
 
     <span class="annotation">@Test</span>
-    <span class="annotation">@CitrusXmlTest</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">CustomName_IT</span><span class="delimiter">&quot;</span></span>, packageName = <span class="string"><span class="delimiter">&quot;</span><span class="content">com.other.test.package</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@CitrusTestSource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">spring</span><span class="delimiter">&quot;</span></span>, name = <span class="string"><span class="delimiter">&quot;</span><span class="content">CustomName_IT</span><span class="delimiter">&quot;</span></span>, packageName = <span class="string"><span class="delimiter">&quot;</span><span class="content">com.other.test.package</span><span class="delimiter">&quot;</span></span>)
     <span class="directive">public</span> <span class="type">void</span> customXmlTest() {}
 }</code></pre>
 </div>
@@ -31644,7 +31652,7 @@ file name pattern.</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Sample_IT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
 
     <span class="annotation">@Test</span>
-    <span class="annotation">@CitrusXmlTest</span>(name = { <span class="string"><span class="delimiter">&quot;</span><span class="content">Test_1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Test_2</span><span class="delimiter">&quot;</span></span> })
+    <span class="annotation">@CitrusTestSource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">spring</span><span class="delimiter">&quot;</span></span>, name = { <span class="string"><span class="delimiter">&quot;</span><span class="content">Test_1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Test_2</span><span class="delimiter">&quot;</span></span> })
     <span class="directive">public</span> <span class="type">void</span> multipleTests() {}
 }</code></pre>
 </div>
@@ -31659,7 +31667,7 @@ a separate test. You can also load all test in a package with a <code>packageSca
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Sample_IT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
 
     <span class="annotation">@Test</span>
-    <span class="annotation">@CitrusXmlTest</span>(packageScan =  { <span class="string"><span class="delimiter">&quot;</span><span class="content">com.some.test.package</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">com.other.test.package</span><span class="delimiter">&quot;</span></span> })
+    <span class="annotation">@CitrusTestSource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">spring</span><span class="delimiter">&quot;</span></span>, packageScan =  { <span class="string"><span class="delimiter">&quot;</span><span class="content">com.some.test.package</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">com.other.test.package</span><span class="delimiter">&quot;</span></span> })
     <span class="directive">public</span> <span class="type">void</span> packageScanTest() {}
 }</code></pre>
 </div>
@@ -31668,28 +31676,28 @@ a separate test. You can also load all test in a package with a <code>packageSca
 <p>This loads all XML files in the given packages and executes each of them as a separate test.</p>
 </div>
 <div class="paragraph">
-<p>You can also mix the various <code>@CitrusXmlTest</code> annotations in a single Java class. The class can have several methods with
+<p>You can also mix the various <code>@CitrusTestSource</code> annotations in a single Java class. The class can have several methods with
 different annotations. Each annotated method represents one or more Citrus XML test cases.</p>
 </div>
 <div class="listingblock">
-<div class="title">@CitrusXmlTest annotations</div>
+<div class="title">@CitrusTestSource annotations</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">SampleIT</span> <span class="directive">extends</span> TestNGCitrusSpringSupport {
 
     <span class="annotation">@Test</span>
-    <span class="annotation">@CitrusXmlTest</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">SampleIT</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@CitrusTestSource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">spring</span><span class="delimiter">&quot;</span></span>, name = <span class="string"><span class="delimiter">&quot;</span><span class="content">SampleIT</span><span class="delimiter">&quot;</span></span>)
     <span class="directive">public</span> <span class="type">void</span> sampleTest() {}
 
     <span class="annotation">@Test</span>
-    <span class="annotation">@CitrusXmlTest</span>(name = { <span class="string"><span class="delimiter">&quot;</span><span class="content">Test_1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Test_2</span><span class="delimiter">&quot;</span></span> })
+    <span class="annotation">@CitrusTestSource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">spring</span><span class="delimiter">&quot;</span></span>, name = { <span class="string"><span class="delimiter">&quot;</span><span class="content">Test_1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Test_2</span><span class="delimiter">&quot;</span></span> })
     <span class="directive">public</span> <span class="type">void</span> multipleTests() {}
 
     <span class="annotation">@Test</span>
-    <span class="annotation">@CitrusXmlTest</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">CustomName_IT</span><span class="delimiter">&quot;</span></span>, packageName = <span class="string"><span class="delimiter">&quot;</span><span class="content">com.other.test.package</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@CitrusTestSource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">spring</span><span class="delimiter">&quot;</span></span>, name = <span class="string"><span class="delimiter">&quot;</span><span class="content">CustomName_IT</span><span class="delimiter">&quot;</span></span>, packageName = <span class="string"><span class="delimiter">&quot;</span><span class="content">com.other.test.package</span><span class="delimiter">&quot;</span></span>)
     <span class="directive">public</span> <span class="type">void</span> customXmlTest() {}
 
     <span class="annotation">@Test</span>
-    <span class="annotation">@CitrusXmlTest</span>(packageScan =  { <span class="string"><span class="delimiter">&quot;</span><span class="content">com.some.test.package</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">com.other.test.package</span><span class="delimiter">&quot;</span></span> })
+    <span class="annotation">@CitrusTestSource</span>(type = <span class="string"><span class="delimiter">&quot;</span><span class="content">spring</span><span class="delimiter">&quot;</span></span>, packageScan =  { <span class="string"><span class="delimiter">&quot;</span><span class="content">com.some.test.package</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">com.other.test.package</span><span class="delimiter">&quot;</span></span> })
     <span class="directive">public</span> <span class="type">void</span> packageScanTest() {}
 }</code></pre>
 </div>
@@ -31719,7 +31727,7 @@ times, for instance by explicit name reference and a package scan will be execut
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-The best thing about using the <strong>@CitrusXmlTest</strong> annotation is that you can continue to use the test framework capabilities
+The best thing about using the <strong>@CitrusTestSource</strong> annotation is that you can continue to use the test framework capabilities
 (e.g. test groups, invocation count, thread pools, data providers, and so on).
 </td>
 </tr>
@@ -33055,8 +33063,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.2.1<br>
-Last updated 2022-04-05 21:45:04 +0200
+Version 3.3.0<br>
+Last updated 2022-08-26 20:11:57 +0200
 </div>
 </div>
 <style>
