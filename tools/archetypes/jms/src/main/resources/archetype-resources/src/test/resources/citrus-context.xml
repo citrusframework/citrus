@@ -47,7 +47,7 @@
   </bean>
 
   <!-- Embedded ActiveMQ JMS broker -->
-  <amq:broker useJmx="false" persistent="false">
+  <amq:broker useJmx="false" persistent="false" advisorySupport="false" timeBeforePurgeTempDestinations="30000">
     <amq:transportConnectors>
       <amq:transportConnector uri="${jms.broker.url}" />
     </amq:transportConnectors>
