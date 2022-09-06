@@ -19,10 +19,6 @@
 
 package com.consol.citrus.common;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusContext;
 import com.consol.citrus.DefaultTestCase;
@@ -35,6 +31,9 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Default test loader implementation takes case on test names/packages and initializes the test runner if applicable.
@@ -64,6 +63,24 @@ public class DefaultTestLoader implements TestLoader {
 
     protected final List<Consumer<TestCase>> configurer = new ArrayList<>();
     protected final List<Consumer<TestCase>> handler = new ArrayList<>();
+
+    /**
+     * Default constructor for full control over the loader.
+     **/
+    public DefaultTestLoader() {
+        // Empty default constructor
+    }
+
+    /**
+     * Constructor with context file and parent application context field for simple initialisation.
+     **/
+    public DefaultTestLoader(Class<?> testClass, String testName, String packageName,
+        CitrusContext citrusContext) {
+        this.testClass = testClass;
+        this.testName = testName;
+        this.packageName = packageName;
+        this.citrusContext = citrusContext;
+    }
 
     @Override
     public final void load() {
@@ -118,6 +135,7 @@ public class DefaultTestLoader implements TestLoader {
             if (testCase == null) {
                 testCase = new DefaultTestCase();
             }
+
             runner = new DefaultTestCaseRunner(testCase, context);
         }
 
@@ -140,9 +158,64 @@ public class DefaultTestLoader implements TestLoader {
         }
     }
 
+    public void setCitrus(Citrus citrus) {
+        this.citrus = citrus;
+    }
+
+    public DefaultTestLoader citrus(Citrus citrus) {
+        setCitrus(citrus);
+        return this;
+    }
+
+    public void setCitrusContext(CitrusContext citrusContext) {
+        this.citrusContext = citrusContext;
+    }
+
+    public DefaultTestLoader citrusContext(CitrusContext citrusContext) {
+        setCitrusContext(citrusContext);
+        return this;
+    }
+
+    public void setContext(TestContext context) {
+        this.context = context;
+    }
+
+    public DefaultTestLoader context(TestContext context) {
+        setContext(context);
+        return this;
+    }
+
+    public void setRunner(TestCaseRunner runner) {
+        this.runner = runner;
+    }
+
+    public DefaultTestLoader runner(TestCaseRunner runner) {
+        setRunner(runner);
+        return this;
+    }
+
+    public void setTestCase(TestCase testCase) {
+        this.testCase = testCase;
+    }
+
+    public DefaultTestLoader testCase(TestCase testCase) {
+        setTestCase(testCase);
+        return this;
+    }
+
+    @Override
+    public TestCase getTestCase() {
+        return testCase;
+    }
+
     @Override
     public void setTestClass(Class<?> testClass) {
         this.testClass = testClass;
+    }
+
+    public DefaultTestLoader testClass(Class<?> testClass) {
+        setTestClass(testClass);
+        return this;
     }
 
     @Override
@@ -150,14 +223,20 @@ public class DefaultTestLoader implements TestLoader {
         this.testName = testName;
     }
 
+    public DefaultTestLoader testName(String testName) {
+        setTestName(testName);
+        return this;
+    }
+
+
     @Override
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
-    @Override
-    public TestCase getTestCase() {
-        return testCase;
+    public DefaultTestLoader packageName(String packageName) {
+        setPackageName(packageName);
+        return this;
     }
 
     @Override

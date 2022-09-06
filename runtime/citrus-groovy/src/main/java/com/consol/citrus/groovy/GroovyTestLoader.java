@@ -19,15 +19,14 @@
 
 package com.consol.citrus.groovy;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.consol.citrus.common.DefaultTestLoader;
 import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.groovy.dsl.GroovyShellUtils;
 import com.consol.citrus.groovy.dsl.test.TestCaseScript;
 import com.consol.citrus.util.FileUtils;
+import java.io.File;
+import java.io.IOException;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -76,5 +75,10 @@ public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAwa
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public GroovyTestLoader source(String source) {
+        setSource(source);
+        return this;
     }
 }

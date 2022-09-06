@@ -64,9 +64,6 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
 
     /**
      * Constructor with context file and parent application context field.
-     * @param testClass
-     * @param testName
-     * @param packageName
      */
     public XmlTestLoader(Class<?> testClass, String testName, String packageName) {
         this();
@@ -105,8 +102,6 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
 
     /**
      * Automatically applies Citrus test namespace if non is set on the root element.
-     * @param xmlSource
-     * @return
      */
     public static String applyNamespace(String xmlSource) {
         if (NAMESPACE_IS_SET.matcher(xmlSource).matches()) {
@@ -119,7 +114,6 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
     /**
      * Gets custom Spring application context file for the XML test case. If not set creates default
      * context file path from testName and packageName.
-     * @return
      */
     public String getSource() {
         if (StringUtils.hasText(source)) {
@@ -132,10 +126,14 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
 
     /**
      * Sets custom Spring application context file for XML test case.
-     * @param source
      */
     @Override
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public XmlTestLoader source(String source) {
+        setSource(source);
+        return this;
     }
 }
