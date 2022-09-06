@@ -65,7 +65,6 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
     /**
      * Create new Spring bean application context with test case XML file,
      * helper and parent context file.
-     * @return
      */
     private ApplicationContext loadApplicationContext() {
         try {
@@ -98,7 +97,7 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
                 } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
                     throw new CitrusRuntimeException(String.format("Could not install custom BeanDefinitionParser '%s'", parserClass), e);
                 }
-            };
+            }
         }
     }
 
@@ -113,7 +112,6 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
     /**
      * Gets custom Spring application context file for the XML test case. If not set creates default
      * context file path from testName and packageName.
-     * @return
      */
     public String getSource() {
         if (StringUtils.hasText(source)) {
@@ -126,10 +124,14 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
 
     /**
      * Sets custom Spring application context file for XML test case.
-     * @param source
      */
     @Override
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public SpringXmlTestLoader source(String source) {
+        setSource(source);
+        return this;
     }
 }
