@@ -125,11 +125,16 @@ public class DefaultTestLoader implements TestLoader {
     protected void initializeTestRunner() {
         if (runner == null) {
             if (context == null) {
-                if (citrus == null) {
-                    throw new CitrusRuntimeException("Missing Citrus framework instance for loading test");
+                if (citrusContext == null) {
+                    if (citrus == null) {
+                        throw new CitrusRuntimeException(
+                            "Missing Citrus framework instance for loading test");
+                    }
+
+                    citrusContext = citrus.getCitrusContext();
                 }
 
-                context = citrus.getCitrusContext().createTestContext();
+                context = citrusContext.createTestContext();
             }
 
             if (testCase == null) {
