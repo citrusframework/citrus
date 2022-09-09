@@ -61,3 +61,4 @@ jobs:
       - name: Build Citrus
         run: |
           ./mvnw --no-transfer-progress install
+          ./mvnw --no-transfer-progress -f bom/pom.xml install

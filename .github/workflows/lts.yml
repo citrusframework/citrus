@@ -62,3 +62,4 @@ jobs:
       - name: Build Citrus
         run: |
           ./mvnw --no-transfer-progress -Djava.version=17 install
+          ./mvnw --no-transfer-progress -Djava.version=17 -f bom/pom.xml install
