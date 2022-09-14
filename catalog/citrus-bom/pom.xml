@@ -73,6 +73,11 @@
         <artifactId>citrus-groovy</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-xml</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <!-- Endpoints -->
       <dependency>
