@@ -16,12 +16,12 @@
 
 package com.consol.citrus.selenium.endpoint;
 
+import java.util.List;
+
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.support.events.WebDriverEventListener;
-
-import java.util.List;
+import org.openqa.selenium.support.events.WebDriverListener;
 
 /**
  * @author Christoph Deppisch
@@ -30,7 +30,7 @@ import java.util.List;
 public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrowser> {
 
     /** Endpoint target */
-    private SeleniumBrowser endpoint = new SeleniumBrowser();
+    private final SeleniumBrowser endpoint = new SeleniumBrowser();
 
     @Override
     protected SeleniumBrowser getEndpoint() {
@@ -103,7 +103,7 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
      * @param listeners
      * @return
      */
-    public SeleniumBrowserBuilder eventListeners(List<WebDriverEventListener> listeners) {
+    public SeleniumBrowserBuilder eventListeners(List<WebDriverListener> listeners) {
         endpoint.getEndpointConfiguration().setEventListeners(listeners);
         return this;
     }

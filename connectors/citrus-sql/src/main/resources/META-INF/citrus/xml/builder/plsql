@@ -1,0 +1,2 @@
+type=com.consol.citrus.sql.xml.Plsql
+ns=http://citrusframework.org/schema/xml/testcase

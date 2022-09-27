@@ -19,6 +19,7 @@ package com.consol.citrus.container;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Consumer;
 
 import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.TestAction;
@@ -38,13 +39,13 @@ import org.slf4j.LoggerFactory;
 public class Parallel extends AbstractActionContainer {
 
     /** Store created threads in stack */
-    private Stack<Thread> threads = new Stack<>();
+    private final Stack<Thread> threads = new Stack<>();
 
     /** Collect exceptions in list */
-    private List<CitrusRuntimeException> exceptions = new ArrayList<>();
+    private final List<CitrusRuntimeException> exceptions = new ArrayList<>();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Parallel.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Parallel.class);
 
     /**
      * Default constructor.
@@ -57,17 +58,7 @@ public class Parallel extends AbstractActionContainer {
     public void doExecute(TestContext context) {
         for (TestActionBuilder<?> actionBuilder : actions) {
             final TestAction action = actionBuilder.build();
-            Thread t = new Thread(new ActionRunner(action, context) {
-                @Override
-                public void exceptionCallback(CitrusRuntimeException e) {
-                    if (exceptions.isEmpty()) {
-                        setActiveAction(action);
-                    }
-
-                    exceptions.add(e);
-                }
-            });
-
+            Thread t = new Thread(new ActionRunner(ctx -> executeAction(action, ctx), context, exceptions::add));
             threads.push(t);
             t.start();
         }
@@ -76,7 +67,7 @@ public class Parallel extends AbstractActionContainer {
             try {
                 threads.pop().join();
             } catch (InterruptedException e) {
-                log.error("Unable to join thread", e);
+                LOG.error("Unable to join thread", e);
             }
         }
 
@@ -92,16 +83,20 @@ public class Parallel extends AbstractActionContainer {
     /**
      * Runnable wrapper for executing an action in separate Thread.
      */
-    private abstract static class ActionRunner implements Runnable {
+    private static class ActionRunner implements Runnable {
         /** Test action to execute */
         private final TestAction action;
 
         /** Test context */
         private final TestContext context;
 
-        public ActionRunner(TestAction action, TestContext context) {
+        /** Exception handler */
+        private final Consumer<CitrusRuntimeException> exceptionHandler;
+
+        public ActionRunner(TestAction action, TestContext context, Consumer<CitrusRuntimeException> exceptionHandler) {
             this.action = action;
             this.context = context;
+            this.exceptionHandler = exceptionHandler;
         }
 
         /**
@@ -111,19 +106,13 @@ public class Parallel extends AbstractActionContainer {
             try {
                 action.execute(context);
             } catch (CitrusRuntimeException e) {
-                log.error("Parallel test action raised error", e);
-                exceptionCallback(e);
+                LOG.error("Parallel test action raised error", e);
+                exceptionHandler.accept(e);
             } catch (Exception | AssertionError e) {
-                log.error("Parallel test action raised error", e);
-                exceptionCallback(new CitrusRuntimeException(e));
+                LOG.error("Parallel test action raised error", e);
+                exceptionHandler.accept(new CitrusRuntimeException(e));
             }
         }
-
-        /**
-         * Callback for exception tracking.
-         * @param exception
-         */
-        public abstract void exceptionCallback(CitrusRuntimeException exception);
     }
 
     /**

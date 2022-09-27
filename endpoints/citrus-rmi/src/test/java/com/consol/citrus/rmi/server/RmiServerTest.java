@@ -16,6 +16,12 @@
 
 package com.consol.citrus.rmi.server;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.rmi.Remote;
+import java.rmi.registry.Registry;
+import java.util.Arrays;
+
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -32,14 +38,8 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.rmi.Remote;
-import java.rmi.registry.Registry;
-import java.util.Arrays;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 
@@ -49,8 +49,8 @@ import static org.mockito.Mockito.reset;
  */
 public class RmiServerTest extends AbstractTestNGUnitTest {
 
-    private Registry registry = Mockito.mock(Registry.class);
-    private EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
+    private final Registry registry = Mockito.mock(Registry.class);
+    private final EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
 
     @Test
     public void testServiceInvocationWithArgument() throws Exception {

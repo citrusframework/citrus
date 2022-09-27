@@ -1,11 +1,9 @@
 package com.consol.citrus;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.consol.citrus.annotations.CitrusConfiguration;
+import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
 import com.consol.citrus.context.TestContext;
@@ -35,11 +33,9 @@ import com.consol.citrus.report.TestReporters;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListenerAware;
 import com.consol.citrus.report.TestSuiteListeners;
-import com.consol.citrus.spi.BindToRegistry;
 import com.consol.citrus.spi.ReferenceRegistry;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.SimpleReferenceResolver;
-import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
 import com.consol.citrus.validation.MessageValidator;
@@ -49,7 +45,6 @@ import com.consol.citrus.validation.matcher.DefaultValidationMatcherRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -135,11 +130,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
      * @param configClass
      */
     public void parseConfiguration(Class<?> configClass) {
-        try {
-            parseConfiguration(configClass.getConstructor().newInstance());
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-            throw new CitrusRuntimeException("Missing or non-accessible default constructor on custom configuration class", e);
-        }
+        CitrusAnnotations.parseConfiguration(configClass, this);
     }
 
     /**
@@ -147,46 +138,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
      * @param configuration
      */
     public void parseConfiguration(Object configuration) {
-        Class<?> configClass = configuration.getClass();
-
-        if (configClass.isAnnotationPresent(CitrusConfiguration.class)) {
-            for (Class<?> type : configClass.getAnnotation(CitrusConfiguration.class).classes()) {
-                parseConfiguration(type);
-            }
-        }
-
-        Arrays.stream(configClass.getDeclaredMethods())
-                .filter(m -> m.getAnnotation(BindToRegistry.class) != null)
-                .forEach(m -> {
-                    try {
-                        String name = ReferenceRegistry.getName(m.getAnnotation(BindToRegistry.class), m.getName());
-                        Object component = m.invoke(configuration);
-                        getReferenceResolver().bind(name, component);
-
-                        if (component instanceof MessageValidator) {
-                            getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
-                        }
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new CitrusRuntimeException("Failed to invoke configuration method", e);
-                    }
-                });
-
-        Arrays.stream(configClass.getDeclaredFields())
-                .filter(f -> f.getAnnotation(BindToRegistry.class) != null)
-                .peek(ReflectionUtils::makeAccessible)
-                .forEach(f -> {
-                    try {
-                        String name = ReferenceRegistry.getName(f.getAnnotation(BindToRegistry.class), f.getName());
-                        Object component = f.get(configuration);
-                        getReferenceResolver().bind(name, component);
-
-                        if (component instanceof MessageValidator) {
-                            getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
-                        }
-                    } catch (IllegalAccessException e) {
-                        throw new CitrusRuntimeException("Failed to access configuration field", e);
-                    }
-                });
+        CitrusAnnotations.parseConfiguration(configuration, this);
     }
 
     /**
@@ -399,7 +351,7 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         private ReferenceResolver referenceResolver = new SimpleReferenceResolver();
         private MessageProcessors messageProcessors = new MessageProcessors();
         private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
-        private TypeConverter typeConverter = new DefaultTypeConverter();
+        private TypeConverter typeConverter = TypeConverter.lookupDefault();
         private LogModifier logModifier = new DefaultLogModifier();
 
         public static Builder defaultContext() {

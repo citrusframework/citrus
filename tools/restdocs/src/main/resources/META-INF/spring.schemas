@@ -20,5 +20,6 @@ http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-3.
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-3.1.2.xsd=com/consol/citrus/schema/citrus-restdocs-config-3.1.2.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-3.2.0.xsd=com/consol/citrus/schema/citrus-restdocs-config-3.2.0.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-3.2.1.xsd=com/consol/citrus/schema/citrus-restdocs-config-3.2.1.xsd
-http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-3.3.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-restdocs-config-3.3.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-3.4.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-restdocs-config-3.4.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-3.3.0.xsd=com/consol/citrus/schema/citrus-restdocs-config-3.3.0.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd=com/consol/citrus/schema/citrus-restdocs-config.xsd

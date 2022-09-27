@@ -100,7 +100,6 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
             } catch (Exception e) {
                 if (ignoreErrors) {
                     log.error("Ignoring error while executing SQL statement: " + e.getLocalizedMessage());
-                    continue;
                 } else {
                     throw new CitrusRuntimeException(e);
                 }

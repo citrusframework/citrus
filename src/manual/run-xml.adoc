@@ -60,7 +60,7 @@ such as test name, package, runtime and so on.
 package com.consol.citrus;
 
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -69,7 +69,7 @@ import org.testng.annotations.Test;
 public class MyFirstCitrus_IT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusXmlTest(name="MyFirstCitrus_IT")
+    @CitrusTestSource(type = "spring", name="MyFirstCitrus_IT")
     public void myFirstCitrus_IT() {
     }
 }
@@ -112,18 +112,19 @@ The default naming convention requires the XML file with the test name in the sa
 that the Java class is able to find and load the XML file when running the test.
 
 [[xml-test-annotation]]
-== @CitrusXmlTest annotation
+== @CitrusTestSource annotation
 
-Each XML test in Citrus defines the `@CitrusXmlTest` annotation in the Java class. This annotation makes Citrus search for the
+Each XML test in Citrus defines the `@CitrusTestSource` annotation in the Java class. This annotation makes Citrus search for the
 XML file that represents the Citrus test within your classpath.
 
 In the basic example above this means that Citrus searches for a XML test file in *com/consol/citrus/MyFirstCitrus_IT.xml* .
 
-You can customize this path and tell Citrus to search for another XML file by using the `@CitrusXmlTest` annotation properties.
+You can customize this path and tell Citrus to search for another XML file by using the `@CitrusTestSource` annotation properties.
 
 Following annotation properties are available:
 
 [horizontal]
+type:: Type of the test source to load (spring, groovy, xml, ...)
 name:: List of test case names to execute. Names also define XML file names to look for (*.xml* file extension is not needed here).
 packageName:: Custom package location for the XML files to load
 packageScan:: List of packages that are automatically scanned for XML test files to execute. For each XML file found separate
@@ -137,7 +138,7 @@ file name pattern.
 public class Sample_IT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusXmlTest(name = "CustomName_IT", packageName = "com.other.test.package")
+    @CitrusTestSource(type = "spring", name = "CustomName_IT", packageName = "com.other.test.package")
     public void customXmlTest() {}
 }
 ----
@@ -152,7 +153,7 @@ You can also load multiple XML files and run each of them.
 public class Sample_IT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusXmlTest(name = { "Test_1", "Test_2" })
+    @CitrusTestSource(type = "spring", name = { "Test_1", "Test_2" })
     public void multipleTests() {}
 }
 ----
@@ -166,35 +167,35 @@ a separate test. You can also load all test in a package with a `packageScan`.
 public class Sample_IT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusXmlTest(packageScan =  { "com.some.test.package", "com.other.test.package" })
+    @CitrusTestSource(type = "spring", packageScan =  { "com.some.test.package", "com.other.test.package" })
     public void packageScanTest() {}
 }
 ----
 
 This loads all XML files in the given packages and executes each of them as a separate test.
 
-You can also mix the various `@CitrusXmlTest` annotations in a single Java class. The class can have several methods with
+You can also mix the various `@CitrusTestSource` annotations in a single Java class. The class can have several methods with
 different annotations. Each annotated method represents one or more Citrus XML test cases.
 
-.@CitrusXmlTest annotations
+.@CitrusTestSource annotations
 [source,java]
 ----
 public class SampleIT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusXmlTest(name = "SampleIT")
+    @CitrusTestSource(type = "spring", name = "SampleIT")
     public void sampleTest() {}
 
     @Test
-    @CitrusXmlTest(name = { "Test_1", "Test_2" })
+    @CitrusTestSource(type = "spring", name = { "Test_1", "Test_2" })
     public void multipleTests() {}
 
     @Test
-    @CitrusXmlTest(name = "CustomName_IT", packageName = "com.other.test.package")
+    @CitrusTestSource(type = "spring", name = "CustomName_IT", packageName = "com.other.test.package")
     public void customXmlTest() {}
 
     @Test
-    @CitrusXmlTest(packageScan =  { "com.some.test.package", "com.other.test.package" })
+    @CitrusTestSource(type = "spring", packageScan =  { "com.some.test.package", "com.other.test.package" })
     public void packageScanTest() {}
 }
 ----
@@ -206,7 +207,7 @@ failed stats. You can use the reports as normal unit test reports, for instance 
 NOTE: When test execution takes place each test method annotation is evaluated in sequence. XML test cases that match several
 times, for instance by explicit name reference and a package scan will be executed several times respectively.
 
-TIP: The best thing about using the *@CitrusXmlTest* annotation is that you can continue to use the test framework capabilities
+TIP: The best thing about using the *@CitrusTestSource* annotation is that you can continue to use the test framework capabilities
 (e.g. test groups, invocation count, thread pools, data providers, and so on).
 
 All XML test definitions use a custom XML schema that aims to reach the convenience of a domain specific language (DSL).

@@ -16,30 +16,42 @@
 
 package com.consol.citrus.jmx.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.bind.JAXBException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.xml.Jaxb2Marshaller;
+import com.consol.citrus.xml.Marshaller;
+import com.consol.citrus.xml.Unmarshaller;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxMarshaller extends Jaxb2Marshaller {
+public class JmxMarshaller implements Marshaller, Unmarshaller {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmxMarshaller.class);
+    private final Jaxb2Marshaller marshaller;
 
     public JmxMarshaller() {
-        setClassesToBeBound(ManagedBeanInvocation.class,
-                ManagedBeanResult.class);
+        this.marshaller = new Jaxb2Marshaller(
+                new ClassPathResource("com/consol/citrus/schema/citrus-jmx-message.xsd"), ManagedBeanInvocation.class, ManagedBeanResult.class);
+    }
 
-        setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-jmx-message.xsd"));
-
+    public void marshal(Object graph, Result result) {
         try {
-            afterPropertiesSet();
-        } catch (Exception e) {
-            log.warn("Failed to setup jmx message marshaller", e);
+            marshaller.marshal(graph, result);
+        } catch (JAXBException e) {
+            throw new CitrusRuntimeException("Failed to marshal object graph", e);
+        }
+    }
+
+    public Object unmarshal(Source source) {
+        try {
+            return marshaller.unmarshal(source);
+        } catch (JAXBException e) {
+            throw new CitrusRuntimeException("Failed to unmarshal source", e);
         }
     }
 }

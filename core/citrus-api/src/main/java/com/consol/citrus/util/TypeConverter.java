@@ -21,6 +21,11 @@ public interface TypeConverter {
 
     Map<String, TypeConverter> converters = new HashMap<>();
 
+    String DEFAULT = "default";
+    String SPRING = "spring";
+    String APACHE_CAMEL = "camel";
+    String GROOVY = "groovy";
+
     /**
      * Resolves all available converters from resource path lookup. Scans classpath for converter meta information
      * and instantiates those converters.
@@ -31,7 +36,7 @@ public interface TypeConverter {
             converters.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
             if (converters.size() == 0) {
-                converters.put("default", new DefaultTypeConverter());
+                converters.put(DEFAULT, DefaultTypeConverter.INSTANCE);
             }
 
             if (LOG.isDebugEnabled()) {
@@ -51,26 +56,43 @@ public interface TypeConverter {
      * @return type converter to use by default.
      */
     static TypeConverter lookupDefault() {
+        return lookupDefault(DefaultTypeConverter.INSTANCE);
+    }
+
+    /**
+     * Lookup default type converter specified by resource path lookup and/or environment settings. In case only a single type converter is loaded
+     * via resource path lookup this converter is used regardless of any environment settings. If there are multiple converter implementations
+     * on the classpath the environment settings must specify the default.
+     *
+     * If no converter implementation is given via resource path lookup the default implementation is returned.
+     *
+     * @param defaultTypeConverter the fallback default converter
+     * @return type converter to use by default.
+     */
+    static TypeConverter lookupDefault(TypeConverter defaultTypeConverter) {
         String name = CitrusSettings.getTypeConverter();
 
-        if (lookup().size() == 1) {
-            Map.Entry<String, TypeConverter> converterEntry = lookup().entrySet().iterator().next();
+        Map<String, TypeConverter> converters = lookup();
+        if (converters.size() == 1) {
+            Map.Entry<String, TypeConverter> converterEntry = converters.entrySet().iterator().next();
             if (LOG.isDebugEnabled()) {
                 LOG.debug(String.format("Using type converter '%s'", converterEntry.getKey()));
             }
 
             return converterEntry.getValue();
-        } else if (lookup().containsKey(name)) {
+        } else if (converters.containsKey(name)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(String.format("Using type converter '%s'", name));
             }
 
-            return lookup().get(name);
+            return converters.get(name);
         }
 
-        LOG.warn(String.format("Missing type converter for name '%s' - using default type converter", name));
+        if (!CitrusSettings.TYPE_CONVERTER_DEFAULT.equals(name)) {
+            LOG.warn(String.format("Missing type converter for name '%s' - using default type converter", name));
+        }
 
-        return new DefaultTypeConverter();
+        return defaultTypeConverter;
     }
 
     /**
@@ -82,4 +104,13 @@ public interface TypeConverter {
      * @return
      */
     <T> T convertIfNecessary(Object target, Class<T> type);
+
+    /**
+     * Converts String value object to given type.
+     * @param value
+     * @param type
+     * @param <T>
+     * @return
+     */
+    <T> T convertStringToType(String value, Class<T> type);
 }

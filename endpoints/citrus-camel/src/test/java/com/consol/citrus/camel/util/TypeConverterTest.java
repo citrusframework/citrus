@@ -22,6 +22,7 @@ package com.consol.citrus.camel.util;
 import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.SpringBeanTypeConverter;
 import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.util.TypeConverter;
@@ -36,19 +37,22 @@ public class TypeConverterTest {
     @Test
     public void testLookup() {
         try {
-            System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, "camel");
+            Assert.assertEquals(TypeConverter.lookupDefault().getClass(), DefaultTypeConverter.class);
+
+            System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, TypeConverter.APACHE_CAMEL);
             TypeConversionUtils.loadDefaultConverter();
 
             Map<String, TypeConverter> converters = TypeConverter.lookup();
             Assert.assertEquals(converters.size(), 2L);
-            Assert.assertEquals(converters.get("camel").getClass(), CamelTypeConverter.class);
-            Assert.assertEquals(converters.get("camel"), TypeConverter.lookupDefault());
+            Assert.assertEquals(converters.get(TypeConverter.APACHE_CAMEL).getClass(), CamelTypeConverter.class);
+            Assert.assertEquals(converters.get(TypeConverter.APACHE_CAMEL), TypeConverter.lookupDefault());
 
-            Assert.assertEquals(converters.get("spring").getClass(), SpringBeanTypeConverter.class);
+            Assert.assertEquals(converters.get(TypeConverter.SPRING).getClass(), SpringBeanTypeConverter.class);
 
-            Assert.assertFalse(TypeConverter.lookup().containsKey("default"));
+            Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.DEFAULT));
         } finally {
             System.setProperty(CitrusSettings.TYPE_CONVERTER_PROPERTY, CitrusSettings.TYPE_CONVERTER_DEFAULT);
+            Assert.assertEquals(TypeConverter.lookupDefault().getClass(), DefaultTypeConverter.class);
             TypeConversionUtils.loadDefaultConverter();
         }
     }

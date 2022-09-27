@@ -17,7 +17,6 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.AbstractExceptionContainerBuilder;
-import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -53,9 +52,7 @@ public class Catch extends AbstractActionContainer {
 
         for (TestActionBuilder<?> actionBuilder: actions) {
             try {
-                TestAction action = actionBuilder.build();
-                setActiveAction(action);
-                action.execute(context);
+                executeAction(actionBuilder.build(), context);
             } catch (Exception e) {
                 if (exception != null && exception.equals(e.getClass().getName())) {
                     log.info("Caught exception " + e.getClass() + ": " + e.getLocalizedMessage());

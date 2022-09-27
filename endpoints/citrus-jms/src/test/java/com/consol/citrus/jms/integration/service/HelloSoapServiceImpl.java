@@ -27,14 +27,13 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.integration.service.model.HelloRequest;
 import com.consol.citrus.jms.integration.service.model.HelloResponse;
 import com.consol.citrus.jms.integration.service.model.ResponseHeader;
+import com.consol.citrus.xml.Marshaller;
 import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.Unmarshaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
-import org.springframework.oxm.XmlMappingException;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
@@ -104,10 +103,10 @@ public class HelloSoapServiceImpl {
             webServiceResponse.writeTo(bos);
 
             return MessageBuilder.withPayload(new String(bos.toByteArray())).build();
-        } catch (XmlMappingException e) {
-            throw new CitrusRuntimeException("Failed to marshal/unmarshal XML", e);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed due to IO error", e);
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to marshal/unmarshal XML", e);
         }
     }
 }

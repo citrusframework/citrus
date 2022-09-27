@@ -16,6 +16,8 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.time.Duration;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
@@ -49,7 +51,7 @@ public class WaitUntilAction extends FindElementAction {
 
     @Override
     protected void execute(WebElement webElement, SeleniumBrowser browser, TestContext context) {
-        WebDriverWait q = new WebDriverWait(browser.getWebDriver(), Math.round(timeout / 1000.0D));
+        WebDriverWait q = new WebDriverWait(browser.getWebDriver(), Duration.ofMillis(timeout));
 
         if (condition.equals("hidden")) {
             q.until(ExpectedConditions.invisibilityOf(webElement));

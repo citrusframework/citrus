@@ -67,7 +67,7 @@ public class TransformAction extends AbstractTestAction {
     private final String targetVariable;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TransformAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TransformAction.class);
 
     /**
      * Default constructor.
@@ -87,8 +87,8 @@ public class TransformAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Starting XSLT transformation");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Starting XSLT transformation");
             }
 
             //parse XML document and define XML source for transformation
@@ -124,7 +124,7 @@ public class TransformAction extends AbstractTestAction {
             transformer.transform(xmlSource, result);
 
             context.setVariable(targetVariable, result.toString());
-            log.info("Finished XSLT transformation");
+            LOG.info("Finished XSLT transformation");
         } catch (IOException | TransformerException e) {
             throw new CitrusRuntimeException(e);
         }
@@ -227,6 +227,17 @@ public class TransformAction extends AbstractTestAction {
         }
 
         /**
+         * Set the XML document as resource file path
+         * @param xmlResourcePath the xmlResource to set
+         * @param charset
+         */
+        public Builder sourceFile(String xmlResourcePath, String charset) {
+            this.xmlResourcePath = xmlResourcePath;
+            this.xmlResourceCharset = charset;
+            return this;
+        }
+
+        /**
          * Set the XML document as resource
          * @param xmlResource the xmlResource to set
          * @param charset
@@ -263,6 +274,17 @@ public class TransformAction extends AbstractTestAction {
          */
         public Builder xsltFile(String xsltResourcePath) {
             this.xsltResourcePath = xsltResourcePath;
+            return this;
+        }
+
+        /**
+         * Set the XML document as resource file path
+         * @param xsltResourcePath the xmlResource to set
+         * @param charset
+         */
+        public Builder xsltFile(String xsltResourcePath, String charset) {
+            this.xsltResourcePath = xsltResourcePath;
+            this.xmlResourceCharset = charset;
             return this;
         }
 

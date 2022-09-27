@@ -17,7 +17,6 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.AbstractTestContainerBuilder;
-import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
@@ -44,9 +43,7 @@ public class Sequence extends AbstractActionContainer {
     @Override
     public void doExecute(TestContext context) {
         for (TestActionBuilder<?> actionBuilder: actions) {
-            TestAction action = actionBuilder.build();
-            setActiveAction(action);
-            action.execute(context);
+            executeAction(actionBuilder.build(), context);
         }
 
         log.debug("Action sequence finished successfully");

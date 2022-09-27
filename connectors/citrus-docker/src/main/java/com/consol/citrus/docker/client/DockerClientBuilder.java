@@ -26,8 +26,8 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 public class DockerClientBuilder extends AbstractEndpointBuilder<DockerClient> {
 
     /** Endpoint target */
-    private DockerClient endpoint = new DockerClient();
-    private DefaultDockerClientConfig.Builder config = DefaultDockerClientConfig.createDefaultConfigBuilder();
+    private final DockerClient endpoint = new DockerClient();
+    private final DefaultDockerClientConfig.Builder config = DefaultDockerClientConfig.createDefaultConfigBuilder();
 
     @Override
     public DockerClient build() {

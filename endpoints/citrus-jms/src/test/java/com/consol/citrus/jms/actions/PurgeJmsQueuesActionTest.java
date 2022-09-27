@@ -28,9 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.jms.endpoint.TextMessageImpl;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.anyBoolean;
@@ -44,12 +46,12 @@ import static org.mockito.Mockito.when;
  */
 public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
 
-    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
-    private Connection connection = Mockito.mock(Connection.class);
-    private Session session = Mockito.mock(Session.class);
-    private MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
+    private final ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private final Connection connection = Mockito.mock(Connection.class);
+    private final Session session = Mockito.mock(Session.class);
+    private final MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
 
-    private Queue queue = Mockito.mock(Queue.class);
+    private final Queue queue = Mockito.mock(Queue.class);
 
     @Test
     public void testPurgeWithQueueNamesConsumeMessages() throws JMSException {
@@ -236,5 +238,14 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
                 .build();
         purgeQueuesAction.execute(context);
         verify(connection).start();
+    }
+
+    @Test
+    public void shouldLookupTestActionBuilder() {
+        Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
+        Assert.assertTrue(endpointBuilders.containsKey("purgeQueues"));
+
+        Assert.assertTrue(TestActionBuilder.lookup("purgeQueues").isPresent());
+        Assert.assertEquals(TestActionBuilder.lookup("purgeQueues").get().getClass(), PurgeJmsQueuesAction.Builder.class);
     }
 }

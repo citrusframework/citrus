@@ -384,15 +384,21 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public Wait.Builder waitFor() {
-        return new Wait.Builder() {
+    public Wait.Builder<Condition> waitFor() {
+        return new Wait.Builder<>() {
             @Override
             public WaitActionConditionBuilder execution() {
                 final Sequence.Builder dummy = new Sequence.Builder();
-                ActionCondition condition = new ActionCondition();
-                this.condition = condition;
                 DefaultTestRunner.this.containers.push(dummy);
-                return new WaitActionConditionBuilder(condition, this) {
+
+                Wait.Builder<ActionCondition> actionConditionBuilder = new Wait.Builder<>();
+                actionConditionBuilder.interval(this.interval);
+                actionConditionBuilder.milliseconds(this.time);
+                actionConditionBuilder.condition(new ActionCondition());
+
+                this.condition = actionConditionBuilder.getCondition();
+
+                return new WaitActionConditionBuilder(actionConditionBuilder) {
                     @Override
                     public WaitActionConditionBuilder action(TestActionBuilder<?> action) {
                         super.action(action);
@@ -404,9 +410,14 @@ public class DefaultTestRunner implements TestRunner {
 
             @Override
             public WaitFileConditionBuilder file() {
-                FileCondition condition = new FileCondition();
-                this.condition = condition;
-                return new WaitFileConditionBuilder(condition, this) {
+                Wait.Builder<FileCondition> fileConditionBuilder = new Wait.Builder<>();
+                fileConditionBuilder.interval(this.interval);
+                fileConditionBuilder.milliseconds(this.time);
+                fileConditionBuilder.condition(new FileCondition());
+
+                this.condition = fileConditionBuilder.getCondition();
+
+                return new WaitFileConditionBuilder(fileConditionBuilder) {
                     @Override
                     public WaitFileConditionBuilder resource(File file) {
                         super.resource(file);
@@ -417,9 +428,14 @@ public class DefaultTestRunner implements TestRunner {
 
             @Override
             public WaitHttpConditionBuilder http() {
-                HttpCondition condition = new HttpCondition();
-                this.condition = condition;
-                return new WaitHttpConditionBuilder(condition, this) {
+                Wait.Builder<HttpCondition> httpConditionBuilder = new Wait.Builder<>();
+                httpConditionBuilder.interval(this.interval);
+                httpConditionBuilder.milliseconds(this.time);
+                httpConditionBuilder.condition(new HttpCondition());
+
+                this.condition = httpConditionBuilder.getCondition();
+
+                return new WaitHttpConditionBuilder(httpConditionBuilder) {
                     @Override
                     public WaitHttpConditionBuilder url(String requestUrl) {
                         super.url(requestUrl);
@@ -429,7 +445,7 @@ public class DefaultTestRunner implements TestRunner {
             }
 
             @Override
-            public Wait.Builder condition(Condition condition) {
+            public Wait.Builder<Condition> condition(Condition condition) {
                 super.condition(condition);
                 return run(this);
             }

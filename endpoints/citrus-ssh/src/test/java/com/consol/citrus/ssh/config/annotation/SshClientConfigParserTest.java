@@ -70,7 +70,7 @@ public class SshClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("sshMessageConverter", SshMessageConverter.class)).thenReturn(messageConverter);
         when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);

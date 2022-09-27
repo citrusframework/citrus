@@ -1,0 +1,2 @@
+type=com.consol.citrus.http.xml.Http
+ns=http://citrusframework.org/schema/xml/testcase

@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xmlns:context="http://www.springframework.org/schema/context"
-     xmlns:util="http://www.springframework.org/schema/util"
      xmlns:amq="http://activemq.apache.org/schema/core"
      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
   <!-- Embedded ActiveMQ JMS broker -->
-  <amq:broker useJmx="false" persistent="false">
+  <amq:broker useJmx="false" persistent="false" advisorySupport="false" timeBeforePurgeTempDestinations="30000">
     <amq:transportConnectors>
       <amq:transportConnector uri="${jms.broker.url}" />
     </amq:transportConnectors>
@@ -18,6 +14,7 @@
 
   <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
     <property name="brokerURL" value="${jms.broker.url}" />
+    <property name="watchTopicAdvisories" value="false"/>
   </bean>
 
 </beans>

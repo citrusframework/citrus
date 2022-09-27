@@ -75,7 +75,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     private KafkaServer kafkaServer;
 
     /** Kafka server port */
-    private int kafkaServerPort = 9092;
+    private int kafkaServerPort = SocketUtils.findAvailableTcpPort(9092);
 
     /** Number of partitions to create for each topic */
     private int partitions = 1;
@@ -137,7 +137,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     public void stop() {
         if (kafkaServer != null) {
             try {
-                if (kafkaServer.brokerState().get() != BrokerState.NOT_RUNNING) {
+                if (kafkaServer.brokerState() != BrokerState.NOT_RUNNING) {
                     kafkaServer.shutdown();
                     kafkaServer.awaitShutdown();
                 }

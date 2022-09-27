@@ -41,6 +41,8 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
@@ -149,6 +151,14 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
         List<String> contextPaths = super.getMarshallerContextPaths();
         contextPaths.add(ObjectFactory.class.getPackage().getName());
         return contextPaths;
+    }
+
+    @Override
+    protected List<Resource> getMarshallerSchemas() {
+        List<Resource> schemas = super.getMarshallerSchemas();
+        schemas.add(new ClassPathResource("com/consol/citrus/schema/citrus-http-testcase.xsd"));
+        schemas.add(new ClassPathResource("com/consol/citrus/schema/citrus-ws-testcase.xsd"));
+        return schemas;
     }
 
     @Override

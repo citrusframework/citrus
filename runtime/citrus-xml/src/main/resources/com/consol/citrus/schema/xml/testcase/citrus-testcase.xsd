@@ -1,0 +1,906 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema elementFormDefault="qualified" version="1.0" targetNamespace="http://citrusframework.org/schema/xml/testcase"
+           xmlns:tns="http://citrusframework.org/schema/xml/testcase" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="ScriptType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="file" type="xs:string"/>
+        <xs:attribute name="charset" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="VariableType">
+    <xs:sequence>
+      <xs:element name="value" minOccurs="0">
+        <xs:complexType>
+          <xs:choice>
+            <xs:element name="data" type="xs:string"/>
+            <xs:element name="script" type="ScriptType"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:simpleType name="StatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DRAFT"/>
+      <xs:enumeration value="READY_FOR_REVIEW"/>
+      <xs:enumeration value="FINAL"/>
+      <xs:enumeration value="DISABLED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="MessageType">
+    <xs:sequence>
+      <xs:element name="headers" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:choice minOccurs="0">
+                  <xs:element name="data" type="xs:string" minOccurs="0"/>
+                  <xs:element name="resource" minOccurs="0">
+                    <xs:complexType>
+                      <xs:sequence/>
+                      <xs:attribute name="file" type="xs:string" use="required"/>
+                      <xs:attribute name="charset" type="xs:string"/>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="fragment" minOccurs="0">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:any processContents="skip" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:choice>
+                <xs:attribute name="name" type="xs:string"/>
+                <xs:attribute name="value" type="xs:string"/>
+                <xs:attribute name="type" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="ignore-case" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="body" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="builder" type="tns:ScriptType" minOccurs="0"/>
+            <xs:element name="resource" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence/>
+                <xs:attribute name="file" type="xs:string" use="required"/>
+                <xs:attribute name="charset" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="data" type="xs:string" minOccurs="0"/>
+            <xs:element name="payload" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:any processContents="skip" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="expression" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="path" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="data-dictionary" type="xs:string"/>
+    <xs:attribute name="schema-validation" type="xs:boolean"/>
+    <xs:attribute name="schema" type="xs:string"/>
+    <xs:attribute name="schema-repository" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="type" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="TestCaseType">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="variables" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="variable" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="value" minOccurs="0">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="script" type="tns:ScriptType" minOccurs="0"/>
+                        <xs:element name="data" type="xs:string" minOccurs="0"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="value" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
+      <xs:element name="finally" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="author" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="status" type="tns:StatusType"/>
+  </xs:complexType>
+
+  <xs:complexType name="TestActions">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tns:action"/>
+        <xs:element ref="tns:echo"/>
+        <xs:element ref="tns:print"/>
+        <xs:element ref="tns:sleep"/>
+        <xs:element ref="tns:delay"/>
+        <xs:element ref="tns:receive"/>
+        <xs:element ref="tns:create-variables"/>
+        <xs:element ref="tns:load"/>
+        <xs:element ref="tns:expect-timeout"/>
+        <xs:element ref="tns:fail"/>
+        <xs:element ref="tns:iterate"/>
+        <xs:element ref="tns:sequential"/>
+        <xs:element ref="tns:parallel"/>
+        <xs:element ref="tns:repeat"/>
+        <xs:element ref="tns:repeat-on-error"/>
+        <xs:element ref="tns:conditional"/>
+        <xs:element ref="tns:assert"/>
+        <xs:element ref="tns:catch"/>
+        <xs:element ref="tns:wait-for"/>
+        <xs:element ref="tns:async"/>
+        <xs:element ref="tns:timer"/>
+        <xs:element ref="tns:stop-timer"/>
+        <xs:element ref="tns:stop-time"/>
+        <xs:element ref="tns:start"/>
+        <xs:element ref="tns:stop"/>
+        <xs:element ref="tns:trace-variables"/>
+        <xs:element ref="tns:purge-endpoint"/>
+        <xs:element ref="tns:transform"/>
+        <xs:element ref="tns:apply-template"/>
+        <xs:any processContents="lax"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Template">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="parameters" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="value" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="value" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="global-context" type="xs:boolean" use="required"/>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Action">
+    <xs:sequence/>
+    <xs:attribute name="reference" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Echo">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="message" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="message" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Print">
+    <xs:complexContent>
+      <xs:extension base="tns:Echo">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Sleep">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="milliseconds" type="xs:string"/>
+    <xs:attribute name="seconds" type="xs:string"/>
+    <xs:attribute name="time" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Receive">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="selector" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence/>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="value" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="value" type="xs:string" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="message" type="tns:MessageType" minOccurs="0"/>
+      <xs:element name="ignore" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="path" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="prefix" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="validate" minOccurs="0" maxOccurs="unbounded" type="tns:Validate"/>
+      <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+    </xs:sequence>
+    <xs:attribute name="actor" type="xs:string"/>
+    <xs:attribute name="endpoint" type="xs:string"/>
+    <xs:attribute name="header-validator" type="xs:string"/>
+    <xs:attribute name="header-validators" type="xs:string"/>
+    <xs:attribute name="select" type="xs:string"/>
+    <xs:attribute name="timeout" type="xs:int"/>
+    <xs:attribute name="validator" type="xs:string"/>
+    <xs:attribute name="validators" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Send">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="message" type="tns:MessageType"/>
+      <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+    </xs:sequence>
+    <xs:attribute name="actor" type="xs:string"/>
+    <xs:attribute name="endpoint" type="xs:string"/>
+    <xs:attribute name="fork" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="Validate">
+    <xs:sequence>
+      <xs:element name="script" type="tns:ScriptType" minOccurs="0"/>
+      <xs:element name="xpath" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="expression" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+          <xs:attribute name="result-type" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="json-path" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="expression" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="prefix" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="path" type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+    <xs:attribute name="result-type" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Extract">
+    <xs:sequence>
+      <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+          <xs:attribute name="variable" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="body" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="path" type="xs:string" use="required"/>
+              <xs:attribute name="variable" type="xs:string" use="required"/>
+              <xs:attribute name="result-type" type="xs:string"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Delay">
+    <xs:complexContent>
+      <xs:extension base="tns:Sleep">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CreateVariables">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="variable" type="tns:VariableType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="StopTimer">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="LoadProperties">
+    <xs:sequence>
+      <xs:element name="properties" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="file" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="StopTime">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="suffix" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Start">
+    <xs:sequence>
+      <xs:element name="servers" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="server" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence/>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="server" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Stop">
+    <xs:sequence>
+      <xs:element name="servers" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="server" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence/>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="server" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="TraceVariables">
+    <xs:sequence>
+      <xs:element name="variable" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="variable" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="PurgeEndpoint">
+    <xs:sequence>
+      <xs:element name="selector" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence/>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="value" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="value" type="xs:string" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="endpoint" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="endpoint" type="xs:string"/>
+    <xs:attribute name="select" type="xs:string"/>
+    <xs:attribute name="sleep" type="xs:long"/>
+    <xs:attribute name="timeout" type="xs:long"/>
+  </xs:complexType>
+
+  <xs:complexType name="ExpectTimeout">
+    <xs:sequence>
+      <xs:element name="selector" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence/>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="value" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="value" type="xs:string" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="endpoint" type="xs:string" use="required"/>
+    <xs:attribute name="select" type="xs:string"/>
+    <xs:attribute name="wait" type="xs:long"/>
+  </xs:complexType>
+
+  <xs:complexType name="Fail">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="message" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="message" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Iterate">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="condition" type="xs:string" use="required"/>
+    <xs:attribute name="index" type="xs:string"/>
+    <xs:attribute name="startsWith" type="xs:int" use="required"/>
+    <xs:attribute name="step" type="xs:int" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Sequential">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Parallel">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Repeat">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="index" type="xs:string"/>
+    <xs:attribute name="startsWith" type="xs:int" use="required"/>
+    <xs:attribute name="until" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="RepeatOnError">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="autoSleep" type="xs:long" use="required"/>
+    <xs:attribute name="auto-sleep" type="xs:long" use="required"/>
+    <xs:attribute name="index" type="xs:string"/>
+    <xs:attribute name="startsWith" type="xs:int" use="required"/>
+    <xs:attribute name="until" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Conditional">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="when" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Assert">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="when" type="tns:TestActions"/>
+    </xs:sequence>
+    <xs:attribute name="exception" type="xs:string"/>
+    <xs:attribute name="message" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Catch">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="when" type="tns:TestActions"/>
+    </xs:sequence>
+    <xs:attribute name="exception" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="WaitFor">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="action" type="tns:TestActions"/>
+        <xs:element name="file">
+          <xs:complexType>
+            <xs:sequence/>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="http">
+          <xs:complexType>
+            <xs:sequence/>
+            <xs:attribute name="url" type="xs:string"/>
+            <xs:attribute name="method" type="xs:string"/>
+            <xs:attribute name="status" type="xs:string"/>
+            <xs:attribute name="timeout" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="message">
+          <xs:complexType>
+            <xs:sequence/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="interval" type="xs:string"/>
+    <xs:attribute name="timeout" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Async">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="tns:TestActions"/>
+      <xs:element name="error" type="tns:TestActions" minOccurs="0"/>
+      <xs:element name="success" type="tns:TestActions" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Timer">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="tns:TestActions"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="delay" type="xs:long"/>
+    <xs:attribute name="fork" type="xs:boolean"/>
+    <xs:attribute name="interval" type="xs:long"/>
+    <xs:attribute name="repeatCount" type="xs:int"/>
+  </xs:complexType>
+
+  <xs:complexType name="Transform">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="source">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="file" type="xs:string"/>
+              <xs:attribute name="charset" type="xs:string"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="xslt">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="file" type="xs:string"/>
+              <xs:attribute name="charset" type="xs:string"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="result" type="xs:string"/>
+    <xs:attribute name="variable" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="ApplyTemplate">
+    <xs:sequence>
+      <xs:element name="parameters" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="value" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="value" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="file" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:element name="test" type="tns:TestCaseType"/>
+  <xs:element name="template" type="tns:Template"/>
+
+  <xs:element name="action" type="tns:Action"/>
+  <xs:element name="apply-template" type="tns:ApplyTemplate"/>
+  <xs:element name="assert" type="tns:Assert"/>
+  <xs:element name="async" type="tns:Async"/>
+  <xs:element name="catch" type="tns:Catch"/>
+  <xs:element name="conditional" type="tns:Conditional"/>
+  <xs:element name="create-variables" type="tns:CreateVariables"/>
+  <xs:element name="delay" type="tns:Delay"/>
+  <xs:element name="echo" type="tns:Echo"/>
+  <xs:element name="expect-timeout" type="tns:ExpectTimeout"/>
+  <xs:element name="fail" type="tns:Fail"/>
+  <xs:element name="iterate" type="tns:Iterate"/>
+  <xs:element name="load" type="tns:LoadProperties"/>
+  <xs:element name="parallel" type="tns:Parallel"/>
+  <xs:element name="print" type="tns:Print"/>
+  <xs:element name="purge-endpoint" type="tns:PurgeEndpoint"/>
+  <xs:element name="receive" type="tns:Receive"/>
+  <xs:element name="repeat" type="tns:Repeat"/>
+  <xs:element name="repeat-on-error" type="tns:RepeatOnError"/>
+  <xs:element name="send" type="tns:Send"/>
+  <xs:element name="sequential" type="tns:Sequential"/>
+  <xs:element name="sleep" type="tns:Sleep"/>
+  <xs:element name="start" type="tns:Start"/>
+  <xs:element name="stop" type="tns:Stop"/>
+  <xs:element name="stop-time" type="tns:StopTime"/>
+  <xs:element name="stop-timer" type="tns:StopTimer"/>
+  <xs:element name="timer" type="tns:Timer"/>
+  <xs:element name="trace-variables" type="tns:TraceVariables"/>
+  <xs:element name="transform" type="tns:Transform"/>
+  <xs:element name="wait-for" type="tns:WaitFor"/>
+  <xs:element name="plsql" type="tns:Plsql"/>
+  <xs:element name="sql" type="tns:Sql"/>
+  <xs:element name="groovy" type="tns:Groovy"/>
+  <xs:element name="http" type="tns:Http"/>
+
+  <xs:complexType name="Plsql">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="transaction" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="manager" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="isolation-level" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="statements">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="statement" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="script" type="xs:string" minOccurs="0"/>
+          </xs:sequence>
+          <xs:attribute name="file" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="datasource" type="xs:string" use="required"/>
+    <xs:attribute name="ignore-errors" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="Sql">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="transaction" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="manager" type="xs:string"/>
+          <xs:attribute name="timeout" type="xs:string"/>
+          <xs:attribute name="isolation-level" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="statements">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="statement" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+          <xs:attribute name="file" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="validate" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="values" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="value" type="xs:string" maxOccurs="unbounded"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="script" minOccurs="0">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:string">
+                    <xs:attribute name="type" type="xs:string" use="required"/>
+                    <xs:attribute name="file" type="xs:string"/>
+                    <xs:attribute name="charset" type="xs:string"/>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="column" type="xs:string"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="extract" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="column" type="xs:string" use="required"/>
+          <xs:attribute name="variable" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="datasource" type="xs:string" use="required"/>
+    <xs:attribute name="ignore-errors" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="Groovy">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="file" type="xs:string"/>
+        <xs:attribute name="script-template" type="xs:string"/>
+        <xs:attribute name="use-script-template" type="xs:boolean"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="Http">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="receive-request">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="selector" type="xs:string" minOccurs="0"/>
+              <xs:choice>
+                <xs:element name="GET" type="tns:HttpRequest"/>
+                <xs:element name="POST" type="tns:HttpRequest"/>
+                <xs:element name="PUT" type="tns:HttpRequest"/>
+                <xs:element name="DELETE" type="tns:HttpRequest"/>
+                <xs:element name="HEAD" type="tns:HttpRequest"/>
+                <xs:element name="OPTIONS" type="tns:HttpRequest"/>
+                <xs:element name="PATCH" type="tns:HttpRequest"/>
+                <xs:element name="TRACE" type="tns:HttpRequest"/>
+              </xs:choice>
+              <xs:element name="validate" minOccurs="0" maxOccurs="unbounded" type="tns:Validate"/>
+              <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+            </xs:sequence>
+            <xs:attribute name="timeout" type="xs:int"/>
+            <xs:attribute name="select" type="xs:string"/>
+            <xs:attribute name="validator" type="xs:string"/>
+            <xs:attribute name="validators" type="xs:string"/>
+            <xs:attribute name="header-validator" type="xs:string"/>
+            <xs:attribute name="header-validators" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="receive-response">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="selector" type="xs:string" minOccurs="0"/>
+              <xs:element name="response" type="tns:HttpResponse"/>
+              <xs:element name="validate" minOccurs="0" maxOccurs="unbounded" type="tns:Validate"/>
+              <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+            </xs:sequence>
+            <xs:attribute name="timeout" type="xs:int"/>
+            <xs:attribute name="select" type="xs:string"/>
+            <xs:attribute name="validator" type="xs:string"/>
+            <xs:attribute name="validators" type="xs:string"/>
+            <xs:attribute name="header-validator" type="xs:string"/>
+            <xs:attribute name="header-validators" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="send-request">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:choice>
+                <xs:element name="GET" type="tns:HttpRequest"/>
+                <xs:element name="POST" type="tns:HttpRequest"/>
+                <xs:element name="PUT" type="tns:HttpRequest"/>
+                <xs:element name="DELETE" type="tns:HttpRequest"/>
+                <xs:element name="HEAD" type="tns:HttpRequest"/>
+                <xs:element name="OPTIONS" type="tns:HttpRequest"/>
+                <xs:element name="PATCH" type="tns:HttpRequest"/>
+                <xs:element name="TRACE" type="tns:HttpRequest"/>
+              </xs:choice>
+              <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+            </xs:sequence>
+            <xs:attribute name="uri" type="xs:string"/>
+            <xs:attribute name="fork" type="xs:boolean"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="send-response">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="response" type="tns:HttpResponse"/>
+              <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="actor" type="xs:string"/>
+    <xs:attribute name="client" type="xs:string"/>
+    <xs:attribute name="server" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="HttpRequest">
+    <xs:complexContent>
+      <xs:extension base="tns:MessageType">
+        <xs:sequence>
+          <xs:element name="param" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:sequence/>
+              <xs:attribute name="name" type="xs:string" use="required"/>
+              <xs:attribute name="value" type="xs:string"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="path" type="xs:string"/>
+        <xs:attribute name="content-type" type="xs:string"/>
+        <xs:attribute name="accept" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HttpResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:MessageType">
+        <xs:attribute name="status" type="xs:string"/>
+        <xs:attribute name="reason-phrase" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="content-type" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+</xs:schema>

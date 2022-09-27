@@ -75,7 +75,7 @@ public class CamelDataFormatMessageProcessor extends CamelMessageProcessor {
             if (operation.equals(DataFormatClause.Operation.Marshal)) {
                 processor = new MarshalProcessor(DataFormatReifier.getDataFormat(camelContext, dataFormat.getDataFormat()));
             } else {
-                processor = new UnmarshalProcessor(DataFormatReifier.getDataFormat(camelContext, dataFormat.getDataFormat()));
+                processor = new UnmarshalProcessor(DataFormatReifier.getDataFormat(camelContext, dataFormat.getDataFormat()), dataFormat.isAllowNullBody());
             }
 
             return new CamelDataFormatMessageProcessor(camelContext, processor);

@@ -24,7 +24,6 @@ import java.util.Properties;
 
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusEndpointProperty;
-import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ResourcePathTypeResolver;
@@ -44,7 +43,7 @@ import org.springframework.util.ReflectionUtils;
 public interface EndpointBuilder<T extends Endpoint> {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(AnnotationConfigParser.class);
+    Logger LOG = LoggerFactory.getLogger(EndpointBuilder.class);
 
     /** Endpoint builder resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/endpoint/builder";
@@ -114,8 +113,8 @@ public interface EndpointBuilder<T extends Endpoint> {
      * and instantiates those builders.
      * @return
      */
-    static Map<String, EndpointBuilder> lookup() {
-        Map<String, EndpointBuilder> builders = new HashMap<>(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
+    static Map<String, EndpointBuilder<?>> lookup() {
+        Map<String, EndpointBuilder<?>> builders = new HashMap<>(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
         if (LOG.isDebugEnabled()) {
             builders.forEach((k, v) -> LOG.debug(String.format("Found endpoint builder '%s' as %s", k, v.getClass())));
@@ -132,9 +131,9 @@ public interface EndpointBuilder<T extends Endpoint> {
      * @param builder
      * @return
      */
-    static Optional<EndpointBuilder> lookup(String builder) {
+    static Optional<EndpointBuilder<?>> lookup(String builder) {
         try {
-            EndpointBuilder instance;
+            EndpointBuilder<?> instance;
             if (builder.contains(".")) {
                 int separatorIndex = builder.lastIndexOf('.');
                 instance = TYPE_RESOLVER.resolve(builder.substring(0, separatorIndex), builder.substring(separatorIndex + 1));

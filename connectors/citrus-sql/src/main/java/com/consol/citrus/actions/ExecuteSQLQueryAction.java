@@ -73,7 +73,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     public static final String DEFAULT_RESULT_SET_VALIDATOR = "sqlResultSetScriptValidator";
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
+    private static final Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
 
     /**
      * Default constructor.
@@ -428,8 +428,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      */
     public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecuteSQLQueryAction, Builder> {
 
-        private Map<String, List<String>> controlResultSet = new HashMap<>();
-        private Map<String, String> extractVariables = new HashMap<>();
+        private final Map<String, List<String>> controlResultSet = new HashMap<>();
+        private final Map<String, String> extractVariables = new HashMap<>();
         private ScriptValidationContext scriptValidationContext;
         private SqlResultSetScriptValidator validator;
 

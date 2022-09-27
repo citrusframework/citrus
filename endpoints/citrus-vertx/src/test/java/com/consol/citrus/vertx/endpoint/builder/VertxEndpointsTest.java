@@ -34,7 +34,7 @@ public class VertxEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
-        Map<String, EndpointBuilder> endpointBuilders = EndpointBuilder.lookup();
+        Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
         Assert.assertTrue(endpointBuilders.containsKey("vertx.sync"));
         Assert.assertTrue(endpointBuilders.containsKey("vertx.async"));
     }

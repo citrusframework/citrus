@@ -23,24 +23,25 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestSourceAware;
 import org.junit.runners.model.FrameworkMethod;
 
 /**
- * Special framework method also holding test name and package coming from {@link CitrusTest} or {@link CitrusXmlTest} annotation. This way
- * execution can decide which test to invoke when annotation has more than one test name defined or package scan is
- * used in annotation.
+ * Special framework method also holding test name and package coming from the Citrus test annotation. This way
+ * execution can decide which test to invoke in case the annotation has more than one test name defined or a package scan is
+ * used in the annotation.
  */
 public class CitrusFrameworkMethod extends FrameworkMethod implements TestSourceAware {
 
     private final String testName;
     private final String packageName;
 
+    private String sourceType;
     private String source;
 
     private final Map<String, Object> attributes = new HashMap<>();
+
+    private RuntimeException error;
 
     public interface Runner {
         /**
@@ -56,9 +57,27 @@ public class CitrusFrameworkMethod extends FrameworkMethod implements TestSource
      * @param method
      */
     public CitrusFrameworkMethod(Method method, String testName, String packageName) {
+        this(method, "", testName, packageName);
+    }
+
+    /**
+     * Returns a new {@code FrameworkMethod} for {@code method}
+     *
+     * @param method
+     */
+    public CitrusFrameworkMethod(Method method, String type, String testName, String packageName) {
         super(method);
+        this.sourceType = type;
         this.testName = testName;
         this.packageName = packageName;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String type) {
+        this.sourceType = type;
     }
 
     /**
@@ -106,5 +125,40 @@ public class CitrusFrameworkMethod extends FrameworkMethod implements TestSource
      */
     public Object getAttribute(String key) {
         return attributes.get(key);
+    }
+
+    /**
+     * Adds error to this framework method.
+     * @param error
+     * @return
+     */
+    public CitrusFrameworkMethod withError(RuntimeException error) {
+        this.setError(error);
+        return this;
+    }
+
+    /**
+     * Checks if this framework method has an error.
+     * @return
+     */
+    public boolean hasError() {
+        return this.error != null;
+    }
+
+    /**
+     * Sets an error on the framework method. Error will be thrown once the framework method is about to be executed.
+     * @param error
+     */
+    public void setError(RuntimeException error) {
+        this.error = error;
+    }
+
+    /**
+     * Gets the optional error on this framework method.
+     * The caller of this framework method should check the error and throw it accordingly before execution.
+     * @return
+     */
+    public RuntimeException getError() {
+        return error;
     }
 }

@@ -219,6 +219,7 @@ public class FailureStackTestListenerTest extends UnitTestSupport {
                 new MockedTestAction("sleep"),
                 failedContainer);
         nestedContainer.setActiveAction(failedContainer);
+        nestedContainer.setExecutedAction(failedContainer);
         actions.add(nestedContainer);
 
         actions.add(new MockedTestAction("fail"));
@@ -331,6 +332,7 @@ public class FailureStackTestListenerTest extends UnitTestSupport {
     private void setActiveActions(TestActionContainer container, TestAction failedAction) {
         for (TestAction action : container.getActions()) {
             container.setActiveAction(action);
+            container.setExecutedAction(action);
             if (action.equals(failedAction)) {
                 break;
             }

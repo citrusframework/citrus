@@ -70,7 +70,7 @@ public class StartServerAction extends AbstractTestAction {
      */
     public static final class Builder extends AbstractTestActionBuilder<StartServerAction, Builder> {
 
-        private List<Server> servers = new ArrayList<>();
+        private final List<Server> servers = new ArrayList<>();
 
         /**
          * Fluent API action building entry method used in Java DSL.

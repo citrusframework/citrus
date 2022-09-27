@@ -20,7 +20,6 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.consol.citrus.AbstractTestContainerBuilder;
-import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -35,7 +34,7 @@ import org.springframework.util.StringUtils;
  */
 public class Timer extends AbstractActionContainer implements StopTimer {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Timer.class);
+    private static final Logger log = LoggerFactory.getLogger(Timer.class);
 
     private final static AtomicInteger nextSerialNumber = new AtomicInteger(0);
 
@@ -91,9 +90,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
                     log.debug(String.format("Timer event fired #%s - executing nested actions", indexCount));
 
                     for (TestActionBuilder<?> actionBuilder : actions)  {
-                        TestAction action = actionBuilder.build();
-                        setActiveAction(action);
-                        action.execute(context);
+                        executeAction(actionBuilder.build(), context);
                     }
                     if (indexCount >= repeatCount) {
                         log.debug(String.format("Timer complete: %s iterations reached", repeatCount));

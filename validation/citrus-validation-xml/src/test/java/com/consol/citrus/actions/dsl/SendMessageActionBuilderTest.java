@@ -1,20 +1,16 @@
 package com.consol.citrus.actions.dsl;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.UnitTestSupport;
-import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.MarshallingPayloadBuilder;
@@ -22,29 +18,19 @@ import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
-import com.consol.citrus.validation.context.HeaderValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageProcessor;
-import com.consol.citrus.xml.StringSource;
-import org.mockito.Mockito;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.xstream.XStreamMarshaller;
+import com.consol.citrus.xml.Jaxb2Marshaller;
+import com.consol.citrus.xml.Marshaller;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.validation.XmlValidator;
-import org.springframework.xml.xsd.XsdSchema;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.xml.sax.SAXParseException;
 
-import javax.xml.transform.Source;
-
-import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
-import static com.consol.citrus.dsl.XmlSupport.xml;
 import static com.consol.citrus.dsl.XpathSupport.xpath;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -54,15 +40,19 @@ import static org.mockito.Mockito.when;
  */
 public class SendMessageActionBuilderTest extends UnitTestSupport {
 
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
-    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
-    private Producer messageProducer = Mockito.mock(Producer.class);
+    @Mock
+    private ReferenceResolver referenceResolver;
+    @Mock
+    private Endpoint messageEndpoint;
+    @Mock
+    private Producer messageProducer;
 
-    private XStreamMarshaller marshaller = new XStreamMarshaller();
+    private final Marshaller marshaller = new Jaxb2Marshaller(TestRequest.class);
 
     @BeforeClass
     public void prepareMarshaller() {
-        marshaller.getXStream().processAnnotations(TestRequest.class);
+        MockitoAnnotations.openMocks(this);
+        ((Jaxb2Marshaller) marshaller).setProperty(javax.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
     }
 
     @Test

@@ -67,9 +67,7 @@ public class Assert extends AbstractActionContainer {
         }
 
         try {
-            TestAction action = this.action.build();
-            setActiveAction(action);
-            action.execute(context);
+            executeAction(this.action.build(), context);
         } catch (Exception e) {
             log.debug("Validating caught exception ...");
 
@@ -161,6 +159,20 @@ public class Assert extends AbstractActionContainer {
          */
         public Builder exception(Class<? extends Throwable> exception) {
             this.exception = exception;
+            return this;
+        }
+
+        /**
+         * Catch exception type during execution.
+         * @param type
+         * @return
+         */
+        public Builder exception(String type) {
+            try {
+                this.exception = (Class<? extends Throwable>) Class.forName(type);
+            } catch (ClassNotFoundException e) {
+                throw new CitrusRuntimeException(String.format("Failed to instantiate exception class of type '%s'", type), e);
+            }
             return this;
         }
 

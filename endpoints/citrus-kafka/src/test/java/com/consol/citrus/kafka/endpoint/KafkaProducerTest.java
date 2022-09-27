@@ -72,7 +72,7 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
             ProduceRequestResult result = new ProduceRequestResult(new TopicPartition("default", 0));
             result.set(0, 0, null);
             result.done();
-            return new FutureRecordMetadata(result, 0L, System.currentTimeMillis(), 0L, 1, message.getPayload(byte[].class).length, Time.SYSTEM);
+            return new FutureRecordMetadata(result, 0, System.currentTimeMillis(), 0, message.getPayload(byte[].class).length, Time.SYSTEM);
         });
 
         endpoint.createProducer().send(message, context);
@@ -104,7 +104,7 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
             ProduceRequestResult result = new ProduceRequestResult(new TopicPartition("foo", 0));
             result.set(0, 0, null);
             result.done();
-            return new FutureRecordMetadata(result, 0L, System.currentTimeMillis(), 0L, 2, message.getPayload(byte[].class).length, Time.SYSTEM);
+            return new FutureRecordMetadata(result, 0, System.currentTimeMillis(), 0, message.getPayload(byte[].class).length, Time.SYSTEM);
         });
 
         endpoint.createProducer().send(message, context);

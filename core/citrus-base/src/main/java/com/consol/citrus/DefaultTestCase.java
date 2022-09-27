@@ -79,8 +79,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             try {
                 start(context);
                 for (final TestActionBuilder<?> actionBuilder: actions) {
-                    TestAction action = actionBuilder.build();
-                    executeAction(action, context);
+                    executeAction(actionBuilder.build(), context);
                 }
 
                 testResult = TestResult.success(getName(), testClass.getName());
@@ -130,8 +129,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         }
 
         try {
+            setActiveAction(action);
             if (!action.isDisabled(context)) {
-                setActiveAction(action);
                 context.getTestActionListeners().onTestActionStart(this, action);
 
                 action.execute(context);
@@ -142,6 +141,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         } catch (final Exception | AssertionError e) {
             testResult = TestResult.failed(getName(), testClass.getName(), e);
             throw new TestCaseFailedException(e);
+        } finally {
+            setExecutedAction(action);
         }
     }
 
@@ -374,6 +375,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 this.parameters.put(parameterNames[i], parameterValues[i]);
             }
         }
+    }
+
+    @Override
+    public List<TestActionBuilder<?>> getActionBuilders() {
+        return actions;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class SshEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
-        Map<String, EndpointBuilder> endpointBuilders = EndpointBuilder.lookup();
+        Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
         Assert.assertTrue(endpointBuilders.containsKey("ssh.client"));
         Assert.assertTrue(endpointBuilders.containsKey("ssh.server"));
     }

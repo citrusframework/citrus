@@ -34,7 +34,7 @@ import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.BrowserType;
-import org.openqa.selenium.support.events.WebDriverEventListener;
+import org.openqa.selenium.support.events.WebDriverListener;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -75,7 +75,7 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     @Mock
     private ReferenceResolver referenceResolver;
     @Mock
-    private WebDriverEventListener eventListener;
+    private WebDriverListener eventListener;
     @Mock
     private WebDriver webDriver;
     @Mock
@@ -83,12 +83,12 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("webDriver", WebDriver.class)).thenReturn(webDriver);
         when(referenceResolver.resolve("firefoxProfile", FirefoxProfile.class)).thenReturn(firefoxProfile);
-        when(referenceResolver.resolve("eventListener", WebDriverEventListener.class)).thenReturn(eventListener);
-        when(referenceResolver.resolve(new String[] { "eventListener" }, WebDriverEventListener.class)).thenReturn(Collections.singletonList(eventListener));
+        when(referenceResolver.resolve("eventListener", WebDriverListener.class)).thenReturn(eventListener);
+        when(referenceResolver.resolve(new String[] { "eventListener" }, WebDriverListener.class)).thenReturn(Collections.singletonList(eventListener));
     }
 
     @BeforeMethod

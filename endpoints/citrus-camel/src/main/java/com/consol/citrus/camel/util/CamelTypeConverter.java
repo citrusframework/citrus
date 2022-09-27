@@ -32,8 +32,10 @@ public class CamelTypeConverter extends DefaultTypeConverter {
 
     private CamelContext context;
 
+    /**
+     * Private default constructor. Prevent instantiation users should use INSTANCE
+     */
     private CamelTypeConverter() {
-        // prevent instantiation users should use INSTANCE
     }
 
     @Override

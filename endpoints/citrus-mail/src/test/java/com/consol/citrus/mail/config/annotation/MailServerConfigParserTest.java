@@ -77,7 +77,7 @@ public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("messageConverter", MailMessageConverter.class)).thenReturn(messageConverter);
         when(referenceResolver.resolve("marshaller", MailMarshaller.class)).thenReturn(marshaller);

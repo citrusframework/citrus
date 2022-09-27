@@ -22,14 +22,14 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Keyboard;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.interactions.Coordinates;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -37,9 +37,9 @@ import static org.mockito.Mockito.*;
  */
 public class HoverActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
-    private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
-    private RemoteWebElement element = Mockito.mock(RemoteWebElement.class);
+    private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
+    private final ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
+    private final RemoteWebElement element = Mockito.mock(RemoteWebElement.class);
 
     @BeforeMethod
     public void setup() {
@@ -54,12 +54,7 @@ public class HoverActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecute() throws Exception {
-        Mouse mouse = Mockito.mock(Mouse.class);
-        Keyboard keyboard = Mockito.mock(Keyboard.class);
         Coordinates coordinates = Mockito.mock(Coordinates.class);
-
-        when(webDriver.getMouse()).thenReturn(mouse);
-        when(webDriver.getKeyboard()).thenReturn(keyboard);
 
         when(element.getCoordinates()).thenReturn(coordinates);
 

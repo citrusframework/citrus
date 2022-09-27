@@ -31,7 +31,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,9 +42,9 @@ import static org.mockito.Mockito.when;
  */
 public class OpenWindowActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
-    private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
-    private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
+    private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
+    private final ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
+    private final WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
     @BeforeMethod
     public void setup() {

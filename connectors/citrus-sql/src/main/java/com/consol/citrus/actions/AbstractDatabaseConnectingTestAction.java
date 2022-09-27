@@ -87,7 +87,9 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Do basic logging and delegate execution to subclass.
      */
     public void execute(TestContext context) {
-        doExecute(context);
+        if (!isDisabled(context)) {
+            doExecute(context);
+        }
     }
 
     /**
@@ -220,7 +222,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         protected JdbcTemplate jdbcTemplate;
         protected DataSource dataSource;
         protected String sqlResourcePath;
-        protected List<String> statements = new ArrayList<>();
+        protected final List<String> statements = new ArrayList<>();
         protected PlatformTransactionManager transactionManager;
         protected String transactionTimeout = String.valueOf(TransactionDefinition.TIMEOUT_DEFAULT);
         protected String transactionIsolationLevel = "ISOLATION_DEFAULT";

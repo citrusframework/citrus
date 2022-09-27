@@ -89,7 +89,7 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(referenceResolver.resolve("apacheFtpServer", org.apache.ftpserver.FtpServer.class)).thenReturn(apacheFtpServer);
         when(referenceResolver.resolve("userManager", UserManager.class)).thenReturn(userManager);

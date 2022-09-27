@@ -20,7 +20,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
@@ -32,7 +31,7 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.consol.citrus.validation.GenericValidationProcessor;
 import com.consol.citrus.xml.StringSource;
-import org.springframework.oxm.Unmarshaller;
+import com.consol.citrus.xml.Unmarshaller;
 import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 
@@ -77,7 +76,7 @@ public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValid
 
         try {
             return (T) unmarshaller.unmarshal(getPayloadSource(message.getPayload()));
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to unmarshal message payload", e);
         }
     }

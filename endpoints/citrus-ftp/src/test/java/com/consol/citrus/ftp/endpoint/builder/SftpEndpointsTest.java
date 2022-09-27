@@ -34,7 +34,7 @@ public class SftpEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
-        Map<String, EndpointBuilder> endpointBuilders = EndpointBuilder.lookup();
+        Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
         Assert.assertTrue(endpointBuilders.containsKey("sftp.client"));
         Assert.assertTrue(endpointBuilders.containsKey("sftp.server"));
     }

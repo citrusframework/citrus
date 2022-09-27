@@ -17,13 +17,20 @@
 package com.consol.citrus.annotations;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusContext;
 import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.BindToRegistry;
+import com.consol.citrus.spi.ReferenceRegistry;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
@@ -37,7 +44,7 @@ import org.springframework.util.ReflectionUtils;
 public abstract class CitrusAnnotations {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusAnnotations.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CitrusAnnotations.class);
 
     /**
      * Prevent instantiation.
@@ -69,7 +76,10 @@ public abstract class CitrusAnnotations {
     public static void injectAll(final Object target, final Citrus citrusFramework, final TestContext context) {
         injectCitrusFramework(target, citrusFramework);
 
-        citrusFramework.getCitrusContext().parseConfiguration(target);
+        CitrusContext citrusContext = citrusFramework.getCitrusContext();
+        injectCitrusContext(target, citrusContext);
+
+        parseConfiguration(target, citrusContext);
 
         injectEndpoints(target, context);
         injectTestContext(target, context);
@@ -95,7 +105,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                log.trace(String.format("Injecting Citrus framework instance on test class field '%s'", field.getName()));
+                LOG.trace(String.format("Injecting Citrus framework instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, testCase, citrusFramework);
             }
         }, new ReflectionUtils.FieldFilter() {
@@ -116,6 +126,28 @@ public abstract class CitrusAnnotations {
     }
 
     /**
+     * Inject Citrus context instance to the test class fields with {@link CitrusResource} annotation.
+     * @param target
+     * @param context
+     */
+    public static void injectCitrusContext(final Object target, final CitrusContext context) {
+        ReflectionUtils.doWithFields(target.getClass(), field -> {
+            LOG.trace(String.format("Injecting Citrus context instance on test class field '%s'", field.getName()));
+            ReflectionUtils.setField(field, target, context);
+        }, field -> {
+            if (field.isAnnotationPresent(CitrusResource.class) && CitrusContext.class.isAssignableFrom(field.getType())) {
+                if (!field.isAccessible()) {
+                    ReflectionUtils.makeAccessible(field);
+                }
+
+                return true;
+            }
+
+            return false;
+        });
+    }
+
+    /**
      * Inject test context instance to the test class fields with {@link CitrusResource} annotation.
      * @param target
      * @param context
@@ -124,7 +156,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (TestContext.class.isAssignableFrom(type)) {
-                log.trace(String.format("Injecting test context instance on test class field '%s'", field.getName()));
+                LOG.trace(String.format("Injecting test context instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, target, context);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
@@ -151,7 +183,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (TestCaseRunner.class.isAssignableFrom(type)) {
-                log.trace(String.format("Injecting test runner instance on test class field '%s'", field.getName()));
+                LOG.trace(String.format("Injecting test runner instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, target, runner);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
@@ -181,7 +213,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (TestActionRunner.class.isAssignableFrom(type)) {
-                log.trace(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
+                LOG.trace(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, target, runner);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
@@ -208,7 +240,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (GherkinTestActionRunner.class.isAssignableFrom(type)) {
-                log.trace(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
+                LOG.trace(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, target, runner);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
@@ -224,5 +256,66 @@ public abstract class CitrusAnnotations {
 
             return false;
         });
+    }
+
+    /**
+     * Parse given configuration class and bind annotated fields, methods to reference registry.
+     * @param configClass
+     * @param citrusContext
+     */
+    public static void parseConfiguration(Class<?> configClass, CitrusContext citrusContext) {
+        try {
+            parseConfiguration(configClass.getConstructor().newInstance(), citrusContext);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            throw new CitrusRuntimeException("Missing or non-accessible default constructor on custom configuration class", e);
+        }
+    }
+
+    /**
+     * Parse given configuration class and bind annotated fields, methods to reference registry.
+     * @param configuration
+     * @param citrusContext
+     */
+    public static void parseConfiguration(Object configuration, CitrusContext citrusContext) {
+        Class<?> configClass = configuration.getClass();
+
+        if (configClass.isAnnotationPresent(CitrusConfiguration.class)) {
+            for (Class<?> type : configClass.getAnnotation(CitrusConfiguration.class).classes()) {
+                parseConfiguration(type, citrusContext);
+            }
+        }
+
+        Arrays.stream(configClass.getDeclaredMethods())
+                .filter(m -> m.getAnnotation(BindToRegistry.class) != null)
+                .forEach(m -> {
+                    try {
+                        String name = ReferenceRegistry.getName(m.getAnnotation(BindToRegistry.class), m.getName());
+                        Object component = m.invoke(configuration);
+                        citrusContext.getReferenceResolver().bind(name, component);
+
+                        if (component instanceof MessageValidator) {
+                            citrusContext.getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
+                        }
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new CitrusRuntimeException("Failed to invoke configuration method", e);
+                    }
+                });
+
+        Arrays.stream(configClass.getDeclaredFields())
+                .filter(f -> f.getAnnotation(BindToRegistry.class) != null)
+                .peek(ReflectionUtils::makeAccessible)
+                .forEach(f -> {
+                    try {
+                        String name = ReferenceRegistry.getName(f.getAnnotation(BindToRegistry.class), f.getName());
+                        Object component = f.get(configuration);
+                        citrusContext.getReferenceResolver().bind(name, component);
+
+                        if (component instanceof MessageValidator) {
+                            citrusContext.getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
+                        }
+                    } catch (IllegalAccessException e) {
+                        throw new CitrusRuntimeException("Failed to access configuration field", e);
+                    }
+                });
     }
 }

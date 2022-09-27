@@ -3,12 +3,14 @@ package com.consol.citrus;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.message.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,10 +111,15 @@ public final class CitrusSettings {
     public static final String VALIDATION_MATCHER_PREFIX = "@";
     public static final String VALIDATION_MATCHER_SUFFIX = "@";
 
+    public static final String GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.groovy.file.name.pattern";
+    public static final String GROOVY_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_GROOVY_FILE_NAME_PATTERN";
+    public static final String GROOVY_TEST_FILE_NAME_PATTERN = System.getProperty(GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(GROOVY_TEST_FILE_NAME_PATTERN_ENV) != null ?
+            System.getenv(GROOVY_TEST_FILE_NAME_PATTERN_ENV) : "/**/*test.groovy,/**/*it.groovy");
+
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
     public static final String XML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_XML_FILE_NAME_PATTERN";
     public static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) != null ?
-            System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) : "/**/*Test.xml,/**/*IT.xml");
+            System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) : "/**/*Test.xml,/**/*IT.xml,/**/*test.xml,/**/*it.xml");
 
     public static final String JAVA_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.java.file.name.pattern";
     public static final String JAVA_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_JAVA_FILE_NAME_PATTERN";
@@ -149,6 +156,14 @@ public final class CitrusSettings {
     public static final String LOG_MASK_KEYWORDS_PROPERTY = "citrus.log.mask.keywords";
     public static final String LOG_MASK_KEYWORDS_ENV = "CITRUS_LOG_MASK_KEYWORDS";
     public static final String LOG_MASK_KEYWORDS_DEFAULT = "password,secret,secretKey";
+
+    /**
+     * Gets set of file name patterns for Groovy test files.
+     * @return
+     */
+    public static Set<String> getGroovyTestFileNamePattern() {
+        return StringUtils.commaDelimitedListToSet(GROOVY_TEST_FILE_NAME_PATTERN);
+    }
 
     /**
      * Gets set of file name patterns for XML test files.
@@ -211,5 +226,22 @@ public final class CitrusSettings {
                 System.getenv(LOG_MASK_KEYWORDS_ENV) : LOG_MASK_KEYWORDS_DEFAULT).split(","))
                     .map(String::trim)
                     .collect(Collectors.toSet());
+    }
+
+    /**
+     * Gets the test file name pattern for given type or empty patterns for unknown type.
+     * @param type
+     * @return
+     */
+    public static Set<String> getTestFileNamePattern(String type) {
+        switch (type) {
+            case TestLoader.XML:
+            case TestLoader.SPRING:
+                return CitrusSettings.getXmlTestFileNamePattern();
+            case TestLoader.GROOVY:
+                return CitrusSettings.getGroovyTestFileNamePattern();
+            default:
+                return Collections.emptySet();
+        }
     }
 }

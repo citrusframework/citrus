@@ -31,6 +31,7 @@ import com.consol.citrus.functions.core.TranslateFunction;
 import com.consol.citrus.functions.core.UpperCaseFunction;
 import com.consol.citrus.functions.core.UrlDecodeFunction;
 import com.consol.citrus.functions.core.UrlEncodeFunction;
+import com.consol.citrus.functions.core.UnixTimestampFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +80,7 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
         getMembers().put("readFile", new ReadFileResourceFunction());
         getMembers().put("message", new LoadMessageFunction());
         getMembers().put("systemProperty", new SystemPropertyFunction());
+        getMembers().put("unixTimestamp", new UnixTimestampFunction());
 
         lookupFunctions();
     }

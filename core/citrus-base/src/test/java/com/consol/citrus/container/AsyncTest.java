@@ -48,9 +48,9 @@ public class AsyncTest extends UnitTestSupport {
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(AsyncTest.class);
 
-    private TestAction action = Mockito.mock(TestAction.class);
-    private TestAction success = Mockito.mock(TestAction.class);
-    private TestAction error = Mockito.mock(TestAction.class);
+    private final TestAction action = Mockito.mock(TestAction.class);
+    private final TestAction success = Mockito.mock(TestAction.class);
+    private final TestAction error = Mockito.mock(TestAction.class);
 
     @Test
     public void testSingleAction() throws Exception {

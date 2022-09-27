@@ -135,7 +135,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         HashMap<String, Filter> filters = new HashMap<>();
         filters.put("filter1", filter1);

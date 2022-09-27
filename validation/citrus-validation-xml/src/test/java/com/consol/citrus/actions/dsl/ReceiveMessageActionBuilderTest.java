@@ -53,13 +53,13 @@ import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
+import com.consol.citrus.xml.Jaxb2Marshaller;
+import com.consol.citrus.xml.Marshaller;
 import com.consol.citrus.xml.StringSource;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.Resource;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.XsdSchema;
 import org.testng.Assert;
@@ -97,12 +97,12 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     @Mock
     private ReferenceResolver referenceResolver;
 
-    private final XStreamMarshaller marshaller = new XStreamMarshaller();
+    private final Marshaller marshaller = new Jaxb2Marshaller(TestRequest.class);
 
     @BeforeClass
     public void prepareMarshaller() {
         MockitoAnnotations.openMocks(this);
-        marshaller.getXStream().processAnnotations(TestRequest.class);
+        ((Jaxb2Marshaller) marshaller).setProperty(javax.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
     }
 
     @Test
@@ -619,7 +619,6 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).size(), 1L);
         Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessageHeaderData(context).get(0),
                 "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-
     }
 
     @Test

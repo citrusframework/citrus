@@ -16,29 +16,26 @@
 
 package com.consol.citrus.actions;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
-import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.Completable;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
-import com.consol.citrus.message.builder.DefaultPayloadBuilder;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageBuilder;
+import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.builder.MessageBuilderSupport;
 import com.consol.citrus.message.builder.SendMessageBuilderSupport;
-import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.IsJsonPredicate;
 import com.consol.citrus.util.IsXmlPredicate;
-import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.SchemaValidator;
-import com.consol.citrus.validation.ValidationContextAdapter;
-import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.validation.context.SchemaValidationContext;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
@@ -109,17 +106,17 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     public SendMessageAction(SendMessageActionBuilder<?, ?, ?> builder) {
         super("send", builder);
 
-        this.endpoint = builder.endpoint;
-        this.endpointUri = builder.endpointUri;
-        this.schemaValidation = builder.messageBuilderSupport.isSchemaValidation();
-        this.schema = builder.messageBuilderSupport.getSchema();
-        this.schemaRepository = builder.messageBuilderSupport.getSchemaRepository();
-        this.variableExtractors = builder.variableExtractors;
-        this.messageProcessors = builder.messageProcessors;
         this.forkMode = builder.forkMode;
-        this.messageBuilder = builder.messageBuilderSupport.getMessageBuilder();
-        this.messageType = builder.messageBuilderSupport.getMessageType();
-        this.dataDictionary = builder.messageBuilderSupport.getDataDictionary();
+        this.endpoint = builder.getEndpoint();
+        this.endpointUri = builder.getEndpointUri();
+        this.schemaValidation = builder.getMessageBuilderSupport().isSchemaValidation();
+        this.schema = builder.getMessageBuilderSupport().getSchema();
+        this.schemaRepository = builder.getMessageBuilderSupport().getSchemaRepository();
+        this.variableExtractors = builder.getVariableExtractors();
+        this.messageProcessors = builder.getMessageProcessors();
+        this.messageBuilder = builder.getMessageBuilderSupport().getMessageBuilder();
+        this.messageType = builder.getMessageBuilderSupport().getMessageType();
+        this.dataDictionary = builder.getMessageBuilderSupport().getDataDictionary();
     }
 
     /**
@@ -433,41 +430,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /**
      * Base send message action builder also used by subclasses of base send message action.
      */
-    public static abstract class SendMessageActionBuilder<T extends SendMessageAction, M extends SendMessageBuilderSupport<T, B, M>, B extends SendMessageActionBuilder<T, M, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
-
-        protected Endpoint endpoint;
-        protected String endpointUri;
+    public static abstract class SendMessageActionBuilder<T extends SendMessageAction, M extends SendMessageBuilderSupport<T, B, M>, B extends SendMessageActionBuilder<T, M, B>>
+            extends MessageBuilderSupport.MessageActionBuilder<T, M, B> {
 
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;
-
-        protected List<VariableExtractor> variableExtractors = new ArrayList<>();
-        protected List<MessageProcessor> messageProcessors = new ArrayList<>();
-
-        /** Basic bean reference resolver */
-        protected ReferenceResolver referenceResolver;
-
-        protected M messageBuilderSupport;
-
-        /**
-         * Sets the message endpoint to send messages to.
-         * @param messageEndpoint
-         * @return
-         */
-        public B endpoint(Endpoint messageEndpoint) {
-            this.endpoint = messageEndpoint;
-            return self;
-        }
-
-        /**
-         * Sets the message endpoint uri to send messages to.
-         * @param messageEndpointUri
-         * @return
-         */
-        public B endpoint(String messageEndpointUri) {
-            this.endpointUri = messageEndpointUri;
-            return self;
-        }
 
         /**
          * Sets the fork mode for this send action builder.
@@ -478,98 +445,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
             this.forkMode = forkMode;
             return self;
         }
-
-        /**
-         * Construct the control message for this receive action.
-         * @return
-         */
-        public M message() {
-            return getMessageBuilderSupport();
-        }
-
-        /**
-         * Sets the control message for this receive action.
-         * @param messageBuilder
-         * @return
-         */
-        public M message(MessageBuilder messageBuilder) {
-            return getMessageBuilderSupport().from(messageBuilder);
-        }
-
-        /**
-         * Expect a control message in this receive action.
-         *
-         * @param controlMessage
-         * @return
-         */
-        public M message(final Message controlMessage) {
-            return getMessageBuilderSupport().from(controlMessage);
-        }
-
-        /**
-         * Adds message processor on the message to be sent.
-         * @param processor
-         * @return
-         */
-        public B transform(MessageProcessor processor) {
-            return process(processor);
-        }
-
-        /**
-         * Adds message processor on the message to be sent as fluent builder.
-         * @param builder
-         * @return
-         */
-        public B transform(MessageProcessor.Builder<?, ?> builder) {
-            return transform(builder.build());
-        }
-
-        /**
-         * Adds message processor on the message to be sent.
-         * @param processor
-         * @return
-         */
-        public B process(MessageProcessor processor) {
-            if (processor instanceof VariableExtractor) {
-                this.variableExtractors.add((VariableExtractor) processor);
-            } else {
-                this.messageProcessors.add(processor);
-            }
-            return self;
-        }
-
-        /**
-         * Adds message processor on the message to be sent as fluent builder.
-         * @param builder
-         * @return
-         */
-        public B process(MessageProcessor.Builder<?, ?> builder) {
-            return process(builder.build());
-        }
-
-        /**
-         * Sets the bean reference resolver.
-         * @param referenceResolver
-         */
-        public B withReferenceResolver(ReferenceResolver referenceResolver) {
-            this.referenceResolver = referenceResolver;
-            return self;
-        }
-
-        @Override
-        public void setReferenceResolver(ReferenceResolver referenceResolver) {
-            this.referenceResolver = referenceResolver;
-        }
-
-        public M getMessageBuilderSupport() {
-            return messageBuilderSupport;
-        }
-
-        /**
-         * Build method implemented by subclasses.
-         * @return
-         */
-        protected abstract T doBuild();
 
         @Override
         public final T build() {

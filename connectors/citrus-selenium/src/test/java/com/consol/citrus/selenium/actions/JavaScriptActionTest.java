@@ -29,7 +29,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,8 +40,8 @@ import static org.mockito.Mockito.when;
  */
 public class JavaScriptActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
-    private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
+    private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
+    private final ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
 
     @BeforeMethod
     public void setup() {
@@ -61,7 +61,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
-        Assert.assertEquals(((List) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
+        Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
 
         verify(webDriver).executeScript(eq("alert('Hello')"));
     }
@@ -79,7 +79,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
-        Assert.assertEquals(((List) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
+        Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 0L);
 
         verify(webDriver).executeScript(eq("alert('Hello')"));
     }
@@ -96,7 +96,7 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
         action.execute(context);
 
         Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
-        Assert.assertEquals(((List) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 1L);
+        Assert.assertEquals(((List<?>) context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS)).size(), 1L);
 
         verify(webDriver).executeScript(eq("alert('Hello')"));
     }

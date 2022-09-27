@@ -17,11 +17,18 @@
 package com.consol.citrus.context;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import com.consol.citrus.context.resolver.TypeAliasResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.SimpleReferenceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -35,9 +42,14 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class SpringBeanReferenceResolver implements ReferenceResolver, ApplicationContextAware {
 
+    /** Logger */
+    private static final Logger log = LoggerFactory.getLogger(SpringBeanReferenceResolver.class);
+
     private ApplicationContext applicationContext;
 
     private ReferenceResolver fallback = new SimpleReferenceResolver();
+
+    private final Map<String, TypeAliasResolver<?, ?>> typeAliasResolvers = new HashMap<>();
 
     /**
      * Default constructor.
@@ -59,7 +71,12 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         try {
             return applicationContext.getBean(requiredType);
         } catch (NoSuchBeanDefinitionException e) {
-            throw new CitrusRuntimeException(String.format("Unable to find bean reference for type '%s'", requiredType), e);
+            if (fallback.isResolvable(requiredType)) {
+                return fallback.resolve(requiredType);
+            }
+
+            return resolveAlias(requiredType, this::resolve)
+                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Unable to find bean reference for type '%s'", requiredType), e));
         }
     }
 
@@ -68,10 +85,12 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         try {
             return applicationContext.getBean(name, type);
         } catch (NoSuchBeanDefinitionException e) {
-            if (fallback.isResolvable(name)) {
+            if (fallback.isResolvable(name, type)) {
                 return fallback.resolve(name, type);
             }
-            throw new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name), e);
+
+            return resolveAlias(type, clazz -> resolve(name, clazz))
+                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name), e));
         }
     }
 
@@ -83,17 +102,25 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
             if (fallback.isResolvable(name)) {
                 return fallback.resolve(name);
             }
+
             throw new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name), e);
         }
     }
 
     @Override
     public <T> Map<String, T> resolveAll(Class<T> requiredType) {
-        try {
-            return applicationContext.getBeansOfType(requiredType);
-        } catch (NoSuchBeanDefinitionException e) {
-            throw new CitrusRuntimeException(String.format("Unable to find bean references for type '%s'", requiredType), e);
+        Map<String, T>  beans = applicationContext.getBeansOfType(requiredType);
+
+        if (beans.isEmpty()) {
+            if (fallback.isResolvable(requiredType)) {
+                return fallback.resolveAll(requiredType);
+            }
+
+            return resolveAllAlias(requiredType, this::resolveAll)
+                    .orElseGet(HashMap::new);
         }
+
+        return beans;
     }
 
     @Override
@@ -103,12 +130,52 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
 
     @Override
     public boolean isResolvable(Class<?> type) {
-        return applicationContext.getBeanNamesForType(type).length > 0 || fallback.isResolvable(type);
+        boolean canResolve = applicationContext.getBeanNamesForType(type).length > 0 || fallback.isResolvable(type);
+
+        if (!canResolve) {
+            Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.values().stream()
+                    .filter(resolver -> resolver.isAliasFor(type))
+                    .findFirst();
+
+            if (aliasResolver.isEmpty()) {
+                aliasResolver = TypeAliasResolver.lookup().values().stream()
+                        .filter(resolver -> resolver.isAliasFor(type))
+                        .findFirst();
+            }
+
+            if (aliasResolver.isPresent()) {
+                canResolve = applicationContext.getBeanNamesForType(aliasResolver.get().getAliasType()).length > 0 || fallback.isResolvable(aliasResolver.get().getAliasType());
+            }
+        }
+
+        return canResolve;
     }
 
     @Override
     public boolean isResolvable(String name, Class<?> type) {
-        return Arrays.asList(applicationContext.getBeanNamesForType(type)).contains(name) || fallback.isResolvable(name, type);
+        boolean canResolve = Arrays.asList(applicationContext.getBeanNamesForType(type)).contains(name) || fallback.isResolvable(name, type);
+
+        if (!canResolve) {
+            if (typeAliasResolvers.containsKey(name) && typeAliasResolvers.get(name).isAliasFor(type)) {
+                canResolve = Arrays.asList(applicationContext.getBeanNamesForType(typeAliasResolvers.get(name).getAliasType())).contains(name) || fallback.isResolvable(name, typeAliasResolvers.get(name).getAliasType());
+            }
+
+            Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.values().stream()
+                    .filter(resolver -> resolver.isAliasFor(type))
+                    .findFirst();
+
+            if (aliasResolver.isEmpty()) {
+                aliasResolver = TypeAliasResolver.lookup().values().stream()
+                        .filter(resolver -> resolver.isAliasFor(type))
+                        .findFirst();
+            }
+
+            if (aliasResolver.isPresent()) {
+                canResolve = Arrays.asList(applicationContext.getBeanNamesForType(aliasResolver.get().getAliasType())).contains(name) || fallback.isResolvable(name, aliasResolver.get().getAliasType());
+            }
+        }
+
+        return canResolve;
     }
 
     /**
@@ -123,6 +190,65 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
     @Override
     public void bind(String name, Object value) {
         fallback.bind(name, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Optional<T> resolveAlias(Class<T> source, Function<Class<?>, ?> supplier) {
+        Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.values().stream()
+                .filter(resolver -> resolver.isAliasFor(source))
+                .findFirst();
+
+        if (aliasResolver.isEmpty()) {
+            aliasResolver = TypeAliasResolver.lookup().values().stream()
+                    .filter(resolver -> resolver.isAliasFor(source))
+                    .findFirst();
+        }
+
+        if (aliasResolver.isPresent()) {
+            TypeAliasResolver<T, ?> resolver = (TypeAliasResolver<T, ?>) aliasResolver.get();
+
+            try {
+                return Optional.of(resolver.adapt(supplier.apply(resolver.getAliasType())));
+            } catch (Exception e) {
+                log.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
+                return Optional.empty();
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Optional<Map<String, T>> resolveAllAlias(Class<T> source, Function<Class<?>, Map<String, ?>> supplier) {
+        Optional<TypeAliasResolver<?, ?>> aliasResolver = typeAliasResolvers.values().stream()
+                .filter(resolver -> resolver.isAliasFor(source))
+                .findFirst();
+
+        if (aliasResolver.isEmpty()) {
+            aliasResolver = TypeAliasResolver.lookup().values().stream()
+                    .filter(resolver -> resolver.isAliasFor(source))
+                    .findFirst();
+        }
+
+        if (aliasResolver.isPresent()) {
+            TypeAliasResolver<T, ?> resolver = (TypeAliasResolver<T, ?>) aliasResolver.get();
+
+            try {
+                return Optional.of(supplier.apply(resolver.getAliasType())
+                        .entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(Map.Entry::getKey, v -> resolver.adapt(v.getValue()))));
+            } catch (Exception e) {
+                log.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
+                return Optional.empty();
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public void registerTypeAliasResolver(String name, TypeAliasResolver<?, ?> aliasResolver) {
+        this.typeAliasResolvers.put(name, aliasResolver);
     }
 
     @Override

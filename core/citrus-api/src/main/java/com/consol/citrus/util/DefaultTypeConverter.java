@@ -34,6 +34,8 @@ public class DefaultTypeConverter implements TypeConverter {
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTypeConverter.class);
 
+    public static DefaultTypeConverter INSTANCE = new DefaultTypeConverter();
+
     @Override
     public final <T> T convertIfNecessary(Object target, Class<T> type) {
         if (type.isInstance(target)) {
@@ -156,7 +158,7 @@ public class DefaultTypeConverter implements TypeConverter {
 
         if (target instanceof String) {
             try {
-                return TypeConversionUtils.convertStringToType(String.valueOf(target), type);
+                return convertStringToType(String.valueOf(target), type);
             } catch (CitrusRuntimeException e) {
                 LOG.warn(String.format("Unable to convert String object to type '%s' - try fallback strategies", type), e);
             }
@@ -188,6 +190,29 @@ public class DefaultTypeConverter implements TypeConverter {
 
             throw e;
         }
+    }
+
+    @Override
+    public <T> T convertStringToType(String value, Class<T> type) {
+        if (type.isAssignableFrom(String.class)) {
+            return (T) value;
+        } else if (type.isAssignableFrom(int.class) || type.isAssignableFrom(Integer.class)) {
+            return (T) Integer.valueOf(value);
+        } else if (type.isAssignableFrom(short.class) || type.isAssignableFrom(Short.class)) {
+            return (T) Short.valueOf(value);
+        }  else if (type.isAssignableFrom(byte.class) || type.isAssignableFrom(Byte.class)) {
+            return (T) Byte.valueOf(value);
+        }  else if (type.isAssignableFrom(long.class) || type.isAssignableFrom(Long.class)) {
+            return (T) Long.valueOf(value);
+        } else if (type.isAssignableFrom(boolean.class) || type.isAssignableFrom(Boolean.class)) {
+            return (T) Boolean.valueOf(value);
+        } else if (type.isAssignableFrom(float.class) || type.isAssignableFrom(Float.class)) {
+            return (T) Float.valueOf(value);
+        } else if (type.isAssignableFrom(double.class) || type.isAssignableFrom(Double.class)) {
+            return (T) Double.valueOf(value);
+        }
+
+        throw new CitrusRuntimeException(String.format("Unable to convert '%s' to required type '%s'", value, type.getName()));
     }
 
     protected <T> T convertBefore(Object target, Class<T> type) {

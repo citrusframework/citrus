@@ -26,29 +26,24 @@ Preconditions
 You need following software on your machine in order to use the
 Citrus framework:
 
-* Java 11 or higher
+* Java 11+
 Installed JDK plus JAVA_HOME environment variable set
-up and pointing to your Java installation directory
+up and pointing to your Java installation directory. Used to compile and build the Citrus code.
+
+* Maven 3.6.3+
+Citrus projects will fit best with [Maven](https://maven.apache.org).
+However, it is not required to use Maven. You can also run tests using [Gradle](https://gradle.org/) for instance.
 
 * Java IDE (optional)
 A Java IDE will help you to manage your Citrus project (e.g. creating
-and executing test cases). You can use the Java IDE that you like best
-like Eclipse or IntelliJ IDEA.
-
-* Maven 3.0.x or higher (optional)
-Citrus projects will fit best with Maven (https://maven.apache.org).
-However it is not required to use Maven. You can also run tests using
-ANT (https://ant.apache.org/) for instance.
-   
+and executing test cases). You can use the Java IDE that you like best like Eclipse or IntelliJ IDEA.
+ 
 Installation
 ---------
 
 * Download the latest Citrus release archive
 
 * Extract the archive into an appropriate location on your local storage
-
-* Use the ANT tutorial in our tutorials section to find out how to run
-tests using ANT.
 
 * Read the Maven tutorial to find out how to integrate the Citrus tests
 into the Maven build lifecycle

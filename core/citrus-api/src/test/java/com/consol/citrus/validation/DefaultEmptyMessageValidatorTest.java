@@ -25,7 +25,7 @@ public class DefaultEmptyMessageValidatorTest {
 
     @BeforeMethod
     public void setupMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

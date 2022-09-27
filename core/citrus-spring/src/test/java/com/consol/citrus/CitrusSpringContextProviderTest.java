@@ -16,6 +16,6 @@ public class CitrusSpringContextProviderTest {
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(CitrusContextProvider.lookup("spring").isPresent());
+        Assert.assertTrue(CitrusContextProvider.lookup(CitrusContextProvider.SPRING).isPresent());
     }
 }

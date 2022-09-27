@@ -19,6 +19,7 @@
 
 package com.consol.citrus.validation.xml;
 
+import com.consol.citrus.xml.MarshallerAdapter;
 import org.springframework.oxm.Unmarshaller;
 
 /**
@@ -33,6 +34,6 @@ public abstract class XmlMarshallingValidationCallback<T> extends XmlMarshalling
     }
 
     public XmlMarshallingValidationCallback(Unmarshaller unmarshaller) {
-        super(unmarshaller);
+        super(new MarshallerAdapter(null, unmarshaller));
     }
 }

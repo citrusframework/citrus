@@ -216,13 +216,21 @@ public class PurgeEndpointAction extends AbstractTestAction {
      */
     public static final class Builder extends AbstractTestActionBuilder<PurgeEndpointAction, Builder> {
 
-        private List<String> endpointNames = new ArrayList<>();
-        private List<Endpoint> endpoints = new ArrayList<>();
+        private final List<String> endpointNames = new ArrayList<>();
+        private final List<Endpoint> endpoints = new ArrayList<>();
         private ReferenceResolver referenceResolver;
         private Map<String, Object> messageSelectorMap = new HashMap<>();
         private String messageSelector;
         private long receiveTimeout = 100;
         private long sleepTime = 350;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder purge() {
+            return new Builder();
+        }
 
         /**
          * Fluent API action building entry method used in Java DSL.

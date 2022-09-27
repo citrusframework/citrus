@@ -16,13 +16,13 @@
 
 package com.consol.citrus.integration.design;
 
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
+import javax.sql.DataSource;
+
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
-
-import javax.sql.DataSource;
 
 /**
  * @author Christoph Deppisch
@@ -36,19 +36,18 @@ public class QueryDatabaseRetriesJavaIT extends TestNGCitrusTestDesigner {
 
     @CitrusTest
     public void sqlQueryRetries() {
+        sql(dataSource)
+                .sqlResource("classpath:com/consol/citrus/actions/script.sql");
+
         parallel().actions(
-            sequential().actions(
-                sql(dataSource)
-                    .sqlResource("classpath:com/consol/citrus/actions/script.sql"),
-                repeatOnError()
-                    .autoSleep(100).index("i").until("i = 5")
-                    .actions(query(dataSource)
-                        .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
-                        .validate("CUSTOMER_CNT", "0")
-                )
+            repeatOnError()
+                .autoSleep(500).index("i").until("i = 10")
+                .actions(query(dataSource)
+                    .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
+                    .validate("CUSTOMER_CNT", "0")
             ),
             sequential().actions(
-                sleep(300),
+                sleep(2000),
                 sql(dataSource)
                     .statement("DELETE FROM CUSTOMERS")
             )

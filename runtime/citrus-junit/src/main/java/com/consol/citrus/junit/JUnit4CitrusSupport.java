@@ -26,8 +26,12 @@ import com.consol.citrus.TestBehavior;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.DefaultTestLoader;
+import com.consol.citrus.common.TestLoader;
+import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.junit.runner.RunWith;
@@ -47,13 +51,18 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
 
     @Override
     public void run(CitrusFrameworkMethod frameworkMethod) {
+        if (frameworkMethod.hasError()) {
+            throw frameworkMethod.getError();
+        }
+
         if (citrus == null) {
             citrus = Citrus.newInstance();
         }
 
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
-        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
+        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null ||
+                frameworkMethod.getMethod().getAnnotation(CitrusTestSource.class) != null) {
             TestCaseRunner runner = JUnit4Helper.createTestRunner(frameworkMethod, this.getClass(), ctx);
             frameworkMethod.setAttribute(JUnit4Helper.BUILDER_ATTRIBUTE, runner);
 
@@ -61,7 +70,19 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
 
             CitrusAnnotations.injectAll(this, citrus, ctx);
 
-            JUnit4Helper.invokeTestMethod(this, frameworkMethod, runner, ctx);
+            TestLoader testLoader;
+            if (frameworkMethod.getMethod().getAnnotation(CitrusTestSource.class) != null) {
+                testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName(),
+                        frameworkMethod.getSource(), frameworkMethod.getSourceType());
+
+                CitrusAnnotations.injectTestRunner(testLoader, runner);
+            } else {
+                testLoader = new DefaultTestLoader();
+            }
+
+            CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+            testLoader.doWithTestCase(t -> JUnit4Helper.invokeTestMethod(this, frameworkMethod, ctx));
+            testLoader.load();
         } else if (frameworkMethod.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
             throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
         }
@@ -77,6 +98,31 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
      */
     protected TestContext prepareTestContext(final TestContext testContext) {
         return testContext;
+    }
+
+    /**
+     * Creates new test loader which has TestNG test annotations set for test execution. Only
+     * suitable for tests that get created at runtime through factory method. Subclasses
+     * may overwrite this in order to provide custom test loader with custom test annotations set.
+     * @param testName
+     * @param packageName
+     * @param source
+     * @param type
+     * @return
+     */
+    protected TestLoader createTestLoader(String testName, String packageName, String source, String type) {
+        TestLoader testLoader = TestLoader.lookup(type)
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", type)));
+
+        testLoader.setTestClass(getClass());
+        testLoader.setTestName(testName);
+        testLoader.setPackageName(packageName);
+
+        if (testLoader instanceof TestSourceAware) {
+            ((TestSourceAware) testLoader).setSource(source);
+        }
+
+        return testLoader;
     }
 
     @Override

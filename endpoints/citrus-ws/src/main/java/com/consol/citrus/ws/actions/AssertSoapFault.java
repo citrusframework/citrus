@@ -77,7 +77,7 @@ public class AssertSoapFault extends AbstractActionContainer {
     private final SoapFaultValidationContext validationContext;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AssertSoapFault.class);
+    private static Logger LOG = LoggerFactory.getLogger(AssertSoapFault.class);
 
     /**
      * Default constructor.
@@ -98,19 +98,19 @@ public class AssertSoapFault extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        log.debug("Asserting SOAP fault ...");
+        LOG.debug("Asserting SOAP fault ...");
 
         try {
-            action.execute(context);
+            executeAction(action, context);
         } catch (SoapFaultClientException soapFaultException) {
-            log.debug("Validating SOAP fault ...");
+            LOG.debug("Validating SOAP fault ...");
 
             SoapFault controlFault = constructControlFault(context);
 
             validator.validateSoapFault(SoapFault.from(soapFaultException.getSoapFault()), controlFault, context, validationContext);
 
-            log.debug("Asserted SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
-            log.info("Assert SOAP fault validation successful");
+            LOG.debug("Asserted SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
+            LOG.info("Assert SOAP fault validation successful");
 
             return;
         } catch (Exception e) {

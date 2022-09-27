@@ -34,7 +34,7 @@ public class WebServiceEndpointsTest {
 
     @Test
     public void shouldLookupEndpoints() {
-        Map<String, EndpointBuilder> endpointBuilders = EndpointBuilder.lookup();
+        Map<String, EndpointBuilder<?>> endpointBuilders = EndpointBuilder.lookup();
         Assert.assertTrue(endpointBuilders.containsKey("soap.client"));
         Assert.assertTrue(endpointBuilders.containsKey("soap.server"));
     }

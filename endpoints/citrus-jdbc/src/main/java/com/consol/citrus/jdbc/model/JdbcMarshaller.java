@@ -16,16 +16,19 @@
 
 package com.consol.citrus.jdbc.model;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Arrays;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.xml.Jaxb2Marshaller;
+import com.consol.citrus.xml.Marshaller;
 import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.Unmarshaller;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -33,63 +36,49 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public class JdbcMarshaller extends ObjectMapper implements Marshaller, Unmarshaller {
+public class JdbcMarshaller implements Marshaller, Unmarshaller {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JdbcMarshaller.class);
+    private static final Logger log = LoggerFactory.getLogger(JdbcMarshaller.class);
 
     /** System property defining message format to marshal to */
     private static final String JDBC_MARSHALLER_TYPE_PROPERTY = "citrus.jdbc.marshaller.type";
 
-    /** XML marshalling delegate */
-    private Jaxb2Marshaller jaxbDelegate = new Jaxb2Marshaller();
-
     /** Message type format: XML or JSON */
     private String type;
+
+    private final ObjectMapper mapper;
+    private final Jaxb2Marshaller marshaller;
+
+    private final Class<?>[] classesToBeBound = new Class<?>[] {Operation.class,
+            OperationResult.class};
 
     /**
      * Default constructor
      */
     public JdbcMarshaller() {
-        jaxbDelegate.setClassesToBeBound(Operation.class,
-                                         OperationResult.class);
-        jaxbDelegate.setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-jdbc-message.xsd"));
+        this.mapper = new ObjectMapper();
+        this.marshaller = new Jaxb2Marshaller(new ClassPathResource("com/consol/citrus/schema/citrus-jdbc-message.xsd"), classesToBeBound);
 
         type = System.getProperty(JDBC_MARSHALLER_TYPE_PROPERTY, MessageType.JSON.name());
 
-        try {
-            jaxbDelegate.afterPropertiesSet();
-        } catch (Exception e) {
-            log.warn("Failed to setup jdbc message marshaller: " + e.getMessage());
-        }
-
-        setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return jaxbDelegate.supports(clazz);
-    }
-
-    @Override
     public Object unmarshal(Source source) {
         if (type.equalsIgnoreCase(MessageType.XML.name())) {
             try {
-                return jaxbDelegate.unmarshal(source);
-            } catch (XmlMappingException e) {
+                return marshaller.unmarshal(source);
+            } catch (JAXBException e) {
                 if (source instanceof StreamSource) {
-                    for (Class<?> type : Arrays.asList(Operation.class, OperationResult.class)) {
+                    for (Class<?> type : classesToBeBound) {
                         try {
-                            return readValue(((StreamSource) source).getReader(), type);
+                            return mapper.readValue(((StreamSource) source).getReader(), type);
                         } catch (JsonParseException | JsonMappingException e2) {
                             continue;
                         } catch (IOException io) {
@@ -102,9 +91,9 @@ public class JdbcMarshaller extends ObjectMapper implements Marshaller, Unmarsha
                 throw new CitrusRuntimeException("Failed to read jdbc XML object from source", e);
             }
         } else if (type.equalsIgnoreCase(MessageType.JSON.name())) {
-            for (Class<?> type : Arrays.asList(Operation.class, OperationResult.class)) {
+            for (Class<?> type : classesToBeBound) {
                 try {
-                    return readValue(((StreamSource) source).getReader(), type);
+                    return mapper.readValue(((StreamSource) source).getReader(), type);
                 } catch (JsonParseException | JsonMappingException e2) {
                     continue;
                 } catch (IOException io) {
@@ -113,8 +102,8 @@ public class JdbcMarshaller extends ObjectMapper implements Marshaller, Unmarsha
             }
 
             try {
-                return jaxbDelegate.unmarshal(source);
-            } catch (XmlMappingException me) {
+                return marshaller.unmarshal(source);
+            } catch (JAXBException me) {
                 log.warn("Failed to read jdbc XML object from source: " + me.getMessage());
             }
 
@@ -124,22 +113,21 @@ public class JdbcMarshaller extends ObjectMapper implements Marshaller, Unmarsha
         }
     }
 
-    @Override
     public void marshal(Object graph, Result result) {
         if (type.equalsIgnoreCase(MessageType.JSON.name())) {
             if (result instanceof StringResult) {
                 StringWriter writer = new StringWriter();
                 ((StringResult) result).setWriter(writer);
                 try {
-                    writer().writeValue(writer, graph);
+                    mapper.writer().writeValue(writer, graph);
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to write jdbc JSON object graph to result", e);
                 }
             }
         } else if (type.equalsIgnoreCase(MessageType.XML.name())) {
             try {
-                jaxbDelegate.marshal(graph, result);
-            }  catch (XmlMappingException e) {
+                marshaller.marshal(graph, result);
+            } catch (JAXBException e) {
                 throw new CitrusRuntimeException("Failed to write jdbc XML object to result", e);
             }
         } else {

@@ -24,9 +24,9 @@ import java.util.Collections;
 import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.dsl.TestRequest;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.xml.Jaxb2Marshaller;
+import com.consol.citrus.xml.Marshaller;
 import org.mockito.Mockito;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -38,14 +38,14 @@ import static org.mockito.Mockito.when;
  */
 public class MarshallingHeaderDataBuilderTest extends UnitTestSupport {
 
-    private final XStreamMarshaller marshaller = new XStreamMarshaller();
+    private final Marshaller marshaller = new Jaxb2Marshaller(TestRequest.class);
     private final TestRequest request = new TestRequest("Hello Citrus!");
 
     private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @BeforeClass
     public void prepareMarshaller() {
-        marshaller.getXStream().processAnnotations(TestRequest.class);
+        ((Jaxb2Marshaller) marshaller).setProperty(javax.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
     }
 
     @Test

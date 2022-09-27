@@ -21,6 +21,7 @@ package com.consol.citrus.camel.dsl;
 
 import java.util.function.Function;
 
+import com.consol.citrus.camel.actions.CamelActionBuilder;
 import com.consol.citrus.camel.actions.CamelControlBusAction;
 import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
 import com.consol.citrus.camel.message.CamelDataFormatMessageProcessor;
@@ -86,12 +87,13 @@ public class CamelSupport {
     }
 
     /**
-     * Creates new control bus tet action builder and sets the Camel context.
+     * Creates new control bus test action builder and sets the Camel context.
      * @return
      */
     public CamelControlBusAction.Builder controlBus() {
-        return CamelControlBusAction.Builder.controlBus()
-                .context(camelContext);
+        return new CamelActionBuilder()
+                .camelContext(camelContext)
+                .controlBus();
     }
 
     /**
@@ -109,8 +111,9 @@ public class CamelSupport {
      * @return
      */
     public CamelRouteActionBuilder route() {
-        return new CamelRouteActionBuilder()
-                .context(camelContext);
+        return new CamelActionBuilder()
+                .camelContext(camelContext)
+                .route();
     }
 
     /**

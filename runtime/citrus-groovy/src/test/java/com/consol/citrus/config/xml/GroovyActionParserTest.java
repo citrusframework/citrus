@@ -43,7 +43,7 @@ public class GroovyActionParserTest extends AbstractActionParserTest<GroovyActio
         action = getNextTestActionFromTest();
         Assert.assertNull(action.getScriptResourcePath());
         Assert.assertNotNull(action.getScript());
-        Assert.assertEquals(action.isUseScriptTemplate(), false);
+        Assert.assertFalse(action.isUseScriptTemplate());
 
         action = getNextTestActionFromTest();
         Assert.assertNull(action.getScriptResourcePath());

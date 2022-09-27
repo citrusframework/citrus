@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
@@ -57,13 +58,12 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
-import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
-import com.consol.citrus.variable.VariableExpressionIterator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.SegmentVariableExtractorRegistry;
+import com.consol.citrus.variable.VariableExpressionIterator;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
@@ -169,7 +169,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     /**
      * Type converter.
      */
-    private TypeConverter typeConverter = new DefaultTypeConverter();
+    private TypeConverter typeConverter = TypeConverter.lookupDefault();
 
     /**
      * Log modifier.
@@ -225,12 +225,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     public Object getVariableObject(final String variableExpression) {
         String variableName = VariableUtils.cutOffVariablesPrefix(variableExpression);
 
-                
         if (variableName.startsWith(CitrusSettings.VARIABLE_ESCAPE) && variableName.endsWith(CitrusSettings.VARIABLE_ESCAPE)) {
             return CitrusSettings.VARIABLE_PREFIX + VariableUtils.cutOffVariablesEscaping(variableName) + CitrusSettings.VARIABLE_SUFFIX;
         } else if (variables.containsKey(variableName)) {
             return variables.get(variableName);
-        } else { 
+        } else {
             return VariableExpressionIterator.getLastExpressionValue(variableName, this, segmentVariableExtractorRegistry.getSegmentValueExtractors());
         }
 
@@ -941,6 +940,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         @Override
+        public List<TestActionBuilder<?>> getActionBuilders() {
+            return Collections.emptyList();
+        }
+
+        @Override
         public long getActionCount() {
             return 0;
         }
@@ -1047,6 +1051,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
         @Override
         public void setActiveAction(TestAction action) {
+            // do nothing
+        }
+
+        @Override
+        public void setExecutedAction(TestAction action) {
             // do nothing
         }
 

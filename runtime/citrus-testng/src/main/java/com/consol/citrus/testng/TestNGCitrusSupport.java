@@ -21,6 +21,7 @@ package com.consol.citrus.testng;
 
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.List;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusContext;
@@ -30,9 +31,14 @@ import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestBehavior;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseRunner;
+import com.consol.citrus.TestGroupAware;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.DefaultTestLoader;
+import com.consol.citrus.common.TestLoader;
+import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
@@ -41,6 +47,11 @@ import org.testng.IHookCallBack;
 import org.testng.IHookable;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Listeners;
 
 /**
  * Basic Citrus TestNG support base class automatically handles test case runner creation. Also provides method parameter resolution
@@ -49,7 +60,8 @@ import org.testng.ITestResult;
  *
  * @author Christoph Deppisch
  */
-public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestNGSuiteListener, GherkinTestActionRunner {
+@Listeners( { TestNGCitrusMethodInterceptor.class } )
+public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -64,9 +76,16 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
     public void run(final IHookCallBack callBack, ITestResult testResult) {
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
 
-        if (method != null && method.getAnnotation(CitrusTest.class) != null) {
+        if (method == null) {
+            callBack.runTestMethod(testResult);
+            return;
+        }
+
+        List<TestLoader> methodTestLoaders = TestNGHelper.createMethodTestLoaders(method, this::createTestLoader);
+        if (method.getAnnotation(CitrusTest.class) != null ||
+                method.getAnnotation(CitrusTestSource.class) != null) {
             try {
-                run(testResult, method, testResult.getMethod().getCurrentInvocationCount());
+                run(testResult, method, methodTestLoaders, testResult.getMethod().getCurrentInvocationCount());
             } catch (Exception e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
@@ -79,7 +98,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
                     throw new CitrusRuntimeException(testResult.getThrowable());
                 }
             }
-        } else if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
+        } else if (method.getAnnotation(CitrusXmlTest.class) != null) {
             throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
         } else {
             callBack.runTestMethod(testResult);
@@ -90,35 +109,57 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
      * Run method prepares and executes test case.
      * @param testResult
      * @param method
+     * @param methodTestLoaders
      * @param invocationCount
      */
-    protected void run(ITestResult testResult, Method method, int invocationCount) {
-        if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
+    protected void run(ITestResult testResult, Method method, List<TestLoader> methodTestLoaders, int invocationCount) {
+        if (method.getAnnotation(CitrusXmlTest.class) != null) {
             throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
-        } else {
-            try {
-                if (citrus == null) {
-                    citrus = Citrus.newInstance();
-                }
+        }
 
-                TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
-
-                TestCaseRunner runner = TestNGHelper.createTestCaseRunner(this, method, ctx);
-                runner.groups(testResult.getMethod().getGroups());
-                testResult.setAttribute(TestNGHelper.BUILDER_ATTRIBUTE, runner);
-
-                delegate = runner;
-
-                CitrusAnnotations.injectAll(this, citrus, ctx);
-
-                TestNGHelper.invokeTestMethod(this, testResult, method, runner, ctx, invocationCount);
-            } finally {
-                testResult.removeAttribute(TestNGHelper.BUILDER_ATTRIBUTE);
+        try {
+            if (citrus == null) {
+                citrus = Citrus.newInstance();
             }
+
+            TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
+
+            TestCaseRunner runner = TestNGHelper.createTestCaseRunner(this, method, ctx);
+            runner.groups(testResult.getMethod().getGroups());
+            testResult.setAttribute(TestNGHelper.BUILDER_ATTRIBUTE, runner);
+
+            delegate = runner;
+
+            CitrusAnnotations.injectAll(this, citrus, ctx);
+
+            TestLoader testLoader;
+            if (method.getAnnotation(CitrusTestSource.class) != null && !methodTestLoaders.isEmpty()) {
+                testLoader = methodTestLoaders.get(invocationCount % methodTestLoaders.size());
+
+                if (testLoader instanceof TestSourceAware) {
+                    String[] sources = method.getAnnotation(CitrusTestSource.class).sources();
+                    if (sources.length > 0) {
+                        ((TestSourceAware) testLoader).setSource(sources[0]);
+                    }
+                }
+            } else {
+                testLoader = new DefaultTestLoader();
+            }
+
+            CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+            CitrusAnnotations.injectTestRunner(testLoader, runner);
+            testLoader.configureTestCase(t -> {
+                if (t instanceof TestGroupAware) {
+                    ((TestGroupAware) t).setGroups(testResult.getMethod().getGroups());
+                }
+            });
+            TestNGHelper.invokeTestMethod(this, testResult, method, testLoader, ctx, invocationCount);
+        } finally {
+            testResult.removeAttribute(TestNGHelper.BUILDER_ATTRIBUTE);
         }
     }
 
-    @Override
+    @BeforeClass(alwaysRun = true)
     public final void before() {
         if (citrus == null) {
             citrus = Citrus.newInstance();
@@ -135,7 +176,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
     protected void before(CitrusContext context) {
     }
 
-    @Override
+    @AfterClass(alwaysRun = true)
     public final void after() {
         if (citrus != null) {
             after(citrus.getCitrusContext());
@@ -149,7 +190,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
     protected void after(CitrusContext context) {
     }
 
-    @Override
+    @BeforeSuite(alwaysRun = true)
     public final void beforeSuite(ITestContext testContext) {
         citrus = Citrus.newInstance();
         CitrusAnnotations.injectCitrusFramework(this, citrus);
@@ -164,7 +205,7 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
     protected void beforeSuite(CitrusContext context) {
     }
 
-    @Override
+    @AfterSuite(alwaysRun = true)
     public final void afterSuite(ITestContext testContext) {
         if (citrus != null) {
             afterSuite(citrus.getCitrusContext());
@@ -189,6 +230,25 @@ public class TestNGCitrusSupport implements IHookable, TestNGTestListener, TestN
      */
     protected TestContext prepareTestContext(final TestContext testContext) {
         return testContext;
+    }
+
+    /**
+     * Creates new test loader which has TestNG test annotations set for test execution. Only
+     * suitable for tests that get created at runtime through factory method. Subclasses
+     * may overwrite this in order to provide custom test loader with custom test annotations set.
+     * @param testName
+     * @param packageName
+     * @return
+     */
+    protected TestLoader createTestLoader(String testName, String packageName, String type) {
+        TestLoader testLoader = TestLoader.lookup(type)
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", type)));
+
+        testLoader.setTestClass(getClass());
+        testLoader.setTestName(testName);
+        testLoader.setPackageName(packageName);
+
+        return testLoader;
     }
 
     @Override

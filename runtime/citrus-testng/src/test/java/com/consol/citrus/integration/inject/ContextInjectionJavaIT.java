@@ -60,7 +60,7 @@ public class ContextInjectionJavaIT extends TestNGCitrusSpringSupport {
 
     @DataProvider
     public Object[][] testData() {
-        return new Object[][] { { "hello", null }, { "bye", null } };
+        return new Object[][] { { "hello", globalContext }, { "bye", globalContext } };
     }
 
 }

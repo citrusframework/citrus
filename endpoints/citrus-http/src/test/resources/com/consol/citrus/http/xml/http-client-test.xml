@@ -1,0 +1,112 @@
+<!--
+  ~ Copyright 2021 the original author or authors.
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements. See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License. You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<test name="HttpClientTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <variables>
+    <variable name="id" value="12345"/>
+  </variables>
+  <actions>
+    <http client="httpClient">
+      <send-request>
+        <GET/>
+      </send-request>
+    </http>
+
+    <http client="httpClient">
+      <receive-response>
+        <response/>
+      </receive-response>
+    </http>
+
+    <http client="httpClient">
+      <send-request uri="http://localhost:${port}/test" fork="true">
+        <GET path="/order/${id}" content-type="application/xml" accept="application/xml" version="HTTP/1.1">
+          <param name="id" value="${id}"/>
+          <param name="type" value="gold"/>
+        </GET>
+      </send-request>
+    </http>
+
+    <sleep milliseconds="1000"/>
+
+    <http client="httpClient">
+      <receive-response>
+        <response status="200" reason-phrase="OK" version="HTTP/1.1" content-type="application/xml">
+           <body>
+             <data>
+               <![CDATA[
+                  <order><id>${id}</id><item>foo</item></order>
+                ]]>
+             </data>
+           </body>
+        </response>
+        <extract>
+          <body variable="orderId" path="/order/id"/>
+        </extract>
+      </receive-response>
+    </http>
+
+    <http client="httpClient">
+      <send-request>
+        <POST path="/user">
+          <headers>
+            <header name="userId" value="1001"/>
+          </headers>
+          <body>
+            <data>
+              <![CDATA[
+                <user><id>1001</id><name>new_user</name></user>
+              ]]>
+            </data>
+          </body>
+        </POST>
+      </send-request>
+    </http>
+
+    <http client="httpClient">
+      <receive-response timeout="2000">
+        <response status="404" reason-phrase="NOT_FOUND">
+          <headers>
+            <header name="userId" value="1001"/>
+          </headers>
+        </response>
+      </receive-response>
+    </http>
+
+    <http client="httpClient">
+      <send-request>
+        <DELETE path="/user/${id}"/>
+      </send-request>
+    </http>
+
+    <http client="httpClient">
+      <send-request uri="http://localhost:${port}/test">
+        <HEAD/>
+      </send-request>
+    </http>
+
+    <http client="http://localhost:${port}/test" actor="testActor">
+      <send-request>
+        <OPTIONS/>
+      </send-request>
+    </http>
+  </actions>
+</test>

@@ -16,19 +16,32 @@
 
 package com.consol.citrus.actions.dsl;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * Sample model object marshalled to message payload.
  *
  * @author Christoph Deppisch
  */
-@XStreamAlias("TestRequest")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "message"
+})
+@XmlRootElement(name = "TestRequest")
 public class TestRequest {
 
-    /** This requests message */
-    @XStreamAlias("Message")
+    @XmlElement(name="Message", required = true)
     private String message;
+
+    /**
+     * Default constructor.
+     */
+    public TestRequest() {
+    }
 
     /**
      * Default constructor using message field.

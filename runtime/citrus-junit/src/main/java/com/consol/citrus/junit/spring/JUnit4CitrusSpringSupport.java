@@ -17,6 +17,7 @@
 package com.consol.citrus.junit.spring;
 
 import java.util.Date;
+import java.util.Optional;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
@@ -29,13 +30,15 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.DefaultTestLoader;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.TestSourceAware;
-import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.junit.CitrusFrameworkMethod;
 import com.consol.citrus.junit.JUnit4Helper;
 import org.junit.runner.RunWith;
@@ -63,9 +66,14 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
 
     /** Test builder delegate */
     private TestCaseRunner delegate;
+    private TestCase testCase;
 
     @Override
     public void run(CitrusFrameworkMethod frameworkMethod) {
+        if (frameworkMethod.hasError()) {
+            throw frameworkMethod.getError();
+        }
+
         if (citrus == null) {
             citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         }
@@ -73,15 +81,14 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
         if (frameworkMethod.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-            TestLoader testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName());
-            if (testLoader instanceof TestSourceAware) {
-                ((TestSourceAware) testLoader).setSource(frameworkMethod.getSource());
-            }
+            TestLoader testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName(), frameworkMethod.getSource(), TestLoader.SPRING);
 
-            TestCase testCase = testLoader.load();
+            CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+            testLoader.doWithTestCase(t -> JUnit4Helper.invokeTestMethod(this, frameworkMethod, ctx));
 
-            citrus.run(testCase, ctx);
-        } else if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
+            testLoader.load();
+        } else if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null ||
+                frameworkMethod.getMethod().getAnnotation(CitrusTestSource.class) != null) {
             TestCaseRunner runner = JUnit4Helper.createTestRunner(frameworkMethod, this.getClass(), ctx);
             frameworkMethod.setAttribute(JUnit4Helper.BUILDER_ATTRIBUTE, runner);
 
@@ -89,7 +96,20 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
 
             CitrusAnnotations.injectAll(this, citrus, ctx);
 
-            JUnit4Helper.invokeTestMethod(this, frameworkMethod, runner, ctx);
+            TestLoader testLoader;
+            if (frameworkMethod.getMethod().getAnnotation(CitrusTestSource.class) != null) {
+                testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName(),
+                        frameworkMethod.getSource(), frameworkMethod.getSourceType());
+
+                CitrusAnnotations.injectTestRunner(testLoader, runner);
+            } else {
+                testLoader = new DefaultTestLoader();
+                testLoader.configureTestCase(t -> testCase = t);
+            }
+
+            CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+            testLoader.doWithTestCase(t -> JUnit4Helper.invokeTestMethod(this, frameworkMethod, ctx));
+            testLoader.load();
         }
     }
 
@@ -111,10 +131,29 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
      * may overwrite this in order to provide custom test loader with custom test annotations set.
      * @param testName
      * @param packageName
+     * @param source
+     * @param type
      * @return
      */
-    protected TestLoader createTestLoader(String testName, String packageName) {
-        return new XmlTestLoader(getClass(), testName, packageName, CitrusSpringContext.create(applicationContext));
+    protected TestLoader createTestLoader(String testName, String packageName, String source, String type) {
+        TestLoader testLoader = TestLoader.lookup(type)
+                .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", type)));
+
+        testLoader.setTestClass(getClass());
+        testLoader.setTestName(testName);
+        testLoader.setPackageName(packageName);
+
+        if (testLoader instanceof TestSourceAware) {
+            ((TestSourceAware) testLoader).setSource(source);
+        }
+
+        CitrusAnnotations.injectCitrusContext(testLoader, Optional.ofNullable(citrus)
+                .map(Citrus::getCitrusContext)
+                .orElseGet(() -> CitrusSpringContext.create(applicationContext)));
+
+        testLoader.configureTestCase(t -> testCase = t);
+
+        return testLoader;
     }
 
     /**
@@ -122,7 +161,11 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
      * @return
      */
     protected TestCase getTestCase() {
-        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()).load();
+        if (delegate != null) {
+            return delegate.getTestCase();
+        }
+
+        return testCase;
     }
 
     @Override

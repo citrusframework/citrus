@@ -28,15 +28,21 @@ import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
+import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTestSource;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.DefaultTestLoader;
+import com.consol.citrus.common.TestLoader;
+import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.junit.jupiter.spring.XmlTestHelper;
-import org.junit.jupiter.api.TestFactory;
+import com.consol.citrus.util.FileUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -53,12 +59,21 @@ public final class CitrusExtensionHelper {
     }
 
     /**
-     * Checks for {@link CitrusXmlTest} annotations or {@link TestFactory} annotations on test method.
+     * Checks for test factory annotations on test method.
      * @param method
      * @return
      */
-    public static boolean isXmlTestMethod(Method method) {
-        return method.isAnnotationPresent(CitrusXmlTest.class) || method.isAnnotationPresent(TestFactory.class);
+    public static boolean isTestFactoryMethod(Method method) {
+        return method.isAnnotationPresent(CitrusTestFactory.class);
+    }
+
+    /**
+     * Checks for Citrus test source annotations on test method.
+     * @param method
+     * @return
+     */
+    public static boolean isTestSourceMethod(Method method) {
+        return method.isAnnotationPresent(CitrusTestSource.class) || method.isAnnotationPresent(CitrusXmlTest.class);
     }
 
     /**
@@ -99,6 +114,18 @@ public final class CitrusExtensionHelper {
     }
 
     /**
+     * Get the {@link TestLoader} associated with the supplied {@code ExtensionContext} and its required test class name.
+     * @param extensionContext
+     * @return the {@code TestLoader} (never {@code null})
+     */
+    public static TestLoader getTestLoader(ExtensionContext extensionContext) {
+        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+
+        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestLoader.class.getSimpleName(),
+                key -> createTestLoader(extensionContext), TestLoader.class);
+    }
+
+    /**
      * Get the {@link TestCase} associated with the supplied {@code ExtensionContext} and its required test class name.
      * @param extensionContext
      * @return the {@code TestCase} (never {@code null})
@@ -106,12 +133,57 @@ public final class CitrusExtensionHelper {
     public static TestCase getTestCase(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
         return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCase.class.getSimpleName(), key -> {
-            if (CitrusExtensionHelper.isXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-                return XmlTestHelper.getXmlTestCase(extensionContext);
+            if (CitrusExtensionHelper.isTestSourceMethod(extensionContext.getRequiredTestMethod())) {
+                return getTestLoader(extensionContext).getTestCase();
             } else {
                 return getTestRunner(extensionContext).getTestCase();
             }
         }, TestCase.class);
+    }
+
+    /**
+     * Creates new test loader which has TestNG test annotations set for test execution. Only
+     * suitable for tests that get created at runtime through factory method. Subclasses
+     * may overwrite this in order to provide custom test loader with custom test annotations set.
+     * @param extensionContext
+     * @return
+     */
+    public static TestLoader createTestLoader(ExtensionContext extensionContext) {
+        Method method = extensionContext.getRequiredTestMethod();
+
+        if (isTestFactoryMethod(method)) {
+            TestLoader testLoader = new DefaultTestLoader();
+            configure(testLoader, extensionContext, method, new String[]{}, null, new String[]{}, new String[]{});
+            return testLoader;
+        }
+
+        if (method.getAnnotation(CitrusXmlTest.class) != null) {
+            CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
+
+            TestLoader testLoader = TestLoader.lookup(TestLoader.SPRING)
+                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", TestLoader.SPRING)));
+
+            configure(testLoader, extensionContext, method, citrusTestAnnotation.name(),
+                    citrusTestAnnotation.packageName(), citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources());
+
+            return testLoader;
+        }
+
+        TestLoader testLoader;
+        if (CitrusExtensionHelper.isTestSourceMethod(method)) {
+            CitrusTestSource citrusTestAnnotation = method.getAnnotation(CitrusTestSource.class);
+
+            testLoader = TestLoader.lookup(citrusTestAnnotation.type())
+                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", citrusTestAnnotation.type())));
+
+            configure(testLoader, extensionContext, method, citrusTestAnnotation.name(),
+                    citrusTestAnnotation.packageName(), citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources());
+        } else {
+            testLoader = new DefaultTestLoader();
+            configure(testLoader, extensionContext, method, new String[]{}, null, new String[]{}, new String[]{});
+        }
+
+        return testLoader;
     }
 
     /**
@@ -121,7 +193,8 @@ public final class CitrusExtensionHelper {
      */
     public static TestContext getTestContext(ExtensionContext extensionContext) {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
-        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestContext.class.getSimpleName(), key -> getCitrus(extensionContext).getCitrusContext().createTestContext(), TestContext.class);
+        return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestContext.class.getSimpleName(),
+                key -> getCitrus(extensionContext).getCitrusContext().createTestContext(), TestContext.class);
     }
 
     /**
@@ -161,15 +234,13 @@ public final class CitrusExtensionHelper {
     }
 
     public static Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        TestCaseRunner storedBuilder = CitrusExtensionHelper.getTestRunner(extensionContext);
+        TestCaseRunner runner = CitrusExtensionHelper.getTestRunner(extensionContext);
         if (TestCaseRunner.class.isAssignableFrom(parameterContext.getParameter().getType())) {
-            return storedBuilder;
-        } else if (GherkinTestActionRunner.class.isAssignableFrom(parameterContext.getParameter().getType())
-                && storedBuilder instanceof GherkinTestActionRunner) {
-            return storedBuilder;
-        } else if (TestActionRunner.class.isAssignableFrom(parameterContext.getParameter().getType())
-                && storedBuilder instanceof TestActionRunner) {
-            return storedBuilder;
+            return runner;
+        } else if (GherkinTestActionRunner.class.isAssignableFrom(parameterContext.getParameter().getType())) {
+            return runner;
+        } else if (TestActionRunner.class.isAssignableFrom(parameterContext.getParameter().getType())) {
+            return runner;
         } else if (TestContext.class.isAssignableFrom(parameterContext.getParameter().getType())) {
             return CitrusExtensionHelper.getTestContext(extensionContext);
         }
@@ -186,5 +257,61 @@ public final class CitrusExtensionHelper {
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
         Citrus citrus = extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).get(Citrus.class.getName(), Citrus.class);
         return citrus == null;
+    }
+
+    /**
+     * Configure given test loader instance with proper test name, package name and optional sources based on
+     * Citrus test annotation information.
+     * @param testLoader
+     * @param extensionContext
+     * @param method
+     * @param methodNames
+     * @param methodPackageName
+     * @param packagesToScan
+     * @param sources
+     */
+    private static void configure(TestLoader testLoader, ExtensionContext extensionContext, Method method,
+                                  String[] methodNames, String methodPackageName, String[] packagesToScan, String[] sources) {
+        String testName = extensionContext.getRequiredTestClass().getSimpleName();
+        String packageName = method.getDeclaringClass().getPackage().getName();
+        String source = null;
+
+        if (StringUtils.hasText(methodPackageName)) {
+            packageName = methodPackageName;
+        }
+
+        if (methodNames.length > 0) {
+            testName = methodNames[0];
+        } else if (packagesToScan.length == 0 && sources.length == 0) {
+            testName = method.getName();
+        }
+
+        if (sources.length > 0) {
+            source = sources[0];
+
+            Resource file = FileUtils.getFileResource(source);
+            testName = FileUtils.getBaseName(file.getFilename());
+
+            packageName = source;
+            if (packageName.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX)) {
+                packageName = source.substring(ResourceLoader.CLASSPATH_URL_PREFIX.length());
+            }
+
+            if (StringUtils.hasLength(packageName) && packageName.contains("/")) {
+                packageName = packageName.substring(0, packageName.lastIndexOf("/"));
+            }
+
+            packageName = packageName.replace("/", ".");
+        }
+
+        testLoader.setTestClass(extensionContext.getRequiredTestClass());
+        testLoader.setTestName(testName);
+        testLoader.setPackageName(packageName);
+
+        CitrusAnnotations.injectAll(testLoader, CitrusExtensionHelper.getCitrus(extensionContext));
+
+        if (testLoader instanceof TestSourceAware) {
+            ((TestSourceAware) testLoader).setSource(source);
+        }
     }
 }

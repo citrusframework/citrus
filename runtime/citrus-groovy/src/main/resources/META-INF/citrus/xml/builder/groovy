@@ -1,0 +1,2 @@
+type=com.consol.citrus.groovy.xml.Groovy
+ns=http://citrusframework.org/schema/xml/testcase

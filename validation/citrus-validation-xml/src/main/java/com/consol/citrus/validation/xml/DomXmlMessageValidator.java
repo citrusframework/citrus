@@ -18,13 +18,6 @@ package com.consol.citrus.validation.xml;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,21 +36,13 @@ import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.validation.xml.schema.XmlSchemaValidation;
-import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import com.consol.citrus.xml.schema.WsdlXsdSchema;
-import com.consol.citrus.xml.schema.XsdSchemaCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
-import org.springframework.xml.validation.XmlValidator;
-import org.springframework.xml.validation.XmlValidatorFactory;
-import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -65,7 +50,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.ls.LSException;
-import org.xml.sax.SAXParseException;
 
 /**
  * Default message validator implementation. Working on XML messages
@@ -230,6 +214,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                     "Unable to validate message payload - received message payload was empty, control message payload is not");
             return;
         } else if (!StringUtils.hasText(controlMessagePayload)) {
+            LOG.debug("Skip message payload validation as no control message payload was defined");
             return;
         }
 
