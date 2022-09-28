@@ -41,8 +41,8 @@ import static org.mockito.Mockito.when;
  */
 public class EnvironmentPropertyFunctionTest extends AbstractTestNGUnitTest {
 
-    private Environment environment = Mockito.mock(Environment.class);
-    private EnvironmentPropertyFunction function = new EnvironmentPropertyFunction();
+    private final Environment environment = Mockito.mock(Environment.class);
+    private final EnvironmentPropertyFunction function = new EnvironmentPropertyFunction();
 
     @BeforeMethod
     public void setup() {

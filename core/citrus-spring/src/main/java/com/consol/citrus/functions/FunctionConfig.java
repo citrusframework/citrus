@@ -26,15 +26,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FunctionConfig {
 
-    private final FunctionLibrary functionLibrary = new DefaultFunctionLibrary();
-
     @Bean(name = "functionRegistry")
     public FunctionRegistryFactory functionRegistry() {
         return new FunctionRegistryFactory();
     }
 
     @Bean(name="citrusFunctionLibrary")
-    public FunctionLibrary functionLibrary() {
-        return functionLibrary;
+    public DefaultFunctionLibraryFactory functionLibrary() {
+        return new DefaultFunctionLibraryFactory();
     }
 }
