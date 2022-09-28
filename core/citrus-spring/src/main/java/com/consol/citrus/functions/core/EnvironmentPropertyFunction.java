@@ -31,7 +31,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.util.CollectionUtils;
 
 /**
- * Function returns given string argument in lower case.
+ * Function to get environment variable settings.
  *
  * @author Christoph Deppisch
  */
@@ -55,12 +55,22 @@ public class EnvironmentPropertyFunction implements Function, EnvironmentAware {
             defaultValue = Optional.empty();
         }
 
-        return Optional.ofNullable(environment.getProperty(propertyName))
-                       .orElseGet(() -> defaultValue.orElseThrow(() -> new CitrusRuntimeException(String.format("Failed to resolve property '%s' in environment", propertyName))));
+        Optional<String> value;
+        if (environment != null) {
+            value = Optional.ofNullable(environment.getProperty(propertyName));
+        } else {
+            value = Optional.ofNullable(System.getenv(propertyName));
+        }
+
+        return value.orElseGet(() -> defaultValue.orElseThrow(() -> new CitrusRuntimeException(String.format("Failed to resolve property '%s' in environment", propertyName))));
     }
 
     @Override
     public void setEnvironment(Environment environment) {
         this.environment = environment;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
     }
 }
