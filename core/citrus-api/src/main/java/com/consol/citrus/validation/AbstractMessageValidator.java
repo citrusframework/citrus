@@ -39,11 +39,14 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
     @Override
     public final void validateMessage(Message receivedMessage, Message controlMessage, TestContext context,
             List<ValidationContext> validationContexts) throws ValidationException {
-        T validationContext = findValidationContext(validationContexts);
-
-        // check if we were able to find a proper validation context
-        if (validationContext != null) {
-            validateMessage(receivedMessage, controlMessage, context, validationContext);
+        
+        // validate all matching contexts
+        for (ValidationContext validationContext : validationContexts) {
+            if (getRequiredValidationContextType().isInstance(validationContext)) {
+                if (validationContext != null) {
+                    validateMessage(receivedMessage, controlMessage, context, validationContext);
+                }
+            }
         }
     }
 
