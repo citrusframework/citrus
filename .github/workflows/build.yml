@@ -61,3 +61,6 @@ jobs:
       - name: Build Citrus
         run: |
           ./mvnw --no-transfer-progress install
+      - name: Informative security dependency checks.
+        run: |
+          ./mvnw org.owasp:dependency-check-maven:check
