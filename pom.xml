@@ -133,7 +133,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.docs.version>${project.version}</project.docs.version>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
     <failsafe.version>2.22.2</failsafe.version>
     <surefire.version>2.22.2</surefire.version>
     <maven.version>3.8.4</maven.version>
