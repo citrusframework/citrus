@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import javax.jms.*;
+import jakarta.jms.*;
 
 /**
  * @author Christoph Deppisch
@@ -85,7 +85,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         }
 
         endpointConfiguration.getJmsTemplate().send(replyDestination, session -> {
-            javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
+            jakarta.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
             endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message, endpointConfiguration, context);
             return jmsMessage;
         });

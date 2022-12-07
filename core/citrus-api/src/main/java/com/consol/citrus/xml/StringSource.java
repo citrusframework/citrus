@@ -1,13 +1,13 @@
 package com.consol.citrus.xml;
 
+import com.consol.citrus.CitrusSettings;
+
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-
-import com.consol.citrus.CitrusSettings;
 
 /**
  * A simple JAXB stream source representation of a static String content. Can be read many times and uses default encoding

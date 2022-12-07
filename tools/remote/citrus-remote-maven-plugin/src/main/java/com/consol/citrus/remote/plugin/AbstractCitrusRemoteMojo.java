@@ -18,9 +18,11 @@ package com.consol.citrus.remote.plugin;
 
 import com.consol.citrus.remote.plugin.config.ReportConfiguration;
 import com.consol.citrus.remote.plugin.config.ServerConfiguration;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.util.Timeout;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -68,7 +70,7 @@ public abstract class AbstractCitrusRemoteMojo extends AbstractMojo {
     private ReportConfiguration report;
 
     /** Http client */
-    private final HttpClient httpClient;
+    private final CloseableHttpClient httpClient;
 
     /**
      * Constructor using default client.
@@ -76,9 +78,7 @@ public abstract class AbstractCitrusRemoteMojo extends AbstractMojo {
     public AbstractCitrusRemoteMojo() {
         httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(RequestConfig.copy(RequestConfig.DEFAULT)
-                        .setConnectionRequestTimeout(timeout)
-                        .setConnectTimeout(timeout)
-                        .setSocketTimeout(timeout)
+                        .setConnectionRequestTimeout(Timeout.ofMicroseconds(timeout))
                         .build())
                 .build();
     }
@@ -87,7 +87,7 @@ public abstract class AbstractCitrusRemoteMojo extends AbstractMojo {
      * Constructor using given client.
      * @param httpClient
      */
-    public AbstractCitrusRemoteMojo(HttpClient httpClient) {
+    public AbstractCitrusRemoteMojo(CloseableHttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
@@ -164,7 +164,7 @@ public abstract class AbstractCitrusRemoteMojo extends AbstractMojo {
      *
      * @return
      */
-    public HttpClient getHttpClient() {
+    public CloseableHttpClient getHttpClient() {
         return httpClient;
     }
 }

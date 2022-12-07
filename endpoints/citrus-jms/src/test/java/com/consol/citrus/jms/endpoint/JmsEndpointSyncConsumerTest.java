@@ -18,20 +18,35 @@ package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.message.JmsMessage;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 import org.mockito.Mockito;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.jms.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch

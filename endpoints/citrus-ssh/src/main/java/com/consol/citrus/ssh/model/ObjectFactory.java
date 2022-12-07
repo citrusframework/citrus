@@ -15,7 +15,7 @@
  */
 package com.consol.citrus.ssh.model;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 @XmlRegistry
 public class ObjectFactory {

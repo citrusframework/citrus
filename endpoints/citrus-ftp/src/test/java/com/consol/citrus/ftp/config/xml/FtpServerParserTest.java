@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ftp.config.xml;
 
-import javax.jms.ConnectionFactory;
+import jakarta.jms.ConnectionFactory;
 import java.io.IOException;
 import java.util.Map;
 

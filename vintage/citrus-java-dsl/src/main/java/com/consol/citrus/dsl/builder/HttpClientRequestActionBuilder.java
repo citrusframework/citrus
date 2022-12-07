@@ -1,6 +1,6 @@
 package com.consol.citrus.dsl.builder;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.actions.SendMessageAction;

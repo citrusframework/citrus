@@ -420,8 +420,8 @@ the message to all subscribers.
 The Citrus JMS endpoints offer the attribute *'pub-sub-domain'*. Once this attribute is set to *true* Citrus will use JMS
 topics instead of queue destinations.
 
-NOTE: When using JMS topics in your project you may want to configure a `javax.jms.TopicConnectionFactory` instead of a
-`javax.jms.QueueConnectionFactory`.
+NOTE: When using JMS topics in your project you may want to configure a `jakarta.jms.TopicConnectionFactory` instead of a
+`jakarta.jms.QueueConnectionFactory`.
 
 See the following example where the publish-subscribe attribute is set to true in JMS message endpoint components.
 

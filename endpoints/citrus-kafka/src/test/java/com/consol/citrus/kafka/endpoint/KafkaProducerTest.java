@@ -16,6 +16,8 @@
 
 package com.consol.citrus.kafka.endpoint;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.Collections;
 import java.util.concurrent.Future;
 
@@ -33,7 +35,6 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.utils.Time;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.springframework.util.SocketUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -113,9 +114,9 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSendMessageTimeout() {
+    public void testSendMessageTimeout() throws IOException {
         KafkaEndpoint endpoint = new KafkaEndpoint();
-        endpoint.getEndpointConfiguration().setServer("localhost:" + SocketUtils.findAvailableTcpPort());
+        endpoint.getEndpointConfiguration().setServer("localhost:" + new ServerSocket(0).getLocalPort());
         endpoint.getEndpointConfiguration().setTopic("test");
         endpoint.getEndpointConfiguration().setProducerProperties(Collections.singletonMap(ProducerConfig.MAX_BLOCK_MS_CONFIG, 1000));
 

@@ -16,8 +16,13 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import javax.jms.*;
-import java.util.*;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
+
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Vector;
 
 /**
  * @author Christoph Deppisch

@@ -1,7 +1,7 @@
 package com.consol.citrus.dsl.builder;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Queue;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Queue;
 import java.util.Arrays;
 import java.util.List;
 

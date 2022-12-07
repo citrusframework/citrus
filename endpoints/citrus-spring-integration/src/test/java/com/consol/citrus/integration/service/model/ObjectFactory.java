@@ -16,7 +16,7 @@
 
 package com.consol.citrus.integration.service.model;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 
 /**

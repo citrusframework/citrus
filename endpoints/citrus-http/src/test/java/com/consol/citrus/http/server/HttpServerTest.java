@@ -28,11 +28,10 @@ import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.SocketUtils;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.ResourceAccessException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -50,8 +49,7 @@ import static org.mockito.Mockito.when;
  */
 public class HttpServerTest extends AbstractTestNGUnitTest {
 
-    private final int port = SocketUtils.findAvailableTcpPort(8080);
-    private final String uri = "http://localhost:" + port + "/test";
+    private  String uri;
 
     private HttpClient client;
     private final HttpServer server = new HttpServer();
@@ -65,12 +63,14 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setRequestUrl(uri);
         client = new HttpClient(endpointConfiguration);
 
-        server.setPort(port);
+        server.setPort(0);
         server.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
         server.setUseRootContextAsParent(true);
         server.setContextConfigLocation("classpath:com/consol/citrus/http/HttpServerTest-http-servlet.xml");
 
         server.startup();
+
+        uri = "http://localhost:" + server.getPort() + "/test";
     }
 
     @AfterClass(alwaysRun = true)
@@ -116,7 +116,7 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK.value());
         Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE), HttpStatus.OK.getReasonPhrase().toUpperCase());
-        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), ContentType.TEXT_PLAIN.getMimeType() + ";charset=utf-8");
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), MediaType.TEXT_PLAIN.getType() + ";charset=utf-8");
 
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
@@ -145,7 +145,7 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.FOUND.value());
         Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE), HttpStatus.FOUND.getReasonPhrase().toUpperCase());
-        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), ContentType.TEXT_PLAIN.getMimeType() + ";charset=utf-8");
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), MediaType.TEXT_PLAIN.getType() + ";charset=utf-8");
 
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
@@ -168,13 +168,13 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(request.getPayload(byte[].class), requestBody);
 
             return new HttpMessage(responseBody)
-                            .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
+                            .contentType(MediaType.APPLICATION_OCTET_STREAM.getType())
                             .status(HttpStatus.OK);
         });
 
         client.send(new HttpMessage(requestBody)
-                            .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
-                            .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
+                            .contentType(MediaType.APPLICATION_OCTET_STREAM.getType())
+                            .accept(MediaType.APPLICATION_OCTET_STREAM.getType())
                             .method(HttpMethod.POST), context);
 
         Message response = client.receive(context);
@@ -185,7 +185,7 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK.value());
         Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE), HttpStatus.OK.getReasonPhrase().toUpperCase());
-        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), MediaType.APPLICATION_OCTET_STREAM.getType());
 
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.server;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +32,10 @@ import com.consol.citrus.http.servlet.GzipServletFilter;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.server.AbstractServer;
+import org.eclipse.jetty.io.EndPoint;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
@@ -75,7 +77,7 @@ public class HttpServer extends AbstractServer {
     /** Use root application context as parent to build WebApplicationContext */
     private boolean useRootContextAsParent = false;
 
-    /** Do only start one instance after another so we need a static lock object */
+    /** Do only start one instance after another, so we need a static lock object */
     private static Object serverLock = new Object();
 
     /** Set custom connector with custom idle time and other configuration options */
@@ -211,6 +213,15 @@ public class HttpServer extends AbstractServer {
             } catch (Exception e) {
                 throw new CitrusRuntimeException(e);
             }
+
+            for (Connector startedConnector: jettyServer.getConnectors()){
+                if (startedConnector instanceof NetworkConnector networkConnector) {
+                    if (!StringUtils.hasLength(networkConnector.getHost()) || networkConnector.getHost().equals("0.0.0.0")){
+                        setPort(networkConnector.getLocalPort());
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -343,7 +354,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the connector.
-     * @return the connector the connector to get.
+     * @return the connector to get.
      */
     public Connector getConnector() {
         return connector;

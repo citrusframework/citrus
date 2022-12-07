@@ -16,10 +16,11 @@
 
 package com.consol.citrus.xml.namespace;
 
+import org.glassfish.jaxb.runtime.marshaller.NamespacePrefixMapper;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * @author Christoph Deppisch

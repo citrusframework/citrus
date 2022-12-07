@@ -16,17 +16,7 @@
 
 package com.consol.citrus.http.security;
 
-import javax.security.auth.Subject;
-import java.io.IOException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.consol.citrus.common.InitializingPhase;
-import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
@@ -34,11 +24,21 @@ import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.IdentityService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.PropertyUserStore;
+import org.eclipse.jetty.security.RolePrincipal;
 import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.security.UserPrincipal;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
 import org.springframework.beans.factory.FactoryBean;
+
+import javax.security.auth.Subject;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Factory bean constructs a security handler for usage in Jetty servlet container. Security handler
@@ -201,29 +201,32 @@ public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, Ini
      * Simple user store loads users from this factories user list.
      */
     private class SimplePropertyUserStore extends PropertyUserStore {
+
         @Override
-        protected void loadUsers() throws IOException {
-            for (User user : users) {
-                Credential credential = Credential.getCredential(user.getPassword());
+        protected void loadUsers() {
+            users.forEach(this::addSecurityUserCredential);
+        }
 
-                Principal userPrincipal = new AbstractLoginService.UserPrincipal(user.getName(),credential);
-                Subject subject = new Subject();
-                subject.getPrincipals().add(userPrincipal);
-                subject.getPrivateCredentials().add(credential);
+        private void addSecurityUserCredential(com.consol.citrus.http.security.User user) {
+            Credential credential = Credential.getCredential(user.getPassword());
 
-                String[] roleArray = IdentityService.NO_ROLES;
-                if (user.getRoles() != null && user.getRoles().length > 0) {
-                    roleArray = user.getRoles();
-                }
+            Principal userPrincipal = new UserPrincipal(user.getName(),credential);
+            Subject subject = new Subject();
+            subject.getPrincipals().add(userPrincipal);
+            subject.getPrivateCredentials().add(credential);
 
-                for (String role : roleArray) {
-                    subject.getPrincipals().add(new AbstractLoginService.RolePrincipal(role));
-                }
-
-                subject.setReadOnly();
-
-                getKnownUserIdentities().put(user.getName(), getIdentityService().newUserIdentity(subject, userPrincipal, roleArray));
+            String[] roleArray = IdentityService.NO_ROLES;
+            if (user.getRoles() != null && user.getRoles().length > 0) {
+                roleArray = user.getRoles();
             }
+
+            for (String role : roleArray) {
+                subject.getPrincipals().add(new RolePrincipal(role));
+            }
+
+            subject.setReadOnly();
+
+            addUser(user.getName(),credential,roleArray);
         }
     }
 }

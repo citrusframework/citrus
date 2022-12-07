@@ -25,8 +25,8 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
+import jakarta.xml.soap.MimeHeader;
+import jakarta.xml.soap.MimeHeaders;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -55,7 +55,7 @@ public class RestDocSoapRequestConverter implements RequestConverter<MessageCont
             messageContext.getRequest().writeTo(bos);
             return new OperationRequestFactory().create(uri, HttpMethod.POST,
                     bos.toByteArray(), extractHeaders(messageContext),
-                    extractParameters(uri, messageContext), extractParts(messageContext));
+                    extractParts(messageContext));
         } catch (IOException | URISyntaxException e) {
             throw new CitrusRuntimeException("Failed to create Spring restdocs", e);
         }
@@ -71,7 +71,7 @@ public class RestDocSoapRequestConverter implements RequestConverter<MessageCont
                 Iterator<?> mimeHeaderIterator = messageMimeHeaders.getAllHeaders();
                 while (mimeHeaderIterator.hasNext()) {
                     MimeHeader mimeHeader = (MimeHeader)mimeHeaderIterator.next();
-                    // http headers can have multipile values so headers might occur several times in map
+                    // http headers can have multiple values so headers might occur several times in map
                     if (mimeHeaders.containsKey(mimeHeader.getName())) {
                         // header is already present, so concat values to a single comma delimited string
                         String value = mimeHeaders.get(mimeHeader.getName());
@@ -89,11 +89,6 @@ public class RestDocSoapRequestConverter implements RequestConverter<MessageCont
         }
 
         return httpHeaders;
-    }
-
-    protected Parameters extractParameters(URI uri, MessageContext messageContext) {
-        Parameters parameters = new Parameters();
-        return parameters;
     }
 
     protected Collection<OperationRequestPart> extractParts(MessageContext messageContext) throws IOException {

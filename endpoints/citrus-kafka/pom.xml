@@ -34,6 +34,7 @@
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
           </xjbSources>
+          <clearOutputDir>true</clearOutputDir>
         </configuration>
       </plugin>
     </plugins>

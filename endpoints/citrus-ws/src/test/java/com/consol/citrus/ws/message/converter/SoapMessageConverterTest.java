@@ -17,9 +17,9 @@
 package com.consol.citrus.ws.message.converter;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.MimeHeader;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPMessage;
 import javax.xml.transform.dom.DOMSource;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

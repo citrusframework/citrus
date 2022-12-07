@@ -28,7 +28,6 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.sun.net.httpserver.HttpServer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.SocketUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -43,7 +42,7 @@ import static com.consol.citrus.container.Wait.Builder.waitFor;
 @Test
 public class WaitJavaIT extends TestNGCitrusSpringSupport {
 
-    private final int serverPort = SocketUtils.findAvailableTcpPort();
+    private final int serverPort = 0;
     private HttpServer server;
 
     @BeforeClass

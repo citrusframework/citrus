@@ -42,7 +42,7 @@ public class HttpResponseErrorHandler extends DefaultResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
         if (errorHandlingStrategy.equals(ErrorHandlingStrategy.PROPAGATE)) {
-            throw new HttpErrorPropagatingException(getHttpStatusCode(response), response.getStatusText(),
+            throw new HttpErrorPropagatingException(response.getStatusCode(), response.getStatusText(),
                     response.getHeaders(), getResponseBody(response), getCharset(response));
         } else if (errorHandlingStrategy.equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
             super.handleError(response);

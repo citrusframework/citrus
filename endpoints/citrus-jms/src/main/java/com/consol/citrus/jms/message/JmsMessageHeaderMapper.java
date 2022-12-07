@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms.message;
 
-import javax.jms.Message;
+import jakarta.jms.Message;
 import java.util.HashMap;
 import java.util.Map;
 

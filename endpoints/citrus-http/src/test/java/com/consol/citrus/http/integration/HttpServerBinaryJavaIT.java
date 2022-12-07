@@ -28,9 +28,8 @@ import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
-import org.apache.http.entity.ContentType;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.SocketUtils;
+import org.springframework.http.MediaType;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.StartServerAction.Builder.start;
@@ -45,7 +44,6 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
 
     /** Random http server port */
-    private final static int serverPort = SocketUtils.findAvailableTcpPort();
     private static final String MEDIA_TYPE_APPLICATION_CUSTOM = "application/custom";
 
     @CitrusEndpoint(name = "httpClient")
@@ -61,12 +59,13 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
         byte[] binaryDataUtf8 = "$&%!!Äöü".getBytes(StandardCharsets.UTF_8);
         byte[] binaryDataLatin1 = "$&%!!Äöü".getBytes(Charset.forName("latin1"));
 
-        httpClient.getEndpointConfiguration().setRequestUrl(String.format(httpClient.getEndpointConfiguration().getRequestUrl(), serverPort));
-        httpServer.setPort(serverPort);
+        httpServer.setPort(0);
 
         given(start(httpServer));
 
         run(doFinally().actions(stop(httpServer)));
+
+        httpClient.getEndpointConfiguration().setRequestUrl(String.format(httpClient.getEndpointConfiguration().getRequestUrl(), httpServer.getPort()));
 
         given(http().client(httpClient)
                 .send()
@@ -110,29 +109,29 @@ public class HttpServerBinaryJavaIT extends TestNGCitrusSpringSupport {
                 .fork(true)
                 .message(new DefaultMessage(binaryData))
                 .type(MessageType.BINARY)
-                .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
-                .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
+                .contentType(MediaType.APPLICATION_OCTET_STREAM.getType())
+                .accept(MediaType.APPLICATION_OCTET_STREAM.getType()));
 
         when(http().server("echoHttpServer")
                     .receive()
                     .post("/echo")
                     .message(new DefaultMessage(binaryData))
                     .type(MessageType.BINARY)
-                    .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
-                    .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM.getType())
+                    .accept(MediaType.APPLICATION_OCTET_STREAM.getType()));
 
         then(http().server("echoHttpServer")
                 .send()
                 .response(HttpStatus.OK)
                 .message(new DefaultMessage(binaryData))
                 .type(MessageType.BINARY)
-                .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
+                .contentType(MediaType.APPLICATION_OCTET_STREAM.getType()));
 
         then(http().client("echoHttpClient")
                 .receive()
                 .response(HttpStatus.OK)
                 .message(new DefaultMessage(binaryData))
                 .type(MessageType.BINARY)
-                .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType()));
+                .contentType(MediaType.APPLICATION_OCTET_STREAM.getType()));
     }
 }

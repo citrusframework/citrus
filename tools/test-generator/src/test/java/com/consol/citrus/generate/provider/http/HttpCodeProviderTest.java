@@ -19,7 +19,7 @@ package com.consol.citrus.generate.provider.http;
 
 import com.consol.citrus.http.message.HttpMessage;
 import com.squareup.javapoet.CodeBlock;
-import org.apache.http.HttpStatus;
+import org.apache.hc.core5.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +36,7 @@ class HttpCodeProviderTest {
 
         //GIVEN
         message.path("foo");
-        final String expectedCode = ".post(\"foo\")\n.contentType(\"application/json\")\n";
+        final String expectedCode = ".post(\"foo\")\n.message()\n.contentType(\"application/json\")\n";
 
         //WHEN
         httpCodeProvider.provideRequestConfiguration(code, message);
@@ -50,7 +50,7 @@ class HttpCodeProviderTest {
 
         //GIVEN
         message.contentType("foo");
-        final String expectedCode = ".post()\n.contentType(\"foo\")\n.header(\"Content-Type\", \"foo\")\n";
+        final String expectedCode = ".post()\n.message()\n.header(\"Content-Type\", \"foo\")\n.contentType(\"foo\")\n";
 
         //WHEN
         httpCodeProvider.provideRequestConfiguration(code, message);
@@ -64,7 +64,7 @@ class HttpCodeProviderTest {
 
         //GIVEN
         message.queryParam("foo");
-        final String expectedCode = ".post()\n.contentType(\"application/json\")\n.queryParam(\"foo\", null)\n";
+        final String expectedCode = ".post()\n.message()\n.contentType(\"application/json\")\n.queryParam(\"foo\", null)\n";
 
         //WHEN
         httpCodeProvider.provideRequestConfiguration(code, message);
@@ -78,7 +78,7 @@ class HttpCodeProviderTest {
 
         //GIVEN
         message.statusCode(HttpStatus.SC_NOT_FOUND);
-        final String expectedCode = ".response(org.springframework.http.HttpStatus.NOT_FOUND)\n";
+        final String expectedCode = ".response(org.springframework.http.HttpStatus.NOT_FOUND)\n.message()\n";
 
         //WHEN
         httpCodeProvider.provideResponseConfiguration(code, message);

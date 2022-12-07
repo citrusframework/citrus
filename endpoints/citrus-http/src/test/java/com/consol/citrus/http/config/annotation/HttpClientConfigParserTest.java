@@ -46,6 +46,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.InterceptingClientHttpRequestFactory;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.testng.Assert;
@@ -66,7 +67,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint
     @HttpClientConfig(requestUrl = "http://localhost:8080/test",
-            requestMethod=HttpMethod.GET,
+            requestMethod= RequestMethod.GET,
             contentType="text/xml",
             charset="ISO-8859-1",
             defaultAcceptHeader=false,

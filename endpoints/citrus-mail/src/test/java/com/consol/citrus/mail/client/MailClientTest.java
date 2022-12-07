@@ -21,18 +21,23 @@ import com.consol.citrus.mail.model.MailRequest;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import jakarta.mail.Address;
+import jakarta.mail.Message;
+import jakarta.mail.Session;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import javax.mail.*;
-import javax.mail.internet.*;
 import javax.xml.transform.stream.StreamSource;
 import java.util.Properties;
 
@@ -76,7 +81,7 @@ public class MailClientTest extends AbstractTestNGUnitTest {
                 Assert.assertEquals(mimeMessage.getContent().toString(), "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.");
                 return null;
             }
-        }).when(javaMailSender).send(any(MimeMessage.class));
+        }).when(javaMailSender).send(any(SimpleMailMessage.class));
 
         mailClient.send(new DefaultMessage(mailRequest), context);
 

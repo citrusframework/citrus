@@ -32,12 +32,7 @@ public class RestDocRequestConverter implements RequestConverter<CachedBodyHttpR
     public OperationRequest convert(CachedBodyHttpRequest request) {
         return new OperationRequestFactory().create(request.getURI(), request.getMethod(),
                 request.getBody(), request.getHeaders(),
-                extractParameters(request), extractParts(request));
-    }
-
-    protected Parameters extractParameters(HttpRequest request) {
-        Parameters parameters = new Parameters();
-        return parameters;
+                extractParts(request));
     }
 
     protected Collection<OperationRequestPart> extractParts(HttpRequest request) {

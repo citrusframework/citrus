@@ -183,7 +183,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         }
 
         public HttpStatus getStatusCode() throws IOException {
-            return this.response.getStatusCode();
+            return (HttpStatus) this.response.getStatusCode();
         }
 
         public int getRawStatusCode() throws IOException {

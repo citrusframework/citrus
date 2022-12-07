@@ -49,7 +49,6 @@ import org.apache.zookeeper.server.ServerCnxnFactory;
 import org.apache.zookeeper.server.ZooKeeperServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.SocketUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -69,13 +68,13 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     private ServerCnxnFactory serverFactory;
 
     /** Zookeeper server port */
-    private int zookeeperPort = SocketUtils.findAvailableTcpPort();
+    private int zookeeperPort;
 
     /** Kafka server instance */
     private KafkaServer kafkaServer;
 
     /** Kafka server port */
-    private int kafkaServerPort = SocketUtils.findAvailableTcpPort(9092);
+    private int kafkaServerPort;
 
     /** Number of partitions to create for each topic */
     private int partitions = 1;
@@ -107,11 +106,12 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
         try {
             serverFactory.startup(zookeeper);
+            setZookeeperPort(serverFactory.getLocalPort());
         } catch (InterruptedException | IOException e) {
             throw new CitrusRuntimeException("Failed to start embedded zookeeper server", e);
         }
 
-        Properties brokerConfigProperties = createBrokerProperties("localhost:" + zookeeperPort, kafkaServerPort, logDir);
+        Properties brokerConfigProperties = createBrokerProperties("localhost:" + zookeeper.getClientPort(),  logDir);
         brokerConfigProperties.setProperty(KafkaConfig.ReplicaSocketTimeoutMsProp(), "1000");
         brokerConfigProperties.setProperty(KafkaConfig.ControllerSocketTimeoutMsProp(), "1000");
         brokerConfigProperties.setProperty(KafkaConfig.OffsetsTopicReplicationFactorProp(), "1");
@@ -126,7 +126,9 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
                 scala.Option.apply(null),
                 false);
         kafkaServer.startup();
-        kafkaServer.boundPort(ListenerName.forSecurityProtocol(SecurityProtocol.PLAINTEXT));
+
+        setKafkaServerPort(kafkaServer.boundPort(ListenerName.forSecurityProtocol(SecurityProtocol.PLAINTEXT)));
+        brokerProperties.put(KafkaConfig.ListenersProp(), SecurityProtocol.PLAINTEXT.name + "://localhost:" + kafkaServerPort);
 
         createKafkaTopics(StringUtils.commaDelimitedListToSet(topics));
     }
@@ -249,11 +251,10 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     /**
      * Creates Kafka broker properties.
      * @param zooKeeperConnect
-     * @param kafkaServerPort
      * @param logDir
      * @return
      */
-    protected Properties createBrokerProperties(String zooKeeperConnect, int kafkaServerPort, File logDir) {
+    protected Properties createBrokerProperties(String zooKeeperConnect,  File logDir) {
         Properties props = new Properties();
 
         props.put(KafkaConfig.BrokerIdProp(), "0");
@@ -271,8 +272,6 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
         props.put(KafkaConfig.OffsetsTopicPartitionsProp(), "5");
         props.put(KafkaConfig.GroupInitialRebalanceDelayMsProp(), "0");
         props.put(KafkaConfig.LogDirProp(), logDir.getAbsolutePath());
-
-        props.put(KafkaConfig.ListenersProp(), SecurityProtocol.PLAINTEXT.name + "://localhost:" + kafkaServerPort);
 
         if (LOG.isDebugEnabled()) {
             props.forEach((key, value) -> LOG.debug(String.format("Using default Kafka broker property %s='%s'", key, value)));

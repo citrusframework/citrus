@@ -16,12 +16,13 @@
 
 package com.consol.citrus.http.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
-
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
 
 /**
  * Servlet filter introduces a caching mechanism for request message data. With
@@ -36,9 +37,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class RequestCachingServletFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
-            FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         filterChain.doFilter(new CachingHttpServletRequestWrapper(request), response);
     }
-    
 }

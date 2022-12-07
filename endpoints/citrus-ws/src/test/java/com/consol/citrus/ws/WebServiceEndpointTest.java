@@ -16,18 +16,6 @@
 
 package com.consol.citrus.ws;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPMessage;
-import java.io.ByteArrayInputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import com.consol.citrus.endpoint.adapter.StaticEndpointAdapter;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -39,7 +27,9 @@ import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.ws.server.WebServiceEndpoint;
 import com.consol.citrus.xml.StringResult;
 import com.consol.citrus.xml.StringSource;
-import org.mockito.Mockito;
+import jakarta.activation.DataHandler;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPMessage;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.ws.context.MessageContext;
@@ -58,9 +48,19 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.xml.namespace.QName;
+import java.io.ByteArrayInputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -71,20 +71,20 @@ import static org.mockito.Mockito.when;
  */
 public class WebServiceEndpointTest {
 
-    private MessageContext messageContext = Mockito.mock(MessageContext.class);
-    private SoapHeader soapRequestHeader = Mockito.mock(SoapHeader.class);
-    private SoapHeader soapResponseHeader = Mockito.mock(SoapHeader.class);
-    private SoapHeaderElement soapRequestHeaderEntry = Mockito.mock(SoapHeaderElement.class);
-    private org.springframework.ws.soap.SoapMessage soapRequest = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
-    private org.springframework.ws.soap.SoapMessage soapResponse = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
+    private MessageContext messageContext = mock(MessageContext.class);
+    private SoapHeader soapRequestHeader = mock(SoapHeader.class);
+    private SoapHeader soapResponseHeader = mock(SoapHeader.class);
+    private SoapHeaderElement soapRequestHeaderEntry = mock(SoapHeaderElement.class);
+    private org.springframework.ws.soap.SoapMessage soapRequest = mock(org.springframework.ws.soap.SoapMessage.class);
+    private org.springframework.ws.soap.SoapMessage soapResponse = mock(org.springframework.ws.soap.SoapMessage.class);
 
-    private SoapEnvelope soapEnvelope = Mockito.mock(SoapEnvelope.class);
-    private SoapBody soapBody = Mockito.mock(SoapBody.class);
+    private SoapEnvelope soapEnvelope = mock(SoapEnvelope.class);
+    private SoapBody soapBody = mock(SoapBody.class);
 
-    private SaajSoapMessage saajSoapRequest = Mockito.mock(SaajSoapMessage.class);
+    private SaajSoapMessage saajSoapRequest = mock(SaajSoapMessage.class);
 
-    private org.springframework.ws.soap.SoapFault soapFault = Mockito.mock(org.springframework.ws.soap.SoapFault.class);
-    private SoapFaultDetail soapFaultDetail = Mockito.mock(SoapFaultDetail.class);
+    private org.springframework.ws.soap.SoapFault soapFault = mock(org.springframework.ws.soap.SoapFault.class);
+    private SoapFaultDetail soapFaultDetail = mock(SoapFaultDetail.class);
 
     private String requestPayload = "<TestRequest><Message>Hello World!</Message></TestRequest>";
 
@@ -293,7 +293,7 @@ public class WebServiceEndpointTest {
             }
         });
 
-        SOAPMessage soapRequestMessage = Mockito.mock(SOAPMessage.class);
+        SOAPMessage soapRequestMessage = mock(SOAPMessage.class);
         MimeHeaders mimeHeaders = new MimeHeaders();
         mimeHeaders.addHeader("Host", "localhost:8080");
         mimeHeaders.addHeader("Content-Length", "236");
@@ -675,7 +675,7 @@ public class WebServiceEndpointTest {
         StringResult soapResponsePayload = new StringResult();
 
         Set<Attachment> attachments = new HashSet<Attachment>();
-        Attachment attachment = Mockito.mock(Attachment.class);
+        Attachment attachment = mock(Attachment.class);
         attachments.add(attachment);
 
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
@@ -729,7 +729,7 @@ public class WebServiceEndpointTest {
         StringResult soapResponsePayload = new StringResult();
 
         Set<Attachment> attachments = new HashSet<Attachment>();
-        Attachment attachment = Mockito.mock(Attachment.class);
+        Attachment attachment = mock(Attachment.class);
         attachments.add(attachment);
 
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
@@ -758,7 +758,7 @@ public class WebServiceEndpointTest {
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
 
-        when(soapResponse.addAttachment(eq("<myAttachment>"), any(DataHandler.class))).thenReturn(Mockito.mock(Attachment.class));
+        when(soapResponse.addAttachment(eq("<myAttachment>"), any(DataHandler.class))).thenReturn(mock(Attachment.class));
 
         when(attachment.getInputStream()).thenReturn(new ByteArrayInputStream("AttachmentBody".getBytes()));
 
@@ -1147,8 +1147,8 @@ public class WebServiceEndpointTest {
             }
         });
 
-        Soap11Body soapResponseBody = Mockito.mock(Soap11Body.class);
-        final Soap11Fault soapFault = Mockito.mock(Soap11Fault.class);
+        Soap11Body soapResponseBody = mock(Soap11Body.class);
+        final Soap11Fault soapFault = mock(Soap11Fault.class);
 
         StringResult soapResponsePayload = new StringResult();
 
@@ -1225,8 +1225,8 @@ public class WebServiceEndpointTest {
             }
         });
 
-        Soap12Body soapResponseBody = Mockito.mock(Soap12Body.class);
-        final Soap12Fault soapFault = Mockito.mock(Soap12Fault.class);
+        Soap12Body soapResponseBody = mock(Soap12Body.class);
+        final Soap12Fault soapFault = mock(Soap12Fault.class);
 
         StringResult soapResponsePayload = new StringResult();
 

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.config.xml;
 
-import javax.jms.ConnectionFactory;
+import jakarta.jms.ConnectionFactory;
 import java.util.List;
 import java.util.Map;
 

@@ -16,12 +16,6 @@
 
 package com.consol.citrus.validation.xml;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import javax.xml.namespace.NamespaceContext;
-
 import com.consol.citrus.XmlValidationHelper;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.UnknownElementException;
@@ -34,6 +28,11 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javax.xml.namespace.NamespaceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;

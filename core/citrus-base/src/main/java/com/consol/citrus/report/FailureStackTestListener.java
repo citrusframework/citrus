@@ -16,11 +16,6 @@
 
 package com.consol.citrus.report;
 
-import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.TestActionContainer;
@@ -36,6 +31,11 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.SAXParserFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * @author Christoph Deppisch

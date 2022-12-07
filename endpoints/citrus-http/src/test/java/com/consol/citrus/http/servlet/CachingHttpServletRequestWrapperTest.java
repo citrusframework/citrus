@@ -16,18 +16,23 @@
 
 package com.consol.citrus.http.servlet;
 
-import org.apache.http.entity.ContentType;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -107,7 +112,7 @@ public class CachingHttpServletRequestWrapperTest {
         when(serverRequestMock.getInputStream()).thenReturn(null);
         wrapper.getInputStream();
 
-        when(serverRequestMock.getContentType()).thenReturn(ContentType.APPLICATION_JSON.toString());
+        when(serverRequestMock.getContentType()).thenReturn(MediaType.APPLICATION_JSON.toString());
 
         when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
 
@@ -159,7 +164,7 @@ public class CachingHttpServletRequestWrapperTest {
         wrapper.getInputStream();
 
         when(serverRequestMock.getContentType())
-                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset(Charset.forName("UTF-8")).toString());
+                .thenReturn(new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8).toString());
 
         when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
 
@@ -186,7 +191,7 @@ public class CachingHttpServletRequestWrapperTest {
         wrapper.getInputStream();
 
         when(serverRequestMock.getContentType())
-                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset(Charset.forName("ISO-8859-1")).toString());
+                .thenReturn(new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.ISO_8859_1).toString());
 
         when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
 

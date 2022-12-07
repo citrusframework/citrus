@@ -17,16 +17,24 @@
 package com.consol.citrus.jms.message;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.jms.support.JmsUtils;
-import org.springframework.messaging.MessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
-import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageConverter;
+import jakarta.jms.BytesMessage;
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
+import jakarta.jms.MapMessage;
+import jakarta.jms.ObjectMessage;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
+import org.springframework.jms.support.JmsUtils;
+import org.springframework.messaging.MessageHeaders;
 
-import javax.jms.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Basic message converter for converting Spring Integration message implementations to JMS
@@ -35,10 +43,10 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public class JmsMessageConverter implements MessageConverter<javax.jms.Message, javax.jms.Message, JmsEndpointConfiguration> {
+public class JmsMessageConverter implements MessageConverter<jakarta.jms.Message, jakarta.jms.Message, JmsEndpointConfiguration> {
 
     @Override
-    public javax.jms.Message convertOutbound(Message message, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
+    public jakarta.jms.Message convertOutbound(Message message, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
         Connection connection = null;
         Session session = null;
 
@@ -55,7 +63,7 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
     }
 
     @Override
-    public void convertOutbound(javax.jms.Message jmsMessage, Message message, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
+    public void convertOutbound(jakarta.jms.Message jmsMessage, Message message, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
         Map<String, Object> headers = message.getHeaders();
 
         if (headers != null) {
@@ -64,7 +72,7 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
     }
 
     @Override
-    public Message convertInbound(javax.jms.Message jmsMessage, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
+    public Message convertInbound(jakarta.jms.Message jmsMessage, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
         if (jmsMessage == null) {
             return null;
         }
@@ -127,15 +135,15 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
      * @param context
      * @return
      */
-    public javax.jms.Message createJmsMessage(Message message, Session session, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
+    public jakarta.jms.Message createJmsMessage(Message message, Session session, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
         try {
             Object payload = message.getPayload();
 
-            javax.jms.Message jmsMessage;
+            jakarta.jms.Message jmsMessage;
             if (endpointConfiguration.isUseObjectMessages()) {
                 jmsMessage = session.createObjectMessage(message);
-            } else if (payload instanceof javax.jms.Message) {
-                jmsMessage = (javax.jms.Message) payload;
+            } else if (payload instanceof jakarta.jms.Message) {
+                jmsMessage = (jakarta.jms.Message) payload;
             } else if (payload instanceof String) {
                 jmsMessage = session.createTextMessage((String) payload);
             } else if (payload instanceof byte[]) {

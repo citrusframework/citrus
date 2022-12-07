@@ -16,12 +16,6 @@
 
 package com.consol.citrus.validation.xml;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
-
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.XmlValidationHelper;
 import com.consol.citrus.context.TestContext;
@@ -37,6 +31,11 @@ import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.validation.xml.schema.XmlSchemaValidation;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;

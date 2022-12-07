@@ -16,6 +16,10 @@
 
 package com.consol.citrus.util;
 
+import com.consol.citrus.xml.StringSource;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import javax.xml.transform.Source;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -24,10 +28,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import com.consol.citrus.xml.StringSource;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -41,18 +41,18 @@ public class DefaultTypeConverterTest {
     public void testConvertIfNecessary() {
         String payload = "Hello Citrus!";
 
-        Assert.assertEquals(converter.convertIfNecessary("1", Byte.class), new Byte((byte) 1));
-        Assert.assertEquals(converter.convertIfNecessary((byte) 1, Byte.class), new Byte((byte) 1));
-        Assert.assertEquals(converter.convertIfNecessary("1", Short.class), new Short((short) 1));
-        Assert.assertEquals(converter.convertIfNecessary((short) 1, Short.class), new Short((short) 1));
-        Assert.assertEquals(converter.convertIfNecessary("1", Integer.class), new Integer(1));
-        Assert.assertEquals(converter.convertIfNecessary(1, Integer.class), new Integer(1));
-        Assert.assertEquals(converter.convertIfNecessary("1", Long.class), new Long(1));
-        Assert.assertEquals(converter.convertIfNecessary(1L, Long.class), new Long(1));
-        Assert.assertEquals(converter.convertIfNecessary("1", Float.class), new Float(1.0F));
-        Assert.assertEquals(converter.convertIfNecessary(1.0F, Float.class), new Float(1.0F));
-        Assert.assertEquals(converter.convertIfNecessary("1", Double.class), new Double(1.0D));
-        Assert.assertEquals(converter.convertIfNecessary(1.0D, Double.class), new Double(1.0D));
+        Assert.assertEquals(converter.convertIfNecessary("1", Byte.class), Byte.valueOf((byte) 1));
+        Assert.assertEquals(converter.convertIfNecessary((byte) 1, Byte.class), Byte.valueOf((byte) 1));
+        Assert.assertEquals(converter.convertIfNecessary("1", Short.class), Short.valueOf((short) 1));
+        Assert.assertEquals(converter.convertIfNecessary((short) 1, Short.class), Short.valueOf((short) 1));
+        Assert.assertEquals(converter.convertIfNecessary("1", Integer.class), Integer.valueOf(1));
+        Assert.assertEquals(converter.convertIfNecessary(1, Integer.class), Integer.valueOf(1));
+        Assert.assertEquals(converter.convertIfNecessary("1", Long.class), Long.valueOf(1));
+        Assert.assertEquals(converter.convertIfNecessary(1L, Long.class), Long.valueOf(1));
+        Assert.assertEquals(converter.convertIfNecessary("1", Float.class), Float.valueOf(1.0F));
+        Assert.assertEquals(converter.convertIfNecessary(1.0F, Float.class), Float.valueOf(1.0F));
+        Assert.assertEquals(converter.convertIfNecessary("1", Double.class), Double.valueOf(1.0D));
+        Assert.assertEquals(converter.convertIfNecessary(1.0D, Double.class), Double.valueOf(1.0D));
         Assert.assertEquals(converter.convertIfNecessary("true", Boolean.class), Boolean.TRUE);
         Assert.assertEquals(converter.convertIfNecessary(Boolean.FALSE, Boolean.class), Boolean.FALSE);
         Assert.assertEquals(converter.convertIfNecessary("no", Boolean.class), Boolean.FALSE);

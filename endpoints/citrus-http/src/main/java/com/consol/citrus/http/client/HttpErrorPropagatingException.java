@@ -18,6 +18,7 @@ package com.consol.citrus.http.client;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.charset.Charset;
@@ -36,7 +37,7 @@ public class HttpErrorPropagatingException extends HttpClientErrorException {
      * @param responseBody
      * @param responseCharset
      */
-    public HttpErrorPropagatingException(HttpStatus statusCode, String statusText, HttpHeaders responseHeaders, byte[] responseBody, Charset responseCharset) {
+    public HttpErrorPropagatingException(HttpStatusCode statusCode, String statusText, HttpHeaders responseHeaders, byte[] responseBody, Charset responseCharset) {
         super(statusCode, statusText, responseHeaders, responseBody, responseCharset);
     }
 }

@@ -16,21 +16,21 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.Session;
-import javax.jms.TemporaryQueue;
-import javax.jms.TemporaryTopic;
-import javax.jms.Topic;
-import javax.jms.TopicConnection;
-import javax.jms.TopicConnectionFactory;
-import javax.jms.TopicSession;
+import jakarta.jms.Connection;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Queue;
+import jakarta.jms.QueueConnection;
+import jakarta.jms.QueueConnectionFactory;
+import jakarta.jms.Session;
+import jakarta.jms.TemporaryQueue;
+import jakarta.jms.TemporaryTopic;
+import jakarta.jms.Topic;
+import jakarta.jms.TopicConnection;
+import jakarta.jms.TopicConnectionFactory;
+import jakarta.jms.TopicSession;
 import java.util.Objects;
 
 import com.consol.citrus.context.TestContext;
@@ -100,7 +100,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             createConnection();
             createSession(connection);
 
-            javax.jms.Message jmsRequest = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
+            jakarta.jms.Message jmsRequest = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
             endpointConfiguration.getMessageConverter().convertOutbound(jmsRequest, message, endpointConfiguration, context);
 
             Destination destination;
@@ -146,7 +146,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             log.info("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(destination));
             log.debug("Receiving reply message on destination: '{}'", replyToDestination);
 
-            javax.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
+            jakarta.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
 
             if (jmsReplyMessage == null) {
                 throw new ReplyMessageTimeoutException(endpointConfiguration.getTimeout(), Objects.toString(replyToDestination));

@@ -1,8 +1,5 @@
 package com.consol.citrus.util;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +22,10 @@ import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
 
 /**
  * @author Christoph Deppisch
@@ -166,17 +167,17 @@ public class DefaultTypeConverter implements TypeConverter {
 
         if (target instanceof Number) {
             if (type.isAssignableFrom(int.class) || type.isAssignableFrom(Integer.class)) {
-                return (T) new Integer(((Number) target).intValue());
+                return (T) Integer.valueOf(((Number) target).intValue());
             } else if (type.isAssignableFrom(short.class) || type.isAssignableFrom(Short.class)) {
-                return (T) new Short(((Number) target).shortValue());
+                return (T) Short.valueOf(((Number) target).shortValue());
             }  else if (type.isAssignableFrom(byte.class) || type.isAssignableFrom(Byte.class)) {
-                return (T) new Byte(((Number) target).byteValue());
+                return (T) Byte.valueOf(((Number) target).byteValue());
             }  else if (type.isAssignableFrom(long.class) || type.isAssignableFrom(Long.class)) {
-                return (T) new Long(((Number) target).longValue());
+                return (T) Long.valueOf(((Number) target).longValue());
             } else if (type.isAssignableFrom(float.class) || type.isAssignableFrom(Float.class)) {
-                return (T) new Float(((Number) target).floatValue());
+                return (T) Float.valueOf(((Number) target).floatValue());
             } else if (type.isAssignableFrom(double.class) || type.isAssignableFrom(Double.class)) {
-                return (T) new Double(((Number) target).doubleValue());
+                return (T) Double.valueOf(((Number) target).doubleValue());
             }
         }
 

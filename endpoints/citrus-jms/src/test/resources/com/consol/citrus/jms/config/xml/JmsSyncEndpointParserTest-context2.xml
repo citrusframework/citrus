@@ -38,23 +38,23 @@
 
   <!-- JMS connection factories -->
   <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="javax.jms.ConnectionFactory"/>
+    <constructor-arg value="jakarta.jms.ConnectionFactory"/>
     <constructor-arg value="connectionFactory"/>
   </bean>
 
   <bean id="jmsConnectionFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="javax.jms.ConnectionFactory"/>
+    <constructor-arg value="jakarta.jms.ConnectionFactory"/>
     <constructor-arg value="jmsConnectionFactory"/>
   </bean>
 
   <!-- JMS Template and queues -->
   <bean id="jmsQueue" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="javax.jms.Queue"/>
+    <constructor-arg value="jakarta.jms.Queue"/>
     <constructor-arg value="jmsQueue"/>
   </bean>
 
   <bean id="replyQueue" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="javax.jms.Queue"/>
+    <constructor-arg value="jakarta.jms.Queue"/>
     <constructor-arg value="replyQueue"/>
   </bean>
 

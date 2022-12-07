@@ -16,29 +16,31 @@
 
 package com.consol.citrus.http.client;
 
-import java.net.URI;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.consol.citrus.common.InitializingPhase;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.AbstractHttpClient;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.apache.hc.client5.http.auth.AuthCache;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.Credentials;
+import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.protocol.BasicHttpContext;
+import org.apache.hc.core5.net.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.Assert;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Factory bean constructing a client request factory with
@@ -53,13 +55,13 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     private Map<String, Object> params;
 
     /** The target request factory */
-    private HttpClient httpClient;
+    private HttpClientBuilder httpClientBuilder;
 
     /** User credentials for basic authentication */
     private Credentials credentials;
 
     /** Authentiacation scope */
-    private AuthScope authScope = new AuthScope("localhost", 8080, AuthScope.ANY_REALM, AuthScope.ANY_SCHEME);
+    private AuthScope authScope = new AuthScope("localhost", 8080);
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(BasicAuthClientHttpRequestFactory.class);
@@ -70,30 +72,45 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     public HttpComponentsClientHttpRequestFactory getObject() throws Exception {
         Assert.notNull(credentials, "User credentials not set properly!");
 
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient) {
+        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(authScope, credentials);
+        httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClientBuilder.build()){
+
             @Override
-            protected HttpContext createHttpContext(HttpMethod httpMethod, URI uri) {
+            protected ClassicHttpRequest createHttpUriRequest(HttpMethod httpMethod, URI uri) {
+                ClassicHttpRequest httpRequest = super.createHttpUriRequest(httpMethod,uri);
+                URIBuilder builder = new URIBuilder(uri);
+                if (params != null) {
+                    for (Entry<String, Object> param : params.entrySet()) {
+                        log.debug("Setting custom Http param on client: '" + param.getKey() + "'='" + param.getValue() + "'");
+                        builder.addParameter(param.getKey(), param.getValue().toString());
+                    }
+                }
+                try {
+                    httpRequest.setUri(builder.build());
+                } catch (URISyntaxException e) {
+                    throw new CitrusRuntimeException(e);
+                }
+                return httpRequest;
+            }
+            } ;
+
+        requestFactory.setHttpContextFactory((HttpMethod httpMethod, URI uri) ->{
                 // we have to use preemptive authentication
                 // therefore add some basic auth cache to the local context
                 AuthCache authCache = new BasicAuthCache();
                 BasicScheme basicAuth = new BasicScheme();
 
-                authCache.put(new HttpHost(authScope.getHost(), authScope.getPort(), "http"), basicAuth);
-                authCache.put(new HttpHost(authScope.getHost(), authScope.getPort(), "https"), basicAuth);
+                authCache.put(new HttpHost("http",authScope.getHost(), authScope.getPort()), basicAuth);
+                authCache.put(new HttpHost( "https",authScope.getHost(), authScope.getPort()), basicAuth);
 
                 BasicHttpContext localcontext = new BasicHttpContext();
-                localcontext.setAttribute(ClientContext.AUTH_CACHE, authCache);
+                localcontext.setAttribute(HttpClientContext.AUTH_CACHE, authCache);
 
                 return localcontext;
-            }
-        };
-
-        if (httpClient instanceof AbstractHttpClient) {
-            ((AbstractHttpClient)httpClient).getCredentialsProvider().setCredentials(authScope, credentials);
-        } else {
-            log.warn("Unable to set username password credentials for basic authentication, " +
-            		"because nested HttpClient implementation does not support a credentials provider!");
-        }
+            });
 
         return requestFactory;
     }
@@ -114,15 +131,8 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
 
     @Override
     public void initialize() {
-        if (httpClient == null) {
-            httpClient = new DefaultHttpClient();
-        }
-
-        if (params != null) {
-            for (Entry<String, Object> param : params.entrySet()) {
-                log.debug("Setting custom Http param on client: '" + param.getKey() + "'='" + param.getValue() + "'");
-                httpClient.getParams().setParameter(param.getKey(), param.getValue());
-            }
+        if (httpClientBuilder == null) {
+            httpClientBuilder = HttpClientBuilder.create();
         }
     }
 
@@ -143,11 +153,11 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     }
 
     /**
-     * Sets the httpClient.
-     * @param httpClient the httpClient to set
+     * Sets the httpClientBuilder.
+     * @param httpClientBuilder the httpClientBuilder to set
      */
-    public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
+    public void setHttpClientBuilder(HttpClientBuilder httpClientBuilder) {
+        this.httpClientBuilder = httpClientBuilder;
     }
 
     /**
@@ -157,5 +167,4 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     public void setParams(Map<String, Object> params) {
         this.params = params;
     }
-
 }

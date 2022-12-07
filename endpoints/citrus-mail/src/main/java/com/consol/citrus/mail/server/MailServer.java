@@ -16,15 +16,6 @@
 
 package com.consol.citrus.mail.server;
 
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import javax.xml.transform.Source;
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Stack;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.client.MailEndpointConfiguration;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
@@ -38,11 +29,20 @@ import com.consol.citrus.mail.model.MailRequest;
 import com.consol.citrus.mail.model.MailResponse;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.server.AbstractServer;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.MimeMailMessage;
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
 import org.subethamail.smtp.server.SMTPServer;
+
+import javax.xml.transform.Source;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Stack;
 
 /**
  * Mail server implementation starts new SMTP server instance and listens for incoming mail messages. Incoming mail messages

@@ -17,9 +17,11 @@
 package com.consol.citrus.remote.servlet;
 
 import com.consol.citrus.remote.CitrusRemoteApplication;
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContainerInitializer;
+import javax.servlet.ServletContext;
 import spark.servlet.SparkFilter;
 
-import javax.servlet.*;
 import java.util.Set;
 
 /**
@@ -29,7 +31,7 @@ import java.util.Set;
 public class CitrusRemoteServletContainerInitializer implements ServletContainerInitializer {
     
     @Override
-    public void onStartup(Set<Class<?>> c, ServletContext servletContext) throws ServletException {
+    public void onStartup(Set<Class<?>> c, ServletContext servletContext) {
         FilterRegistration.Dynamic encodingFilter = servletContext.addFilter("spark-filter", SparkFilter.class);
         encodingFilter.setInitParameter(SparkFilter.APPLICATION_CLASS_PARAM, CitrusRemoteApplication.class.getName());
         encodingFilter.addMappingForUrlPatterns(null, false, "/*");

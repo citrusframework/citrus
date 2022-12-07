@@ -16,19 +16,10 @@
 
 package com.consol.citrus.actions;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -36,7 +27,6 @@ import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.ValidationProcessor;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
-import com.consol.citrus.validation.builder.StaticMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -52,12 +42,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.Resource;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.consol.citrus.validation.json.JsonMessageValidationContext.Builder.json;
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
 import static com.consol.citrus.validation.xml.XpathMessageValidationContext.Builder.xpath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -169,41 +166,6 @@ class ReceiveMessageBuilderTest {
         //THEN
         assertEquals("payload", getPayloadData(builder));
         assertNotNull(builder.build().getMessageBuilder());
-    }
-
-    @Test
-    void testSetPayloadWithStaticMessageBuilder() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		builder.message(new StaticMessageBuilder(new DefaultMessage()));
-
-        //WHEN
-        builder.message().body("payload");
-
-        //THEN
-        final Object payload = ((StaticMessageBuilder)
-				builder.build().getMessageBuilder()).getMessage().getPayload();
-        assertEquals("payload", payload);
-    }
-
-    @Test
-    void testErrorIsThrownOnUnknownMessageBuilder() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		builder.message(new DefaultMessageBuilder() {
-			@Override
-			public Object buildMessagePayload(final TestContext context, String messageType) {
-				return null;
-			}
-		});
-
-        //WHEN
-        final Executable setPayload = () -> builder.message().body("payload");
-
-        //THEN
-        assertThrows(CitrusRuntimeException.class, setPayload);
     }
 
 	@Test
@@ -325,13 +287,17 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
 		//WHEN
-		builder.message().headerNameIgnoreCase(false);
+		final HeaderValidator validator = mock(HeaderValidator.class);
+
+		//WHEN
+		builder.message().headerNameIgnoreCase(true);
+		builder.validator(validator);
+		builder.build();
 
 		//THEN
 		final HeaderValidationContext headerValidationContext =
 				getFieldFromBuilder(builder, HeaderValidationContext.class, "headerValidationContext");
-		assertNotNull(headerValidationContext);
-		assertFalse((boolean)ReflectionTestUtils.getField(headerValidationContext, "headerNameIgnoreCase"));
+		assertTrue((boolean)ReflectionTestUtils.getField(headerValidationContext, "headerNameIgnoreCase"));
 	}
 
 	@Test
@@ -447,7 +413,7 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final MessageType messageType = MessageType.JSON;
 		builder.message().type(messageType);
-		assertEquals(messageType.name(), ReflectionTestUtils.getField(builder, "messageType"));
+		assertEquals(messageType.name(), ReflectionTestUtils.getField(builder.build(), "messageType"));
 	}
 
 	@Test
@@ -461,7 +427,7 @@ class ReceiveMessageBuilderTest {
 		builder.message().type(messageType);
 
 		//THEN
-		assertEquals(messageType, ReflectionTestUtils.getField(builder, "messageType"));
+		assertEquals(messageType, ReflectionTestUtils.getField(builder.build(), "messageType"));
 		assertEquals(messageType, builder.build().getMessageType());
 		assertEquals(3, builder.build().getValidationContexts().size());
 		assertTrue(builder.build().getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
@@ -934,7 +900,7 @@ class ReceiveMessageBuilderTest {
         builder.message().type(messageType);
 
         //THEN
-        final Object currentMessageType = ReflectionTestUtils.getField(builder, "messageType");
+        final Object currentMessageType = ReflectionTestUtils.getField(builder.build(), "messageType");
         assertNotNull(currentMessageType);
         assertEquals(messageType.toString(), currentMessageType.toString());
     }
@@ -950,7 +916,7 @@ class ReceiveMessageBuilderTest {
         builder.message().type(messageType);
 
         //THEN
-        assertEquals(messageType, ReflectionTestUtils.getField(builder, "messageType"));
+        assertEquals(messageType, ReflectionTestUtils.getField(builder.build(), "messageType"));
     }
 
 	private <T> T getFieldFromBuilder(ReceiveMessageAction.Builder builder, final Class<T> targetClass, final String fieldName) {

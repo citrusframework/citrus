@@ -16,16 +16,16 @@
 
 package com.consol.citrus.xml.namespace;
 
+import com.consol.citrus.message.Message;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.util.xml.SimpleNamespaceContext;
+
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.consol.citrus.message.Message;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.util.xml.SimpleNamespaceContext;
 
 /**
  * Builds a namespace context for XPath expression evaluations. Builder supports default mappings

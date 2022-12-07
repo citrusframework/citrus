@@ -1267,15 +1267,18 @@ public BasicAuthClientHttpRequestFactory basicAuthFactory() {
 <bean id="basicAuthFactory"
     class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
   <property name="authScope">
-      <bean class="org.apache.http.auth.AuthScope">
+      <bean class="org.apache.hc.client5.http.auth.AuthScope">
+        <constructor-arg value="http"/>
         <constructor-arg value="localhost"/>
         <constructor-arg value="8080"/>
-        <constructor-arg value=""/>
+        <constructor-arg>
+          <null/>
+        </constructor-arg>
         <constructor-arg value="basic"/>
       </bean>
   </property>
   <property name="credentials">
-    <bean class="org.apache.http.auth.UsernamePasswordCredentials">
+    <bean class="org.apache.hc.client5.http.auth.UsernamePasswordCredentials">
         <constructor-arg value="someUsername"/>
         <constructor-arg value="somePassword"/>
     </bean>

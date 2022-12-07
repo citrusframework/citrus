@@ -22,8 +22,8 @@ import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
-import org.springframework.http.HttpMethod;
-import org.springframework.util.SocketUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
@@ -37,17 +37,22 @@ import static com.consol.citrus.container.Wait.Builder.waitFor;
 @Test
 public class WaitJavaIT extends TestNGCitrusSpringSupport {
 
-    private final int serverPort = SocketUtils.findAvailableTcpPort();
+    private  int serverPort;
 
     private HttpServer httpServer = new HttpServerBuilder()
-            .port(serverPort)
+            .port(0)
             .timeout(500L)
             .build();
 
     private HttpClient client = new HttpClientBuilder()
             .requestUrl(String.format("http://localhost:%s/test", serverPort))
-            .requestMethod(HttpMethod.GET)
+            .requestMethod(RequestMethod.GET)
             .build();
+
+    @BeforeEach
+    void beforeEachSetup() {
+        serverPort = httpServer.getPort();
+    }
 
     @CitrusTest
     public void waitHttpAsAction() {

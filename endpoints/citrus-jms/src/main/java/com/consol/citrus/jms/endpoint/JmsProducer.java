@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import javax.jms.Destination;
+import jakarta.jms.Destination;
 
 /**
  * @author Christoph Deppisch
@@ -87,7 +87,7 @@ public class JmsProducer implements Producer {
         }
 
         endpointConfiguration.getJmsTemplate().send(destinationName, session -> {
-            javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
+            jakarta.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
             endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message, endpointConfiguration, context);
             return jmsMessage;
         });
@@ -107,7 +107,7 @@ public class JmsProducer implements Producer {
         }
 
         endpointConfiguration.getJmsTemplate().send(destination, session -> {
-            javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
+            jakarta.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration, context);
             endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message, endpointConfiguration, context);
             return jmsMessage;
         });

@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.server;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeaders;
+import jakarta.xml.soap.MimeHeaders;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -52,7 +52,6 @@ import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 import org.springframework.ws.soap.soap11.Soap11Body;
@@ -196,8 +195,6 @@ public class WebServiceEndpoint implements MessageEndpoint {
                     SaajSoapMessage saajSoapMessage = (SaajSoapMessage) response;
                     MimeHeaders headers = saajSoapMessage.getSaajMessage().getMimeHeaders();
                     headers.setHeader(headerName, headerEntry.getValue().toString());
-                } else if (response instanceof AxiomSoapMessage) {
-                    log.warn("Unable to set mime message header '" + headerName + "' on AxiomSoapMessage - unsupported");
                 } else {
                     log.warn("Unsupported SOAP message implementation - unable to set mime message header '" + headerName + "'");
                 }

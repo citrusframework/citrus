@@ -19,8 +19,6 @@ package com.consol.citrus.websocket.client;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.websocket.endpoint.AbstractWebSocketEndpointConfiguration;
 import com.consol.citrus.websocket.handler.CitrusWebSocketHandler;
-import org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension;
-import org.eclipse.jetty.websocket.jsr356.JsrExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -75,7 +73,7 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
 
         if (webSocketHttpHeaders == null) {
             webSocketHttpHeaders = new WebSocketHttpHeaders();
-            webSocketHttpHeaders.setSecWebSocketExtensions(Collections.singletonList(new StandardToWebSocketExtensionAdapter(new JsrExtension(new PerMessageDeflateExtension().getName()))));
+            // webSocketHttpHeaders.setSecWebSocketExtensions(Collections.singletonList(new StandardToWebSocketExtensionAdapter(new JsrExtension(new PerMessageDeflateExtension().getName()))));
         }
 
         ListenableFuture<WebSocketSession> future = client.doHandshake(handler, webSocketHttpHeaders, UriComponentsBuilder.fromUriString(url).buildAndExpand().encode().toUri());

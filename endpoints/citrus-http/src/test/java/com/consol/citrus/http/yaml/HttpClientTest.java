@@ -56,7 +56,6 @@ import com.consol.citrus.yaml.actions.YamlTestActionBuilder;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.SocketUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -78,8 +77,7 @@ public class HttpClientTest extends AbstractYamlActionTest {
     @BindToRegistry
     private final TextEqualsMessageValidator validator = new TextEqualsMessageValidator().enableTrim();
 
-    private final int port = SocketUtils.findAvailableTcpPort(8080);
-    private final String uri = "http://localhost:" + port + "/test";
+    private  String uri ;
 
     private HttpServer httpServer;
     private HttpClient httpClient;
@@ -99,13 +97,15 @@ public class HttpClientTest extends AbstractYamlActionTest {
         };
 
         httpServer = http().server()
-                .port(port)
+                .port(0)
                 .timeout(500L)
                 .endpointAdapter(endpointAdapter)
                 .autoStart(true)
                 .name("httpServer")
                 .build();
         httpServer.initialize();
+
+        uri =  "http://localhost:" + httpServer.getPort() + "/test";
 
         httpClient = http().client()
                 .requestUrl(uri)
@@ -124,7 +124,7 @@ public class HttpClientTest extends AbstractYamlActionTest {
     public void shouldLoadHttpClientActions() {
         YamlTestLoader testLoader = createTestLoader("classpath:com/consol/citrus/http/yaml/http-client-test.yaml");
 
-        context.setVariable("port", port);
+        context.setVariable("port", httpServer.getPort());
 
         context.getReferenceResolver().bind("httpClient", httpClient);
         context.getReferenceResolver().bind("httpServer", httpServer);

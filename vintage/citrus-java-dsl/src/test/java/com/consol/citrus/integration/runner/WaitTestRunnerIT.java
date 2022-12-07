@@ -16,9 +16,6 @@
 
 package com.consol.citrus.integration.runner;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.runner.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
@@ -28,25 +25,31 @@ import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.integration.common.FileHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpMethod;
-import org.springframework.util.SocketUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 @Test
 public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
 
-    private final int serverPort = SocketUtils.findAvailableTcpPort();
-
     private HttpServer httpServer = new HttpServerBuilder()
-            .port(serverPort)
+            .port(0)
             .timeout(500L)
             .build();
 
-    private HttpClient client = new HttpClientBuilder()
-            .requestUrl(String.format("http://localhost:%s/test", serverPort))
-            .requestMethod(HttpMethod.GET)
-            .build();
+    private HttpClient client;
+
+    @BeforeEach
+    void beforeEachSetup() {
+        client = new HttpClientBuilder()
+                .requestUrl(String.format("http://localhost:%s/test", httpServer.getPort()))
+                .requestMethod(RequestMethod.GET)
+                .build();
+    }
 
     @CitrusTest
     public void waitFile() throws IOException {
@@ -71,7 +74,7 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
         //THEN
         waitFor()
             .execution()
-            .action(send(http -> http.endpoint(String.format("http://localhost:%s/test", serverPort))));
+            .action(send(http -> http.endpoint(String.format("http://localhost:%s/test", httpServer.getPort()))));
 
         doFinally().actions(stop(httpServer));
     }
@@ -84,7 +87,7 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
         //THEN
         waitFor()
             .http()
-            .url(String.format("http://localhost:%s", serverPort));
+            .url(String.format("http://localhost:%s", httpServer.getPort()));
 
         doFinally().actions(stop(httpServer));
     }

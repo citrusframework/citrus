@@ -22,14 +22,16 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageHeaders;
+import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.Cookie;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -90,10 +92,10 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         }
 
         if (message instanceof ResponseEntity<?>) {
-            httpMessage.status(((ResponseEntity<?>) message).getStatusCode());
+            httpMessage.status((HttpStatus) ((ResponseEntity<?>) message).getStatusCode());
 
             // We've no information here about the HTTP Version in this context.
-            // Because HTTP/2 is not supported anyways currently, this should be acceptable.
+            // Because HTTP/2 is not supported anyway currently, this should be acceptable.
             httpMessage.version("HTTP/1.1");
 
             if (endpointConfiguration.isHandleCookies()) {
@@ -198,11 +200,11 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
      */
     private HttpMethod determineHttpMethod(HttpEndpointConfiguration endpointConfiguration,
                                            HttpMessage httpMessage) {
-        HttpMethod method = endpointConfiguration.getRequestMethod();
+        RequestMethod method = endpointConfiguration.getRequestMethod();
         if (httpMessage.getRequestMethod() != null) {
             method = httpMessage.getRequestMethod();
         }
-        return method;
+        return HttpMethod.valueOf(method.toString());
     }
 
     /**

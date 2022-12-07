@@ -16,11 +16,6 @@
 
 package com.consol.citrus.camel.actions;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.StringSource;
@@ -30,6 +25,11 @@ import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
 import org.apache.camel.spring.xml.SpringModelJAXBContextFactory;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.util.StringUtils;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch

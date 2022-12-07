@@ -19,9 +19,9 @@
 
 package com.consol.citrus.xml.actions;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.actions.FailAction;

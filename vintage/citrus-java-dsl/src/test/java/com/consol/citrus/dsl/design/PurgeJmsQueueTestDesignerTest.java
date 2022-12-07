@@ -16,8 +16,8 @@
 
 package com.consol.citrus.dsl.design;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Queue;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Queue;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;

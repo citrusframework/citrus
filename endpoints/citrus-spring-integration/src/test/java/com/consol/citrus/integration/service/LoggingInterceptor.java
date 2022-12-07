@@ -20,12 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.support.ChannelInterceptorAdapter;
+import org.springframework.messaging.support.ChannelInterceptor;
 
 /**
  * @author Christoph Deppisch
  */
-public class LoggingInterceptor extends ChannelInterceptorAdapter {
+public class LoggingInterceptor implements ChannelInterceptor {
     private static Logger log = LoggerFactory.getLogger(LoggingInterceptor.class);
     
     @Override
@@ -38,6 +38,6 @@ public class LoggingInterceptor extends ChannelInterceptorAdapter {
             ((Throwable)message.getPayload()).printStackTrace();
         }
         
-        return super.preSend(message, channel);
+        return message;
     }
 }
