@@ -166,7 +166,7 @@
     <hamcrest.version>2.2</hamcrest.version>
     <htmlunit.version>3.60.0</htmlunit.version>
     <httpclient.version>4.5.13</httpclient.version>
-    <hsqldb.version>2.6.1</hsqldb.version>
+    <hsqldb.version>2.7.1</hsqldb.version>
     <jackson.version>2.13.3</jackson.version>
     <jakarta.activation.api.version>1.2.2</jakarta.activation.api.version>
     <jakarta.activation.version>1.2.2</jakarta.activation.version>
