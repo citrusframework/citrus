@@ -1,0 +1,33 @@
+name: PurgeEndpointTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - purge:
+      endpoints:
+        - name: "testEndpoint1"
+        - name: "testEndpoint2"
+        - name: "testEndpoint3"
+  - purge:
+      endpoints:
+        - name: testEndpoint
+  - purge:
+      select: "operation = 'sayHello'"
+      endpoints:
+        - name: "testEndpoint"
+  - purge:
+      selector:
+        value: "operation = 'sayHello'"
+      endpoints:
+        - name: "testEndpoint"
+      sleep: "100"
+      timeout: "500"
+  - purge:
+      selector:
+        elements:
+          - name: "operation"
+            value: "sayHello"
+          - name: "id"
+            value: "12345"
+      endpoints:
+        - name: "testEndpoint1"

@@ -1,0 +1,11 @@
+name: StartTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - start:
+      server: "myServer"
+  - start:
+      servers:
+        - name: "myFooServer"
+        - name: "myBarServer"

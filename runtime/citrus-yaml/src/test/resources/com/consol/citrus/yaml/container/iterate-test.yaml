@@ -1,0 +1,25 @@
+name: IterateTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+actions:
+  - iterate:
+      condition: "i < 3"
+      actions:
+        - echo:
+            message: Hello Citrus!
+  - iterate:
+      condition: "index <= 2"
+      index: "index"
+      actions:
+        - echo:
+            message: Hello Citrus!
+  - iterate:
+      condition: "i <= 10"
+      startsWith: "0"
+      step: "5"
+      actions:
+        - echo:
+            message: Hello Citrus!
+        - echo:
+            message: Hello You!

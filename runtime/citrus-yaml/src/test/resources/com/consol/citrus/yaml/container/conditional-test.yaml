@@ -1,0 +1,20 @@
+name: ConditionalTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+variables:
+  - name: "shouldRun"
+    value: true
+  - name: "shouldNotRun"
+    value: false
+actions:
+  - conditional:
+      when: "${shouldRun}"
+      actions:
+        - echo:
+            message: "Hello from Citrus!"
+  - conditional:
+      when: "${shouldNotRun}"
+      actions:
+        - fail:
+            message: "Should not execute"

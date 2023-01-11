@@ -1,0 +1,21 @@
+name: AsyncTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - async:
+      actions:
+        - echo:
+            message: 1
+        - echo:
+            message: 2
+  - async:
+      actions:
+        - echo:
+            message: Try
+      success:
+        - echo:
+            message: Success!
+      error:
+        - echo:
+            message: Failed!

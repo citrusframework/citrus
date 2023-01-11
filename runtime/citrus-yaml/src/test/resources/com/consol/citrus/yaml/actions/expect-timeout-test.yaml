@@ -1,0 +1,24 @@
+name: ExpectTimeoutTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - expectTimeout:
+      endpoint: helloEndpoint
+  - expectTimeout:
+      endpoint: "direct:helloQueue"
+  - expectTimeout:
+      endpoint: helloEndpoint
+      wait: 500
+      selector:
+        value: "operation='Test'"
+  - expectTimeout:
+      endpoint: helloEndpoint
+      select: "operation='Test'"
+  - expectTimeout:
+      endpoint: helloEndpoint
+      wait: 500
+      selector:
+        elements:
+          - name: operation
+            value: "Test"

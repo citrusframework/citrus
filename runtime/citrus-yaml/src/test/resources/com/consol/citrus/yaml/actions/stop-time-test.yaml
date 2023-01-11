@@ -1,0 +1,9 @@
+name: StopTimeTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - stopTime:
+      id: "CITRUS_TIMELINE"
+  - stopTime:
+      id: "timer#1"

@@ -1,0 +1,11 @@
+name: CatchTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - catch:
+      when:
+        - echo:
+            message: Citrus rocks!
+        - fail:
+            message: Something went wrong

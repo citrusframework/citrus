@@ -21,7 +21,6 @@ package com.consol.citrus.xml.container;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -127,35 +126,6 @@ public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware 
     @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
-    }
-
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-            "any",
-            "action"
-    })
-    public static class Action {
-
-        @XmlAnyElement(lax = true)
-        protected Object any;
-
-        protected TestActions action;
-
-        public Object getAny() {
-            return any;
-        }
-
-        public void setAny(Object value) {
-            this.any = value;
-        }
-
-        public TestActions getAction() {
-            return action;
-        }
-
-        public void setAction(TestActions action) {
-            this.action = action;
-        }
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

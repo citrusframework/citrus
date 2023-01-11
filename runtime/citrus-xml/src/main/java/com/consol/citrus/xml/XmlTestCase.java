@@ -19,18 +19,24 @@
 
 package com.consol.citrus.xml;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.actions.script.ScriptDefinitionType;
 
 /**
@@ -68,7 +74,21 @@ public class XmlTestCase {
     public void setVariables(Variables variables) {
         variables.getVariables().forEach(variable -> {
             if (variable.multilineValue != null) {
-                delegate.getVariableDefinitions().put(variable.name, variable.multilineValue.data);
+                if (variable.multilineValue.script != null) {
+                    if (variable.multilineValue.script.getFile() != null) {
+                        try {
+                            delegate.getVariableDefinitions().put(variable.name, VariableUtils.getValueFromScript(variable.multilineValue.script.getType(),
+                                    FileUtils.readToString(FileUtils.getFileResource(variable.multilineValue.script.getFile()),
+                                            Optional.ofNullable(variable.multilineValue.script.getCharset()).map(Charset::forName).orElse(FileUtils.getDefaultCharset()))));
+                        } catch (IOException e) {
+                            throw new CitrusRuntimeException("Failed to read script file resource", e);
+                        }
+                    } else {
+                        delegate.getVariableDefinitions().put(variable.name, VariableUtils.getValueFromScript(variable.multilineValue.script.getType(), variable.multilineValue.script.getValue()));
+                    }
+                } else {
+                    delegate.getVariableDefinitions().put(variable.name, variable.multilineValue.data);
+                }
             } else {
                 delegate.getVariableDefinitions().put(variable.name, variable.value);
             }

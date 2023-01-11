@@ -116,6 +116,11 @@ public final class CitrusSettings {
     public static final String GROOVY_TEST_FILE_NAME_PATTERN = System.getProperty(GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(GROOVY_TEST_FILE_NAME_PATTERN_ENV) != null ?
             System.getenv(GROOVY_TEST_FILE_NAME_PATTERN_ENV) : "/**/*test.groovy,/**/*it.groovy");
 
+    public static final String YAML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.yaml.file.name.pattern";
+    public static final String YAML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_YAML_FILE_NAME_PATTERN";
+    public static final String YAML_TEST_FILE_NAME_PATTERN = System.getProperty(YAML_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(YAML_TEST_FILE_NAME_PATTERN_ENV) != null ?
+            System.getenv(YAML_TEST_FILE_NAME_PATTERN_ENV) : "/**/*test.yaml,/**/*it.yaml");
+
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
     public static final String XML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_XML_FILE_NAME_PATTERN";
     public static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) != null ?
@@ -163,6 +168,14 @@ public final class CitrusSettings {
      */
     public static Set<String> getGroovyTestFileNamePattern() {
         return StringUtils.commaDelimitedListToSet(GROOVY_TEST_FILE_NAME_PATTERN);
+    }
+
+    /**
+     * Gets set of file name patterns for YAML test files.
+     * @return
+     */
+    public static Set<String> getYamlTestFileNamePattern() {
+        return StringUtils.commaDelimitedListToSet(YAML_TEST_FILE_NAME_PATTERN);
     }
 
     /**
@@ -240,6 +253,8 @@ public final class CitrusSettings {
                 return CitrusSettings.getXmlTestFileNamePattern();
             case TestLoader.GROOVY:
                 return CitrusSettings.getGroovyTestFileNamePattern();
+            case TestLoader.YAML:
+                return CitrusSettings.getYamlTestFileNamePattern();
             default:
                 return Collections.emptySet();
         }

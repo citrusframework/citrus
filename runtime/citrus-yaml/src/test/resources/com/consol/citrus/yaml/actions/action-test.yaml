@@ -1,0 +1,9 @@
+name: ActionTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - action:
+      reference: echoBuilder
+  - action:
+      reference: echo

@@ -1,0 +1,17 @@
+name: myTemplate
+globalContext: false
+description: Sample template in YAML
+parameters:
+  - name: foo
+  - name: bar
+    value: "barValue"
+  - name: baz
+    value: |
+      foo
+      bar
+      baz
+actions:
+  - echo:
+      message: "Citrus rocks!"
+  - echo:
+      message: "${foo} ${bar}"

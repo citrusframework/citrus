@@ -38,7 +38,7 @@ public final class BooleanExpressionParser {
     /**
      * List of known non-boolean operators
      */
-    private static final List<String> OPERATORS = new ArrayList<>(Arrays.asList("lt", "lt=", "gt", "gt="));
+    private static final List<String> OPERATORS = new ArrayList<>(Arrays.asList("lt", "lt=", "gt", "gt=", "<", "<=", ">", ">="));
 
     /**
      * List of known boolean operators
@@ -317,12 +317,16 @@ public final class BooleanExpressionParser {
     private static String getBooleanResultAsString(final String operator, final String rightOperand, final String leftOperand) {
         switch (operator) {
             case "lt":
+            case "<":
                 return Boolean.toString(Integer.valueOf(leftOperand) < Integer.valueOf(rightOperand));
             case "lt=":
+            case "<=":
                 return Boolean.toString(Integer.valueOf(leftOperand) <= Integer.valueOf(rightOperand));
             case "gt":
+            case ">":
                 return Boolean.toString(Integer.valueOf(leftOperand) > Integer.valueOf(rightOperand));
             case "gt=":
+            case ">=":
                 return Boolean.toString(Integer.valueOf(leftOperand) >= Integer.valueOf(rightOperand));
             case "=":
                 return Boolean.toString(Integer.parseInt(leftOperand) == Integer.parseInt(rightOperand));

@@ -1,0 +1,7 @@
+name: DelayTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+actions:
+  - delay:
+      milliseconds: "500"

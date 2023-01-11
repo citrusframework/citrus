@@ -1,0 +1,7 @@
+name: SleepTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+actions:
+  - sleep:
+      milliseconds: "500"

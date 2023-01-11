@@ -1,0 +1,30 @@
+name: TimerTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - timer:
+      id: timer1
+      fork: true
+      delay: 5000
+      interval: 2000
+      repeatCount: 1
+      actions:
+        - echo:
+            message: 1
+  - timer:
+      id: timer2
+      fork: false
+      delay: 500
+      interval: 200
+      repeatCount: 2
+      actions:
+        - echo:
+            message: 1
+        - echo:
+            message: 2
+  - timer:
+      fork: true
+      actions:
+        - echo:
+            message: 1
