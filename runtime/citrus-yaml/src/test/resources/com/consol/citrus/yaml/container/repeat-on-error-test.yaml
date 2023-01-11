@@ -1,0 +1,31 @@
+name: RepeatOnErrorTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - repeatOnError:
+      until: i > 3
+      actions:
+        - echo:
+            message: Hello Citrus!
+  - repeatOnError:
+      until: index >= 2
+      index: index
+      actions:
+        - echo:
+            message: Hello Citrus!
+  - repeatOnError:
+      until: i >= 10
+      index: i
+      autoSleep: 500
+      actions:
+        - echo:
+            message: Hello Citrus!
+        - echo:
+            message: Hello You!
+  - repeatOnError:
+      until: i >= 5
+      autoSleep: 250
+      actions:
+        - echo:
+            message: Hello Citrus!

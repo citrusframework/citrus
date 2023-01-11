@@ -43,6 +43,7 @@ public interface TestLoader {
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     String XML = "xml";
+    String YAML = "yaml";
     String SPRING = "spring";
     String GROOVY = "groovy";
 

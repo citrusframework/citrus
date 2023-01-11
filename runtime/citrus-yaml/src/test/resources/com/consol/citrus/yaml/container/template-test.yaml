@@ -1,0 +1,5 @@
+name: myTemplate
+description: Sample template in YAML
+actions:
+  - echo:
+      message: "Citrus rocks!"

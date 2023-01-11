@@ -1,0 +1,7 @@
+name: echo
+description: Sample template in YAML
+parameters:
+  - name: message
+actions:
+  - echo:
+      message: "${message}"

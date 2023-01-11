@@ -1,0 +1,23 @@
+name: ParallelTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - parallel:
+      actions:
+        - echo:
+            message: 1
+        - echo:
+            message: 2
+  - parallel:
+      actions:
+        - parallel:
+            actions:
+              - echo:
+                  message: 1
+              - echo:
+                  message: 2
+        - echo:
+            message: 3
+        - echo:
+            message: 4

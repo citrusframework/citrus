@@ -1,0 +1,24 @@
+name: RepeatTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - repeat:
+      until: i < 3
+      actions:
+        - echo:
+            message: Hello Citrus!
+  - repeat:
+      until: index <= 2
+      index: index
+      actions:
+        - echo:
+            message: Hello Citrus!
+  - repeat:
+      until: i <= 10
+      index: i
+      actions:
+        - echo:
+            message: Hello Citrus!
+        - echo:
+            message: Hello You!

@@ -1,0 +1,19 @@
+name: CreateVariablesTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+actions:
+  - createVariables:
+      variables:
+        - name: var1
+          value: "test1"
+        - name: var2
+          value: "test2"
+        - name: var3
+          value: |
+            test3
+        - name: var4
+          script:
+            type: "groovy"
+            value: |
+              return "test4"

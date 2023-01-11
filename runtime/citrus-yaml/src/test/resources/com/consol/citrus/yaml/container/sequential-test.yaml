@@ -1,0 +1,11 @@
+name: SequentialTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - sequential:
+      actions:
+        - echo:
+            message: Hello Citrus!
+        - echo:
+            message: Citrus rocks!

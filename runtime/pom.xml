@@ -20,6 +20,7 @@
     <module>citrus-testng</module>
     <module>citrus-cucumber</module>
     <module>citrus-xml</module>
+    <module>citrus-yaml</module>
     <module>citrus-groovy</module>
     <module>citrus-main</module>
   </modules>

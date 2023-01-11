@@ -1,0 +1,11 @@
+name: StopTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - stop:
+      server: "myServer"
+  - stop:
+      servers:
+        - name: "myFooServer"
+        - name: "myBarServer"

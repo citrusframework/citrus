@@ -1,0 +1,7 @@
+name: PrintTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+actions:
+  - print:
+      message: "Hello from Citrus!"

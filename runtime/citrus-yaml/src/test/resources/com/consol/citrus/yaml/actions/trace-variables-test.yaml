@@ -1,0 +1,18 @@
+name: TraceVariablesTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+variables:
+  - name: "foo"
+    value: "fooValue"
+  - name: "bar"
+    value: "barValue"
+actions:
+  - trace:
+      variables: []
+  - trace:
+      variable: "foo"
+  - trace:
+      variables:
+        - name: "foo"
+        - name: "bar"

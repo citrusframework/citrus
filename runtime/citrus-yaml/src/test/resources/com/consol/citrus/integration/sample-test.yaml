@@ -1,0 +1,26 @@
+name: SampleIT
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+variables:
+  - name: message
+    value: Citrus rocks!
+actions:
+  - echo:
+      message: "${message}"
+  - send:
+      endpoint: "direct:sayHello"
+      message:
+        headers:
+          - name: operation
+            value: "sayHello"
+        body:
+          data: "Hello from Citrus!"
+  - receive:
+      endpoint: "direct:sayHello"
+      message:
+        headers:
+          - name: operation
+            value: "sayHello"
+        body:
+          data: "Hello from Citrus!"
