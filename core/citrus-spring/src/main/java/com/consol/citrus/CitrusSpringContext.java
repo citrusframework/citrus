@@ -1,6 +1,7 @@
 package com.consol.citrus;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.container.AfterSuite;
@@ -17,6 +18,7 @@ import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -98,22 +100,37 @@ public class CitrusSpringContext extends CitrusContext {
         public Builder withApplicationContext(ApplicationContext applicationContext) {
             this.applicationContext = applicationContext;
 
-            functionRegistry(applicationContext.getBean(FunctionRegistry.class));
-            validationMatcherRegistry(applicationContext.getBean(ValidationMatcherRegistry.class));
-            messageValidatorRegistry(applicationContext.getBean(MessageValidatorRegistry.class));
-            messageListeners(applicationContext.getBean(MessageListeners.class));
-            testListeners(applicationContext.getBean(TestListeners.class));
-            testActionListeners(applicationContext.getBean(TestActionListeners.class));
-            testReporters(applicationContext.getBean(TestReporters.class));
-            testSuiteListeners(applicationContext.getBean(TestSuiteListeners.class));
-            testContextFactory(applicationContext.getBean(TestContextFactoryBean.class));
-            referenceResolver(applicationContext.getBean(ReferenceResolver.class));
-            typeConverter(applicationContext.getBean(TypeConverter.class));
-            logModifier(applicationContext.getBean(LogModifier.class));
+            findBean(FunctionRegistry.class).ifPresent(this::functionRegistry);
+            findBean(ValidationMatcherRegistry.class).ifPresent(this::validationMatcherRegistry);
+            findBean(MessageValidatorRegistry.class).ifPresent(this::messageValidatorRegistry);
+            findBean(MessageListeners.class).ifPresent(this::messageListeners);
+            findBean(TestListeners.class).ifPresent(this::testListeners);
+            findBean(TestActionListeners.class).ifPresent(this::testActionListeners);
+            findBean(TestReporters.class).ifPresent(this::testReporters);
+            findBean(TestSuiteListeners.class).ifPresent(this::testSuiteListeners);
+            findBean(TestContextFactoryBean.class).ifPresent(this::testContextFactory);
+            findBean(ReferenceResolver.class).ifPresent(this::referenceResolver);
+            findBean(TypeConverter.class).ifPresent(this::typeConverter);
+            findBean(LogModifier.class).ifPresent(this::logModifier);
             beforeSuite(new ArrayList<>(applicationContext.getBeansOfType(BeforeSuite.class).values()));
             afterSuite(new ArrayList<>(applicationContext.getBeansOfType(AfterSuite.class).values()));
 
             return this;
+        }
+
+        /**
+         * Gets bean by given type from application context.
+         * Handles no such bean exception to returns empty.
+         * @param beanType
+         * @return optional bean or empty
+         * @param <T> bean type
+         */
+        private <T> Optional<T> findBean(Class<T> beanType) {
+            try {
+                return Optional.of(applicationContext.getBean(beanType));
+            } catch (NoSuchBeanDefinitionException e) {
+                return Optional.empty();
+            }
         }
 
         public CitrusSpringContext build() {

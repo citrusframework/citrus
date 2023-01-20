@@ -12,22 +12,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ReporterConfig {
 
-    @Bean
+    @Bean(name = "citrusLoggingReporter")
     public LoggingReporter loggingReporter() {
         return new LoggingReporter();
     }
 
-    @Bean
+    @Bean(name = "citrusHtmlReporter")
     public HtmlReporter htmlReporter() {
         return new HtmlReporter();
     }
 
-    @Bean
+    @Bean(name = "citrusJunitReporter")
     public JUnitReporter junitReporter() {
         return new JUnitReporter();
     }
 
-    @Bean
+    @Bean(name = "citrusTestReporters")
     public TestReportersFactory testReporters() {
         return new TestReportersFactory();
     }

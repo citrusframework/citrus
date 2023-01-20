@@ -26,13 +26,23 @@ import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.log.LogModifier;
+import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.report.TestReporters;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListeners;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.TypeConverter;
+import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -74,6 +84,17 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
         afterActions = new SequenceAfterSuite();
 
         when(testContextFactory.getObject()).thenReturn(context);
+
+        when(applicationContextMock.getBean(FunctionRegistry.class)).thenThrow(NoSuchBeanDefinitionException.class);
+        when(applicationContextMock.getBean(ValidationMatcherRegistry.class)).thenThrow(NoSuchBeanDefinitionException.class);
+        when(applicationContextMock.getBean(MessageValidatorRegistry.class)).thenThrow(NoSuchBeanDefinitionException.class);
+        when(applicationContextMock.getBean(MessageListeners.class)).thenThrow(NoSuchBeanDefinitionException.class);
+        when(applicationContextMock.getBean(TestActionListeners.class)).thenThrow(NoSuchBeanDefinitionException.class);
+        when(applicationContextMock.getBean(TestReporters.class)).thenThrow(NoSuchBeanDefinitionException.class);
+        when(applicationContextMock.getBean(ReferenceResolver.class)).thenThrow(NoSuchBeanDefinitionException.class);
+        when(applicationContextMock.getBean(TypeConverter.class)).thenThrow(NoSuchBeanDefinitionException.class);
+        when(applicationContextMock.getBean(LogModifier.class)).thenThrow(NoSuchBeanDefinitionException.class);
+
         when(applicationContextMock.getBean(TestContextFactoryBean.class)).thenReturn(testContextFactory);
         when(applicationContextMock.getBeansOfType(AfterSuite.class)).thenReturn(Collections.singletonMap("afterActions", afterActions));
         when(applicationContextMock.getBeansOfType(BeforeSuite.class)).thenReturn(Collections.singletonMap("beforeActions", beforeActions));
