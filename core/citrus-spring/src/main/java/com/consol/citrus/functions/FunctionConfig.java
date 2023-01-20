@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FunctionConfig {
 
-    @Bean(name = "functionRegistry")
+    @Bean(name = "citrusFunctionRegistry")
     public FunctionRegistryFactory functionRegistry() {
         return new FunctionRegistryFactory();
     }

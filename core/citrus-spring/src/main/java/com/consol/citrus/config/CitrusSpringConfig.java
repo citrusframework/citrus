@@ -54,68 +54,68 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource(locations = "${systemProperties['citrus.spring.application.context']?:classpath*:citrus-context.xml}", reader = CitrusBeanDefinitionReader.class)
 public class CitrusSpringConfig {
 
-    @Bean
+    @Bean(name = "citrusTestContextFactory")
     public TestContextFactoryBean testContextFactory() {
         return new TestContextFactoryBean();
     }
 
-    @Bean
+    @Bean(name = "citrusEndpointFactory")
     public EndpointFactory endpointFactory() {
         return new DefaultEndpointFactory();
     }
 
-    @Bean
+    @Bean(name = "citrusReferenceResolver")
     public ReferenceResolver referenceResolver() {
         return new SpringBeanReferenceResolver();
     }
 
-    @Bean
+    @Bean(name = "citrusTypeConverter")
     public TypeConverter typeConverter() {
         return TypeConverter.lookupDefault(SpringBeanTypeConverter.INSTANCE);
     }
 
-    @Bean
+    @Bean(name = "citrusLogModifier")
     public LogModifier logModifier() {
         return new DefaultLogModifier();
     }
 
-    @Bean
+    @Bean(name = "citrusMessageProcessors")
     public MessageProcessorsFactory messageProcessors() {
         return new MessageProcessorsFactory();
     }
 
-    @Bean
+    @Bean(name = "citrusTestListeners")
     public TestListenersFactory testListeners() {
         return new TestListenersFactory();
     }
 
-    @Bean
+    @Bean(name = "citrusTestActionListeners")
     public TestActionListenersFactory testActionListeners() {
         return new TestActionListenersFactory();
     }
 
-    @Bean
+    @Bean(name = "citrusTestSuiteListeners")
     public TestSuiteListenersFactory testSuiteListeners() {
         return new TestSuiteListenersFactory();
     }
 
-    @Bean
+    @Bean(name = "citrusMessageListeners")
     public MessageListenersFactory messageListeners() {
         return new MessageListenersFactory();
     }
 
-    @Bean
+    @Bean(name = "citrusFailureStackTestListener")
     public FailureStackTestListener failureStackTestListener() {
         return new FailureStackTestListener();
     }
 
-    @Bean
+    @Bean(name = "citrusComponentInitializer")
     public ComponentLifecycleProcessor componentInitializer() {
         return new ComponentLifecycleProcessor();
     }
 
-    @Bean
-    public SegmentVariableExtractorRegistry segmentVariableExtractorRegistry() {
+    @Bean(name = "citrusVariableExtractorRegistry")
+    public SegmentVariableExtractorRegistry variableExtractorRegistry() {
         return new SegmentVariableExtractorRegistry();
     }
 }

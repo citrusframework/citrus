@@ -31,6 +31,7 @@ import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -214,7 +215,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<PurgeEndpointAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<PurgeEndpointAction, Builder> implements ReferenceResolverAware {
 
         private final List<String> endpointNames = new ArrayList<>();
         private final List<Endpoint> endpoints = new ArrayList<>();
@@ -344,6 +345,11 @@ public class PurgeEndpointAction extends AbstractTestAction {
         public Builder referenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return this;
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
         }
 
         @Override

@@ -40,7 +40,6 @@ public class SimpleMappingStrategy implements EndpointAdapterMappingStrategy {
             return adapterMappings.get(mappingKey);
         } else {
             throw new CitrusRuntimeException("Unable to find matching endpoint adapter with mapping key '" + mappingKey + "'");
-
         }
     }
 
