@@ -19,6 +19,7 @@ package com.consol.citrus.integration;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,25 @@ public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport {
             .validate(xpath().expression("//:HelloRequest/:MessageId", "${messageId}")
                              .expression("//:HelloRequest/:CorrelationId", "${correlationId}")
                              .expression("//:HelloRequest/:Text", "Hello ${user}"))
+            .header("Operation", "sayHello")
+            .header("CorrelationId", "${correlationId}"));
+
+        $(send("direct:hello")
+            .message()
+            .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                           "<MessageId>${messageId}</MessageId>" +
+                           "<CorrelationId>${correlationId}</CorrelationId>" +
+                           "<User>${user}</User>" +
+                           "<Text>Hello ${user}</Text>" +
+                       "</HelloRequest>")
+            .header("Operation", "sayHello")
+            .header("CorrelationId", "${correlationId}"));
+
+        $(receive("direct:hello")
+            .message()
+            .validate(xpath().expression("//:HelloRequest/:MessageId", "${messageId}"))
+            .validate(xpath().expression("//:HelloRequest/:CorrelationId", "${correlationId}"))
+            .validate(xpath().expression("//:HelloRequest/:Text", "Hello ${user}"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
@@ -199,5 +219,32 @@ public class ValidateXpathJavaIT extends TestNGCitrusSpringSupport {
                                     context.replaceDynamicContentInString("Hello ${user}"));
             }
         });
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class)
+    @CitrusTest
+    public void shouldFailOnMultipleXpathExpressionValidation() {
+        variable("correlationId", "citrus:randomNumber(10)");
+        variable("messageId", "citrus:randomNumber(10)");
+        variable("user", "Christoph");
+
+        $(send("direct:hello")
+                .message()
+                .body("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>${user}</User>" +
+                        "<Text>Hello ${user}</Text>" +
+                        "</HelloRequest>")
+                .header("Operation", "sayHello")
+                .header("CorrelationId", "${correlationId}"));
+
+        $(receive("direct:hello")
+                .message()
+                .validate(xpath().expression("//:HelloRequest/:MessageId", "${messageId}"))
+                .validate(xpath().expression("//:HelloRequest/:CorrelationId", "${correlationId}"))
+                .validate(xpath().expression("//:HelloRequest/:Text", "should fail"))
+                .header("Operation", "sayHello")
+                .header("CorrelationId", "${correlationId}"));
     }
 }

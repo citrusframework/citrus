@@ -35,7 +35,13 @@ public class JsonSupport {
         return new JsonMessageValidationContext.Builder();
     }
 
-    public <T> JsonMappingValidationProcessor.Builder<T> validate(Class<T> type) {
+    /**
+     * Static entrance for Json mapping validation that uses object mapper to perform Json object validation.
+     * @param type
+     * @return
+     * @param <T>
+     */
+    public static <T> JsonMappingValidationProcessor.Builder<T> validate(Class<T> type) {
         return JsonMappingValidationProcessor.Builder.validate(type);
     }
 }
