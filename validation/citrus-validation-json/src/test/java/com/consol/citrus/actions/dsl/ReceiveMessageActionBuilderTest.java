@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
@@ -66,11 +67,7 @@ import static com.consol.citrus.dsl.PathExpressionSupport.path;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -654,6 +651,57 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.index"), 5);
         Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.id").getClass(), AnyOf.class);
+    }
+
+    @Test
+    public void testReceiveBuilderWithMultipleJsonPathExpressions() {
+        reset(messageEndpoint, messageConsumer, configuration);
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
+                new DefaultMessage("{\"text\":\"Citrus rocks!\", \"user\": \"christoph\"}")
+                        .setHeader("operation", "sayHello"));
+
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(receive(messageEndpoint)
+                                .message()
+                                .type(MessageType.JSON)
+                                .body("{\"text\":\"Citrus rocks!\", \"user\":\"christoph\"}")
+                                .validate(jsonPath()
+                                        .expression("$.user", "christoph"))
+                                .validate(jsonPath()
+                                        .expression("$.text", "Citrus rocks!")));
+
+        TestCase test = runner.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 4);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assert.assertEquals(action.getValidationContexts().stream().filter(JsonPathMessageValidationContext.class::isInstance).count(), 2L);
+
+        Map<String, Object> jsonPathExpressions = action.getValidationContexts().stream()
+                .filter(JsonPathMessageValidationContext.class::isInstance)
+                .map(JsonPathMessageValidationContext.class::cast)
+                .map(JsonPathMessageValidationContext::getJsonPathExpressions)
+                .reduce((collect, map) -> {
+                    collect.putAll(map);
+                    return collect;
+                })
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
+
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
+        Assert.assertEquals(jsonPathExpressions.size(), 2L);
+        Assert.assertEquals(jsonPathExpressions.get("$.user"), "christoph");
+        Assert.assertEquals(jsonPathExpressions.get("$.text"), "Citrus rocks!");
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class)

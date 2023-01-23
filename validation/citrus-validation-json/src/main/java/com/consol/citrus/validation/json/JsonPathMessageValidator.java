@@ -16,6 +16,11 @@
 
 package com.consol.citrus.validation.json;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -23,6 +28,7 @@ import com.consol.citrus.json.JsonPathUtils;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import net.minidev.json.parser.JSONParser;
@@ -32,8 +38,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Map;
-
 /**
  * Message validator evaluates set of JSONPath expressions on message payload and checks that values are as expected.
  * @author Christoph Deppisch
@@ -41,7 +45,7 @@ import java.util.Map;
  */
 public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathMessageValidationContext> {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JsonPathMessageValidator.class);
+    private static final Logger log = LoggerFactory.getLogger(JsonPathMessageValidator.class);
 
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, JsonPathMessageValidationContext validationContext) throws ValidationException {
@@ -85,6 +89,31 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
     @Override
     protected Class<JsonPathMessageValidationContext> getRequiredValidationContextType() {
         return JsonPathMessageValidationContext.class;
+    }
+
+    @Override
+    public JsonPathMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        List<JsonPathMessageValidationContext> jsonPathMessageValidationContexts = validationContexts.stream()
+                .filter(JsonPathMessageValidationContext.class::isInstance)
+                .map(JsonPathMessageValidationContext.class::cast)
+                .collect(Collectors.toList());
+
+        if (jsonPathMessageValidationContexts.size() > 1) {
+            // Collect all jsonPath expressions and combine into one single validation context
+            Map<String, Object> jsonPathExpressions = jsonPathMessageValidationContexts.stream()
+                    .map(JsonPathMessageValidationContext::getJsonPathExpressions)
+                    .reduce((collect, map) -> {
+                        collect.putAll(map);
+                        return collect;
+                    })
+                    .orElseGet(Collections::emptyMap);
+
+            if (!jsonPathExpressions.isEmpty()) {
+                return new JsonPathMessageValidationContext.Builder().expressions(jsonPathExpressions).build();
+            }
+        }
+
+        return super.findValidationContext(validationContexts);
     }
 
     @Override

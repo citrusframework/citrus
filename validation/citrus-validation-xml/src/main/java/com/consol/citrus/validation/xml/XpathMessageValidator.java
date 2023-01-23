@@ -16,8 +16,11 @@
 
 package com.consol.citrus.validation.xml;
 
-import javax.xml.namespace.NamespaceContext;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import javax.xml.namespace.NamespaceContext;
 
 import com.consol.citrus.XmlValidationHelper;
 import com.consol.citrus.context.TestContext;
@@ -27,6 +30,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
@@ -122,6 +126,34 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
     @Override
     protected Class<XpathMessageValidationContext> getRequiredValidationContextType() {
         return XpathMessageValidationContext.class;
+    }
+
+    @Override
+    public XpathMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+        List<XpathMessageValidationContext> xpathMessageValidationContexts = validationContexts.stream()
+                .filter(XpathMessageValidationContext.class::isInstance)
+                .map(XpathMessageValidationContext.class::cast)
+                .collect(Collectors.toList());
+
+        if (xpathMessageValidationContexts.size() > 1) {
+            XpathMessageValidationContext xpathMessageValidationContext = xpathMessageValidationContexts.get(0);
+
+            // Collect all xpath expressions and combine into one single validation context
+            Map<String, Object> xpathExpressions = xpathMessageValidationContexts.stream()
+                    .map(XpathMessageValidationContext::getXpathExpressions)
+                    .reduce((collect, map) -> {
+                        collect.putAll(map);
+                        return collect;
+                    })
+                    .orElseGet(Collections::emptyMap);
+
+            if (!xpathExpressions.isEmpty()) {
+                xpathMessageValidationContext.getXpathExpressions().putAll(xpathExpressions);
+                return xpathMessageValidationContext;
+            }
+        }
+
+        return super.findValidationContext(validationContexts);
     }
 
     @Override

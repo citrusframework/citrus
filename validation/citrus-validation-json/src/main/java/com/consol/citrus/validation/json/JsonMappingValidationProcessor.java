@@ -28,6 +28,8 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.validation.AbstractValidationProcessor;
 import com.consol.citrus.validation.GenericValidationProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
@@ -35,6 +37,9 @@ import org.springframework.util.Assert;
  * @since 2.4
  */
 public abstract class JsonMappingValidationProcessor<T> extends AbstractValidationProcessor<T> {
+
+    /** Logger */
+    private static final Logger log = LoggerFactory.getLogger(JsonMappingValidationProcessor.class);
 
     /** JSON object mapper */
     private ObjectMapper mapper;
@@ -59,7 +64,11 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
 
     @Override
     public void validate(Message message, TestContext context) {
+        log.debug("Start JSON object validation ...");
+
         validate(readJson(message), message.getHeaders(), context);
+
+        log.info("JSON object validation successful: All values OK");
     }
 
     private T readJson(Message message) {
