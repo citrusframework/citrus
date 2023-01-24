@@ -15,10 +15,11 @@
 
   <bean id="soapRequestFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.http.client.ClientHttpRequestFactory"/>
+    <constructor-arg value="soapRequestFactory"/>
   </bean>
 
   <bean id="restTemplate" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.web.client.RestTemplate"/>
+    <constructor-arg value="restTemplate"/>
   </bean>
 
 </beans>

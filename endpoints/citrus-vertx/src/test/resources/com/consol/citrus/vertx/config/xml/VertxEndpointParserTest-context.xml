@@ -31,13 +31,16 @@
   <!-- Vert.x instance factory -->
   <bean id="vertxInstanceFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.vertx.factory.VertxInstanceFactory"/>
+    <constructor-arg value="vertxInstanceFactory"/>
   </bean>
 
   <bean id="specialVertxInstanceFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.vertx.factory.VertxInstanceFactory"/>
+    <constructor-arg value="specialVertxInstanceFactory"/>
   </bean>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.vertx.message.VertxMessageConverter"/>
+    <constructor-arg value="messageConverter"/>
   </bean>
 </beans>

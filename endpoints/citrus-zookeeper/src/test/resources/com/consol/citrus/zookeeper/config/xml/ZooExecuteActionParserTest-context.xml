@@ -32,6 +32,7 @@
     
     <spring:bean id="myZookeeperClient" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.zookeeper.client.ZooClient"/>
+        <spring:constructor-arg value="myZookeeperClient"/>
     </spring:bean>
     
 </spring:beans>

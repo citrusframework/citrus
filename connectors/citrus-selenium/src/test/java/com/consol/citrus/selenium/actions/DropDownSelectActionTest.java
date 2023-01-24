@@ -24,15 +24,11 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -63,6 +59,7 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.isEnabled()).thenReturn(true);
         when(option.isSelected()).thenReturn(false);
 
         DropDownSelectAction action =  new DropDownSelectAction.Builder()
@@ -79,11 +76,12 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
     public void testExecuteMultiSelect() throws Exception {
         WebElement option = Mockito.mock(WebElement.class);
 
-        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.IE);
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.IE.browserName());
 
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.isEnabled()).thenReturn(true);
         when(option.isSelected()).thenReturn(false);
 
         DropDownSelectAction action =  new DropDownSelectAction.Builder()

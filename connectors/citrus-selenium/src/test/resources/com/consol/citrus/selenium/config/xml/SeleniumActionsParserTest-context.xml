@@ -98,10 +98,12 @@
 
     <spring:bean id="pageValidator" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.selenium.model.PageValidator"/>
+        <spring:constructor-arg value="pageValidator"/>
     </spring:bean>
 
     <spring:bean id="mockBrowser" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.selenium.endpoint.SeleniumBrowser"/>
+        <spring:constructor-arg value="mockBrowser"/>
     </spring:bean>
     
 </spring:beans>

@@ -263,15 +263,15 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
                 options = new FirefoxOptions().setProfile(getEndpointConfiguration().getFirefoxProfile());
             } else if (Browser.IE.is(browserType)) {
                 options = new InternetExplorerOptions();
-                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
                 return new RemoteWebDriver(new URL(serverAddress), options);
             } else if (Browser.EDGE.is(browserType)) {
                 options = new EdgeOptions();
-                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
                 return new RemoteWebDriver(new URL(serverAddress), options);
             } else if (Browser.CHROME.is(browserType)) {
                 options = new ChromeOptions();
-                options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
             } else {
                 throw new CitrusRuntimeException("Unsupported remote browser type: " + browserType);
             }

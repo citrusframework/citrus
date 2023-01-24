@@ -43,18 +43,22 @@
 
   <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg value="replyMessageCorrelator"/>
   </bean>
 
   <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
+    <constructor-arg value="endpointResolver"/>
   </bean>
 
   <bean id="soapMessageFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
+    <constructor-arg value="soapMessageFactory"/>
   </bean>
 
   <bean id="wsTemplate" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.client.core.WebServiceTemplate"/>
+    <constructor-arg value="wsTemplate"/>
   </bean>
 
   <bean id="wsAddressingMessageConverter" class="com.consol.citrus.ws.message.converter.WsAddressingMessageConverter">
@@ -65,10 +69,12 @@
 
   <bean id="wsMessageSender" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.transport.WebServiceMessageSender"/>
+    <constructor-arg value="wsMessageSender"/>
   </bean>
 
   <bean id="singleInterceptor" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+    <constructor-arg value="singleInterceptor"/>
   </bean>
 
   <util:list id="interceptors">
@@ -78,9 +84,11 @@
 
   <bean id="interceptor1" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+    <constructor-arg value="interceptor1"/>
   </bean>
   <bean id="interceptor2" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+    <constructor-arg value="interceptor2"/>
   </bean>
 
 </beans>

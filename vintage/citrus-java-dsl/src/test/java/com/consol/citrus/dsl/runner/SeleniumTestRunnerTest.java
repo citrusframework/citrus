@@ -28,23 +28,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.selenium.actions.AlertAction;
-import com.consol.citrus.selenium.actions.CheckInputAction;
-import com.consol.citrus.selenium.actions.ClearBrowserCacheAction;
-import com.consol.citrus.selenium.actions.ClickAction;
-import com.consol.citrus.selenium.actions.CloseWindowAction;
-import com.consol.citrus.selenium.actions.FindElementAction;
-import com.consol.citrus.selenium.actions.GetStoredFileAction;
-import com.consol.citrus.selenium.actions.HoverAction;
-import com.consol.citrus.selenium.actions.JavaScriptAction;
-import com.consol.citrus.selenium.actions.NavigateAction;
-import com.consol.citrus.selenium.actions.OpenWindowAction;
-import com.consol.citrus.selenium.actions.SetInputAction;
-import com.consol.citrus.selenium.actions.StartBrowserAction;
-import com.consol.citrus.selenium.actions.StopBrowserAction;
-import com.consol.citrus.selenium.actions.StoreFileAction;
-import com.consol.citrus.selenium.actions.SwitchWindowAction;
-import com.consol.citrus.selenium.actions.WaitUntilAction;
+import com.consol.citrus.selenium.actions.*;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowserConfiguration;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
@@ -56,9 +40,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Coordinates;
-import org.openqa.selenium.interactions.Keyboard;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -88,8 +70,6 @@ public class SeleniumTestRunnerTest extends UnitTestSupport {
     private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
     private WebDriver.Options options = Mockito.mock(WebDriver.Options.class);
 
-    private Mouse mouse = Mockito.mock(Mouse.class);
-    private Keyboard keyboard = Mockito.mock(Keyboard.class);
     private Coordinates coordinates = Mockito.mock(Coordinates.class);
 
     @Test
@@ -100,7 +80,7 @@ public class SeleniumTestRunnerTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         when(seleniumBrowser.getEndpointConfiguration()).thenReturn(seleniumBrowserConfiguration);
-        when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(BrowserType.CHROME);
+        when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(Browser.CHROME.browserName());
         when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
 
         when(seleniumBrowser.getName()).thenReturn("mockBrowser");
@@ -123,8 +103,6 @@ public class SeleniumTestRunnerTest extends UnitTestSupport {
         when(link.isDisplayed()).thenReturn(true);
 
         when(webDriver.findElement(By.linkText("Hover Me!"))).thenReturn(link);
-        when(webDriver.getMouse()).thenReturn(mouse);
-        when(webDriver.getKeyboard()).thenReturn(keyboard);
 
         when(link.getCoordinates()).thenReturn(coordinates);
 

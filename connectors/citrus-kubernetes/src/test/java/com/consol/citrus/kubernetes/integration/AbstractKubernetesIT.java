@@ -36,9 +36,9 @@ import org.testng.annotations.BeforeSuite;
 public class AbstractKubernetesIT extends TestNGCitrusSpringSupport {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AbstractKubernetesIT.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractKubernetesIT.class);
 
-    /** Kubernetes connection state, checks connectivity only once per test run */
+    /** Kubernetes' connection state, checks connectivity only once per test run */
     private static boolean connected = false;
 
     @BeforeSuite(alwaysRun = true)
@@ -63,6 +63,8 @@ public class AbstractKubernetesIT extends TestNGCitrusSpringSupport {
     public void run(IHookCallBack callBack, ITestResult testResult) {
         if (connected) {
             super.run(callBack, testResult);
+        } else {
+            testResult.setStatus(ITestResult.SKIP);
         }
     }
 }

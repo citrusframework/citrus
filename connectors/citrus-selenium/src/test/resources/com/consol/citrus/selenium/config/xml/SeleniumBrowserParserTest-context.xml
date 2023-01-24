@@ -32,14 +32,17 @@
 
   <bean id="webDriver" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.openqa.selenium.WebDriver"/>
+    <constructor-arg value="webDriver"/>
   </bean>
 
   <bean id="firefoxProfile" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.openqa.selenium.firefox.FirefoxProfile"/>
+    <constructor-arg value="firefoxProfile"/>
   </bean>
 
   <bean id="eventListener" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.openqa.selenium.support.events.WebDriverListener"/>
+    <constructor-arg value="eventListener"/>
   </bean>
 
 </beans>

@@ -25,6 +25,7 @@
     
     <spring:bean id="myK8sClient" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.kubernetes.client.KubernetesClient"/>
+        <spring:constructor-arg value="myK8sClient"/>
     </spring:bean>
     
 </spring:beans>

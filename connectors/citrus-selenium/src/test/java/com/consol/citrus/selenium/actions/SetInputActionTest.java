@@ -76,6 +76,7 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
         when(element.getTagName()).thenReturn("select");
 
         when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
+        when(option.isEnabled()).thenReturn(true);
         when(option.isSelected()).thenReturn(false);
 
         SetInputAction action =  new SetInputAction.Builder()

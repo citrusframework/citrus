@@ -44,14 +44,17 @@
 
     <bean id="testActor" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.consol.citrus.TestActor"/>
+        <constructor-arg value="testActor"/>
     </bean>
 
     <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+        <constructor-arg value="replyMessageCorrelator"/>
     </bean>
 
     <bean id="endpointAdapter" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+        <constructor-arg value="endpointAdapter"/>
     </bean>
 
     <util:list id="autoHanldeQueries">

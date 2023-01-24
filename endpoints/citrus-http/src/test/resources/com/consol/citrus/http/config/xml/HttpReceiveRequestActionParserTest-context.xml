@@ -56,10 +56,12 @@
     
     <spring:bean id="httpServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.http.server.HttpServer"/>
+        <spring:constructor-arg value="httpServer"/>
     </spring:bean>
 
     <spring:bean id="testActor" class="org.mockito.Mockito" factory-method="mock">
       <spring:constructor-arg value="com.consol.citrus.TestActor"/>
+      <spring:constructor-arg value="testActor"/>
     </spring:bean>
     
 </spring:beans>

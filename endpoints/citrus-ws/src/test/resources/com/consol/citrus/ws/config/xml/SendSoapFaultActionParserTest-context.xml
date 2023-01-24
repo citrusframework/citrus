@@ -41,6 +41,7 @@
 
     <spring:bean id="soapServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.ws.server.WebServiceServer"/>
+        <spring:constructor-arg value="soapServer"/>
     </spring:bean>
 
 </spring:beans>

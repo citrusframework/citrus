@@ -29,13 +29,16 @@
 
   <bean id="messagingTemplate" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.integration.core.MessagingTemplate"/>
+    <constructor-arg value="messagingTemplate"/>
   </bean>
 
   <bean id="channel" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.messaging.PollableChannel"/>
+    <constructor-arg value="channel"/>
   </bean>
 
   <bean id="channelResolver" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.messaging.core.DestinationResolver"/>
+    <constructor-arg value="channelResolver"/>
   </bean>
 </beans>

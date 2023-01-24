@@ -59,6 +59,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
         if (method != null && method.getAnnotation(CitrusTest.class) != null) {
             try {
                 run(testResult, method, null, testResult.getMethod().getCurrentInvocationCount());
+                testResult.setStatus(ITestResult.SUCCESS);
             } catch (RuntimeException e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);

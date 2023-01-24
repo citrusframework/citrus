@@ -37,6 +37,7 @@
 
     <bean id="mockResponseEndpointAdapter" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+      <constructor-arg value="mockResponseEndpointAdapter"/>
     </bean>
     
 </beans>

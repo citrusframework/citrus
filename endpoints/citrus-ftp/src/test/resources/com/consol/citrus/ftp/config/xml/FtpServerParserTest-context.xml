@@ -31,10 +31,12 @@
 
   <bean id="apacheFtpServer" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.apache.ftpserver.FtpServer"/>
+    <constructor-arg value="apacheFtpServer"/>
   </bean>
 
   <bean id="userManager" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.apache.ftpserver.ftplet.UserManager"/>
+    <constructor-arg value="userManager"/>
   </bean>
 
 </beans>

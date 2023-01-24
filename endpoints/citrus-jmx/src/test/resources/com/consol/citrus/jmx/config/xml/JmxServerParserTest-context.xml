@@ -57,6 +57,7 @@
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.jmx.message.JmxMessageConverter"/>
+    <constructor-arg value="messageConverter"/>
   </bean>
 
   <util:map id="environmentProperties">

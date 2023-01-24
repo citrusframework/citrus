@@ -21,10 +21,12 @@
 
     <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="javax.jms.ConnectionFactory"/>
+      <constructor-arg value="connectionFactory"/>
     </bean>
 
     <bean id="mockEndpointAdapter" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+      <constructor-arg value="mockEndpointAdapter"/>
     </bean>
 
 </beans>

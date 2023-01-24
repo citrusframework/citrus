@@ -39,14 +39,17 @@
     
     <bean id ="connector" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.eclipse.jetty.server.Connector"/>
+        <constructor-arg value="connector"/>
     </bean>
     
     <util:list id="connectors">
         <bean id="connector1" class="org.mockito.Mockito" factory-method="mock">
           <constructor-arg value="org.eclipse.jetty.server.Connector"/>
+          <constructor-arg value="connector1"/>
         </bean>
         <bean id="connector2" class="org.mockito.Mockito" factory-method="mock">
             <constructor-arg value="org.eclipse.jetty.server.Connector"/>
+            <constructor-arg value="connector2"/>
         </bean>
     </util:list>
                 
@@ -73,14 +76,17 @@
                 
     <bean id ="servletHandler" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.eclipse.jetty.servlet.ServletHandler"/>
+        <constructor-arg value="servletHandler"/>
     </bean>
 
     <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.ws.message.converter.SoapMessageConverter"/>
+      <constructor-arg value="messageConverter"/>
     </bean>
 
     <bean id="soap12MessageFactory" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
+      <constructor-arg value="soap12MessageFactory"/>
     </bean>
 
 </beans>

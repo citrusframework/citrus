@@ -42,6 +42,7 @@
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.http.message.HttpMessageConverter"/>
+    <constructor-arg value="messageConverter"/>
   </bean>
 
   <util:list id="clientInterceptors">
@@ -55,26 +56,32 @@
 
   <bean id="errorHandler" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.web.client.ResponseErrorHandler"/>
+    <constructor-arg value="errorHandler"/>
   </bean>
 
   <bean id="clientInterceptor" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
+    <constructor-arg value="clientInterceptor"/>
   </bean>
 
   <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg value="replyMessageCorrelator"/>
   </bean>
 
   <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
+    <constructor-arg value="endpointResolver"/>
   </bean>
 
   <bean id="soapRequestFactory" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.http.client.ClientHttpRequestFactory"/>
+    <constructor-arg value="soapRequestFactory"/>
   </bean>
 
   <bean id="restTemplate" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.web.client.RestTemplate"/>
+    <constructor-arg value="restTemplate"/>
   </bean>
 
 </beans>

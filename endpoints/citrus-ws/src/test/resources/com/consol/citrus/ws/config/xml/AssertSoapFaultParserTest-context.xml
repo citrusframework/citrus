@@ -92,6 +92,7 @@
     
     <spring:bean id="customSoapFaultValidator" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.ws.validation.SoapFaultValidator"/>
+        <spring:constructor-arg value="customSoapFaultValidator"/>
     </spring:bean>
     
 </spring:beans>

@@ -24,16 +24,12 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -57,7 +53,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testNavigatePageUrl() throws Exception {
-        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.CHROME);
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.CHROME.browserName());
         doAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -77,7 +73,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testNavigatePageUrlInternetExplorer() throws Exception {
-        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.IE);
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.IE.browserName());
         doAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -97,7 +93,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testNavigateRelativePageUrl() throws Exception {
-        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.IE);
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.IE.browserName());
         seleniumBrowser.getEndpointConfiguration().setStartPageUrl("http://localhost:8080");
 
         NavigateAction action =  new NavigateAction.Builder()

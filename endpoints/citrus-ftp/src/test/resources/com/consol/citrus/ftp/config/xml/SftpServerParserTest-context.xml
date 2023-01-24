@@ -26,6 +26,7 @@
 
   <bean id="sftpServerAdapter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+    <constructor-arg value="sftpServerAdapter"/>
   </bean>
 
 </beans>

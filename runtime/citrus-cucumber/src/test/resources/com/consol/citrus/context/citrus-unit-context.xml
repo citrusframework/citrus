@@ -9,14 +9,17 @@
 
   <bean id="httpClient" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.http.client.HttpClient"/>
+    <constructor-arg value="httpClient"/>
   </bean>
 
   <bean id="dockerClient" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.docker.client.DockerClient"/>
+    <constructor-arg value="dockerClient"/>
   </bean>
 
   <bean id="seleniumBrowser" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.selenium.endpoint.SeleniumBrowser"/>
+    <constructor-arg value="seleniumBrowser"/>
   </bean>
 
   <!-- Text equals message validator -->

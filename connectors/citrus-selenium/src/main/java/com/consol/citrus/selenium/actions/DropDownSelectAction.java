@@ -26,7 +26,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -66,7 +66,7 @@ public class DropDownSelectAction extends FindElementAction {
         }
 
         if (!CollectionUtils.isEmpty(options)) {
-            if (BrowserType.IE.equals(browser.getEndpointConfiguration().getBrowserType())) {
+            if (Browser.IE.is(browser.getEndpointConfiguration().getBrowserType())) {
                 for (String option : options) {
                     dropdown.selectByValue(context.replaceDynamicContentInString(option));
                 }

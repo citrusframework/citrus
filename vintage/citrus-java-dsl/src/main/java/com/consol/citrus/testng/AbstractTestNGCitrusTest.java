@@ -80,6 +80,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 try {
                     run(testResult, method, methodTestLoaders.get(testResult.getMethod().getCurrentInvocationCount() % methodTestLoaders.size()),
                             testResult.getMethod().getCurrentInvocationCount());
+                    testResult.setStatus(ITestResult.SUCCESS);
                 } catch (Exception e) {
                     testResult.setThrowable(e);
                     testResult.setStatus(ITestResult.FAILURE);

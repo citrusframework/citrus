@@ -26,17 +26,12 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -56,7 +51,7 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
         when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(seleniumBrowser.getEndpointConfiguration()).thenReturn(seleniumBrowserConfiguration);
         when(seleniumBrowser.getName()).thenReturn("ChromeBrowser");
-        when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(BrowserType.CHROME);
+        when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(Browser.CHROME.browserName());
         when(webDriver.navigate()).thenReturn(navigation);
     }
 

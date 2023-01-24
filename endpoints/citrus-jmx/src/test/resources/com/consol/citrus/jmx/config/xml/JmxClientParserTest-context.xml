@@ -22,18 +22,22 @@
 
   <bean id="notificationFilter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="javax.management.NotificationFilter"/>
+    <constructor-arg value="notificationFilter"/>
   </bean>
 
   <bean id="actor" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.TestActor"/>
+    <constructor-arg value="actor"/>
   </bean>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.jmx.message.JmxMessageConverter"/>
+    <constructor-arg value="messageConverter"/>
   </bean>
 
   <bean id="messageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg value="messageCorrelator"/>
   </bean>
 
 </beans>
