@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.sql.xml;
+package com.consol.citrus.sql.yaml;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
@@ -25,8 +25,8 @@ import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.spi.BindToRegistry;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
-import com.consol.citrus.xml.XmlTestLoader;
-import com.consol.citrus.xml.actions.XmlTestActionBuilder;
+import com.consol.citrus.yaml.YamlTestLoader;
+import com.consol.citrus.yaml.actions.YamlTestActionBuilder;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class SqlTest extends AbstractXmlActionTest {
+public class SqlTest extends AbstractYamlActionTest {
 
     @BindToRegistry
     private final BasicDataSource dataSource = new BasicDataSource();
@@ -52,7 +52,7 @@ public class SqlTest extends AbstractXmlActionTest {
     @BeforeClass
     public void setupDataSource() {
         dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
-        dataSource.setUrl("jdbc:hsqldb:mem:sql-xml-test");
+        dataSource.setUrl("jdbc:hsqldb:mem:sql-yaml-test");
         dataSource.setUsername("sa");
         dataSource.setPassword("");
 
@@ -61,7 +61,7 @@ public class SqlTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadSql() {
-        XmlTestLoader testLoader = createTestLoader("classpath:com/consol/citrus/sql/xml/sql-test.xml");
+        YamlTestLoader testLoader = createTestLoader("classpath:com/consol/citrus/sql/yaml/sql-test.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -99,7 +99,7 @@ public class SqlTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadSqlQuery() {
-        XmlTestLoader testLoader = createTestLoader("classpath:com/consol/citrus/sql/xml/sql-query-test.xml");
+        YamlTestLoader testLoader = createTestLoader("classpath:com/consol/citrus/sql/yaml/sql-query-test.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();
@@ -185,11 +185,14 @@ public class SqlTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLookupTestActionBuilder() {
-        Assert.assertTrue(XmlTestActionBuilder.lookup("sql").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("sql").get().getClass(), Sql.class);
+        Assert.assertTrue(YamlTestActionBuilder.lookup().containsKey("sql"));
+        Assert.assertTrue(YamlTestActionBuilder.lookup().containsKey("plsql"));
 
-        Assert.assertTrue(XmlTestActionBuilder.lookup("plsql").isPresent());
-        Assert.assertEquals(XmlTestActionBuilder.lookup("plsql").get().getClass(), Plsql.class);
+        Assert.assertTrue(YamlTestActionBuilder.lookup("sql").isPresent());
+        Assert.assertEquals(YamlTestActionBuilder.lookup("sql").get().getClass(), Sql.class);
+
+        Assert.assertTrue(YamlTestActionBuilder.lookup("plsql").isPresent());
+        Assert.assertEquals(YamlTestActionBuilder.lookup("plsql").get().getClass(), Plsql.class);
     }
 
 }

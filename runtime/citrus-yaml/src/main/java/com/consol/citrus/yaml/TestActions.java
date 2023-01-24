@@ -162,6 +162,10 @@ public class TestActions implements Supplier<TestActionBuilder<?>> {
         this.builder = builder;
     }
 
+    public void setAction(TestActionBuilder<?> builder) {
+        this.builder = builder;
+    }
+
     @Override
     public TestActionBuilder<?> get() {
         return builder;

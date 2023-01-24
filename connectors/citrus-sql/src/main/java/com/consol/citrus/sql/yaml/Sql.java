@@ -17,20 +17,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.sql.xml;
+package com.consol.citrus.sql.yaml;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
 
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.actions.AbstractDatabaseConnectingTestAction;
@@ -41,7 +34,6 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.StringUtils;
 
-@XmlRootElement(name = "sql")
 public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestAction>, ReferenceResolverAware {
 
     private AbstractDatabaseConnectingTestAction.Builder<?, ?> builder = new ExecuteSQLAction.Builder();
@@ -51,38 +43,32 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
 
     private ReferenceResolver referenceResolver;
 
-    @XmlElement(name = "validate")
-    protected List<Validate> validates;
+    protected List<Validate> validate;
 
-    @XmlElement(name = "extract")
-    protected List<Extract> extracts;
+    protected List<Extract> extract;
 
-    @XmlElement
-    public Sql setDescription(String value) {
+    public void setDescription(String value) {
         builder.description(value);
-        return this;
     }
 
-    @XmlAttribute(name = "datasource", required = true)
-    public Sql setDataSource(String dataSource) {
+    public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
         builder.name(String.format("sql:%s", dataSource));
-        return this;
     }
 
-    @XmlElement(required = true)
-    public Sql setStatements(Statements statements) {
-        statements.getStatements().forEach(builder::statement);
+    public void setStatements(List<Statement> statements) {
+        for (Statement statement : statements) {
+            if (statement.statement != null) {
+                builder.statement(statement.statement);
+            }
 
-        if (statements.file != null) {
-            builder.sqlResource(statements.file);
+            if (statement.file != null) {
+                builder.sqlResource(statement.file);
+            }
         }
-
-        return this;
     }
 
-    @XmlElement
-    public Sql setTransaction(Transaction transaction) {
+    public void setTransaction(Transaction transaction) {
         if (transaction.manager != null) {
             transactionManager = transaction.manager;
         }
@@ -94,30 +80,34 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         if (transaction.timeout != null) {
             builder.transactionTimeout(transaction.timeout);
         }
-
-        return this;
     }
 
-    @XmlAttribute(name = "ignore-errors")
-    public Sql setIgnoreErrors(boolean value) {
+    public void setIgnoreErrors(boolean value) {
         if (builder instanceof ExecuteSQLAction.Builder) {
             ((ExecuteSQLAction.Builder) builder).ignoreErrors(value);
         }
-        return this;
     }
 
     public List<Validate> getValidates() {
-        if (validates == null) {
-            validates = new ArrayList<>();
+        if (validate == null) {
+            validate = new ArrayList<>();
         }
-        return this.validates;
+        return this.validate;
+    }
+
+    public void setValidate(List<Validate> validate) {
+        this.validate = validate;
     }
 
     public List<Extract> getExtracts() {
-        if (extracts == null) {
-            extracts = new ArrayList<>();
+        if (extract == null) {
+            extract = new ArrayList<>();
         }
-        return this.extracts;
+        return this.extract;
+    }
+
+    public void setExtract(List<Extract> extract) {
+        this.extract = extract;
     }
 
     @Override
@@ -137,7 +127,7 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
                 }
 
                 if (validate.getValues() != null) {
-                    asSqlQueryBuilder().validate(validate.column, validate.getValues().getValues().toArray(String[]::new));
+                    asSqlQueryBuilder().validate(validate.column, validate.getValues().toArray(String[]::new));
                 }
             }
 
@@ -199,17 +189,11 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         return sqlQueryBuilder;
     }
 
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-            "statements"
-    })
-    public static class Statements {
+    public static class Statement {
 
-        @XmlElement(name = "statement")
-        private List<String> statements;
+        private String statement;
 
-        @XmlAttribute(name = "file")
-        protected String file;
+        private String file;
 
         public String getFile() {
             return file;
@@ -219,23 +203,19 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             this.file = value;
         }
 
-        public List<String> getStatements() {
-            if (statements == null) {
-                statements = new ArrayList<>();
-            }
-            return statements;
+        public String getStatement() {
+            return statement;
+        }
+
+        public void setStatement(String statement) {
+            this.statement = statement;
         }
     }
 
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "")
     public static class Transaction {
 
-        @XmlAttribute(name = "manager")
         protected String manager;
-        @XmlAttribute(name = "timeout")
         protected String timeout;
-        @XmlAttribute(name = "isolation-level")
         protected String isolationLevel;
 
         public String getManager() {
@@ -263,13 +243,9 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         }
     }
 
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "")
     public static class Extract {
 
-        @XmlAttribute(name = "column", required = true)
         protected String column;
-        @XmlAttribute(name = "variable", required = true)
         protected String variable;
 
         public String getColumn() {
@@ -289,27 +265,18 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
         }
     }
 
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-            "values",
-            "script"
-    })
     public static class Validate {
 
-        @XmlElement
-        protected Values values;
-        @XmlAttribute(name = "column")
+        protected List<String> values;
         protected String column;
-        @XmlAttribute(name = "value")
         protected String value;
-        @XmlElement
         protected Script script;
 
-        public Values getValues() {
+        public List<String> getValues() {
             return values;
         }
 
-        public void setValues(Values value) {
+        public void setValues(List<String> value) {
             this.values = value;
         }
 
@@ -337,36 +304,11 @@ public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestActi
             this.script = script;
         }
 
-        @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-                "values"
-        })
-        public static class Values {
-
-            @XmlElement(name = "value", required = true)
-            protected List<String> values;
-
-            public List<String> getValues() {
-                if (values == null) {
-                    values = new ArrayList<>();
-                }
-                return this.values;
-            }
-        }
-
-        @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-                "value"
-        })
         public static class Script {
 
-            @XmlValue
             protected String value;
-            @XmlAttribute(name = "type", required = true)
             protected String type;
-            @XmlAttribute(name = "file")
             protected String file;
-            @XmlAttribute(name = "charset")
             protected String charset;
 
             public String getValue() {

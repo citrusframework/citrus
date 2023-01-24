@@ -17,13 +17,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.sql.xml;
+package com.consol.citrus.sql.yaml;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.spi.BindToRegistry;
-import com.consol.citrus.xml.XmlTestLoader;
+import com.consol.citrus.yaml.YamlTestLoader;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.mockito.Mockito;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class PlsqlTest extends AbstractXmlActionTest {
+public class PlsqlTest extends AbstractYamlActionTest {
 
     @BindToRegistry
     private final BasicDataSource dataSource = new BasicDataSource();
@@ -45,14 +45,14 @@ public class PlsqlTest extends AbstractXmlActionTest {
     @BeforeClass
     public void setupDataSource() {
         dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
-        dataSource.setUrl("jdbc:hsqldb:mem:plsql-xml-test");
+        dataSource.setUrl("jdbc:hsqldb:mem:plsql-yaml-test");
         dataSource.setUsername("sa");
         dataSource.setPassword("");
     }
 
     @Test
     public void shouldLoadPlsql() {
-        XmlTestLoader testLoader = createTestLoader("classpath:com/consol/citrus/sql/xml/plsql-test.xml");
+        YamlTestLoader testLoader = createTestLoader("classpath:com/consol/citrus/sql/yaml/plsql-test.yaml");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

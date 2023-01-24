@@ -31,7 +31,7 @@
 
     <sql datasource="dataSource" ignore-errors="true">
       <transaction manager="mockTransactionManager" timeout="5000" isolation-level="ISOLATION_READ_COMMITTED"/>
-      <statements file="classpath:com/consol/citrus/sql/xml/test-statements.sql"/>
+      <statements file="classpath:com/consol/citrus/sql/test-statements.sql"/>
     </sql>
   </actions>
 </test>

@@ -17,37 +17,35 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http.xml;
+package com.consol.citrus.groovy.yaml;
 
-import java.util.Map;
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.script.GroovyAction;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.variable.VariableExtractor;
+public class Groovy implements TestActionBuilder<GroovyAction> {
 
-/**
- * @author Christoph Deppisch
- */
-public class NoopVariableExtractor implements VariableExtractor {
-    @Override
-    public void extractVariables(Message message, TestContext context) {
+    private final GroovyAction.Builder builder = new GroovyAction.Builder();
+
+    public void setScript(String value) {
+        if (value.length() > 0) {
+            builder.script(value);
+        }
     }
 
-    public static class Builder implements VariableExtractor.Builder<NoopVariableExtractor, Builder> {
+    public void setFile(String file) {
+        builder.scriptResourcePath(file);
+    }
 
-        @Override
-        public Builder expressions(Map<String, Object> expressions) {
-            return this;
-        }
+    public void setScriptTemplate(String template) {
+        builder.template(template);
+    }
 
-        @Override
-        public Builder expression(String expression, Object value) {
-            return this;
-        }
+    public void setUseScriptTemplate(boolean enabled) {
+        builder.useScriptTemplate(enabled);
+    }
 
-        @Override
-        public NoopVariableExtractor build() {
-            return new NoopVariableExtractor();
-        }
+    @Override
+    public GroovyAction build() {
+        return builder.build();
     }
 }

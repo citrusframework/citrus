@@ -19,6 +19,7 @@
 
 package com.consol.citrus.yaml.actions;
 
+import java.util.Map;
 import java.util.Optional;
 
 import com.consol.citrus.TestActionBuilder;
@@ -40,6 +41,20 @@ public interface YamlTestActionBuilder {
 
     /** Default Citrus test action builders from classpath resource properties */
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    /**
+     * Resolves all available test action builder instances from resource path lookup. Scans classpath for test action builder meta information
+     * and instantiates the components.
+     * @return
+     */
+    static Map<String, TestActionBuilder<?>> lookup() {
+        Map<String, TestActionBuilder<?>> loader = TYPE_RESOLVER.resolveAll();
+
+        if (LOG.isDebugEnabled()) {
+            loader.forEach((k, v) -> LOG.debug(String.format("Found YAML test action builder '%s' as %s", k, v.getClass())));
+        }
+        return loader;
+    }
 
     /**
      * Resolves test action builder from resource path lookup with given resource name. Scans classpath for test action builder meta information

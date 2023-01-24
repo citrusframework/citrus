@@ -1,0 +1,83 @@
+name: "HttpServerTest"
+author: "Christoph"
+status: "FINAL"
+variables:
+  - name: "id"
+    value: "12345"
+actions:
+  - http:
+      server: "httpServer"
+      receiveRequest:
+        GET: {}
+  - http:
+      server: "httpServer"
+      sendResponse: {}
+
+  - http:
+      server: "httpServer"
+      receiveRequest:
+        timeout: "2000"
+        GET:
+          path: "/test/order/${id}"
+          contentType: "application/xml"
+          accept: "application/xml"
+          version: "HTTP/1.1"
+          parameters:
+            - name: "id"
+              value: "${id}"
+            - name: "type"
+              value: "gold"
+  - http:
+      server: "httpServer"
+      sendResponse:
+        response:
+          status: "200"
+          reasonPhrase: "OK"
+          version: "HTTP/1.1"
+          contentType: "application/xml"
+          body:
+            data: |
+              <order><id>${id}</id><item>foo</item></order>
+
+  - http:
+      server: "httpServer"
+      receiveRequest:
+        POST:
+          path: "/user"
+          headers:
+            - name: "userId"
+              value: "1001"
+          body:
+            data: |
+              <user><id>1001</id><name>new_user</name></user>
+        extract:
+          body:
+            - variable: "userId"
+              path: "/user/id"
+  - http:
+      server: "httpServer"
+      sendResponse:
+        response:
+          status: "404"
+          reasonPhrase: "NOT_FOUND"
+          headers:
+            - name: "userId"
+              value: "1001"
+
+  - http:
+      server: "httpServer"
+      receiveRequest:
+        DELETE:
+          path: "/user/${id}"
+
+  - http:
+      server: "httpServer"
+      receiveRequest:
+        HEAD:
+          path: "/test"
+
+  - http:
+      server: "httpServer"
+      actor: "testActor"
+      receiveRequest:
+        OPTIONS: {}
