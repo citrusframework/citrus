@@ -37,7 +37,7 @@ import org.testng.annotations.BeforeSuite;
 public class AbstractDockerIT extends TestNGCitrusSpringSupport {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AbstractDockerIT.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractDockerIT.class);
 
     /** Docker connection state, checks connectivity only once per test run */
     private static boolean connected = false;
@@ -66,6 +66,8 @@ public class AbstractDockerIT extends TestNGCitrusSpringSupport {
     public void run(IHookCallBack callBack, ITestResult testResult) {
         if (connected) {
             super.run(callBack, testResult);
+        } else {
+            testResult.setStatus(ITestResult.SKIP);
         }
     }
 }

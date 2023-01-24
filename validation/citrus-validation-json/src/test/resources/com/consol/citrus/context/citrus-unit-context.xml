@@ -14,5 +14,6 @@
 
   <bean id="jsonTestSchema" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.json.schema.SimpleJsonSchema"/>
+    <constructor-arg value="jsonTestSchema"/>
   </bean>
 </beans>

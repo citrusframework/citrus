@@ -29,5 +29,6 @@
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.rmi.message.RmiMessageConverter"/>
+    <constructor-arg value="messageConverter"/>
   </bean>
 </beans>

@@ -5,6 +5,7 @@
 
   <bean id="dockerClient" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.github.dockerjava.api.DockerClient"/>
+    <constructor-arg value="dockerClient"/>
   </bean>
 
 </beans>

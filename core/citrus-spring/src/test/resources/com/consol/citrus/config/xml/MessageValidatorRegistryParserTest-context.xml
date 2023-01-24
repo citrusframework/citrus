@@ -18,9 +18,11 @@
 
   <bean id="validator1" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
+    <constructor-arg value="validator1"/>
   </bean>
   <bean id="validator2" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
+    <constructor-arg value="validator2"/>
   </bean>
 
 </beans>

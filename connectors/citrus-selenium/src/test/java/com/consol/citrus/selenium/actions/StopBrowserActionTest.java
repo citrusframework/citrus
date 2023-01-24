@@ -16,16 +16,18 @@
 
 package com.consol.citrus.selenium.actions;
 
-import com.consol.citrus.selenium.endpoint.*;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Christoph Deppisch
@@ -41,7 +43,7 @@ public class StopBrowserActionTest extends AbstractTestNGUnitTest {
         reset(webDriver);
 
         seleniumBrowser.setWebDriver(webDriver);
-        seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.CHROME);
+        seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.CHROME.browserName());
     }
 
     @Test

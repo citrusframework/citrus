@@ -16,6 +16,7 @@
 
     <bean id="testSchema" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="org.springframework.xml.xsd.XsdSchema"/>
+      <constructor-arg value="testSchema"/>
     </bean>
 
     <citrus:schema-repository id="customJsonSchemaRepository" type="json">
@@ -26,6 +27,7 @@
 
     <bean id="jsonTestSchema" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.consol.citrus.json.schema.SimpleJsonSchema"/>
+        <constructor-arg value="jsonTestSchema"/>
     </bean>
 
     <camelContext id="citrusCamelContext" xmlns="http://camel.apache.org/schema/spring">

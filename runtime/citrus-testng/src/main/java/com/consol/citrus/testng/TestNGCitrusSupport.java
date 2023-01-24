@@ -86,6 +86,7 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
                 method.getAnnotation(CitrusTestSource.class) != null) {
             try {
                 run(testResult, method, methodTestLoaders, testResult.getMethod().getCurrentInvocationCount());
+                testResult.setStatus(ITestResult.SUCCESS);
             } catch (Exception e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);

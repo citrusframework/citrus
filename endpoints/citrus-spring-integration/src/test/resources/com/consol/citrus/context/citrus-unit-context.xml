@@ -9,6 +9,7 @@
 
   <bean id="mockChannel" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.springframework.integration.channel.QueueChannel"/>
+    <constructor-arg value="mockChannel"/>
   </bean>
 
 </beans>

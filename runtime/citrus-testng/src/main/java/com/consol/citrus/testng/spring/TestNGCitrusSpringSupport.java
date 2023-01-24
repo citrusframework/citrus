@@ -99,6 +99,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
                 method.getAnnotation(CitrusXmlTest.class) != null) {
             try {
                 run(testResult, method, methodTestLoaders, testResult.getMethod().getCurrentInvocationCount());
+                testResult.setStatus(ITestResult.SUCCESS);
             } catch (Exception e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);

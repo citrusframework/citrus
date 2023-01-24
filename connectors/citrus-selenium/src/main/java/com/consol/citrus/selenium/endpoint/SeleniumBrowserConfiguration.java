@@ -22,7 +22,7 @@ import java.util.List;
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.openqa.selenium.support.events.WebDriverListener;
 
 /**
@@ -32,7 +32,7 @@ import org.openqa.selenium.support.events.WebDriverListener;
 public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration {
 
     /** Browser type */
-    private String browserType = BrowserType.HTMLUNIT;
+    private String browserType = Browser.HTMLUNIT.browserName();
 
     /** Enable Javascript */
     private boolean javaScript = true;

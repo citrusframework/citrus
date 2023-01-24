@@ -26,18 +26,22 @@
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.camel.message.CamelMessageConverter"/>
+    <constructor-arg value="messageConverter"/>
   </bean>
 
   <!-- Camel context instances -->
   <bean id="camelContext" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.apache.camel.CamelContext"/>
+    <constructor-arg value="camelContext"/>
   </bean>
 
   <bean id="specialCamelContext" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.apache.camel.CamelContext"/>
+    <constructor-arg value="specialCamelContext"/>
   </bean>
 
   <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg value="replyMessageCorrelator"/>
   </bean>
 </beans>

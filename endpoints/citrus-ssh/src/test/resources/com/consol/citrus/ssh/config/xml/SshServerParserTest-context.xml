@@ -25,10 +25,12 @@
 
   <bean id="sshMessageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.ssh.message.SshMessageConverter"/>
+    <constructor-arg value="sshMessageConverter"/>
   </bean>
 
   <bean id="sshServerAdapter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+    <constructor-arg value="sshServerAdapter"/>
   </bean>
 
 </beans>

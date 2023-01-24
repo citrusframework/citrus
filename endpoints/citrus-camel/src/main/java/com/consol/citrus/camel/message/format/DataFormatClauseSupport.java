@@ -103,28 +103,6 @@ public class DataFormatClauseSupport<T> {
         return result;
     }
 
-    public T beanio(String mapping, String streamName) {
-        delegate.beanio(mapping, streamName);
-        return result;
-    }
-
-    public T beanio(String mapping, String streamName, String encoding) {
-        delegate.beanio(mapping, streamName, encoding);
-        return result;
-    }
-
-    public T beanio(
-            String mapping, String streamName, String encoding, boolean ignoreUnidentifiedRecords,
-            boolean ignoreUnexpectedRecords, boolean ignoreInvalidRecords) {
-        delegate.beanio(mapping, streamName, encoding, ignoreUnidentifiedRecords, ignoreUnexpectedRecords, ignoreInvalidRecords);
-        return result;
-    }
-
-    public T beanio(String mapping, String streamName, String encoding, String beanReaderErrorHandlerType) {
-        delegate.beanio(mapping, streamName, encoding, beanReaderErrorHandlerType);
-        return result;
-    }
-
     public T bindy(BindyType type, Class<?> classType) {
         delegate.bindy(type, classType);
         return result;
@@ -709,6 +687,46 @@ public class DataFormatClauseSupport<T> {
     public T allowNullBody(boolean allowNullBody) {
         this.allowNullBody = allowNullBody;
         delegate.allowNullBody(allowNullBody);
+        return result;
+    }
+
+    public T swiftMx() {
+        delegate.swiftMx();
+        return result;
+    }
+
+    public T swiftMx(boolean writeInJson) {
+        delegate.swiftMx(writeInJson);
+        return result;
+    }
+
+    public T swiftMx(boolean writeInJson, String readMessageId, Object readConfig) {
+        delegate.swiftMx(writeInJson, readMessageId, readConfig);
+        return result;
+    }
+
+    public T swiftMx(boolean writeInJson, String readMessageId, String readConfigRef) {
+        delegate.swiftMx(writeInJson, readMessageId, readConfigRef);
+        return result;
+    }
+
+    public T swiftMx(Object writeConfig, String readMessageId, Object readConfig) {
+        delegate.swiftMx(writeConfig, readMessageId, readConfig);
+        return result;
+    }
+
+    public T swiftMx(String writeConfigRef, String readMessageId, String readConfigRef) {
+        delegate.swiftMx(writeConfigRef, readMessageId, readConfigRef);
+        return result;
+    }
+
+    public T swiftMt() {
+        delegate.swiftMt();
+        return result;
+    }
+
+    public T swiftMt(boolean writeInJson) {
+        delegate.swiftMt(writeInJson);
         return result;
     }
 

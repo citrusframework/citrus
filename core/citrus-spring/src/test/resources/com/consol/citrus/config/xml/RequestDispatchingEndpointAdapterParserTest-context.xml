@@ -11,10 +11,12 @@
 
   <bean id="mappingKeyExtractor" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.adapter.mapping.MappingKeyExtractor"/>
+    <constructor-arg value="mappingKeyExtractor"/>
   </bean>
 
   <bean id="mappingStrategy" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.adapter.mapping.EndpointAdapterMappingStrategy"/>
+    <constructor-arg value="mappingStrategy"/>
   </bean>
 
 </beans>

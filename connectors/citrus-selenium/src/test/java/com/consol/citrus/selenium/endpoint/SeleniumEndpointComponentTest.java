@@ -27,7 +27,7 @@ import com.consol.citrus.http.client.HttpsEndpointComponent;
 import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -58,13 +58,13 @@ public class SeleniumEndpointComponentTest {
 
         Assert.assertEquals(endpoint.getClass(), SeleniumBrowser.class);
 
-        Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getBrowserType(), BrowserType.HTMLUNIT);
+        Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
 
         endpoint = component.createEndpoint("selenium:firefox", context);
 
         Assert.assertEquals(endpoint.getClass(), SeleniumBrowser.class);
 
-        Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getBrowserType(), BrowserType.FIREFOX);
+        Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getBrowserType(), Browser.FIREFOX.browserName());
         Assert.assertEquals(((SeleniumBrowser) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
     }
 

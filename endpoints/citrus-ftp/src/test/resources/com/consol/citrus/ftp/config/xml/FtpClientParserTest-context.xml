@@ -36,6 +36,7 @@
 
   <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg value="replyMessageCorrelator"/>
   </bean>
 
 </beans>

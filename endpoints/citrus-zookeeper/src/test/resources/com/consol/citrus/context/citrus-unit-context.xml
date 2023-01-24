@@ -5,6 +5,7 @@
 
   <bean id="zookeeperClient" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="org.apache.zookeeper.ZooKeeper"/>
+    <constructor-arg value="zookeeperClient"/>
   </bean>
 
 </beans>

@@ -24,7 +24,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.util.BrowserUtils;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.springframework.util.StringUtils;
 
 /**
@@ -58,7 +58,7 @@ public class NavigateAction extends AbstractSeleniumAction {
             browser.getWebDriver().navigate().refresh();
         } else {
             try {
-                if (browser.getEndpointConfiguration().getBrowserType().equals(BrowserType.IE)) {
+                if (Browser.IE.is(browser.getEndpointConfiguration().getBrowserType())) {
                     String cachingSafeUrl = BrowserUtils.makeIECachingSafeUrl(context.replaceDynamicContentInString(page), new Date().getTime());
                     browser.getWebDriver().navigate().to(new URL(cachingSafeUrl));
                 } else {

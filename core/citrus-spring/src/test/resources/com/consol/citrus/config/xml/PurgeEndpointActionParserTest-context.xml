@@ -39,5 +39,6 @@
     
     <spring:bean id="testEndpoint" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
+        <spring:constructor-arg value="testEndpoint"/>
     </spring:bean>
 </spring:beans>

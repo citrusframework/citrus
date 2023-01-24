@@ -60,6 +60,7 @@
     
     <spring:bean id="myDockerClient" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.docker.client.DockerClient"/>
+        <spring:constructor-arg value="myDockerClient"/>
     </spring:bean>
     
 </spring:beans>

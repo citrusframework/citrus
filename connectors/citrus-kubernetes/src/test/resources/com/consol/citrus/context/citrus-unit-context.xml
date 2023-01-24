@@ -6,6 +6,7 @@
 
   <bean id="k8sClient" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="io.fabric8.kubernetes.client.KubernetesClient"/>
+    <constructor-arg value="k8sClient"/>
   </bean>
 
 </beans>

@@ -19,14 +19,17 @@
     
     <spring:bean id="myServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.server.Server"/>
+        <spring:constructor-arg value="myServer"/>
     </spring:bean>
 
     <spring:bean id="myFooServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.server.Server"/>
+        <spring:constructor-arg value="myFooServer"/>
     </spring:bean>
 
     <spring:bean id="myBarServer" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.server.Server"/>
+        <spring:constructor-arg value="myBarServer"/>
     </spring:bean>
     
 </spring:beans>

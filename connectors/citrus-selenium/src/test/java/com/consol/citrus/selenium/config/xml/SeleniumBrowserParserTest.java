@@ -16,13 +16,13 @@
 
 package com.consol.citrus.selenium.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.Browser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -42,7 +42,7 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
         Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
 
         SeleniumBrowser browser = browsers.get("htmlUnitBrowser");
-        Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), BrowserType.HTMLUNIT);
+        Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
         Assert.assertNull(browser.getEndpointConfiguration().getStartPageUrl());
         Assert.assertTrue(browser.getEndpointConfiguration().getEventListeners().isEmpty());
         Assert.assertEquals(browser.getEndpointConfiguration().isJavaScript(), true);
@@ -57,7 +57,7 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
         Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
 
         SeleniumBrowser browser = browsers.get("firefoxBrowser");
-        Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), BrowserType.FIREFOX);
+        Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), Browser.FIREFOX.browserName());
         Assert.assertEquals(browser.getEndpointConfiguration().getStartPageUrl(), "http://citrusframework.org");
         Assert.assertEquals(browser.getEndpointConfiguration().getEventListeners().size(), 1L);
         Assert.assertEquals(browser.getEndpointConfiguration().getEventListeners().get(0), beanDefinitionContext.getBean("eventListener"));
@@ -73,7 +73,7 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
         Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
 
         SeleniumBrowser browser = browsers.get("remoteBrowser");
-        Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), BrowserType.IE);
+        Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), Browser.IE.browserName());
         Assert.assertEquals(browser.getEndpointConfiguration().getRemoteServerUrl(), "http://localhost:9090/selenium");
     }
 
@@ -82,6 +82,6 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
         Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
 
         SeleniumBrowser browser = browsers.get("browserUsingDeprecatedConfiguration");
-        Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), BrowserType.HTMLUNIT);
+        Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
     }
 }

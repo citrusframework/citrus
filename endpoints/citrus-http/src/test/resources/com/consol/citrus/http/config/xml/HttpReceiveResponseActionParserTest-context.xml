@@ -38,10 +38,12 @@
     
     <spring:bean id="httpClient" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.http.client.HttpClient"/>
+        <spring:constructor-arg value="httpClient"/>
     </spring:bean>
 
     <spring:bean id="testActor" class="org.mockito.Mockito" factory-method="mock">
       <spring:constructor-arg value="com.consol.citrus.TestActor"/>
+      <spring:constructor-arg value="testActor"/>
     </spring:bean>
     
 </spring:beans>

@@ -18,10 +18,12 @@
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.kubernetes.message.KubernetesMessageConverter"/>
+    <constructor-arg value="messageConverter"/>
   </bean>
 
   <bean id="objectMapper" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.fasterxml.jackson.databind.ObjectMapper"/>
+    <constructor-arg value="objectMapper"/>
   </bean>
 
 </beans>

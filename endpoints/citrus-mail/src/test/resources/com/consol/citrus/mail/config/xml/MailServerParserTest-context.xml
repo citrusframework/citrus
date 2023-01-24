@@ -28,14 +28,17 @@
 
   <bean id="endpointAdapter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+    <constructor-arg value="endpointAdapter"/>
   </bean>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.mail.message.MailMessageConverter"/>
+    <constructor-arg value="messageConverter"/>
   </bean>
 
   <bean id="marshaller" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg value="com.consol.citrus.mail.model.MailMarshaller"/>
+    <constructor-arg value="marshaller"/>
   </bean>
 
 </beans>
