@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -17,25 +17,6 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http.xml;
+package com.consol.citrus.sql
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageProcessor;
-
-/**
- * @author Christoph Deppisch
- */
-public class NoopMessageProcessor implements MessageProcessor {
-
-    @Override
-    public void process(Message message, TestContext context) {
-    }
-
-    public static class Builder implements MessageProcessor.Builder<NoopMessageProcessor, Builder> {
-        @Override
-        public NoopMessageProcessor build() {
-            return new NoopMessageProcessor();
-        }
-    }
-}
+assert rows.size() == 2

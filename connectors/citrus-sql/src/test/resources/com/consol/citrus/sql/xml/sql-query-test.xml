@@ -83,7 +83,7 @@
         <statement>select * from message where id>=1000</statement>
       </statements>
       <validate>
-        <script type="groovy" file="classpath:com/consol/citrus/sql/xml/validate.groovy"/>
+        <script type="groovy" file="classpath:com/consol/citrus/sql/validate.groovy"/>
       </validate>
     </sql>
   </actions>

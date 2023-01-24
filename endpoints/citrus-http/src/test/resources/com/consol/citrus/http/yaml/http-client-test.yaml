@@ -1,0 +1,87 @@
+name: "HttpClientTest"
+author: "Christoph"
+status: "FINAL"
+variables:
+  - name: "id"
+    value: "12345"
+actions:
+  - http:
+      client: "httpClient"
+      sendRequest:
+        GET: {}
+  - http:
+      client: "httpClient"
+      receiveResponse: {}
+
+  - http:
+      client: "httpClient"
+      sendRequest:
+        uri: "http://localhost:${port}/test"
+        fork: "true"
+        GET:
+          path: "/order/${id}"
+          contentType: "application/xml"
+          accept: "application/xml"
+          version: "HTTP/1.1"
+          parameters:
+            - name: "id"
+              value: "${id}"
+            - name: "type"
+              value: "gold"
+  - sleep:
+      milliseconds: "1000"
+  - http:
+      client: "httpClient"
+      receiveResponse:
+        response:
+          status: "200"
+          reasonPhrase: "OK"
+          version: "HTTP/1.1"
+          contentType: "application/xml"
+          body:
+            data: |
+              <order><id>${id}</id><item>foo</item></order>
+        extract:
+          body:
+            - variable: "orderId"
+              path: "/order/id"
+
+  - http:
+      client: "httpClient"
+      sendRequest:
+        POST:
+          path: "/user"
+          headers:
+            - name: "userId"
+              value: "1001"
+          body:
+            data: |
+              <user><id>1001</id><name>new_user</name></user>
+  - http:
+      client: "httpClient"
+      receiveResponse:
+        timeout: "2000"
+        response:
+          status: "404"
+          reasonPhrase: "NOT_FOUND"
+          headers:
+            - name: "userId"
+              value: "1001"
+
+  - http:
+      client: "httpClient"
+      sendRequest:
+        DELETE:
+          path: "/user/${id}"
+
+  - http:
+      client: "httpClient"
+      sendRequest:
+        uri: "http://localhost:${port}/test"
+        HEAD: {}
+
+  - http:
+      client: "http://localhost:${port}/test"
+      actor: "testActor"
+      sendRequest:
+        OPTIONS: {}

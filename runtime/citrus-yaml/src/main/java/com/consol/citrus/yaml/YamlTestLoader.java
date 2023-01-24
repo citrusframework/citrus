@@ -21,15 +21,19 @@ package com.consol.citrus.yaml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.common.DefaultTestLoader;
 import com.consol.citrus.common.TestSourceAware;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.yaml.actions.YamlTestActionBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
+import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -47,7 +51,18 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
      * Default constructor.
      */
     public YamlTestLoader() {
-        yaml = new Yaml(new Constructor(YamlTestCase.class));
+        Constructor constructor = new Constructor(YamlTestCase.class);
+
+        Map<String, TestActionBuilder<?>> builders = YamlTestActionBuilder.lookup();
+        if (!builders.isEmpty()) {
+            TypeDescription actions = new TypeDescription(TestActions.class);
+            for (Map.Entry<String, TestActionBuilder<?>> builder : builders.entrySet()) {
+                actions.substituteProperty(builder.getKey(), builder.getValue().getClass(), "getAction", "setAction", TestActionBuilder.class);
+            }
+            constructor.addTypeDescription(actions);
+        }
+
+        yaml = new Yaml(constructor);
     }
 
     /**
