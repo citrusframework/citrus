@@ -34,7 +34,6 @@ import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.json.schema.JsonSchemaValidation;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import net.minidev.json.JSONArray;
@@ -80,11 +79,6 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
 
         if (validationContext.isSchemaValidationEnabled()) {
             jsonSchemaValidation.validate(receivedMessage, context, validationContext);
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Received message:\n" + receivedMessage.print(context));
-            log.debug("Control message:\n" + controlMessage.print(context));
         }
 
         String receivedJsonText = receivedMessage.getPayload(String.class);

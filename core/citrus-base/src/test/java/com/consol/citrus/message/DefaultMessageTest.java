@@ -38,7 +38,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         String output = message.print();
         Assert.assertEquals(output, String.format("DEFAULTMESSAGE [" +
                     "id: %s, " +
-                    "payload: <credentials><password>foo</password></credentials>" +
+                    "payload: <credentials>%n  <password>foo</password>%n</credentials>%n" +
                 "][headers: {" +
                     "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=foo" +
                 "}]", message.getId(), message.getId(), message.getTimestamp()));
@@ -88,7 +88,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         String output = message.print(context);
         Assert.assertEquals(output, String.format("DEFAULTMESSAGE [" +
                     "id: %s, " +
-                    "payload: <credentials><password>****</password></credentials>" +
+                    "payload: <credentials>%n  <password>****</password>%n</credentials>%n" +
                 "][headers: {" +
                     "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****" +
                 "}]", message.getId(), message.getId(), message.getTimestamp()));
@@ -105,7 +105,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         String output = message.print(context);
         Assert.assertEquals(output, String.format("DEFAULTMESSAGE [" +
                     "id: %s, " +
-                    "payload: { \"credentials\": { \"password\": \"****\", \"secretKey\": \"****\" }}" +
+                    "payload: {%n  \"credentials\": {%n    \"password\": \"****\",%n    \"secretKey\": \"****\"%n  }%n}" +
                 "][headers: {" +
                     "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secretKey=****" +
                 "}]", message.getId(), message.getId(), message.getTimestamp()));

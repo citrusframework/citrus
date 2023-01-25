@@ -45,11 +45,7 @@ public class TextEqualsMessageValidator extends DefaultMessageValidator {
             return;
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Start text equals validation ...");
-            log.debug("Received message:\n" + receivedMessage.getPayload(String.class));
-            log.debug("Control message:\n" + controlMessage.getPayload(String.class));
-        }
+        log.debug("Start text equals validation ...");
 
         String controlPayload = controlMessage.getPayload(String.class);
         String receivedPayload = receivedMessage.getPayload(String.class);

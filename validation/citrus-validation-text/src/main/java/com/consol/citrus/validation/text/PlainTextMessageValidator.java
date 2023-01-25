@@ -57,11 +57,6 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
 
         log.debug("Start text message validation");
 
-        if (log.isDebugEnabled()) {
-            log.debug("Received message:\n" + receivedMessage.print(context));
-            log.debug("Control message:\n" + controlMessage.print(context));
-        }
-
         try {
             String resultValue = normalizeWhitespace(receivedMessage.getPayload(String.class).trim());
             String controlValue = normalizeWhitespace(context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()));
