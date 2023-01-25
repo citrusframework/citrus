@@ -33,6 +33,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageBuilder;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessagePayloadBuilder;
+import com.consol.citrus.message.MessagePayloadUtils;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.message.WithPayloadBuilder;
@@ -214,21 +215,30 @@ public class ReceiveMessageAction extends AbstractTestAction {
     protected void validateMessage(Message message, TestContext context) {
         messageProcessors.forEach(processor -> processor.process(message, context));
 
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Received message:\n" + message.print(context));
+        }
+
         // extract variables from received message content
         for (VariableExtractor variableExtractor : variableExtractors) {
             variableExtractor.extractVariables(message, context);
         }
 
-        if (validationProcessor != null) {
-            if (StringUtils.hasText(message.getName())) {
-                context.getMessageStore().storeMessage(message.getName(), message);
-            } else {
-                context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), message);
-            }
+        if (StringUtils.hasText(message.getName())) {
+            context.getMessageStore().storeMessage(message.getName(), message);
+        } else {
+            context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), message);
+        }
 
+        if (validationProcessor != null) {
             validationProcessor.validate(message, context);
         } else {
             Message controlMessage = createControlMessage(context, messageType);
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Control message:\n" + controlMessage.print(context));
+            }
+
             if (StringUtils.hasText(controlMessage.getName())) {
                 context.getMessageStore().storeMessage(controlMessage.getName(), message);
             } else {
@@ -745,9 +755,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 // if still no Json or Xml message validation context is set check the message payload and set proper context
                 Optional<String> payload = getMessagePayload();
                 if (payload.isPresent()) {
-                    if (payload.get().trim().startsWith("<")) {
+                    if (MessagePayloadUtils.isXml(payload.get())) {
                         validate(new XmlMessageValidationContext());
-                    } else if ((payload.get().trim().startsWith("{") || payload.get().trim().startsWith("["))) {
+                    } else if (MessagePayloadUtils.isJson(payload.get())) {
                         validate(new JsonMessageValidationContext());
                     }
                 }

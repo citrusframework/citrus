@@ -147,6 +147,11 @@ public final class CitrusSettings {
     public static final String TYPE_CONVERTER_ENV = "CITRUS_TYPE_CONVERTER";
     public static final String TYPE_CONVERTER_DEFAULT = "default";
 
+    /** Flag to enable/disable message pretty print */
+    public static final String PRETTY_PRINT_PROPERTY = "citrus.message.pretty.print";
+    public static final String PRETTY_PRINT_ENV = "CITRUS_MESSAGE_PRETTY_PRINT";
+    public static final String PRETTY_PRINT_DEFAULT = Boolean.TRUE.toString();
+
     /** Flag to enable/disable log modifier */
     public static final String LOG_MODIFIER_PROPERTY = "citrus.log.modifier";
     public static final String LOG_MODIFIER_ENV = "CITRUS_LOG_MODIFIER";
@@ -210,6 +215,15 @@ public final class CitrusSettings {
     public static String getTypeConverter() {
         return System.getProperty(TYPE_CONVERTER_PROPERTY,  System.getenv(TYPE_CONVERTER_ENV) != null ?
                 System.getenv(TYPE_CONVERTER_ENV) : TYPE_CONVERTER_DEFAULT);
+    }
+
+    /**
+     * Gets the message payload pretty print enabled/disabled setting.
+     * @return
+     */
+    public static boolean isPrettyPrintEnabled() {
+        return Boolean.parseBoolean(System.getProperty(PRETTY_PRINT_PROPERTY,  System.getenv(PRETTY_PRINT_ENV) != null ?
+                System.getenv(PRETTY_PRINT_ENV) : PRETTY_PRINT_DEFAULT));
     }
 
     /**

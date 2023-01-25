@@ -16,11 +16,11 @@
 
 package com.consol.citrus.validation.xml;
 
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.XmlValidationHelper;
@@ -225,11 +225,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         XMLUtils.stripWhitespaceNodes(received);
         XMLUtils.stripWhitespaceNodes(source);
-
-        if (LOG.isDebugEnabled()) {
-            log.debug("Received message:\n" + context.getLogModifier().mask(XMLUtils.serialize(received)));
-            log.debug("Control message:\n" + context.getLogModifier().mask(XMLUtils.serialize(source)));
-        }
 
         validateXmlTree(received, source, validationContext, getNamespaceContextBuilder(context)
                 .buildContext(receivedMessage, validationContext.getNamespaces()), context);

@@ -37,11 +37,7 @@ public class TextEqualsMessageValidator extends DefaultMessageValidator {
     public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, ValidationContext validationContext) {
         Logger log = LoggerFactory.getLogger("TextEqualsMessageValidator");
 
-        if (log.isDebugEnabled()) {
-            log.debug("Start text equals validation ...");
-            log.debug("Received message:\n" + receivedMessage.getPayload(String.class));
-            log.debug("Control message:\n" + controlMessage.getPayload(String.class));
-        }
+        log.debug("Start text equals validation ...");
 
         Assert.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload(String.class), "Validation failed - " +
                 "expected message contents not equal!");

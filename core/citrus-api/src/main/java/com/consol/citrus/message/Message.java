@@ -48,9 +48,9 @@ public interface Message extends Serializable {
      */
     default String print(String body, Map<String, Object> headers, List<String> headerData) {
         if (CollectionUtils.isEmpty(headerData)) {
-            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + body + "][headers: " + Collections.unmodifiableMap(headers) + "]";
+            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + MessagePayloadUtils.prettyPrint(body) + "][headers: " + Collections.unmodifiableMap(headers) + "]";
         } else {
-            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + body + "][headers: " + Collections.unmodifiableMap(headers) + "][header-data: " + Collections.unmodifiableList(headerData) + "]";
+            return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + MessagePayloadUtils.prettyPrint(body) + "][headers: " + Collections.unmodifiableMap(headers) + "][header-data: " + Collections.unmodifiableList(headerData) + "]";
         }
     }
 
