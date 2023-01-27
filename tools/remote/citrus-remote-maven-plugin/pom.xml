@@ -14,7 +14,6 @@
   <name>Citrus :: Tools :: Remote :: Maven Plugin</name>
   <description>Citrus Remote Maven Plugin</description>
 
-
   <dependencies>
     <!-- Citrus -->
     <dependency>

@@ -1,5 +1,21 @@
+<!--
+  ~ Copyright 2006-2019 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.consol.citrus</groupId>
@@ -9,6 +25,7 @@
   <name>Citrus :: Catalog :: BOM</name>
   <description>This Bill of Materials POM can be used to ease dependency management when referencing multiple Citrus artifacts using Gradle or Maven</description>
   <url>https://citrusframework.org</url>
+  <inceptionYear>2008</inceptionYear>
 
   <licenses>
     <license>
@@ -21,11 +38,84 @@
     </license>
   </licenses>
 
+  <ciManagement>
+    <system>GitHub actions</system>
+    <url>https://github.com/citrusframework/citrus/actions</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <address>citrus-dev@googlegroups.com</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+
+  <developers>
+    <developer>
+      <id>christophd</id>
+      <name>Christoph Deppisch</name>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>Red Hat</organization>
+      <organizationUrl>https://www.redhat.com/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>svettwer</id>
+      <name>Sven Hettwer</name>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>IBM Deutschland Research and Development GmbH</organization>
+      <organizationUrl>https://www.ibm.com/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>s1hofmann</id>
+      <name>Simon Hofmann</name>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>Instana</organization>
+      <organizationUrl>https://www.instana.com/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>tnobody</id>
+      <name>Tim Keiner</name>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>ConSol Software GmbH</organization>
+      <organizationUrl>https://www.consol.com/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
+
   <scm>
     <connection>scm:git:git@github.com:citrusframework/citrus.git</connection>
     <developerConnection>scm:git:git@github.com/citrusframework/citrus.git</developerConnection>
     <url>http://github.com/citrusframework/citrus.git</url>
   </scm>
+
+  <organization>
+    <name>ConSol Software GmbH</name>
+    <url>https://www.consol.com/</url>
+  </organization>
+
+  <mailingLists>
+    <mailingList>
+      <name>Project Announcements</name>
+    </mailingList>
+    <mailingList>
+      <name>Project Development List</name>
+      <post>citrus-dev@googlegroups.com</post>
+    </mailingList>
+    <mailingList>
+      <name>Project User List</name>
+      <post>citrus-users@googlegroups.com</post>
+    </mailingList>
+  </mailingLists>
 
   <properties>
     <skip.gpg>false</skip.gpg>
