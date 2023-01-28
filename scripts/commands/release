@@ -63,10 +63,10 @@ release::run() {
     local release_version=$(get_release_version "$working_dir")
     check_error $release_version
 
-    local snapshot_version=$(get_snapshot_version "$working_dir")
+    local snapshot_version="3.4.0-SNAPSHOT"
     check_error $snapshot_version
 
-    local next_version=$(get_next_snapshot_version "$working_dir")
+    local next_version="3.5.0-SNAPSHOT"
     check_error $next_version
 
     echo "==== Starting release $release_version based on $snapshot_version ($working_dir)"
@@ -84,37 +84,37 @@ release::run() {
     fi
 
     # Verify that there are no modified file in git repo
-    check_git_clean "$working_dir"
+    #check_git_clean "$working_dir"
 
     # Calculate common maven options
-    local maven_opts="$(extract_maven_opts)"
+    #local maven_opts="$(extract_maven_opts)"
 
     # Clean Maven build
-    clean "$working_dir" "$maven_opts"
+    #clean "$working_dir" "$maven_opts"
 
     # Set release version in sources
-    set_version "$working_dir" "$release_version" "$snapshot_version"
+    #set_version "$working_dir" "$release_version" "$snapshot_version"
 
-    if [ ! $(hasflag --local-release) ] && [ ! $(hasflag --snapshot-release) ]; then
+    #if [ ! $(hasflag --local-release) ] && [ ! $(hasflag --snapshot-release) ]; then
         # Commit spring.schemas for new version
-        git_commit "$working_dir" spring.schemas "Add Spring schemas for $release_version"
-    fi
+        #git_commit "$working_dir" spring.schemas "Add Spring schemas for $release_version"
+    #fi
 
     # Update project metadata to new release version
-    if [ $(hasflag --major-release) ] && [ ! $(hasflag --snapshot-release) ]; then
-        update_project_metadata "$working_dir" "$release_version" "$next_version"
-    else
-        update_project_metadata "$working_dir" "$release_version" "$snapshot_version"
-    fi
+    #if [ $(hasflag --major-release) ] && [ ! $(hasflag --snapshot-release) ]; then
+        #update_project_metadata "$working_dir" "$release_version" "$next_version"
+    #else
+        #update_project_metadata "$working_dir" "$release_version" "$snapshot_version"
+    #fi
 
 
-    if [ ! $(hasflag --local-release) ] && [ ! $(hasflag --snapshot-release) ]; then
+    #if [ ! $(hasflag --local-release) ] && [ ! $(hasflag --snapshot-release) ]; then
         # Commit project metadata for new version
-        git_commit "$working_dir" project.yml "Update project metadata for $release_version"
-    fi
+        #git_commit "$working_dir" project.yml "Update project metadata for $release_version"
+    #fi
 
     # Build and stage artifacts
-    build_and_stage_artifacts "$working_dir" "$release_version" "$maven_opts"
+    #build_and_stage_artifacts "$working_dir" "$release_version" "$maven_opts"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
@@ -133,7 +133,7 @@ release::run() {
 
     if [ ! $(hasflag --local-release) ] && [ ! $(hasflag --snapshot-release) ]; then
         # Release staging repo
-        release_staging_repo "$working_dir" "$maven_opts"
+        #release_staging_repo "$working_dir" "$maven_opts"
 
         # Push everything (if configured)
         git_push "$working_dir" "$release_version"
