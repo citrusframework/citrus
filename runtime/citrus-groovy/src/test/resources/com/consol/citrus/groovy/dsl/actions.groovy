@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2023 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -17,23 +17,8 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.groovy.dsl
+actions {
+    $(echo("Hello from Citrus!"))
 
-configuration {
-    queues {
-        queue('say-hello')
-        queue('say-goodbye')
-    }
-
-    endpoints {
-        direct('hello')
-            .asynchronous()
-                .queue('say-hello')
-
-        direct() {
-            asynchronous()
-                .name('goodbye')
-                .queue('say-goodbye')
-        }
-    }
+    $(iterate().condition('i < 5').actions(echo('Hello ${i}'), echo('ByeBye ${i}')))
 }

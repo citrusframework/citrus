@@ -32,15 +32,12 @@ public class ActionsScript {
 
     private final String script;
     private final Citrus citrus;
-    private final TestContext context;
-
-    public ActionsScript(String script, Citrus citrus, TestContext context) {
+    public ActionsScript(String script, Citrus citrus) {
         this.script = script;
         this.citrus = citrus;
-        this.context = context;
     }
 
-    public void execute(TestActionRunner runner) {
+    public void execute(TestActionRunner runner, TestContext context) {
         ImportCustomizer ic = new ImportCustomizer();
         GroovyShellUtils.run(ic, new ActionsConfiguration(runner, context), normalize(script), citrus, context);
     }
@@ -48,15 +45,20 @@ public class ActionsScript {
     private String normalize(String script) {
         String normalized = GroovyShellUtils.removeComments(script);
 
-        if (!isActionScript(normalized)) {
-            return String.format("$(%s)", normalized);
-        }
+        if (isActionScript(normalized)) {
+            if (normalized.startsWith("$(")) {
+                return String.format("actions { %s }", normalized);
+            }
 
-        return normalized;
+            return normalized;
+        } else {
+            return String.format("actions { $(%s) }", normalized);
+        }
     }
 
     public static boolean isActionScript(String script) {
-        return script.startsWith("$actions {") || script.startsWith("$actions{") ||
+        return script.startsWith("actions {") || script.startsWith("actions{") ||
+                script.startsWith("$actions {") || script.startsWith("$actions{") ||
                 script.startsWith("$finally {") || script.startsWith("$finally{") ||
                 script.startsWith("$(");
     }

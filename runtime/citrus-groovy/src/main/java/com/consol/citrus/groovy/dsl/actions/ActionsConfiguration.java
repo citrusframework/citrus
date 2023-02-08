@@ -22,6 +22,7 @@ package com.consol.citrus.groovy.dsl.actions;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionRunner;
+import com.consol.citrus.container.FinallySequence;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.groovy.dsl.test.VariablesConfiguration;
 import groovy.lang.Closure;
@@ -40,19 +41,36 @@ public class ActionsConfiguration implements ActionsBuilder {
         this.context = context;
     }
 
+    public void actions(@DelegatesTo(ActionsConfiguration.class) Closure<?> callable) {
+        callable.setResolveStrategy(Closure.DELEGATE_FIRST);
+        callable.setDelegate(this);
+        callable.call();
+    }
+
+    public void $actions(@DelegatesTo(ActionsConfiguration.class) Closure<?> callable) {
+        this.actions(callable);
+    }
+    public void $finally(@DelegatesTo(FinallyActionsBuilder.class) Closure<?> callable) {
+        this.doFinally(callable);
+    }
+
     public void variables(@DelegatesTo(VariablesConfiguration.class) Closure<?> callable) {
         callable.setResolveStrategy(Closure.DELEGATE_FIRST);
         callable.setDelegate(new VariablesConfiguration(context));
         callable.call();
     }
 
-    public void doFinally(@DelegatesTo(FinallyActionsBuilder.class) Closure<?> callable) {
+    public FinallySequence.Builder doFinally(@DelegatesTo(FinallyActionsBuilder.class) Closure<?> callable) {
         FinallyActionsBuilder builder = new FinallyActionsBuilder();
-        callable.setResolveStrategy(Closure.DELEGATE_FIRST);
-        callable.setDelegate(builder);
-        callable.call();
+        if (callable != null) {
+            callable.setResolveStrategy(Closure.DELEGATE_FIRST);
+            callable.setDelegate(builder);
+            callable.call();
 
-        runner.run(builder.get());
+            runner.run(builder.get());
+        }
+
+        return builder.get();
     }
 
     @Override

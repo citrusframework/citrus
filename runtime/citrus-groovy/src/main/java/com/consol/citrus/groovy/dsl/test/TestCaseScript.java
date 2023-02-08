@@ -23,6 +23,7 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestCaseRunner;
+import com.consol.citrus.container.FinallySequence;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.groovy.dsl.actions.ActionsBuilder;
 import com.consol.citrus.groovy.dsl.actions.FinallyActionsBuilder;
@@ -65,13 +66,17 @@ public class TestCaseScript extends GroovyObjectSupport implements ActionsBuilde
         callable.call();
     }
 
-    public void doFinally(@DelegatesTo(FinallyActionsBuilder.class) Closure<?> callable) {
+    public FinallySequence.Builder doFinally(@DelegatesTo(FinallyActionsBuilder.class) Closure<?> callable) {
         FinallyActionsBuilder builder = new FinallyActionsBuilder();
-        callable.setResolveStrategy(Closure.DELEGATE_FIRST);
-        callable.setDelegate(builder);
-        callable.call();
+        if (callable != null) {
+            callable.setResolveStrategy(Closure.DELEGATE_FIRST);
+            callable.setDelegate(builder);
+            callable.call();
 
-        runner.run(builder.get());
+            runner.run(builder.get());
+        }
+
+        return builder.get();
     }
 
     @Override

@@ -98,7 +98,7 @@ public class RmiServerTest extends AbstractTestNGUnitTest {
         try {
             ((HelloService)remote[0]).sayHello("Hello RMI this is cool!");
         } catch (Throwable throwable) {
-            Assert.fail("Faidled to invoke remote service", throwable);
+            Assert.fail("Failed to invoke remote service", throwable);
         }
     }
 
@@ -149,7 +149,7 @@ public class RmiServerTest extends AbstractTestNGUnitTest {
         try {
             Assert.assertEquals(((HelloService)remote[0]).getHelloCount(), 10);
         } catch (Throwable throwable) {
-            Assert.fail("Faidled to invoke remote service", throwable);
+            Assert.fail("Failed to invoke remote service", throwable);
         }
     }
 }

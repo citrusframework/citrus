@@ -19,15 +19,15 @@
 
 package com.consol.citrus.groovy.dsl.actions;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.actions.SleepAction;
@@ -103,6 +103,16 @@ public interface ActionsBuilder {
      */
     default GroovyTestActionWrapper<Wait> waitFor() {
         return new GroovyTestActionWrapper<>(this, new Wait.Builder());
+    }
+
+    /**
+     * Alias for create variables action.
+     * @return
+     */
+    default GroovyTestActionWrapper<CreateVariablesAction> createVariable(String name, String value) {
+        CreateVariablesAction.Builder builder = new CreateVariablesAction.Builder();
+        builder.variable(name, value);
+        return new GroovyTestActionWrapper<>(this, builder);
     }
 
     /**
@@ -200,36 +210,13 @@ public interface ActionsBuilder {
                 Method m;
                 if (args.length > 0) {
                     Class<?>[] paramTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
-                    m = ReflectionUtils.findMethod(delegate.getClass(), name, paramTypes);
-
-                    if (m == null) {
-                        List<Method> methods = Arrays.stream(ReflectionUtils.getAllDeclaredMethods(delegate.getClass()))
-                                .filter(candidate -> candidate.getName().equals(name))
-                                .collect(Collectors.toList());
-
-                        for (Method method : methods) {
-                            if (method.getParameterTypes().length != paramTypes.length) {
-                                continue;
-                            }
-
-                            boolean fullParamMatch = true;
-                            for (int i = 0; i < method.getParameterTypes().length && fullParamMatch; i++) {
-                                fullParamMatch = method.getParameterTypes()[i].isAssignableFrom(paramTypes[i]) ||
-                                        (method.getParameterTypes()[i].isPrimitive() && method.getParameterTypes()[i].getSimpleName().equalsIgnoreCase(paramTypes[i].getSimpleName()));
-                            }
-
-                            if (fullParamMatch) {
-                                m = method;
-                                break;
-                            }
-                        }
-                    }
+                    m = findMethodWithArguments(name, delegate.getClass(), paramTypes);
                 } else {
                     m = ReflectionUtils.findMethod(delegate.getClass(), name);
                 }
 
                 if (m != null) {
-                    Object result = m.invoke(delegate, args);
+                    Object result = m.invoke(delegate, normalizeMethodArgs(m, args));
 
                     if (result instanceof TestActionBuilder) {
                         delegate = (TestActionBuilder<T>) result;
@@ -242,6 +229,89 @@ public interface ActionsBuilder {
             }
 
             throw new MissingMethodException(name, delegate.getClass(), args);
+        }
+
+        /**
+         * Normalize arguments for given method. Converts arguments to array if applicable.
+         * @param method
+         * @param args
+         * @return
+         */
+        private static Object[] normalizeMethodArgs(Method method, Object[] args) {
+            if (args.length == 0) {
+                return args;
+            }
+
+            if (Arrays.stream(args).allMatch(p -> p.getClass().equals(args[0].getClass()))) {
+                if (method.getParameterTypes().length == 1 && method.getParameterTypes()[0].isArray()) {
+                    Object array = Array.newInstance(args[0].getClass(), args.length);
+                    for (int i = 0; i < args.length; i++) {
+                        Array.set(array, i, args[i]);
+                    }
+                    return new Object[] { array };
+                }
+            }
+
+            return args;
+        }
+
+        /**
+         * Try to find proper method with given argument types. Supports varArgs methods and Array arguments.
+         * @param name
+         * @param type
+         * @param paramTypes
+         * @return
+         */
+        private static Method findMethodWithArguments(String name, Class<?> type, Class<?>[] paramTypes) {
+            Method m = ReflectionUtils.findMethod(type, name, paramTypes);
+            if (m != null) {
+                return m;
+            }
+
+            Optional<Method> method = Arrays.stream(ReflectionUtils.getAllDeclaredMethods(type))
+                    .filter(candidate -> candidate.getName().equals(name))
+                    .filter(candidate -> candidate.getParameterTypes().length == paramTypes.length)
+                    .filter(candidate -> {
+                        boolean fullParamMatch = true;
+                        for (int i = 0; i < candidate.getParameterTypes().length && fullParamMatch; i++) {
+                            fullParamMatch = candidate.getParameterTypes()[i].isAssignableFrom(paramTypes[i]) ||
+                                    (candidate.getParameterTypes()[i].isPrimitive() && candidate.getParameterTypes()[i].getSimpleName().equalsIgnoreCase(paramTypes[i].getSimpleName()));
+                        }
+                        return fullParamMatch;
+                    })
+                    .findFirst();
+
+            if (method.isPresent()) {
+                return method.get();
+            }
+
+            if (Arrays.stream(paramTypes).allMatch(p -> p.equals(paramTypes[0]))) {
+                method = Arrays.stream(ReflectionUtils.getAllDeclaredMethods(type))
+                            .filter(candidate -> candidate.getName().equals(name))
+                            .filter(Method::isVarArgs)
+                            .filter(candidate -> candidate.getParameterTypes().length == 1 &&
+                                    candidate.getParameterTypes()[0].getComponentType().isAssignableFrom(paramTypes[0]))
+                            .findFirst();
+
+                if (method.isPresent()) {
+                    return method.get();
+                }
+
+                method = Arrays.stream(ReflectionUtils.getAllDeclaredMethods(type))
+                        .filter(candidate -> candidate.getName().equals(name))
+                        .filter(candidate -> candidate.getParameterTypes().length == 1 &&
+                                candidate.getParameterTypes()[0].isArray() &&
+                                candidate.getParameterTypes()[0].getComponentType().isAssignableFrom(paramTypes[0]))
+                        .findFirst();
+
+
+
+                if (method.isPresent()) {
+                    return method.get();
+                }
+            }
+
+            return null;
         }
 
         @Override
