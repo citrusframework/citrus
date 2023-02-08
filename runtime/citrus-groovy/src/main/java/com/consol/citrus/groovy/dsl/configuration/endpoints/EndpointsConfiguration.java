@@ -84,10 +84,12 @@ public class EndpointsConfiguration extends GroovyObjectSupport {
                 return endpoint(name, endpointName, (Closure<?>) closure);
             }
         } else if (args.length == 1) {
-            Object closure = args[0];
+            Object closureOrName = args[0];
 
-            if (closure instanceof Closure) {
-                return endpoint(name, (Closure<?>) closure);
+            if (closureOrName instanceof Closure) {
+                return endpoint(name, (Closure<?>) closureOrName);
+            } else {
+                return new EndpointBuilderWrapper(citrus, name, closureOrName.toString());
             }
         }
 

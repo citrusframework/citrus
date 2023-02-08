@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.FinallySequence;
 import com.consol.citrus.container.Wait;
@@ -47,6 +48,13 @@ public class FinallyActionsBuilder extends GroovyObjectSupport implements Action
         GroovyTestActionWrapper<SleepAction> delay = ActionsBuilder.super.delay();
         builder.actions(delay);
         return delay;
+    }
+
+    @Override
+    public GroovyTestActionWrapper<CreateVariablesAction> createVariable(String name, String value) {
+        GroovyTestActionWrapper<CreateVariablesAction> createVariable = ActionsBuilder.super.createVariable(name, value);
+        builder.actions(createVariable);
+        return createVariable;
     }
 
     @Override
