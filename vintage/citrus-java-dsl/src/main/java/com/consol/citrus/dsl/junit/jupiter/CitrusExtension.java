@@ -85,7 +85,11 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
             if (isDesignerMethod(extensionContext.getRequiredTestMethod()) ||
                     isDesignerClass(extensionContext.getRequiredTestClass())) {
                 TestContext context = CitrusExtensionHelper.getTestContext(extensionContext);
-                CitrusExtensionHelper.getCitrus(extensionContext).run(testCase, context);
+                try {
+                    CitrusExtensionHelper.getCitrus(extensionContext).run(testCase, context);
+                } finally {
+                    testCase.finish(context);
+                }
             } else if (isRunnerMethod(extensionContext.getRequiredTestMethod()) ||
                     isRunnerClass(extensionContext.getRequiredTestClass())) {
                 getTestRunner(extensionContext).stop();
@@ -102,7 +106,13 @@ public class CitrusExtension extends CitrusBaseExtension implements ParameterRes
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) throws Exception {
         if (isSpringXmlTestMethod(extensionContext.getRequiredTestMethod())) {
-            CitrusExtensionHelper.getCitrus(extensionContext).run(getXmlTestCase(extensionContext), CitrusExtensionHelper.getTestContext(extensionContext));
+            TestCase testCase = getXmlTestCase(extensionContext);
+            TestContext context = CitrusExtensionHelper.getTestContext(extensionContext);
+            try {
+                CitrusExtensionHelper.getCitrus(extensionContext).run(testCase, context);
+            } finally {
+                testCase.finish(context);
+            }
         } else {
             CitrusDslAnnotations.injectTestDesigner(extensionContext.getRequiredTestInstance(), getTestDesigner(extensionContext));
             CitrusDslAnnotations.injectTestRunner(extensionContext.getRequiredTestInstance(), getTestRunner(extensionContext));

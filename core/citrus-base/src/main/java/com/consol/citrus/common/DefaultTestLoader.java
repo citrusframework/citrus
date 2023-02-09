@@ -19,6 +19,10 @@
 
 package com.consol.citrus.common;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusContext;
 import com.consol.citrus.DefaultTestCase;
@@ -31,9 +35,6 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Default test loader implementation takes case on test names/packages and initializes the test runner if applicable.
@@ -102,6 +103,8 @@ public class DefaultTestLoader implements TestLoader {
 
             testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
             throw new TestCaseFailedException(e);
+        }  finally {
+            runner.stop();
         }
     }
 
@@ -109,14 +112,10 @@ public class DefaultTestLoader implements TestLoader {
      * Subclasses are supposed to overwrite this method on order to add logic how to load the test case (e.g. from XML, Json, YAML).
      */
     protected void doLoad() {
-        try {
-            testCase = runner.getTestCase();
-            configurer.forEach(it -> it.accept(testCase));
-            runner.start();
-            handler.forEach(it -> it.accept(testCase));
-        } finally {
-            runner.stop();
-        }
+        testCase = runner.getTestCase();
+        configurer.forEach(it -> it.accept(testCase));
+        runner.start();
+        handler.forEach(it -> it.accept(testCase));
     }
 
     /**

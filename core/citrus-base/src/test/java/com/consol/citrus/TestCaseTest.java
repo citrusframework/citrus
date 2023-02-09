@@ -47,6 +47,7 @@ public class TestCaseTest extends UnitTestSupport {
         testcase.addTestAction(new EchoAction.Builder().build());
 
         testcase.execute(context);
+        testcase.finish(context);
     }
 
     @Test
@@ -67,6 +68,7 @@ public class TestCaseTest extends UnitTestSupport {
         });
 
         testcase.execute(context);
+        testcase.finish(context);
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class,
@@ -89,6 +91,7 @@ public class TestCaseTest extends UnitTestSupport {
         });
 
         testcase.execute(context);
+        testcase.finish(context);
     }
 
     @Test
@@ -108,6 +111,7 @@ public class TestCaseTest extends UnitTestSupport {
         }).build());
 
         testcase.execute(context);
+        testcase.finish(context);
 
         // Make sure that waiting thread is completed
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
@@ -144,6 +148,7 @@ public class TestCaseTest extends UnitTestSupport {
         }));
 
         testcase.execute(context);
+        testcase.finish(context);
     }
 
     @Test(expectedExceptions = {TestCaseFailedException.class})
@@ -157,6 +162,7 @@ public class TestCaseTest extends UnitTestSupport {
         testcase.addTestAction(action(context -> Assert.assertEquals(context.getVariable("${unknown}"), message)));
 
         testcase.execute(context);
+        testcase.finish(context);
     }
 
     @Test(expectedExceptions = {TestCaseFailedException.class}, expectedExceptionsMessageRegExp = "This failed in forked action")
@@ -171,6 +177,7 @@ public class TestCaseTest extends UnitTestSupport {
         testcase.addTestAction(new EchoAction.Builder().message("Everything is fine!").build());
 
         testcase.execute(context);
+        testcase.finish(context);
     }
 
     @Test(expectedExceptions = {TestCaseFailedException.class})
@@ -181,6 +188,7 @@ public class TestCaseTest extends UnitTestSupport {
         testcase.addTestAction(action(context -> context.addException(new CitrusRuntimeException("This failed in forked action"))).build());
 
         testcase.execute(context);
+        testcase.finish(context);
     }
 
     @Test
@@ -192,6 +200,7 @@ public class TestCaseTest extends UnitTestSupport {
         testcase.addFinalAction(new EchoAction.Builder().build());
 
         testcase.execute(context);
+        testcase.finish(context);
     }
 
     @Test
@@ -204,6 +213,7 @@ public class TestCaseTest extends UnitTestSupport {
 
         //WHEN
         testcase.execute(context);
+        testcase.finish(context);
 
         //THEN
         final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();

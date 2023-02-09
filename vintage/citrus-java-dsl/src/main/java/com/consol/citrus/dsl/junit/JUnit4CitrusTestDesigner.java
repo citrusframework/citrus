@@ -16,10 +16,10 @@
 
 package com.consol.citrus.dsl.junit;
 
-import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
+import javax.sql.DataSource;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
@@ -27,25 +27,7 @@ import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestResult;
-import com.consol.citrus.actions.AntRunAction;
-import com.consol.citrus.actions.CreateVariablesAction;
-import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.actions.ExecutePLSQLAction;
-import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.actions.ExecuteSQLQueryAction;
-import com.consol.citrus.actions.FailAction;
-import com.consol.citrus.actions.InputAction;
-import com.consol.citrus.actions.JavaAction;
-import com.consol.citrus.actions.LoadPropertiesAction;
-import com.consol.citrus.actions.PurgeEndpointAction;
-import com.consol.citrus.actions.ReceiveTimeoutAction;
-import com.consol.citrus.actions.SleepAction;
-import com.consol.citrus.actions.StartServerAction;
-import com.consol.citrus.actions.StopServerAction;
-import com.consol.citrus.actions.StopTimeAction;
-import com.consol.citrus.actions.StopTimerAction;
-import com.consol.citrus.actions.TraceVariablesAction;
-import com.consol.citrus.actions.TransformAction;
+import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.container.Catch;
@@ -107,15 +89,15 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
         if (isConfigure(frameworkMethod.getMethod())) {
             try {
                 configure();
+                citrus.run(testCase, context);
             } catch (TestCaseFailedException e) {
                 throw e;
             } catch (Exception | AssertionError e) {
                 testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-                testCase.finish(context);
                 throw new TestCaseFailedException(e);
+            } finally {
+                testCase.finish(context);
             }
-
-            citrus.run(testCase, context);
         } else {
             super.invokeTestMethod(frameworkMethod, testCase, context);
         }

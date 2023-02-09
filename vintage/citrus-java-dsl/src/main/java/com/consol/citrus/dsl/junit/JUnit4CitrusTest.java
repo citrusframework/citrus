@@ -79,18 +79,17 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
             try {
                 ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
                         resolveParameter(frameworkMethod, context));
+                citrus.run(testCase, context);
             } catch (TestCaseFailedException e) {
                 throw e;
             } catch (Exception | AssertionError e) {
                 testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-                testCase.finish(context);
                 throw new TestCaseFailedException(e);
+            } finally {
+                testCase.finish(context);
             }
-
-            citrus.run(testCase, context);
         } else if (frameworkMethod.getAttribute(RUNNER_ATTRIBUTE) != null) {
             TestRunner testRunner = (TestRunner) frameworkMethod.getAttribute(RUNNER_ATTRIBUTE);
-
             try {
                 Object[] params = resolveParameter(frameworkMethod, context);
                 testRunner.start();
