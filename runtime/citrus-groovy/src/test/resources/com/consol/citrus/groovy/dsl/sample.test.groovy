@@ -20,7 +20,7 @@
 package com.consol.citrus.groovy.dsl
 
 configuration {
-    load("./endpoints.groovy")
+    load("./configuration.groovy")
 
     queues {
         queue('say-hello')

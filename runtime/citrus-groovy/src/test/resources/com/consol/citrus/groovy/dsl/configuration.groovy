@@ -19,14 +19,21 @@
 
 package com.consol.citrus.groovy.dsl
 
-endpoints {
-    direct('hello')
-        .asynchronous()
-        .queue('say-hello')
+configuration {
+    queues {
+        queue('say-hello')
+        queue('say-goodbye')
+    }
 
-    direct() {
-        asynchronous()
+    endpoints {
+        direct('hello')
+            .asynchronous()
+                .queue('say-hello')
+
+        direct() {
+            asynchronous()
                 .name('goodbye')
                 .queue('say-goodbye')
+        }
     }
 }

@@ -22,6 +22,7 @@ package com.consol.citrus.groovy.dsl.configuration;
 import java.io.IOException;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.groovy.dsl.GroovyShellUtils;
@@ -91,8 +92,16 @@ public class ContextConfiguration {
     }
 
     public void endpoints(@DelegatesTo(EndpointsConfiguration.class) Closure<?> callable) {
+        EndpointsConfiguration configuration = new EndpointsConfiguration();
         callable.setResolveStrategy(Closure.DELEGATE_FIRST);
-        callable.setDelegate(new EndpointsConfiguration(citrus));
+        callable.setDelegate(configuration);
         callable.call();
+
+        configuration.getEndpoints().forEach(endpoint -> {
+            if (endpoint instanceof InitializingPhase) {
+                ((InitializingPhase) endpoint).initialize();
+            }
+            citrus.getCitrusContext().bind(endpoint.getName(), endpoint);
+        });
     }
 }

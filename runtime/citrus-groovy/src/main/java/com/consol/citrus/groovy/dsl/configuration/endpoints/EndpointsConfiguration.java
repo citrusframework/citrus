@@ -19,24 +19,29 @@
 
 package com.consol.citrus.groovy.dsl.configuration.endpoints;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.endpoint.Endpoint;
 import groovy.lang.Closure;
+import groovy.lang.DelegatesTo;
 import groovy.lang.GroovyObjectSupport;
-import groovy.lang.MissingMethodException;
 
 /**
  * @author Christoph Deppisch
  */
 public class EndpointsConfiguration extends GroovyObjectSupport {
 
-    private final Citrus citrus;
+    private final Set<Supplier<Endpoint>> endpoints = new HashSet<>();
 
-    public EndpointsConfiguration(Citrus citrus) {
-        this.citrus = citrus;
+    public void endpoints(@DelegatesTo(EndpointsConfiguration.class) Closure<?> callable) {
+        callable.setResolveStrategy(Closure.DELEGATE_FIRST);
+        callable.setDelegate(this);
+        callable.call();
     }
 
     public Endpoint endpoint(String type, Closure<?> callable) {
@@ -45,13 +50,8 @@ public class EndpointsConfiguration extends GroovyObjectSupport {
         callable.setDelegate(endpointSupplier);
         callable.call();
 
-        Endpoint endpoint = endpointSupplier.get();
-        if (endpoint instanceof InitializingPhase) {
-            ((InitializingPhase) endpoint).initialize();
-        }
-        citrus.getCitrusContext().bind(endpoint.getName(), endpoint);
-
-        return endpoint;
+        endpoints.add(endpointSupplier);
+        return endpointSupplier.get();
     }
 
     public Endpoint endpoint(String type, String endpointName, Closure<?> callable) {
@@ -60,28 +60,24 @@ public class EndpointsConfiguration extends GroovyObjectSupport {
         callable.setDelegate(endpointSupplier);
         callable.call();
 
+        endpoints.add(endpointSupplier);
         Endpoint endpoint = endpointSupplier.get();
         endpoint.setName(endpointName);
-        if (endpoint instanceof InitializingPhase) {
-            ((InitializingPhase) endpoint).initialize();
-        }
-        citrus.getCitrusContext().bind(endpointName, endpoint);
-
         return endpoint;
     }
 
     public Object methodMissing(String name, Object argLine) {
-        if (argLine == null) {
-            throw new MissingMethodException(name, EndpointsConfiguration.class, null);
-        }
-
-        Object[] args = (Object[]) argLine;
+        Object[] args = Optional.ofNullable(argLine).map(Object[].class::cast).orElseGet(() -> new Object[]{});
         if (args.length > 1) {
             String endpointName = args[0].toString();
             Object closure = args[1];
 
             if (closure instanceof Closure) {
                 return endpoint(name, endpointName, (Closure<?>) closure);
+            } else {
+                EndpointBuilderWrapper wrapper = new EndpointBuilderWrapper(name, endpointName);
+                endpoints.add(wrapper);
+                return wrapper;
             }
         } else if (args.length == 1) {
             Object closureOrName = args[0];
@@ -89,10 +85,21 @@ public class EndpointsConfiguration extends GroovyObjectSupport {
             if (closureOrName instanceof Closure) {
                 return endpoint(name, (Closure<?>) closureOrName);
             } else {
-                return new EndpointBuilderWrapper(citrus, name, closureOrName.toString());
+                EndpointBuilderWrapper wrapper = new EndpointBuilderWrapper(name, closureOrName.toString());
+                endpoints.add(wrapper);
+                return wrapper;
             }
         }
 
-        throw new MissingMethodException(name, EndpointsConfiguration.class, args);
+        EndpointBuilderWrapper wrapper = new EndpointBuilderWrapper(name, name);
+        endpoints.add(wrapper);
+        return wrapper;
+    }
+
+    public Set<Endpoint> getEndpoints() {
+        return endpoints.stream()
+                .map(Supplier::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 }

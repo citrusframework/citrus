@@ -17,37 +17,48 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.groovy.dsl.configuration;
+package com.consol.citrus.groovy.dsl.configuration.endpoints;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.groovy.dsl.GroovyShellUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 /**
  * @author Christoph Deppisch
  */
-public class ConfigurationScript {
+public class EndpointConfigurationScript {
 
     private final Citrus citrus;
 
-    private final String basePath;
-
     private final String script;
 
-    public ConfigurationScript(String script, Citrus citrus) {
-        this(script, citrus, "");
-    }
-
-    public ConfigurationScript(String script, Citrus citrus, String basePath) {
+    public EndpointConfigurationScript(String script, Citrus citrus) {
         this.script = script;
         this.citrus = citrus;
-        this.basePath = basePath;
     }
 
     public void execute(TestContext context) {
+        EndpointsConfiguration configuration = new EndpointsConfiguration();
         ImportCustomizer ic = new ImportCustomizer();
-        GroovyShellUtils.run(ic, new ContextConfiguration(citrus, context, basePath),
-                context.replaceDynamicContentInString(script), citrus, context);
+        GroovyShellUtils.run(ic, configuration, context.replaceDynamicContentInString(script), citrus, context);
+
+        configuration.getEndpoints().forEach(endpoint -> {
+            onCreate(endpoint);
+            if (endpoint instanceof InitializingPhase) {
+                ((InitializingPhase) endpoint).initialize();
+            }
+            citrus.getCitrusContext().bind(endpoint.getName(), endpoint);
+        });
     }
+
+    /**
+     * Subclasses may add custom endpoint configuration logic here.
+     * @param endpoint
+     */
+    protected void onCreate(Endpoint endpoint) {
+    }
+
 }

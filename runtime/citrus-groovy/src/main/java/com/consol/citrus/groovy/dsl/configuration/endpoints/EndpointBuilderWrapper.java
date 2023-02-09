@@ -19,8 +19,9 @@
 
 package com.consol.citrus.groovy.dsl.configuration.endpoints;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.common.InitializingPhase;
+import java.util.function.Supplier;
+
+import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -29,14 +30,13 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * Wrapper used as a helper to lookup client/server or asynchronous/synchronous
  * endpoint builder with resource path lookup.
  */
-public class EndpointBuilderWrapper {
+public class EndpointBuilderWrapper implements Supplier<Endpoint> {
 
-    private final Citrus citrus;
+    private EndpointBuilder<?> builder;
     private final String type;
     private final String endpointName;
 
-    public EndpointBuilderWrapper(Citrus citrus, String type, String endpointName) {
-        this.citrus = citrus;
+    public EndpointBuilderWrapper(String type, String endpointName) {
         this.type = type;
         this.endpointName = endpointName;
     }
@@ -58,16 +58,22 @@ public class EndpointBuilderWrapper {
     }
 
     private EndpointBuilder<?> resolve(String name) {
-        EndpointBuilder<?> builder = EndpointBuilder.lookup(name).orElseThrow(() ->
+        builder = EndpointBuilder.lookup(name).orElseThrow(() ->
                 new CitrusRuntimeException(String.format("Failed to resolve endpoint for type %s", name)));
 
-        Endpoint endpoint = builder.build();
-        endpoint.setName(endpointName);
-        if (endpoint instanceof InitializingPhase) {
-            ((InitializingPhase) endpoint).initialize();
+        if (builder instanceof AbstractEndpointBuilder) {
+            ((AbstractEndpointBuilder<?>) builder).name(endpointName);
         }
-        citrus.getCitrusContext().bind(endpointName, endpoint);
 
         return builder;
+    }
+
+    @Override
+    public Endpoint get() {
+        if (builder != null) {
+            return builder.build();
+        }
+
+        return null;
     }
 }
