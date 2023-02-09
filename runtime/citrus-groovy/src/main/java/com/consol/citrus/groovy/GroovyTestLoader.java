@@ -19,14 +19,14 @@
 
 package com.consol.citrus.groovy;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.consol.citrus.common.DefaultTestLoader;
 import com.consol.citrus.common.TestSourceAware;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.groovy.dsl.GroovyShellUtils;
 import com.consol.citrus.groovy.dsl.test.TestCaseScript;
 import com.consol.citrus.util.FileUtils;
-import java.io.File;
-import java.io.IOException;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -57,9 +57,8 @@ public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAwa
 
             handler.forEach(it -> it.accept(testCase));
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to load Groovy test source", e);
-        } finally {
-            runner.stop();
+            throw citrusContext.getTestContextFactory().getObject()
+                    .handleError(testName, packageName, "Failed to load Groovy test source '" + testName + "'", e);
         }
     }
 

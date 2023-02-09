@@ -123,18 +123,17 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
             try {
                 ReflectionUtils.invokeMethod(method, this,
                         resolveParameter(testResult, method, testCase, context, invocationCount));
+                citrus.run(testCase, context);
             } catch (TestCaseFailedException e) {
                 throw e;
             } catch (Exception | AssertionError e) {
                 testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-                testCase.finish(context);
                 throw new TestCaseFailedException(e);
+            } finally {
+                testCase.finish(context);
             }
-
-            citrus.run(testCase, context);
         } else if (testResult.getAttribute(RUNNER_ATTRIBUTE) != null) {
             TestRunner testRunner = (TestRunner) testResult.getAttribute(RUNNER_ATTRIBUTE);
-
             try {
                 Object[] params = resolveParameter(testResult, method, testCase, context, invocationCount);
                 testRunner.start();

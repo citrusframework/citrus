@@ -88,8 +88,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             } catch (final Exception | AssertionError e) {
                 testResult = TestResult.failed(getName(), testClass.getName(), e);
                 throw new TestCaseFailedException(e);
-            } finally {
-                finish(context);
             }
         } else {
             testResult = TestResult.skipped(getName(), testClass.getName());
@@ -151,6 +149,10 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      * Usually used for clean up tasks.
      */
     public void finish(final TestContext context) {
+        if (getMetaInfo().getStatus().equals(TestCaseMetaInfo.Status.DISABLED)) {
+            return;
+        }
+
         try {
             CitrusRuntimeException contextException = null;
             if (testResult == null) {
