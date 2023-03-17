@@ -56,14 +56,9 @@ public class PurgeMessageChannelActionParserTest extends AbstractActionParserTes
         Assert.assertEquals(action.getChannelNames().get(0), "testChannel1");
     }
 
-    @Test
+    @Test(expectedExceptions = BeanDefinitionStoreException.class)
     public void testPurgeMessageChannelActionParserFailed() {
-        try {
-            createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to empty channel attributes");
-        } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getMessage().endsWith("Element 'channel' must set one of the attributes 'name' or 'ref'"));
-        }
+        createApplicationContext("failed");
     }
 
     @Test

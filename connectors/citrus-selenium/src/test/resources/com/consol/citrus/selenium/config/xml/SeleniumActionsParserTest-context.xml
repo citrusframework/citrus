@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/selenium/testcase http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
 
@@ -97,13 +97,13 @@
     <spring:bean id="userForm" class="com.consol.citrus.selenium.pages.UserFormPage"/>
 
     <spring:bean id="pageValidator" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.selenium.model.PageValidator"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.selenium.model.PageValidator</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="pageValidator"/>
     </spring:bean>
 
     <spring:bean id="mockBrowser" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.selenium.endpoint.SeleniumBrowser"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.selenium.endpoint.SeleniumBrowser</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="mockBrowser"/>
     </spring:bean>
-    
+
 </spring:beans>

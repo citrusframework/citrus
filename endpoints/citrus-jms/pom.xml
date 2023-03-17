@@ -88,12 +88,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-broker</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-spring</artifactId>
+      <artifactId>artemis-jakarta-server</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

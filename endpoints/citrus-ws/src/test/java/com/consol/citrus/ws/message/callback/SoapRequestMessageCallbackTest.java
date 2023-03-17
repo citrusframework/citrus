@@ -16,15 +16,12 @@
 
 package com.consol.citrus.ws.message.callback;
 
-import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.transform.TransformerException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
+import javax.xml.namespace.QName;
+import javax.xml.transform.TransformerException;
 
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -33,6 +30,9 @@ import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.xml.StringResult;
+import jakarta.xml.soap.MimeHeader;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPMessage;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -46,23 +46,18 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
 
-    private SoapMessage soapRequest = Mockito.mock(SoapMessage.class);
-    private SoapBody soapBody = Mockito.mock(SoapBody.class);
-    private SoapHeader soapHeader = Mockito.mock(SoapHeader.class);
+    private final SoapMessage soapRequest = Mockito.mock(SoapMessage.class);
+    private final SoapBody soapBody = Mockito.mock(SoapBody.class);
+    private final SoapHeader soapHeader = Mockito.mock(SoapHeader.class);
 
-    private String requestPayload = "<testMessage>Hello</testMessage>";
+    private final String requestPayload = "<testMessage>Hello</testMessage>";
 
     @Test
     public void testSoapBody() throws TransformerException, IOException {
@@ -228,6 +223,7 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
         reset(saajSoapRequest, soapBody, soapHeader, soapEnvelope, saajMessage);
 
         when(saajSoapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(saajSoapRequest.getSoapBody()).thenReturn(soapBody);
 
         when(soapEnvelope.getBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
@@ -235,7 +231,6 @@ public class SoapRequestMessageCallbackTest extends AbstractTestNGUnitTest {
         when(saajSoapRequest.getSaajMessage()).thenReturn(saajMessage);
 
         when(saajMessage.getMimeHeaders()).thenReturn(mimeHeaders);
-
 
         callback.doWithMessage(saajSoapRequest);
 

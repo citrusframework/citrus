@@ -22,8 +22,8 @@ import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
+import com.consol.citrus.util.SocketUtils;
 import org.springframework.http.HttpMethod;
-import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;

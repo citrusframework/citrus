@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns:camel="http://www.citrusframework.org/schema/camel/testcase"
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -31,13 +31,13 @@
     </testcase>
 
     <spring:bean id="citrusCamelContext" class="org.mockito.Mockito" factory-method="mock">
-      <spring:constructor-arg value="org.apache.camel.CamelContext"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.apache.camel.CamelContext</spring:value></spring:constructor-arg>
       <spring:constructor-arg value="citrusCamelContext"/>
     </spring:bean>
 
     <spring:bean id="camelContext" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="org.apache.camel.CamelContext"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.apache.camel.CamelContext</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="camelContext"/>
     </spring:bean>
-    
+
 </spring:beans>

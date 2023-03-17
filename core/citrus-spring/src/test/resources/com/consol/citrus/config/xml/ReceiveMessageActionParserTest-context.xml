@@ -189,22 +189,22 @@
     </testcase>
 
     <spring:bean id="myMessageEndpoint" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.endpoint.Endpoint</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="myMessageEndpoint"/>
     </spring:bean>
 
     <spring:bean id="myDataDictionary" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.variable.dictionary.DataDictionary"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.variable.dictionary.DataDictionary</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="myDataDictionary"/>
     </spring:bean>
 
     <spring:bean id="myValidator" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.validation.MessageValidator</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="myValidator"/>
     </spring:bean>
 
     <spring:bean id="defaultMessageValidator" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.validation.MessageValidator</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="defaultMessageValidator"/>
     </spring:bean>
 

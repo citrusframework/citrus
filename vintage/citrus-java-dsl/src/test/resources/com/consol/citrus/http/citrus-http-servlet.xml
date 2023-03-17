@@ -6,7 +6,7 @@
        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                 http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                 http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
@@ -22,7 +22,7 @@
         </list>
     </property>
   </bean>
-  
+
   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
     <property name="messageConverters">
       <util:list id="converters">
@@ -42,9 +42,8 @@
                                connection-factory="jmsConnectionFactory"
                                timeout="2000"/>
 
-  <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-    <property name="brokerURL" value="tcp://localhost:61616" />
-    <property name="watchTopicAdvisories" value="false"/>
+  <bean id="jmsConnectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="tcp://localhost:61616"/>
   </bean>
 
 </beans>

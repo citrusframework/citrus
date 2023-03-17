@@ -190,7 +190,7 @@ After that you are able to use the adapter implementation in the Spring bean con
               connection-factory="jmsConnectionFactory"
               timeout="2500"/>
 
-<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-      <property name="brokerURL" value="tcp://localhost:61616" />
+<bean id="jmsConnectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+  <property name="brokerURL" value="tcp://localhost:61616"/>
 </bean>
 ----

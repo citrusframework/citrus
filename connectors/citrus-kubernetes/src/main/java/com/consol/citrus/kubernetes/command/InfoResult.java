@@ -19,7 +19,7 @@ package com.consol.citrus.kubernetes.command;
 import com.fasterxml.jackson.annotation.*;
 import io.fabric8.kubernetes.api.model.*;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author Christoph Deppisch

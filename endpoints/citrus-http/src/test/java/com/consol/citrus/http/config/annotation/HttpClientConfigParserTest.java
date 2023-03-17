@@ -66,7 +66,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint
     @HttpClientConfig(requestUrl = "http://localhost:8080/test",
-            requestMethod=HttpMethod.GET,
+            requestMethod="GET",
             contentType="text/xml",
             charset="ISO-8859-1",
             defaultAcceptHeader=false,

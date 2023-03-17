@@ -63,7 +63,7 @@ import org.springframework.util.StringUtils;
 public class ZooExecuteAction extends AbstractTestAction {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ZooExecuteAction.class);
+    private static final Logger log = LoggerFactory.getLogger(ZooExecuteAction.class);
 
     /** Zookeeper client instance  */
     private final ZooClient zookeeperClient;

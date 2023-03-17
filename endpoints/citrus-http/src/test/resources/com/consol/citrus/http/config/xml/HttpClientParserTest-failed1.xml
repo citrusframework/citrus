@@ -14,7 +14,7 @@
 
 
   <bean id="soapRequestFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.http.client.ClientHttpRequestFactory"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.http.client.ClientHttpRequestFactory</value></constructor-arg>
     <constructor-arg value="soapRequestFactory"/>
   </bean>
 

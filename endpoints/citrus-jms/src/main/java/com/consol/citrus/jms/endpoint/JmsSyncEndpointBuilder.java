@@ -16,8 +16,8 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
 
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;

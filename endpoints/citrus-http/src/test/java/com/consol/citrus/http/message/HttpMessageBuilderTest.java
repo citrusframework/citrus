@@ -17,7 +17,7 @@
 
 package com.consol.citrus.http.message;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.util.Collections;
 
 import com.consol.citrus.context.TestContext;

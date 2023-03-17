@@ -16,10 +16,10 @@
 
 package com.consol.citrus.mail.message;
 
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimePart;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimePart;
 import javax.xml.transform.Source;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -153,9 +153,9 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
         Map<String, Object> headers = new HashMap<>();
         headers.put(CitrusMailMessageHeaders.MAIL_MESSAGE_ID, msg.getMimeMessage().getMessageID());
         headers.put(CitrusMailMessageHeaders.MAIL_FROM, StringUtils.arrayToCommaDelimitedString(msg.getMimeMessage().getFrom()));
-        headers.put(CitrusMailMessageHeaders.MAIL_TO, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(javax.mail.Message.RecipientType.TO))));
-        headers.put(CitrusMailMessageHeaders.MAIL_CC, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(javax.mail.Message.RecipientType.CC))));
-        headers.put(CitrusMailMessageHeaders.MAIL_BCC, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(javax.mail.Message.RecipientType.BCC))));
+        headers.put(CitrusMailMessageHeaders.MAIL_TO, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(jakarta.mail.Message.RecipientType.TO))));
+        headers.put(CitrusMailMessageHeaders.MAIL_CC, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(jakarta.mail.Message.RecipientType.CC))));
+        headers.put(CitrusMailMessageHeaders.MAIL_BCC, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(jakarta.mail.Message.RecipientType.BCC))));
         headers.put(CitrusMailMessageHeaders.MAIL_REPLY_TO, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getReplyTo())));
         headers.put(CitrusMailMessageHeaders.MAIL_DATE, msg.getMimeMessage().getSentDate() != null ? dateFormat.format(msg.getMimeMessage().getSentDate()) : null);
         headers.put(CitrusMailMessageHeaders.MAIL_SUBJECT, msg.getMimeMessage().getSubject());

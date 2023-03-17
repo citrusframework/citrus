@@ -8,14 +8,20 @@
   <name>Citrus Integration Test</name>
 
   <properties>
-    <java.version>11</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>17</java.version>
+
+    <maven.version>3.8.4</maven.version>
+    <maven.compiler.version>3.11.0</maven.compiler.version>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
 
     <citrus.version>3.5.0-SNAPSHOT</citrus.version>
 
-    <activemq.version>5.16.2</activemq.version>
-    <log4j2.version>2.15.0</log4j2.version>
-    <slf4j.version>1.7.30</slf4j.version>
+    <activemq.artemis.version>2.28.0</activemq.artemis.version>
+    <slf4j.version>2.0.6</slf4j.version>
+    <log4j2.version>2.20.0</log4j2.version>
   </properties>
 
   <dependencies>
@@ -49,13 +55,8 @@
 
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-broker</artifactId>
-      <version>${activemq.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-spring</artifactId>
-      <version>${activemq.version}</version>
+      <artifactId>artemis-jakarta-server</artifactId>
+      <version>${activemq.artemis.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.xbean</groupId>
@@ -75,7 +76,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
+      <artifactId>log4j-slf4j2-impl</artifactId>
       <version>${log4j2.version}</version>
     </dependency>
   </dependencies>
@@ -93,11 +94,10 @@
 
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>${maven.compiler.version}</version>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
+          <release>${java.version}</release>
         </configuration>
       </plugin>
 

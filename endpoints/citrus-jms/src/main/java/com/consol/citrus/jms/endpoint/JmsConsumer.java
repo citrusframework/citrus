@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import javax.jms.Destination;
+import jakarta.jms.Destination;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -52,7 +52,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
         endpointConfiguration.getJmsTemplate().setReceiveTimeout(timeout);
-        javax.jms.Message receivedJmsMessage;
+        jakarta.jms.Message receivedJmsMessage;
 
         if (endpointConfiguration.getDestination() != null) {
             receivedJmsMessage = receive(endpointConfiguration.getDestination(), selector);
@@ -78,8 +78,8 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
      * @param selector
      * @return
      */
-    private javax.jms.Message receive(String destinationName, String selector) {
-        javax.jms.Message receivedJmsMessage;
+    private jakarta.jms.Message receive(String destinationName, String selector) {
+        jakarta.jms.Message receivedJmsMessage;
 
         if (log.isDebugEnabled()) {
             log.debug("Receiving JMS message on destination: '" + getDestinationNameWithSelector(destinationName, selector) + "'");
@@ -106,8 +106,8 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
      * @param selector
      * @return
      */
-    private javax.jms.Message receive(Destination destination, String selector) {
-        javax.jms.Message receivedJmsMessage;
+    private jakarta.jms.Message receive(Destination destination, String selector) {
+        jakarta.jms.Message receivedJmsMessage;
 
         if (log.isDebugEnabled()) {
             log.debug("Receiving JMS message on destination: '" + getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector) + "'");

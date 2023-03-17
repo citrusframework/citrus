@@ -16,7 +16,6 @@
 
 package com.consol.citrus.http.server;
 
-import javax.servlet.Filter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +31,7 @@ import com.consol.citrus.http.servlet.GzipServletFilter;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.server.AbstractServer;
+import jakarta.servlet.Filter;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -197,6 +197,7 @@ public class HttpServer extends AbstractServer {
                 contextHandler.setSecurityHandler(securityHandler);
             }
 
+            configure(contextHandler);
             contextCollection.addHandler(contextHandler);
 
             handlers.addHandler(contextCollection);
@@ -212,6 +213,13 @@ public class HttpServer extends AbstractServer {
                 throw new CitrusRuntimeException(e);
             }
         }
+    }
+
+    /**
+     * Subclasses may add additional configuration on context handler.
+     * @param contextHandler
+     */
+    protected void configure(ServletContextHandler contextHandler) {
     }
 
     @Override

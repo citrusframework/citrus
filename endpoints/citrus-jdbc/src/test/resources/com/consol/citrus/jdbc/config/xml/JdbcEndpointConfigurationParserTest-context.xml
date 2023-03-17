@@ -43,17 +43,17 @@
                       endpoint-adapter="endpointAdapter"/>
 
     <bean id="testActor" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="com.consol.citrus.TestActor"/>
+        <constructor-arg><value type="java.lang.Class">com.consol.citrus.TestActor</value></constructor-arg>
         <constructor-arg value="testActor"/>
     </bean>
 
     <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+        <constructor-arg><value type="java.lang.Class">com.consol.citrus.message.MessageCorrelator</value></constructor-arg>
         <constructor-arg value="replyMessageCorrelator"/>
     </bean>
 
     <bean id="endpointAdapter" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+        <constructor-arg><value type="java.lang.Class">com.consol.citrus.endpoint.EndpointAdapter</value></constructor-arg>
         <constructor-arg value="endpointAdapter"/>
     </bean>
 

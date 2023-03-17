@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl.runner;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;

@@ -20,7 +20,7 @@ import com.consol.citrus.endpoint.PollableEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 
-import javax.jms.*;
+import jakarta.jms.*;
 
 /**
  * Endpoint configuration sets additional synchronous message handling properties such as

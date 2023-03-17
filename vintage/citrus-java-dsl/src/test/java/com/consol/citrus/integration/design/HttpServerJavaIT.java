@@ -52,7 +52,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .contentType("application/xml")
+                    .header("contentType", "application/xml")
                     .accept("application/xml")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                     .extractFromHeader("citrus_jms_messageId", "correlation_id"),
@@ -101,7 +101,7 @@ public class HttpServerJavaIT extends TestNGCitrusTestDesigner {
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .contentType("application/xml")
+                    .header("contentType", "application/xml")
                     .accept("application/xml")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                     .extractFromHeader("citrus_jms_messageId", "correlation_id"),

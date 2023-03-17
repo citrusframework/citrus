@@ -21,7 +21,7 @@ import java.util.Properties;
 import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.MailMarshaller;
 import com.consol.citrus.server.AbstractServerBuilder;
-import org.subethamail.smtp.server.SMTPServer;
+import com.icegreen.greenmail.util.GreenMail;
 
 /**
  * @author Christoph Deppisch
@@ -92,7 +92,7 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
      * @param smtpServer
      * @return
      */
-    public MailServerBuilder smtp(SMTPServer smtpServer) {
+    public MailServerBuilder smtp(GreenMail smtpServer) {
         endpoint.setSmtpServer(smtpServer);
         return this;
     }

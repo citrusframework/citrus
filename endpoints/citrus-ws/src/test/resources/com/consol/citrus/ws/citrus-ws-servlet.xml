@@ -58,7 +58,7 @@
   </bean>
 
   <citrus:static-response-adapter id="emptyHelloResponseEndpointAdapter">
-    <citrus:payload></citrus:payload>
+    <citrus:payload/>
     <citrus:header>
       <citrus:element name="citrus_http_status_code" value="200"/>
     </citrus:header>
@@ -104,16 +104,8 @@
                                use-object-messages="true"
                                timeout="5000"/>
 
-  <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-    <property name="brokerURL" value="tcp://localhost:61616" />
-    <property name="trustedPackages">
-      <list>
-        <value>java.util</value>
-        <value>java.lang</value>
-        <value>com.consol.citrus</value>
-      </list>
-    </property>
-    <property name="watchTopicAdvisories" value="false"/>
+  <bean id="jmsConnectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="tcp://localhost:61616"/>
   </bean>
 
 </beans>

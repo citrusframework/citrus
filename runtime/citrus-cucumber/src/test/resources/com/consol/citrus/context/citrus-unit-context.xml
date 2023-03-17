@@ -7,22 +7,4 @@
               http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
               http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-  <bean id="httpClient" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.http.client.HttpClient"/>
-    <constructor-arg value="httpClient"/>
-  </bean>
-
-  <bean id="dockerClient" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.docker.client.DockerClient"/>
-    <constructor-arg value="dockerClient"/>
-  </bean>
-
-  <bean id="seleniumBrowser" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.selenium.endpoint.SeleniumBrowser"/>
-    <constructor-arg value="seleniumBrowser"/>
-  </bean>
-
-  <!-- Text equals message validator -->
-  <bean id="textEqualsMessageValidator" class="com.consol.citrus.cucumber.integration.TextEqualsMessageValidator"/>
-
 </beans>

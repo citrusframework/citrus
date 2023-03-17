@@ -19,7 +19,7 @@ package com.consol.citrus.generate.provider.http;
 
 import com.consol.citrus.http.message.HttpMessage;
 import com.squareup.javapoet.CodeBlock;
-import org.apache.http.HttpStatus;
+import org.apache.hc.core5.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

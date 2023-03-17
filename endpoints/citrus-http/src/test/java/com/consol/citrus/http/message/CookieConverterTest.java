@@ -22,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.util.Collections;
 
 import static org.testng.AssertJUnit.assertEquals;

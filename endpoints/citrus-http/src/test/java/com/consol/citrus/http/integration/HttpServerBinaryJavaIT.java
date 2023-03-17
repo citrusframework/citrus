@@ -28,9 +28,9 @@ import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
-import org.apache.http.entity.ContentType;
+import com.consol.citrus.util.SocketUtils;
+import org.apache.hc.core5.http.ContentType;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.StartServerAction.Builder.start;

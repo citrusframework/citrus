@@ -27,6 +27,7 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.yaml.container.Template;
 import org.springframework.core.io.Resource;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -46,7 +47,7 @@ public class TemplateLoader implements ReferenceResolverAware {
      */
     public TemplateLoader(String source) {
         this.source = source;
-        yaml = new Yaml(new Constructor(Template.class));
+        yaml = new Yaml(new Constructor(Template.class, new LoaderOptions()));
     }
 
     public Template load() {

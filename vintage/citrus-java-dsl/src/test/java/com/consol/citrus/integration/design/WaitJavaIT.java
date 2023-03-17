@@ -29,9 +29,9 @@ import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.integration.common.FileHelper;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.util.SocketUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
-import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
 

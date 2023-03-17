@@ -25,6 +25,7 @@ import com.consol.citrus.messaging.ReplyConsumer;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(VertxSyncProducer.class);
+    private static final Logger log = LoggerFactory.getLogger(VertxSyncProducer.class);
 
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
@@ -74,17 +75,16 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
         log.info("Message was sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
-        vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload(),
-            new Handler<AsyncResult<io.vertx.core.eventbus.Message<Object>>>() {
-                @Override
-                public void handle(AsyncResult<io.vertx.core.eventbus.Message<Object>> event) {
-                    log.info("Received synchronous response on Vert.x event bus reply address");
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setSendTimeout(endpointConfiguration.getTimeout());
+        vertx.eventBus().request(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions,
+            event -> {
+                log.info("Received synchronous response on Vert.x event bus reply address");
 
-                    Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(event.result(), endpointConfiguration, context);
+                Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(event.result(), endpointConfiguration, context);
 
-                    context.onInboundMessage(responseMessage);
-                    correlationManager.store(correlationKey, responseMessage);
-                }
+                context.onInboundMessage(responseMessage);
+                correlationManager.store(correlationKey, responseMessage);
             });
     }
 

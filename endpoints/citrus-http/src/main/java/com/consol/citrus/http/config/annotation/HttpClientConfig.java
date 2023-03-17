@@ -62,7 +62,7 @@ public @interface HttpClientConfig {
      * Http request method.
      * @return
      */
-    HttpMethod requestMethod() default HttpMethod.POST;
+    String requestMethod() default "POST";
 
     /**
      * Message converter.

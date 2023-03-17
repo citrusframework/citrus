@@ -20,13 +20,13 @@
                                    timeout="2500"/>
 
     <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="javax.jms.ConnectionFactory"/>
-      <constructor-arg value="connectionFactory"/>
+        <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>
+        <constructor-arg value="connectionFactory"/>
     </bean>
 
     <bean id="mockEndpointAdapter" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
-      <constructor-arg value="mockEndpointAdapter"/>
+        <constructor-arg><value type="java.lang.Class">com.consol.citrus.endpoint.EndpointAdapter</value></constructor-arg>
+        <constructor-arg value="mockEndpointAdapter"/>
     </bean>
 
 </beans>

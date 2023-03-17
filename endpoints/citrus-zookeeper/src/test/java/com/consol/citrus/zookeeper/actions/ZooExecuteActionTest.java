@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 public class ZooExecuteActionTest extends AbstractTestNGUnitTest {
 
-    private ZooKeeper zookeeper = Mockito.mock(ZooKeeper.class);
+    private final ZooKeeper zookeeper = Mockito.mock(ZooKeeper.class);
 
     @Test
     public void testInfo() throws Exception {

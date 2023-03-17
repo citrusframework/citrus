@@ -19,7 +19,7 @@ package com.consol.citrus.jms.message;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 
-import javax.jms.Destination;
+import jakarta.jms.Destination;
 
 /**
  * @author Christoph Deppisch

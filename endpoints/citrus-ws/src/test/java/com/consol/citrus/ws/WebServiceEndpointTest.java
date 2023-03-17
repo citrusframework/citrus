@@ -16,10 +16,6 @@
 
 package com.consol.citrus.ws;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPMessage;
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +23,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.namespace.QName;
 
 import com.consol.citrus.endpoint.adapter.StaticEndpointAdapter;
 import com.consol.citrus.message.DefaultMessage;
@@ -39,6 +36,9 @@ import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.ws.server.WebServiceEndpoint;
 import com.consol.citrus.xml.StringResult;
 import com.consol.citrus.xml.StringSource;
+import jakarta.activation.DataHandler;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPMessage;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -58,13 +58,7 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -86,7 +80,7 @@ public class WebServiceEndpointTest {
     private org.springframework.ws.soap.SoapFault soapFault = Mockito.mock(org.springframework.ws.soap.SoapFault.class);
     private SoapFaultDetail soapFaultDetail = Mockito.mock(SoapFaultDetail.class);
 
-    private String requestPayload = "<TestRequest><Message>Hello World!</Message></TestRequest>";
+    private final String requestPayload = "<TestRequest><Message>Hello World!</Message></TestRequest>";
 
     @Test
     public void testMessageProcessing() throws Exception {
@@ -252,7 +246,6 @@ public class WebServiceEndpointTest {
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
 
-
         endpoint.invoke(messageContext);
 
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
@@ -268,7 +261,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setEndpointConfiguration(endpointConfiguration);
 
-        Map<String, Object> requestHeaders = new HashMap<String, Object>();
+        Map<String, Object> requestHeaders = new HashMap<>();
         requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         requestHeaders.put("Operation", "sayHello");
         requestHeaders.put("Host", "localhost:8080");
@@ -303,7 +296,7 @@ public class WebServiceEndpointTest {
         mimeHeaders.addHeader("Accept", "image/jpeg");
         mimeHeaders.addHeader("Content-Type", "text/xml");
 
-        Set<SoapHeaderElement> soapRequestHeaders = new HashSet<SoapHeaderElement>();
+        Set<SoapHeaderElement> soapRequestHeaders = new HashSet<>();
         soapRequestHeaders.add(soapRequestHeaderEntry);
 
         StringResult soapResponsePayload = new StringResult();
@@ -323,8 +316,9 @@ public class WebServiceEndpointTest {
 
         when(soapEnvelope.getBody()).thenReturn(soapBody);
         when(soapBody.getPayloadSource()).thenReturn(new StringSource(requestPayload));
+        when(saajSoapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
 
-        when(soapEnvelope.getHeader()).thenReturn(soapRequestHeader);
+        when(saajSoapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
 
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
@@ -337,7 +331,6 @@ public class WebServiceEndpointTest {
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
-
 
         endpoint.invoke(messageContext);
 

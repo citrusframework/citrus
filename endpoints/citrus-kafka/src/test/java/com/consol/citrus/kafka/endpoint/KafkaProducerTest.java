@@ -23,6 +23,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.kafka.message.KafkaMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.SocketUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -33,7 +34,6 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.utils.Time;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.springframework.util.SocketUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
  */
 public class KafkaProducerTest extends AbstractTestNGUnitTest {
 
-    private KafkaProducer kafkaProducer = Mockito.mock(KafkaProducer.class);
+    private final KafkaProducer kafkaProducer = Mockito.mock(KafkaProducer.class);
 
     @Test
     @SuppressWarnings("unchecked")

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
-              xmlns:spring="http://www.springframework.org/schema/beans" 
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
     <testcase name="ReceiveSoapMessageActionParserTest">
@@ -22,7 +22,7 @@
                     </ws:data>
                 </ws:attachment>
             </ws:receive>
-            
+
             <ws:receive endpoint="mySoapServer">
                 <message>
                     <data>
@@ -31,7 +31,7 @@
                         ]]>
                     </data>
                 </message>
-                <ws:attachment content-id="MySoapAttachment" content-type="application/xml" 
+                <ws:attachment content-id="MySoapAttachment" content-type="application/xml"
                                charset-name="UTF-8" validator="mySoapAttachmentValidator">
                     <ws:resource file="classpath:com/consol/citrus/ws/actions/test-attachment.txt"/>
                 </ws:attachment>
@@ -57,15 +57,15 @@
             </ws:receive>
         </actions>
     </testcase>
-    
+
     <spring:bean id="mySoapServer" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.ws.server.WebServiceServer"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.ws.server.WebServiceServer</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="mySoapServer"/>
     </spring:bean>
-    
+
     <spring:bean id="mySoapAttachmentValidator" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.ws.validation.SoapAttachmentValidator"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.ws.validation.SoapAttachmentValidator</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="mySoapAttachmentValidator"/>
     </spring:bean>
-    
+
 </spring:beans>

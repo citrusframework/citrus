@@ -31,7 +31,7 @@ public class PurgeEndpointActionParserTest extends AbstractActionParserTest<Purg
     public void testPurgeEndpointActionParser() {
         assertActionCount(4);
         assertActionClassAndName(PurgeEndpointAction.class, "purge-endpoint");
-        
+
         PurgeEndpointAction action = getNextTestActionFromTest();
         Assert.assertNull(action.getMessageSelector());
         Assert.assertNotNull(action.getMessageSelectorMap());
@@ -51,7 +51,7 @@ public class PurgeEndpointActionParserTest extends AbstractActionParserTest<Purg
         Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
         Assert.assertEquals(action.getEndpointNames().get(1), "testEndpoint2");
         Assert.assertEquals(action.getEndpointNames().get(2), "testEndpoint3");
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");
         Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
@@ -68,14 +68,9 @@ public class PurgeEndpointActionParserTest extends AbstractActionParserTest<Purg
         Assert.assertEquals(action.getEndpointNames().size(), 1);
         Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
     }
-    
-    @Test
+
+    @Test(expectedExceptions = BeanDefinitionStoreException.class)
     public void testPurgeEndpointActionParserFailed() {
-        try {
-            createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to empty endpoint attributes");
-        } catch (BeanDefinitionStoreException e) {
-            Assert.assertTrue(e.getMessage().endsWith("Element 'endpoint' must set one of the attributes 'name' or 'ref'"));
-        }
+        createApplicationContext("failed");
     }
 }

@@ -56,7 +56,7 @@
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.jmx.message.JmxMessageConverter"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.jmx.message.JmxMessageConverter</value></constructor-arg>
     <constructor-arg value="messageConverter"/>
   </bean>
 

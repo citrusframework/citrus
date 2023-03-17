@@ -16,11 +16,11 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Queue;
-import javax.jms.Topic;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Queue;
+import jakarta.jms.Topic;
 
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;

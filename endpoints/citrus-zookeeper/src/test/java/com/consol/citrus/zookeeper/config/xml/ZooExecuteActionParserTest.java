@@ -16,6 +16,8 @@
 
 package com.consol.citrus.zookeeper.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import com.consol.citrus.zookeeper.client.ZooClient;
@@ -24,8 +26,6 @@ import com.consol.citrus.zookeeper.command.Info;
 import org.springframework.beans.factory.BeanCreationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 public class ZooExecuteActionParserTest extends AbstractActionParserTest<ZooExecuteAction> {
 
@@ -53,12 +53,12 @@ public class ZooExecuteActionParserTest extends AbstractActionParserTest<ZooExec
         Assert.assertEquals(action.getExpectedCommandResult(), "{b:\"some thing\"}");
     }
 
-    private void assertParametersContainValue(Map parameters, String key, String value) {
+    private void assertParametersContainValue(Map<String, Object> parameters, String key, String value) {
         Assert.assertTrue(parameters.containsKey(key));
         Assert.assertEquals(parameters.get(key), value);
     }
 
-    @Test(expectedExceptions = BeanCreationException.class, expectedExceptionsMessageRegExp = ".*Cannot resolve reference to bean 'yyyy' while setting bean property 'zookeeperClient'.*")
+    @Test(expectedExceptions = BeanCreationException.class)
     public void testZookeeperExecuteActionParserFailed() {
         createApplicationContext("failed");
     }

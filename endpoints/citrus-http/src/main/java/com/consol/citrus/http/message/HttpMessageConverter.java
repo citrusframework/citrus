@@ -25,11 +25,12 @@ import com.consol.citrus.message.MessageHeaders;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +91,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         }
 
         if (message instanceof ResponseEntity<?>) {
-            httpMessage.status(((ResponseEntity<?>) message).getStatusCode());
+            httpMessage.status(HttpStatus.valueOf(((ResponseEntity<?>) message).getStatusCode().value()));
 
             // We've no information here about the HTTP Version in this context.
             // Because HTTP/2 is not supported anyways currently, this should be acceptable.
