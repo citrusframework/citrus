@@ -47,5 +47,4 @@
       <package name="com.consol.citrus.ftp.model"/>
     </schemaBindings>
   </bindings>
-
 </bindings>

@@ -29,5 +29,4 @@
       <package name="com.consol.citrus.jdbc.model"/>
     </schemaBindings>
   </bindings>
-
 </bindings>

@@ -30,7 +30,7 @@ import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.integration.common.FileHelper;
 import com.consol.citrus.util.SocketUtils;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.Test;
 
 @Test
@@ -45,7 +45,7 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
 
     private HttpClient client = new HttpClientBuilder()
             .requestUrl(String.format("http://localhost:%s/test", serverPort))
-            .requestMethod(HttpMethod.GET)
+            .requestMethod(RequestMethod.GET)
             .build();
 
     @CitrusTest

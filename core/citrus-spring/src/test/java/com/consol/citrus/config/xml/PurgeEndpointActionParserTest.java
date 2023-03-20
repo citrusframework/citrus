@@ -71,6 +71,13 @@ public class PurgeEndpointActionParserTest extends AbstractActionParserTest<Purg
 
     @Test(expectedExceptions = BeanDefinitionStoreException.class)
     public void testPurgeEndpointActionParserFailed() {
-        createApplicationContext("failed");
+        try {
+            createApplicationContext("failed");
+            Assert.fail("Missing bean creation exception due to empty endpoint attributes");
+        } catch (BeanDefinitionStoreException e) {
+            Assert.assertNotNull(e.getRootCause());
+            Assert.assertTrue(e.getRootCause().getMessage().endsWith("Element 'endpoint' must set one of the attributes 'name' or 'ref'"));
+            throw e;
+        }
     }
 }

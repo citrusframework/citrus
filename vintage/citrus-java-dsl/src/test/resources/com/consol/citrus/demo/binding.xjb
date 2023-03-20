@@ -17,5 +17,4 @@
     </globalBindings>
     <schemaBindings><package name="com.consol.citrus.demo.model"/></schemaBindings>
   </bindings>
-
 </bindings>

@@ -38,6 +38,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
@@ -103,7 +104,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             log.debug("Message to send:\n" + httpMessage.getPayload(String.class));
         }
 
-        HttpMethod method = getEndpointConfiguration().getRequestMethod();
+        RequestMethod method = getEndpointConfiguration().getRequestMethod();
         if (httpMessage.getRequestMethod() != null) {
             method = httpMessage.getRequestMethod();
         }
@@ -126,9 +127,9 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
                                 .orElse(MediaType.ALL);
 
             if (getEndpointConfiguration().getBinaryMediaTypes().stream().anyMatch(mediaType -> mediaType.includes(accept))) {
-                response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), method, requestEntity, byte[].class);
+                response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), HttpMethod.valueOf(method.toString()), requestEntity, byte[].class);
             } else {
-                response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), method, requestEntity, String.class);
+                response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), HttpMethod.valueOf(method.toString()), requestEntity, String.class);
             }
 
             log.info("HTTP message was sent to endpoint: '" + endpointUri + "'");

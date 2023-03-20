@@ -41,11 +41,11 @@ import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.InterceptingClientHttpRequestFactory;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.testng.Assert;
@@ -66,7 +66,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint
     @HttpClientConfig(requestUrl = "http://localhost:8080/test",
-            requestMethod="GET",
+            requestMethod= RequestMethod.GET,
             contentType="text/xml",
             charset="ISO-8859-1",
             defaultAcceptHeader=false,
@@ -142,7 +142,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getClientInterceptors().size(), 1L);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getClientInterceptors().get(0).getClass(), LoggingClientInterceptor.class);
-        Assert.assertEquals(httpClient1.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
+        Assert.assertEquals(httpClient1.getEndpointConfiguration().getRequestMethod(), RequestMethod.POST);
         Assert.assertTrue(httpClient1.getEndpointConfiguration().isDefaultAcceptHeader());
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getTimeout(), 5000L);
@@ -155,7 +155,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(httpClient2.getEndpointConfiguration().getRestTemplate());
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
-        Assert.assertEquals(httpClient2.getEndpointConfiguration().getRequestMethod(), HttpMethod.GET);
+        Assert.assertEquals(httpClient2.getEndpointConfiguration().getRequestMethod(), RequestMethod.GET);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getContentType(), "text/xml");
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getCharset(), "ISO-8859-1");

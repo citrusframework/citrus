@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 import com.consol.citrus.annotations.CitrusEndpointConfig;
 import com.consol.citrus.message.ErrorHandlingStrategy;
-import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author Christoph Deppisch
@@ -62,7 +62,7 @@ public @interface HttpClientConfig {
      * Http request method.
      * @return
      */
-    String requestMethod() default "POST";
+    RequestMethod requestMethod() default RequestMethod.POST;
 
     /**
      * Message converter.

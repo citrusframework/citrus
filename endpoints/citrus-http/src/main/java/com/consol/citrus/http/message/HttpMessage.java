@@ -37,6 +37,7 @@ import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author Christoph Deppisch
@@ -298,11 +299,11 @@ public class HttpMessage extends DefaultMessage {
      *
      * @return The used HttpMethod
      */
-    public HttpMethod getRequestMethod() {
+    public RequestMethod getRequestMethod() {
         final Object method = getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD);
 
         if (method != null) {
-            return HttpMethod.valueOf(method.toString());
+            return RequestMethod.valueOf(method.toString());
         }
 
         return null;

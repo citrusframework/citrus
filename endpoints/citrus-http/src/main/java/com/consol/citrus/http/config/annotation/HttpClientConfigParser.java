@@ -28,7 +28,6 @@ import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.spi.ReferenceResolver;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -66,7 +65,7 @@ public class HttpClientConfigParser implements AnnotationConfigParser<HttpClient
         }
 
         builder.requestUrl(annotation.requestUrl());
-        builder.requestMethod(HttpMethod.valueOf(annotation.requestMethod()));
+        builder.requestMethod(annotation.requestMethod());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
             builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), HttpMessageConverter.class));

@@ -16,25 +16,25 @@
 
 package com.consol.citrus.http.message;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageHeaders;
+import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-
-import jakarta.servlet.http.Cookie;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Message converter implementation able to convert HTTP request and response entities to internal message
@@ -74,7 +74,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             }
         }
 
-        HttpMethod method = determineHttpMethod(endpointConfiguration, httpMessage);
+        RequestMethod method = determineRequestMethod(endpointConfiguration, httpMessage);
 
         return createHttpEntity(httpHeaders, payload, method);
     }
@@ -94,7 +94,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             httpMessage.status(HttpStatus.valueOf(((ResponseEntity<?>) message).getStatusCode().value()));
 
             // We've no information here about the HTTP Version in this context.
-            // Because HTTP/2 is not supported anyways currently, this should be acceptable.
+            // Because HTTP/2 is not supported anyway currently, this should be acceptable.
             httpMessage.version("HTTP/1.1");
 
             if (endpointConfiguration.isHandleCookies()) {
@@ -197,9 +197,9 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
      * @param httpMessage The HttpMessage to override the default with if necessary
      * @return The HttpMethod of the message to send
      */
-    private HttpMethod determineHttpMethod(HttpEndpointConfiguration endpointConfiguration,
-                                           HttpMessage httpMessage) {
-        HttpMethod method = endpointConfiguration.getRequestMethod();
+    private RequestMethod determineRequestMethod(HttpEndpointConfiguration endpointConfiguration,
+                                                 HttpMessage httpMessage) {
+        RequestMethod method = endpointConfiguration.getRequestMethod();
         if (httpMessage.getRequestMethod() != null) {
             method = httpMessage.getRequestMethod();
         }
@@ -213,7 +213,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
      * @param method The HttpMethod to use
      * @return The composed HttpEntitiy
      */
-    private HttpEntity<?> createHttpEntity(HttpHeaders httpHeaders, Object payload, HttpMethod method) {
+    private HttpEntity<?> createHttpEntity(HttpHeaders httpHeaders, Object payload, RequestMethod method) {
         if (httpMethodSupportsBody(method)) {
             return new HttpEntity<>(payload, httpHeaders);
         } else {
@@ -241,9 +241,9 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
      * @param method The HttpMethod to evaluate
      * @return Whether a message body is supported
      */
-    private boolean httpMethodSupportsBody(HttpMethod method) {
-        return HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method)
-                || HttpMethod.DELETE.equals(method) || HttpMethod.PATCH.equals(method);
+    private boolean httpMethodSupportsBody(RequestMethod method) {
+        return RequestMethod.POST.equals(method) || RequestMethod.PUT.equals(method)
+                || RequestMethod.DELETE.equals(method) || RequestMethod.PATCH.equals(method);
     }
 
     /**

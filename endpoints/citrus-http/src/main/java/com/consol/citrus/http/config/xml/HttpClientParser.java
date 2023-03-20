@@ -26,9 +26,9 @@ import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.http.HttpMethod;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.w3c.dom.Element;
 
 /**
@@ -63,7 +63,7 @@ public class HttpClientParser extends AbstractEndpointParser {
 
         String requestMethod = element.getAttribute("request-method");
         if (StringUtils.hasText(requestMethod)) {
-            endpointConfiguration.addPropertyValue("requestMethod", new TypedStringValue(requestMethod, HttpMethod.class));
+            endpointConfiguration.addPropertyValue("requestMethod", new TypedStringValue(requestMethod, RequestMethod.class));
         }
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");

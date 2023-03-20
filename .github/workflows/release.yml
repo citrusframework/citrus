@@ -29,7 +29,6 @@ jobs:
   release:
     runs-on: ubuntu-20.04
     if: github.ref == 'refs/heads/main' && github.repository == 'citrusframework/citrus'
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
