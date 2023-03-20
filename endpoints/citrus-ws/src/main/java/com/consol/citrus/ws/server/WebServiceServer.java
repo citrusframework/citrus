@@ -159,6 +159,7 @@ public class WebServiceServer extends AbstractServer {
                 contextHandler.setSecurityHandler(securityHandler);
             }
 
+            configure(contextHandler);
             contextCollection.addHandler(contextHandler);
 
             handlers.addHandler(contextCollection);
@@ -174,6 +175,13 @@ public class WebServiceServer extends AbstractServer {
                 throw new CitrusRuntimeException(e);
             }
         }
+    }
+
+    /**
+     * Subclasses may add additional configuration on context handler.
+     * @param contextHandler
+     */
+    protected void configure(ServletContextHandler contextHandler) {
     }
 
     @Override

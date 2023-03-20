@@ -16,6 +16,10 @@
 
 package com.consol.citrus.websocket.servlet;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpoint;
@@ -28,8 +32,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.socket.server.HandshakeHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 import org.springframework.web.socket.server.support.WebSocketHttpRequestHandler;
-
-import java.util.*;
 
 /**
  * Citrus dispatcher servlet extends Spring's message dispatcher servlet and just
@@ -61,10 +63,10 @@ public class CitrusWebSocketDispatcherServlet extends CitrusDispatcherServlet {
     protected void initStrategies(ApplicationContext context) {
         super.initStrategies(context);
 
-        configureWebSockerHandler(context);
+        configureWebSocketHandler(context);
     }
 
-    private void configureWebSockerHandler(ApplicationContext context) {
+    private void configureWebSocketHandler(ApplicationContext context) {
         List<WebSocketEndpoint> webSocketEndpoints = webSocketServer.getWebSockets();
         if (CollectionUtils.isEmpty(webSocketEndpoints)) {
             return;

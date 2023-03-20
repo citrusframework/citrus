@@ -19,7 +19,6 @@
 
 package com.consol.citrus.camel.message.format;
 
-import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.camel.dsl.CamelContextAware;
@@ -27,7 +26,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.model.DataFormatDefinition;
 import org.apache.camel.model.ProcessDefinition;
-import org.apache.camel.model.dataformat.Any23Type;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.dataformat.YAMLLibrary;
@@ -56,26 +54,6 @@ public class DataFormatClauseSupport<T> {
             ((CamelContextAware<?>) result).camelContext(camelContext);
         }
         return this;
-    }
-
-    public T any23(String baseuri) {
-        delegate.any23(baseuri);
-        return result;
-    }
-
-    public T any23(String baseuri, Any23Type outputformat) {
-        delegate.any23(baseuri, outputformat);
-        return result;
-    }
-
-    public T any23(String baseuri, Any23Type outputformat, Map<String, String> configurations) {
-        delegate.any23(baseuri, outputformat, configurations);
-        return result;
-    }
-
-    public T any23(String baseuri, Any23Type outputformat, Map<String, String> configurations, List<String> extractors) {
-        delegate.any23(baseuri, outputformat, configurations, extractors);
-        return result;
     }
 
     public T avro() {
@@ -433,31 +411,6 @@ public class DataFormatClauseSupport<T> {
 
     public T tidyMarkup() {
         delegate.tidyMarkup();
-        return result;
-    }
-
-    public T xstream() {
-        delegate.xstream();
-        return result;
-    }
-
-    public T xstream(String encodingOrPermission) {
-        delegate.xstream(encodingOrPermission);
-        return result;
-    }
-
-    public T xstream(String encoding, String permission) {
-        delegate.xstream(encoding, permission);
-        return result;
-    }
-
-    public T xstream(Class<?> type) {
-        delegate.xstream(type);
-        return result;
-    }
-
-    public T xstream(String encoding, Class<?>... type) {
-        delegate.xstream(encoding, type);
         return result;
     }
 

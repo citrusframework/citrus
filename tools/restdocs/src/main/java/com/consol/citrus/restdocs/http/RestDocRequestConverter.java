@@ -16,10 +16,15 @@
 
 package com.consol.citrus.restdocs.http;
 
-import org.springframework.http.HttpRequest;
-import org.springframework.restdocs.operation.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import java.util.*;
+import org.springframework.http.HttpRequest;
+import org.springframework.restdocs.operation.OperationRequest;
+import org.springframework.restdocs.operation.OperationRequestFactory;
+import org.springframework.restdocs.operation.OperationRequestPart;
+import org.springframework.restdocs.operation.RequestConverter;
 
 /**
  * Converts a Http request to RestDoc operation request instance.
@@ -31,13 +36,7 @@ public class RestDocRequestConverter implements RequestConverter<CachedBodyHttpR
     @Override
     public OperationRequest convert(CachedBodyHttpRequest request) {
         return new OperationRequestFactory().create(request.getURI(), request.getMethod(),
-                request.getBody(), request.getHeaders(),
-                extractParameters(request), extractParts(request));
-    }
-
-    protected Parameters extractParameters(HttpRequest request) {
-        Parameters parameters = new Parameters();
-        return parameters;
+                request.getBody(), request.getHeaders(), extractParts(request));
     }
 
     protected Collection<OperationRequestPart> extractParts(HttpRequest request) {

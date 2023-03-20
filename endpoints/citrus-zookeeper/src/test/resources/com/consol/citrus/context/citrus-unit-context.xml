@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean id="zookeeperClient" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.apache.zookeeper.ZooKeeper"/>
+    <constructor-arg><value type="java.lang.Class">org.apache.zookeeper.ZooKeeper</value></constructor-arg>
     <constructor-arg value="zookeeperClient"/>
   </bean>
 

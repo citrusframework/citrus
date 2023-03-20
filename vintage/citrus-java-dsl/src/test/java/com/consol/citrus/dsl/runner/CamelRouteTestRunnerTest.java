@@ -26,7 +26,6 @@ import com.consol.citrus.dsl.UnitTestSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ServiceStatus;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.SimpleBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -287,7 +286,7 @@ public class CamelRouteTestRunnerTest extends UnitTestSupport {
 
                 camel(builder -> builder.context(camelContext)
                         .controlBus()
-                        .language(SimpleBuilder.simple("${camelContext.getRouteStatus('route_1')}"))
+                        .language("${camelContext.getRouteStatus('route_1')}")
                         .result(ServiceStatus.Started));
             }
         };

@@ -12,8 +12,8 @@
 
     <import resource="classpath:com/consol/citrus/service/hello-service-context.xml"/>
 
-    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616" />
+    <bean id="connectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
     </bean>
 
 </beans>

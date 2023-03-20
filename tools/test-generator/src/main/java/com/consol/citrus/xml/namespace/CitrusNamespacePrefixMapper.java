@@ -19,7 +19,7 @@ package com.consol.citrus.xml.namespace;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+import org.glassfish.jaxb.runtime.marshaller.NamespacePrefixMapper;
 
 /**
  * @author Christoph Deppisch

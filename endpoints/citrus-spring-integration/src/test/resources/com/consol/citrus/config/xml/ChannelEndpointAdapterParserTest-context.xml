@@ -17,7 +17,7 @@
                                    timeout="10000"/>
 
     <bean id="mockEndpointAdapter" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+        <constructor-arg><value type="java.lang.Class">com.consol.citrus.endpoint.EndpointAdapter</value></constructor-arg>
       <constructor-arg value="mockEndpointAdapter"/>
     </bean>
 

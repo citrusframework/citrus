@@ -35,6 +35,7 @@
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
           </xjbSources>
+          <clearOutputDir>true</clearOutputDir>
         </configuration>
       </plugin>
       <plugin>
@@ -93,28 +94,6 @@
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-spring</artifactId>
       <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-docker</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-http</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-selenium</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional>
       <scope>provided</scope>
     </dependency>
 

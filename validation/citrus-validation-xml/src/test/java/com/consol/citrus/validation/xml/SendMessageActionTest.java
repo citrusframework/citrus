@@ -28,13 +28,10 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.TestUtils;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
-import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.SchemaValidator;
 import com.consol.citrus.validation.builder.DefaultMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -75,8 +72,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             .expressions(overwriteElements)
             .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
-                "   <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
+                "<TestRequest>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -112,8 +110,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .expressions(overwriteElements)
                 .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
-                "   <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
+                "<TestRequest>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -150,9 +149,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .expressions(overwriteElements)
                 .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
                 "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
-                "   <ns0:Message>Hello World!</ns0:Message>" + System.lineSeparator() +
+                "    <ns0:Message>Hello World!</ns0:Message>" + System.lineSeparator() +
                 "</ns0:TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -189,9 +188,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .expressions(overwriteElements)
                 .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
                 "<TestRequest xmlns=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
-                "   <Message>Hello World!</Message>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -215,7 +214,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithXmlDeclaration() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -246,7 +244,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         AtomicBoolean  validated = new AtomicBoolean(false);
 
-        SchemaValidator schemaValidator = mock(SchemaValidator.class);
+        SchemaValidator<?> schemaValidator = mock(SchemaValidator.class);
         when(schemaValidator.supportsMessageType(eq("XML"), any())).thenReturn(true);
         doAnswer(invocation-> {
 

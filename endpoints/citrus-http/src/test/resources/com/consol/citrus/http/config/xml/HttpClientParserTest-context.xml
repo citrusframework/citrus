@@ -41,7 +41,7 @@
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.http.message.HttpMessageConverter"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.http.message.HttpMessageConverter</value></constructor-arg>
     <constructor-arg value="messageConverter"/>
   </bean>
 
@@ -55,32 +55,32 @@
   </util:list>
 
   <bean id="errorHandler" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.web.client.ResponseErrorHandler"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.web.client.ResponseErrorHandler</value></constructor-arg>
     <constructor-arg value="errorHandler"/>
   </bean>
 
   <bean id="clientInterceptor" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.http.interceptor.LoggingClientInterceptor</value></constructor-arg>
     <constructor-arg value="clientInterceptor"/>
   </bean>
 
   <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.message.MessageCorrelator</value></constructor-arg>
     <constructor-arg value="replyMessageCorrelator"/>
   </bean>
 
   <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.endpoint.resolver.EndpointUriResolver</value></constructor-arg>
     <constructor-arg value="endpointResolver"/>
   </bean>
 
   <bean id="soapRequestFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.http.client.ClientHttpRequestFactory"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.http.client.ClientHttpRequestFactory</value></constructor-arg>
     <constructor-arg value="soapRequestFactory"/>
   </bean>
 
   <bean id="restTemplate" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.web.client.RestTemplate"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.web.client.RestTemplate</value></constructor-arg>
     <constructor-arg value="restTemplate"/>
   </bean>
 

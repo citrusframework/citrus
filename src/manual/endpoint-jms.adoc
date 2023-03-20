@@ -121,9 +121,8 @@ public ActiveMQConnectionFactory connectionFactory() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="connectionFactory"
-         class="org.apache.activemq.ActiveMQConnectionFactory">
-    <property name="brokerURL" value="tcp://localhost:61616" />
+<bean id="connectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+  <property name="brokerURL" value="tcp://localhost:61616"/>
 </bean>
 ----
 
@@ -420,8 +419,8 @@ the message to all subscribers.
 The Citrus JMS endpoints offer the attribute *'pub-sub-domain'*. Once this attribute is set to *true* Citrus will use JMS
 topics instead of queue destinations.
 
-NOTE: When using JMS topics in your project you may want to configure a `javax.jms.TopicConnectionFactory` instead of a
-`javax.jms.QueueConnectionFactory`.
+NOTE: When using JMS topics in your project you may want to configure a `jakarta.jms.TopicConnectionFactory` instead of a
+`jakarta.jms.QueueConnectionFactory`.
 
 See the following example where the publish-subscribe attribute is set to true in JMS message endpoint components.
 
@@ -552,12 +551,38 @@ public JmsSyncEndpoint helloServiceSyncEndpoint() {
             durable-subscription="true"
             auto-start="true"/>
 
+<bean class="org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ" init-method="start" destroy-method="stop">
+  <property name="SecurityManager" ref="securityManager"/>
+</bean>
+
 <bean id="topicConnectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
   <constructor-arg>
-    <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-      <property name="brokerURL" value="${jms.broker.url}" />
-      <property name="watchTopicAdvisories" value="false"/>
+    <bean class="org.apache.activemq.artemis.jms.client.ActiveMQTopicConnectionFactory">
+      <property name="brokerURL" value="tcp://localhost:61616"/>
       <property name="clientID" value="citrusDurableConnectionFactory"/>
+    </bean>
+  </constructor-arg>
+</bean>
+
+<bean id="securityManager" class="org.apache.activemq.artemis.spi.core.security.ActiveMQJAASSecurityManager">
+  <constructor-arg value="org.apache.activemq.artemis.spi.core.security.jaas.InVMLoginModule"/>
+  <constructor-arg>
+    <bean class="org.apache.activemq.artemis.core.config.impl.SecurityConfiguration">
+      <constructor-arg name="users">
+        <map>
+          <entry key="citrus" value="citrus"/>
+        </map>
+      </constructor-arg>
+      <constructor-arg name="roles">
+        <map>
+          <entry key="citrus">
+            <list>
+              <value>citrus</value>
+            </list>
+          </entry>
+        </map>
+      </constructor-arg>
+      <property name="DefaultUser" value="citrus"/>
     </bean>
   </constructor-arg>
 </bean>

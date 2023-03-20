@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                             http://www.citrusframework.org/schema/websocket/config http://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd">
-    
+
     <citrus-websocket:server id="webSocketServer1"
                         auto-start="false"
                         port="8080"
@@ -26,7 +26,7 @@
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="com.consol.citrus.websocket.message.WebSocketMessageConverter"/>
+      <constructor-arg><value type="java.lang.Class">com.consol.citrus.websocket.message.WebSocketMessageConverter</value></constructor-arg>
       <constructor-arg value="messageConverter"/>
   </bean>
 </beans>

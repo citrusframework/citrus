@@ -14,7 +14,6 @@
   <name>Citrus :: Tools :: Maven :: Plugin</name>
   <description>Citrus Maven Plugin</description>
 
-
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>

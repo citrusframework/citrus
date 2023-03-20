@@ -19,9 +19,9 @@
     <description>Test sends and receives SOAP messages on an asynchronous JMS queue endpoint.</description>
 
     <variables>
-      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-      <variable name="user" value="Christoph"></variable>
+      <variable name="correlationId" value="citrus:randomNumber(10)"/>
+      <variable name="messageId" value="citrus:randomNumber(10)"/>
+      <variable name="user" value="Christoph"/>
     </variables>
 
     <actions>
@@ -45,7 +45,7 @@
                   </HelloRequest>
                 </SOAP-ENV:Body>
               </SOAP-ENV:Envelope>
-						]]>
+            ]]>
           </data>
         </message>
         <header>
@@ -69,7 +69,7 @@
                   </HelloResponse>
                 </SOAP-ENV:Body>
               </SOAP-ENV:Envelope>
-						]]>
+            ]]>
           </data>
         </message>
         <header>
@@ -92,7 +92,7 @@
                 <User>${user}</User>
                 <Text>Hello Citrus</Text>
               </HelloRequest>
-						]]>
+            ]]>
           </data>
         </message>
         <header>
@@ -111,7 +111,7 @@
                 <User>HelloSoapService</User>
                 <Text>Hello ${user}</Text>
               </HelloResponse>
-						]]>
+            ]]>
           </data>
         </message>
         <header>
@@ -134,16 +134,16 @@
                 <User>${user}</User>
                 <Text>Hello Citrus</Text>
               </HelloRequest>
-						]]>
+            ]]>
           </data>
         </message>
         <header>
           <data>
             <![CDATA[
-            <RequestHeader xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
-              <Service>HelloService</Service>
-              <Operation>sayHello</Operation>
-            </RequestHeader>
+              <RequestHeader xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <Service>HelloService</Service>
+                <Operation>sayHello</Operation>
+              </RequestHeader>
             ]]>
           </data>
           <element name="citrus_soap_action" value="sayHello"/>
@@ -161,19 +161,19 @@
                 <User>HelloSoapService</User>
                 <Text>Hello ${user}</Text>
               </HelloResponse>
-						]]>
+            ]]>
           </data>
         </message>
         <header>
           <data>
             <![CDATA[
-            <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-              <ResponseHeader xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
-                <Service>HelloService</Service>
-                <Operation>sayHello</Operation>
-                <Acknowledge>true</Acknowledge>
-              </ResponseHeader>
-            </SOAP-ENV:Header>
+              <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+                <ResponseHeader xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <Service>HelloService</Service>
+                  <Operation>sayHello</Operation>
+                  <Acknowledge>true</Acknowledge>
+                </ResponseHeader>
+              </SOAP-ENV:Header>
             ]]>
           </data>
           <element name="citrus_soap_action" value="sayHello"/>

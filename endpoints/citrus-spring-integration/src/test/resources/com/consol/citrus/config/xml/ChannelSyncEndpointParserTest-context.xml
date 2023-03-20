@@ -25,22 +25,22 @@
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.message.MessageCorrelator</value></constructor-arg>
     <constructor-arg value="replyMessageCorrelator"/>
   </bean>
 
   <bean id="messagingTemplate" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.integration.core.MessagingTemplate"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.integration.core.MessagingTemplate</value></constructor-arg>
     <constructor-arg value="messagingTemplate"/>
   </bean>
 
   <bean id="channel" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.messaging.PollableChannel"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.messaging.PollableChannel</value></constructor-arg>
     <constructor-arg value="channel"/>
   </bean>
 
   <bean id="channelResolver" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.messaging.core.DestinationResolver"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.messaging.core.DestinationResolver</value></constructor-arg>
     <constructor-arg value="channelResolver"/>
   </bean>
 </beans>

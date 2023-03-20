@@ -13,7 +13,7 @@
   </citrus:schema-repository>
 
   <bean id="jsonTestSchema" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.json.schema.SimpleJsonSchema"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.json.schema.SimpleJsonSchema</value></constructor-arg>
     <constructor-arg value="jsonTestSchema"/>
   </bean>
 </beans>

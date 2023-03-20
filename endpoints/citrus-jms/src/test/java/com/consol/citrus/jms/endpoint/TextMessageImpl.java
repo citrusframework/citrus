@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import javax.jms.*;
+import jakarta.jms.*;
 import java.util.*;
 
 /**

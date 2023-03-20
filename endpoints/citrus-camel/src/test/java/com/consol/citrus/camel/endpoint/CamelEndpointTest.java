@@ -24,6 +24,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelExchangeException;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.engine.AbstractCamelContext;
@@ -32,17 +33,10 @@ import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.support.DefaultMessage;
 import org.apache.camel.support.SimpleUuidGenerator;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -50,12 +44,13 @@ import static org.mockito.Mockito.when;
  */
 public class CamelEndpointTest extends AbstractTestNGUnitTest {
 
-    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
-    private ProducerTemplate producerTemplate = Mockito.mock(ProducerTemplate.class);
-    private ConsumerTemplate consumerTemplate = Mockito.mock(ConsumerTemplate.class);
-    private Exchange exchange = Mockito.mock(Exchange.class);
+    private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
+    private final ExtendedCamelContext extendedCamelContext = Mockito.mock(ExtendedCamelContext.class);
+    private final ProducerTemplate producerTemplate = Mockito.mock(ProducerTemplate.class);
+    private final ConsumerTemplate consumerTemplate = Mockito.mock(ConsumerTemplate.class);
+    private final Exchange exchange = Mockito.mock(Exchange.class);
 
-    private MessageListeners messageListeners = Mockito.mock(MessageListeners.class);
+    private final MessageListeners messageListeners = Mockito.mock(MessageListeners.class);
 
     @Test
     public void testCamelEndpointProducer() {
@@ -71,7 +66,8 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate, exchange);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
-        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(producerTemplate.send(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
         when(exchange.getException()).thenReturn(null);
 
@@ -94,7 +90,8 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate, exchange);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
-        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(producerTemplate.send(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
         when(exchange.getException()).thenReturn(exchangeException);
 
@@ -113,7 +110,8 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         reset(camelContext, consumerTemplate);
 
         when(camelContext.createConsumerTemplate()).thenReturn(consumerTemplate);
-        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
 
         DefaultMessage message = new DefaultMessage(camelContext);
@@ -153,7 +151,8 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate, consumerTemplate, messageListeners);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
-        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(producerTemplate.send(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         when(camelContext.createConsumerTemplate()).thenReturn(consumerTemplate);
@@ -161,13 +160,10 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         when(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).thenReturn(exchange);
 
         when(messageListeners.isEmpty()).thenReturn(false);
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Message inboundMessage = (Message) invocation.getArguments()[0];
-                Assert.assertTrue(inboundMessage.getPayload(String.class).contains("Hello from Camel!"));
-                return null;
-            }
+        doAnswer(invocation -> {
+            Message inboundMessage = (Message) invocation.getArguments()[0];
+            Assert.assertTrue(inboundMessage.getPayload(String.class).contains("Hello from Camel!"));
+            return null;
         }).when(messageListeners).onInboundMessage(any(Message.class), eq(context));
 
         camelEndpoint.createProducer().send(requestMessage, context);

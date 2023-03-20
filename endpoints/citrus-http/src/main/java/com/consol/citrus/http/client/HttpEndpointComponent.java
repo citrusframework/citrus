@@ -22,7 +22,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
-import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Component creates proper HTTP client endpoint from endpoint uri resource and parameters.
@@ -54,7 +54,7 @@ public class HttpEndpointComponent extends AbstractEndpointComponent {
 
         if (parameters.containsKey("requestMethod")) {
             String method = parameters.remove("requestMethod");
-            client.getEndpointConfiguration().setRequestMethod(HttpMethod.valueOf(method));
+            client.getEndpointConfiguration().setRequestMethod(RequestMethod.valueOf(method));
         }
 
         if (parameters.containsKey("errorHandlingStrategy")) {

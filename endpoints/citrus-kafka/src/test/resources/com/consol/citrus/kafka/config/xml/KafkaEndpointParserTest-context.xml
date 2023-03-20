@@ -48,13 +48,13 @@
 
   <!-- Custom message converter -->
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.kafka.message.KafkaMessageConverter"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.kafka.message.KafkaMessageConverter</value></constructor-arg>
     <constructor-arg value="messageConverter"/>
   </bean>
 
   <!-- Custom header mapper -->
   <bean id="headerMapper" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.kafka.message.KafkaMessageHeaderMapper"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.kafka.message.KafkaMessageHeaderMapper</value></constructor-arg>
     <constructor-arg value="headerMapper"/>
   </bean>
 </beans>

@@ -22,7 +22,7 @@
                      known-hosts-path="classpath:com/consol/citrus/ssh/known_hosts"/>
 
   <bean id="sshMessageConverter" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.ssh.message.SshMessageConverter"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.ssh.message.SshMessageConverter</value></constructor-arg>
     <constructor-arg value="sshMessageConverter"/>
   </bean>
 

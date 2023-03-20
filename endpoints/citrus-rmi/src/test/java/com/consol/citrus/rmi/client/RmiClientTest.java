@@ -16,21 +16,24 @@
 
 package com.consol.citrus.rmi.client;
 
+import java.io.InputStreamReader;
+import java.rmi.registry.Registry;
+
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.rmi.endpoint.RmiEndpointConfiguration;
 import com.consol.citrus.rmi.message.RmiMessage;
 import com.consol.citrus.rmi.remote.HelloService;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.InputStreamReader;
-import java.rmi.registry.Registry;
 
 import static org.mockito.Mockito.*;
 
@@ -40,8 +43,15 @@ import static org.mockito.Mockito.*;
  */
 public class RmiClientTest extends AbstractTestNGUnitTest {
 
-    private HelloService remoteInterface = Mockito.mock(HelloService.class);
-    private Registry registry = Mockito.mock(Registry.class);
+    @Mock
+    private HelloService remoteInterface;
+    @Mock
+    private Registry registry;
+
+    @BeforeClass
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void testRmiClient() throws Exception {

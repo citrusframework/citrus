@@ -32,22 +32,22 @@
 
   <!-- Vert.x instance factory -->
   <bean id="vertxInstanceFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.vertx.factory.VertxInstanceFactory"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.vertx.factory.VertxInstanceFactory</value></constructor-arg>
     <constructor-arg value="vertxInstanceFactory"/>
   </bean>
 
   <bean id="specialVertxInstanceFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.vertx.factory.VertxInstanceFactory"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.vertx.factory.VertxInstanceFactory</value></constructor-arg>
     <constructor-arg value="specialVertxInstanceFactory"/>
   </bean>
 
   <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.message.MessageCorrelator</value></constructor-arg>
     <constructor-arg value="replyMessageCorrelator"/>
   </bean>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.vertx.message.VertxMessageConverter"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.vertx.message.VertxMessageConverter</value></constructor-arg>
     <constructor-arg value="messageConverter"/>
   </bean>
 </beans>

@@ -16,7 +16,6 @@
 
 package com.consol.citrus.http.config.xml;
 
-import javax.jms.ConnectionFactory;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +30,7 @@ import com.consol.citrus.http.server.HttpServerSettings;
 import com.consol.citrus.jms.endpoint.JmsEndpointAdapter;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import jakarta.jms.ConnectionFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -106,7 +106,7 @@ public class SshCommandTest {
     @Test
     public void ioException() throws IOException {
         InputStream i = Mockito.mock(InputStream.class);
-        doThrow(new IOException("No")).when(i).read((byte[]) any());
+        doThrow(new IOException("No")).when(i).transferTo(any());
         i.close();
 
         exitCallback.onExit(1,"No");
@@ -143,15 +143,11 @@ public class SshCommandTest {
      * @return
      */
     public Message eqMessage(final String expected) {
-        argThat(new ArgumentMatcher() {
+        argThat(new ArgumentMatcher<Object>() {
             public boolean matches(Object argument) {
                 Message msg = (Message) argument;
                 String payload = (String) msg.getPayload();
                 return expected.equals(payload);
-            }
-
-            public void appendTo(StringBuffer buffer) {
-                buffer.append("message matcher");
             }
         });
         return null;

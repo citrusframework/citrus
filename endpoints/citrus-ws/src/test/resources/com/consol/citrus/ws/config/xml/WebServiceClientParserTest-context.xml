@@ -42,22 +42,22 @@
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.message.MessageCorrelator</value></constructor-arg>
     <constructor-arg value="replyMessageCorrelator"/>
   </bean>
 
   <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.endpoint.resolver.EndpointUriResolver</value></constructor-arg>
     <constructor-arg value="endpointResolver"/>
   </bean>
 
   <bean id="soapMessageFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.soap.SoapMessageFactory</value></constructor-arg>
     <constructor-arg value="soapMessageFactory"/>
   </bean>
 
   <bean id="wsTemplate" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.ws.client.core.WebServiceTemplate"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.client.core.WebServiceTemplate</value></constructor-arg>
     <constructor-arg value="wsTemplate"/>
   </bean>
 
@@ -68,12 +68,12 @@
   </bean>
 
   <bean id="wsMessageSender" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.ws.transport.WebServiceMessageSender"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.transport.WebServiceMessageSender</value></constructor-arg>
     <constructor-arg value="wsMessageSender"/>
   </bean>
 
   <bean id="singleInterceptor" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.client.support.interceptor.ClientInterceptor</value></constructor-arg>
     <constructor-arg value="singleInterceptor"/>
   </bean>
 
@@ -83,11 +83,11 @@
   </util:list>
 
   <bean id="interceptor1" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.client.support.interceptor.ClientInterceptor</value></constructor-arg>
     <constructor-arg value="interceptor1"/>
   </bean>
   <bean id="interceptor2" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.client.support.interceptor.ClientInterceptor</value></constructor-arg>
     <constructor-arg value="interceptor2"/>
   </bean>
 

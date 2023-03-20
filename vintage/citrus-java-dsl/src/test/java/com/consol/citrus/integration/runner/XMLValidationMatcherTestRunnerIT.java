@@ -53,7 +53,7 @@ public class XMLValidationMatcherTestRunnerIT extends TestNGCitrusTestRunner {
                                 "<timestamp>@ignore@</timestamp>" +
                                 "</data>')@')</text>" +
                                 "</testRequestMessage>")
-                        .contentType("application/xml")
+                        .header("contentType", "application/xml")
                         .accept("application/xml")
                         .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                         .extractFromHeader("citrus_jms_messageId", "correlation_id")),

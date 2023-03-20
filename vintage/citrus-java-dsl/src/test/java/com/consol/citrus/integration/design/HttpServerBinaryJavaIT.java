@@ -16,6 +16,8 @@
 
 package com.consol.citrus.integration.design;
 
+import java.nio.charset.Charset;
+
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
@@ -25,12 +27,10 @@ import com.consol.citrus.http.config.annotation.HttpServerConfig;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.util.SocketUtils;
 import org.apache.http.entity.ContentType;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
-
-import java.nio.charset.Charset;
 
 /**
  * @author Christoph Deppisch

@@ -27,9 +27,8 @@ First of all we have a look at the TravelAgency configuration. The TravelAgency 
 
 [source,xml]
 ----
-<bean name="connectionFactory" 
-         class="org.apache.activemq.ActiveMQConnectionFactory">
-    <property name="brokerURL" value="tcp://localhost:61616" />
+<bean id="connectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+  <property name="brokerURL" value="tcp://localhost:61616"/>
 </bean>
 
 <citrus-jms:endpoint id="travelAgencyBookingRequestEndpoint"
@@ -47,7 +46,7 @@ The sender and receivers do also need a JMS destination. Here the destination na
 
 [source,xml]
 ----
-<bean name="propertyLoader" 
+<bean name="propertyLoader"
    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
         <list>
@@ -109,11 +108,11 @@ Let us define the Http adapter in the Spring configuration:
 
 [source,xml]
 ----
-<citrus-http:server id="royalAirlineHttpServer" 
-                       port="8091" 
-                       uri="/flightbooking" 
+<citrus-http:server id="royalAirlineHttpServer"
+                       port="8091"
+                       uri="/flightbooking"
                        endpoint-adapter="jmsEndpointAdapter"/>
-        
+
 <citrus-jms:endpoint-adapter id="jmsEndpointAdapter
       destination-name="${royal.airline.request.queue}"/>
       connection-factory="connectionFactory" />
@@ -133,12 +132,12 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
 [source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
-             xmlns:spring="http://www.springframework.org/schema/beans" 
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-             xsi:schemaLocation="http://www.springframework.org/schema/beans 
-             http://www.springframework.org/schema/beans/spring-beans.xsd 
-             http://www.citrusframework.org/schema/testcase 
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+             xmlns:spring="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.citrusframework.org/schema/testcase
              http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="FlightBookingTest">
         <meta-info>
@@ -152,9 +151,9 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
             Test flight booking service.
         </description>
         <variables>
-            <variable name="correlationId" 
+            <variable name="correlationId"
                 value="citrus:concat('Lx1x', 'citrus:randomNumber(10)')"/>
-            <variable name="customerId" 
+            <variable name="customerId"
                 value="citrus:concat('Mx1x', citrus:randomNumber(10))"/>
         </variables>
         <actions>
@@ -162,7 +161,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                 <message>
                     <data>
                       <![CDATA[
-                        <TravelBookingRequestMessage 
+                        <TravelBookingRequestMessage
                           xmlns="http://www.consol.com/schemas/TravelAgency">
                           <correlationId>${correlationId}</correlationId>
                           <customer>
@@ -189,7 +188,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                               <scheduledDeparture>16:00:00</scheduledDeparture>
                               <scheduledArrival>17:10:00</scheduledArrival>
                             </flight>
-                          </flights>                                
+                          </flights>
                         </TravelBookingRequestMessage>
                       ]]>
                     </data>
@@ -198,12 +197,12 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <element name="correlationId" value="${correlationId}"/>
                 </header>
             </send>
-            
+
             <receive endpoint="smartAirlineBookingRequestEndpoint">
                 <message>
                     <data>
                       <![CDATA[
-                        <FlightBookingRequestMessage 
+                        <FlightBookingRequestMessage
                           xmlns="http://www.consol.com/schemas/AirlineSchema">
                           <correlationId>${correlationId}</correlationId>
                           <bookingId>???</bookingId>
@@ -230,16 +229,16 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <element name="correlationId" value="${correlationId}"/>
                 </header>
                 <extract>
-                    <message path="//:FlightBookingRequestMessage/:bookingId" 
+                    <message path="//:FlightBookingRequestMessage/:bookingId"
                                 variable="${smartAirlineBookingId}"/>
                 </extract>
             </receive>
-            
+
             <send endpoint="smartAirlineBookingResponseEndpoint">
                 <message>
                     <data>
                       <![CDATA[
-                        <FlightBookingConfirmationMessage 
+                        <FlightBookingConfirmationMessage
                           xmlns="http://www.consol.com/schemas/AirlineSchema">
                           <correlationId>${correlationId}</correlationId>
                           <bookingId>${smartAirlineBookingId}</bookingId>
@@ -261,12 +260,12 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <element name="correlationId" value="${correlationId}"/>
                 </header>
             </send>
-            
+
             <receive endpoint="royalAirlineBookingEndpoint">
                 <message>
                     <data>
                       <![CDATA[
-                        <FlightBookingRequestMessage 
+                        <FlightBookingRequestMessage
                           xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema">
                           <correlationId>${correlationId}</correlationId>
                           <bookingId>???</bookingId>
@@ -293,16 +292,16 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <element name="correlationId" value="${correlationId}"/>
                 </header>
                 <extract>
-                    <message path="//:FlightBookingRequestMessage/:bookingId" 
+                    <message path="//:FlightBookingRequestMessage/:bookingId"
                                 variable="${royalAirlineBookingId}"/>
                 </extract>
             </receive>
-            
+
             <send endpoint="royalAirlineBookingEndpoint">
                 <message>
                     <data>
                       <![CDATA[
-                        <FlightBookingConfirmationMessage 
+                        <FlightBookingConfirmationMessage
                           xmlns="http://www.consol.com/schemas/AirlineSchema">
                           <correlationId>${correlationId}</correlationId>
                           <bookingId>${royalAirlineBookingId}</bookingId>
@@ -324,12 +323,12 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <element name="correlationid" value="${correlationId}"/>
                 </header>
             </send>
-            
+
             <receive endpoint="travelAgencyBookingResponseEndpoint">
                 <message>
                     <data>
                       <![CDATA[
-                        <TravelBookingResponseMessage 
+                        <TravelBookingResponseMessage
                           xmlns="http://www.consol.com/schemas/TravelAgency">
                           <correlationId>${correlationId}</correlationId>
                           <success>true</success>
@@ -352,7 +351,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                               <scheduledDeparture>16:00:00</scheduledDeparture>
                               <scheduledArrival>17:10:00</scheduledArrival>
                             </flight>
-                          </flights>                                
+                          </flights>
                         </TravelBookingResponseMessage>
                       ]]>
                     </data>
@@ -361,7 +360,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <element name="correlationId" value="${correlationId}"/>
                 </header>
             </receive>
-            
+
         </actions>
     </testcase>
 </spring:beans>
@@ -371,8 +370,8 @@ Similar to a sequence diagram the test case describes every step of the use case
 
 [source]
 ----
-<correlationId>${correlationId}</correlationId> 
-<id>${customerId}</id> 
+<correlationId>${correlationId}</correlationId>
+<id>${customerId}</id>
 ----
 
 The sending/receiving actions use a previously defined message sender/receiver. This is the link between test case and basic Spring configuration we have done before.

@@ -16,11 +16,11 @@
 
 package com.consol.citrus.vertx.factory;
 
-import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
-import io.vertx.core.Vertx;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
+import io.vertx.core.Vertx;
 
 /**
  * Vert.x instance factory that caches created instances in memory. Ensures that same cluster host and port is
@@ -32,7 +32,7 @@ import java.util.Map;
 public class CachingVertxInstanceFactory extends AbstractVertxInstanceFactory {
 
     /** Cache holds Vert.x instances identified by cluster hostname port combination */
-    private Map<String, Vertx> instanceCache = new HashMap<String, Vertx>();
+    private final Map<String, Vertx> instanceCache = new HashMap<>();
 
     @Override
     public synchronized Vertx newInstance(VertxEndpointConfiguration endpointConfiguration) {

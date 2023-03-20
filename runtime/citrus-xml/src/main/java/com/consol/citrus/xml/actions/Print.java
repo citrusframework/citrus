@@ -19,7 +19,7 @@
 
 package com.consol.citrus.xml.actions;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Christoph Deppisch

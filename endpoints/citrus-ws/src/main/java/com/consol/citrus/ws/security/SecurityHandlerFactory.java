@@ -202,27 +202,16 @@ public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, Ini
      */
     private class SimplePropertyUserStore extends PropertyUserStore {
         @Override
-        protected void loadUsers() throws IOException {
-            for (User user : users) {
+        protected void loadUsers() {
+            for (com.consol.citrus.ws.security.User user : users) {
                 Credential credential = Credential.getCredential(user.getPassword());
 
-                Principal userPrincipal = new AbstractLoginService.UserPrincipal(user.getName(),credential);
-                Subject subject = new Subject();
-                subject.getPrincipals().add(userPrincipal);
-                subject.getPrivateCredentials().add(credential);
-
-                String[] roleArray = IdentityService.NO_ROLES;
+                String[] roles = IdentityService.NO_ROLES;
                 if (user.getRoles() != null && user.getRoles().length > 0) {
-                    roleArray = user.getRoles();
+                    roles = user.getRoles();
                 }
 
-                for (String role : roleArray) {
-                    subject.getPrincipals().add(new AbstractLoginService.RolePrincipal(role));
-                }
-
-                subject.setReadOnly();
-
-                getKnownUserIdentities().put(user.getName(), getIdentityService().newUserIdentity(subject, userPrincipal, roleArray));
+                addUser(user.getName(), credential, roles);
             }
         }
     }

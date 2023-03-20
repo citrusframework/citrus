@@ -25,23 +25,23 @@
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.camel.message.CamelMessageConverter"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.camel.message.CamelMessageConverter</value></constructor-arg>
     <constructor-arg value="messageConverter"/>
   </bean>
 
   <!-- Camel context instances -->
   <bean id="camelContext" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.apache.camel.CamelContext"/>
+    <constructor-arg><value type="java.lang.Class">org.apache.camel.CamelContext</value></constructor-arg>
     <constructor-arg value="camelContext"/>
   </bean>
 
   <bean id="specialCamelContext" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.apache.camel.CamelContext"/>
+    <constructor-arg><value type="java.lang.Class">org.apache.camel.CamelContext</value></constructor-arg>
     <constructor-arg value="specialCamelContext"/>
   </bean>
 
   <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.message.MessageCorrelator</value></constructor-arg>
     <constructor-arg value="replyMessageCorrelator"/>
   </bean>
 </beans>

@@ -20,9 +20,9 @@
     So test has to accept incoming requests as first step.</description>
 
     <variables>
-      <variable name="from" value="christoph@citrusframework.com"></variable>
-      <variable name="to" value="citrus@citrusframework.com"></variable>
-      <variable name="subject" value="This is a test mail message"></variable>
+      <variable name="from" value="christoph@citrusframework.com"/>
+      <variable name="to" value="citrus@citrusframework.com"/>
+      <variable name="subject" value="This is a test mail message"/>
     </variables>
 
     <actions>

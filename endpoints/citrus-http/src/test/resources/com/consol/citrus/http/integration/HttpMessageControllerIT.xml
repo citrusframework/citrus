@@ -39,7 +39,8 @@
                 <sequential>
                     <http:receive-request server="httpServerRequestEndpoint">
                       <http:GET path="/" context-path="">
-                        <http:headers version="HTTP/1.1" content-type="text/html" accept="application/xml;charset=UTF-8">
+                        <http:headers version="HTTP/1.1" accept="application/xml;charset=UTF-8">
+                            <http:header name="contentType" value="text/html"/>
                             <http:header name="Host" value="localhost:11082"/>
                         </http:headers>
                       </http:GET>
@@ -65,7 +66,8 @@
                 <sequential>
                     <http:receive-request server="httpServerRequestEndpoint">
                       <http:GET path="/test/user/${id}" context-path="">
-                        <http:headers content-type="text/html" accept="application/xml;charset=UTF-8">
+                        <http:headers accept="application/xml;charset=UTF-8">
+                            <http:header name="contentType" value="text/html"/>
                             <http:header name="Host" value="localhost:11082"/>
                         </http:headers>
                         <http:body><http:data></http:data></http:body>
@@ -96,7 +98,8 @@
                       <http:GET path="/test/user" context-path="">
                         <http:param name="id" value="${id}"/>
                         <http:param name="name" value="TestUser"/>
-                        <http:headers content-type="text/html" accept="application/xml;charset=UTF-8">
+                        <http:headers accept="application/xml;charset=UTF-8">
+                            <http:header name="contentType" value="text/html"/>
                             <http:header name="Host" value="localhost:11082"/>
                         </http:headers>
                         <http:body><http:data></http:data></http:body>

@@ -25,7 +25,6 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.variable.VariableUtils;
 import org.apache.camel.ServiceStatus;
-import org.apache.camel.builder.SimpleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -183,8 +182,8 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
          * @param simpleExpression
          * @return
          */
-        public Builder language(SimpleBuilder simpleExpression) {
-            language("simple", simpleExpression.getText());
+        public Builder language(String simpleExpression) {
+            language("simple", simpleExpression);
             return this;
         }
 

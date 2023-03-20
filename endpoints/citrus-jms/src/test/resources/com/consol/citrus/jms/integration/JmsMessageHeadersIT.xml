@@ -2,9 +2,9 @@
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
               xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans 
-                                  http://www.springframework.org/schema/beans/spring-beans.xsd 
-                                  http://www.citrusframework.org/schema/testcase 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase
                                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
   <testcase name="JmsMessageHeadersIT">
@@ -39,8 +39,8 @@
                  <CorrelationId>${correlationId}</CorrelationId>
                  <User>${user}</User>
                  <Text>Hello Citrus</Text>
-               </HelloRequest>								
-						]]>
+               </HelloRequest>
+             ]]>
           </data>
         </message>
         <header>
@@ -61,7 +61,7 @@
                  <User>${user}</User>
                  <Text>Hello Citrus</Text>
               </HelloRequest>
-						]]>
+            ]]>
           </data>
         </message>
         <header>
@@ -71,7 +71,7 @@
           <element name="citrus_jms_timestamp" value="@assertThat(greaterThan(0))@"/>
           <element name="citrus_jms_deliveryMode" value="2"/>
           <element name="citrus_jms_expiration" value="0"/>
-          <element name="citrus_jms_destination" value="queue://headers"/>
+          <element name="citrus_jms_destination" value="ActiveMQQueue[headers]"/>
           <element name="citrus_jms_priority" value="4"/>
           <element name="citrus_jms_redelivered" value="false"/>
         </header>

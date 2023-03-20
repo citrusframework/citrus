@@ -25,17 +25,17 @@
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <bean id="webSocketHttpHeaders" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.web.socket.WebSocketHttpHeaders"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.web.socket.WebSocketHttpHeaders</value></constructor-arg>
     <constructor-arg value="webSocketHttpHeaders"/>
   </bean>
 
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.websocket.message.WebSocketMessageConverter"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.websocket.message.WebSocketMessageConverter</value></constructor-arg>
     <constructor-arg value="messageConverter"/>
   </bean>
 
   <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.endpoint.resolver.EndpointUriResolver</value></constructor-arg>
     <constructor-arg value="endpointResolver"/>
   </bean>
 

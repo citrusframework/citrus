@@ -26,10 +26,10 @@ import com.consol.citrus.restdocs.http.CitrusRestDocConfigurer;
 import com.consol.citrus.restdocs.http.RestDocClientInterceptor;
 import com.consol.citrus.testng.spring.TestNGCitrusSpringSupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.ManualRestDocumentation;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -55,7 +55,7 @@ public class RestDocConfigurationIT extends TestNGCitrusSpringSupport {
 
         httpClient = new HttpClientBuilder()
                                     .requestUrl("http://localhost:11080/hello")
-                                    .requestMethod(HttpMethod.POST)
+                                    .requestMethod(RequestMethod.POST)
                                     .contentType(MediaType.APPLICATION_XML_VALUE)
                                     .interceptors(Arrays.asList(restDocConfigurer, restDocInterceptor))
                                     .build();

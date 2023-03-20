@@ -1175,7 +1175,8 @@ Citrus provides a comfortable way to set the HTTP message sender with basic auth
 
 <bean id="basicAuthClient" class="org.springframework.ws.transport.http.HttpComponentsMessageSender">
   <property name="authScope">
-      <bean class="org.apache.http.auth.AuthScope">
+      <bean class="org.apache.hc.client5.http.auth.AuthScope">
+        <constructor-arg value="http"/>
         <constructor-arg value="localhost"/>
         <constructor-arg value="8090"/>
         <constructor-arg>
@@ -1185,7 +1186,7 @@ Citrus provides a comfortable way to set the HTTP message sender with basic auth
       </bean>
   </property>
   <property name="credentials">
-    <bean class="org.apache.http.auth.UsernamePasswordCredentials">
+    <bean class="org.apache.hc.client5.http.auth.UsernamePasswordCredentials">
         <constructor-arg value="someUsername"/>
         <constructor-arg value="somePassword"/>
     </bean>

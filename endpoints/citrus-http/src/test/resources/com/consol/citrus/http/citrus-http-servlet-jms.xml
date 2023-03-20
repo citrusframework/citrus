@@ -40,9 +40,8 @@
                                connection-factory="jmsConnectionFactory"
                                timeout="2000"/>
 
-  <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+  <bean id="jmsConnectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
     <property name="brokerURL" value="tcp://localhost:61616" />
-    <property name="watchTopicAdvisories" value="false"/>
   </bean>
 
 </beans>

@@ -15,7 +15,7 @@
  */
 package com.consol.citrus.ssh.model;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 @XmlRegistry
 public class ObjectFactory {
@@ -23,7 +23,7 @@ public class ObjectFactory {
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.consol.citrus.ssh.model
-     * 
+     *
      */
     public ObjectFactory() {
     }
@@ -38,7 +38,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link com.consol.citrus.ssh.model.SshResponse }
-     * 
+     *
      */
     public SshResponse createSshResponse() {
         return new SshResponse();

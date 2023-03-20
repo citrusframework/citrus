@@ -16,14 +16,12 @@
 
 package com.consol.citrus.mail.server;
 
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-import javax.xml.transform.Source;
-import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Stack;
+import java.util.stream.Collectors;
+import javax.xml.transform.Source;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.client.MailEndpointConfiguration;
@@ -38,11 +36,14 @@ import com.consol.citrus.mail.model.MailRequest;
 import com.consol.citrus.mail.model.MailResponse;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.server.AbstractServer;
+import com.icegreen.greenmail.mail.MailAddress;
+import com.icegreen.greenmail.user.GreenMailUser;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
+import jakarta.mail.AuthenticationFailedException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.MimeMailMessage;
-import org.subethamail.smtp.RejectException;
-import org.subethamail.smtp.helper.SimpleMessageListener;
-import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
-import org.subethamail.smtp.server.SMTPServer;
 
 /**
  * Mail server implementation starts new SMTP server instance and listens for incoming mail messages. Incoming mail messages
@@ -58,7 +59,7 @@ import org.subethamail.smtp.server.SMTPServer;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MailServer extends AbstractServer implements SimpleMessageListener {
+public class MailServer extends AbstractServer {
 
     /** Server port */
     private int port = 25;
@@ -82,13 +83,28 @@ public class MailServer extends AbstractServer implements SimpleMessageListener 
     private boolean splitMultipart = false;
 
     /** Smtp server instance */
-    private SMTPServer smtpServer;
+    private GreenMail smtpServer;
 
     @Override
     protected void startup() {
-        smtpServer = new SMTPServer(new SimpleMessageListenerAdapter(this));
-        smtpServer.setSoftwareName(getName());
-        smtpServer.setPort(port);
+        smtpServer = new GreenMail(new ServerSetup(port, null, "smtp"));
+        smtpServer.getManagers().getSmtpManager().getUserManager().setMessageDeliveryHandler((msg, mailAddress) -> {
+            GreenMailUser user = smtpServer.getManagers().getUserManager().getUserByEmail(mailAddress.getEmail());
+
+            if (null == user) {
+                String login = mailAddress.getEmail();
+                String email = mailAddress.getEmail();
+                String password = mailAddress.getEmail();
+                user = smtpServer.getManagers().getUserManager().createUser(email, login, password);
+            }
+
+            if (!accept(msg.getReturnPath().getEmail(), msg.getToAddresses())) {
+                throw new AuthenticationFailedException("Invalid user");
+            }
+
+            deliver(msg.getMessage());
+            return user;
+        });
         smtpServer.start();
     }
 
@@ -97,14 +113,13 @@ public class MailServer extends AbstractServer implements SimpleMessageListener 
         smtpServer.stop();
     }
 
-    @Override
-    public boolean accept(String from, String recipient) {
+    public boolean accept(String from, List<MailAddress> recipients) {
         if (autoAccept) {
             return true;
         }
 
         Message response = getEndpointAdapter().handleMessage(
-                MailMessage.accept(from, recipient)
+                MailMessage.accept(from, recipients.stream().map(MailAddress::getEmail).collect(Collectors.joining(",")))
                            .marshaller(marshaller));
 
         if (response == null || response.getPayload() == null) {
@@ -125,27 +140,22 @@ public class MailServer extends AbstractServer implements SimpleMessageListener 
         return acceptResponse.isAccept();
     }
 
-    @Override
-    public void deliver(String from, String recipient, InputStream data) {
-        try {
-            MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessage(getSession(), data));
-            MailMessage request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration(), null);
-            Message response = invokeEndpointAdapter(request);
+    public void deliver(MimeMessage msg) {
+        MimeMailMessage mimeMailMessage = new MimeMailMessage(msg);
+        MailMessage request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration(), null);
+        Message response = invokeEndpointAdapter(request);
 
-            if (response != null && response.getPayload() != null) {
-                MailResponse mailResponse = null;
-                if (response.getPayload() instanceof MailResponse) {
-                    mailResponse = (MailResponse) response.getPayload();
-                } else if (response.getPayload() instanceof String) {
-                    mailResponse = (MailResponse) marshaller.unmarshal(response.getPayload(Source.class));
-                }
-
-                if (mailResponse != null && mailResponse.getCode() != MailResponse.OK_CODE) {
-                    throw new RejectException(mailResponse.getCode(), mailResponse.getMessage());
-                }
+        if (response != null && response.getPayload() != null) {
+            MailResponse mailResponse = null;
+            if (response.getPayload() instanceof MailResponse) {
+                mailResponse = (MailResponse) response.getPayload();
+            } else if (response.getPayload() instanceof String) {
+                mailResponse = (MailResponse) marshaller.unmarshal(response.getPayload(Source.class));
             }
-        } catch (MessagingException e) {
-            throw new CitrusRuntimeException(e);
+
+            if (mailResponse != null && mailResponse.getCode() != MailResponse.OK_CODE) {
+                throw new CitrusRuntimeException(String.format("%s %s", mailResponse.getCode(), mailResponse.getMessage()));
+            }
         }
     }
 
@@ -304,7 +314,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener 
      * Gets the smtp server instance.
      * @return
      */
-    public SMTPServer getSmtpServer() {
+    public GreenMail getSmtpServer() {
         return smtpServer;
     }
 
@@ -312,7 +322,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener 
      * Sets the smtp server instance.
      * @param smtpServer
      */
-    public void setSmtpServer(SMTPServer smtpServer) {
+    public void setSmtpServer(GreenMail smtpServer) {
         this.smtpServer = smtpServer;
     }
 

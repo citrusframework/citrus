@@ -12,6 +12,11 @@
   <artifactId>citrus-jdbc</artifactId>
   <name>Citrus :: Endpoints :: JDBC</name>
 
+  <properties>
+    <jetty9.version>9.4.51.v20230217</jetty9.version>
+    <jakarta.servlet-api4.version>4.0.4</jakarta.servlet-api4.version>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -55,13 +60,47 @@
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-db-server</artifactId>
     </dependency>
+    <!-- TODO remove as soon as Spark supports Jakarta websocket-servlet-api -->
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>${jetty9.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-servlet</artifactId>
+      <version>${jetty9.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-util</artifactId>
+      <version>${jetty9.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-io</artifactId>
+      <version>${jetty9.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-webapp</artifactId>
+      <version>${jetty9.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.eclipse.jetty.websocket</groupId>
       <artifactId>websocket-server</artifactId>
+      <version>${jetty9.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-servlet</artifactId>
+      <version>${jetty9.version}</version>
+    </dependency>
+    <!-- TODO remove as soon as Spark supports Jakarta servlet-api -->
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
+      <version>${jakarta.servlet-api4.version}</version>
     </dependency>
 
     <dependency>

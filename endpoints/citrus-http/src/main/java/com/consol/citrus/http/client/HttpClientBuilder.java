@@ -23,11 +23,11 @@ import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -80,7 +80,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
      * @param requestMethod
      * @return
      */
-    public HttpClientBuilder requestMethod(HttpMethod requestMethod) {
+    public HttpClientBuilder requestMethod(RequestMethod requestMethod) {
         endpoint.getEndpointConfiguration().setRequestMethod(requestMethod);
         return this;
     }

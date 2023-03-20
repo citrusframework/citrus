@@ -16,16 +16,23 @@
 
 package com.consol.citrus.vertx.factory;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
-import io.vertx.core.*;
-import io.vertx.core.impl.FutureFactoryImpl;
-import io.vertx.core.impl.VertxFactoryImpl;
-import io.vertx.core.spi.VertxFactory;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
+import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract Vertx instance factory provides basic method for creating a new Vertx instance. By default waits for
+ * Abstract Vertx instance factory provides basic method for creating a new Vertx instance. By default, waits for
  * instance to start up properly.
  *
  * @author Christoph Deppisch
@@ -34,10 +41,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractVertxInstanceFactory implements VertxInstanceFactory {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AbstractVertxInstanceFactory.class);
-
-    /** Vertx factory */
-    private VertxFactory vertxFactory = new VertxFactoryImpl();
+    private static final Logger log = LoggerFactory.getLogger(AbstractVertxInstanceFactory.class);
 
     /**
      * Creates new Vert.x instance with default factory. Subclasses may overwrite this
@@ -45,46 +49,36 @@ public abstract class AbstractVertxInstanceFactory implements VertxInstanceFacto
      * @return
      */
     protected Vertx createVertx(VertxEndpointConfiguration endpointConfiguration) {
-        final Vertx[] vertx = new Vertx[1];
-        final Future loading = new FutureFactoryImpl().future();
+        final CompletableFuture<Vertx> loading = new CompletableFuture<>();
 
-        Handler<AsyncResult<Vertx>> asyncLoadingHandler = new Handler<AsyncResult<Vertx>>() {
-            @Override
-            public void handle(AsyncResult<Vertx> event) {
-                vertx[0] = event.result();
-                loading.complete();
-                log.info("Vert.x instance started");
-            }
+        Handler<AsyncResult<Vertx>> asyncLoadingHandler = event -> {
+            loading.complete(event.result());
+            log.info("Vert.x instance started");
         };
 
-        if (endpointConfiguration.getPort() > 0) {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Creating new Vert.x instance '%s:%s' ...", endpointConfiguration.getHost(), endpointConfiguration.getPort()));
-            }
-            VertxOptions vertxOptions = new VertxOptions();
-            vertxOptions.setClusterPort(endpointConfiguration.getPort());
-            vertxOptions.setClusterHost(endpointConfiguration.getHost());
-            vertxFactory.clusteredVertx(vertxOptions, asyncLoadingHandler);
-        } else {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Creating new Vert.x instance '%s:%s' ...", endpointConfiguration.getHost(), 0L));
-            }
-            VertxOptions vertxOptions = new VertxOptions();
-            vertxOptions.setClusterPort(0);
-            vertxOptions.setClusterHost(endpointConfiguration.getHost());
-            vertxFactory.clusteredVertx(vertxOptions, asyncLoadingHandler);
+        if (log.isDebugEnabled()) {
+            log.debug("Creating new Vert.x instance ...");
         }
+
+        VertxOptions vertxOptions = new VertxOptions();
+        vertxOptions.setClusterManager(new HazelcastClusterManager());
+        Vertx.clusteredVertx(vertxOptions, asyncLoadingHandler);
 
         // Wait for full loading
-        while (!loading.isComplete()) {
+        int maxAttempts = 25;
+        for (int i = 0; i < maxAttempts; i++) {
             try {
-                log.debug("Waiting for Vert.x instance to startup");
-                Thread.sleep(250L);
-            } catch (InterruptedException e) {
+                Vertx vertx = loading.get(500, TimeUnit.MILLISECONDS);
+                if (vertx != null) {
+                    return vertx;
+                }
+            } catch (InterruptedException | ExecutionException e) {
                 log.warn("Interrupted while waiting for Vert.x instance startup", e);
+            } catch (TimeoutException e) {
+                log.debug("Waiting for Vert.x instance to startup ...");
             }
         }
 
-        return vertx[0];
+        throw new CitrusRuntimeException("Failed to start Vert.x instance");
     }
 }

@@ -19,7 +19,7 @@
 
 package com.consol.citrus.xml;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 import com.consol.citrus.xml.container.Template;
 

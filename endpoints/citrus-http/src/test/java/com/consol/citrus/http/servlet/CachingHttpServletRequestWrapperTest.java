@@ -16,18 +16,23 @@
 
 package com.consol.citrus.http.servlet;
 
-import org.apache.http.entity.ContentType;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Collections;
+import java.util.Map;
+
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.hc.core5.http.ContentType;
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.*;
-
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -46,22 +51,22 @@ public class CachingHttpServletRequestWrapperTest {
     }
 
     @DataProvider(name = "queryStringRequestMethods")
-    public static Object[] queryStringRequestMethods() {
-        return new Object[]{
-                RequestMethod.DELETE,
-                RequestMethod.GET,
-                RequestMethod.HEAD,
-                RequestMethod.OPTIONS,
-                RequestMethod.PATCH,
-                RequestMethod.TRACE
+    public static Object[][] queryStringRequestMethods() {
+        return new Object[][] {
+            new Object[] { RequestMethod.DELETE },
+            new Object[] { RequestMethod.GET },
+            new Object[] { RequestMethod.HEAD },
+            new Object[] { RequestMethod.OPTIONS },
+            new Object[] { RequestMethod.PATCH },
+            new Object[] { RequestMethod.TRACE }
         };
     }
 
     @DataProvider(name = "bodyPayloadRequestMethods")
-    public static Object[] bodyPayloadRequestMethods() {
-        return new Object[]{
-                RequestMethod.POST,
-                RequestMethod.PUT
+    public static Object[][] bodyPayloadRequestMethods() {
+        return new Object[][] {
+            new Object[] { RequestMethod.POST },
+            new Object[] { RequestMethod.PUT}
         };
     }
 

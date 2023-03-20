@@ -121,7 +121,7 @@ public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, Ini
 
     /**
      * Gets the realm.
-     * @return the realm the realm to get.
+     * @return the realm.
      */
     public String getRealm() {
         return realm;
@@ -137,7 +137,7 @@ public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, Ini
 
     /**
      * Gets the constraints.
-     * @return the constraints the constraints to get.
+     * @return the constraints.
      */
     public Map<String, Constraint> getConstraints() {
         return constraints;
@@ -153,7 +153,7 @@ public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, Ini
 
     /**
      * Gets the loginService.
-     * @return the loginService the loginService to get.
+     * @return the loginService.
      */
     public LoginService getLoginService() {
         return loginService;
@@ -169,7 +169,7 @@ public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, Ini
 
     /**
      * Gets the authenticator.
-     * @return the authenticator the authenticator to get.
+     * @return the authenticator.
      */
     public Authenticator getAuthenticator() {
         return authenticator;
@@ -202,27 +202,16 @@ public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, Ini
      */
     private class SimplePropertyUserStore extends PropertyUserStore {
         @Override
-        protected void loadUsers() throws IOException {
-            for (User user : users) {
+        protected void loadUsers() {
+            for (com.consol.citrus.http.security.User user : users) {
                 Credential credential = Credential.getCredential(user.getPassword());
 
-                Principal userPrincipal = new AbstractLoginService.UserPrincipal(user.getName(),credential);
-                Subject subject = new Subject();
-                subject.getPrincipals().add(userPrincipal);
-                subject.getPrivateCredentials().add(credential);
-
-                String[] roleArray = IdentityService.NO_ROLES;
+                String[] roles = IdentityService.NO_ROLES;
                 if (user.getRoles() != null && user.getRoles().length > 0) {
-                    roleArray = user.getRoles();
+                    roles = user.getRoles();
                 }
 
-                for (String role : roleArray) {
-                    subject.getPrincipals().add(new AbstractLoginService.RolePrincipal(role));
-                }
-
-                subject.setReadOnly();
-
-                getKnownUserIdentities().put(user.getName(), getIdentityService().newUserIdentity(subject, userPrincipal, roleArray));
+                addUser(user.getName(), credential, roles);
             }
         }
     }

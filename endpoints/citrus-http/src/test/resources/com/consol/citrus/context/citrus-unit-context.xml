@@ -4,7 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-	 
+
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository"/>
 
     <bean id="citrusLoggingInterceptor" class="com.consol.citrus.http.interceptor.LoggingHandlerInterceptor"/>
@@ -12,32 +12,23 @@
     <bean id="citrusHttpMessageController" class="com.consol.citrus.http.controller.HttpMessageController"/>
 
     <bean id="basicAuthClientRequestFactory" class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
-      <property name="params">
-        <map>
-            <entry key="http.socket.timeout">
-                <value type="java.lang.Integer">10000</value>
-            </entry>
-        </map>
-      </property>
       <property name="authScope">
-          <bean class="org.apache.http.auth.AuthScope">
+          <bean class="org.apache.hc.client5.http.auth.AuthScope">
             <constructor-arg value="localhost"/>
             <constructor-arg value="8088"/>
-            <constructor-arg value=""/>
-            <constructor-arg value="basic"/>
           </bean>
       </property>
       <property name="credentials">
-        <bean class="org.apache.http.auth.UsernamePasswordCredentials">
+        <bean class="org.apache.hc.client5.http.auth.UsernamePasswordCredentials">
             <constructor-arg value="someUsername"/>
             <constructor-arg value="somePassword"/>
-        </bean>      
-      </property>  
+        </bean>
+      </property>
     </bean>
 
     <bean id="mockResponseEndpointAdapter" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+        <constructor-arg><value type="java.lang.Class">com.consol.citrus.endpoint.EndpointAdapter</value></constructor-arg>
       <constructor-arg value="mockResponseEndpointAdapter"/>
     </bean>
-    
+
 </beans>

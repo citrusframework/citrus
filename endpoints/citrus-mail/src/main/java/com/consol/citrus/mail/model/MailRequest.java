@@ -15,7 +15,7 @@
  */
 package com.consol.citrus.mail.model;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 /**
  * Mail message model object representing mail content with sender and recipient information. Body can be text, binary

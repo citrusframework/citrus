@@ -21,7 +21,7 @@ import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 /**
  * @author Christoph Deppisch

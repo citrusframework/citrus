@@ -5,7 +5,7 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean id="k8sClient" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="io.fabric8.kubernetes.client.KubernetesClient"/>
+    <constructor-arg><value type="java.lang.Class">io.fabric8.kubernetes.client.KubernetesClient</value></constructor-arg>
     <constructor-arg value="k8sClient"/>
   </bean>
 

@@ -16,10 +16,10 @@
 
 package com.consol.citrus.jms.message;
 
-import javax.jms.Message;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.jms.Message;
 import org.springframework.jms.support.JmsHeaders;
 import org.springframework.jms.support.SimpleJmsHeaderMapper;
 import org.springframework.messaging.MessageHeaders;

@@ -17,11 +17,11 @@
   </citrus:message-validators>
 
   <bean id="validator1" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.validation.MessageValidator</value></constructor-arg>
     <constructor-arg value="validator1"/>
   </bean>
   <bean id="validator2" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.validation.MessageValidator</value></constructor-arg>
     <constructor-arg value="validator2"/>
   </bean>
 

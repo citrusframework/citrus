@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.common.ShutdownPhase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.SocketUtils;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
 import kafka.utils.CoreUtils;
@@ -49,7 +50,6 @@ import org.apache.zookeeper.server.ServerCnxnFactory;
 import org.apache.zookeeper.server.ZooKeeperServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.SocketUtils;
 import org.springframework.util.StringUtils;
 
 /**
