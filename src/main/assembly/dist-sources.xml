@@ -115,13 +115,6 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>endpoints/citrus-jdbc/target</directory>
-      <outputDirectory/>
-      <includes>
-        <include>*sources.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>endpoints/citrus-jms/target</directory>
       <outputDirectory/>
       <includes>

@@ -78,7 +78,6 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(enterpriseArchive, "/citrus-core-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-jms-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-kafka-.*jar");
-        verifyArtifact(enterpriseArchive, "/citrus-jdbc-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-http-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-websocket-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-ws-.*jar");
@@ -114,7 +113,6 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(enterpriseArchive, "/citrus-core-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-jms-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-kafka-.*jar");
-        verifyArtifact(enterpriseArchive, "/citrus-jdbc-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-http-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-websocket-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-ws-.*jar");
@@ -144,7 +142,6 @@ public class CitrusArchiveProcessorTest {
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-core-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-jms-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-kafka-.*jar");
-        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-jdbc-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-http-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-websocket-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-ws-.*jar");

@@ -16,11 +16,10 @@
 
 package com.consol.citrus.dsl.runner;
 
-import jakarta.servlet.http.Cookie;
-
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessage;
@@ -31,8 +30,8 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Producer;
-import com.consol.citrus.dsl.UnitTestSupport;
-import org.apache.http.entity.ContentType;
+import jakarta.servlet.http.Cookie;
+import org.apache.hc.core5.http.ContentType;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;

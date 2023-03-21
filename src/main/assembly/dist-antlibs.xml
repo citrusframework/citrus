@@ -30,7 +30,6 @@
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-ftp</include>
         <include>com.consol.citrus:citrus-http</include>
-        <include>com.consol.citrus:citrus-jdbc</include>
         <include>com.consol.citrus:citrus-jms</include>
         <include>com.consol.citrus:citrus-kafka</include>
         <include>com.consol.citrus:citrus-jmx</include>

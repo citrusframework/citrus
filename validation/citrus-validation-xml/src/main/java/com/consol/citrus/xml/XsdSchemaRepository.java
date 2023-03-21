@@ -16,10 +16,10 @@
 
 package com.consol.citrus.xml;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.parsers.ParserConfigurationException;
 
 import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.common.Named;
@@ -85,7 +85,6 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
             addCitrusSchema("citrus-http-message");
             addCitrusSchema("citrus-mail-message");
             addCitrusSchema("citrus-ftp-message");
-            addCitrusSchema("citrus-jdbc-message");
             addCitrusSchema("citrus-ssh-message");
             addCitrusSchema("citrus-rmi-message");
             addCitrusSchema("citrus-jmx-message");

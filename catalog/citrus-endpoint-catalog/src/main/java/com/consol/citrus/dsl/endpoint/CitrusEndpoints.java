@@ -23,7 +23,6 @@ import com.consol.citrus.dsl.endpoint.ftp.FtpEndpointCatalog;
 import com.consol.citrus.dsl.endpoint.ftp.ScpEndpointCatalog;
 import com.consol.citrus.dsl.endpoint.ftp.SftpEndpointCatalog;
 import com.consol.citrus.dsl.endpoint.http.HttpEndpointCatalog;
-import com.consol.citrus.dsl.endpoint.jdbc.JdbcEndpointCatalog;
 import com.consol.citrus.dsl.endpoint.jms.JmsEndpointCatalog;
 import com.consol.citrus.dsl.endpoint.jmx.JmxEndpointCatalog;
 import com.consol.citrus.dsl.endpoint.kafka.KafkaEndpointCatalog;
@@ -184,14 +183,6 @@ public abstract class CitrusEndpoints {
      */
     public static SeleniumEndpointCatalog selenium() {
         return SeleniumEndpointCatalog.selenium();
-    }
-
-    /**
-     * Creates new JdbcDbServer builder.
-     * @return
-     */
-    public static JdbcEndpointCatalog jdbc() {
-        return JdbcEndpointCatalog.jdbc();
     }
 
     /**
