@@ -27,8 +27,8 @@ import com.consol.citrus.jms.endpoint.JmsEndpointComponent;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mockito;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -60,7 +60,7 @@ public class HttpsEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), HttpClient.class);
 
         Assert.assertEquals(((HttpClient)endpoint).getEndpointConfiguration().getRequestUrl(), "https://localhost:8088/test");
-        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
+        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getRequestMethod(), RequestMethod.POST);
         Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
     }
@@ -91,7 +91,7 @@ public class HttpsEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), HttpClient.class);
 
         Assert.assertEquals(((HttpClient)endpoint).getEndpointConfiguration().getRequestUrl(), "https://localhost:8088/test?customParam=foo");
-        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getRequestMethod(), HttpMethod.DELETE);
+        Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getRequestMethod(), RequestMethod.DELETE);
         Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
     }
 

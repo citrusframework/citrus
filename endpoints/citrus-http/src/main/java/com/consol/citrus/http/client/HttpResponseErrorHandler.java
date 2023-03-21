@@ -16,12 +16,12 @@
 
 package com.consol.citrus.http.client;
 
+import java.io.IOException;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
-
-import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -42,7 +42,7 @@ public class HttpResponseErrorHandler extends DefaultResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
         if (errorHandlingStrategy.equals(ErrorHandlingStrategy.PROPAGATE)) {
-            throw new HttpErrorPropagatingException(getHttpStatusCode(response), response.getStatusText(),
+            throw new HttpErrorPropagatingException(response.getStatusCode(), response.getStatusText(),
                     response.getHeaders(), getResponseBody(response), getCharset(response));
         } else if (errorHandlingStrategy.equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
             super.handleError(response);

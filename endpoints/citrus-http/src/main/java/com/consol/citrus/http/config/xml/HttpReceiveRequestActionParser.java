@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.config.xml;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.util.List;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;

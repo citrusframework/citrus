@@ -30,12 +30,12 @@
                       port="22222"/>
 
   <bean id="apacheFtpServer" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.apache.ftpserver.FtpServer"/>
+    <constructor-arg><value type="java.lang.Class">org.apache.ftpserver.FtpServer</value></constructor-arg>
     <constructor-arg value="apacheFtpServer"/>
   </bean>
 
   <bean id="userManager" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.apache.ftpserver.ftplet.UserManager"/>
+    <constructor-arg><value type="java.lang.Class">org.apache.ftpserver.ftplet.UserManager</value></constructor-arg>
     <constructor-arg value="userManager"/>
   </bean>
 

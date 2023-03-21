@@ -31,17 +31,17 @@
   </util:list>
 
   <bean id="webDriver" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.openqa.selenium.WebDriver"/>
+    <constructor-arg><value type="java.lang.Class">org.openqa.selenium.WebDriver</value></constructor-arg>
     <constructor-arg value="webDriver"/>
   </bean>
 
   <bean id="firefoxProfile" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.openqa.selenium.firefox.FirefoxProfile"/>
+    <constructor-arg><value type="java.lang.Class">org.openqa.selenium.firefox.FirefoxProfile</value></constructor-arg>
     <constructor-arg value="firefoxProfile"/>
   </bean>
 
   <bean id="eventListener" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.openqa.selenium.support.events.WebDriverListener"/>
+    <constructor-arg><value type="java.lang.Class">org.openqa.selenium.support.events.WebDriverListener</value></constructor-arg>
     <constructor-arg value="eventListener"/>
   </bean>
 

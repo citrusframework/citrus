@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
-              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/kubernetes/testcase http://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd">
 
@@ -21,10 +21,10 @@
             </k8s:create-service>
         </actions>
     </testcase>
-    
+
     <spring:bean id="myK8sClient" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.kubernetes.client.KubernetesClient"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.kubernetes.client.KubernetesClient</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="myK8sClient"/>
     </spring:bean>
-    
+
 </spring:beans>

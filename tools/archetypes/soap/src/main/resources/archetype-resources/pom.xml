@@ -8,12 +8,19 @@
   <name>Citrus Integration Test</name>
 
   <properties>
-    <java.version>11</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>17</java.version>
 
-    <citrus.version>3.5.0-SNAPSHOT</citrus.version>
-    <slf4j.version>1.7.30</slf4j.version>
-    <log4j2.version>2.15.0</log4j2.version>
+    <maven.version>3.8.4</maven.version>
+    <maven.compiler.version>3.11.0</maven.compiler.version>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
+    <citrus.version>4.0.0-SNAPSHOT</citrus.version>
+
+    <slf4j.version>2.0.6</slf4j.version>
+    <log4j2.version>2.20.0</log4j2.version>
   </properties>
 
   <dependencies>
@@ -57,7 +64,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
+      <artifactId>log4j-slf4j2-impl</artifactId>
       <version>${log4j2.version}</version>
     </dependency>
   </dependencies>
@@ -75,11 +82,10 @@
 
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>${maven.compiler.version}</version>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
+          <release>${java.version}</release>
         </configuration>
       </plugin>
 

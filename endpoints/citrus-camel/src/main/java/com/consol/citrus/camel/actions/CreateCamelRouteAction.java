@@ -16,18 +16,17 @@
 
 package com.consol.citrus.camel.actions;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.StringSource;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
-import org.apache.camel.spring.xml.SpringModelJAXBContextFactory;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.util.StringUtils;
 
@@ -42,6 +41,8 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
 
     /** Route context as XML */
     private final String routeContext;
+
+    private volatile JAXBContext context;
 
     /**
      * Default constructor.
@@ -97,10 +98,19 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
     /**
      * Creates new Camel JaxB context.
      * @return
-     * @throws javax.xml.bind.JAXBException
+     * @throws JAXBException
      */
     public JAXBContext getJaxbContext() throws JAXBException {
-        return new SpringModelJAXBContextFactory().newJAXBContext();
+        if (context == null) {
+            synchronized (this) {
+                context = JAXBContext.newInstance("org.apache.camel:org.apache.camel.model:org.apache.camel.model.cloud:" +
+                        "org.apache.camel.model.config:org.apache.camel.model.dataformat:org.apache.camel.model.language:" +
+                        "org.apache.camel.model.loadbalancer:org.apache.camel.model.rest:org.apache.camel.model.transformer:" +
+                        "org.apache.camel.model.validator:org.apache.camel.core.xml:org.apache.camel.spring.xml", this.getClass().getClassLoader());
+            }
+        }
+
+        return context;
     }
 
     /**

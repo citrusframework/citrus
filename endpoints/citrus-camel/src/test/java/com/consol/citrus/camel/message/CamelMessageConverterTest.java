@@ -25,6 +25,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.apache.camel.impl.engine.DefaultHeadersMapFactory;
 import org.apache.camel.support.DefaultExchange;
@@ -33,6 +34,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 /**
@@ -41,14 +43,18 @@ import static org.mockito.Mockito.when;
  */
 public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
-    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
-    private CamelMessageConverter messageConverter = new CamelMessageConverter();
-    private CamelEndpointConfiguration endpointConfiguration = new CamelEndpointConfiguration();
+    private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
+    private final ExtendedCamelContext extendedCamelContext = Mockito.mock(ExtendedCamelContext.class);
+    private final CamelMessageConverter messageConverter = new CamelMessageConverter();
+    private final CamelEndpointConfiguration endpointConfiguration = new CamelEndpointConfiguration();
 
     @BeforeClass
     void setupMocks() {
-        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         endpointConfiguration.setCamelContext(camelContext);
+
+        reset(camelContext);
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
     }
 
     @Test
@@ -80,7 +86,6 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
     public void testConvertInbound() {
         DefaultExchange exchange = new DefaultExchange(camelContext);
         exchange.setExchangeId(UUID.randomUUID().toString());
-        exchange.setFromRouteId("helloRoute");
         exchange.getIn().setBody("Hello from Citrus!");
         exchange.getIn().setHeader("operation", "sayHello");
 
@@ -89,7 +94,6 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.ROUTE_ID), "helloRoute");
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), false);
         Assert.assertEquals(result.getHeader("operation"), "sayHello");
     }
@@ -98,7 +102,6 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
     public void testConvertInboundWithProperties() {
         DefaultExchange exchange = new DefaultExchange(camelContext);
         exchange.setExchangeId(UUID.randomUUID().toString());
-        exchange.setFromRouteId("helloRoute");
         exchange.getIn().setBody("Hello from Citrus!");
         exchange.getIn().setHeader("operation", "sayHello");
 
@@ -110,7 +113,6 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.ROUTE_ID), "helloRoute");
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), false);
         Assert.assertEquals(result.getHeader("operation"), "sayHello");
         Assert.assertEquals(result.getHeader("SpecialProperty"), "foo");
@@ -121,7 +123,6 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
     public void testConvertInboundWithException() {
         DefaultExchange exchange = new DefaultExchange(camelContext);
         exchange.setExchangeId(UUID.randomUUID().toString());
-        exchange.setFromRouteId("helloRoute");
         exchange.getIn().setBody("Hello from Citrus!");
         exchange.getIn().setHeader("operation", "sayHello");
         exchange.setException(new CitrusRuntimeException("Something went wrong"));
@@ -131,7 +132,6 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
-        Assert.assertEquals(result.getHeader(CamelMessageHeaders.ROUTE_ID), "helloRoute");
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_FAILED), true);
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION), CitrusRuntimeException.class.getName());
         Assert.assertEquals(result.getHeader(CamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE), "Something went wrong");

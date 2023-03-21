@@ -34,7 +34,7 @@ class ReceiveCodeProviderTest {
 
         //GIVEN
         final String endpoint = "foo";
-        final String expectedString = "runner.run(receive().endpoint(\"foo\")\n);";
+        final String expectedString = "runner.run(receive().endpoint(\"foo\")\n  .message()\n);";
 
         //WHEN
         final CodeBlock code = receiveCodeProvider.getCode(endpoint, message);

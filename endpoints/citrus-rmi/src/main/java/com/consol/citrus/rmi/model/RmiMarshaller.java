@@ -16,7 +16,6 @@
 
 package com.consol.citrus.rmi.model;
 
-import javax.xml.bind.JAXBException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
@@ -24,6 +23,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.Jaxb2Marshaller;
 import com.consol.citrus.xml.Marshaller;
 import com.consol.citrus.xml.Unmarshaller;
+import jakarta.xml.bind.JAXBException;
 import org.springframework.core.io.ClassPathResource;
 
 /**

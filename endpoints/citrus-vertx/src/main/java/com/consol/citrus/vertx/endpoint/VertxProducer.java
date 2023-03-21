@@ -19,6 +19,7 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
+import io.vertx.core.eventbus.DeliveryOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.core.Vertx;
@@ -30,7 +31,7 @@ import io.vertx.core.Vertx;
 public class VertxProducer implements Producer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(VertxProducer.class);
+    private static final Logger log = LoggerFactory.getLogger(VertxProducer.class);
 
     /** The producer name. */
     private final String name;
@@ -82,16 +83,19 @@ public class VertxProducer implements Producer {
      * @param message
      */
     private void sendOrPublishMessage(Message message) {
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setSendTimeout(endpointConfiguration.getTimeout());
+
         if (endpointConfiguration.isPubSubDomain()) {
             if (log.isDebugEnabled()) {
                 log.debug("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
             }
-            vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload());
+            vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions);
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
             }
-            vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload());
+            vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions);
         }
     }
 

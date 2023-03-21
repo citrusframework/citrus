@@ -36,7 +36,8 @@ import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.matcher.ValidationMatcherLibrary;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -162,16 +163,29 @@ public class CitrusSpringConfigTest extends TestNGCitrusSpringSupport {
 
     @Configuration
     static class CustomConfig {
-        static TestReporter reporter = Mockito.mock(TestReporter.class);
-        static TestListener testListener = Mockito.mock(TestListener.class);
-        static TestSuiteListener testSuiteListener = Mockito.mock(TestSuiteListener.class);
-        static TestActionListener testActionListener = Mockito.mock(TestActionListener.class);
-        static MessageListener messageListener = Mockito.mock(MessageListener.class);
-        static MessageProcessor messageProcessor = Mockito.mock(MessageProcessor.class);
+        @Mock
+        static TestReporter reporter;
+        @Mock
+        static TestListener testListener;
+        @Mock
+        static TestSuiteListener testSuiteListener;
+        @Mock
+        static TestActionListener testActionListener;
+        @Mock
+        static MessageListener messageListener;
+        @Mock
+        static MessageProcessor messageProcessor;
 
-        static FunctionLibrary functionLibrary = Mockito.mock(FunctionLibrary.class);
-        static ValidationMatcherLibrary validationMatcherLibrary = Mockito.mock(ValidationMatcherLibrary.class);
-        static MessageValidator<?> messageValidator = Mockito.mock(MessageValidator.class);
+        @Mock
+        static FunctionLibrary functionLibrary;
+        @Mock
+        static ValidationMatcherLibrary validationMatcherLibrary;
+        @Mock
+        static MessageValidator<?> messageValidator;
+
+        public CustomConfig() {
+            MockitoAnnotations.openMocks(this);
+        }
 
         @Bean
         public TestReporter reporter() {

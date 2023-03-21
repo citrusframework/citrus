@@ -16,12 +16,11 @@
 
 package com.consol.citrus.ftp.message;
 
-import javax.xml.bind.JAXBException;
+import java.io.IOException;
+import java.io.StringWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
-import java.io.StringWriter;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.model.Command;
@@ -44,6 +43,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;

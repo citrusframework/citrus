@@ -33,6 +33,7 @@ import com.consol.citrus.yaml.actions.YamlTestActionBuilder;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -51,7 +52,7 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
      * Default constructor.
      */
     public YamlTestLoader() {
-        Constructor constructor = new Constructor(YamlTestCase.class);
+        Constructor constructor = new Constructor(YamlTestCase.class, new LoaderOptions());
 
         Map<String, TestActionBuilder<?>> builders = YamlTestActionBuilder.lookup();
         if (!builders.isEmpty()) {

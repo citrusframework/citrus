@@ -17,24 +17,19 @@
 package com.consol.citrus.http.client;
 
 import java.net.URI;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.consol.citrus.common.InitializingPhase;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.AbstractHttpClient;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.hc.client5.http.auth.AuthCache;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.Credentials;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.protocol.HttpContext;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -49,9 +44,6 @@ import org.springframework.util.Assert;
  */
 public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpComponentsClientHttpRequestFactory>, InitializingPhase {
 
-    /** Custom Http params */
-    private Map<String, Object> params;
-
     /** The target request factory */
     private HttpClient httpClient;
 
@@ -59,10 +51,7 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     private Credentials credentials;
 
     /** Authentiacation scope */
-    private AuthScope authScope = new AuthScope("localhost", 8080, AuthScope.ANY_REALM, AuthScope.ANY_SCHEME);
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(BasicAuthClientHttpRequestFactory.class);
+    private AuthScope authScope = new AuthScope(new HttpHost("http", "localhost", 8080));
 
     /**
      * Construct the client factory bean with user credentials.
@@ -70,32 +59,28 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     public HttpComponentsClientHttpRequestFactory getObject() throws Exception {
         Assert.notNull(credentials, "User credentials not set properly!");
 
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient) {
+        return new HttpComponentsClientHttpRequestFactory(httpClient) {
             @Override
             protected HttpContext createHttpContext(HttpMethod httpMethod, URI uri) {
                 // we have to use preemptive authentication
                 // therefore add some basic auth cache to the local context
                 AuthCache authCache = new BasicAuthCache();
                 BasicScheme basicAuth = new BasicScheme();
+                basicAuth.initPreemptive(credentials);
 
-                authCache.put(new HttpHost(authScope.getHost(), authScope.getPort(), "http"), basicAuth);
-                authCache.put(new HttpHost(authScope.getHost(), authScope.getPort(), "https"), basicAuth);
+                HttpHost httpTarget = new HttpHost(uri.getScheme(), authScope.getHost(), authScope.getPort());
+                authCache.put(httpTarget, basicAuth);
 
-                BasicHttpContext localcontext = new BasicHttpContext();
-                localcontext.setAttribute(ClientContext.AUTH_CACHE, authCache);
+                BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                credentialsProvider.setCredentials(new AuthScope(httpTarget), credentials);
 
-                return localcontext;
+                HttpClientContext ctx = HttpClientContext.create();
+                ctx.setAuthCache(authCache);
+                ctx.setCredentialsProvider(credentialsProvider);
+
+                return ctx;
             }
         };
-
-        if (httpClient instanceof AbstractHttpClient) {
-            ((AbstractHttpClient)httpClient).getCredentialsProvider().setCredentials(authScope, credentials);
-        } else {
-            log.warn("Unable to set username password credentials for basic authentication, " +
-            		"because nested HttpClient implementation does not support a credentials provider!");
-        }
-
-        return requestFactory;
     }
 
     /**
@@ -115,14 +100,12 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     @Override
     public void initialize() {
         if (httpClient == null) {
-            httpClient = new DefaultHttpClient();
-        }
+            BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(authScope, credentials);
 
-        if (params != null) {
-            for (Entry<String, Object> param : params.entrySet()) {
-                log.debug("Setting custom Http param on client: '" + param.getKey() + "'='" + param.getValue() + "'");
-                httpClient.getParams().setParameter(param.getKey(), param.getValue());
-            }
+            httpClient = HttpClients.custom()
+                    .setDefaultCredentialsProvider(credentialsProvider)
+                    .build();
         }
     }
 
@@ -148,14 +131,6 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
      */
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
-    }
-
-    /**
-     * Sets the params.
-     * @param params the params to set
-     */
-    public void setParams(Map<String, Object> params) {
-        this.params = params;
     }
 
 }

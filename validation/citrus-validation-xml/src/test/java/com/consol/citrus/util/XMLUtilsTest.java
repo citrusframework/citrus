@@ -17,11 +17,11 @@
 package com.consol.citrus.util;
 
 
-import javax.xml.XMLConstants;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
+import javax.xml.XMLConstants;
 
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
@@ -377,7 +377,8 @@ public class XMLUtilsTest {
 
         Document doc = XMLUtils.parseMessagePayload(payload);
 
-        Assert.assertEquals(XMLUtils.serialize(doc), payload + System.getProperty("line.separator"));
+        Assert.assertEquals(XMLUtils.serialize(doc), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
+                "<testRequest xmlns=\"http://www.consol.de/test-default\">ÄäÖöÜü</testRequest>" + System.getProperty("line.separator"));
     }
 
     @Test

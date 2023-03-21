@@ -5,7 +5,7 @@
   <parent>
     <artifactId>citrus-endpoints</artifactId>
     <groupId>com.consol.citrus</groupId>
-    <version>3.5.0-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -35,6 +35,7 @@
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
           </xjbSources>
+          <clearOutputDir>true</clearOutputDir>
         </configuration>
       </plugin>
 
@@ -169,12 +170,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-broker</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-spring</artifactId>
+      <artifactId>artemis-jakarta-server</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

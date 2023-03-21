@@ -28,6 +28,7 @@
 
   <!-- RMI server -->
   <citrus-rmi:server id="rmiHelloServer"
+                       host="localhost"
                        interface="com.consol.citrus.rmi.remote.HelloService"
                        binding="helloService"
                        create-registry="false"
@@ -35,6 +36,7 @@
                        auto-start="true"/>
 
   <citrus-rmi:server id="rmiNewsServer"
+                       host="localhost"
                        interface="com.consol.citrus.rmi.remote.NewsService"
                        binding="newsService"
                        create-registry="false"

@@ -29,7 +29,7 @@
     </testcase>
 
     <spring:bean id="myMessageEndpoint" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.endpoint.Endpoint</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="myMessageEndpoint"/>
     </spring:bean>
 

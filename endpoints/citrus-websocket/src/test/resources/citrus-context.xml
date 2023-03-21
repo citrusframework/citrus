@@ -23,8 +23,7 @@
   <citrus-websocket:server id="echoHttpServer"
                            port="12080"
                            auto-start="true"
-                           root-parent-context="true"
-                           resource-base="src/it/resources">
+                           root-parent-context="true">
     <citrus-websocket:endpoints>
       <citrus-websocket:endpoint ref="webSocketEndpoint1"/>
     </citrus-websocket:endpoints>
@@ -33,8 +32,7 @@
   <citrus-websocket:server id="echoHttpServer2"
                            port="13080"
                            auto-start="true"
-                           root-parent-context="true"
-                           resource-base="src/it/resources">
+                           root-parent-context="true">
     <citrus-websocket:endpoints>
       <citrus-websocket:endpoint ref="webSocketEndpoint2"/>
     </citrus-websocket:endpoints>

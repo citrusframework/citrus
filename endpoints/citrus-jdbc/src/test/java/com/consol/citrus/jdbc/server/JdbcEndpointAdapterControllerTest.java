@@ -49,6 +49,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 public class JdbcEndpointAdapterControllerTest {
@@ -742,8 +743,8 @@ public class JdbcEndpointAdapterControllerTest {
         JdbcMessage jdbcMessageResponse = (JdbcMessage) response;
         OperationResult operationResult = jdbcMessageResponse.getPayload(OperationResult.class);
         assertTrue(operationResult.isSuccess());
-        assertEquals(operationResult.getDataSet(), null);
-        assertEquals(operationResult.getAffectedRows(), new Integer(0));
+        assertNull(operationResult.getDataSet());
+        assertEquals(operationResult.getAffectedRows(), Integer.valueOf(0));
         verify(endpointAdapter, times(0)).handleMessage(request);
     }
 
@@ -781,7 +782,7 @@ public class JdbcEndpointAdapterControllerTest {
         JdbcMessage jdbcMessageResponse = (JdbcMessage) response;
         OperationResult operationResult = jdbcMessageResponse.getPayload(OperationResult.class);
         assertTrue(operationResult.isSuccess());
-        assertEquals(operationResult.getDataSet(), null);
+        assertNull(operationResult.getDataSet());
         assertEquals(operationResult.getAffectedRows(), isMatching ? 0 : null);
 
         verify(endpointAdapter, times(isMatching ? 0 : 1)).handleMessage(any());
@@ -822,7 +823,7 @@ public class JdbcEndpointAdapterControllerTest {
         JdbcMessage jdbcMessageResponse = (JdbcMessage) response;
         OperationResult operationResult = jdbcMessageResponse.getPayload(OperationResult.class);
         assertTrue(operationResult.isSuccess());
-        assertEquals(operationResult.getDataSet(), null);
+        assertNull(operationResult.getDataSet());
         assertEquals(operationResult.getAffectedRows(), isMatching ? 0 : null);
 
         verify(endpointAdapter, times(isMatching ? 0 : 1)).handleMessage(any());

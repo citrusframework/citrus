@@ -26,7 +26,7 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.jms.*;
+import jakarta.jms.*;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -71,12 +71,12 @@
                         endpoint-adapter="httpServerAdapter6"/>
 
     <bean id="httpServerAdapter6" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+        <constructor-arg><value type="java.lang.Class">com.consol.citrus.endpoint.EndpointAdapter</value></constructor-arg>
       <constructor-arg value="httpServerAdapter6"/>
     </bean>
 
     <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="javax.jms.ConnectionFactory"/>
+        <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>
       <constructor-arg value="connectionFactory"/>
     </bean>
 </beans>

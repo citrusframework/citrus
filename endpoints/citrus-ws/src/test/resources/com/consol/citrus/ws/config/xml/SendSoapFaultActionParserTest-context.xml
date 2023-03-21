@@ -40,7 +40,7 @@
     </testcase>
 
     <spring:bean id="soapServer" class="org.mockito.Mockito" factory-method="mock">
-        <spring:constructor-arg value="com.consol.citrus.ws.server.WebServiceServer"/>
+        <spring:constructor-arg><spring:value type="java.lang.Class">com.consol.citrus.ws.server.WebServiceServer</spring:value></spring:constructor-arg>
         <spring:constructor-arg value="soapServer"/>
     </spring:bean>
 

@@ -29,7 +29,7 @@ public class VertxEndpointConfiguration extends AbstractPollableEndpointConfigur
     private String host = "localhost";
 
     /** Vert.x cluster port */
-    private int port = -1;
+    private int port = 0;
 
     /** Address on the event bus */
     private String address;

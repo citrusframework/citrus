@@ -16,11 +16,6 @@
 
 package com.consol.citrus.ws.message.converter;
 
-import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.transform.dom.DOMSource;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,6 +24,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.xml.namespace.QName;
+import javax.xml.transform.dom.DOMSource;
 
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -41,6 +38,9 @@ import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.xml.StringResult;
 import com.consol.citrus.xml.StringSource;
+import jakarta.xml.soap.MimeHeader;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPMessage;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -56,20 +56,14 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @since 2.0
  */
 public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
-    private SoapMessageConverter soapMessageConverter = new SoapMessageConverter();
+    private final SoapMessageConverter soapMessageConverter = new SoapMessageConverter();
 
     private static final String XML_PROCESSING_INSTRUCTION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
@@ -239,6 +233,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final MimeHeaders mimeHeaders = new MimeHeaders();
 
         when(saajSoapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(saajSoapRequest.getSoapBody()).thenReturn(soapBody);
 
         when(soapEnvelope.getBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
@@ -269,6 +264,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final SaajSoapMessage saajSoapRequest = mock(SaajSoapMessage.class);
 
         when(saajSoapRequest.getEnvelope()).thenReturn(soapEnvelope);
+        when(saajSoapRequest.getSoapBody()).thenReturn(soapBody);
 
         when(soapEnvelope.getBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());

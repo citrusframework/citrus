@@ -52,10 +52,10 @@ public class TransformTestRunnerTest extends UnitTestSupport {
         TestContext context = builder.getTestContext();
         Assert.assertNotNull(context.getVariable("result"));
         Assert.assertEquals(context.getVariable("result"), String.format("<html>%n" +
-					"<body>%n" +
-						"<h2>Test Request</h2>%n" +
-						"<p>Message: Hello World!</p>%n" +
-					"</body>%n" +
+					"    <body>%n" +
+						"        <h2>Test Request</h2>%n" +
+						"        <p>Message: Hello World!</p>%n" +
+					"    </body>%n" +
 				"</html>%n"));
 
         TestCase test = builder.getTestCase();
@@ -84,10 +84,10 @@ public class TransformTestRunnerTest extends UnitTestSupport {
 		TestContext context = builder.getTestContext();
 		Assert.assertNotNull(context.getVariable("result"));
 		Assert.assertEquals(context.getVariable("result"), String.format("<html>%n" +
-					"<body>%n" +
-						"<h2>Test Request</h2>%n" +
-						"<p>Message: Hello World!</p>%n" +
-					"</body>%n" +
+					"    <body>%n" +
+						"        <h2>Test Request</h2>%n" +
+						"        <p>Message: Hello World!</p>%n" +
+					"    </body>%n" +
 				"</html>%n"));
 
         TestCase test = builder.getTestCase();

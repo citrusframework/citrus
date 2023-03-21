@@ -32,8 +32,8 @@
               <http:send-request client="httpClient" actor="helloClient">
                 <http:POST>
                   <http:headers content-type="application/xml" accept="application/xml">
-                    <http:header name="X-customHeaderId" value="${custom_header_id}"/>
-                    <http:header name="X-empty-header" value=""/>
+                    <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+                    <http:header name="EmptyHeader" value=""/>
                   </http:headers>
                   <http:body>
                     <http:data>
@@ -50,9 +50,10 @@
               <sequential>
                   <http:receive-request server="httpServerRequestEndpoint" actor="helloClient">
                     <http:POST path="/test">
-                      <http:headers content-type="application/xml" accept="application/xml">
-                          <http:header name="X-customHeaderId" value="${custom_header_id}"/>
-                          <http:header name="X-empty-header" value=""/>
+                      <http:headers accept="application/xml">
+                          <http:header name="contentType" value="application/xml"/>
+                          <http:header name="CustomHeaderId" value="${custom_header_id}"/>
+                          <http:header name="EmptyHeader" value=""/>
                           <http:header name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
                       </http:headers>
                       <http:body>
@@ -72,7 +73,7 @@
 
                   <http:send-response server="httpServerResponseEndpoint" actor="helloServer">
                     <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
-                      <http:header name="X-customHeaderId" value="${custom_header_id}"/>
+                      <http:header name="CustomHeaderId" value="${custom_header_id}"/>
                       <http:header name="Content-Type" value="application/xml"/>
                       <http:header name="citrus_jms_correlationId" value="${correlation_id}"/>
                     </http:headers>
@@ -91,7 +92,7 @@
 
             <http:receive-response client="httpClient" actor="helloServer">
               <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
-                <http:header name="X-customHeaderId" value="${custom_header_id}"/>
+                <http:header name="CustomHeaderId" value="${custom_header_id}"/>
               </http:headers>
               <http:body>
                 <http:data>
@@ -112,7 +113,7 @@
                 <http:send-request client="httpClient" actor="helloClient">
                   <http:POST>
                       <http:headers content-type="application/xml" accept="application/xml">
-                          <http:header name="X-customHeaderId" value="${custom_header_id}"/>
+                          <http:header name="CustomHeaderId" value="${custom_header_id}"/>
                       </http:headers>
                       <http:body>
                         <http:data>
@@ -129,8 +130,9 @@
                 <sequential>
                     <http:receive-request server="httpServerRequestEndpoint" actor="helloClient">
                       <http:POST path="/test">
-                        <http:headers content-type="application/xml" accept="application/xml">
-                            <http:header name="X-customHeaderId" value="${custom_header_id}"/>
+                        <http:headers accept="application/xml">
+                            <http:header name="contentType" value="application/xml"/>
+                            <http:header name="CustomHeaderId" value="${custom_header_id}"/>
                         </http:headers>
                         <http:body>
                             <http:data>
@@ -149,7 +151,7 @@
 
                     <http:send-response server="httpServerResponseEndpoint" actor="helloServer">
                         <http:headers status="404" reason-phrase="NOT_FOUND" version="HTTP/1.1">
-                            <http:header name="X-customHeaderId" value="${custom_header_id}"/>
+                            <http:header name="CustomHeaderId" value="${custom_header_id}"/>
                             <http:header name="Content-Type" value="text/plain"/>
                             <http:header name="citrus_jms_correlationId" value="${correlation_id}"/>
                         </http:headers>
@@ -162,7 +164,7 @@
 
             <http:receive-response client="httpClient" actor="helloServer">
                 <http:headers status="404" reason-phrase="NOT_FOUND" version="HTTP/1.1">
-                    <http:header name="Content-Type" value="text/plain"/>
+                    <http:header name="contentType" value="text/plain"/>
                 </http:headers>
             </http:receive-response>
 
@@ -173,7 +175,7 @@
             <http:send-request client="httpClient">
               <http:POST>
                 <http:headers>
-                  <http:header name="X-customHeaderId" value="${custom_header_id}"/>
+                  <http:header name="CustomHeaderId" value="${custom_header_id}"/>
                 </http:headers>
                 <http:body>
                   <http:data>

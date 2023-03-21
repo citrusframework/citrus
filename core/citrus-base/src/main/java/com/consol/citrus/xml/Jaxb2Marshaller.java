@@ -19,23 +19,23 @@
 
 package com.consol.citrus.xml;
 
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.PropertyException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.PropertyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -110,8 +110,8 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
         return createUnmarshaller().unmarshal(source);
     }
 
-    private javax.xml.bind.Marshaller createMarshaller() throws JAXBException {
-        javax.xml.bind.Marshaller marshaller = getOrCreateContext().createMarshaller();
+    private jakarta.xml.bind.Marshaller createMarshaller() throws JAXBException {
+        jakarta.xml.bind.Marshaller marshaller = getOrCreateContext().createMarshaller();
 
         if (schema != null) {
             marshaller.setSchema(schema);
@@ -128,8 +128,8 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
         return marshaller;
     }
 
-    private javax.xml.bind.Unmarshaller createUnmarshaller() throws JAXBException {
-        javax.xml.bind.Unmarshaller unmarshaller = getOrCreateContext().createUnmarshaller();
+    private jakarta.xml.bind.Unmarshaller createUnmarshaller() throws JAXBException {
+        jakarta.xml.bind.Unmarshaller unmarshaller = getOrCreateContext().createUnmarshaller();
 
         if (schema != null) {
             unmarshaller.setSchema(schema);

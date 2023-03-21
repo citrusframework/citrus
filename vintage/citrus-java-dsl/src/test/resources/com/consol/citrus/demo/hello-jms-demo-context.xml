@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" 
+<beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:int="http://www.springframework.org/schema/integration"
     xmlns:jms="http://www.springframework.org/schema/integration/jms"
@@ -11,21 +11,21 @@
             http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd">
 
     <import resource="classpath:com/consol/citrus/demo/hello-common-context.xml"/>
-    
-    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616" />
+
+    <bean id="connectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
     </bean>
-    
+
     <jms:message-driven-channel-adapter id="helloRequestsIn"
                                         connection-factory="connectionFactory"
-                                        destination-name="Citrus.Hello.Request.Queue" 
+                                        destination-name="Citrus.Hello.Request.Queue"
                                         channel="helloRequests"/>
 
     <jms:outbound-channel-adapter id="helloResponsesOut"
                                   connection-factory="connectionFactory"
                                   destination-name="Citrus.Hello.Response.Queue"
                                   channel="helloResponses" />
-                        
+
     <jms:inbound-gateway id="syncHelloRequestsIn"
                          connection-factory="connectionFactory"
                          request-destination-name="Citrus.Hello.Sync.Request.Queue"

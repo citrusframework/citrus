@@ -16,7 +16,6 @@
 
 package com.consol.citrus.mail.client;
 
-import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -29,6 +28,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
+import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMailMessage;
@@ -76,9 +76,7 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
         try {
             mimeMessage.getMimeMessage().writeTo(bos);
             mailMessage = new RawMessage(bos.toString()); //TODO use message charset encoding
-        } catch (IOException e) {
-            mailMessage = message;
-        } catch (MessagingException e) {
+        } catch (IOException | MessagingException e) {
             mailMessage = message;
         } finally {
             try {

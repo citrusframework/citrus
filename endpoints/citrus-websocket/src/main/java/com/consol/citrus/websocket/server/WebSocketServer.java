@@ -22,6 +22,8 @@ import java.util.List;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpoint;
 import com.consol.citrus.websocket.servlet.CitrusWebSocketDispatcherServlet;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.springframework.web.servlet.DispatcherServlet;
 
 /**
@@ -45,6 +47,11 @@ public class WebSocketServer extends HttpServer {
     @Override
     protected DispatcherServlet getDispatcherServlet() {
         return new CitrusWebSocketDispatcherServlet(this);
+    }
+
+    @Override
+    protected void configure(ServletContextHandler contextHandler) {
+        contextHandler.addServletContainerInitializer(new JettyWebSocketServletContainerInitializer());
     }
 
     @Override

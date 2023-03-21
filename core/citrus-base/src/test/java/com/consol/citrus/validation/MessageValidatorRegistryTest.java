@@ -34,8 +34,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import javax.xml.validation.Schema;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 

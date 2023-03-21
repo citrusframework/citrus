@@ -16,7 +16,7 @@
 
 package com.consol.citrus.generate.xml;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import javax.xml.transform.Result;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -36,9 +36,9 @@ public class TestActionMarshaller implements Marshaller {
     public TestActionMarshaller(Resource[] schemas, String... contextPaths) {
         this.marshaller = new Jaxb2Marshaller(schemas, contextPaths);
 
-        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8");
-        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FRAGMENT, true);
+        marshaller.setProperty(jakarta.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.setProperty(jakarta.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(jakarta.xml.bind.Marshaller.JAXB_FRAGMENT, true);
 
         marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new CitrusNamespacePrefixMapper());
     }

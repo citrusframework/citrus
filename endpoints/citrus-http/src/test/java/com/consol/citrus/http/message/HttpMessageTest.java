@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.util.Collection;
 import java.util.Map;
 

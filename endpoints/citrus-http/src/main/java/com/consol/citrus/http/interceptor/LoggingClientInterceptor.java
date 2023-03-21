@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
@@ -182,22 +182,27 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
             this.response = response;
         }
 
-        public HttpStatus getStatusCode() throws IOException {
+        @Override
+        public HttpStatusCode getStatusCode() throws IOException {
             return this.response.getStatusCode();
         }
 
+        @Override
         public int getRawStatusCode() throws IOException {
             return this.response.getRawStatusCode();
         }
 
+        @Override
         public String getStatusText() throws IOException {
             return this.response.getStatusText();
         }
 
+        @Override
         public HttpHeaders getHeaders() {
             return this.response.getHeaders();
         }
 
+        @Override
         public InputStream getBody() throws IOException {
             if (this.body == null) {
                 if (response.getBody() != null) {
@@ -217,6 +222,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
             return new String(body, StandardCharsets.UTF_8);
         }
 
+        @Override
         public void close() {
             this.response.close();
         }

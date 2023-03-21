@@ -11,12 +11,12 @@
                     message-factory="soapMessageFactory"/>
 
   <bean id="soapMessageFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.soap.SoapMessageFactory</value></constructor-arg>
     <constructor-arg value="soapMessageFactory"/>
   </bean>
 
   <bean id="wsTemplate" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.ws.client.core.WebServiceTemplate"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.client.core.WebServiceTemplate</value></constructor-arg>
     <constructor-arg value="wsTemplate"/>
   </bean>
 </beans>

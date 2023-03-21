@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.model;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 

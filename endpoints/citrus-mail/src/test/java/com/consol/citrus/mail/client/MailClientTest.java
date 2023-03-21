@@ -31,8 +31,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import javax.mail.*;
-import javax.mail.internet.*;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
 import javax.xml.transform.stream.StreamSource;
 import java.util.Properties;
 

@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  */
 public class RmiEndpointComponentTest {
 
-    private TestContext context = new TestContext();
+    private final TestContext context = new TestContext();
 
     @Test
     public void testCreateClientEndpoint() throws Exception {

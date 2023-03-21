@@ -16,22 +16,30 @@
 
 package com.consol.citrus.restdocs.soap;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.restdocs.operation.*;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.transport.context.TransportContext;
-import org.springframework.ws.transport.context.TransportContextHolder;
-
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import jakarta.xml.soap.MimeHeader;
+import jakarta.xml.soap.MimeHeaders;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.restdocs.operation.OperationRequest;
+import org.springframework.restdocs.operation.OperationRequestFactory;
+import org.springframework.restdocs.operation.OperationRequestPart;
+import org.springframework.restdocs.operation.RequestConverter;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.transport.context.TransportContext;
+import org.springframework.ws.transport.context.TransportContextHolder;
 
 /**
  * Converts a Http request to RestDoc operation request instance.
@@ -54,8 +62,7 @@ public class RestDocSoapRequestConverter implements RequestConverter<MessageCont
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             messageContext.getRequest().writeTo(bos);
             return new OperationRequestFactory().create(uri, HttpMethod.POST,
-                    bos.toByteArray(), extractHeaders(messageContext),
-                    extractParameters(uri, messageContext), extractParts(messageContext));
+                    bos.toByteArray(), extractHeaders(messageContext), extractParts(messageContext));
         } catch (IOException | URISyntaxException e) {
             throw new CitrusRuntimeException("Failed to create Spring restdocs", e);
         }
@@ -89,11 +96,6 @@ public class RestDocSoapRequestConverter implements RequestConverter<MessageCont
         }
 
         return httpHeaders;
-    }
-
-    protected Parameters extractParameters(URI uri, MessageContext messageContext) {
-        Parameters parameters = new Parameters();
-        return parameters;
     }
 
     protected Collection<OperationRequestPart> extractParts(MessageContext messageContext) throws IOException {

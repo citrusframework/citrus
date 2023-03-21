@@ -19,13 +19,13 @@
     <description>Test asynchronous JMS communication.</description>
 
     <variables>
-      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-      <variable name="correlationIdA" value="citrus:randomNumber(10)"></variable>
-      <variable name="correlationIdB" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageIdA" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageIdB" value="citrus:randomNumber(10)"></variable>
-      <variable name="user" value="Christoph"></variable>
+      <variable name="correlationId" value="citrus:randomNumber(10)"/>
+      <variable name="correlationIdA" value="citrus:randomNumber(10)"/>
+      <variable name="correlationIdB" value="citrus:randomNumber(10)"/>
+      <variable name="messageId" value="citrus:randomNumber(10)"/>
+      <variable name="messageIdA" value="citrus:randomNumber(10)"/>
+      <variable name="messageIdB" value="citrus:randomNumber(10)"/>
+      <variable name="user" value="Christoph"/>
     </variables>
 
     <actions>
@@ -46,7 +46,7 @@
                  <User>${user}</User>
                  <Text>Hello Citrus</Text>
                </HelloRequest>
-						]]>
+             ]]>
           </data>
         </message>
         <header>
@@ -68,7 +68,7 @@
                 <User>HelloService</User>
                 <Text>Hello ${user}</Text>
               </HelloResponse>
-						]]>
+            ]]>
           </data>
         </message>
         <header>

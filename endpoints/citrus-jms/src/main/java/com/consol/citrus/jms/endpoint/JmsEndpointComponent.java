@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import javax.jms.ConnectionFactory;
+import jakarta.jms.ConnectionFactory;
 import java.util.Map;
 
 import com.consol.citrus.context.TestContext;

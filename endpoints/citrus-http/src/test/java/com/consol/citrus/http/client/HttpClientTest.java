@@ -17,7 +17,7 @@
 package com.consol.citrus.http.client;
 
 import java.net.URI;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Random;
 
@@ -29,7 +29,7 @@ import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.http.entity.ContentType;
+import org.apache.hc.core5.http.ContentType;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -42,21 +42,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyList;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -80,7 +73,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.POST);
+        endpointConfiguration.setRequestMethod(RequestMethod.POST);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         Message requestMessage = new DefaultMessage(requestBody);
@@ -114,7 +107,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.POST);
+        endpointConfiguration.setRequestMethod(RequestMethod.POST);
         endpointConfiguration.setRequestUrl(requestUrl);
         endpointConfiguration.setContentType("text/xml");
         endpointConfiguration.setCharset("ISO-8859-1");
@@ -152,7 +145,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.POST);
+        endpointConfiguration.setRequestMethod(RequestMethod.POST);
         endpointConfiguration.setRequestUrl(requestUrl);
         endpointConfiguration.setContentType("text/xml");
         endpointConfiguration.setCharset("ISO-8859-1");
@@ -195,7 +188,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.POST);
+        endpointConfiguration.setRequestMethod(RequestMethod.POST);
         endpointConfiguration.setRequestUrl(requestUrl);
         endpointConfiguration.setContentType("text/xml");
         endpointConfiguration.setCharset("ISO-8859-1");
@@ -234,7 +227,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.GET);
+        endpointConfiguration.setRequestMethod(RequestMethod.GET);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         HttpMessage requestMessage = new HttpMessage(requestBody)
@@ -269,7 +262,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.GET);
+        endpointConfiguration.setRequestMethod(RequestMethod.GET);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         Message requestMessage = new DefaultMessage(requestBody);
@@ -303,7 +296,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.PUT);
+        endpointConfiguration.setRequestMethod(RequestMethod.PUT);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         Message requestMessage = new DefaultMessage(requestBody);
@@ -337,7 +330,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.GET);
+        endpointConfiguration.setRequestMethod(RequestMethod.GET);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         MessageCorrelator correlator = Mockito.mock(MessageCorrelator.class);
@@ -371,7 +364,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.GET);
+        endpointConfiguration.setRequestMethod(RequestMethod.GET);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         Message requestMessage = new HttpMessage(requestBody);
@@ -404,7 +397,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.POST);
+        endpointConfiguration.setRequestMethod(RequestMethod.POST);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         endpointConfiguration.setErrorHandlingStrategy(ErrorHandlingStrategy.PROPAGATE);
@@ -413,7 +406,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
-        doThrow(new HttpErrorPropagatingException(HttpStatus.FORBIDDEN, "Not allowed", new HttpHeaders(), responseBody.getBytes(), Charset.forName("UTF-8"))).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
+        doThrow(new HttpErrorPropagatingException(HttpStatus.FORBIDDEN, "Not allowed", new HttpHeaders(), responseBody.getBytes(), StandardCharsets.UTF_8)).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
 
         httpClient.send(requestMessage, context);
 
@@ -430,7 +423,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.POST);
+        endpointConfiguration.setRequestMethod(RequestMethod.POST);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         endpointConfiguration.setErrorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION);
@@ -458,7 +451,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.PATCH);
+        endpointConfiguration.setRequestMethod(RequestMethod.PATCH);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         Message requestMessage = new DefaultMessage(requestBody);
@@ -498,7 +491,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         final byte[] requestBody = new byte[20];
         new Random().nextBytes(requestBody);
 
-        endpointConfiguration.setRequestMethod(HttpMethod.POST);
+        endpointConfiguration.setRequestMethod(RequestMethod.POST);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         Message requestMessage = new HttpMessage(requestBody)
@@ -535,7 +528,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         HttpClient httpClient = new HttpClient(endpointConfiguration);
         String requestUrl = "http://localhost:8088/test";
 
-        endpointConfiguration.setRequestMethod(HttpMethod.POST);
+        endpointConfiguration.setRequestMethod(RequestMethod.POST);
         endpointConfiguration.setRequestUrl(requestUrl);
 
         Message requestMessage = new HttpMessage(requestBody)

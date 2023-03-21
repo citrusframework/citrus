@@ -1,11 +1,12 @@
 package com.consol.citrus.ws.context;
 
-import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
+import jakarta.servlet.ServletContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -176,6 +177,11 @@ public final class ParentDelegatingWebApplicationContext implements WebApplicati
     @Override
     public <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException {
         return delegate.findAnnotationOnBean(beanName, annotationType, allowFactoryBeanInit);
+    }
+
+    @Override
+    public <A extends Annotation> Set<A> findAllAnnotationsOnBean(String beanName, Class<A> annotationType, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException {
+        return delegate.findAllAnnotationsOnBean(beanName, annotationType, allowFactoryBeanInit);
     }
 
     @Override

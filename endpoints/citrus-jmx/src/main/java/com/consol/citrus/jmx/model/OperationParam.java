@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jmx.model;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 /**
  * @author Christoph Deppisch

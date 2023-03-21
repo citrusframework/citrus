@@ -16,16 +16,6 @@
 
 package com.consol.citrus.ws.message.converter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -34,6 +24,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.xml.namespace.QName;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
@@ -47,6 +44,9 @@ import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.xml.StringResult;
 import com.consol.citrus.xml.StringSource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.xml.soap.MimeHeader;
+import jakarta.xml.soap.MimeHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -56,7 +56,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContext;
@@ -323,8 +322,6 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             final SaajSoapMessage soapMsg = (SaajSoapMessage) message;
             final MimeHeaders headers = soapMsg.getSaajMessage().getMimeHeaders();
             headers.setHeader(name, value.toString());
-        } else if (message instanceof AxiomSoapMessage) {
-            log.warn("Unable to set mime message header '" + name + "' on AxiomSoapMessage - unsupported");
         } else {
             log.warn("Unsupported SOAP message implementation - unable to set mime message header '" + name + "'");
         }
@@ -346,9 +343,6 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         // to get access to mime headers we need to get implementation specific here
         if (soapMessage instanceof SaajSoapMessage) {
             messageMimeHeaders = ((SaajSoapMessage)soapMessage).getSaajMessage().getMimeHeaders();
-        } else if (soapMessage instanceof AxiomSoapMessage) {
-            // we do not handle axiom message implementations as it is very difficult to get access to the mime headers there
-            log.warn("Skip mime headers for AxiomSoapMessage - unsupported");
         } else {
             log.warn("Unsupported SOAP message implementation - skipping mime headers");
         }

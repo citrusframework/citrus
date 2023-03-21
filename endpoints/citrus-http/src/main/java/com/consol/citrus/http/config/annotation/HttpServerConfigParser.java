@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.config.annotation;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

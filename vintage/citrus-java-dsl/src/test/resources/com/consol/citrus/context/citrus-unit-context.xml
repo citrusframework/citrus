@@ -6,7 +6,7 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
-	 
+
     <!-- Empty test context used in unit tests -->
     <citrus:schema-repository id="customSchemaRepository">
       <citrus:schemas>
@@ -15,8 +15,8 @@
     </citrus:schema-repository>
 
     <bean id="testSchema" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="org.springframework.xml.xsd.XsdSchema"/>
-      <constructor-arg value="testSchema"/>
+        <constructor-arg><value type="java.lang.Class">org.springframework.xml.xsd.XsdSchema</value></constructor-arg>
+        <constructor-arg value="testSchema"/>
     </bean>
 
     <citrus:schema-repository id="customJsonSchemaRepository" type="json">
@@ -26,7 +26,7 @@
     </citrus:schema-repository>
 
     <bean id="jsonTestSchema" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="com.consol.citrus.json.schema.SimpleJsonSchema"/>
+        <constructor-arg><value type="java.lang.Class">com.consol.citrus.json.schema.SimpleJsonSchema</value></constructor-arg>
         <constructor-arg value="jsonTestSchema"/>
     </bean>
 

@@ -36,7 +36,9 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.util.DecoratedObjectFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
@@ -54,7 +56,8 @@ import static org.mockito.Mockito.when;
  */
 public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest {
 
-    private WebSocketServer httpServer = Mockito.mock(WebSocketServer.class);
+    @Mock
+    private WebSocketServer httpServer;
     private CitrusWebSocketDispatcherServlet servlet;
 
     @Autowired
@@ -71,6 +74,7 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
 
     @BeforeClass
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
         servlet = new CitrusWebSocketDispatcherServlet(httpServer);
     }
 

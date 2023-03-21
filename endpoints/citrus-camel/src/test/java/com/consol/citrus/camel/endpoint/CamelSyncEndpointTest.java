@@ -22,6 +22,7 @@ import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.engine.AbstractCamelContext;
@@ -35,12 +36,7 @@ import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -48,10 +44,11 @@ import static org.mockito.Mockito.when;
  */
 public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
-    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
-    private ProducerTemplate producerTemplate = Mockito.mock(ProducerTemplate.class);
-    private ConsumerTemplate consumerTemplate = Mockito.mock(ConsumerTemplate.class);
-    private MessageListeners messageListeners = Mockito.mock(MessageListeners.class);
+    private final AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
+    private final ExtendedCamelContext extendedCamelContext = Mockito.mock(ExtendedCamelContext.class);
+    private final ProducerTemplate producerTemplate = Mockito.mock(ProducerTemplate.class);
+    private final ConsumerTemplate consumerTemplate = Mockito.mock(ConsumerTemplate.class);
+    private final MessageListeners messageListeners = Mockito.mock(MessageListeners.class);
 
     @Test
     public void testCamelSyncEndpointProducer() {
@@ -66,7 +63,8 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, producerTemplate);
 
-        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
 
@@ -105,7 +103,8 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         reset(camelContext, consumerTemplate);
 
         when(camelContext.createConsumerTemplate()).thenReturn(consumerTemplate);
-        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
 
         DefaultMessage message = new DefaultMessage(camelContext);
@@ -152,7 +151,8 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         reset(camelContext, producerTemplate, messageListeners);
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
-        when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
+        when(extendedCamelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 

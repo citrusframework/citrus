@@ -29,7 +29,6 @@ import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -38,6 +37,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.integration.mapping.HeaderMapper;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -51,7 +51,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
     private String requestUrl;
 
     /** Request method */
-    private HttpMethod requestMethod = HttpMethod.POST;
+    private RequestMethod requestMethod = RequestMethod.POST;
 
     /** The request charset */
     private String charset = "UTF-8";
@@ -153,7 +153,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      * Sets the requestMethod.
      * @param requestMethod the requestMethod to set
      */
-    public void setRequestMethod(HttpMethod requestMethod) {
+    public void setRequestMethod(RequestMethod requestMethod) {
         this.requestMethod = requestMethod;
     }
 
@@ -201,7 +201,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      * Gets the requestMethod.
      * @return the requestMethod
      */
-    public HttpMethod getRequestMethod() {
+    public RequestMethod getRequestMethod() {
         return requestMethod;
     }
 

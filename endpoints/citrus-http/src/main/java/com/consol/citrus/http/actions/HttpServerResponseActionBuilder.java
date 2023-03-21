@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.actions;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.http.message.HttpMessage;

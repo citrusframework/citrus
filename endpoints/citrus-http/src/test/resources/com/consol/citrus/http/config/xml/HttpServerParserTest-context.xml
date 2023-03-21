@@ -49,22 +49,22 @@
 
     <util:list id="interceptors">
       <bean id="interceptor1" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.springframework.web.servlet.HandlerInterceptor"/>
+          <constructor-arg><value type="java.lang.Class">org.springframework.web.servlet.HandlerInterceptor</value></constructor-arg>
         <constructor-arg value="interceptor1"/>
       </bean>
       <bean id="interceptor2" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.springframework.web.servlet.HandlerInterceptor"/>
+          <constructor-arg><value type="java.lang.Class">org.springframework.web.servlet.HandlerInterceptor</value></constructor-arg>
         <constructor-arg value="interceptor2"/>
       </bean>
     </util:list>
 
     <util:list id="connectors">
         <bean id="connector1" class="org.mockito.Mockito" factory-method="mock">
-          <constructor-arg value="org.eclipse.jetty.server.Connector"/>
+            <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.server.Connector</value></constructor-arg>
           <constructor-arg value="connector1"/>
         </bean>
         <bean id="connector2" class="org.mockito.Mockito" factory-method="mock">
-            <constructor-arg value="org.eclipse.jetty.server.Connector"/>
+            <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.server.Connector</value></constructor-arg>
             <constructor-arg value="connector2"/>
         </bean>
     </util:list>
@@ -77,13 +77,13 @@
     <util:map id="filters">
         <entry key="filter1">
             <bean id="filter1" class="org.mockito.Mockito" factory-method="mock">
-                <constructor-arg value="javax.servlet.Filter"/>
+                <constructor-arg><value type="java.lang.Class">jakarta.servlet.Filter</value></constructor-arg>
                 <constructor-arg value="filter1"/>
             </bean>
         </entry>
         <entry key="filter2">
             <bean id="filter2" class="org.mockito.Mockito" factory-method="mock">
-                <constructor-arg value="javax.servlet.Filter"/>
+                <constructor-arg><value type="java.lang.Class">jakarta.servlet.Filter</value></constructor-arg>
                 <constructor-arg value="filter2"/>
             </bean>
         </entry>
@@ -94,12 +94,12 @@
     </util:map>
 
     <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="com.consol.citrus.http.message.HttpMessageConverter"/>
+        <constructor-arg><value type="java.lang.Class">com.consol.citrus.http.message.HttpMessageConverter</value></constructor-arg>
         <constructor-arg value="messageConverter"/>
     </bean>
 
     <bean id="connector" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.eclipse.jetty.server.Connector"/>
+        <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.server.Connector</value></constructor-arg>
         <constructor-arg value="connector"/>
     </bean>
 
@@ -125,7 +125,7 @@
     </bean>
 
     <bean id ="servletHandler" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.eclipse.jetty.servlet.ServletHandler"/>
+        <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.servlet.ServletHandler</value></constructor-arg>
         <constructor-arg value="servletHandler"/>
     </bean>
 </beans>

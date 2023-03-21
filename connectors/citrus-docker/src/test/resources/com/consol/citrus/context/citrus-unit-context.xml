@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean id="dockerClient" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.github.dockerjava.api.DockerClient"/>
+    <constructor-arg><value type="java.lang.Class">com.github.dockerjava.api.DockerClient</value></constructor-arg>
     <constructor-arg value="dockerClient"/>
   </bean>
 

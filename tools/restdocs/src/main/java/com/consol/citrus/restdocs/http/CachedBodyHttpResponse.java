@@ -16,13 +16,15 @@
 
 package com.consol.citrus.restdocs.http;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.FileCopyUtils;
-
-import java.io.*;
-import java.nio.charset.Charset;
 
 /**
  * Helper Http response wrapper implementation provides access to the response body for usage
@@ -41,22 +43,27 @@ public class CachedBodyHttpResponse implements ClientHttpResponse {
         this.response = response;
     }
 
+    @Override
     public HttpStatus getStatusCode() throws IOException {
-        return this.response.getStatusCode();
+        return HttpStatus.valueOf(this.response.getStatusCode().value());
     }
 
+    @Override
     public int getRawStatusCode() throws IOException {
         return this.response.getRawStatusCode();
     }
 
+    @Override
     public String getStatusText() throws IOException {
         return this.response.getStatusText();
     }
 
+    @Override
     public HttpHeaders getHeaders() {
         return this.response.getHeaders();
     }
 
+    @Override
     public InputStream getBody() throws IOException {
         if (this.body == null) {
             if (response.getBody() != null) {
@@ -73,7 +80,7 @@ public class CachedBodyHttpResponse implements ClientHttpResponse {
             getBody();
         }
 
-        return new String(body, Charset.forName("UTF-8"));
+        return new String(body, StandardCharsets.UTF_8);
     }
 
     public byte[] getBodyAsBytes() throws IOException {

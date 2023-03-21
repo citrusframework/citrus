@@ -35,39 +35,39 @@
 
   <!-- JMS connection factories -->
   <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="javax.jms.ConnectionFactory"/>
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>
     <constructor-arg value="connectionFactory"/>
   </bean>
 
   <bean id="jmsConnectionFactory" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="javax.jms.ConnectionFactory"/>
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>
     <constructor-arg value="jmsConnectionFactory"/>
   </bean>
 
   <!-- JMS Template and queues -->
   <bean id="jmsQueue" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="javax.jms.Queue"/>
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.Queue</value></constructor-arg>
     <constructor-arg value="jmsQueue"/>
   </bean>
 
   <bean id="jmsTemplate" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.jms.core.JmsTemplate"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.jms.core.JmsTemplate</value></constructor-arg>
     <constructor-arg value="jmsTemplate"/>
   </bean>
 
   <!-- Custom message converter -->
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.jms.message.JmsMessageConverter"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.jms.message.JmsMessageConverter</value></constructor-arg>
     <constructor-arg value="messageConverter"/>
   </bean>
 
   <bean id="destinationResolver" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="org.springframework.jms.support.destination.DestinationResolver"/>
+    <constructor-arg><value type="java.lang.Class">org.springframework.jms.support.destination.DestinationResolver</value></constructor-arg>
     <constructor-arg value="destinationResolver"/>
   </bean>
 
   <bean id="destinationNameResolver" class="org.mockito.Mockito" factory-method="mock">
-    <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
+    <constructor-arg><value type="java.lang.Class">com.consol.citrus.endpoint.resolver.EndpointUriResolver</value></constructor-arg>
     <constructor-arg value="destinationNameResolver"/>
   </bean>
 </beans>

@@ -39,7 +39,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
     private final VertxEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(VertxConsumer.class);
+    private static final Logger log = LoggerFactory.getLogger(VertxConsumer.class);
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.RetryLogger");

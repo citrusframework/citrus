@@ -16,8 +16,8 @@
 
 package com.consol.citrus.jms.config.xml;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Queue;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Queue;
 import java.util.ArrayList;
 import java.util.List;
 

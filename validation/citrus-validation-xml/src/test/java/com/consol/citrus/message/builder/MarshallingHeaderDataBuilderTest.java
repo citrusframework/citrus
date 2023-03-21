@@ -45,7 +45,7 @@ public class MarshallingHeaderDataBuilderTest extends UnitTestSupport {
 
     @BeforeClass
     public void prepareMarshaller() {
-        ((Jaxb2Marshaller) marshaller).setProperty(javax.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+        ((Jaxb2Marshaller) marshaller).setProperty(jakarta.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
     }
 
     @Test

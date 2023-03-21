@@ -16,7 +16,6 @@
 
 package com.consol.citrus.ftp.config.xml;
 
-import javax.jms.ConnectionFactory;
 import java.io.IOException;
 import java.util.Map;
 
@@ -30,6 +29,7 @@ import com.consol.citrus.ftp.server.FtpServer;
 import com.consol.citrus.jms.endpoint.JmsEndpointAdapter;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import jakarta.jms.ConnectionFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
