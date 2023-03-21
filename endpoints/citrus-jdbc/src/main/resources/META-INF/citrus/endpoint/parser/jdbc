@@ -1,1 +1,0 @@
-server=com.consol.citrus.jdbc.config.annotation.JdbcServerConfigParser

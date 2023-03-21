@@ -26,7 +26,6 @@
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-ftp</include>
         <include>com.consol.citrus:citrus-http</include>
-        <include>com.consol.citrus:citrus-jdbc</include>
         <include>com.consol.citrus:citrus-jms</include>
         <include>com.consol.citrus:citrus-kafka</include>
         <include>com.consol.citrus:citrus-jmx</include>
@@ -167,13 +166,6 @@
     </fileSet>
     <fileSet>
       <directory>endpoints/citrus-http/target</directory>
-      <outputDirectory>src</outputDirectory>
-      <includes>
-        <include>*sources.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>endpoints/citrus-jdbc/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

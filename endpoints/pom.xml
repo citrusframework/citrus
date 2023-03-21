@@ -19,7 +19,6 @@
     <module>citrus-camel</module>
     <module>citrus-ftp</module>
     <module>citrus-http</module>
-    <module>citrus-jdbc</module>
     <module>citrus-jms</module>
     <module>citrus-jmx</module>
     <module>citrus-kafka</module>
