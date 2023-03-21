@@ -56,7 +56,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusSpringSupport {
                     .get()
                     .message(new HttpMessage()
                         .method(HttpMethod.GET)
-                        .header("contentType","text/html")
+                        .header("contentType", "text/html")
                         .header("Host", "localhost:11082")
                         .accept("application/xml;charset=UTF-8"))
             )
