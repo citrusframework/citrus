@@ -76,7 +76,20 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
 
         if (beforeSuite) {
             beforeSuite = false;
-            CitrusExtensionHelper.getCitrus(extensionContext).beforeSuite(SUITE_NAME);
+      // Assertion: If the beforeAll callback is called for a test, the annotated tags are currently
+      // included by the groups filter of surefire / failsafe or no specific filter is defined and
+      // all groups / tags will run anyway.
+      final String[] tags = extensionContext.getTags().toArray(new String[0]);
+      extensionContext.getTestClass().map(Class::getName).or(() ->
+          extensionContext.getTestMethod().map(method -> method.getDeclaringClass().getName()+":"+method.getName())
+      ).ifPresentOrElse(suiteName ->
+              CitrusExtensionHelper
+                  .getCitrus(extensionContext)
+                  .beforeSuite(suiteName, tags),
+          () -> CitrusExtensionHelper
+              .getCitrus(extensionContext)
+              .beforeSuite(SUITE_NAME, tags)
+      );
         }
     }
 
@@ -84,7 +97,20 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     public void afterAll(ExtensionContext extensionContext) throws Exception {
         if (afterSuite) {
             afterSuite = false;
-            CitrusExtensionHelper.getCitrus(extensionContext).afterSuite(SUITE_NAME);
+      // Assertion: If the afterAll callback is called for a test, the annotated tags are currently
+      // included by the groups filter of surefire / failsafe or no specific filter is defined and
+      // all groups / tags did run anyway.
+      final String[] tags = extensionContext.getTags().toArray(new String[0]);
+      extensionContext.getTestClass().map(Class::getName).or(() ->
+          extensionContext.getTestMethod().map(meth -> meth.getDeclaringClass().getName()+":"+meth.getName())
+      ).ifPresentOrElse(suiteName ->
+              CitrusExtensionHelper
+                  .getCitrus(extensionContext)
+                  .afterSuite(suiteName, tags),
+          () -> CitrusExtensionHelper
+              .getCitrus(extensionContext)
+              .afterSuite(SUITE_NAME, tags)
+      );
         }
     }
 
