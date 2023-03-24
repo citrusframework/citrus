@@ -47,7 +47,7 @@ The file content for our example will look like follows:
 
 [source,xml]
 ----
-http://www.citrusframework.org/samples/my-testcase-info/my-testcase-info.xsd=com/consol/citrus/schemas/my-testcase-info.xsd
+http://www.citrusframework.org/samples/my-testcase-info/my-testcase-info.xsd=org/citrusframework/schemas/my-testcase-info.xsd
 ----
 
 So now we are finally ready to use the new meta-info elements inside the test case:

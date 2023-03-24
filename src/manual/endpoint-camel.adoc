@@ -15,7 +15,7 @@ So you should add the module as Maven dependency to your project accordingly.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-camel</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -89,7 +89,7 @@ public CamelContext camelContext() {
         public void configure() throws Exception {
             from("direct:hello")
                 .routeId("helloRoute")
-                .to("log:com.consol.citrus.camel?level=INFO")
+                .to("log:org.citrusframework.camel?level=INFO")
                 .to("seda:greetings");
         }
     });
@@ -104,7 +104,7 @@ public CamelContext camelContext() {
 <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
   <route id="helloRoute">
     <from uri="direct:hello"/>
-    <to uri="log:com.consol.citrus.camel?level=INFO"/>
+    <to uri="log:org.citrusframework.camel?level=INFO"/>
     <to uri="seda:greetings-feed"/>
   </route>
 </camelContext>
@@ -408,7 +408,7 @@ public CamelContext camelContext() {
         public void configure() throws Exception {
             from("direct:hello")
                 .routeId("helloRoute")
-                .to("log:com.consol.citrus.camel?level=INFO")
+                .to("log:org.citrusframework.camel?level=INFO")
                 .to("seda:greetings-feed")
                 .onException(CitrusRuntimeException.class)
                     .to("seda:exceptions");
@@ -425,10 +425,10 @@ public CamelContext camelContext() {
 <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
   <route id="helloRoute">
     <from uri="direct:hello"/>
-    <to uri="log:com.consol.citrus.camel?level=INFO"/>
+    <to uri="log:org.citrusframework.camel?level=INFO"/>
     <to uri="seda:greetings-feed"/>
     <onException>
-      <exception>com.consol.citrus.exceptions.CitrusRuntimeException</exception>
+      <exception>org.citrusframework.exceptions.CitrusRuntimeException</exception>
       <to uri="seda:exceptions"/>
     </onException>
   </route>
@@ -459,7 +459,7 @@ send(helloCamelEndpoint)
   </message>
   <header>
     <element name="citrus_camel_exchange_exception"
-                value="com.consol.citrus.exceptions.CitrusRuntimeException"/>
+                value="org.citrusframework.exceptions.CitrusRuntimeException"/>
     <element name="citrus_camel_exchange_exception_message" value="Something went wrong!"/>
     <element name="citrus_camel_exchange_failed" value="true"/>
   </header>
@@ -482,7 +482,7 @@ receive(errorCamelEndpoint)
     .body("Something went wrong!")
     .header("citrus_camel_route_id", "helloRoute")
     .header("citrus_camel_exchange_failed", true)
-    .header("CamelExceptionCaught", "com.consol.citrus.exceptions.CitrusRuntimeException: Something went wrong!");
+    .header("CamelExceptionCaught", "org.citrusframework.exceptions.CitrusRuntimeException: Something went wrong!");
 ----
 
 .XML
@@ -496,7 +496,7 @@ receive(errorCamelEndpoint)
     <element name="citrus_camel_route_id" value="helloRoute"/>
     <element name="citrus_camel_exchange_failed" value="true"/>
     <element name="CamelExceptionCaught"
-        value="com.consol.citrus.exceptions.CitrusRuntimeException: Something went wrong!"/>
+        value="org.citrusframework.exceptions.CitrusRuntimeException: Something went wrong!"/>
   </header>
 </receive>
 ----
@@ -531,7 +531,7 @@ public CamelContext newsContext() {
         public void configure() throws Exception {
             from("direct:news")
                 .routeId("newsRoute")
-                .to("log:com.consol.citrus.camel?level=INFO")
+                .to("log:org.citrusframework.camel?level=INFO")
                 .to("seda:news-feed");
         }
     });
@@ -548,7 +548,7 @@ public CamelContext helloContext() {
         public void configure() throws Exception {
             from("direct:hello")
                 .routeId("helloRoute")
-                .to("log:com.consol.citrus.camel?level=INFO")
+                .to("log:org.citrusframework.camel?level=INFO")
                 .to("seda:greetings");
         }
     });
@@ -567,7 +567,7 @@ public CamelContext helloContext() {
 <camelContext id="newsContext" xmlns="http://camel.apache.org/schema/spring">
     <route id="newsRoute">
       <from uri="direct:news"/>
-      <to uri="log:com.consol.citrus.camel?level=INFO"/>
+      <to uri="log:org.citrusframework.camel?level=INFO"/>
       <to uri="seda:news-feed"/>
     </route>
 </camelContext>
@@ -575,7 +575,7 @@ public CamelContext helloContext() {
 <camelContext id="helloContext" xmlns="http://camel.apache.org/schema/spring">
   <route id="helloRoute">
     <from uri="direct:hello"/>
-    <to uri="log:com.consol.citrus.camel?level=INFO"/>
+    <to uri="log:org.citrusframework.camel?level=INFO"/>
     <to uri="seda:greetings"/>
   </route>
 </camelContext>

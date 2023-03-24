@@ -18,7 +18,7 @@
   </citrus:global-variables>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
   <!-- JDBC data sources -->
   <bean id="testDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">

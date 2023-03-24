@@ -1,2 +1,2 @@
 name=marshallerResolver
-type=com.consol.citrus.context.resolver.MarshallerAliasResolver
+type=org.citrusframework.context.resolver.MarshallerAliasResolver

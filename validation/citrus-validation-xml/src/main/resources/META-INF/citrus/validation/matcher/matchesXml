@@ -1,1 +1,1 @@
-type=com.consol.citrus.validation.matcher.core.XmlValidationMatcher
+type=org.citrusframework.validation.matcher.core.XmlValidationMatcher

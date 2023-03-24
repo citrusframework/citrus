@@ -4,7 +4,7 @@
 
   <parent>
     <artifactId>citrus-runtime</artifactId>
-    <groupId>com.consol.citrus</groupId>
+    <groupId>org.citrusframework</groupId>
     <version>4.0.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
@@ -15,13 +15,13 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-spring</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
@@ -42,7 +42,7 @@
 
     <!-- Test scoped dependencies -->
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-groovy</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -81,7 +81,7 @@
               <goal>integration-test</goal>
             </goals>
             <configuration>
-              <groups>com.consol.citrus.ShouldFailGroup</groups>
+              <groups>org.citrusframework.ShouldFailGroup</groups>
               <excludedGroups>NonExisting</excludedGroups>
             </configuration>
           </execution>
@@ -93,7 +93,7 @@
               <value>false</value>
             </property>
           </properties>
-          <excludedGroups>com.consol.citrus.ShouldFailGroup</excludedGroups>
+          <excludedGroups>org.citrusframework.ShouldFailGroup</excludedGroups>
         </configuration>
         <dependencies>
           <dependency>

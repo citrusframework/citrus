@@ -1,2 +1,2 @@
-client=com.consol.citrus.websocket.config.annotation.WebSocketClientConfigParser
-server=com.consol.citrus.websocket.config.annotation.WebSocketServerConfigParser
+client=org.citrusframework.websocket.config.annotation.WebSocketClientConfigParser
+server=org.citrusframework.websocket.config.annotation.WebSocketServerConfigParser

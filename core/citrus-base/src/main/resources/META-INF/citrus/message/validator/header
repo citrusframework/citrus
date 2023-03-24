@@ -1,2 +1,2 @@
 name=defaultMessageHeaderValidator
-type=com.consol.citrus.validation.DefaultMessageHeaderValidator
+type=org.citrusframework.validation.DefaultMessageHeaderValidator

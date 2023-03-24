@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-websocket="http://www.citrusframework.org/schema/websocket/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/websocket/config http://www.citrusframework.org/schema/websocket/config/citrus-websocket-config.xsd">
+
+  <citrus-websocket:client id="webSocketClient1"
+                          url="ws://localhost:8080/test"/>
+
+  <citrus-websocket:client id="webSocketClient2"
+                          url="ws://localhost:8080/test/uri"
+                          timeout="10000"
+                          http-headers="webSocketHttpHeaders"
+                          endpoint-resolver="endpointResolver"
+                          message-converter="messageConverter"/>
+
+  <citrus-websocket:client id="webSocketClient3"
+                          url="ws://localhost:8080/test"
+                          polling-interval="250"
+                          actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="webSocketHttpHeaders" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.web.socket.WebSocketHttpHeaders</value></constructor-arg>
+    <constructor-arg value="webSocketHttpHeaders"/>
+  </bean>
+
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.websocket.message.WebSocketMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+
+  <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.resolver.EndpointUriResolver</value></constructor-arg>
+    <constructor-arg value="endpointResolver"/>
+  </bean>
+
+</beans>

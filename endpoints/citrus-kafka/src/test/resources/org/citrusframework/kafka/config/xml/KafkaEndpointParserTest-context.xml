@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-kafka="http://www.citrusframework.org/schema/kafka/config"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/kafka/config http://www.citrusframework.org/schema/kafka/config/citrus-kafka-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <citrus-kafka:endpoint id="kafkaEndpoint1"
+                               server="localhost:9091"
+                               topic="test"/>
+
+  <citrus-kafka:endpoint id="kafkaEndpoint2"
+                               client-id="kafkaEndpoint2"
+                               server="localhost:9092"
+                               timeout="10000"
+                               message-converter="messageConverter"
+                               header-mapper="headerMapper"
+                               auto-commit="false"
+                               auto-commit-interval="500"
+                               offset-reset="latest"
+                               topic="test"
+                               partition="1"
+                               consumer-group="citrus_group"
+                               key-serializer="org.apache.kafka.common.serialization.IntegerSerializer"
+                               key-deserializer="org.apache.kafka.common.serialization.IntegerDeserializer"
+                               value-serializer="org.apache.kafka.common.serialization.ByteArraySerializer"
+                               value-deserializer="org.apache.kafka.common.serialization.ByteArrayDeserializer"/>
+
+  <citrus-kafka:endpoint id="kafkaEndpoint3"
+                               server="localhost:9093"
+                               consumer-properties="consumerProps"
+                               producer-properties="producerProps"
+                               actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <util:map id="producerProps">
+    <entry key="max.request.size" value="1024" value-type="java.lang.Integer"/>
+  </util:map>
+
+  <util:map id="consumerProps">
+    <entry key="enable.auto.commit" value="true" value-type="java.lang.Boolean"/>
+  </util:map>
+
+  <!-- Custom message converter -->
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.kafka.message.KafkaMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+
+  <!-- Custom header mapper -->
+  <bean id="headerMapper" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.kafka.message.KafkaMessageHeaderMapper</value></constructor-arg>
+    <constructor-arg value="headerMapper"/>
+  </bean>
+</beans>

@@ -1,1 +1,1 @@
-client=com.consol.citrus.kubernetes.client.KubernetesClientBuilder
+client=org.citrusframework.kubernetes.client.KubernetesClientBuilder

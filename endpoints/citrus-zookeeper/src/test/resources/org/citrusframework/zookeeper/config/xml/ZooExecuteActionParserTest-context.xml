@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:zookeeper="http://www.citrusframework.org/schema/zookeeper/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/zookeeper/testcase http://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase.xsd">
+
+    <testcase name="ZooExecuteActionParserTest">
+        <actions>
+            <zookeeper:info zookeeper-client="myZookeeperClient">
+                <zookeeper:expect>
+                    <zookeeper:result>{a:"some thing"}</zookeeper:result>
+                </zookeeper:expect>
+                <zookeeper:extract>
+                    <zookeeper:message path="$.a" variable="a" />
+                </zookeeper:extract>
+            </zookeeper:info>
+
+            <zookeeper:create zookeeper-client="myZookeeperClient" path="/some-path" mode="PERSISTENT" acl="OPEN_ACL_UNSAFE">
+                <zookeeper:data>more data</zookeeper:data>
+                <zookeeper:expect>
+                    <zookeeper:result>{b:"some thing"}</zookeeper:result>
+                </zookeeper:expect>
+                <zookeeper:extract>
+                    <zookeeper:message path="$.b" variable="b" />
+                </zookeeper:extract>
+            </zookeeper:create>
+        </actions>
+    </testcase>
+
+    <spring:bean id="myZookeeperClient" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.zookeeper.client.ZooClient</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myZookeeperClient"/>
+    </spring:bean>
+
+</spring:beans>

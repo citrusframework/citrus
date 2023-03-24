@@ -11,17 +11,17 @@ settings and files.
 
 [source,xml]
 ----
-mvn archetype:generate -Dfilter=com.consol.citrus.mvn:citrus
+mvn archetype:generate -Dfilter=org.citrusframework.mvn:citrus
 
-1: remote -> com.consol.citrus.mvn:citrus-quickstart (Citrus quickstart project)
-2: remote -> com.consol.citrus.mvn:citrus-quickstart-jms (Citrus quickstart project with JMS consumer and producer)
-3: remote -> com.consol.citrus.mvn:citrus-quickstart-soap (Citrus quickstart project with SOAP client and producer)
+1: remote -> org.citrusframework.mvn:citrus-quickstart (Citrus quickstart project)
+2: remote -> org.citrusframework.mvn:citrus-quickstart-jms (Citrus quickstart project with JMS consumer and producer)
+3: remote -> org.citrusframework.mvn:citrus-quickstart-soap (Citrus quickstart project with SOAP client and producer)
 Choose a number: 1
 
-Define value for groupId: com.consol.citrus.samples
+Define value for groupId: org.citrusframework.samples
 Define value for artifactId: citrus-sample
 Define value for version: 1.0-SNAPSHOT
-Define value for package: com.consol.citrus.samples
+Define value for package: org.citrusframework.samples
 ----
 
 In the sample above we used the Citrus archetype available in Maven central repository.

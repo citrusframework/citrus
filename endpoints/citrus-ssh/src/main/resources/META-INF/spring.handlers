@@ -1,1 +1,1 @@
-http\://www.citrusframework.org/schema/ssh/config=com.consol.citrus.ssh.config.handler.CitrusSshConfigNamespaceHandler
+http\://www.citrusframework.org/schema/ssh/config=org.citrusframework.ssh.config.handler.CitrusSshConfigNamespaceHandler

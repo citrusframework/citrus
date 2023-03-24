@@ -1,0 +1,22 @@
+name: ApplyTemplateTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - applyTemplate:
+      name: myTemplate
+  - applyTemplate:
+      name: print
+      parameters:
+        - name: text
+          value: "Hello from Citrus!"
+        - name: message
+          value: |
+            <HelloRequest>
+               <Text>Hello from Citrus!</Text>
+            </HelloRequest>
+  - applyTemplate:
+      file: "classpath:org/citrusframework/yaml/template.yaml"
+      parameters:
+        - name: message
+          value: "Citrus rocks!"

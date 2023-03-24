@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+
+  <testcase name="HttpJsonSchemaValidationIT">
+    <meta-info>
+      <author>Sven Hettwer</author>
+      <creationdate>2017-12-11</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Sven Hettwer</last-updated-by>
+      <last-updated-on>2017-12-11T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      Tests whether the client/server is able to detect invalid json objects defined by a given json schema
+    </description>
+
+    <actions>
+      <echo>
+        <message>Test: Send a request to the server and detect the invalid server response</message>
+      </echo>
+
+      <http:send-request client="echoHttpClient" fork="true">
+        <http:GET/>
+      </http:send-request>
+
+      <http:receive-request server="echoHttpServer">
+        <http:GET/>
+      </http:receive-request>
+
+      <http:send-response server="echoHttpServer">
+        <http:body>
+          <http:data>
+            [{}]
+          </http:data>
+        </http:body>
+      </http:send-response>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <http:receive-response client="echoHttpClient">
+            <http:body type="json" schema-validation="true">
+              <http:data>
+                [{}]
+              </http:data>
+            </http:body>
+          </http:receive-response>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test: Send a valid request to the server which is successfully validated against the schema</message>
+      </echo>
+
+
+      <http:send-request client="echoHttpClient" fork="true">
+        <http:GET/>
+      </http:send-request>
+
+      <http:receive-request server="echoHttpServer">
+        <http:GET/>
+      </http:receive-request>
+
+      <http:send-response server="echoHttpServer">
+        <http:body>
+          <http:data>
+            [
+              {
+                "id": 2,
+                "name": "An ice sculpture",
+                "price": 12.50,
+                "tags": ["cold", "ice"],
+                "dimensions": {
+                  "length": 7.0,
+                  "width": 12.0,
+                  "height": 9.5
+                 }
+              }
+            ]
+          </http:data>
+        </http:body>
+
+      </http:send-response>
+          <http:receive-response client="echoHttpClient">
+            <http:body type="json" schema-validation="true">
+              <http:data>
+                [
+                  {
+                    "id": 2,
+                    "name": "An ice sculpture",
+                    "price": 12.50,
+                    "tags": ["cold", "ice"],
+                    "dimensions": {
+                      "length": 7.0,
+                      "width": 12.0,
+                      "height": 9.5
+                    }
+                  }
+                ]
+              </http:data>
+            </http:body>
+          </http:receive-response>
+
+
+      <echo>
+        <message>Test: Detect the invalid request send to the server</message>
+      </echo>
+
+
+      <http:send-request client="echoHttpClient" fork="true">
+        <http:POST>
+          <http:body type="json">
+            <http:data>
+              [{}]
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <http:receive-request server="echoHttpServer">
+            <http:POST>
+              <http:body type="json" schema-validation="true">
+                <http:data>
+                  [{}]
+                </http:data>
+              </http:body>
+            </http:POST>
+          </http:receive-request>
+        </when>
+      </assert>
+
+
+      <echo>
+        <message>Test: Successfully accept the valid massage on the server</message>
+      </echo>
+
+
+      <http:send-request client="echoHttpClient" fork="true">
+        <http:POST>
+          <http:body type="json">
+            <http:data>
+              [
+                {
+                  "id": 2,
+                  "name": "An ice sculpture",
+                  "price": 12.50,
+                  "tags": ["cold", "ice"],
+                  "dimensions": {
+                    "length": 7.0,
+                    "width": 12.0,
+                    "height": 9.5
+                  }
+                }
+              ]
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <http:receive-request server="echoHttpServer">
+        <http:POST>
+          <http:body type="json" schema-validation="true">
+            <http:data>
+              [
+                {
+                  "id": 2,
+                  "name": "An ice sculpture",
+                  "price": 12.50,
+                  "tags": ["cold", "ice"],
+                  "dimensions": {
+                    "length": 7.0,
+                    "width": 12.0,
+                    "height": 9.5
+                  }
+                }
+              ]
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:receive-request>
+
+
+      <echo>
+        <message>Test: Error is thrown if a non existing schema was referenced</message>
+      </echo>
+
+      <http:send-request client="echoHttpClient" fork="true">
+        <http:POST>
+          <http:body type="json">
+            <http:data>
+              {}
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
+        <when>
+        <http:receive-request server="echoHttpServer">
+          <http:POST>
+            <http:body type="json" schema="notExisting" schema-validation="true">
+              <http:data>
+                {}
+              </http:data>
+            </http:body>
+          </http:POST>
+        </http:receive-request>
+        </when>
+      </assert>
+
+
+      <echo>
+        <message>Test: Error is thrown if a non existing repository was referenced</message>
+      </echo>
+
+      <http:send-request client="echoHttpClient" fork="true">
+        <http:POST>
+          <http:body type="json">
+            <http:data>
+              {}
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
+        <when>
+          <http:receive-request server="echoHttpServer">
+            <http:POST>
+              <http:body type="json" schema-repository="notExistingRepo" schema-validation="true">
+                <http:data>
+                  {}
+                </http:data>
+              </http:body>
+            </http:POST>
+          </http:receive-request>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test: Successfully accept valid message with specified schema repository</message>
+      </echo>
+
+
+      <http:send-request client="echoHttpClient" fork="true">
+        <http:POST>
+          <http:body type="json">
+            <http:data>
+              {
+                "isbn" : "0345391802",
+                "title": "The Hitchhiker's Guide to the Galaxy",
+                "author": "Douglas Adams"
+              }
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <http:receive-request server="echoHttpServer">
+        <http:POST>
+          <http:body type="json" schema-repository="jsonBookStoreRepository" schema-validation="true">
+            <http:data>
+              {
+                "isbn" : "0345391802",
+                "title": "The Hitchhiker's Guide to the Galaxy",
+                "author": "Douglas Adams"
+              }
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:receive-request>
+
+      <echo>
+        <message>Test: Successfully accept valid message with specified schema</message>
+      </echo>
+
+
+      <http:send-request client="echoHttpClient" fork="true">
+        <http:POST>
+          <http:body type="json">
+            <http:data>
+              {
+                "isbn" : "0345391802",
+                "title": "The Hitchhiker's Guide to the Galaxy",
+                "author": "Douglas Adams"
+              }
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <http:receive-request server="echoHttpServer">
+        <http:POST>
+          <http:body type="json" schema="bookStore" schema-validation="true">
+            <http:data>
+              {
+                "isbn" : "0345391802",
+                "title": "The Hitchhiker's Guide to the Galaxy",
+                "author": "Douglas Adams"
+              }
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:receive-request>
+
+        <echo>
+            <message>Test: The correct repository has been chosen but the message was invalid</message>
+        </echo>
+
+
+        <http:send-request client="echoHttpClient" fork="true">
+            <http:POST>
+                <http:body type="json">
+                    <http:data>
+                        [
+                            {
+                                "id": 2,
+                                "name": "An ice sculpture",
+                                "price": 12.50,
+                                "tags": ["cold", "ice"],
+                                "dimensions": {
+                                    "length": 7.0,
+                                    "width": 12.0,
+                                    "height": 9.5
+                                }
+                            }
+                        ]
+                    </http:data>
+                </http:body>
+            </http:POST>
+        </http:send-request>
+
+
+        <assert exception="org.citrusframework.exceptions.ValidationException">
+            <when>
+                <http:receive-request server="echoHttpServer">
+                    <http:POST>
+                        <http:body type="json" schema-repository="jsonBookStoreRepository" schema-validation="true">
+                            <http:data>
+                                [
+                                    {
+                                        "id": 2,
+                                        "name": "An ice sculpture",
+                                        "price": 12.50,
+                                        "tags": ["cold", "ice"],
+                                        "dimensions": {
+                                            "length": 7.0,
+                                            "width": 12.0,
+                                            "height": 9.5
+                                        }
+                                    }
+                                ]
+                            </http:data>
+                        </http:body>
+                    </http:POST>
+                </http:receive-request>
+            </when>
+        </assert>
+
+        <echo>
+            <message>Test: The correct schema was chosen but the message was invalid</message>
+        </echo>
+
+
+        <http:send-request client="echoHttpClient" fork="true">
+            <http:POST>
+                <http:body type="json">
+                    <http:data>
+                        [
+                            {
+                                "id": 2,
+                                "name": "An ice sculpture",
+                                "price": 12.50,
+                                "tags": ["cold", "ice"],
+                                "dimensions": {
+                                    "length": 7.0,
+                                    "width": 12.0,
+                                    "height": 9.5
+                                }
+                            }
+                        ]
+                    </http:data>
+                </http:body>
+            </http:POST>
+        </http:send-request>
+
+        <assert exception="org.citrusframework.exceptions.ValidationException">
+            <when>
+                <http:receive-request server="echoHttpServer">
+                    <http:POST>
+                        <http:body type="json" schema="bookStore" schema-validation="true">
+                            <http:data>
+                                [
+                                    {
+                                        "id": 2,
+                                        "name": "An ice sculpture",
+                                        "price": 12.50,
+                                        "tags": ["cold", "ice"],
+                                        "dimensions": {
+                                            "length": 7.0,
+                                            "width": 12.0,
+                                            "height": 9.5
+                                        }
+                                    }
+                                ]
+                            </http:data>
+                        </http:body>
+                    </http:POST>
+                </http:receive-request>
+            </when>
+        </assert>
+
+    </actions>
+  </testcase>
+</spring:beans>

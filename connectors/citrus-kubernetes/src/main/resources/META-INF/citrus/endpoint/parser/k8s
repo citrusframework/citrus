@@ -1,1 +1,1 @@
-client=com.consol.citrus.kubernetes.config.annotation.KubernetesClientConfigParser
+client=org.citrusframework.kubernetes.config.annotation.KubernetesClientConfigParser

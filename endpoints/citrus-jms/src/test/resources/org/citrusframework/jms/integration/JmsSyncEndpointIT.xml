@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="JmsSyncEndpointIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2014-01-23</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2014-01-23T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test sends and receives messages on an synchronous JMS queue endpoint with reply message handling.</description>
+
+    <variables>
+      <variable name="correlationId" value="citrus:randomNumber(10)"/>
+      <variable name="messageId" value="citrus:randomNumber(10)"/>
+      <variable name="user" value="Christoph"/>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Test 1: Send JMS request and receive sync JMS response (inline CDATA payload)</message>
+      </echo>
+
+      <send endpoint="helloServiceJmsSyncEndpoint">
+        <description>Send synchronous JMS request: Citrus -> HelloService</description>
+        <message>
+          <data>
+            <![CDATA[
+               <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                 <MessageId>${messageId}</MessageId>
+                 <CorrelationId>${correlationId}</CorrelationId>
+                 <User>${user}</User>
+                 <Text>Hello Citrus</Text>
+               </HelloRequest>
+						]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+          <element name="CorrelationId" value="${correlationId}"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloServiceJmsSyncEndpoint">
+        <description>Receive synchronous JMS response: HelloService -> Citrus</description>
+        <message>
+          <data>
+            <![CDATA[
+              <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <MessageId>${messageId}</MessageId>
+                <CorrelationId>${correlationId}</CorrelationId>
+                <User>HelloService</User>
+                <Text>Hello ${user}</Text>
+              </HelloResponse>
+						]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+          <element name="CorrelationId" value="${correlationId}"/>
+        </header>
+      </receive>
+
+      <echo>
+        <message>Test 2: Send JMS request and receive sync JMS response (file resource payload)</message>
+      </echo>
+
+      <send endpoint="helloServiceJmsSyncEndpoint">
+        <description>Send synchronous JMS request: Citrus -> HelloService</description>
+        <message>
+          <resource file="classpath:org/citrusframework/templates/HelloRequest.xml"/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+          <element name="CorrelationId" value="${correlationId}"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloServiceJmsSyncEndpoint">
+        <description>Receive synchronous JMS response: HelloService -> Citrus</description>
+        <message>
+          <resource file="classpath:org/citrusframework/templates/HelloResponse.xml"/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+          <element name="CorrelationId" value="${correlationId}"/>
+        </header>
+      </receive>
+
+      <echo>
+        <message>Test 3: Receive JMS message timeout response</message>
+      </echo>
+
+      <assert exception="org.citrusframework.exceptions.ActionTimeoutException"
+              message="Action timeout after 300 milliseconds. Failed to receive synchronous reply message on endpoint: 'helloServiceJmsSyncEndpoint:producer'">
+        <when>
+          <receive endpoint="helloServiceJmsSyncEndpoint" timeout="300">
+            <description>Receive JMS timeout: HelloService -> Citrus</description>
+            <selector>
+              <element name="CorrelationId" value="doesNotExist"/>
+            </selector>
+            <message>
+              <data>
+                <![CDATA[
+                  <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                    <MessageId>?</MessageId>
+                    <CorrelationId>?</CorrelationId>
+                    <User>HelloService</User>
+                    <Text>Hello ?</Text>
+                  </HelloResponse>
+                ]]>
+              </data>
+            </message>
+            <header>
+              <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+    </actions>
+  </testcase>
+</spring:beans>

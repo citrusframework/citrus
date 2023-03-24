@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
+  <remote>org.citrusframework.rmi.remote.HelloService</remote>
+  <method>sayHello</method>
+  <args>
+    <arg type="java.lang.String" value="Hello RMI this is cool!"/>
+  </args>
+</service-invocation>

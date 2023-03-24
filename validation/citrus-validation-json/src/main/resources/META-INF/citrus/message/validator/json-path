@@ -1,2 +1,2 @@
 name=defaultJsonPathMessageValidator
-type=com.consol.citrus.validation.json.JsonPathMessageValidator
+type=org.citrusframework.validation.json.JsonPathMessageValidator

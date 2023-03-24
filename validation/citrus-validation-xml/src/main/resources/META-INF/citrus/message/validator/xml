@@ -1,2 +1,2 @@
 name=defaultXmlMessageValidator
-type=com.consol.citrus.validation.xml.DomXmlMessageValidator
+type=org.citrusframework.validation.xml.DomXmlMessageValidator

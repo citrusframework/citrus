@@ -1,0 +1,64 @@
+name: "SqlQueryTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+actions:
+  - sql:
+      dataSource: "dataSource"
+      statements:
+        - statement: insert into message values (1000, 'Hello from Citrus!')
+        - statement: insert into message values (1001, 'Citrus rocks!')
+
+  - sql:
+      dataSource: "dataSource"
+      statements:
+        - statement: select text from message where id=1000
+      validate:
+        - column: "text"
+          value: "Hello from Citrus!"
+      extract:
+        - column: "text"
+          variable: "greeting"
+
+  - sql:
+      dataSource: "dataSource"
+      statements:
+        - statement: select text from message where id>=1000
+      validate:
+        - column: "text"
+          values:
+            - Hello from Citrus!
+            - Citrus rocks!
+
+  - sql:
+      dataSource: "dataSource"
+      statements:
+        - statement: select * from message where id>=1000
+      validate:
+        - column: "id"
+          values:
+            - 1000
+            - 1001
+        - column: "text"
+          values:
+            - Hello from Citrus!
+            - Citrus rocks!
+
+  - sql:
+      dataSource: "dataSource"
+      statements:
+        - statement: select * from message where id>=1000
+      validate:
+        - script:
+            type: "groovy"
+            value: |
+              assert rows.size() == 2
+
+  - sql:
+      dataSource: "dataSource"
+      statements:
+        - statement: select * from message where id>=1000
+      validate:
+        - script:
+            type: "groovy"
+            file: "classpath:org/citrusframework/sql/validate.groovy"

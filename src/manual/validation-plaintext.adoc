@@ -10,7 +10,7 @@ as a Maven dependency.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-validation-text</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -32,7 +32,7 @@ public PlainTextMessageValidator defaultPlaintextMessageValidator() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultPlaintextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
+<bean id="defaultPlaintextMessageValidator" class="org.citrusframework.validation.text.PlainTextMessageValidator"/>
 ----
 
 Citrus will try to auto-guess the appropiate message validator for the incoming message. You can explicitly set the message
@@ -127,7 +127,7 @@ public PlainTextMessageValidator defaultPlaintextMessageValidator() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultPlaintextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator">
+<bean id="defaultPlaintextMessageValidator" class="org.citrusframework.validation.text.PlainTextMessageValidator">
   <property name="ignoreNewLineType" value="true"/>
   <property name="ignoreWhitespace" value="true"/>
 </bean>
@@ -293,7 +293,7 @@ public GzipBinaryBase64MessageValidator defaultGzipBinaryBase64MessageValidator(
 [source,xml,indent=0,role="secondary"]
 ----
 <bean id="defaultGzipBinaryBase64MessageValidator"
-      class="com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator"/>
+      class="org.citrusframework.validation.text.GzipBinaryBase64MessageValidator"/>
 ----
 
 In the test case receiving action we tell Citrus to use gzip message validation.

@@ -1,1 +1,1 @@
-type=com.consol.citrus.http.actions.HttpActionBuilder
+type=org.citrusframework.http.actions.HttpActionBuilder

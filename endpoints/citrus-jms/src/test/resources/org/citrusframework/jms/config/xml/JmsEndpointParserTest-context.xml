@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
+
+  <citrus-jms:endpoint id="jmsEndpoint1"
+                               destination-name="JMS.Queue.Test"/>
+
+  <citrus-jms:endpoint id="jmsEndpoint2"
+                               connection-factory="jmsConnectionFactory"
+                               timeout="10000"
+                               message-converter="messageConverter"
+                               destination-resolver="destinationResolver"
+                               destination-name-resolver="destinationNameResolver"
+                               destination="jmsQueue"/>
+
+  <citrus-jms:endpoint id="jmsEndpoint3"
+                               pub-sub-domain="true"
+                               auto-start="true"
+                               durable-subscription="true"
+                               durable-subscriber-name="durableSubscriber"
+                               use-object-messages="true"
+                               filter-internal-headers="false"
+                               jms-template="jmsTemplate"/>
+
+  <citrus-jms:endpoint id="jmsEndpoint4"
+                               destination-name="JMS.Queue.Test"
+                               actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <!-- JMS connection factories -->
+  <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>
+    <constructor-arg value="connectionFactory"/>
+  </bean>
+
+  <bean id="jmsConnectionFactory" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>
+    <constructor-arg value="jmsConnectionFactory"/>
+  </bean>
+
+  <!-- JMS Template and queues -->
+  <bean id="jmsQueue" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.Queue</value></constructor-arg>
+    <constructor-arg value="jmsQueue"/>
+  </bean>
+
+  <bean id="jmsTemplate" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.jms.core.JmsTemplate</value></constructor-arg>
+    <constructor-arg value="jmsTemplate"/>
+  </bean>
+
+  <!-- Custom message converter -->
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.jms.message.JmsMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+
+  <bean id="destinationResolver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.jms.support.destination.DestinationResolver</value></constructor-arg>
+    <constructor-arg value="destinationResolver"/>
+  </bean>
+
+  <bean id="destinationNameResolver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.resolver.EndpointUriResolver</value></constructor-arg>
+    <constructor-arg value="destinationNameResolver"/>
+  </bean>
+</beans>

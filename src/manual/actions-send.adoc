@@ -13,8 +13,8 @@ ways of constructing a message with body and header values.
 [source,java,indent=0,role="primary"]
 ----
 import org.testng.annotations.Test;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.TestNGCitrusSupport;
 
 @Test
 public class SendMessageTest extends TestNGCitrusSupport {
@@ -180,7 +180,7 @@ send("helloService")
 ----
 
 The model object requires a proper message marshaller that should be available as bean in the project context (e.g. the
-Spring application context). By default, Citrus is searching for a bean of type *com.consol.cirus.xml.Marshaller*.
+Spring application context). By default, Citrus is searching for a bean of type *org.citrusframework.xml.Marshaller*.
 
 In case you have multiple message marshallers in the application context you have to tell Citrus which one to use in this
 particular send message action.
@@ -292,7 +292,7 @@ You need to add the module to your project to use the functionality.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-groovy</artifactId>
   <version>${citrus.version}</version>
 </dependency>

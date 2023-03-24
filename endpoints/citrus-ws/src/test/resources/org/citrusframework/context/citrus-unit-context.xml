@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd"
+       default-autowire="byType">
+	
+    <citrus:schema-repository id="schemaRepository">
+      <citrus:locations>
+        <citrus:location path="classpath:org/citrusframework/ws/schema/error-details.xsd"/>
+      </citrus:locations>
+    </citrus:schema-repository>
+
+    <citrus:global-variables>
+      <citrus:variable name="project.name" value="Citrus Integration Testing"/>
+    </citrus:global-variables>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="citrusEndpointInterceptor" class="org.citrusframework.ws.interceptor.DelegatingEndpointInterceptor"/>
+    <bean id="citrusWsEndpoint" class="org.citrusframework.ws.server.WebServiceEndpoint"/>
+
+    <!-- Message Validators -->
+    <bean id="soapFaultValidator" class="org.citrusframework.ws.validation.SimpleSoapFaultValidator"/>
+    <bean id="soapAttachmentValidator" class="org.citrusframework.ws.validation.SimpleSoapAttachmentValidator"/>
+    <bean id="soapXmlFaultValidator" class="org.citrusframework.ws.validation.XmlSoapFaultValidator"/>
+</beans>

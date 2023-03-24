@@ -1,1 +1,1 @@
-type=com.consol.citrus.container.Template$Builder
+type=org.citrusframework.container.Template$Builder

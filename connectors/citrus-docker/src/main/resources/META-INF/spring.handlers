@@ -1,2 +1,2 @@
-http\://www.citrusframework.org/schema/docker/testcase=com.consol.citrus.docker.config.handler.CitrusDockerTestcaseNamespaceHandler
-http\://www.citrusframework.org/schema/docker/config=com.consol.citrus.docker.config.handler.CitrusDockerConfigNamespaceHandler
+http\://www.citrusframework.org/schema/docker/testcase=org.citrusframework.docker.config.handler.CitrusDockerTestcaseNamespaceHandler
+http\://www.citrusframework.org/schema/docker/config=org.citrusframework.docker.config.handler.CitrusDockerConfigNamespaceHandler

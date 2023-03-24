@@ -125,7 +125,7 @@ The properties in that file are automatically loaded as Java system properties. 
 [source,properties]
 ----
 citrus.spring.application.context=classpath*:citrus-custom-context.xml
-citrus.spring.java.config=com.consol.citrus.config.MyCustomConfig
+citrus.spring.java.config=org.citrusframework.config.MyCustomConfig
 citrus.file.encoding=UTF-8
 citrus.default.message.type=XML
 citrus.xml.file.name.pattern=/**/*Test.xml,/**/*IT.xml

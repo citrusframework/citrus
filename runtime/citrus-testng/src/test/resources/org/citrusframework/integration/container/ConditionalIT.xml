@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ConditionalIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2013-08-23</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2013-08-23T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Execute test actions based on some condition</description>
+
+    <variables>
+      <variable name="failMessage" value="Something went wrong!"/>
+      <variable name="shouldExecute" value="true"/>
+      <variable name="shouldNotExecute" value="false"/>
+      <variable name="number" value="10"/>
+    </variables>
+
+    <actions>
+      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
+        <when>
+          <conditional expression="${shouldExecute}">
+            <fail message="${failMessage}"/>
+          </conditional>
+        </when>
+      </assert>
+
+      <conditional expression="${shouldNotExecute}">
+        <fail message="${failMessage}"/>
+      </conditional>
+
+      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
+        <when>
+          <conditional expression="${number} = 10">
+            <fail message="${failMessage}"/>
+          </conditional>
+        </when>
+      </assert>
+
+      <conditional expression="${number} lt 10">
+        <fail message="${failMessage}"/>
+      </conditional>
+
+      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
+        <when>
+          <conditional expression="${shouldExecute} = true">
+            <fail message="${failMessage}"/>
+          </conditional>
+        </when>
+      </assert>
+
+      <conditional expression="${shouldNotExecute} = true">
+        <fail message="${failMessage}"/>
+      </conditional>
+    </actions>
+  </testcase>
+</spring:beans>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="SpringXmlTestLoader_IT">
+        <meta-info>
+            <author>T. Schlathoelter</author>
+            <creationdate>2022-02-01</creationdate>
+            <status>FINAL</status>
+            <spring:description>Foo bar: F#!$§ed up beyond all repair</spring:description>
+        </meta-info>
+        <actions>
+            <action reference="echoAction"/>
+        </actions>
+    </testcase>
+
+    <spring:bean id="echoAction" class="org.citrusframework.config.xml.EchoActionParser.EchoActionFactoryBean"/>
+</spring:beans>

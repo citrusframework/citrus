@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean id="schemaRepository" class="org.citrusframework.xml.XsdSchemaRepository"/>
+
+    <bean id="citrusLoggingInterceptor" class="org.citrusframework.http.interceptor.LoggingHandlerInterceptor"/>
+    <bean id="citrusHandlerInterceptor" class="org.citrusframework.http.interceptor.DelegatingHandlerInterceptor"/>
+    <bean id="citrusHttpMessageController" class="org.citrusframework.http.controller.HttpMessageController"/>
+
+    <bean id="basicAuthClientRequestFactory" class="org.citrusframework.http.client.BasicAuthClientHttpRequestFactory">
+      <property name="authScope">
+          <bean class="org.apache.hc.client5.http.auth.AuthScope">
+            <constructor-arg value="localhost"/>
+            <constructor-arg value="8088"/>
+          </bean>
+      </property>
+      <property name="credentials">
+        <bean class="org.apache.hc.client5.http.auth.UsernamePasswordCredentials">
+            <constructor-arg value="someUsername"/>
+            <constructor-arg value="somePassword"/>
+        </bean>
+      </property>
+    </bean>
+
+    <bean id="mockResponseEndpointAdapter" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.EndpointAdapter</value></constructor-arg>
+      <constructor-arg value="mockResponseEndpointAdapter"/>
+    </bean>
+
+</beans>

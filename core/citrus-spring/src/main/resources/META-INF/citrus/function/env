@@ -1,1 +1,1 @@
-type=com.consol.citrus.functions.core.EnvironmentPropertyFunction
+type=org.citrusframework.functions.core.EnvironmentPropertyFunction

@@ -1,1 +1,1 @@
-http\://www.citrusframework.org/schema/vertx/config=com.consol.citrus.vertx.config.handler.CitrusVertxConfigNamespaceHandler
+http\://www.citrusframework.org/schema/vertx/config=org.citrusframework.vertx.config.handler.CitrusVertxConfigNamespaceHandler

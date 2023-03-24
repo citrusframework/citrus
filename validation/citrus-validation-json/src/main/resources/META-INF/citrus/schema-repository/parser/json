@@ -1,1 +1,1 @@
-type=com.consol.citrus.config.xml.JsonSchemaRepositoryParser
+type=org.citrusframework.config.xml.JsonSchemaRepositoryParser

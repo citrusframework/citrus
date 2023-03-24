@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="JsonGroovyValidationIT">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2012-07-29</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2010-07-29T00:00:00</last-updated-on>
+		</meta-info>
+
+    <description>
+			Validate Http JSON response data with JSON slurper Groovy code.
+		</description>
+
+      <actions>
+        <send endpoint="helloEndpoint">
+          <message>
+            <data>
+              {
+                "type" : "read",
+                "mbean" : "java.lang:type=Memory",
+                "attribute" : "HeapMemoryUsage",
+                "path" : "used"
+              }
+            </data>
+          </message>
+        </send>
+
+        <receive endpoint="helloEndpoint">
+          <message type="json" validator="defaultGroovyJsonMessageValidator">
+            <validate>
+              <script type="groovy">
+                <![CDATA[
+                  assert json.type == 'read'
+                  assert json.mbean == 'java.lang:type=Memory'
+                  assert json.attribute == 'HeapMemoryUsage'
+                ]]>
+              </script>
+            </validate>
+          </message>
+        </receive>
+
+        <send endpoint="helloEndpoint">
+          <message>
+            <data>
+              {
+                "timestamp" : "2011-01-01",
+                "status" : 200,
+                "request" :
+                {
+                  "mbean" : "java.lang:type=Memory",
+                  "path" : "used",
+                  "attribute" : "HeapMemoryUsage",
+                  "type" : "read"
+                },
+                "value" : 512
+              }
+            </data>
+          </message>
+        </send>
+
+        <receive endpoint="helloEndpoint">
+          <message type="json" validator="defaultGroovyJsonMessageValidator">
+            <validate>
+              <script type="groovy">
+                <![CDATA[
+                  assert json.request.type == 'read'
+                  assert json.request.mbean == 'java.lang:type=Memory'
+                  assert json.request.attribute == 'HeapMemoryUsage'
+                  assert json.status == 200
+                  assert json.value >= 256
+                  assert json.value <= 1024
+                ]]>
+              </script>
+            </validate>
+          </message>
+        </receive>
+
+        <send endpoint="helloEndpoint">
+          <message>
+            <data>
+              {
+              "type" : "read",
+              "mbean" : "java.lang:type=Memory",
+              "attribute" : "HeapMemoryUsage",
+              "path" : "used"
+              }
+            </data>
+          </message>
+        </send>
+
+        <assert exception="org.citrusframework.exceptions.ValidationException">
+          <when>
+            <receive endpoint="helloEndpoint">
+              <message type="json" validator="defaultGroovyJsonMessageValidator">
+                <validate>
+                  <script type="groovy">
+                    <![CDATA[
+                      assert json.path == 'wrong'
+                    ]]>
+                  </script>
+                </validate>
+              </message>
+            </receive>
+          </when>
+        </assert>
+      </actions>
+  </testcase>
+</spring:beans>

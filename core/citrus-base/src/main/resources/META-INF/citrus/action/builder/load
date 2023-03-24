@@ -1,1 +1,1 @@
-type=com.consol.citrus.actions.LoadPropertiesAction$Builder
+type=org.citrusframework.actions.LoadPropertiesAction$Builder

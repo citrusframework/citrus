@@ -10,7 +10,7 @@ NOTE: The Vert.x components in Citrus are kept in a separate Maven module. So yo
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-vertx</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -56,7 +56,7 @@ The Vert.x endpoint component is defined as follows in your Citrus Spring config
       pubSubDomain="false"
       address="news-feed"/>
 
-<bean id="vertxInstanceFactory" class="com.consol.citrus.vertx.factory.CachingVertxInstanceFactory"/>
+<bean id="vertxInstanceFactory" class="org.citrusframework.vertx.factory.CachingVertxInstanceFactory"/>
 ----
 
 The endpoint holds some general information how to access the Vert.x event bus. Host and port values define the Vert.x Hazelcast
@@ -185,9 +185,9 @@ named *vertxInstanceFactory* . You can choose the factory implementation to use 
 implementation that caches the Vert.x instances so we do not connect more than one Vert.x instance to the same cluster host.
 Citrus offers following instance factory implementations:
 
-com.consol.citrus.vertx.factory.CachingVertxInstanceFactory:: default implementation that reuses the Vert.x instance based on given
+org.citrusframework.vertx.factory.CachingVertxInstanceFactory:: default implementation that reuses the Vert.x instance based on given
 cluster host and port. With this implementation we ensure to connect a single Citrus Vert.x instance to a cluster host.
-com.consol.citrus.vertx.factory.SingleVertxInstanceFactory:: creates a single Vert.x instance and reuses this instance for all endpoints.
+org.citrusframework.vertx.factory.SingleVertxInstanceFactory:: creates a single Vert.x instance and reuses this instance for all endpoints.
 You can also set your very custom Vert.x instance via configuration for custom Vert.x instantiation.
 
 The instance factory implementations do implement the *_VertxInstanceFactory_* interface. So you can also provide your very special implementation.
@@ -201,5 +201,5 @@ The Vert.x instance factory is set on the Vert.x endpoint as follows:
       vertx-factory="singleVertxInstanceFactory"/>
 
 <bean id="singleVertxInstanceFactory"
-      class="com.consol.citrus.vertx.factory.SingleVertxInstanceFactory"/>
+      class="org.citrusframework.vertx.factory.SingleVertxInstanceFactory"/>
 ----

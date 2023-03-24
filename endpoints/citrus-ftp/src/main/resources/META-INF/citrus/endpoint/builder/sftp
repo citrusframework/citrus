@@ -1,2 +1,2 @@
-client=com.consol.citrus.ftp.client.SftpClientBuilder
-server=com.consol.citrus.ftp.server.SftpServerBuilder
+client=org.citrusframework.ftp.client.SftpClientBuilder
+server=org.citrusframework.ftp.server.SftpServerBuilder

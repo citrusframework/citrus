@@ -17,9 +17,9 @@
     <xjc:simple />
   </globalBindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-spring-integration-config.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-spring-integration-config.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.channel"/>
+      <package name="org.citrusframework.model.config.channel"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>

@@ -10,8 +10,8 @@ The library is built in the Spring configuration and contains a set of functions
 [source,xml]
 ----
 <citrus:function-library id="testLibrary" prefix="foo:">
-          <citrus:function name="randomNumber" class="com.consol.citrus.functions.RandomNumberFunction"/>
-          <citrus:function name="randomString" class="com.consol.citrus.functions.RandomStringFunction"/>
+          <citrus:function name="randomNumber" class="org.citrusframework.functions.RandomNumberFunction"/>
+          <citrus:function name="randomString" class="org.citrusframework.functions.RandomStringFunction"/>
           <citrus:function name="customFunction" ref="customFunctionBean"/>
           ...
 </citrus:function-library>
@@ -303,7 +303,7 @@ As mentioned before you can define a custom function for your very specific need
     <citrus-function name="randomHttpStatusCode" ref="randomHttpStatusCodeFunction"/>
 </citrus:function-library>
 
-<bean id="randomHttpStatusCodeFunction" class="com.consol.citrus.functions.core.RandomEnumValueFunction">
+<bean id="randomHttpStatusCodeFunction" class="org.citrusframework.functions.core.RandomEnumValueFunction">
   <property name="values">
     <list>
       <value>200</value>
@@ -458,7 +458,7 @@ The following function library defines a custom function for mapping HTTP status
       <citrus-function name="getHttpStatusMessage" ref="getHttpStatusMessageFunction"/>
 </citrus:function-library>
 
-<bean id="getHttpStatusMessageFunction" class="com.consol.citrus.functions.core.MapValueFunction">
+<bean id="getHttpStatusMessageFunction" class="org.citrusframework.functions.core.MapValueFunction">
   <property name="values">
     <map>
       <entry key="200" value="OK" />

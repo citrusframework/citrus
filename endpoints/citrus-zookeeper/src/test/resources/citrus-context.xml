@@ -18,9 +18,9 @@
   </citrus:global-variables>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
-  <bean class="com.consol.citrus.zookeeper.server.ZooServer" init-method="startup" destroy-method="shutdown"/>
+  <bean class="org.citrusframework.zookeeper.server.ZooServer" init-method="startup" destroy-method="shutdown"/>
 
   <citrus-zookeeper:client id="zookeeperClient" timeout="2000" url="localhost:21181"/>
 

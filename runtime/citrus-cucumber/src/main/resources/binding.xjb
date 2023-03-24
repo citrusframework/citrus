@@ -17,9 +17,9 @@
     <xjc:simple />
   </globalBindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-cucumber-testcase.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-cucumber-testcase.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.testcase.cucumber"/>
+      <package name="org.citrusframework.model.testcase.cucumber"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>
@@ -28,7 +28,7 @@
 
   <bindings schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.testcase.core"/>
+      <package name="org.citrusframework.model.testcase.core"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>

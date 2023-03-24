@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <!-- JSON -->
+  <citrus:schema id="jsonSchema1" location="classpath:org/citrusframework/validation/ProductsSchema.json"/>
+
+  <citrus:schema-repository type="json" id="jsonSchemaRepository1">
+    <citrus:schemas>
+      <citrus:schema id="jsonSchema2" location="classpath:org/citrusframework/validation/ProductsSchema.json"/>
+      <citrus:reference schema="jsonSchema1"/>
+    </citrus:schemas>
+  </citrus:schema-repository>
+
+  <citrus:schema-repository type="json" id="jsonSchemaRepository2">
+    <citrus:locations>
+      <citrus:location path="classpath:org/citrusframework/validation/*"/>
+    </citrus:locations>
+  </citrus:schema-repository>
+
+</beans>

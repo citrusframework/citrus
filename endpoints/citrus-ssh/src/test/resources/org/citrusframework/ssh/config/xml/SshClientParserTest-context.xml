@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/ssh/config http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd">
+
+  <citrus-ssh:client id="sshClient1"
+                     user="citrus"/>
+
+  <citrus-ssh:client id="sshClient2"
+                     host="dev7"
+                     port="10022"
+                     user="foo"
+                     password="bar"
+                     private-key-path="classpath:org/citrusframework/ssh/citrus.priv"
+                     private-key-password="consol"
+                     strict-host-checking="true"
+                     message-converter="sshMessageConverter"
+                     command-timeout="10000"
+                     connection-timeout="5000"
+                     known-hosts-path="classpath:org/citrusframework/ssh/known_hosts"/>
+
+  <bean id="sshMessageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.ssh.message.SshMessageConverter</value></constructor-arg>
+    <constructor-arg value="sshMessageConverter"/>
+  </bean>
+
+</beans>

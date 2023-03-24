@@ -1,2 +1,2 @@
-client=com.consol.citrus.websocket.client.WebSocketClientBuilder
-server=com.consol.citrus.websocket.server.WebSocketServerBuilder
+client=org.citrusframework.websocket.client.WebSocketClientBuilder
+server=org.citrusframework.websocket.server.WebSocketServerBuilder

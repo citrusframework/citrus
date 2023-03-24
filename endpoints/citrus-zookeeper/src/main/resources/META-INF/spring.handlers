@@ -1,2 +1,2 @@
-http\://www.citrusframework.org/schema/zookeeper/testcase=com.consol.citrus.zookeeper.config.handler.CitrusZooTestcaseNamespaceHandler
-http\://www.citrusframework.org/schema/zookeeper/config=com.consol.citrus.zookeeper.config.handler.CitrusZooConfigNamespaceHandler
+http\://www.citrusframework.org/schema/zookeeper/testcase=org.citrusframework.zookeeper.config.handler.CitrusZooTestcaseNamespaceHandler
+http\://www.citrusframework.org/schema/zookeeper/config=org.citrusframework.zookeeper.config.handler.CitrusZooConfigNamespaceHandler

@@ -1,2 +1,2 @@
 name=sqlResultSetScriptValidator
-type=com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator
+type=org.citrusframework.validation.script.sql.GroovySqlResultSetValidator

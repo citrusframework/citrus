@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/sftp/config http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+
+  <citrus-sftp:server id="sftpServer1"
+                     auto-start="false"
+                     port="22"/>
+
+  <citrus-sftp:server id="sftpServer2"
+                     auto-start="false"
+                     auto-login="false"
+                     auto-connect="false"
+                     port="10022"
+                     allowed-key-path="classpath:org/citrusframework/sftp/citrus_pub.pem"
+                     host-key-path="classpath:org/citrusframework/sftp/citrus.pem"
+                     user-home-path="/home/user"
+                     user="foo"
+                     password="bar"/>
+
+  <citrus-sftp:server id="sftpServer3"
+                     auto-start="false"
+                     endpoint-adapter="sftpServerAdapter"/>
+
+  <bean id="sftpServerAdapter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.EndpointAdapter</value></constructor-arg>
+    <constructor-arg value="sftpServerAdapter"/>
+  </bean>
+
+</beans>

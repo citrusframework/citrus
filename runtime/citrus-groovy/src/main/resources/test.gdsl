@@ -17,5 +17,5 @@
 def ctx = context(scope: scriptScope())
 
 contributor(ctx) {
-    delegatesTo(findClass('com.consol.citrus.groovy.dsl.test.TestCaseScript'))
+    delegatesTo(findClass('org.citrusframework.groovy.dsl.test.TestCaseScript'))
 }

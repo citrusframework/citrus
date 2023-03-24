@@ -1,1 +1,1 @@
-http\://www.citrusframework.org/schema/rmi/config=com.consol.citrus.rmi.config.handler.RmiConfigNamespaceHandler
+http\://www.citrusframework.org/schema/rmi/config=org.citrusframework.rmi.config.handler.RmiConfigNamespaceHandler

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+    <citrus:schema-repository id="schemaRepository1">
+      <citrus:schemas>
+        <citrus:schema id="schema2" location="classpath:org/citrusframework/validation/test.xsd"/>
+        <citrus:schema id="wsdl2" location="classpath:org/citrusframework/xml/BookStore.wsdl"/>
+        <citrus:reference schema="schema1"/>
+        <citrus:reference schema="wsdl1"/>
+        <citrus:reference schema="schemaCollection1"/>
+      </citrus:schemas>
+    </citrus:schema-repository>
+
+    <citrus:schema-repository id="schemaRepository2">
+      <citrus:locations>
+        <citrus:location path="classpath:org/citrusframework/validation/*"/>
+      </citrus:locations>
+    </citrus:schema-repository>
+
+    <citrus:schema-repository id="schemaRepository3" schema-mapping-strategy="schemaMappingStrategy"/>
+
+    <citrus:schema id="schema1" location="classpath:org/citrusframework/validation/test.xsd"/>
+
+    <citrus:schema id="wsdl1" location="classpath:org/citrusframework/xml/BookStore.wsdl"/>
+
+    <citrus:schema-collection id="schemaCollection1">
+      <citrus:schemas>
+        <citrus:schema location="classpath:org/citrusframework/validation/test.xsd"/>
+        <citrus:schema location="classpath:org/citrusframework/validation/sample.xsd"/>
+      </citrus:schemas>
+    </citrus:schema-collection>
+
+    <citrus:schema-repository id="xmlSchemaRepository" type="xml">
+        <citrus:schemas>
+            <citrus:reference schema="schema2" />
+        </citrus:schemas>
+    </citrus:schema-repository>
+
+    <bean id="schemaMappingStrategy" class="org.citrusframework.xml.schema.RootQNameSchemaMappingStrategy"/>
+
+    <bean id="testSchemaBean" class="org.springframework.xml.xsd.SimpleXsdSchema">
+      <property name="xsd" value="classpath:org/citrusframework/validation/test.xsd"/>
+    </bean>
+
+    <bean id="testSchemaRepositoryBean" class="org.citrusframework.xml.XsdSchemaRepository">
+      <property name="schemas">
+        <list>
+          <ref bean="testSchemaBean"/>
+        </list>
+      </property>
+    </bean>
+
+</beans>

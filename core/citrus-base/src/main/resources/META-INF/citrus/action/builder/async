@@ -1,1 +1,1 @@
-type=com.consol.citrus.container.Async$Builder
+type=org.citrusframework.container.Async$Builder

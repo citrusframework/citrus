@@ -10,7 +10,7 @@ to your project as a Maven dependency.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-validation-hamcrest</artifactId>
   <version>${citrus.version}</version>
 </dependency>

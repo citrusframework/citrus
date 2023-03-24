@@ -1,1 +1,1 @@
-type=com.consol.citrus.http.yaml.Http
+type=org.citrusframework.http.yaml.Http

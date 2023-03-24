@@ -5,5 +5,5 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <rewriteSystem
         systemIdStartString="http://www.citrusframework.org/schema/testcase"
-        rewritePrefix="com/consol/citrus/schema" />
+        rewritePrefix="org/citrusframework/schema" />
 </catalog>

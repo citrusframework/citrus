@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="ExecuteSQLQueryActionParserTest">
+        <actions>
+            <sql datasource="testDataSource">
+                <statement>select A, B, C from D where E='${id}'</statement>
+                <statement>select COUNT(F) as cnt_f from G</statement>
+                <validate column="A" value="a"/>
+                <validate column="B" value="b"/>
+                <validate column="C" value="NULL"/>
+                <validate column="CNT_F" value="${count}"/>
+            </sql>
+
+            <sql datasource="testDataSource" transaction-manager="testTransactionManager" transaction-timeout="5000" transaction-isolation-level="ISOLATION_READ_COMMITTED">
+                <resource file="classpath:org/citrusframework/actions/test-sql-query-statements.sql"/>
+                <validate column="foo" value="1"/>
+            </sql>
+
+            <sql datasource="testDataSource">
+                <statement>select A as A_COLUMN, B as B_COLUMN from C</statement>
+                <validate column="A_COLUMN">
+                    <values>
+                        <value>a</value>
+                        <value>@ignore@</value>
+                    </values>
+                </validate>
+                <validate column="B_COLUMN">
+                    <values>
+                        <value>b</value>
+                        <value>NULL</value>
+                    </values>
+                </validate>
+                <extract column="A_COLUMN" variable="a_values"/>
+                <extract column="B_COLUMN" variable="b_values"/>
+            </sql>
+
+            <sql datasource="testDataSource">
+                <statement>select A as A_COLUMN, B as B_COLUMN from C</statement>
+                <validate-script type="groovy">
+                    assert rows.size() == 2
+                </validate-script>
+            </sql>
+
+            <sql datasource="testDataSource">
+                <statement>select A as A_COLUMN, B as B_COLUMN from C</statement>
+                <validate-script type="groovy" file="classpath:org/citrusframework/script/example.groovy"/>
+            </sql>
+        </actions>
+    </testcase>
+
+    <spring:bean id="testDataSource" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">javax.sql.DataSource</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="testDataSource"/>
+    </spring:bean>
+
+    <spring:bean id="testTransactionManager" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.springframework.transaction.PlatformTransactionManager</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="testTransactionManager"/>
+    </spring:bean>
+
+</spring:beans>

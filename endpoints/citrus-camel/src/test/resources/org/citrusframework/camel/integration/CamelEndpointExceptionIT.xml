@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2006-2014 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="CamelEndpointExceptionIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2014-06-07</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2014-06-07T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test receives synchronous message as Camel endpoint and simulates exception on Camel exchange.</description>
+
+    <actions>
+      <echo>
+        <message>Test: Send message to Camel endpoint and receive synchronous response</message>
+      </echo>
+
+      <send endpoint="camel:sync:direct:hello" fork="true">
+        <message type="plaintext">
+          <data>Hello Camel!</data>
+        </message>
+      </send>
+
+      <receive endpoint="camelHelloEndpoint">
+        <message type="plaintext">
+          <data>Hello Camel!</data>
+        </message>
+      </receive>
+
+      <sleep milliseconds="1000"/>
+
+      <send endpoint="camelHelloEndpoint">
+        <message type="plaintext">
+          <data>Something went wrong!</data>
+        </message>
+        <header>
+          <element name="citrus_camel_exchange_exception" value="org.citrusframework.exceptions.CitrusRuntimeException"/>
+          <element name="citrus_camel_exchange_exception_message" value="Something went wrong!"/>
+        </header>
+      </send>
+
+      <receive endpoint="camel:sync:seda:exceptions">
+        <message type="plaintext">
+          <data>Something went wrong!</data>
+        </message>
+      </receive>
+
+      <send endpoint="camel:sync:seda:exceptions">
+        <message type="plaintext">
+          <data>Hello after error!</data>
+        </message>
+      </send>
+
+      <receive endpoint="camel:sync:direct:hello">
+        <message type="plaintext">
+          <data>Hello after error!</data>
+        </message>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>

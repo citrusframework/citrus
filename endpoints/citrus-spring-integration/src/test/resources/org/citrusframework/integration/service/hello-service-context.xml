@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:jms="http://www.springframework.org/schema/integration/jms"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+            http://www.springframework.org/schema/integration/jms http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
+
+  <int:poller id="poller"
+              fixed-rate="100"
+              max-messages-per-poll="1"
+              default="true"/>
+
+  <int:logging-channel-adapter id="logger" level="DEBUG"/>
+
+  <bean id="helloService" class="org.citrusframework.integration.service.HelloServiceImpl"/>
+
+  <int:service-activator input-channel="helloRequests"
+                         output-channel="helloResponses"
+                         ref="helloService"/>
+
+  <int:service-activator input-channel="helloSyncRequests"
+                         ref="helloService"/>
+
+  <int:channel id="helloRequests"/>
+  <citrus-si:channel id="helloResponses" capacity="5"/>
+  <int:channel id="helloSyncRequests"/>
+
+  <int:channel id="errorChannel">
+    <int:interceptors>
+      <ref bean="loggingInterceptor"/>
+    </int:interceptors>
+  </int:channel>
+
+  <bean id="loggingInterceptor" class="org.citrusframework.integration.service.LoggingInterceptor"/>
+
+  <bean id="helloMarshaller" class="org.citrusframework.xml.Jaxb2Marshaller">
+    <constructor-arg value="org.citrusframework.integration.service.model"/>
+  </bean>
+
+</beans>

@@ -1,0 +1,20 @@
+name: "SqlTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+actions:
+  - sql:
+      dataSource: "dataSource"
+      statements:
+        - statement: insert into message values (100, 'Hello from Citrus!')
+        - statement: update message set text='Hello' where id=100
+
+  - sql:
+      dataSource: "dataSource"
+      ignoreErrors: "true"
+      transaction:
+        manager: "mockTransactionManager"
+        timeout: "5000"
+        isolationLevel: "ISOLATION_READ_COMMITTED"
+      statements:
+        - file: "classpath:org/citrusframework/sql/test-statements.sql"

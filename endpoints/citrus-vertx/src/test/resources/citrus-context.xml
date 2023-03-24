@@ -20,9 +20,9 @@
   </citrus:global-variables>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
-  <bean id="vertxInstanceFactory" class="com.consol.citrus.vertx.factory.CachingVertxInstanceFactory"/>
+  <bean id="vertxInstanceFactory" class="org.citrusframework.vertx.factory.CachingVertxInstanceFactory"/>
 
   <!-- Vert.x message endpoints -->
   <citrus-vertx:endpoint id="vertxNewsEndpoint"

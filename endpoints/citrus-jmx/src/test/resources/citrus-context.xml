@@ -18,7 +18,7 @@
   </citrus:global-variables>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
   <!-- JMX client -->
   <citrus-jmx:client id="jmxHelloClient"
@@ -31,8 +31,8 @@
                      timeout="10000"
                      auto-start="true">
     <citrus-jmx:mbeans>
-      <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean"/>
-      <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.NewsBean" objectDomain="news" objectName="name=NewsBean"/>
+      <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.HelloBean"/>
+      <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.NewsBean" objectDomain="news" objectName="name=NewsBean"/>
     </citrus-jmx:mbeans>
   </citrus-jmx:server>
 

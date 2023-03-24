@@ -1,1 +1,1 @@
-type=com.consol.citrus.camel.actions.CamelActionBuilder
+type=org.citrusframework.camel.actions.CamelActionBuilder

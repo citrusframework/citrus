@@ -1,2 +1,2 @@
-client=com.consol.citrus.ftp.config.annotation.SftpClientConfigParser
-server=com.consol.citrus.ftp.config.annotation.SftpServerConfigParser
+client=org.citrusframework.ftp.config.annotation.SftpClientConfigParser
+server=org.citrusframework.ftp.config.annotation.SftpServerConfigParser

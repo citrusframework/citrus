@@ -1,2 +1,2 @@
-async=com.consol.citrus.vertx.config.annotation.VertxEndpointConfigParser
-sync=com.consol.citrus.vertx.config.annotation.VertxSyncEndpointConfigParser
+async=org.citrusframework.vertx.config.annotation.VertxEndpointConfigParser
+sync=org.citrusframework.vertx.config.annotation.VertxSyncEndpointConfigParser

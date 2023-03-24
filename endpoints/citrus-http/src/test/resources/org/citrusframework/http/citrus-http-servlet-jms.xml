@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
+
+  <description>Contains the root context. Gets loaded via ContextLoaderListener in web.xml</description>
+
+  <context:annotation-config/>
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+    <property name="interceptors">
+        <list>
+            <bean class="org.citrusframework.http.interceptor.LoggingHandlerInterceptor"/>
+        </list>
+    </property>
+  </bean>
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <property name="messageConverters">
+      <util:list id="converters">
+        <bean class="org.citrusframework.http.message.DelegatingHttpEntityMessageConverter"/>
+      </util:list>
+    </property>
+  </bean>
+
+  <!-- Controller for handling rest requests -->
+  <bean class="org.citrusframework.http.controller.HttpMessageController">
+    <property name="endpointAdapter" ref="jmsEndpointAdapter"/>
+  </bean>
+
+  <citrus-jms:endpoint-adapter id="jmsEndpointAdapter"
+                               destination-name="JMS.Citrus.Http.Request.Forward"
+                               reply-destination-name="JMS.Citrus.Http.Request.Ack"
+                               connection-factory="jmsConnectionFactory"
+                               timeout="2000"/>
+
+  <bean id="jmsConnectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="tcp://localhost:61616" />
+  </bean>
+
+</beans>

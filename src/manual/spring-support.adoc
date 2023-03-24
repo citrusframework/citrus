@@ -80,8 +80,8 @@ application context. See the following example for custom Spring Java configurat
 .MyCustomConfig.java
 [source,java]
 ----
-import com.consol.citrus.TestCase;
-import com.consol.citrus.report.*;
+import org.citrusframework.TestCase;
+import org.citrusframework.report.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;

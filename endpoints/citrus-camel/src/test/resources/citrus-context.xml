@@ -22,7 +22,7 @@
   <citrus:schema-repository id="schemaRepository"/>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
   <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
     <route id="sampleInRoute" trace="true">
@@ -40,7 +40,7 @@
 
     <route id="newsRoute">
       <from uri="direct:news"/>
-      <to uri="log:com.consol.citrus.camel?level=INFO"/>
+      <to uri="log:org.citrusframework.camel?level=INFO"/>
       <to uri="seda:newsFeed"/>
     </route>
 
@@ -48,7 +48,7 @@
       <from uri="direct:hello"/>
       <to uri="seda:sayHello" pattern="InOut"/>
       <onException>
-        <exception>com.consol.citrus.exceptions.CitrusRuntimeException</exception>
+        <exception>org.citrusframework.exceptions.CitrusRuntimeException</exception>
         <to uri="seda:exceptions"/>
       </onException>
     </route>

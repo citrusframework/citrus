@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="JavaActionIT">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2008-04-25</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2008-04-25T00:00:00</last-updated-on>
+        </meta-info>
+
+        <description>
+            Citrus offers a service bean to instantiate any class
+            and run any method through Java reflection.
+
+            The class can be specified either by fully qualified class name (first example)
+            or through dependency injection via the property "instance" as shown
+            in the second example.
+
+            Constructor arguments can be added through the element "constructor-arg"
+            or through following property definition
+
+                &lt;property name="constructorArgs"&gt;
+                    &lt;list&gt;
+                        &lt;value type="boolean"&gt;false&lt;/value&gt;
+                    &lt;/list&gt;
+                &lt;/property&gt;
+
+
+            The Method is simply specified by its name. Arguments can be added through
+            the property "methodArgs" as shown in following example.
+
+                &lt;property name="methodArgs"&gt;
+                    &lt;list&gt;
+                        &lt;value type="int"&gt;4&lt;/value&gt;
+                        &lt;value&gt;Test&lt;/value&gt;
+                        &lt;value type="boolean"&gt;true&lt;/value&gt;
+                    &lt;/list&gt;
+                &lt;/property&gt;
+
+
+            As you can see several datatypes are supported. To specify string arrays as arguments,
+            for example to invoke main methods, you should take a look at the third example given.
+            Here you can see that lists are automatically converted to string arrays.
+        </description>
+
+        <variables>
+            <variable name="text" value="Test Invocation"/>
+        </variables>
+
+        <actions>
+            <java class="org.citrusframework.integration.util.InvocationDummy">
+                <constructor>
+                    <argument type="">Test Invocation</argument>
+                </constructor>
+                <method name="invoke">
+                    <argument type="String[]">1,2</argument>
+                </method>
+            </java>
+
+            <java class="org.citrusframework.integration.util.InvocationDummy">
+                <constructor>
+                    <argument type="">Test Invocation</argument>
+                </constructor>
+                <method name="invoke">
+                    <argument type="int">4</argument>
+                    <argument type="String">Test</argument>
+                    <argument type="boolean">true</argument>
+                </method>
+            </java>
+
+            <java class="org.citrusframework.integration.util.InvocationDummy">
+                <constructor>
+                    <argument type="">${text}</argument>
+                </constructor>
+                <method name="invoke">
+                    <argument type="int">4</argument>
+                    <argument>Test</argument>
+                    <argument type="boolean">true</argument>
+                </method>
+            </java>
+
+            <java class="org.citrusframework.integration.util.InvocationDummy">
+                <constructor>
+                    <argument type="">Test Invocation</argument>
+                </constructor>
+                <method name="invoke">
+                    <argument type="int">4</argument>
+                    <argument>${text}</argument>
+                    <argument type="boolean">true</argument>
+                </method>
+            </java>
+
+            <java class="org.citrusframework.integration.util.InvocationDummy">
+                <method name="main">
+                    <argument type="String[]">4,Test,true</argument>
+                </method>
+            </java>
+
+            <java class="org.citrusframework.integration.util.InvocationDummy">
+                <method name="main">
+                    <argument type="String[]">4,${text},true</argument>
+                </method>
+            </java>
+
+            <java ref="invocationDummy">
+                <method name="invoke">
+                    <argument type="int">4</argument>
+                    <argument>Test invocation</argument>
+                    <argument type="boolean">true</argument>
+                </method>
+            </java>
+        </actions>
+    </testcase>
+
+    <spring:bean id="invocationDummy" class="org.citrusframework.integration.util.InvocationDummy"/>
+</spring:beans>

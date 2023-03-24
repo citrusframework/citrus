@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	 
+    <bean id="schemaRepository" class="org.citrusframework.xml.XsdSchemaRepository"/>
+    
+    <bean id="citrusHandlerInterceptor" class="org.citrusframework.http.interceptor.DelegatingHandlerInterceptor"/>
+    <bean id="citrusHttpMessageController" class="org.citrusframework.http.controller.HttpMessageController"/>
+
+    <bean id="citrusUrlHandlerMapping" class="org.citrusframework.websocket.handler.WebSocketUrlHandlerMapping">
+      <property name="order" value="1" />
+    </bean>
+
+    <bean id="citrusHandshakeHandler" class="org.springframework.web.socket.server.support.DefaultHandshakeHandler">
+      <constructor-arg ref="upgradeStrategy"/>
+    </bean>
+
+    <bean id="upgradeStrategy" class="org.springframework.web.socket.server.jetty.JettyRequestUpgradeStrategy"/>
+
+</beans>

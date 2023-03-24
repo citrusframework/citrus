@@ -25,7 +25,7 @@
         </property>
     </bean>
     
-    <bean id="defaultWsEndpoint" class="com.consol.citrus.ws.server.WebServiceEndpoint">
+    <bean id="defaultWsEndpoint" class="org.citrusframework.ws.server.WebServiceEndpoint">
         <property name="endpointAdapter" ref="emptyResponseEndpointAdapter"/>
     </bean>
 

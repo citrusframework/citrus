@@ -16,7 +16,7 @@ to your project accordingly.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-http</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -426,7 +426,7 @@ public HttpClient httpClient() {
                   interceptors="clientInterceptors"/>
 
 <util:list id="clientInterceptors">
-  <bean class="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
+  <bean class="org.citrusframework.http.interceptor.LoggingClientInterceptor"/>
 </util:list>
 ----
 
@@ -924,7 +924,7 @@ public HttpServer httpServer() {
                   interceptors="serverInterceptors"/>
 
 <util:list id="serverInterceptors">
-  <bean class="com.consol.citrus.http.interceptor.LoggingHandlerInterceptor"/>
+  <bean class="org.citrusframework.http.interceptor.LoggingHandlerInterceptor"/>
 </util:list>
 ----
 
@@ -1012,7 +1012,7 @@ public FormUrlEncodedMessageValidator formUrlEncodedMessageValidator() {
 [source,xml,indent=0,role="secondary"]
 ----
 <citrus:message-validators>
-  <citrus:validator class="com.consol.citrus.http.validation.FormUrlEncodedMessageValidator"/>
+  <citrus:validator class="org.citrusframework.http.validation.FormUrlEncodedMessageValidator"/>
 </citrus:message-validators>
 ----
 
@@ -1265,7 +1265,7 @@ public BasicAuthClientHttpRequestFactory basicAuthFactory() {
                     request-factory="basicAuthFactory"/>
 
 <bean id="basicAuthFactory"
-    class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
+    class="org.citrusframework.http.client.BasicAuthClientHttpRequestFactory">
   <property name="authScope">
       <bean class="org.apache.hc.client5.http.auth.AuthScope">
         <constructor-arg value="localhost"/>
@@ -1352,10 +1352,10 @@ public SecurityHandlerFactory securityHandler() {
                 auto-start="true"
                 security-handler="securityHandler"/>
 
-<bean id="securityHandler" class="com.consol.citrus.http.security.SecurityHandlerFactory">
+<bean id="securityHandler" class="org.citrusframework.http.security.SecurityHandlerFactory">
     <property name="users">
         <list>
-            <bean class="com.consol.citrus.http.security.User">
+            <bean class="org.citrusframework.http.security.User">
                 <property name="name" value="citrus"/>
                 <property name="password" value="secret"/>
                 <property name="roles" value="CitrusRole"/>
@@ -1365,7 +1365,7 @@ public SecurityHandlerFactory securityHandler() {
     <property name="constraints">
         <map>
             <entry key="/foo/*">
-                <bean class="com.consol.citrus.http.security.BasicAuthConstraint">
+                <bean class="org.citrusframework.http.security.BasicAuthConstraint">
                     <constructor-arg value="CitrusRole"/>
                 </bean>
             </entry>
@@ -1750,10 +1750,10 @@ public Map<String, String> filterMappings() {
 
 <util:map id="filters">
     <entry key="request-caching-filter">
-        <bean class="com.consol.citrus.http.servlet.RequestCachingServletFilter"/>
+        <bean class="org.citrusframework.http.servlet.RequestCachingServletFilter"/>
     </entry>
     <entry key="gzip-filter">
-        <bean class="com.consol.citrus.http.servlet.GzipServletFilter"/>
+        <bean class="org.citrusframework.http.servlet.GzipServletFilter"/>
     </entry>
 </util:map>
 
@@ -1773,8 +1773,8 @@ can participate in the request and response handling process.
 Citrus provides several default servlet implementations that are automatically added to each http server component these
 implementations are:
 
-com.consol.citrus.http.servlet.RequestCachingServletFilter:: caches incoming request data so input streams can be read multiple times during request processing (important when request logging is enabled)
-com.consol.citrus.http.servlet.GzipServletFilter:: applies Gzip compressing when according headers are set and client explicitly asks for compressed request/response communication
+org.citrusframework.http.servlet.RequestCachingServletFilter:: caches incoming request data so input streams can be read multiple times during request processing (important when request logging is enabled)
+org.citrusframework.http.servlet.GzipServletFilter:: applies Gzip compressing when according headers are set and client explicitly asks for compressed request/response communication
 
 By the time you define some custom servlet filters or mappings to the server component Citrus will not apply default servlet
 filters. This means you always need to construct the whole servlet filter chain including default servlet filters mentioned above.
@@ -1832,12 +1832,12 @@ public HttpMessageController citrusHttpMessageController() {
   </property>
 </bean>
 
-<bean id="citrusHttpMessageConverter" class="com.consol.citrus.http.message.DelegatingHttpEntityMessageConverter"/>
+<bean id="citrusHttpMessageConverter" class="org.citrusframework.http.message.DelegatingHttpEntityMessageConverter"/>
 
-<bean id="citrusHttpMessageController" class="com.consol.citrus.http.controller.HttpMessageController">
+<bean id="citrusHttpMessageController" class="org.citrusframework.http.controller.HttpMessageController">
   <property name="endpointAdapter">
       <bean
-       class="com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter"/>
+       class="org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter"/>
   </property>
 </bean>
 ----
@@ -1858,7 +1858,7 @@ public HttpServer httpServer() {
     return new HttpServerBuilder()
         .port(8080)
         .autoStart(true)
-        .contextConfigLocation("classpath:com/consol/citrus/http/custom-servlet-context.xml")
+        .contextConfigLocation("classpath:org/citrusframework/http/custom-servlet-context.xml")
         .build();
 }
 ----
@@ -1869,5 +1869,5 @@ public HttpServer httpServer() {
 <citrus-http:server id="helloHttpServer"
       port="8080"
       auto-start="true"
-      context-config-location="classpath:com/consol/citrus/http/custom-servlet-context.xml"/>
+      context-config-location="classpath:org/citrusframework/http/custom-servlet-context.xml"/>
 ----

@@ -23,7 +23,7 @@
   <citrus:schema-repository id="schemaRepository"/>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
   <citrus-ftp:client id="ftpClient"
                       host="localhost"

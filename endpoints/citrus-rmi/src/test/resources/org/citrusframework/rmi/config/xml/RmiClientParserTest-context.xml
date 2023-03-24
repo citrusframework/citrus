@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">
+
+  <citrus-rmi:client id="rmiClient1"
+                       server-url="rmi://localhost:1099/helloService"
+                       method="sayHello"/>
+
+  <citrus-rmi:client id="rmiClient2"
+                       host="127.0.0.1"
+                       port="2099"
+                       binding="newsService"
+                       method="getNews"
+                       message-converter="messageConverter"
+                       timeout="10000"/>
+
+  <citrus-rmi:client id="rmiClient3"
+                       binding="helloService"
+                       actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.rmi.message.RmiMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+</beans>

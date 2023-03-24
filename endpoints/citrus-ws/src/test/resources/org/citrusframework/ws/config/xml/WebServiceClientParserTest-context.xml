@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+
+  <citrus-ws:client id="soapClient1"
+                      request-url="http://localhost:8080/test"/>
+
+  <citrus-ws:client id="soapClient2"
+                      timeout="10000"
+                      request-url="http://localhost:8080/test"
+                      message-factory="soapMessageFactory"
+                      endpoint-resolver="endpointResolver"/>
+
+  <citrus-ws:client id="soapClient3"
+                      request-url="http://localhost:8080/test"
+                      web-service-template="wsTemplate"
+                      message-correlator="replyMessageCorrelator"/>
+
+  <citrus-ws:client id="soapClient4"
+                      request-url="http://localhost:8080/test"
+                      message-sender="wsMessageSender"
+                      interceptor="singleInterceptor"
+                      message-converter="wsAddressingMessageConverter"/>
+
+  <citrus-ws:client id="soapClient5"
+                      request-url="http://localhost:8080/test"
+                      fault-strategy="propagateError"
+                      interceptors="interceptors"
+                      polling-interval="250"/>
+
+  <citrus-ws:client id="soapClient6"
+                      request-url="http://localhost:8080/test"
+                      actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.message.MessageCorrelator</value></constructor-arg>
+    <constructor-arg value="replyMessageCorrelator"/>
+  </bean>
+
+  <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.resolver.EndpointUriResolver</value></constructor-arg>
+    <constructor-arg value="endpointResolver"/>
+  </bean>
+
+  <bean id="soapMessageFactory" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.soap.SoapMessageFactory</value></constructor-arg>
+    <constructor-arg value="soapMessageFactory"/>
+  </bean>
+
+  <bean id="wsTemplate" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.client.core.WebServiceTemplate</value></constructor-arg>
+    <constructor-arg value="wsTemplate"/>
+  </bean>
+
+  <bean id="wsAddressingMessageConverter" class="org.citrusframework.ws.message.converter.WsAddressingMessageConverter">
+    <constructor-arg>
+      <bean class="org.citrusframework.ws.addressing.WsAddressingHeaders"/>
+    </constructor-arg>
+  </bean>
+
+  <bean id="wsMessageSender" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.transport.WebServiceMessageSender</value></constructor-arg>
+    <constructor-arg value="wsMessageSender"/>
+  </bean>
+
+  <bean id="singleInterceptor" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.client.support.interceptor.ClientInterceptor</value></constructor-arg>
+    <constructor-arg value="singleInterceptor"/>
+  </bean>
+
+  <util:list id="interceptors">
+    <ref bean="interceptor1"/>
+    <ref bean="interceptor2"/>
+  </util:list>
+
+  <bean id="interceptor1" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.client.support.interceptor.ClientInterceptor</value></constructor-arg>
+    <constructor-arg value="interceptor1"/>
+  </bean>
+  <bean id="interceptor2" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.ws.client.support.interceptor.ClientInterceptor</value></constructor-arg>
+    <constructor-arg value="interceptor2"/>
+  </bean>
+
+</beans>

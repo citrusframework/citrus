@@ -10,7 +10,7 @@ The nested actions are error proof for the chosen exception type. This means pos
 ----
 <testcase name="catchExceptionTest">
     <actions>
-        <catch exception="com.consol.citrus.exceptions.CitrusRuntimeException">
+        <catch exception="org.citrusframework.exceptions.CitrusRuntimeException">
             <echo>
                 <message>Current date is: ${date}</message>
             </echo>

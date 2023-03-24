@@ -8,7 +8,7 @@ NOTE: The Spring Restdocs support components in Citrus are kept in a separate Ma
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-restdocs</artifactId>
   <version>${citrus.version}</version>
 </dependency>

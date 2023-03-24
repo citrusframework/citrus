@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
+        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
+        xmlns:citrus-ftp="http://www.citrusframework.org/schema/ftp/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/ftp/config http://www.citrusframework.org/schema/ftp/config/citrus-ftp-config.xsd
+                            http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
+
+  <citrus-ftp:server id="ftpServer1"
+                      auto-start="false"
+                      port="22222"
+                      endpoint-adapter="ftpServerAdapter1"/>
+
+  <citrus-si:channel-endpoint-adapter id="ftpServerAdapter1"
+                                   channel-name="serverChannel"
+                                   polling-interval="250"
+                                   timeout="10000"/>
+
+  <citrus-ftp:server id="ftpServer2"
+                      auto-start="false"
+                      port="22222"
+                      endpoint-adapter="ftpServerAdapter2"/>
+
+  <citrus-jms:endpoint-adapter id="ftpServerAdapter2"
+                                   destination-name="serverQueue"
+                                   connection-factory="connectionFactory"
+                                   timeout="2500"/>
+
+  <citrus-ftp:server id="ftpServer3"
+                      auto-start="false"
+                      port="22222"
+                      endpoint-adapter="ftpServerAdapter3"/>
+
+  <citrus:empty-response-adapter id="ftpServerAdapter3"/>
+
+  <citrus-ftp:server id="ftpServer4"
+                      auto-start="false"
+                      port="22222"
+                      endpoint-adapter="ftpServerAdapter4"/>
+
+  <citrus:static-response-adapter id="ftpServerAdapter4">
+    <citrus:payload>
+      <![CDATA[
+          <TestMessage>
+            <Text>Hello!</Text>
+          </TestMessage>
+        ]]>
+    </citrus:payload>
+    <citrus:header>
+      <citrus:element name="Operation" value="sayHello"/>
+    </citrus:header>
+  </citrus:static-response-adapter>
+
+  <citrus-ftp:server id="ftpServer5"
+                      auto-start="false"
+                      port="22222"
+                      endpoint-adapter="ftpServerAdapter5"/>
+
+  <citrus:timeout-producing-adapter id="ftpServerAdapter5"/>
+
+  <citrus-ftp:server id="ftpServer6"
+                      auto-start="false"
+                      port="22222"
+                      endpoint-adapter="ftpServerAdapter6"/>
+
+  <bean id="ftpServerAdapter6" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.EndpointAdapter</value></constructor-arg>
+    <constructor-arg value="ftpServerAdapter6"/>
+  </bean>
+
+  <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>
+    <constructor-arg value="connectionFactory"/>
+  </bean>
+</beans>

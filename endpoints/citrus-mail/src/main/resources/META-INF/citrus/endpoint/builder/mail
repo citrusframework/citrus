@@ -1,2 +1,2 @@
-client=com.consol.citrus.mail.client.MailClientBuilder
-server=com.consol.citrus.mail.server.MailServerBuilder
+client=org.citrusframework.mail.client.MailClientBuilder
+server=org.citrusframework.mail.server.MailServerBuilder

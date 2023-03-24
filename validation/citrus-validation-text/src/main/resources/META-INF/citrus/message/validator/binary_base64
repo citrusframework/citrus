@@ -1,2 +1,2 @@
 name=defaultBinaryBase64MessageValidator
-type=com.consol.citrus.validation.text.BinaryBase64MessageValidator
+type=org.citrusframework.validation.text.BinaryBase64MessageValidator

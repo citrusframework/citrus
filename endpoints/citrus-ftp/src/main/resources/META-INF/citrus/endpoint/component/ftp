@@ -1,1 +1,1 @@
-type=com.consol.citrus.ftp.client.FtpEndpointComponent
+type=org.citrusframework.ftp.client.FtpEndpointComponent
