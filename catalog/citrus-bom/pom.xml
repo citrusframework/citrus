@@ -18,7 +18,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-bom</artifactId>
   <version>4.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -125,214 +125,214 @@
     <dependencies>
       <!-- Core -->
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-base</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-spring</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- Runtimes -->
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-cucumber</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-testng</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-junit</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-junit5</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-main</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-arquillian</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-groovy</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-xml</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-yaml</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- Endpoints -->
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-camel</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-ftp</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-http</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-jms</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-kafka</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-jmx</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-mail</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-rmi</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-ssh</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-vertx</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-websocket</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-ws</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-zookeeper</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-spring-integration</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- Validation -->
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-xml</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-json</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-text</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-binary</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-groovy</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-validation-hamcrest</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- Connectors -->
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-docker</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-selenium</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-kubernetes</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-sql</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- Tools -->
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-restdocs</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-maven-plugin</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- Catalog -->
       <dependency>
-        <groupId>com.consol.citrus</groupId>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-endpoint-catalog</artifactId>
         <version>${project.version}</version>
       </dependency>
