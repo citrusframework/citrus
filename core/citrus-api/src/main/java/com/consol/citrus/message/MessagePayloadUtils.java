@@ -138,7 +138,6 @@ public class MessagePayloadUtils {
         int indent = 0;
         boolean inQuote = false;
         boolean isKey = true;
-        boolean inArray = false;
 
         String s = payload.trim();
         StringBuilder sb = new StringBuilder();
@@ -201,6 +200,9 @@ public class MessagePayloadUtils {
                         isKey = true;
                         sb.append(System.lineSeparator());
                     }
+                    break;
+                case '\r':
+                case '\n':
                     break;
                 default:
                     if (inQuote || !System.lineSeparator().equals(String.valueOf(currentChar))) {
