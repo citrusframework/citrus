@@ -1,4 +1,4 @@
-async=com.consol.citrus.camel.config.annotation.CamelEndpointConfigParser
-inOnly=com.consol.citrus.camel.config.annotation.CamelEndpointConfigParser
-sync=com.consol.citrus.camel.config.annotation.CamelSyncEndpointConfigParser
-inOut=com.consol.citrus.camel.config.annotation.CamelSyncEndpointConfigParser
+async=org.citrusframework.camel.config.annotation.CamelEndpointConfigParser
+inOnly=org.citrusframework.camel.config.annotation.CamelEndpointConfigParser
+sync=org.citrusframework.camel.config.annotation.CamelSyncEndpointConfigParser
+inOut=org.citrusframework.camel.config.annotation.CamelSyncEndpointConfigParser

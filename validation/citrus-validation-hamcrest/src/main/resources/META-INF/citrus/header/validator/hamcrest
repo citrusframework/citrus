@@ -1,2 +1,2 @@
 name=hamcrestHeaderValidator
-type=com.consol.citrus.validation.HamcrestHeaderValidator
+type=org.citrusframework.validation.HamcrestHeaderValidator

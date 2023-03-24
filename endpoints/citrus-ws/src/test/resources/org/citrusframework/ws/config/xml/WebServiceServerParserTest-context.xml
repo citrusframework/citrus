@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+              xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+              xmlns:util="http://www.springframework.org/schema/util"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                                  http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+
+    <citrus-ws:server id="soapServer1" />
+
+    <citrus-ws:server id="soapServer2"
+                      port="8081"
+                      root-parent-context="true"
+                      context-config-location="classpath:org/citrusframework/ws/citrus-ws-servlet.xml"
+                      resource-base="src/it/resources"
+                      context-path="/citrus"
+                      servlet-name="citrus-ws"
+                      servlet-mapping-path="/foo"
+                      handle-mime-headers="true"
+                      handle-header-attributes="true"
+                      keep-soap-envelope="true"
+                      message-converter="messageConverter"
+                      message-factory="soap12MessageFactory"
+                      soap-header-namespace="http://citrusframework.org"
+                      soap-header-prefix="CITRUS"/>
+
+    <citrus-ws:server id="soapServer3"
+                            connector="connector"/>
+
+    <citrus-ws:server id="soapServer4"
+                            connectors="connectors"/>
+
+    <citrus-ws:server id="soapServer5"
+                            security-handler="securityHandler"/>
+
+    <citrus-ws:server id="soapServer6"
+                            servlet-handler="servletHandler"/>
+
+    <bean id ="connector" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.server.Connector</value></constructor-arg>
+        <constructor-arg value="connector"/>
+    </bean>
+
+    <util:list id="connectors">
+        <bean id="connector1" class="org.mockito.Mockito" factory-method="mock">
+            <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.server.Connector</value></constructor-arg>
+            <constructor-arg value="connector1"/>
+        </bean>
+        <bean id="connector2" class="org.mockito.Mockito" factory-method="mock">
+            <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.server.Connector</value></constructor-arg>
+            <constructor-arg value="connector2"/>
+        </bean>
+    </util:list>
+
+    <bean id="securityHandler" class="org.citrusframework.ws.security.SecurityHandlerFactory">
+        <property name="users">
+            <list>
+                <bean class="org.citrusframework.ws.security.User">
+                    <property name="name" value="citrus"/>
+                    <property name="password" value="secret"/>
+                    <property name="roles" value="CitrusRole"/>
+                </bean>
+            </list>
+        </property>
+        <property name="constraints">
+            <map>
+                <entry key="/foo/*">
+                    <bean class="org.citrusframework.ws.security.BasicAuthConstraint">
+                        <constructor-arg value="CitrusRole"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id ="servletHandler" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.servlet.ServletHandler</value></constructor-arg>
+        <constructor-arg value="servletHandler"/>
+    </bean>
+
+    <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.citrusframework.ws.message.converter.SoapMessageConverter</value></constructor-arg>
+      <constructor-arg value="messageConverter"/>
+    </bean>
+
+    <bean id="soap12MessageFactory" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.springframework.ws.soap.SoapMessageFactory</value></constructor-arg>
+      <constructor-arg value="soap12MessageFactory"/>
+    </bean>
+
+</beans>

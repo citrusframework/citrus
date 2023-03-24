@@ -1,2 +1,2 @@
-http\://www.citrusframework.org/schema/selenium/config=com.consol.citrus.selenium.config.handler.SeleniumConfigNamespaceHandler
-http\://www.citrusframework.org/schema/selenium/testcase=com.consol.citrus.selenium.config.handler.SeleniumTestcaseNamespaceHandler
+http\://www.citrusframework.org/schema/selenium/config=org.citrusframework.selenium.config.handler.SeleniumConfigNamespaceHandler
+http\://www.citrusframework.org/schema/selenium/testcase=org.citrusframework.selenium.config.handler.SeleniumTestcaseNamespaceHandler

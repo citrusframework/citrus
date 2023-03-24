@@ -1,1 +1,1 @@
-type=com.consol.citrus.jms.config.xml.PurgeJmsQueuesActionParser
+type=org.citrusframework.jms.config.xml.PurgeJmsQueuesActionParser

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+
+    <testcase name="HttpReceiveRequestActionParserTest">
+      <actions>
+        <http:receive-request server="httpServer">
+          <http:GET/>
+        </http:receive-request>
+
+        <http:receive-request server="httpServer">
+          <http:GET path="/order/${id}">
+            <http:param name="id" value="12345"/>
+            <http:param name="type" value="gold"/>
+            <http:param name="alive"/>
+            <http:headers content-type="text/xml" accept="text/xml" version="HTTP/1.1"/>
+          </http:GET>
+        </http:receive-request>
+
+        <http:receive-request server="httpServer">
+          <http:POST path="/user">
+            <http:headers>
+              <http:header name="userId" value="1001"/>
+            </http:headers>
+            <http:body>
+              <http:data>
+                <![CDATA[
+                  <user><id>1001</id><name>new_user</name></user>
+                ]]>
+              </http:data>
+            </http:body>
+          </http:POST>
+          <http:extract>
+            <http:body variable="userId" path="$.user.id"/>
+          </http:extract>
+        </http:receive-request>
+
+        <http:receive-request server="httpServer">
+          <http:DELETE path="/user/${id}"/>
+        </http:receive-request>
+
+        <http:receive-request server="httpServer">
+          <http:HEAD/>
+        </http:receive-request>
+
+        <http:receive-request server="httpServer" actor="testActor">
+          <http:OPTIONS/>
+        </http:receive-request>
+      </actions>
+    </testcase>
+
+    <spring:bean id="httpServer" class="org.mockito.Mockito" factory-method="mock">
+      <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.http.server.HttpServer</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="httpServer"/>
+    </spring:bean>
+
+    <spring:bean id="testActor" class="org.mockito.Mockito" factory-method="mock">
+      <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.TestActor</spring:value></spring:constructor-arg>
+      <spring:constructor-arg value="testActor"/>
+    </spring:bean>
+
+</spring:beans>

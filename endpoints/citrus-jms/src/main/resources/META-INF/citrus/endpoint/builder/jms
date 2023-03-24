@@ -1,4 +1,4 @@
-async=com.consol.citrus.jms.endpoint.JmsEndpointBuilder
-asynchronous=com.consol.citrus.jms.endpoint.JmsEndpointBuilder
-sync=com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder
-synchronous=com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder
+async=org.citrusframework.jms.endpoint.JmsEndpointBuilder
+asynchronous=org.citrusframework.jms.endpoint.JmsEndpointBuilder
+sync=org.citrusframework.jms.endpoint.JmsSyncEndpointBuilder
+synchronous=org.citrusframework.jms.endpoint.JmsSyncEndpointBuilder

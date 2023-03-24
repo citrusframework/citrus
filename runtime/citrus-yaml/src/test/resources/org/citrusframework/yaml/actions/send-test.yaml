@@ -1,0 +1,117 @@
+name: SendTest
+author: Christoph
+status: FINAL
+actions:
+  - send:
+      endpoint: helloEndpoint
+      message:
+        headers:
+          - name: operation
+            value: "sayHello"
+        body:
+          data: Hello from Citrus!
+  - send:
+      endpoint: helloEndpoint
+      message:
+        headers:
+          - name: operation
+            value: "sayHello"
+        body:
+          data: |
+            <TestMessage>Hello Citrus</TestMessage>
+  - send:
+      endpoint: helloEndpoint
+      message:
+        headers:
+          - data: |
+              <Header xmlns="http://citrusframework.org/test"><operation>hello</operation></Header>
+          - name: operation
+            value: "sayHello"
+        body:
+          data: |
+            <TestMessage xmlns="http://citrusframework.org/test">Hello Citrus</TestMessage>
+  - send:
+      endpoint: helloEndpoint
+      message:
+        body:
+          resource:
+            file: "classpath:org/citrusframework/yaml/test-request-payload.xml"
+
+  - send:
+      endpoint: helloEndpoint
+      message:
+        dataDictionary: myDataDictionary
+        headers:
+          - name: operation
+            value: "sayHello"
+        body:
+          data: |
+            <TestMessage>Hello Citrus</TestMessage>
+        expression:
+          - path: "/TestMessage/text()"
+            value: "newValue"
+      extract:
+        header:
+          - name: "operation"
+            variable: "operation"
+  - send:
+      endpoint: "direct:helloQueue"
+      message:
+        headers:
+          - name: "intValue"
+            value: "5"
+            type: "integer"
+          - name: "longValue"
+            value: 10
+            type: "long"
+          - name: "floatValue"
+            value: "10.0"
+            type: "float"
+          - name: "doubleValue"
+            value: "10.0"
+            type: "double"
+          - name: "byteValue"
+            value: "1"
+            type: "byte"
+          - name: "shortValue"
+            value: "10"
+            type: "short"
+          - name: "boolValue"
+            value: "true"
+            type: "boolean"
+          - name: "stringValue"
+            value: "Hello Citrus"
+            type: "string"
+        body:
+          data: |
+            <TestMessage>Hello Citrus</TestMessage>
+  - send:
+      endpoint: helloEndpoint
+      message:
+        type: "json"
+        body:
+          data: |
+            { "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}
+        expression:
+          - path: "$.FooMessage.foo"
+            value: "newValue"
+  - send:
+      endpoint: helloEndpoint
+      message:
+        type: "json"
+        schemaValidation: true
+        schema: "fooSchema"
+        schemaRepository: "fooRepository"
+        body:
+          data: |
+            { "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}
+  - send:
+      endpoint: helloEndpoint
+      message:
+        type: "xml"
+        schemaValidation: true
+        schema: "fooSchema"
+        schemaRepository: "fooRepository"
+        body:
+          data: |
+            <TestMessage>Hello Citrus</TestMessage>

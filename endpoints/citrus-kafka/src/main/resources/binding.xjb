@@ -3,7 +3,7 @@
           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
           version="3.0">
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-kafka-config.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-kafka-config.xsd">
     <globalBindings>
       <xjc:javaType
               name="java.util.Calendar"
@@ -16,16 +16,16 @@
       <xjc:simple />
     </globalBindings>
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.kafka"/>
+      <package name="org.citrusframework.model.config.kafka"/>
       <nameXmlTransform>
         <elementName prefix="Kafka" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-kafka-testcase.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-kafka-testcase.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.testcase.kafka"/>
+      <package name="org.citrusframework.model.testcase.kafka"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>

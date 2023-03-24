@@ -1,1 +1,1 @@
-type=com.consol.citrus.kafka.endpoint.KafkaEndpointComponent
+type=org.citrusframework.kafka.endpoint.KafkaEndpointComponent

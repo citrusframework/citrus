@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="JmxServerIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2016-01-19</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2016-01-19T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test JMX client server communication.</description>
+
+    <actions>
+      <echo>
+        <message>Test 1: Receive JMX mbean call as server and return null result</message>
+      </echo>
+
+      <send endpoint="jmxHelloClient" fork="true">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
+              <operation name="hello">
+                <parameter>
+                  <param type="java.lang.String" value="JMX"/>
+                </parameter>
+              </operation>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="jmxHelloServer">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
+              <operation name="hello">
+                <parameter>
+                  <param type="java.lang.String" value="JMX"/>
+                </parameter>
+              </operation>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="jmxHelloServer">
+        <message>
+          <payload>
+            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.String" value="Hello JMX this is cool!"/>
+            </mbean-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="jmxHelloClient">
+        <message>
+          <payload>
+            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.String" value="Hello JMX this is cool!"/>
+            </mbean-result>
+          </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test 2: Receive JMX mbean call return some result object</message>
+      </echo>
+
+      <send endpoint="jmxHelloClient" fork="true">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
+              <attribute type="java.lang.String" name="helloMessage"/>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="jmxHelloServer">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
+              <attribute type="java.lang.String" name="helloMessage"/>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="jmxHelloServer">
+        <message>
+          <payload>
+            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.String" value="Hello %s this is cool!"/>
+            </mbean-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="jmxHelloClient">
+        <message>
+          <payload>
+            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.String" value="Hello %s this is cool!"/>
+            </mbean-result>
+          </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test 3: Identify mbean by its name</message>
+      </echo>
+
+      <send endpoint="jmxHelloClient" fork="true">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>news:name=NewsBean</mbean>
+              <operation name="getNews"/>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="jmxHelloServer">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>news:name=NewsBean</mbean>
+              <operation name="getNews"/>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="jmxHelloServer">
+        <message>
+          <payload>
+            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.String" value="News from JMX!"/>
+            </mbean-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="jmxHelloClient">
+        <message>
+          <payload>
+            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.String" value="News from JMX!"/>
+            </mbean-result>
+          </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test 4: Unknown mbean exception</message>
+      </echo>
+
+      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException" message="Failed to execute MBean operation">
+        <when>
+          <send endpoint="jmxHelloClient">
+            <message>
+              <payload>
+                <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                  <mbean>org.citrusframework.jmx.mbean:type=NewsBean</mbean>
+                  <operation name="getNews"/>
+                </mbean-invocation>
+              </payload>
+            </message>
+          </send>
+        </when>
+      </assert>
+
+    </actions>
+  </testcase>
+</spring:beans>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/jmx/config http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <citrus-jmx:server id="jmxServer1"
+                     server-url="platform">
+    <citrus-jmx:mbeans>
+      <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.HelloBean"/>
+      <citrus-jmx:mbean name="fooBean" objectDomain="foo.object.domain" objectName="type=FooBean">
+        <citrus-jmx:operations>
+          <citrus-jmx:operation name="fooOperation">
+            <citrus-jmx:parameter>
+              <citrus-jmx:param type="java.lang.String"/>
+              <citrus-jmx:param type="java.lang.Integer"/>
+            </citrus-jmx:parameter>
+          </citrus-jmx:operation>
+          <citrus-jmx:operation name="barOperation"/>
+        </citrus-jmx:operations>
+        <citrus-jmx:attributes>
+          <citrus-jmx:attribute name="fooAttribute" type="java.lang.String"/>
+          <citrus-jmx:attribute name="barAttribute" type="java.lang.Boolean"/>
+        </citrus-jmx:attributes>
+      </citrus-jmx:mbean>
+    </citrus-jmx:mbeans>
+  </citrus-jmx:server>
+
+  <citrus-jmx:server id="jmxServer2"
+                     server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
+                     message-converter="messageConverter"
+                     environment-properties="environmentProperties"
+                     timeout="10000">
+    <citrus-jmx:mbeans>
+      <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.NewsBean" objectDomain="some.other.domain" objectName="name=NewsBean"/>
+    </citrus-jmx:mbeans>
+  </citrus-jmx:server>
+
+  <citrus-jmx:server id="jmxServer3"
+                     host="localhost"
+                     port="2099"
+                     protocol="rmi"
+                     binding="jmxrmi"
+                     create-registry="true"
+                     actor="testActor">
+    <citrus-jmx:mbeans>
+      <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.HelloBean" objectDomain="hello"/>
+    </citrus-jmx:mbeans>
+  </citrus-jmx:server>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.jmx.message.JmxMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+
+  <util:map id="environmentProperties">
+    <entry key="com.sun.management.jmxremote.authenticate" value="false"/>
+  </util:map>
+</beans>

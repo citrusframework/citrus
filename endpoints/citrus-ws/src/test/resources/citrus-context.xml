@@ -89,12 +89,12 @@
   </bean>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
   <!-- Message validators -->
-  <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
-  <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
-  <bean id="xmlSoapFaultValidator" class="com.consol.citrus.ws.validation.XmlSoapFaultValidator"/>
+  <bean id="soapAttachmentValidator" class="org.citrusframework.ws.validation.SimpleSoapAttachmentValidator"/>
+  <bean id="soapFaultValidator" class="org.citrusframework.ws.validation.SimpleSoapFaultValidator"/>
+  <bean id="xmlSoapFaultValidator" class="org.citrusframework.ws.validation.XmlSoapFaultValidator"/>
 
   <!-- SOAP Message Factory -->
   <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
@@ -106,9 +106,9 @@
     </property>
   </bean>
 
-  <bean id="wsAddressingMessageConverter" class="com.consol.citrus.ws.message.converter.WsAddressingMessageConverter">
+  <bean id="wsAddressingMessageConverter" class="org.citrusframework.ws.message.converter.WsAddressingMessageConverter">
     <constructor-arg>
-      <bean id="wsAddressing200408" class="com.consol.citrus.ws.addressing.WsAddressingHeaders">
+      <bean id="wsAddressing200408" class="org.citrusframework.ws.addressing.WsAddressingHeaders">
         <property name="version" value="VERSION200408"/>
         <property name="action" value="sayHello"/>
         <property name="to" value="urn:CitrusHelloServer"/>
@@ -132,7 +132,7 @@
   </bean>
 
   <bean id="soapEndpointUriResolver"
-        class="com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver"/>
+        class="org.citrusframework.endpoint.resolver.DynamicEndpointUriResolver"/>
 
   <!-- Soap message endpoints -->
   <citrus-ws:client id="helloSoapClient"
@@ -153,7 +153,7 @@
   <citrus-ws:server id="helloSoapServer"
                     port="13080"
                     auto-start="true"
-                    context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
+                    context-config-location="classpath:org/citrusframework/ws/citrus-ws-servlet.xml"
                     resource-base="src/test/resources"/>
 
   <citrus-jms:endpoint id="soapRequestEndpoint"

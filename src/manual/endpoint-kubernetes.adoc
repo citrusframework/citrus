@@ -9,7 +9,7 @@ NOTE: The Kubernetes test components in Citrus are kept in a separate Maven modu
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-kubernetes</artifactId>
   <version>${citrus.version}</version>
 </dependency>

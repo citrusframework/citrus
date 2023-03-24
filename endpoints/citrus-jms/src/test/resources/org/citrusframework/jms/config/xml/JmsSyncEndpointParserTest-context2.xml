@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
+
+  <citrus-jms:sync-endpoint id="jmsSyncEndpoint1"
+                                  destination-name="JMS.Queue.Test"
+                                  reply-destination-name="JMS.Reply.Queue"/>
+
+  <citrus-jms:sync-endpoint id="jmsSyncEndpoint2"
+                                  timeout="10000"
+                                  connection-factory="jmsConnectionFactory"
+                                  destination="jmsQueue"
+                                  reply-destination="replyQueue"
+                                  message-correlator="replyMessageCorrelator"/>
+
+  <citrus-jms:sync-endpoint id="jmsSyncEndpoint3"
+                                  pub-sub-domain="true"
+                                  jms-template="jmsTemplate"
+                                  message-correlator="replyMessageCorrelator"/>
+
+  <citrus-jms:sync-endpoint id="jmsSyncEndpoint4"
+                                  destination-name="JMS.Queue.Test"
+                                  reply-destination-name="JMS.Reply.Queue"
+                                  polling-interval="250"
+                                  actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.message.MessageCorrelator</value></constructor-arg>
+    <constructor-arg value="replyMessageCorrelator"/>
+  </bean>
+
+  <!-- JMS connection factories -->
+  <bean id="connectionFactory" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>
+    <constructor-arg value="connectionFactory"/>
+  </bean>
+
+  <bean id="jmsConnectionFactory" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.ConnectionFactory</value></constructor-arg>
+    <constructor-arg value="jmsConnectionFactory"/>
+  </bean>
+
+  <!-- JMS Template and queues -->
+  <bean id="jmsQueue" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.Queue</value></constructor-arg>
+    <constructor-arg value="jmsQueue"/>
+  </bean>
+
+  <bean id="replyQueue" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">jakarta.jms.Queue</value></constructor-arg>
+    <constructor-arg value="replyQueue"/>
+  </bean>
+
+  <bean id="jmsTemplate" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.jms.core.JmsTemplate</value></constructor-arg>
+    <constructor-arg value="jmsTemplate"/>
+  </bean>
+</beans>

@@ -1,4 +1,4 @@
-async=com.consol.citrus.endpoint.direct.DirectEndpointBuilder
-asynchronous=com.consol.citrus.endpoint.direct.DirectEndpointBuilder
-sync=com.consol.citrus.endpoint.direct.DirectSyncEndpointBuilder
-synchronous=com.consol.citrus.endpoint.direct.DirectSyncEndpointBuilder
+async=org.citrusframework.endpoint.direct.DirectEndpointBuilder
+asynchronous=org.citrusframework.endpoint.direct.DirectEndpointBuilder
+sync=org.citrusframework.endpoint.direct.DirectSyncEndpointBuilder
+synchronous=org.citrusframework.endpoint.direct.DirectSyncEndpointBuilder

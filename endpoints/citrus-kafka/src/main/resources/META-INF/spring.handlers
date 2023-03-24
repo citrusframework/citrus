@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 
-http\://www.citrusframework.org/schema/kafka/testcase=com.consol.citrus.kafka.config.handler.CitrusKafkaTestcaseNamespaceHandler
-http\://www.citrusframework.org/schema/kafka/config=com.consol.citrus.kafka.config.handler.CitrusKafkaConfigNamespaceHandler
+http\://www.citrusframework.org/schema/kafka/testcase=org.citrusframework.kafka.config.handler.CitrusKafkaTestcaseNamespaceHandler
+http\://www.citrusframework.org/schema/kafka/config=org.citrusframework.kafka.config.handler.CitrusKafkaConfigNamespaceHandler

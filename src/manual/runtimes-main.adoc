@@ -10,7 +10,7 @@ project.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-main</artifactId>
   <version>${citrus.version}</version>
 </dependency>

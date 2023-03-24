@@ -8,7 +8,7 @@ NOTE: The SFTP components in Citrus are maintained in their own Maven module. So
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-ftp</artifactId>
   <version>2.7.6</version>
 </dependency>

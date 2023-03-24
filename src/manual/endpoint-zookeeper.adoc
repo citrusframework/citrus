@@ -8,7 +8,7 @@ NOTE: The Zookeeper test components in Citrus are kept in a separate Maven modul
 [source,xml]
 ----
 <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-zookeeper</artifactId>
       <version>${citrus.version}</version>
       </dependency>

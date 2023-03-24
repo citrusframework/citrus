@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <citrus-http:server id="httpServer1"
+                        auto-start="false"
+                        port="8081"/>
+
+    <citrus-http:server id="httpServer2"
+                        auto-start="false"
+                        port="8082"
+                        context-config-location="classpath:org/citrusframework/http/servlet-context.xml"
+                        message-converter="messageConverter"
+                        handle-header-attributes="true"
+                        handle-cookies="true"
+                        connector="connector"
+                        resource-base="src/it/resources"
+                        root-parent-context="true"
+                        default-status-code="404"
+                        response-cache-size="1000"
+                        binary-media-types="binaryMediaTypes"
+                        debug-logging="true"
+                        context-path="/citrus"
+                        servlet-name="citrus-http"
+                        servlet-mapping-path="/foo"/>
+
+    <citrus-http:server id="httpServer3"
+                        auto-start="false"
+                        port="8083"
+                        connectors="connectors"
+                        filters="filters"
+                        filter-mappings="filterMappings"/>
+
+    <citrus-http:server id="httpServer4"
+                        auto-start="false"
+                        port="8084"
+                        servlet-handler="servletHandler"/>
+
+    <citrus-http:server id="httpServer5"
+                        auto-start="false"
+                        port="8085"
+                        security-handler="securityHandler"
+                        interceptors="interceptors"/>
+
+    <util:list id="interceptors">
+      <bean id="interceptor1" class="org.mockito.Mockito" factory-method="mock">
+          <constructor-arg><value type="java.lang.Class">org.springframework.web.servlet.HandlerInterceptor</value></constructor-arg>
+        <constructor-arg value="interceptor1"/>
+      </bean>
+      <bean id="interceptor2" class="org.mockito.Mockito" factory-method="mock">
+          <constructor-arg><value type="java.lang.Class">org.springframework.web.servlet.HandlerInterceptor</value></constructor-arg>
+        <constructor-arg value="interceptor2"/>
+      </bean>
+    </util:list>
+
+    <util:list id="connectors">
+        <bean id="connector1" class="org.mockito.Mockito" factory-method="mock">
+            <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.server.Connector</value></constructor-arg>
+          <constructor-arg value="connector1"/>
+        </bean>
+        <bean id="connector2" class="org.mockito.Mockito" factory-method="mock">
+            <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.server.Connector</value></constructor-arg>
+            <constructor-arg value="connector2"/>
+        </bean>
+    </util:list>
+
+    <util:list id="binaryMediaTypes" value-type="org.springframework.http.MediaType">
+        <util:constant static-field="org.springframework.http.MediaType.APPLICATION_OCTET_STREAM"/>
+        <value>application/custom</value>
+    </util:list>
+
+    <util:map id="filters">
+        <entry key="filter1">
+            <bean id="filter1" class="org.mockito.Mockito" factory-method="mock">
+                <constructor-arg><value type="java.lang.Class">jakarta.servlet.Filter</value></constructor-arg>
+                <constructor-arg value="filter1"/>
+            </bean>
+        </entry>
+        <entry key="filter2">
+            <bean id="filter2" class="org.mockito.Mockito" factory-method="mock">
+                <constructor-arg><value type="java.lang.Class">jakarta.servlet.Filter</value></constructor-arg>
+                <constructor-arg value="filter2"/>
+            </bean>
+        </entry>
+    </util:map>
+
+    <util:map id="filterMappings">
+        <entry key="filter2" value="/filter2/*"/>
+    </util:map>
+
+    <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.citrusframework.http.message.HttpMessageConverter</value></constructor-arg>
+        <constructor-arg value="messageConverter"/>
+    </bean>
+
+    <bean id="connector" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.server.Connector</value></constructor-arg>
+        <constructor-arg value="connector"/>
+    </bean>
+
+    <bean id="securityHandler" class="org.citrusframework.http.security.SecurityHandlerFactory">
+        <property name="users">
+            <list>
+                <bean class="org.citrusframework.http.security.User">
+                    <property name="name" value="citrus"/>
+                    <property name="password" value="secret"/>
+                    <property name="roles" value="CitrusRole"/>
+                </bean>
+            </list>
+        </property>
+        <property name="constraints">
+            <map>
+                <entry key="/foo/*">
+                    <bean class="org.citrusframework.http.security.BasicAuthConstraint">
+                        <constructor-arg value="CitrusRole"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id ="servletHandler" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.servlet.ServletHandler</value></constructor-arg>
+        <constructor-arg value="servletHandler"/>
+    </bean>
+</beans>

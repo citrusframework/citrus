@@ -1,1 +1,1 @@
-type=com.consol.citrus.util.SpringBeanTypeConverter
+type=org.citrusframework.util.SpringBeanTypeConverter

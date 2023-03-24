@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
+
+    <citrus-si:channel-endpoint-adapter id="endpointAdapter1"
+                                     channel-name="serverChannel"/>
+
+    <citrus-si:channel-endpoint-adapter id="endpointAdapter2"
+                                   channel-name="fooChannel"
+                                   polling-interval="250"
+                                   use-object-messages="true"
+                                   filter-internal-headers="false"
+                                   fallback-adapter="mockEndpointAdapter"
+                                   timeout="10000"/>
+
+    <bean id="mockEndpointAdapter" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.EndpointAdapter</value></constructor-arg>
+      <constructor-arg value="mockEndpointAdapter"/>
+    </bean>
+
+</beans>

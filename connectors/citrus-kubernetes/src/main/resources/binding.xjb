@@ -3,7 +3,7 @@
           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
           version="3.0">
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-kubernetes-config.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-kubernetes-config.xsd">
     <globalBindings>
       <xjc:javaType
               name="java.util.Calendar"
@@ -16,16 +16,16 @@
       <xjc:simple />
     </globalBindings>
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.kubernetes"/>
+      <package name="org.citrusframework.model.config.kubernetes"/>
       <nameXmlTransform>
         <elementName prefix="Kubernetes" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-kubernetes-testcase.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-kubernetes-testcase.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.testcase.kubernetes"/>
+      <package name="org.citrusframework.model.testcase.kubernetes"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>

@@ -1,1 +1,1 @@
-type=com.consol.citrus.message.selector.HeaderMatchingMessageSelector$Factory
+type=org.citrusframework.message.selector.HeaderMatchingMessageSelector$Factory

@@ -1,1 +1,1 @@
-type=com.consol.citrus.config.xml.PurgeMessageChannelActionParser
+type=org.citrusframework.config.xml.PurgeMessageChannelActionParser

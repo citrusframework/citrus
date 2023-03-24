@@ -1,1 +1,1 @@
-type=com.consol.citrus.validation.json.JsonPathMessageProcessor$Builder
+type=org.citrusframework.validation.json.JsonPathMessageProcessor$Builder

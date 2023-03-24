@@ -173,7 +173,7 @@ Users that do not want to change much in their project regarding the dependency 
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-core</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -186,16 +186,16 @@ The downside of this approach is that you get a lot of features and transitive d
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-core</artifactId>
   <version>${project.version}</version>
   <exclusions>
     <exclusion>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-validation-groovy</artifactId>
     </exclusion>
     <exclusion>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-testng</artifactId>
     </exclusion>
   </exclusions>
@@ -209,7 +209,7 @@ Of course there is a lot more to exclude and you might end up having a more comp
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-base</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -220,7 +220,7 @@ If you want to use Spring Framework support you may also add:
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-spring</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -231,7 +231,7 @@ As you write and execute tests in your project you might then run into errors be
 [source]
 ----
 FAILURE: Caused by: NoSuchValidationMatcherException: Can not find validation matcher "assertThat" in library citrusValidationMatcherLibrary ()
-	at com/consol/citrus/jms/integration/JmsTopicDurableSubscriberIT(iterate:26-48)
+	at org/citrusframework/jms/integration/JmsTopicDurableSubscriberIT(iterate:26-48)
 ----
 
 With that error given you need to add the Hamcrest validation matcher feature to the project:
@@ -239,7 +239,7 @@ With that error given you need to add the Hamcrest validation matcher feature to
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-validation-hamcrest</artifactId>
   <version>${project.version}</version>
 </dependency>
@@ -496,7 +496,7 @@ Users enable the Spring support in Citrus by adding:
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-spring</artifactId>
   <version>${project.version}</version>
 </dependency>

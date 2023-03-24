@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+
+  <testcase name="HttpClientIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2014-01-25</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2014-01-25T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test send messages to some Http server instance that automatically responds with static message data.</description>
+
+    <variables>
+      <variable name="correlationId" value="1000000001"></variable>
+      <variable name="messageId" value="1234567890"></variable>
+      <variable name="user" value="User"></variable>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Test: Send Http request and receive sync response</message>
+      </echo>
+
+      <http:send-request client="helloHttpClient">
+        <http:POST>
+          <http:headers>
+            <http:header name="Operation" value="sayHello"/>
+            <http:header name="CorrelationId" value="${correlationId}"/>
+          </http:headers>
+          <http:body>
+            <http:data>
+              <![CDATA[
+                <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <MessageId>${messageId}</MessageId>
+                  <CorrelationId>${correlationId}</CorrelationId>
+                  <User>${user}</User>
+                  <Text>Hello Citrus</Text>
+                </HelloRequest>
+              ]]>
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <http:receive-response client="helloHttpClient">
+        <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
+          <http:header name="Operation" value="sayHello"/>
+          <http:header name="CorrelationId" value="${correlationId}"/>
+        </http:headers>
+        <http:body>
+          <http:data>
+            <![CDATA[
+              <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <MessageId>${messageId}</MessageId>
+                <CorrelationId>${correlationId}</CorrelationId>
+                <User>HelloService</User>
+                <Text>Hello ${user}</Text>
+              </HelloResponse>
+            ]]>
+          </http:data>
+        </http:body>
+      </http:receive-response>
+
+      <echo>
+        <message>Test pure Http status code validation</message>
+      </echo>
+
+      <http:send-request client="helloHttpClient">
+        <http:POST>
+          <http:headers>
+            <http:header name="Operation" value="sayHello"/>
+            <http:header name="CorrelationId" value="${correlationId}"/>
+          </http:headers>
+          <http:body>
+            <http:data>
+              <![CDATA[
+                <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <MessageId>${messageId}</MessageId>
+                  <CorrelationId>${correlationId}</CorrelationId>
+                  <User>${user}</User>
+                  <Text>Hello Citrus</Text>
+                </HelloRequest>
+              ]]>
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <http:receive-response client="helloHttpClient">
+        <http:headers status="200" reason-phrase="OK"/>
+      </http:receive-response>
+
+      <echo>
+        <message>Test header validation error</message>
+      </echo>
+
+      <http:send-request client="helloHttpClient">
+        <http:POST>
+          <http:headers>
+            <http:header name="Operation" value="sayHello"/>
+            <http:header name="CorrelationId" value="${correlationId}"/>
+          </http:headers>
+          <http:body>
+            <http:data>
+              <![CDATA[
+                <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                  <MessageId>${messageId}</MessageId>
+                  <CorrelationId>${correlationId}</CorrelationId>
+                  <User>${user}</User>
+                  <Text>Hello Citrus</Text>
+                </HelloRequest>
+              ]]>
+            </http:data>
+          </http:body>
+        </http:POST>
+      </http:send-request>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <http:receive-response client="helloHttpClient">
+            <http:headers status="400" reason-phrase="NOT_FOUND"/>
+          </http:receive-response>
+        </when>
+      </assert>
+
+    </actions>
+  </testcase>
+</spring:beans>

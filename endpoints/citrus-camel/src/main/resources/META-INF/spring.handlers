@@ -1,2 +1,2 @@
-http\://www.citrusframework.org/schema/camel/config=com.consol.citrus.camel.config.handler.CitrusCamelConfigNamespaceHandler
-http\://www.citrusframework.org/schema/camel/testcase=com.consol.citrus.camel.config.handler.CitrusCamelTestcaseNamespaceHandler
+http\://www.citrusframework.org/schema/camel/config=org.citrusframework.camel.config.handler.CitrusCamelConfigNamespaceHandler
+http\://www.citrusframework.org/schema/camel/testcase=org.citrusframework.camel.config.handler.CitrusCamelTestcaseNamespaceHandler

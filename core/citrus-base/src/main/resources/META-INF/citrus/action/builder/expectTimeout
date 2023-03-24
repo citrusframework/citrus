@@ -1,1 +1,1 @@
-type=com.consol.citrus.actions.ReceiveTimeoutAction$Builder
+type=org.citrusframework.actions.ReceiveTimeoutAction$Builder

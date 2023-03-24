@@ -19,18 +19,18 @@ Spring bean in the application context).
 The default message validator implementations of Citrus are:
 
 [horizontal]
-defaultXmlMessageValidator:: com.consol.citrus.validation.xml.DomXmlMessageValidator
-defaultXpathMessageValidator:: com.consol.citrus.validation.xml.XpathMessageValidator
-defaultJsonMessageValidator:: com.consol.citrus.validation.json.JsonTextMessageValidator
-defaultJsonPathMessageValidator:: com.consol.citrus.validation.json.JsonPathMessageValidator
-defaultPlaintextMessageValidator:: com.consol.citrus.validation.text.PlainTextMessageValidator
-defaultMessageHeaderValidator:: com.consol.citrus.validation.DefaultMessageHeaderValidator
-defaultBinaryBase64MessageValidator:: com.consol.citrus.validation.text.BinaryBase64MessageValidator
-defaultGzipBinaryBase64MessageValidator:: com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator
-defaultXhtmlMessageValidator:: com.consol.citrus.validation.xhtml.XhtmlMessageValidator
-defaultGroovyXmlMessageValidator:: com.consol.citrus.validation.script.GroovyXmlMessageValidator
-defaultGroovyTextMessageValidator:: com.consol.citrus.validation.script.GroovyScriptMessageValidator
-defaultGroovyJsonMessageValidator:: com.consol.citrus.validation.script.GroovyJsonMessageValidator
+defaultXmlMessageValidator:: org.citrusframework.validation.xml.DomXmlMessageValidator
+defaultXpathMessageValidator:: org.citrusframework.validation.xml.XpathMessageValidator
+defaultJsonMessageValidator:: org.citrusframework.validation.json.JsonTextMessageValidator
+defaultJsonPathMessageValidator:: org.citrusframework.validation.json.JsonPathMessageValidator
+defaultPlaintextMessageValidator:: org.citrusframework.validation.text.PlainTextMessageValidator
+defaultMessageHeaderValidator:: org.citrusframework.validation.DefaultMessageHeaderValidator
+defaultBinaryBase64MessageValidator:: org.citrusframework.validation.text.BinaryBase64MessageValidator
+defaultGzipBinaryBase64MessageValidator:: org.citrusframework.validation.text.GzipBinaryBase64MessageValidator
+defaultXhtmlMessageValidator:: org.citrusframework.validation.xhtml.XhtmlMessageValidator
+defaultGroovyXmlMessageValidator:: org.citrusframework.validation.script.GroovyXmlMessageValidator
+defaultGroovyTextMessageValidator:: org.citrusframework.validation.script.GroovyScriptMessageValidator
+defaultGroovyJsonMessageValidator:: org.citrusframework.validation.script.GroovyJsonMessageValidator
 
 TIP: You can overwrite a default message validator with a custom implementation. Just add your customized validator implementation
 as a bean to the Citrus context and use one of the default bean identifiers.
@@ -49,13 +49,13 @@ public CustomMessageValidator customMessageValidator() {
 .XML DSL
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="customMessageValidator" class="com.consol.citrus.validation.custom.CustomMessageValidator"/>
+<bean id="customMessageValidator" class="org.citrusframework.validation.custom.CustomMessageValidator"/>
 ----
 
 The listing above adds a custom message validator implementation. The message validator registry will automatically add this
 validator to the list of available validators in the project.
 
-The custom implementation class has to implement the basic interface *com.consol.citrus.validation.MessageValidator<>*. Now
+The custom implementation class has to implement the basic interface *org.citrusframework.validation.MessageValidator<>*. Now
 Citrus will try to match the custom implementation to incoming message types and occasionally execute the message validator
 logic when applicable.
 
@@ -72,7 +72,7 @@ capabilities in Citrus you need to add the following dependency:
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-validation-json</artifactId>
   <version>${citrus.version}</version>
 </dependency>

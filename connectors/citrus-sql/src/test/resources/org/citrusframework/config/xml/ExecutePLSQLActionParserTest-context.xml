@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="ExecutePLSQLActionParserTest">
+        <actions>
+            <plsql datasource="testDataSource">
+                <resource file="classpath:org/citrusframework/actions/plsql.sql"/>
+            </plsql>
+
+            <plsql datasource="testDataSource" ignore-errors="true" transaction-manager="testTransactionManager" transaction-timeout="5000" transaction-isolation-level="ISOLATION_READ_COMMITTED">
+                <script>
+                    <![CDATA[
+                        BEGIN
+                            EXECUTE IMMEDIATE 'create or replace function test (v_id in number) return number is
+                              begin
+                               if v_id  is null then
+                                return 0;
+                                end if;
+                                return v_id;
+                              end;';
+                        END;
+                        /
+                    ]]>
+                </script>
+            </plsql>
+        </actions>
+    </testcase>
+
+    <spring:bean id="testDataSource" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">javax.sql.DataSource</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="testDataSource"/>
+    </spring:bean>
+
+    <spring:bean id="testTransactionManager" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.springframework.transaction.PlatformTransactionManager</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="testTransactionManager"/>
+    </spring:bean>
+</spring:beans>

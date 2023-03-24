@@ -1,2 +1,2 @@
 name=defaultGroovyXmlMessageValidator
-type=com.consol.citrus.validation.script.GroovyXmlMessageValidator
+type=org.citrusframework.validation.script.GroovyXmlMessageValidator

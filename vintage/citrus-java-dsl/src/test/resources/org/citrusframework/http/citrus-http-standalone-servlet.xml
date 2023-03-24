@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation=
+               "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <description>Contains the root context. Gets loaded via ContextLoaderListener in web.xml</description>
+
+  <context:annotation-config/>
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <property name="messageConverters">
+      <util:list id="converters">
+        <bean class="org.citrusframework.http.message.DelegatingHttpEntityMessageConverter"/>
+      </util:list>
+    </property>
+  </bean>
+
+  <!-- Controller for handling rest requests -->
+  <bean class="org.citrusframework.http.controller.HttpMessageController">
+    <property name="endpointAdapter" ref="dispatchingEndpointAdapter"/>
+  </bean>
+
+  <citrus:dispatching-endpoint-adapter id="dispatchingEndpointAdapter"
+          mapping-key-extractor="payloadRootQnameMappingKeyExtractor"
+          mapping-strategy="beanNameMappingStrategy"/>
+
+  <bean id="payloadRootQnameMappingKeyExtractor" class="org.citrusframework.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor"/>
+  <bean id="referenceResolver" class="org.citrusframework.context.SpringBeanReferenceResolver"/>
+  <bean id="beanNameMappingStrategy" class="org.citrusframework.endpoint.adapter.mapping.BeanNameMappingStrategy">
+    <constructor-arg ref="referenceResolver"/>
+  </bean>
+
+  <citrus:static-response-adapter id="testRequestMessage">
+    <citrus:payload>
+      <![CDATA[
+					<testResponseMessage>
+            <text>Hello TestFramework</text>
+          </testResponseMessage>
+				]]>
+    </citrus:payload>
+  </citrus:static-response-adapter>
+
+  <alias name="testRequestMessage" alias="moreRequestMessage"/>
+
+</beans>

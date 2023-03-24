@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+
+    <testcase name="HttpSendMessageJsonSchemaValidationIT">
+        <meta-info>
+            <author>Thorsten Schlathoelter</author>
+            <creationdate>2022-01-27</creationdate>
+            <status>FINAL</status>
+        </meta-info>
+
+        <description>
+            Tests the sent message on schema validity
+        </description>
+
+        <actions>
+            <echo>
+                <message>Test: Send a request and successfully validate it's request message against json schema
+                </message>
+            </echo>
+
+            <http:send-request client="echoHttpClient" fork="true">
+                <http:PUT>
+                    <http:body type="json" schema-validation="true">
+                        <http:data>
+                            [
+                            {
+                            "id": 2,
+                            "name": "An ice sculpture",
+                            "price": 12.50,
+                            "tags": ["cold", "ice"],
+                            "dimensions": {
+                            "length": 7.0,
+                            "width": 12.0,
+                            "height": 9.5
+                            }
+                            }
+                            ]
+                        </http:data>
+                    </http:body>
+                </http:PUT>
+            </http:send-request>
+
+            <http:receive-request server="echoHttpServer">
+                <http:PUT>
+                    <http:body schema-validation="false"/>
+                </http:PUT>
+            </http:receive-request>
+
+            <http:send-response server="echoHttpServer">
+                <http:body>
+                    <http:data>
+                    </http:data>
+                </http:body>
+            </http:send-response>
+
+            <http:receive-response client="echoHttpClient">
+            </http:receive-response>
+
+            <echo>
+                <message>Test: Detect an invalid json message send to the server</message>
+            </echo>
+
+            <assert exception="org.citrusframework.exceptions.ValidationException">
+                <when>
+                    <http:send-request client="echoHttpClient" >
+
+                        <http:PUT>
+                            <http:body type="json" schema-validation="true">
+                                <http:data>
+                                    [
+                                    {
+                                    "name": "An ice sculpture",
+                                    "price": 12.50,
+                                    "tags": ["cold", "ice"],
+                                    "dimensions": {
+                                    "length": 7.0,
+                                    "width": 12.0,
+                                    "height": 9.5
+                                    }
+                                    }
+                                    ]
+                                </http:data>
+                            </http:body>
+                        </http:PUT>
+                    </http:send-request>
+                </when>
+            </assert>
+
+        </actions>
+    </testcase>
+</spring:beans>

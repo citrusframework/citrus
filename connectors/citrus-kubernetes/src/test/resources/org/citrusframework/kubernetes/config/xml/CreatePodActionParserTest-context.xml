@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/kubernetes/testcase http://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd">
+
+    <testcase name="CreatePodActionParserTest">
+        <actions>
+            <k8s:create-pod>
+                <k8s:template file="classpath:templates/hello-jetty.yml"/>
+            </k8s:create-pod>
+
+            <k8s:create-pod name="myPod" label="pod=new" namespace="default" client="myK8sClient">
+                <k8s:spec restart-policy="Always">
+                    <k8s:container image="busybox:latest" name="myContainer" command="exec" pull-policy="Always">
+                        <k8s:ports port="8080" protocol="TCP"/>
+                    </k8s:container>
+                </k8s:spec>
+            </k8s:create-pod>
+        </actions>
+    </testcase>
+
+    <spring:bean id="myK8sClient" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.kubernetes.client.KubernetesClient</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myK8sClient"/>
+    </spring:bean>
+
+</spring:beans>

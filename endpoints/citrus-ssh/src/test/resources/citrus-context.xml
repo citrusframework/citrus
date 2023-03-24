@@ -18,14 +18,14 @@
   </citrus:global-variables>
 
   <!-- Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
   <!-- SSH setting -->
   <citrus-ssh:server id="sshServer"
                      auto-start="true"
                      user="roland"
                      port="10022"
-                     allowed-key-path="classpath:com/consol/citrus/ssh/test_user_pub.pem"/>
+                     allowed-key-path="classpath:org/citrusframework/ssh/test_user_pub.pem"/>
 
   <citrus-ssh:client id="sshClient"
                      host="localhost"
@@ -33,7 +33,7 @@
                      user="roland"
                      connection-timeout="2000"
                      command-timeout="5000"
-                     private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
+                     private-key-path="classpath:org/citrusframework/ssh/test_user.priv"
                      strict-host-checking="false"/>
 
   <citrus-ssh:client id="sshClientWithWrongKey"
@@ -42,7 +42,7 @@
                      user="roland"
                      connection-timeout="2000"
                      command-timeout="5000"
-                     private-key-path="classpath:com/consol/citrus/ssh/wrong_user.priv"
+                     private-key-path="classpath:org/citrusframework/ssh/wrong_user.priv"
                      private-key-password="consol"
                      strict-host-checking="false"/>
 
@@ -52,7 +52,7 @@
                      user="blubber"
                      connection-timeout="2000"
                      command-timeout="5000"
-                     private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
+                     private-key-path="classpath:org/citrusframework/ssh/test_user.priv"
                      strict-host-checking="false"/>
 
 </beans>

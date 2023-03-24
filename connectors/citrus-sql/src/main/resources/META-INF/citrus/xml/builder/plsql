@@ -1,2 +1,2 @@
-type=com.consol.citrus.sql.xml.Plsql
+type=org.citrusframework.sql.xml.Plsql
 ns=http://citrusframework.org/schema/xml/testcase

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation=
+               "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+  <description>Contains the root context. Gets loaded via ContextLoaderListener in web.xml</description>
+
+  <context:annotation-config/>
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <property name="messageConverters">
+      <util:list id="converters">
+        <bean class="org.citrusframework.http.message.DelegatingHttpEntityMessageConverter"/>
+      </util:list>
+    </property>
+  </bean>
+
+  <!-- Controller for handling rest requests -->
+  <bean class="org.citrusframework.http.controller.HttpMessageController">
+    <property name="endpointAdapter">
+      <bean class="org.citrusframework.endpoint.adapter.StaticResponseEndpointAdapter">
+        <property name="messagePayload">
+          <value>
+            <![CDATA[
+            <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+              <MessageId>1234567890</MessageId>
+              <CorrelationId>1000000001</CorrelationId>
+              <User>HelloService</User>
+              <Text>Hello User</Text>
+            </HelloResponse>
+            ]]>
+          </value>
+        </property>
+        <property name="messageHeader">
+          <map>
+            <entry key="Operation" value="sayHello"/>
+            <entry key="CorrelationId" value="1000000001"/>
+          </map>
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+</beans>

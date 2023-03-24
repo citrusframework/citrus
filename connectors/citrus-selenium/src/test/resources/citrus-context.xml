@@ -33,7 +33,7 @@
                                        mapping-strategy="simpleMappingStrategy"
                                        fallback-adapter="index"/>
 
-  <bean id="simpleMappingStrategy" class="com.consol.citrus.endpoint.adapter.mapping.SimpleMappingStrategy">
+  <bean id="simpleMappingStrategy" class="org.citrusframework.endpoint.adapter.mapping.SimpleMappingStrategy">
     <property name="adapterMappings">
       <map>
         <entry key="/" value-ref="index"/>
@@ -43,7 +43,7 @@
     </property>
   </bean>
 
-  <bean id="requestPathMappingKeyExtractor" class="com.consol.citrus.endpoint.adapter.mapping.HeaderMappingKeyExtractor">
+  <bean id="requestPathMappingKeyExtractor" class="org.citrusframework.endpoint.adapter.mapping.HeaderMappingKeyExtractor">
     <property name="headerName" value="citrus_http_request_uri"/>
   </bean>
 
@@ -64,6 +64,6 @@
   <citrus:static-response-adapter id="favicon"/>
 
   <!-- Web page objects -->
-  <bean id="userForm" class="com.consol.citrus.selenium.pages.UserFormPage" scope="prototype"/>
+  <bean id="userForm" class="org.citrusframework.selenium.pages.UserFormPage" scope="prototype"/>
 
 </beans>

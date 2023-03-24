@@ -1,1 +1,1 @@
-type=com.consol.citrus.validation.matcher.hamcrest.HamcrestValidationMatcher
+type=org.citrusframework.validation.matcher.hamcrest.HamcrestValidationMatcher

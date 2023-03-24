@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase
+                                  http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="RmiClientIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2015-12-10</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2015-12-10T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test RMI client server communication.</description>
+
+    <actions>
+      <echo>
+        <message>Test 1: Call RMI service as client and receive result</message>
+      </echo>
+
+      <send endpoint="rmiNewsClient" fork="true">
+        <message>
+          <payload>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>org.citrusframework.rmi.remote.NewsService</rmi:remote>
+              <rmi:method>getNews</rmi:method>
+            </rmi:service-invocation>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="rmiNewsServer">
+        <message>
+          <payload>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>org.citrusframework.rmi.remote.NewsService</rmi:remote>
+              <rmi:method>getNews</rmi:method>
+            </rmi:service-invocation>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="rmiNewsServer">
+        <message>
+          <payload>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:object type="java.lang.String" value="This is news from RMI!"/>
+            </rmi:service-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="rmiNewsClient">
+        <message>
+          <payload>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:object type="java.lang.String" value="This is news from RMI!"/>
+            </rmi:service-result>
+          </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test 2: Call RMI service with method argument and receive null result</message>
+      </echo>
+
+      <send endpoint="rmiNewsClient" fork="true">
+        <message>
+          <payload>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>org.citrusframework.rmi.remote.NewsService</rmi:remote>
+              <rmi:method>setNews</rmi:method>
+              <rmi:args>
+                <rmi:arg value="This is breaking news!"/>
+              </rmi:args>
+            </rmi:service-invocation>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="rmiNewsServer">
+        <message>
+          <payload>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>org.citrusframework.rmi.remote.NewsService</rmi:remote>
+              <rmi:method>setNews</rmi:method>
+              <rmi:args>
+                <rmi:arg type="java.lang.String" value="This is breaking news!"/>
+              </rmi:args>
+            </rmi:service-invocation>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="rmiNewsServer">
+        <message>
+          <payload>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"/>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="rmiNewsClient">
+        <message>
+          <payload>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"/>
+          </payload>
+        </message>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>

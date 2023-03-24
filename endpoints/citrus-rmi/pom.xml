@@ -4,7 +4,7 @@
 
   <parent>
     <artifactId>citrus-endpoints</artifactId>
-    <groupId>com.consol.citrus</groupId>
+    <groupId>org.citrusframework</groupId>
     <version>4.0.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
@@ -28,7 +28,7 @@
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
           <sources>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-rmi-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-rmi-config.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
@@ -42,12 +42,12 @@
   <dependencies>
     <!-- Citrus -->
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-spring</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
@@ -64,19 +64,19 @@
 
     <!-- Test scoped dependencies -->
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-test-support</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-testng</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-validation-xml</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>

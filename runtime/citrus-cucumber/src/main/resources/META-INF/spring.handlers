@@ -1,1 +1,1 @@
-http\://www.citrusframework.org/schema/cucumber/testcase=com.consol.citrus.cucumber.config.handler.CucumberTestcaseNamespaceHandler
+http\://www.citrusframework.org/schema/cucumber/testcase=org.citrusframework.cucumber.config.handler.CucumberTestcaseNamespaceHandler

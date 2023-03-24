@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config" 
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+    <citrus:schema-collection id="schemaCollection1">
+      <citrus:schemas>
+        <citrus:schema location="classpath:org/citrusframework/validation/test.xsd"/>
+        <citrus:schema location="classpath:org/citrusframework/validation/sample.xsd"/>
+      </citrus:schemas>
+    </citrus:schema-collection>
+
+</beans>

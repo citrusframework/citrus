@@ -13,7 +13,7 @@ project.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-junit5</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -27,11 +27,11 @@ You can use the Citrus JUnit5 extension on your test as follows:
 .JUnit5 Citrus test
 [source,java]
 ----
-package com.consol.citrus.samples;
+package org.citrusframework.samples;
 
-import com.consol.citrus.GherkinTestActionRunner;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.junit.jupiter.CitrusSupport;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -79,12 +79,12 @@ your test class. This enabled you to inject endpoint components that are defined
 .JUnit5 Citrus endpoint injection
 [source,java]
 ----
-package com.consol.citrus.samples;
+package org.citrusframework.samples;
 
-import com.consol.citrus.annotations.*;
-import com.consol.citrus.GherkinTestActionRunner;
-import com.consol.citrus.junit.jupiter.CitrusSupport;
-import com.consol.citrus.http.client.HttpClient;
+import org.citrusframework.annotations.*;
+import org.citrusframework.GherkinTestActionRunner;
+import org.citrusframework.junit.jupiter.CitrusSupport;
+import org.citrusframework.http.client.HttpClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpStatus;

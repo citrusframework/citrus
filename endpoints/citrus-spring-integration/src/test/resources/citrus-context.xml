@@ -11,7 +11,7 @@
                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                          http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
-  <import resource="classpath:com/consol/citrus/integration/service/hello-service-context.xml"/>
+  <import resource="classpath:org/citrusframework/integration/service/hello-service-context.xml"/>
 
   <context:property-placeholder location="classpath:citrus.properties"
                                 ignore-unresolvable="true"/>
@@ -38,7 +38,7 @@
   </citrus:namespace-context>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
   <!-- Message channel endpoints -->
   <citrus-si:channel-endpoint id="helloServiceChannelEndpoint"

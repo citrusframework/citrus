@@ -1,2 +1,2 @@
-http\://www.citrusframework.org/schema/jms/testcase=com.consol.citrus.jms.config.handler.CitrusJmsTestcaseNamespaceHandler
-http\://www.citrusframework.org/schema/jms/config=com.consol.citrus.jms.config.handler.CitrusJmsConfigNamespaceHandler
+http\://www.citrusframework.org/schema/jms/testcase=org.citrusframework.jms.config.handler.CitrusJmsTestcaseNamespaceHandler
+http\://www.citrusframework.org/schema/jms/config=org.citrusframework.jms.config.handler.CitrusJmsConfigNamespaceHandler

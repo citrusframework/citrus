@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="SshServerErrorIT">
+    <meta-info>
+      <author>Roland</author>
+      <creationdate>2012-09-13</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>roland</last-updated-by>
+      <last-updated-on>2012-09-13T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      SSH test with a wrong private key
+    </description>
+
+    <actions>
+      <echo>
+        <message>Contact the SSH server with a wrong private key</message>
+      </echo>
+
+      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException"
+              message="Cannot connect via SSH: com.jcraft.jsch.JSchException: Auth fail">
+        <when>
+          <send endpoint="sshClientWithWrongKey">
+            <message>
+              <payload>
+                  <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
+                    <command>shutdown</command>
+                    <stdin>input</stdin>
+                  </ssh-request>
+              </payload>
+            </message>
+          </send>
+        </when>
+      </assert>
+
+      <assert exception="org.citrusframework.exceptions.CitrusRuntimeException"
+              message="Cannot connect via SSH: com.jcraft.jsch.JSchException: Auth fail">
+        <when>
+          <send endpoint="sshClientWithWrongUser">
+            <message>
+              <payload>
+                  <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
+                    <command>shutdown</command>
+                    <stdin>input</stdin>
+                  </ssh-request>
+              </payload>
+            </message>
+          </send>
+        </when>
+      </assert>
+
+    </actions>
+  </testcase>
+</spring:beans>

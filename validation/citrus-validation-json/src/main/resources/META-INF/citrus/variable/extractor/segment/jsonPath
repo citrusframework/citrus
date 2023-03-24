@@ -1,1 +1,1 @@
-type=com.consol.citrus.json.JsonPathSegmentVariableExtractor
+type=org.citrusframework.json.JsonPathSegmentVariableExtractor

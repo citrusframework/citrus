@@ -1,0 +1,23 @@
+name: "GroovyTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+variables:
+  - name: "greetingText"
+    value: "Hello Citrus!"
+actions:
+  - groovy:
+      script: |
+        println 'Hello Citrus'
+  - groovy:
+      useScriptTemplate: false
+      script: |
+        println 'Hello Citrus'
+  - groovy:
+      scriptTemplate: "classpath:org/citrusframework/script/custom-script-template.groovy"
+      script: |
+        Assert.assertEquals(context.getVariable("scriptTemplateVar"), "It works!")
+        Assert.assertEquals(context.getVariable("greetingText"), "Hello Citrus!")
+        Assert.assertEquals(context.getVariable("greetingText"), "${greetingText}")
+  - groovy:
+      file: "classpath:org/citrusframework/script/example.groovy"

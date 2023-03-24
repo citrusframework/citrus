@@ -1,3 +1,3 @@
-http\://www.citrusframework.org/schema/ftp/config=com.consol.citrus.ftp.config.handler.CitrusFtpConfigNamespaceHandler
-http\://www.citrusframework.org/schema/sftp/config=com.consol.citrus.ftp.config.handler.CitrusSftpConfigNamespaceHandler
-http\://www.citrusframework.org/schema/scp/config=com.consol.citrus.ftp.config.handler.CitrusScpConfigNamespaceHandler
+http\://www.citrusframework.org/schema/ftp/config=org.citrusframework.ftp.config.handler.CitrusFtpConfigNamespaceHandler
+http\://www.citrusframework.org/schema/sftp/config=org.citrusframework.ftp.config.handler.CitrusSftpConfigNamespaceHandler
+http\://www.citrusframework.org/schema/scp/config=org.citrusframework.ftp.config.handler.CitrusScpConfigNamespaceHandler

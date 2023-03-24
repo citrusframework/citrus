@@ -11,7 +11,7 @@ as Maven dependency to your project
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-jms</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -719,7 +719,7 @@ public SoapJmsMessageConverter soapJmsMessageConverter() {
         destination-name="Citrus.HelloService.Request.Queue"
         message-converter="soapJmsMessageConverter"/>
 
-<bean id="soapJmsMessageConverter" class="com.consol.citrus.jms.message.SoapJmsMessageConverter"/>
+<bean id="soapJmsMessageConverter" class="org.citrusframework.jms.message.SoapJmsMessageConverter"/>
 ----
 
 With this message converter you can skip the SOAP envelope completely in your test case. You just deal with the message

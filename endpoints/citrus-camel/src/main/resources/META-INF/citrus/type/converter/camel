@@ -1,1 +1,1 @@
-type=com.consol.citrus.camel.util.CamelTypeConverter
+type=org.citrusframework.camel.util.CamelTypeConverter

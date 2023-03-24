@@ -1,1 +1,1 @@
-type=com.consol.citrus.container.Iterate$Builder
+type=org.citrusframework.container.Iterate$Builder

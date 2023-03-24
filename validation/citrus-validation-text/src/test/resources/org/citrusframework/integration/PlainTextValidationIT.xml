@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+							xmlns:spring="http://www.springframework.org/schema/beans"
+							xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+							xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+																  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+	<testcase name="PlainTextValidationIT">
+		<meta-info>
+			<author>Christoph Deppisch</author>
+			<creationdate>2010-01-12</creationdate>
+			<status>FINAL</status>
+			<last-updated-by>Christoph Deppisch</last-updated-by>
+			<last-updated-on>2010-01-12T00:00:00</last-updated-on>
+		</meta-info>
+
+		<description>
+			Send plain text as message payload. Here we use custom data format to send it over
+			HTTP to a server and receive simple plain text as response.
+		</description>
+
+		<actions>
+			<send endpoint="helloEndpoint">
+				<message>
+					<data>Hello, World!</data>
+				</message>
+			</send>
+
+			<receive endpoint="helloEndpoint">
+				<message type="plaintext">
+					<data>Hello, World!</data>
+				</message>
+			</receive>
+
+			<send endpoint="helloEndpoint">
+				<message>
+					<data>Hello, World!</data>
+				</message>
+			</send>
+
+			<assert exception="org.citrusframework.exceptions.ValidationException">
+				<when>
+					<receive endpoint="helloEndpoint">
+						<message type="plaintext">
+							<data>Hello Citrus!</data>
+						</message>
+					</receive>
+				</when>
+			</assert>
+
+			<send endpoint="helloEndpoint">
+				<message>
+					<data/>
+				</message>
+			</send>
+
+			<receive endpoint="helloEndpoint">
+				<message type="plaintext">
+					<data/>
+				</message>
+			</receive>
+
+			<send endpoint="helloEndpoint">
+				<message>
+					<data/>
+				</message>
+			</send>
+
+			<assert exception="org.citrusframework.exceptions.ValidationException">
+				<when>
+					<receive endpoint="helloEndpoint">
+						<message type="plaintext">
+							<data>Hello Citrus!</data>
+						</message>
+					</receive>
+				</when>
+			</assert>
+
+			<send endpoint="helloEndpoint">
+				<message>
+					<data>Hello, Citrus!</data>
+				</message>
+				<header>
+					<element name="Operation" value="sayHello"/>
+				</header>
+			</send>
+
+			<receive endpoint="helloEndpoint">
+				<message type="plaintext"/>
+				<header>
+					<element name="Operation" value="sayHello"/>
+				</header>
+			</receive>
+
+			<send endpoint="helloEndpoint">
+				<message>
+					<data>Hello, Citrus!</data>
+				</message>
+				<header>
+					<element name="Operation" value="sayHello"/>
+				</header>
+			</send>
+
+			<assert exception="org.citrusframework.exceptions.ValidationException">
+				<when>
+					<receive endpoint="helloEndpoint">
+						<message type="plaintext"/>
+						<header>
+							<element name="Operation" value="sayHi"/>
+						</header>
+					</receive>
+				</when>
+			</assert>
+		</actions>
+	</testcase>
+</spring:beans>

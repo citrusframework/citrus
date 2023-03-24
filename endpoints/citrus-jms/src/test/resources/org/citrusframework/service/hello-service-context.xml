@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:jms="http://www.springframework.org/schema/integration/jms"
+       xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+            http://www.springframework.org/schema/integration/jms http://www.springframework.org/schema/integration/jms/spring-integration-jms.xsd
+            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
+
+  <!-- Async JMS adapters -->
+  <jms:message-driven-channel-adapter id="helloReqeustIn"
+                                      destination-name="Citrus.HelloService.Request.Queue"
+                                      connection-factory="connectionFactory"
+                                      channel="helloRequests"/>
+
+  <jms:outbound-channel-adapter id="helloResponseOut"
+                                destination-name="Citrus.HelloService.Response.Queue"
+                                connection-factory="connectionFactory"
+                                channel="helloResponses"/>
+
+  <!-- SOAP adapters -->
+  <jms:message-driven-channel-adapter id="helloSoapReqeustIn"
+                                      destination-name="Citrus.HelloSoapService.Request.Queue"
+                                      connection-factory="connectionFactory"
+                                      channel="helloSoapRequests"/>
+
+  <jms:outbound-channel-adapter id="helloSoapResponseOut"
+                                destination-name="Citrus.HelloSoapService.Response.Queue"
+                                connection-factory="connectionFactory"
+                                channel="helloSoapResponses"/>
+
+  <!-- Sync JMS adapters -->
+  <jms:inbound-gateway id="helloSyncRequestsIn"
+                       request-destination-name="Citrus.HelloService.InOut.Queue"
+                       connection-factory="connectionFactory"
+                       request-channel="helloSyncRequests"/>
+
+  <int:poller id="poller"
+              fixed-rate="100"
+              max-messages-per-poll="1"
+              default="true"/>
+
+  <int:logging-channel-adapter id="logger" level="DEBUG"/>
+
+  <bean id="helloService" class="org.citrusframework.jms.integration.service.HelloServiceImpl"/>
+  <bean id="helloSoapService" class="org.citrusframework.jms.integration.service.HelloSoapServiceImpl"/>
+
+  <int:service-activator input-channel="helloRequests"
+                         output-channel="helloResponses"
+                         ref="helloService"/>
+
+  <int:service-activator input-channel="helloSoapRequests"
+                         output-channel="helloSoapResponses"
+                         ref="helloSoapService"/>
+
+  <int:service-activator input-channel="helloSyncRequests"
+                         ref="helloService"/>
+
+  <int:channel id="helloRequests"/>
+  <citrus-si:channel id="helloResponses" capacity="5"/>
+  <int:channel id="helloSoapRequests"/>
+  <int:channel id="helloSoapResponses"/>
+  <int:channel id="helloSyncRequests"/>
+
+  <int:channel id="errorChannel">
+    <int:interceptors>
+      <ref bean="loggingInterceptor"/>
+    </int:interceptors>
+  </int:channel>
+
+  <bean id="loggingInterceptor" class="org.citrusframework.jms.integration.service.LoggingInterceptor"/>
+
+  <bean id="helloMarshaller" class="org.citrusframework.xml.Jaxb2Marshaller">
+    <constructor-arg value="org.citrusframework.jms.integration.service.model"/>
+  </bean>
+
+  <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+</beans>

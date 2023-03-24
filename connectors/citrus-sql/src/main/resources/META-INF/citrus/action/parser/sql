@@ -1,1 +1,1 @@
-type=com.consol.citrus.config.xml.SQLActionParser
+type=org.citrusframework.config.xml.SQLActionParser

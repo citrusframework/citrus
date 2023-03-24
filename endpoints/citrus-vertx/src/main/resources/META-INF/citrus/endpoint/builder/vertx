@@ -1,4 +1,4 @@
-async=com.consol.citrus.vertx.endpoint.VertxEndpointBuilder
-asynchronous=com.consol.citrus.vertx.endpoint.VertxEndpointBuilder
-sync=com.consol.citrus.vertx.endpoint.VertxSyncEndpointBuilder
-synchronous=com.consol.citrus.vertx.endpoint.VertxSyncEndpointBuilder
+async=org.citrusframework.vertx.endpoint.VertxEndpointBuilder
+asynchronous=org.citrusframework.vertx.endpoint.VertxEndpointBuilder
+sync=org.citrusframework.vertx.endpoint.VertxSyncEndpointBuilder
+synchronous=org.citrusframework.vertx.endpoint.VertxSyncEndpointBuilder

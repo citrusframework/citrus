@@ -13,7 +13,7 @@ the module as Maven dependency to your project
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-kafka</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -154,15 +154,15 @@ The following table shows all available settings on a Kafka endpoint in Citrus:
 
 | message-converter
 | No
-| `com.consol.citrus.kafka.message.KafkaMessageConverter`
+| `org.citrusframework.kafka.message.KafkaMessageConverter`
 | Converter maps internal Citrus message objects to ProducerRecord/ConsumerRecord objects. The converter implementation takes
   care on message key, value, timestamp and special message headers.
 
 | header-mapper
 | No
-| `com.consol.citrus.kafka.message.KafkaMessageHeaderMapper`
+| `org.citrusframework.kafka.message.KafkaMessageHeaderMapper`
 | Header mapper maps Kafka record information (e.g. topic name, timestamp, message key) to internal message headers
-  (`com.consol.citrus.kafka.message.KafkaMessageHeaders`) and vice versa.
+  (`org.citrusframework.kafka.message.KafkaMessageHeaders`) and vice versa.
 
 | auto-commit
 | No

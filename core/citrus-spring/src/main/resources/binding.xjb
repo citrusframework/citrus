@@ -17,18 +17,18 @@
     <xjc:simple />
   </globalBindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-config.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-config.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.core"/>
+      <package name="org.citrusframework.model.config.core"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-testcase.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-testcase.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.testcase.core"/>
+      <package name="org.citrusframework.model.testcase.core"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>

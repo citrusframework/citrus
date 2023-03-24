@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="AntRunActionParserTest">
+        <actions>
+            <ant build-file="classpath:org/citrusframework/actions/build.xml">
+                <execute target="sayHello"/>
+            </ant>
+            
+            <ant build-file="classpath:org/citrusframework/actions/build.xml">
+                <execute targets="sayHello,sayGoodbye"/>
+            </ant>
+            
+            <ant build-file="classpath:org/citrusframework/actions/build.xml">
+                <execute target="sayHello"/>
+                <properties>
+                    <property name="welcomeText" value="Hello World!" />
+                    <property name="goodbyeText" value="Goodbye!" />
+                </properties>
+            </ant>
+            
+            <ant build-file="classpath:org/citrusframework/actions/build.xml" build-listener="logger">
+                <execute target="sayHello"/>
+                <properties file="classpath:org/citrusframework/actions/build.properties" />
+            </ant>
+        </actions>
+    </testcase>
+    
+    <spring:bean id="logger" class="org.apache.tools.ant.DefaultLogger"/>
+    
+</spring:beans>

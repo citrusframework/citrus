@@ -3,7 +3,7 @@
           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
           version="3.0">
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-ssh-config.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-ssh-config.xsd">
     <globalBindings>
       <xjc:javaType
               name="java.util.Calendar"
@@ -16,7 +16,7 @@
       <xjc:simple />
     </globalBindings>
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.ssh"/>
+      <package name="org.citrusframework.model.config.ssh"/>
       <nameXmlTransform>
         <elementName prefix="Ssh" suffix="Model" />
       </nameXmlTransform>

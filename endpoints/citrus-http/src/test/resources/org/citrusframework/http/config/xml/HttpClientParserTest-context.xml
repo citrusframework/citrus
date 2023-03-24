@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd">
+
+  <citrus-http:client id="httpClient1"
+                          request-url="http://localhost:8080/test"/>
+
+  <citrus-http:client id="httpClient2"
+                          request-url="http://localhost:8080/test"
+                          request-method="GET"
+                          content-type="text/xml"
+                          charset="ISO-8859-1"
+                          timeout="10000"
+                          default-accept-header="false"
+                          handle-cookies="true"
+                          error-strategy="throwsException"
+                          error-handler="errorHandler"
+                          message-converter="messageConverter"
+                          binary-media-types="binaryMediaTypes"
+                          request-factory="soapRequestFactory"
+                          endpoint-resolver="endpointResolver"/>
+
+  <citrus-http:client id="httpClient3"
+                          request-url="http://localhost:8080/test"
+                          rest-template="restTemplate"
+                          message-correlator="replyMessageCorrelator"/>
+
+  <citrus-http:client id="httpClient4"
+                          request-url="http://localhost:8080/test"
+                          interceptors="clientInterceptors"
+                          polling-interval="250"
+                          actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.http.message.HttpMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+
+  <util:list id="clientInterceptors">
+    <ref bean="clientInterceptor"/>
+  </util:list>
+
+  <util:list id="binaryMediaTypes" value-type="org.springframework.http.MediaType">
+    <util:constant static-field="org.springframework.http.MediaType.APPLICATION_OCTET_STREAM"/>
+    <value>application/custom</value>
+  </util:list>
+
+  <bean id="errorHandler" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.web.client.ResponseErrorHandler</value></constructor-arg>
+    <constructor-arg value="errorHandler"/>
+  </bean>
+
+  <bean id="clientInterceptor" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.http.interceptor.LoggingClientInterceptor</value></constructor-arg>
+    <constructor-arg value="clientInterceptor"/>
+  </bean>
+
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.message.MessageCorrelator</value></constructor-arg>
+    <constructor-arg value="replyMessageCorrelator"/>
+  </bean>
+
+  <bean id="endpointResolver" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.resolver.EndpointUriResolver</value></constructor-arg>
+    <constructor-arg value="endpointResolver"/>
+  </bean>
+
+  <bean id="soapRequestFactory" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.http.client.ClientHttpRequestFactory</value></constructor-arg>
+    <constructor-arg value="soapRequestFactory"/>
+  </bean>
+
+  <bean id="restTemplate" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.springframework.web.client.RestTemplate</value></constructor-arg>
+    <constructor-arg value="restTemplate"/>
+  </bean>
+
+</beans>

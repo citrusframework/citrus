@@ -1,1 +1,1 @@
-browser=com.consol.citrus.selenium.config.annotation.SeleniumBrowserConfigParser
+browser=org.citrusframework.selenium.config.annotation.SeleniumBrowserConfigParser

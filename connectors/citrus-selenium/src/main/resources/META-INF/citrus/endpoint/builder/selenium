@@ -1,1 +1,1 @@
-browser=com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder
+browser=org.citrusframework.selenium.endpoint.SeleniumBrowserBuilder

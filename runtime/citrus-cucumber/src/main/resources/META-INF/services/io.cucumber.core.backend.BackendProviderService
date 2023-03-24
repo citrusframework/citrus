@@ -1,1 +1,1 @@
-com.consol.citrus.cucumber.backend.CitrusBackendProviderService
+org.citrusframework.cucumber.backend.CitrusBackendProviderService

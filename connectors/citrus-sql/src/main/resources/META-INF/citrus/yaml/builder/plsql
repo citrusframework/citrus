@@ -1,1 +1,1 @@
-type=com.consol.citrus.sql.yaml.Plsql
+type=org.citrusframework.sql.yaml.Plsql

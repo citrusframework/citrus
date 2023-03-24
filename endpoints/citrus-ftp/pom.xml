@@ -4,7 +4,7 @@
 
   <parent>
     <artifactId>citrus-endpoints</artifactId>
-    <groupId>com.consol.citrus</groupId>
+    <groupId>org.citrusframework</groupId>
     <version>4.0.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
@@ -28,10 +28,10 @@
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
           <sources>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-ftp-config.xsd</source>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-sftp-config.xsd</source>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-scp-config.xsd</source>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-ftp-message.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-ftp-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-sftp-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-scp-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-ftp-message.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
@@ -53,12 +53,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-spring</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
@@ -74,7 +74,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-ssh</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -95,7 +95,7 @@
 
     <!-- Test scoped dependencies -->
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-jms</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -108,25 +108,25 @@
     </dependency>
 
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-test-support</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-testng</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-spring-integration</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
+      <groupId>org.citrusframework</groupId>
       <artifactId>citrus-validation-xml</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>

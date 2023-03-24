@@ -59,7 +59,7 @@ The SSH client components receive its configuration in the Spring application co
 <citrus-ssh:client id="sshClient"
            port="9072"
            user="roland"
-           private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
+           private-key-path="classpath:org/citrusframework/ssh/test_user.priv"
            strict-host-checking="false"
            host="localhost"/>
 ----
@@ -120,7 +120,7 @@ Given the above SSH module namespace declaration, adding a new SSH server is qui
 [source,xml]
 ----
 <citrus-ssh:server id="sshServer"
-             allowed-key-path="classpath:com/consol/citrus/ssh/test_user_pub.pem"
+             allowed-key-path="classpath:org/citrusframework/ssh/test_user_pub.pem"
              user="roland"
              port="9072"
              auto-start="true"

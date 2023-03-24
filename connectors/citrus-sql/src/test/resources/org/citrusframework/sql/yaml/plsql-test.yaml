@@ -1,0 +1,30 @@
+name: "PlsqlTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in YAML
+actions:
+  - plsql:
+      dataSource: "dataSource"
+      ignoreErrors: true
+      statements:
+        - file: "classpath:org/citrusframework/integration/actions/plsql.sql"
+
+  - plsql:
+      dataSource: "dataSource"
+      ignoreErrors: true
+      transaction:
+        manager: "mockTransactionManager"
+        timeout: "5000"
+        isolationLevel: "ISOLATION_READ_COMMITTED"
+      statements:
+        - script: |
+            BEGIN
+                EXECUTE IMMEDIATE 'create or replace function test (v_id in number) return number is
+                  begin
+                   if v_id  is null then
+                    return 0;
+                    end if;
+                    return v_id;
+                  end;';
+            END;
+            /

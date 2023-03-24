@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/mail/config http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <citrus-mail:server id="mailServer1"/>
+
+  <citrus-mail:server id="mailServer2"
+                      auto-start="false"
+                      auto-accept="false"
+                      port="25000"/>
+
+  <citrus-mail:server id="mailServer3"
+                      auto-start="false"
+                      split-multipart="true"
+                      message-converter="messageConverter"
+                      marshaller="marshaller"
+                      mail-properties="mailProperties"
+                      endpoint-adapter="endpointAdapter"/>
+
+  <util:properties id="mailProperties">
+    <prop key="mail.transport.protocol">smtp</prop>
+  </util:properties>
+
+  <bean id="endpointAdapter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.EndpointAdapter</value></constructor-arg>
+    <constructor-arg value="endpointAdapter"/>
+  </bean>
+
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.mail.message.MailMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+
+  <bean id="marshaller" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.mail.model.MailMarshaller</value></constructor-arg>
+    <constructor-arg value="marshaller"/>
+  </bean>
+
+</beans>

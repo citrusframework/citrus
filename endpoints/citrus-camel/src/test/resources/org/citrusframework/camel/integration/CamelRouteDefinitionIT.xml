@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:camel="http://www.citrusframework.org/schema/camel/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+                                  http://www.citrusframework.org/schema/camel/testcase http://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="CamelRouteDefinitionIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2014-06-07</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2014-06-07T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test creates Camel routes on the fly and uses them in test.</description>
+
+    <actions>
+      <echo>
+        <message>Create Camel news route</message>
+      </echo>
+
+      <camel:create-routes camel-context="camelContext">
+        <routeContext xmlns="http://camel.apache.org/schema/spring">
+          <route id="myRoute">
+            <from uri="direct:dynamic-news"/>
+            <to uri="log:org.citrusframework.camel?level=INFO"/>
+            <setHeader name="headline">
+              <simple>This is BIG news!</simple>
+            </setHeader>
+            <to uri="seda:big-news"/>
+          </route>
+        </routeContext>
+      </camel:create-routes>
+
+      <echo>
+        <message>Invoke Camel news route with some message</message>
+      </echo>
+
+      <send endpoint="camel:direct:dynamic-news">
+        <message type="plaintext">
+          <data>News from Citrus! Today is citrus:currentDate()</data>
+        </message>
+      </send>
+
+      <echo>
+        <message>Receive Camel route out message</message>
+      </echo>
+
+      <receive endpoint="camel:seda:big-news">
+        <message type="plaintext">
+          <data>News from Citrus! Today is citrus:currentDate()</data>
+        </message>
+        <header>
+          <element name="headline" value="This is BIG news!"/>
+        </header>
+      </receive>
+    </actions>
+
+    <finally>
+      <echo>
+        <message>Stop Camel route</message>
+      </echo>
+
+      <camel:stop-routes camel-context="camelContext">
+        <camel:route id="myRoute"/>
+      </camel:stop-routes>
+
+      <echo>
+        <message>Validate that route was stopped</message>
+      </echo>
+
+      <camel:control-bus camel-context="camelContext">
+        <camel:route id="myRoute" action="status"/>
+        <camel:result>Stopped</camel:result>
+      </camel:control-bus>
+
+      <camel:control-bus camel-context="camelContext">
+        <camel:language type="simple">${camelContext.getRouteStatus('myRoute')}</camel:language>
+        <camel:result>Stopped</camel:result>
+      </camel:control-bus>
+
+      <echo>
+        <message>Remove Camel route</message>
+      </echo>
+
+      <camel:remove-routes camel-context="camelContext">
+        <camel:route id="myRoute"/>
+      </camel:remove-routes>
+    </finally>
+
+  </testcase>
+</spring:beans>

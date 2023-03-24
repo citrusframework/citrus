@@ -8,7 +8,7 @@ NOTE: The Selenium test components in Citrus are kept in a separate Maven module
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-selenium</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -400,14 +400,14 @@ _setUserName_ or _submit_.
 .XML DSL
 [source,xml]
 ----
-<selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
+<selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
                action="setUserName">
   <selenium:arguments>
     <selenium:argument>Citrus</selenium:argument>
   </selenium:arguments>
 </selenium:page>
 
-<selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
+<selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
                action="submit"/>
 ----
 
@@ -449,9 +449,9 @@ validation purpose. In a test case we can call the validator to validate the pag
 .XML DSL
 [source,xml]
 ----
-<bean id ="userFormValidator" class="com.consol.citrus.selenium.pages.UserFormValidator"/>
+<bean id ="userFormValidator" class="org.citrusframework.selenium.pages.UserFormValidator"/>
 
-<selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
+<selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
                action="validate"
                validator="userFormValidator"/>
 ----
@@ -506,7 +506,7 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 .XML DSL
 [source,xml]
 ----
-<selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
+<selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
                action="validate"/>
 ----
 

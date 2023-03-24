@@ -1,1 +1,1 @@
-type=com.consol.citrus.selenium.endpoint.SeleniumEndpointComponent
+type=org.citrusframework.selenium.endpoint.SeleniumEndpointComponent

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="StopServerActionParserTest">
+        <actions>
+            <stop server="myServer"/>
+
+            <stop>
+                <servers>
+                    <server name="myFooServer"/>
+                    <server name="myBarServer"/>
+                </servers>
+            </stop>
+        </actions>
+    </testcase>
+
+    <spring:bean id="myServer" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.server.Server</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myServer"/>
+    </spring:bean>
+
+    <spring:bean id="myFooServer" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.server.Server</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myFooServer"/>
+    </spring:bean>
+
+    <spring:bean id="myBarServer" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.server.Server</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myBarServer"/>
+    </spring:bean>
+
+</spring:beans>

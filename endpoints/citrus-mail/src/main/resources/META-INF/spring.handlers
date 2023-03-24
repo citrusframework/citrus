@@ -1,1 +1,1 @@
-http\://www.citrusframework.org/schema/mail/config=com.consol.citrus.mail.config.handler.CitrusMailConfigNamespaceHandler
+http\://www.citrusframework.org/schema/mail/config=org.citrusframework.mail.config.handler.CitrusMailConfigNamespaceHandler

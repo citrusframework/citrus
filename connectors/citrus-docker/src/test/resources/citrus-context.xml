@@ -18,7 +18,7 @@
   </citrus:global-variables>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
   <citrus-docker:client id="dockerClient"/>
 

@@ -306,7 +306,7 @@ Note that we must use the Citrus test case XML namespace for the nested test act
 .XML Config
 [source,xml]
 ----
-<citrus:before-test id="defaultBeforeTest" test="*_Ok_Test" package="com.consol.citrus.longrunning.*">
+<citrus:before-test id="defaultBeforeTest" test="*_Ok_Test" package="org.citrusframework.longrunning.*">
     <citrus:actions>
         <citrus-test:echo>
           <citrus-test:message>This is executed before each test!</citrus-test:message>
@@ -315,7 +315,7 @@ Note that we must use the Citrus test case XML namespace for the nested test act
 </citrus:before-test>
 ----
 
-The above before test component is only executed for test cases that match the name pattern `\\*_Ok_Test` and that match the package `com.consol.citrus.longrunning.*`. Also we could just use the test name pattern or the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify before test actions in various ways. Of course you can have multiple before test configuration components at the same time. Citrus will pick the right containers and put it to execution when necessary.
+The above before test component is only executed for test cases that match the name pattern `\\*_Ok_Test` and that match the package `org.citrusframework.longrunning.*`. Also we could just use the test name pattern or the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify before test actions in various ways. Of course you can have multiple before test configuration components at the same time. Citrus will pick the right containers and put it to execution when necessary.
 
 Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
 in order to enable the before suite sequence in that test run.
@@ -372,11 +372,11 @@ The before test implementations are added to the Spring bean application context
 [source,xml]
 ----
 <bean id="myBeforeTest" class="my.company.citrus.MyBeforeTest">
-  <property name="packageNamePattern" value="com.consol.citrus.e2e"></property>
+  <property name="packageNamePattern" value="org.citrusframework.e2e"></property>
 </bean>
 ----
 
-We can add filter properties to the before test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package *com.consol.citrus.e2e* . Leave these properties empty for default actions that are executed before all tests.
+We can add filter properties to the before test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package *org.citrusframework.e2e* . Leave these properties empty for default actions that are executed before all tests.
 
 [[after-test]]
 == After test
@@ -412,7 +412,7 @@ Please be aware of the fact that we must use the Citrus test case XML namespace 
 .XML Config
 [source,xml]
 ----
-<citrus:after-test id="defaultAfterTest" test="*_Error_Test" package="com.consol.citrus.error.*">
+<citrus:after-test id="defaultAfterTest" test="*_Error_Test" package="org.citrusframework.error.*">
     <citrus:actions>
         <citrus-test:echo>
           <citrus-test:message>This is executed after each test!</citrus-test:message>
@@ -421,7 +421,7 @@ Please be aware of the fact that we must use the Citrus test case XML namespace 
 </citrus:after-test>
 ----
 
-The above after test component is obviously only executed for test cases that match the name pattern `\\*_Error_Test` and that match the package `com.consol.citrus.error.*`. Also we could just use the test name pattern or the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify after test actions in various ways. Of course you can have multiple after test configuration components at the same time.
+The above after test component is obviously only executed for test cases that match the name pattern `\\*_Error_Test` and that match the package `org.citrusframework.error.*`. Also we could just use the test name pattern or the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify after test actions in various ways. Of course you can have multiple after test configuration components at the same time.
 Citrus will pick the right containers and put it to execution when necessary.
 
 Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
@@ -479,8 +479,8 @@ The after test implementations are added to the Spring bean application context 
 [source,xml]
 ----
 <bean id="myAfterTest" class="my.company.citrus.MyAfterTest">
-  <property name="packageNamePattern" value="com.consol.citrus.e2e"></property>
+  <property name="packageNamePattern" value="org.citrusframework.e2e"></property>
 </bean>
 ----
 
-We can add filter properties to the after test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package *com.consol.citrus.e2e* . Leave these properties empty for default actions that are executed after all tests.
+We can add filter properties to the after test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package *org.citrusframework.e2e* . Leave these properties empty for default actions that are executed after all tests.

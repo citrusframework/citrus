@@ -1,1 +1,1 @@
-type=com.consol.citrus.util.GroovyTypeConverter
+type=org.citrusframework.util.GroovyTypeConverter

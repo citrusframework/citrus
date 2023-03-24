@@ -1,1 +1,1 @@
-type=com.consol.citrus.ws.client.WebServiceEndpointComponent
+type=org.citrusframework.ws.client.WebServiceEndpointComponent

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="ReceiveMessageActionParserTest">
+        <actions>
+            <receive endpoint="myMessageEndpoint">
+                <message>
+                    <builder type="groovy">
+                        <![CDATA[
+                            markupBuilder.TestMessage('Hello Citrus')
+                        ]]>
+                    </builder>
+                </message>
+                <header>
+                    <element name="header1" value="Test"/>
+                    <element name="header2" value="Test"/>
+                </header>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <message>
+                    <builder type="groovy" file="classpath:org/citrusframework/actions/payload.groovy"/>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+
+    <spring:bean id="myMessageEndpoint" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.endpoint.Endpoint</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myMessageEndpoint"/>
+    </spring:bean>
+
+</spring:beans>

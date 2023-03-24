@@ -1,2 +1,2 @@
 name=defaultGroovyJsonMessageValidator
-type=com.consol.citrus.validation.script.GroovyJsonMessageValidator
+type=org.citrusframework.validation.script.GroovyJsonMessageValidator

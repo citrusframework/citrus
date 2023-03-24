@@ -1,1 +1,1 @@
-type=com.consol.citrus.actions.TransformAction$Builder
+type=org.citrusframework.actions.TransformAction$Builder

@@ -8,19 +8,19 @@
 
   <citrus:schema-repository id="imageServiceSchemaRepository">
     <citrus:schemas>
-      <citrus:schema id="imageServiceSchema" location="classpath:com/consol/citrus/schema/ImageService.wsdl" />
+      <citrus:schema id="imageServiceSchema" location="classpath:org/citrusframework/schema/ImageService.wsdl" />
     </citrus:schemas>
   </citrus:schema-repository>
 
   <citrus:schema-repository id="sampleServiceSchemaRepository">
     <citrus:schemas>
-      <citrus:schema id="sampleServiceSchema" location="classpath:com/consol/citrus/schema/SampleServiceWithImports.wsdl" />
+      <citrus:schema id="sampleServiceSchema" location="classpath:org/citrusframework/schema/SampleServiceWithImports.wsdl" />
     </citrus:schemas>
   </citrus:schema-repository>
 
   <citrus:schema-repository id="sampleServiceSchemaNamespaceDiffRepository">
     <citrus:schemas>
-      <citrus:schema id="sampleServiceSchemaNamespaceDiff" location="classpath:com/consol/citrus/schema/SampleServiceWithImportsNamespaceDiff.wsdl" />
+      <citrus:schema id="sampleServiceSchemaNamespaceDiff" location="classpath:org/citrusframework/schema/SampleServiceWithImportsNamespaceDiff.wsdl" />
     </citrus:schemas>
   </citrus:schema-repository>
 

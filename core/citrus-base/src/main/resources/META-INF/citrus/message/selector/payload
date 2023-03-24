@@ -1,1 +1,1 @@
-type=com.consol.citrus.message.selector.PayloadMatchingMessageSelector$Factory
+type=org.citrusframework.message.selector.PayloadMatchingMessageSelector$Factory

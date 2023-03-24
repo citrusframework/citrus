@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="QueryDatabaseRetriesIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2008-08-05</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2008-06-13T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      Test of retry functionality in sql action.
+      Sql action is configured so that it retries for 5 seconds with a pause of 1
+      second. The parallel task waits for 3 seconds and updates the database so
+      that the sql action succeeds.
+    </description>
+    <actions>
+      <sql datasource="testDataSource">
+        <resource file="classpath:org/citrusframework/integration/actions/script.sql"/>
+      </sql>
+
+      <parallel>
+        <repeat-onerror-until-true auto-sleep="500" condition="i = 10" index="i">
+          <sql datasource="testDataSource">
+            <statement>select COUNT(*) as customer_cnt from CUSTOMERS</statement>
+            <validate column="CUSTOMER_CNT" value="0"/>
+          </sql>
+        </repeat-onerror-until-true>
+
+        <sequential>
+          <sleep milliseconds="2000"/>
+          <sql datasource="testDataSource">
+            <statement>DELETE FROM CUSTOMERS</statement>
+          </sql>
+        </sequential>
+      </parallel>
+    </actions>
+  </testcase>
+</spring:beans>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <description>Application context gets loaded via ContextLoaderListener on server startup</description>
+
+  <context:annotation-config/>
+
+  <bean id="citrusHandlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+    <property name="interceptors">
+      <list>
+        <ref bean="citrusHandlerInterceptor"/>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="citrusLoggingInterceptor" class="org.citrusframework.http.interceptor.LoggingHandlerInterceptor"/>
+  <bean id="citrusHandlerInterceptor" class="org.citrusframework.http.interceptor.DelegatingHandlerInterceptor"/>
+
+  <bean id="citrusMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <property name="messageConverters">
+      <util:list id="converters">
+        <ref bean="citrusHttpMessageConverter"/>
+      </util:list>
+    </property>
+  </bean>
+
+  <!-- Message converter for multiple media types -->
+  <bean id="citrusHttpMessageConverter" class="org.citrusframework.http.message.DelegatingHttpEntityMessageConverter"/>
+
+  <!-- Default controller for handling incoming requests messages -->
+  <bean id="citrusHttpMessageController" class="org.citrusframework.http.controller.HttpMessageController"/>
+
+</beans>
