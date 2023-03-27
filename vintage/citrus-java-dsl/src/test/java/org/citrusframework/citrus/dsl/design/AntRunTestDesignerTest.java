@@ -34,7 +34,7 @@ public class AntRunTestDesignerTest extends UnitTestSupport {
         MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
-                antrun("com/consol/ant/build.xml")
+                antrun("org/citrusframework/ant/build.xml")
                     .target("doBuild");
             }
         };
@@ -47,7 +47,7 @@ public class AntRunTestDesignerTest extends UnitTestSupport {
 
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
-        Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
+        Assert.assertEquals(action.getBuildFilePath(), "org/citrusframework/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
     }
 
@@ -56,7 +56,7 @@ public class AntRunTestDesignerTest extends UnitTestSupport {
         MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
-                antrun("com/consol/ant/build.xml")
+                antrun("org/citrusframework/ant/build.xml")
                     .targets("prepare", "test", "release");
             }
         };
@@ -69,7 +69,7 @@ public class AntRunTestDesignerTest extends UnitTestSupport {
 
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
-        Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
+        Assert.assertEquals(action.getBuildFilePath(), "org/citrusframework/ant/build.xml");
         Assert.assertNull(action.getTarget());
         Assert.assertEquals(action.getTargets(), "prepare,test,release");
     }
@@ -79,7 +79,7 @@ public class AntRunTestDesignerTest extends UnitTestSupport {
         MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
-                antrun("com/consol/ant/build.xml")
+                antrun("org/citrusframework/ant/build.xml")
                     .target("doBuild")
                     .property("name", "MyBuildTest")
                     .property("filePath", "/home/sayHello.txt");
@@ -94,7 +94,7 @@ public class AntRunTestDesignerTest extends UnitTestSupport {
 
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
-        Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
+        Assert.assertEquals(action.getBuildFilePath(), "org/citrusframework/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
         Assert.assertEquals(action.getProperties().size(), 2L);
         Assert.assertEquals(action.getProperties().getProperty("name"), "MyBuildTest");
@@ -106,7 +106,7 @@ public class AntRunTestDesignerTest extends UnitTestSupport {
         MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
-                antrun("com/consol/ant/build.xml")
+                antrun("org/citrusframework/ant/build.xml")
                     .target("doBuild")
                     .propertyFile("/ant/build.properties");
             }
@@ -120,7 +120,7 @@ public class AntRunTestDesignerTest extends UnitTestSupport {
 
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
-        Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
+        Assert.assertEquals(action.getBuildFilePath(), "org/citrusframework/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
         Assert.assertEquals(action.getProperties().size(), 0L);
         Assert.assertEquals(action.getPropertyFilePath(), "/ant/build.properties");
@@ -133,7 +133,7 @@ public class AntRunTestDesignerTest extends UnitTestSupport {
         MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
-                antrun("com/consol/ant/build.xml")
+                antrun("org/citrusframework/ant/build.xml")
                     .target("doBuild")
                     .listener(buildListener);
             }
