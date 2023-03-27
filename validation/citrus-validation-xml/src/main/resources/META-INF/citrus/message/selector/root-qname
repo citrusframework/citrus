@@ -1,1 +1,1 @@
-type=com.consol.citrus.message.selector.RootQNameMessageSelector$Factory
+type=org.citrusframework.citrus.message.selector.RootQNameMessageSelector$Factory

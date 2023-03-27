@@ -1,1 +1,1 @@
-type=com.consol.citrus.config.xml.XpathDataDictionaryParser
+type=org.citrusframework.citrus.config.xml.XpathDataDictionaryParser

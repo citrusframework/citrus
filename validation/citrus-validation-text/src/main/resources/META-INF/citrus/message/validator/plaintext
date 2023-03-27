@@ -1,2 +1,2 @@
 name=defaultPlaintextMessageValidator
-type=com.consol.citrus.validation.text.PlainTextMessageValidator
+type=org.citrusframework.citrus.validation.text.PlainTextMessageValidator

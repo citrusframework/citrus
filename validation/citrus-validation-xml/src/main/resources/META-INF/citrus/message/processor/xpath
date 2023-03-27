@@ -1,1 +1,1 @@
-type=com.consol.citrus.validation.xml.XpathMessageProcessor$Builder
+type=org.citrusframework.citrus.validation.xml.XpathMessageProcessor$Builder

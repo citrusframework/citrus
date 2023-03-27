@@ -1,1 +1,1 @@
-type=com.consol.citrus.functions.core.EscapeXmlFunction
+type=org.citrusframework.citrus.functions.core.EscapeXmlFunction
