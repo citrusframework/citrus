@@ -3,7 +3,7 @@
           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
           version="3.0">
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-selenium-config.xsd">
+  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-selenium-config.xsd">
     <globalBindings>
       <xjc:javaType
               name="java.util.Calendar"
@@ -16,16 +16,16 @@
       <xjc:simple />
     </globalBindings>
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.selenium"/>
+      <package name="org.citrusframework.citrus.model.config.selenium"/>
       <nameXmlTransform>
         <elementName prefix="Selenium" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-selenium-testcase.xsd">
+  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-selenium-testcase.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.testcase.selenium"/>
+      <package name="org.citrusframework.citrus.model.testcase.selenium"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>

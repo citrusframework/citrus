@@ -3,7 +3,7 @@
           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
           version="3.0">
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-docker-config.xsd">
+  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-docker-config.xsd">
     <globalBindings>
       <xjc:javaType
               name="java.util.Calendar"
@@ -16,16 +16,16 @@
       <xjc:simple />
     </globalBindings>
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.docker"/>
+      <package name="org.citrusframework.citrus.model.config.docker"/>
       <nameXmlTransform>
         <elementName prefix="Docker" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-docker-testcase.xsd">
+  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-docker-testcase.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.testcase.docker"/>
+      <package name="org.citrusframework.citrus.model.testcase.docker"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>

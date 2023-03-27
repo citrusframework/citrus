@@ -83,8 +83,8 @@
                 <phase>generate-resources</phase>
                 <configuration>
                   <sources>
-                    <source>src/main/java/com/consol/citrus/sql/xml/Sql.java</source>
-                    <source>src/main/java/com/consol/citrus/sql/xml/Plsql.java</source>
+                    <source>src/main/java/org/citrusframework/citrus/sql/xml/Sql.java</source>
+                    <source>src/main/java/org/citrusframework/citrus/sql/xml/Plsql.java</source>
                   </sources>
                   <outputDirectory>${project.build.directory}/schemas</outputDirectory>
                 </configuration>

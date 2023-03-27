@@ -1,1 +1,1 @@
-type=com.consol.citrus.kubernetes.endpoint.KubernetesEndpointComponent
+type=org.citrusframework.citrus.kubernetes.endpoint.KubernetesEndpointComponent
