@@ -62,8 +62,8 @@ public class HtmlTestDocsGeneratorTest {
         Assert.assertTrue(docContent.contains("This is a sample test"));
         Assert.assertTrue(docContent.contains("src" + File.separator + "test" +
                                                         File.separator + "resources" +
-                                                        File.separator + "com" + 
-                                                        File.separator + "consol" + 
+                                                        File.separator + "org" +
+                                                        File.separator + "citrusframework" +
                                                         File.separator + "citrus" + 
                                                         File.separator + "sample" +
                                                         File.separator + "SampleIT.xml\">SampleIT.xml</a>"));
@@ -91,8 +91,8 @@ public class HtmlTestDocsGeneratorTest {
         Assert.assertTrue(docContent.contains("This is a sample test"));
         Assert.assertTrue(docContent.contains("src" + File.separator + "test" +
                                                         File.separator + "resources" +
-                                                        File.separator + "com" + 
-                                                        File.separator + "consol" + 
+                                                        File.separator + "org" +
+                                                        File.separator + "citrusframework" +
                                                         File.separator + "citrus" + 
                                                         File.separator + "sample" +
                                                         File.separator + "SampleIT.xml\">SampleIT.xml</a>"));
