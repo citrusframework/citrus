@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.testng;
+package org.citrusframework.citrus.testng;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactory;
+import org.citrusframework.citrus.context.TestContext;
+import org.citrusframework.citrus.context.TestContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;

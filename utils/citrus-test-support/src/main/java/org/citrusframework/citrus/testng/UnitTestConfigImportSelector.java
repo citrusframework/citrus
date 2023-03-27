@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.testng;
+package org.citrusframework.citrus.testng;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DeferredImportSelector;
@@ -31,7 +31,7 @@ import org.springframework.util.ClassUtils;
 public class UnitTestConfigImportSelector implements DeferredImportSelector {
     @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-        if (ClassUtils.isPresent("com.consol.citrus.config.ComponentLifecycleProcessor", getClass().getClassLoader())) {
+        if (ClassUtils.isPresent("org.citrusframework.citrus.config.ComponentLifecycleProcessor", getClass().getClassLoader())) {
             return new String[]{
                     DefaultUnitTestConfig.class.getName(),
                     ComponentLifecycleConfig.class.getName()
@@ -44,7 +44,7 @@ public class UnitTestConfigImportSelector implements DeferredImportSelector {
     }
 
     @Configuration
-    @ImportResource(locations = "classpath:com/consol/citrus/context/citrus-unit-context.xml")
+    @ImportResource(locations = "classpath:org/citrusframework/citrus/context/citrus-unit-context.xml")
     public static class DefaultUnitTestConfig {
     }
 

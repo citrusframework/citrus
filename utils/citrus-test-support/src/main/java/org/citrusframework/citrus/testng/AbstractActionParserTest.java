@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.testng;
+package org.citrusframework.citrus.testng;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCase;
+import org.citrusframework.citrus.TestAction;
+import org.citrusframework.citrus.TestCase;
 import org.testng.Assert;
 
 /**

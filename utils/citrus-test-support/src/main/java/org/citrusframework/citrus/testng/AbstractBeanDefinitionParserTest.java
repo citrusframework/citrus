@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.testng;
+package org.citrusframework.citrus.testng;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
