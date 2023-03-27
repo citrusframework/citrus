@@ -1,2 +1,2 @@
 name=fooMock
-type=com.consol.citrus.spi.mocks.Foo
+type=org.citrusframework.citrus.spi.mocks.Foo

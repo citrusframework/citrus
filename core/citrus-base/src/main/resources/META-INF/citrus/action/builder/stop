@@ -1,1 +1,1 @@
-type=com.consol.citrus.actions.StopServerAction$Builder
+type=org.citrusframework.citrus.actions.StopServerAction$Builder

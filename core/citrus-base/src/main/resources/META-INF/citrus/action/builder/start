@@ -1,1 +1,1 @@
-type=com.consol.citrus.actions.StartServerAction$Builder
+type=org.citrusframework.citrus.actions.StartServerAction$Builder

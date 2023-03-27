@@ -1,1 +1,1 @@
-type=com.consol.citrus.actions.PurgeEndpointAction$Builder
+type=org.citrusframework.citrus.actions.PurgeEndpointAction$Builder

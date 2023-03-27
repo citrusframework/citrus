@@ -1,2 +1,2 @@
 name=barMock
-type=com.consol.citrus.spi.mocks.Bar
+type=org.citrusframework.citrus.spi.mocks.Bar

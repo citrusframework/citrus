@@ -1,1 +1,1 @@
-type=com.consol.citrus.actions.FailAction$Builder
+type=org.citrusframework.citrus.actions.FailAction$Builder

@@ -1,1 +1,1 @@
-type=com.consol.citrus.container.Conditional$Builder
+type=org.citrusframework.citrus.container.Conditional$Builder

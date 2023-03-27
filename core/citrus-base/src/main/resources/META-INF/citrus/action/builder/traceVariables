@@ -1,1 +1,1 @@
-type=com.consol.citrus.actions.TraceVariablesAction$Builder
+type=org.citrusframework.citrus.actions.TraceVariablesAction$Builder

@@ -1,1 +1,1 @@
-type=com.consol.citrus.actions.SendMessageAction$Builder
+type=org.citrusframework.citrus.actions.SendMessageAction$Builder
