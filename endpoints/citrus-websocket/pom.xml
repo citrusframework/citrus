@@ -28,7 +28,7 @@
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
           <sources>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-websocket-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-websocket-config.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>

@@ -28,8 +28,8 @@
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
           <sources>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-http-config.xsd</source>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-http-testcase.xsd</source>
+            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-http-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-http-testcase.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
@@ -185,7 +185,7 @@
                 <phase>generate-resources</phase>
                 <configuration>
                   <sources>
-                    <source>src/main/java/com/consol/citrus/http/xml/Http.java</source>
+                    <source>src/main/java/org/citrusframework/citrus/http/xml/Http.java</source>
                   </sources>
                   <outputDirectory>${project.build.directory}/schemas</outputDirectory>
                 </configuration>

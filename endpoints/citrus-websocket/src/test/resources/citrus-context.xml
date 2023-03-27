@@ -18,7 +18,7 @@
   </citrus:global-variables>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.citrus.report.MessageTracingTestListener"/>
 
   <citrus-websocket:server id="echoHttpServer"
                            port="12080"

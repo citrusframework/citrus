@@ -12,7 +12,7 @@
                          http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd">
 
   <import resource="classpath:citrus-activemq-context.xml"/>
-  <import resource="classpath:com/consol/citrus/service/hello-service-context.xml"/>
+  <import resource="classpath:org/citrusframework/citrus/service/hello-service-context.xml"/>
 
   <context:property-placeholder location="classpath:citrus.properties"
                                 ignore-unresolvable="true"/>
@@ -39,9 +39,9 @@
   </citrus:namespace-context>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.citrus.report.MessageTracingTestListener"/>
 
-  <bean id="soapMessageConverter" class="com.consol.citrus.jms.message.SoapJmsMessageConverter"/>
+  <bean id="soapMessageConverter" class="org.citrusframework.citrus.jms.message.SoapJmsMessageConverter"/>
 
   <!-- JMS message endpoints -->
   <citrus-jms:endpoint id="helloServiceJmsEndpoint"

@@ -1,1 +1,1 @@
-type=com.consol.citrus.mail.client.MailEndpointComponent
+type=org.citrusframework.citrus.mail.client.MailEndpointComponent

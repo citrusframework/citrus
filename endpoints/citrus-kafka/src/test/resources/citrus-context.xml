@@ -42,7 +42,7 @@
   </citrus:before-test>
 
   <!-- Test Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.citrus.report.MessageTracingTestListener"/>
 
   <!-- Embedded Kafka server with embedded Zookeeper -->
   <citrus-kafka:embedded-server id="embeddedKafkaServer"

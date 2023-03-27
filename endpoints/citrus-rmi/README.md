@@ -72,7 +72,7 @@ On the server side we define one to many remote interfaces and bind those in a r
                      host="localhost" 
                      port="1099"
                      binding="service/path/or/name"
-                     interface="com.consol.citrus.remote.SomeInterface"/>
+                     interface="org.citrusframework.citrus.remote.SomeInterface"/>
                     
 The server component connects to a registry for bindin the remote interface as service with given binding name. Clients 
 can then do a lookup for calling the remote service methods. Each method call is handled within the server and can be validated
@@ -101,7 +101,7 @@ XML DSL support is also available for RMI components and actions:
       <message>
         <payload>
             <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <remote>com.consol.citrus.remote.SomeInterface</remote>
+              <remote>org.citrusframework.citrus.remote.SomeInterface</remote>
               <method>someMethod</method>
               <args>
                 <arg value="Hello remote service!"/>

@@ -28,10 +28,10 @@
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
           <sources>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-ftp-config.xsd</source>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-sftp-config.xsd</source>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-scp-config.xsd</source>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-ftp-message.xsd</source>
+            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-ftp-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-sftp-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-scp-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-ftp-message.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>

@@ -1,2 +1,2 @@
-client=com.consol.citrus.ws.client.WebServiceClientBuilder
-server=com.consol.citrus.ws.server.WebServiceServerBuilder
+client=org.citrusframework.citrus.ws.client.WebServiceClientBuilder
+server=org.citrusframework.citrus.ws.server.WebServiceServerBuilder

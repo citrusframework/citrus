@@ -1,2 +1,2 @@
-client=com.consol.citrus.ssh.client.SshClientBuilder
-server=com.consol.citrus.ssh.server.SshServerBuilder
+client=org.citrusframework.citrus.ssh.client.SshClientBuilder
+server=org.citrusframework.citrus.ssh.server.SshServerBuilder

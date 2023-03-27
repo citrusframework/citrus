@@ -1,4 +1,4 @@
-async=com.consol.citrus.channel.ChannelEndpointBuilder
-asynchronous=com.consol.citrus.channel.ChannelEndpointBuilder
-sync=com.consol.citrus.channel.ChannelSyncEndpointBuilder
-synchronous=com.consol.citrus.channel.ChannelSyncEndpointBuilder
+async=org.citrusframework.citrus.channel.ChannelEndpointBuilder
+asynchronous=org.citrusframework.citrus.channel.ChannelEndpointBuilder
+sync=org.citrusframework.citrus.channel.ChannelSyncEndpointBuilder
+synchronous=org.citrusframework.citrus.channel.ChannelSyncEndpointBuilder

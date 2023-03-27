@@ -1,2 +1,2 @@
-client=com.consol.citrus.http.client.HttpClientBuilder
-server=com.consol.citrus.http.server.HttpServerBuilder
+client=org.citrusframework.citrus.http.client.HttpClientBuilder
+server=org.citrusframework.citrus.http.server.HttpServerBuilder

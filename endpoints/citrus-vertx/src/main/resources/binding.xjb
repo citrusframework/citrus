@@ -3,7 +3,7 @@
           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
           version="3.0">
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-vertx-config.xsd">
+  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-vertx-config.xsd">
     <globalBindings>
       <xjc:javaType
               name="java.util.Calendar"
@@ -16,7 +16,7 @@
       <xjc:simple />
     </globalBindings>
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.vertx"/>
+      <package name="org.citrusframework.citrus.model.config.vertx"/>
       <nameXmlTransform>
         <elementName prefix="Vertx" suffix="Model" />
       </nameXmlTransform>

@@ -1,1 +1,1 @@
-type=com.consol.citrus.ssh.client.SshEndpointComponent
+type=org.citrusframework.citrus.ssh.client.SshEndpointComponent

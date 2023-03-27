@@ -1,6 +1,6 @@
-async=com.consol.citrus.camel.endpoint.CamelEndpointBuilder
-asynchronous=com.consol.citrus.camel.endpoint.CamelEndpointBuilder
-inOnly=com.consol.citrus.camel.endpoint.CamelEndpointBuilder
-sync=com.consol.citrus.camel.endpoint.CamelSyncEndpointBuilder
-synchronous=com.consol.citrus.camel.endpoint.CamelSyncEndpointBuilder
-inOut=com.consol.citrus.camel.endpoint.CamelSyncEndpointBuilder
+async=org.citrusframework.citrus.camel.endpoint.CamelEndpointBuilder
+asynchronous=org.citrusframework.citrus.camel.endpoint.CamelEndpointBuilder
+inOnly=org.citrusframework.citrus.camel.endpoint.CamelEndpointBuilder
+sync=org.citrusframework.citrus.camel.endpoint.CamelSyncEndpointBuilder
+synchronous=org.citrusframework.citrus.camel.endpoint.CamelSyncEndpointBuilder
+inOut=org.citrusframework.citrus.camel.endpoint.CamelSyncEndpointBuilder

@@ -15,36 +15,36 @@
     <xjc:simple />
   </globalBindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-ftp-config.xsd">
+  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-ftp-config.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.ftp"/>
+      <package name="org.citrusframework.citrus.model.config.ftp"/>
       <nameXmlTransform>
         <elementName prefix="Ftp" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-sftp-config.xsd">
+  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-sftp-config.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.sftp"/>
+      <package name="org.citrusframework.citrus.model.config.sftp"/>
       <nameXmlTransform>
         <elementName prefix="Sftp" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-scp-config.xsd">
+  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-scp-config.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.config.scp"/>
+      <package name="org.citrusframework.citrus.model.config.scp"/>
       <nameXmlTransform>
         <elementName prefix="Scp" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="com/consol/citrus/schema/citrus-ftp-message.xsd">
+  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-ftp-message.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.ftp.model"/>
+      <package name="org.citrusframework.citrus.ftp.model"/>
     </schemaBindings>
   </bindings>
 </bindings>
