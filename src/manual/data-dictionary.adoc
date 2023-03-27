@@ -29,7 +29,7 @@ Alternatively the key-value mappings can be defined in an external file and a re
 [source,xml]
 ----
 <citrus:xml-data-dictionary id="nodeMappingDataDictionary">
-  <citrus:mapping-file path="classpath:com/consol/citrus/sample.dictionary"/>
+  <citrus:mapping-file path="classpath:org/citrusframework/citrus/sample.dictionary"/>
 </citrus:xml-data-dictionary>
 ----
 
@@ -157,7 +157,7 @@ You can overwrite the dictionary scope. For instance in order to use an explicit
 [source,xml]
 ----
 <citrus:xml-data-dictionary id="specialDataDictionary" global-scope="false">
-  <citrus:mapping-file path="classpath:com/consol/citrus/sample.dictionary"/>
+  <citrus:mapping-file path="classpath:org/citrusframework/citrus/sample.dictionary"/>
 </citrus:xml-data-dictionary>
 ----
 

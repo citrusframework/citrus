@@ -92,8 +92,8 @@ public void transformTest() {
     echo("${result}");
     
     transform()
-        .source(new ClassPathResource("com/consol/citrus/actions/transform-source.xml"))
-        .xslt(new ClassPathResource("com/consol/citrus/actions/transform.xslt"))
+        .source(new ClassPathResource("org/citrusframework/citrus/actions/transform-source.xml"))
+        .xslt(new ClassPathResource("org/citrusframework/citrus/actions/transform.xslt"))
         .result("result");
     
     echo("${result}");
@@ -124,8 +124,8 @@ public void transformTest() {
     echo("${result}");
 
     transform(action ->
-        action.source(new ClassPathResource("com/consol/citrus/actions/transform-source.xml"))
-              .xslt(new ClassPathResource("com/consol/citrus/actions/transform.xslt"))
+        action.source(new ClassPathResource("org/citrusframework/citrus/actions/transform-source.xml"))
+              .xslt(new ClassPathResource("org/citrusframework/citrus/actions/transform.xslt"))
               .result("result"));
 
     echo("${result}");

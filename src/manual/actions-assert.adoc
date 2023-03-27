@@ -8,7 +8,7 @@ Citrus test actions fail with Java exceptions and error messages. This gives you
 ----
 <testcase name="assertFailureTest">
     <actions>
-        <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
+        <assert exception="org.citrusframework.citrus.exceptions.CitrusRuntimeException"
                    message="Unknown variable ${date}">
             <when>
                 <echo>
@@ -25,7 +25,7 @@ Citrus test actions fail with Java exceptions and error messages. This gives you
 ----
 @CitrusTest
 public void assertTest() {
-    assertException().exception(com.consol.citrus.exceptions.CitrusRuntimeException.class)
+    assertException().exception(org.citrusframework.citrus.exceptions.CitrusRuntimeException.class)
                      .message("Unknown variable ${date}")
                 .when(echo("Current date is: ${date}"));
 }

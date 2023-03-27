@@ -136,7 +136,7 @@ You simply define the message selector as a new Spring bean in the Citrus applic
 [source,xml]
 ----
 <bean id="specialMessageSelector"
-    class="com.consol.citrus.special.TimeBasedMessageSelector"/>
+    class="org.citrusframework.citrus.special.TimeBasedMessageSelector"/>
 ----
 
 Now let us have a look at how you reference the selector in your test case:

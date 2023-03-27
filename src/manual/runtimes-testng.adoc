@@ -11,7 +11,7 @@ project.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-testng</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -25,11 +25,11 @@ See the following sample showing how to write a Citrus test on top of TestNG:
 .TestNG Citrus test
 [source,java]
 ----
-package com.consol.citrus.samples;
+package org.citrusframework.citrus.samples;
 
 import org.testng.annotations.Test;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import org.citrusframework.citrus.annotations.CitrusTest;
+import org.citrusframework.citrus.testng.TestNGCitrusSupport;
 
 @Test
 public class Simple_IT extends TestNGCitrusSupport {

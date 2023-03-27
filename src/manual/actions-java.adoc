@@ -7,7 +7,7 @@ The action syntax looks like follows:
 
 [source,xml]
 ----
-<java class="com.consol.citrus.test.util.InvocationDummy">
+<java class="org.citrusframework.citrus.test.util.InvocationDummy">
     <constructor>
         <argument type="">Test Invocation</argument>
     </constructor>
@@ -16,7 +16,7 @@ The action syntax looks like follows:
     </method>
 </java>
 
-<java class="com.consol.citrus.test.util.InvocationDummy">
+<java class="org.citrusframework.citrus.test.util.InvocationDummy">
     <constructor>
         <argument type="">Test Invocation</argument>
     </constructor>
@@ -27,7 +27,7 @@ The action syntax looks like follows:
     </method>
 </java>
     
-<java class="com.consol.citrus.test.util.InvocationDummy">
+<java class="org.citrusframework.citrus.test.util.InvocationDummy">
     <method name="main">
         <argument type="String[]">4,Test,true </argument>
     </method>
@@ -54,7 +54,7 @@ Besides instantiating a fully new object instance for a class how about reusing 
     </method>
 </java>
 
-<bean id="invocationDummy" class="com.consol.citrus.test.util.InvocationDummy"/>
+<bean id="invocationDummy" class="org.citrusframework.citrus.test.util.InvocationDummy"/>
     
 ----
 

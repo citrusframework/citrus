@@ -14,7 +14,7 @@ Now we have a look at the opportunity to add custom test actions to the test cas
 </testcase>
 ----
 
-The generic <action> element references Spring beans that implement the Java interface *_com.consol.citrus.TestAction_* . This is a very fast way to add your own action implementations to a Citrus test case. This way you can easily implement your own actions in Java and include them into the test case.
+The generic <action> element references Spring beans that implement the Java interface *_org.citrusframework.citrus.TestAction_* . This is a very fast way to add your own action implementations to a Citrus test case. This way you can easily implement your own actions in Java and include them into the test case.
 
 In the example above the called actions are special database cleanup implementations. The actions are defined as Spring beans in the Citrus configuration and get referenced by their bean name or id.
 
@@ -29,8 +29,8 @@ The Spring application context holds your custom bean implementations. You can s
 
 [source,java]
 ----
-import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.context.TestContext;
+import org.citrusframework.citrus.actions.AbstractTestAction;
+import org.citrusframework.citrus.context.TestContext;
 
 public class SpecialDatabaseCleanupAction extends AbstractTestAction {
 
@@ -47,7 +47,7 @@ public class SpecialDatabaseCleanupAction extends AbstractTestAction {
 }
 ----
 
-All you need to do in your Java class is to implement the Citrus *_com.consol.citrus.TestAction_* interface. The abstract class *_com.consol.citrus.actions.AbstractTestAction_* may help you to start with your custom test action implementation as it provides basic method implementations so you just have to implement the *_doExecute()_* method.
+All you need to do in your Java class is to implement the Citrus *_org.citrusframework.citrus.TestAction_* interface. The abstract class *_org.citrusframework.citrus.actions.AbstractTestAction_* may help you to start with your custom test action implementation as it provides basic method implementations so you just have to implement the *_doExecute()_* method.
 
 When using the Java test case DSL you are also quite comfortable with including your custom test actions.
 

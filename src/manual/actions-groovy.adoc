@@ -11,7 +11,7 @@ You need to add the module to your project to use the functionality.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-groovy</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -37,7 +37,7 @@ Let's have a look at some examples in order to understand the possible Groovy co
     <groovy>
         println 'The variable is: ${time}'
     </groovy>
-    <groovy resource="classpath:com/consol/citrus/script/example.groovy"/>
+    <groovy resource="classpath:org/citrusframework/citrus/script/example.groovy"/>
   </actions>
 </testcase>
 ----
@@ -50,7 +50,7 @@ public void groovyTest() {
     groovy("println 'Hello Citrus'");
     groovy("println 'The variable is: ${time}'");
 
-    groovy(new ClassPathResource("com/consol/citrus/script/example.groovy"));
+    groovy(new ClassPathResource("org/citrusframework/citrus/script/example.groovy"));
 }
 ----
 
@@ -62,7 +62,7 @@ public void groovyTest() {
     groovy(action -> action.script("println 'Hello Citrus'"));
     groovy(action -> action.script("println 'The variable is: ${time}'"));
 
-    groovy(action -> action.script(new ClassPathResource("com/consol/citrus/script/example.groovy")));
+    groovy(action -> action.script(new ClassPathResource("org/citrusframework/citrus/script/example.groovy")));
 }
 ----
 
@@ -90,10 +90,10 @@ NOTE: The implicit TestContext access that was shown in the previous sample work
 
 [source,java]
 ----
-import com.consol.citrus.*
-import com.consol.citrus.variable.*
-import com.consol.citrus.context.TestContext
-import com.consol.citrus.script.GroovyAction.ScriptExecutor
+import org.citrusframework.citrus.*
+import org.citrusframework.citrus.variable.*
+import org.citrusframework.citrus.context.TestContext
+import org.citrusframework.citrus.script.GroovyAction.ScriptExecutor
 
 public class GScript implements ScriptExecutor {
     public void execute(TestContext context) {
@@ -131,10 +131,10 @@ The next example deals with advanced Groovy code and writing whole classes. We w
   <actions>
     <groovy>
       <![CDATA[
-        import com.consol.citrus.*
-        import com.consol.citrus.variable.*
-        import com.consol.citrus.context.TestContext
-        import com.consol.citrus.script.GroovyAction.ScriptExecutor
+        import org.citrusframework.citrus.*
+        import org.citrusframework.citrus.variable.*
+        import org.citrusframework.citrus.context.TestContext
+        import org.citrusframework.citrus.script.GroovyAction.ScriptExecutor
 
         public class GScript implements ScriptExecutor {
             public void execute(TestContext context) {

@@ -10,7 +10,7 @@ as a Maven dependency.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-validation-binary</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -40,7 +40,7 @@ public BinaryMessageValidator defaultBinaryMessageValidator() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultBinaryMessageValidator" class="com.consol.citrus.validation.text.BinaryMessageValidator"/>
+<bean id="defaultBinaryMessageValidator" class="org.citrusframework.citrus.validation.text.BinaryMessageValidator"/>
 ----
 
 You can use the binary message type in a receive action in order to enable this stream comparison during validation.
@@ -114,7 +114,7 @@ public BinaryBase64MessageValidator defaultBinaryBase64MessageValidator() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultBinaryBase64MessageValidator" class="com.consol.citrus.validation.text.BinaryBase64MessageValidator"/>
+<bean id="defaultBinaryBase64MessageValidator" class="org.citrusframework.citrus.validation.text.BinaryBase64MessageValidator"/>
 ----
 
 In the test case receiving action we tell Citrus to use binary base64 message validation.

@@ -12,7 +12,7 @@ as a Maven dependency.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-validation-xml</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -33,7 +33,7 @@ public DomXmlMessageValidator defaultXmlMessageValidator() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultXmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
+<bean id="defaultXmlMessageValidator" class="org.citrusframework.citrus.validation.xml.DomXmlMessageValidator"/>
 ----
 
 The default XML message validator is very powerful when it comes to compare XML structures. The validator supports namespaces
@@ -63,7 +63,7 @@ to using external file resources in Java when dealing with large complex message
 public void externalBodyResourceTest() {
     receive("someEndpoint")
         .message()
-        .body(new ClassPathResource("com/consol/citrus/message/data/TestRequest.xml"))
+        .body(new ClassPathResource("org/citrusframework/citrus/message/data/TestRequest.xml"))
         .header("Operation", "sayHello")
         .header("MessageId", "${messageId}");
 }
@@ -74,7 +74,7 @@ public void externalBodyResourceTest() {
 ----
 <receive endpoint="someEndpoint">
   <message>
-    <payload file="classpath:com/consol/citrus/message/data/TestRequest.xml"/>
+    <payload file="classpath:org/citrusframework/citrus/message/data/TestRequest.xml"/>
   </message>
 </receive>
 ----
@@ -643,7 +643,7 @@ public XmlConfigurer xmlConfigurer() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="xmlConfigurer" class="com.consol.citrus.xml.XmlConfigurer">
+<bean id="xmlConfigurer" class="org.citrusframework.citrus.xml.XmlConfigurer">
     <property name="parseSettings">
         <map>
             <entry key="validate-if-schema" value="false" value-type="java.lang.Boolean"/>
@@ -1033,7 +1033,7 @@ public SimpleXsdSchema helloSchema() {
 </citrus:schema-repository>
 
 <bean id="schemaMappingStrategy"
-    class="com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy"/>
+    class="org.citrusframework.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy"/>
 ----
 
 The *sayHello.xsd* schema file defines a target namespace (http://consol.de/schemas/sayHello.xsd)[http://consol.de/schemas/sayHello.xsd)]:
@@ -1117,7 +1117,7 @@ public SimpleXsdSchema goodbyeSchema() {
 </citrus:schema-repository>
 
 <bean id="schemaMappingStrategy"
-    class="com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy">
+    class="org.citrusframework.citrus.xml.schema.RootQNameSchemaMappingStrategy">
   <property name="mappings">
     <map>
       <entry key="HelloRequest" value="helloSchema"/>
@@ -1184,17 +1184,17 @@ public SchemaMappingStrategyChain schemaMappingStrategy() {
 </citrus:schema-repository>
 
 <bean id="schemaMappingStrategy"
-    class="com.consol.citrus.xml.schema.SchemaMappingStrategyChain">
+    class="org.citrusframework.citrus.xml.schema.SchemaMappingStrategyChain">
   <property name="strategies">
     <list>
-      <bean class="com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy">
+      <bean class="org.citrusframework.citrus.xml.schema.RootQNameSchemaMappingStrategy">
         <property name="mappings">
           <map>
             <entry key="HelloRequest" value="helloSchema"/>
           </map>
         </property>
       </bean>
-      <bean class="com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy"/>
+      <bean class="org.citrusframework.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy"/>
     </list>
   </property>
 </bean>
@@ -1265,7 +1265,7 @@ as well.
 ----
 receive("someEndpoint")
     .message()
-    .body("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">\n" +
+    .body("<!DOCTYPE root SYSTEM \"org/citrusframework/citrus/validation/example.dtd\">\n" +
             "<root>\n" +
                 "<message>\n" +
                     "<text>Hello from Citrus!</text>\n" +
@@ -1281,7 +1281,7 @@ receive("someEndpoint")
     <message schema-validation="false">
         <data>
         <![CDATA[
-            <!DOCTYPE root SYSTEM "com/consol/citrus/validation/example.dtd">
+            <!DOCTYPE root SYSTEM "org/citrusframework/citrus/validation/example.dtd">
             <root>
                 <message>
                     <text>Hello from Citrus!</text>
@@ -1333,7 +1333,7 @@ public XhtmlMessageValidator defaultXhtmlMessageValidator() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultXhtmlMessageValidator" class="com.consol.citrus.validation.xhtml.XhtmlMessageValidator"/>
+<bean id="defaultXhtmlMessageValidator" class="org.citrusframework.citrus.validation.xhtml.XhtmlMessageValidator"/>
 ----
 
 Now you can use the XHTML message validation in your test case.

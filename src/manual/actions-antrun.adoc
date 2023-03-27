@@ -13,7 +13,7 @@ See this basic Ant run example to see how it works within your test case:
         <variable name="today" value="citrus:currentDate()"/>
     </variables>
     <actions>
-        <ant build-file="classpath:com/consol/citrus/actions/build.xml">
+        <ant build-file="classpath:org/citrusframework/citrus/actions/build.xml">
             <execute target="sayHello"/>
             <properties>
                 <property name="date" value="${today}"/>
@@ -31,7 +31,7 @@ See this basic Ant run example to see how it works within your test case:
 public void antRunTest() {
     variable("today", "citrus:currentDate()");
     
-    antrun("classpath:com/consol/citrus/actions/build.xml")
+    antrun("classpath:org/citrusframework/citrus/actions/build.xml")
         .target("sayHello")
         .property("date", "${today}")
         .property("welcomeText", "$Hello!");
@@ -45,7 +45,7 @@ public void antRunTest() {
 public void antRunTest() {
     variable("today", "citrus:currentDate()");
 
-    antrun(action -> action.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+    antrun(action -> action.buildFilePath("classpath:org/citrusframework/citrus/actions/build.xml")
                 .target("sayHello")
                 .property("date", "${today}")
                 .property("welcomeText", "$Hello!"));
@@ -81,7 +81,7 @@ You can also call multiple targets within one single build run by using a comma 
         <variable name="today" value="citrus:currentDate()"/>
     </variables>
     <actions>
-        <ant build-file="classpath:com/consol/citrus/actions/build.xml">
+        <ant build-file="classpath:org/citrusframework/citrus/actions/build.xml">
             <execute targets="sayHello,sayGoodbye"/>
             <properties>
                 <property name="date" value="${today}"/>
@@ -98,7 +98,7 @@ You can also call multiple targets within one single build run by using a comma 
 public void antRunTest() {
     variable("today", "citrus:currentDate()");
     
-    antrun("classpath:com/consol/citrus/actions/build.xml")
+    antrun("classpath:org/citrusframework/citrus/actions/build.xml")
         .targets("sayHello", "sayGoodbye")
         .property("date", "${today}");
 }
@@ -111,7 +111,7 @@ public void antRunTest() {
 public void antRunTest() {
     variable("today", "citrus:currentDate()");
 
-    antrun(action -> action.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+    antrun(action -> action.buildFilePath("classpath:org/citrusframework/citrus/actions/build.xml")
                 .targets("sayHello", "sayGoodbye")
                 .property("date", "${today}"));
 }
@@ -126,10 +126,10 @@ In addition to that you can also define a custom build listener. The build liste
 ----
 <testcase name="AntRunTest">
     <actions>
-        <ant build-file="classpath:com/consol/citrus/actions/build.xml" 
+        <ant build-file="classpath:org/citrusframework/citrus/actions/build.xml"
                 build-listener="customBuildListener">
             <execute target="sayHello"/>
-            <properties file="classpath:com/consol/citrus/actions/build.properties"/>
+            <properties file="classpath:org/citrusframework/citrus/actions/build.properties"/>
         </ant>
     </actions>
 </testcase>
@@ -143,9 +143,9 @@ private BuildListener customBuildListener;
 
 @CitrusTest
 public void antRunTest() {
-    antrun("classpath:com/consol/citrus/actions/build.xml")
+    antrun("classpath:org/citrusframework/citrus/actions/build.xml")
         .target("sayHello")
-        .propertyFile("classpath:com/consol/citrus/actions/build.properties")
+        .propertyFile("classpath:org/citrusframework/citrus/actions/build.properties")
         .listener(customBuildListener);
 }
 ----
@@ -158,9 +158,9 @@ private BuildListener customBuildListener;
 
 @CitrusTest
 public void antRunTest() {
-    antrun(action -> action.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+    antrun(action -> action.buildFilePath("classpath:org/citrusframework/citrus/actions/build.xml")
             .target("sayHello")
-            .propertyFile("classpath:com/consol/citrus/actions/build.properties")
+            .propertyFile("classpath:org/citrusframework/citrus/actions/build.properties")
             .listener(customBuildListener));
 }
 ----

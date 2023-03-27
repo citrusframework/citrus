@@ -116,8 +116,8 @@ use of the message endpoint definition and reference this instance. The same tes
 ----
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
+import org.citrusframework.citrus.annotations.CitrusTest;
+import org.citrusframework.citrus.dsl.testng.TestNGCitrusTestDesigner;
 
 @Test
 public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {

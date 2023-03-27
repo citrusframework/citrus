@@ -12,7 +12,7 @@ To enable the JDBC support for your test project, you'll have to add the followi
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-jdbc</artifactId>
   <version>${citrus.version}</version>
   <scope>test</scope>
@@ -25,7 +25,7 @@ To enable the JDBC support for your test project, you'll have to add the followi
 The Citrus-JDBC-Driver is a JDBC conform driver that realizes the communication with the Citrus-JDBC-Server. To be able
 to use Citrus-JDBC within a CI/CD setup, we recommend to ensure that your software is able to exchange the JDBC driver
 by configuration. The Citrus-JDBC-Driver is available on maven central under
-`com.consol.citrus.citrus-db-driver`. After the driver has been downloaded and configured to be used by your
+`org.citrusframework.citrus.citrus-db-driver`. After the driver has been downloaded and configured to be used by your
 application, please make sure that the driver configuration matches the Citrus-JDBC-Server configuration in your
 tests.
 
@@ -39,7 +39,7 @@ tests.
     </systemProperty>
     <systemProperty>
       <name>todo.jdbc.driverClassName</name>
-      <value>com.consol.citrus.db.driver.JdbcDriver</value>
+      <value>org.citrusframework.citrus.db.driver.JdbcDriver</value>
     </systemProperty>
     <systemProperty>
       <name>todo.jdbc.url</name>

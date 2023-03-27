@@ -23,7 +23,7 @@ dependency to your project.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-cucumber</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -48,7 +48,7 @@ comfortable way to specify a custom object factory is to add this property to th
 .cucumber.properties
 [source,properties]
 ----
-cucumber.object-factory=com.consol.citrus.cucumber.backend.CitrusObjectFactory
+cucumber.object-factory=org.citrusframework.citrus.cucumber.backend.CitrusObjectFactory
 ----
 
 This special object factory takes care on creating all step definition instances. The object factory is able to inject
@@ -67,7 +67,7 @@ implementation.
 .cucumber.properties
 [source,properties]
 ----
-cucumber.object-factory=com.consol.citrus.cucumber.backend.spring.CitrusSpringObjectFactory
+cucumber.object-factory=org.citrusframework.citrus.cucumber.backend.spring.CitrusSpringObjectFactory
 ----
 
 [[cucumber-options]]
@@ -81,14 +81,14 @@ implementation from cucumber.
 ----
 @RunWith(Cucumber.class)
 @CucumberOptions(
-  plugin = { "pretty", "com.consol.citrus.cucumber.CitrusReporter" } )
+  plugin = { "pretty", "org.citrusframework.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 }
 ----
 
 The test case above uses the *Cucumber* JUnit test runner. In addition to that we give some options to the Cucumber execution.
 In case you want to have the usual Citrus test results reported you can add the special Citrus reporter implementation
-`com.consol.citrus.cucumber.CitrusReporter`. This class is responsible for printing the Citrus test summary. This reporter
+`org.citrusframework.citrus.cucumber.CitrusReporter`. This class is responsible for printing the Citrus test summary. This reporter
 extends the default Cucumber reporter so the default Cucumber report summary is also printed to the console.
 
 That completes the JUnit class configuration. Now we are able to add feature stories and step definitions to the package
@@ -201,7 +201,7 @@ options specific to Citrus:
 ----
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    plugin = { "pretty", "com.consol.citrus.cucumber.CitrusReporter" } )
+    plugin = { "pretty", "org.citrusframework.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 }
 ----
@@ -324,7 +324,7 @@ another object factory implementation that also support Cucumber Spring features
 .cucumber.properties
 [source,properties]
 ----
-cucumber.object-factory=com.consol.citrus.cucumber.backend.spring.CitrusSpringObjectFactory
+cucumber.object-factory=org.citrusframework.citrus.cucumber.backend.spring.CitrusSpringObjectFactory
 ----
 
 Now we are ready to add *@Autowired* Spring bean dependency injection to step definition classes:
@@ -413,7 +413,7 @@ After that you need to include the glue code package in your test class like thi
 @RunWith(Cucumber.class)
 @CucumberOptions(
     extraGlue = { "org.citrusframework.yaks.standard" },
-    plugin = { "pretty", "com.consol.citrus.cucumber.CitrusReporter" } )
+    plugin = { "pretty", "org.citrusframework.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }

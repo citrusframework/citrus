@@ -31,7 +31,7 @@ in your Maven pom.xml as a dependency like follows.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-base</artifactId>
   <version>${citrus.version}</version>
   <scope>test</scope>
@@ -44,7 +44,7 @@ in your Maven pom.xml as a dependency like follows.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-http</artifactId>
   <version>${citrus.version}</version>
   <scope>test</scope>
@@ -55,7 +55,7 @@ in your Maven pom.xml as a dependency like follows.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-testng</artifactId>
   <version>${citrus.version}</version>
   <scope>test</scope>
@@ -70,7 +70,7 @@ add the Spring support in Citrus.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-spring</artifactId>
   <version>${citrus.version}</version>
   <scope>test</scope>
@@ -84,12 +84,12 @@ as creating new tests from command line.
 [source,xml]
 ----
 <plugin>
-  <groupId>com.consol.citrus.mvn</groupId>
+  <groupId>org.citrusframework.citrus.mvn</groupId>
   <artifactId>citrus-maven-plugin</artifactId>
   <version>${citrus.version}</version>
   <configuration>
     <author>Donald Duck</author>
-    <targetPackage>com.consol.citrus</targetPackage>
+    <targetPackage>org.citrusframework.citrus</targetPackage>
   </configuration>
 </plugin>
 ----
@@ -165,7 +165,7 @@ and the project version.
 [source,groovy]
 ----
 rootProject.name = 'citrus-sample-gradle'
-group 'com.consol.citrus.samples'
+group 'org.citrusframework.citrus.samples'
 version '${citrus.version}'
 ----
 
@@ -187,8 +187,8 @@ to add the ConSol Labs snapshot repository which is optional. Now lets move on w
 [source,groovy]
 ----
 dependencies {
-    testCompile group: 'com.consol.citrus', name: 'citrus-base', version: '${citrus.version}'
-    testCompile group: 'com.consol.citrus', name: 'citrus-http', version: '${citrus.version}'
+    testCompile group: 'org.citrusframework.citrus', name: 'citrus-base', version: '${citrus.version}'
+    testCompile group: 'org.citrusframework.citrus', name: 'citrus-http', version: '${citrus.version}'
     testCompile group: 'org.testng', name: 'testng', version: '6.11'
     [...]
 }

@@ -10,7 +10,7 @@ NOTE: The JMX components in Citrus are kept in a separate Maven module. So you s
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-jmx</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -165,7 +165,7 @@ Last not least we are able to access managed bean operations.
     <message>
         <payload>
             <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
-              <mbean>com.consol.citrus.jmx.mbean:type=HelloBean</mbean>
+              <mbean>org.citrusframework.citrus.jmx.mbean:type=HelloBean</mbean>
               <operation name="sayHello">
                 >parameter>
                   >param type="java.lang.String" value="Hello JMX!"/>
@@ -183,7 +183,7 @@ Last not least we are able to access managed bean operations.
 @CitrusTest
 public void jmxClientTest() {
     send(jmxClient)
-        .message(JmxMessage.invocation("com.consol.citrus.jmx.mbean:type=HelloBean")
+        .message(JmxMessage.invocation("org.citrusframework.citrus.jmx.mbean:type=HelloBean")
             .operation("sayHello")
             .parameter("Hello JMX!"));
 }
@@ -203,8 +203,8 @@ The server side is always a little bit more tricky because we need to simulate c
 <citrus-jmx:server id="jmxServer"
       server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
     <citrus-jmx:mbeans>
-        <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean"/>
-        <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.NewsBean" objectDomain="com.consol.citrus.news" objectName="name=News"/>
+        <citrus-jmx:mbean type="org.citrusframework.citrus.jmx.mbean.HelloBean"/>
+        <citrus-jmx:mbean type="org.citrusframework.citrus.jmx.mbean.NewsBean" objectDomain="org.citrusframework.citrus.news" objectName="name=News"/>
     </citrus-jmx:mbeans>
 </citrus-jmx:server>
 ----
@@ -221,8 +221,8 @@ Besides using the whole server-url as property we can also construct the connect
       protocol="rmi"
       binding="jmxrmi"
     <citrus-jmx:mbeans>
-        <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.HelloBean"/>
-        <citrus-jmx:mbean type="com.consol.citrus.jmx.mbean.NewsBean" objectDomain="com.consol.citrus.news" objectName="name=News"/>
+        <citrus-jmx:mbean type="org.citrusframework.citrus.jmx.mbean.HelloBean"/>
+        <citrus-jmx:mbean type="org.citrusframework.citrus.jmx.mbean.NewsBean" objectDomain="org.citrusframework.citrus.news" objectName="name=News"/>
     </citrus-jmx:mbeans>
 </citrus-jmx:server>
 ----
@@ -231,7 +231,7 @@ On last thing to mention is that we could have also used *platform* as server-ur
 
 Now that we clarified the connectivity we need to talk about how to define the managed beans that are available on our JMX mbean server. This is done as nested *mbean* configuration elements. Here the managed bean definitions describe the managed bean with its objectDomain, objectName, operations and attributes. The most convenient way of defining such managed bean definitions is to give a bean type which is the fully qualified class name of the managed bean. Citrus will use the package name and class name for proper objectDomain and objectName construction.
 
-Lets have a closer look at the first mbean definition in the example above. So the first managed bean is defined by its class name *com.consol.citrus.jmx.mbean.HelloBean* and therefore is accessible using the objectName *com.consol.citrus.jmx.mbean:type=HelloBean* . In addition to that Citrus will read the class information such as available methods, getters and setters for constructing a proper MBeanInfo. In the second managed bean definition in our example we have used additional custom objectDomain and objectName values. So the *NewsBean* will be accessible with *com.consol.citrus.news:name=News* on the managed bean server.
+Lets have a closer look at the first mbean definition in the example above. So the first managed bean is defined by its class name *org.citrusframework.citrus.jmx.mbean.HelloBean* and therefore is accessible using the objectName *org.citrusframework.citrus.jmx.mbean:type=HelloBean* . In addition to that Citrus will read the class information such as available methods, getters and setters for constructing a proper MBeanInfo. In the second managed bean definition in our example we have used additional custom objectDomain and objectName values. So the *NewsBean* will be accessible with *org.citrusframework.citrus.news:name=News* on the managed bean server.
 
 This is how we can define the bindings of managed beans and what clients need to search for when finding and accessing the managed beans on the server. When clients try to find the managed beans they have to use proper objectNames accordingly. ObjectNames that are not defined on the server will be rejected with managed bean not found error.
 
@@ -272,7 +272,7 @@ Now we can use the server component in a test case to receive some incoming mana
     <message>
         <payload>
             <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
-              <mbean>com.consol.citrus.jmx.mbean:type=HelloBean</mbean>
+              <mbean>org.citrusframework.citrus.jmx.mbean:type=HelloBean</mbean>
               <operation name="sayHello">
                 >parameter>
                   >param type="java.lang.String" value="Hello JMX!"/>
@@ -290,13 +290,13 @@ Now we can use the server component in a test case to receive some incoming mana
 @CitrusTest
 public void jmxServerTest() {
     receive(jmxServer)
-        .message(JmxMessage.invocation("com.consol.citrus.jmx.mbean:type=HelloBean")
+        .message(JmxMessage.invocation("org.citrusframework.citrus.jmx.mbean:type=HelloBean")
             .operation("sayHello")
             .parameter("Hello JMX!"));
 }
 ----
 
-In this very first example we expect a managed bean access to the bean *com.consol.citrus.jmx.mbean:type=HelloBean* . We further expect the operation *sayHello* to be called with respective parameter values. Now we have to define the operation result that will be returned to the calling client as operation result.
+In this very first example we expect a managed bean access to the bean *org.citrusframework.citrus.jmx.mbean:type=HelloBean* . We further expect the operation *sayHello* to be called with respective parameter values. Now we have to define the operation result that will be returned to the calling client as operation result.
 
 .XML DSL
 [source,xml]
@@ -331,7 +331,7 @@ The operation returns a String *Hello from JMX!* . This is how we can expect ope
     <message>
         <payload>
             <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
-              <mbean>com.consol.citrus.news:name=News</mbean>
+              <mbean>org.citrusframework.citrus.news:name=News</mbean>
                 >attribute name="newsCount"/>
             </mbean-invocation>
         </payload>
@@ -355,7 +355,7 @@ The operation returns a String *Hello from JMX!* . This is how we can expect ope
 @CitrusTest
 public void jmxServerTest() {
     receive(jmxServer)
-        .message(JmxMessage.invocation("com.consol.citrus.news:name=News")
+        .message(JmxMessage.invocation("org.citrusframework.citrus.news:name=News")
             .attribute("newsCount");
 
     send(jmxServer)

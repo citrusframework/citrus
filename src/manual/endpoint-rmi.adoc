@@ -10,7 +10,7 @@ NOTE: The RMI components in Citrus are kept in a separate Maven module. So you s
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-rmi</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -66,7 +66,7 @@ The client component in the Spring application context receives host and port co
     <message>
         <payload>
             <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <remote>com.consol.citrus.rmi.remote.NewsService</remote>
+              <remote>org.citrusframework.citrus.rmi.remote.NewsService</remote>
               <method>getNews</method>
             </service-invocation>
         </payload>
@@ -123,7 +123,7 @@ Of course we can also deal with method arguments.
     <message>
         <payload>
             <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-                <remote>com.consol.citrus.rmi.remote.NewsService</remote>
+                <remote>org.citrusframework.citrus.rmi.remote.NewsService</remote>
                 <method>setNews</method>
                 <args>
                   <arg value="This is breaking news!"/>
@@ -178,7 +178,7 @@ Let us have a look at the Citrus RMI server component and how you can add it to 
 <citrus-rmi:server id="rmiServer"
       host="localhost"
       port="1099"
-      interface="com.consol.citrus.rmi.remote.NewsService"
+      interface="org.citrusframework.citrus.rmi.remote.NewsService"
       binding="newService"
       create-registry="true"
       auto-start="true"/>
@@ -195,12 +195,12 @@ You have to give Citrus the fully qualified remote interface name so Citrus can 
     <message>
         <payload>
             <service-invocation xmlns="http://www.citrusframework.org/schema/rmi/message">
-              <remote>com.consol.citrus.rmi.remote.NewsService</remote>
+              <remote>org.citrusframework.citrus.rmi.remote.NewsService</remote>
               <method>getNews</method>
             </service-invocation>
         </payload>
         <header>
-            <element name="citrus_rmi_interface" value="com.consol.citrus.rmi.remote.NewsService"/>
+            <element name="citrus_rmi_interface" value="org.citrusframework.citrus.rmi.remote.NewsService"/>
             <element name="citrus_rmi_method" value="getNews"/>
         </header>
     </message>

@@ -16,7 +16,7 @@ as a Maven dependency.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-validation-json</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -55,7 +55,7 @@ public JsonTextMessageValidator defaultJsonMessageValidator() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultJsonMessageValidator" class="com.consol.citrus.validation.json.JsonTextMessageValidator"/>
+<bean id="defaultJsonMessageValidator" class="org.citrusframework.citrus.validation.json.JsonTextMessageValidator"/>
 ----
 
 The same approach applies to the Groovy message validator implementation.
@@ -72,7 +72,7 @@ public GroovyJsonMessageValidator defaultGroovyJsonMessageValidator() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<bean id="defaultGroovyJsonMessageValidator" class="com.consol.citrus.validation.script.GroovyJsonMessageValidator"/>
+<bean id="defaultGroovyJsonMessageValidator" class="org.citrusframework.citrus.validation.script.GroovyJsonMessageValidator"/>
 ----
 
 This is how you can customize the message validators used for Json message data.
@@ -545,7 +545,7 @@ public JsonSchemaRepository schemaRepository() {
 ----
 <citrus:schema-repository type="json" id="jsonSchemaRepository">
     <citrus:schemas>
-        <citrus:schema ref="productSchema" location="classpath:com/consol/citrus/validation/ProductsSchema.json"/>
+        <citrus:schema ref="productSchema" location="classpath:org/citrusframework/citrus/validation/ProductsSchema.json"/>
     </citrus:schemas>
 </citrus:schema-repository>
 ----
@@ -558,14 +558,14 @@ The referenced schema is another bean in the configuration that represents the s
 @Bean
 public SimpleJsonSchema productSchema() {
     return new SimpleJsonSchema(
-            new ClassPathResource("classpath:com/consol/citrus/validation/ProductsSchema.json"));
+            new ClassPathResource("classpath:org/citrusframework/citrus/validation/ProductsSchema.json"));
 }
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<citrus:schema id="productSchema" location="classpath:com/consol/citrus/validation/ProductsSchema.json"/>
+<citrus:schema id="productSchema" location="classpath:org/citrusframework/citrus/validation/ProductsSchema.json"/>
 ----
 
 === Json schema filtering and validation strategy

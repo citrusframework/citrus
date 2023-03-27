@@ -13,8 +13,8 @@ ways of constructing a message with body and header values.
 [source,java,indent=0,role="primary"]
 ----
 import org.testng.annotations.Test;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import org.citrusframework.citrus.annotations.CitrusTest;
+import org.citrusframework.citrus.testng.TestNGCitrusSupport;
 
 @Test
 public class SendMessageTest extends TestNGCitrusSupport {
@@ -292,7 +292,7 @@ You need to add the module to your project to use the functionality.
 [source,xml]
 ----
 <dependency>
-  <groupId>com.consol.citrus</groupId>
+  <groupId>org.citrusframework.citrus</groupId>
   <artifactId>citrus-groovy</artifactId>
   <version>${citrus.version}</version>
 </dependency>

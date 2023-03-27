@@ -12,8 +12,8 @@ The XML test case definition in Citrus uses two files that are connected via nam
 .XML test case files
 [source]
 ----
-src/test/java/com/consol/citrus/MyFirstCitrus_IT.java
-src/test/resources/com/consol/citrus/MyFirstCitrus_IT.xml
+src/test/java/org/citrusframework/citrus/MyFirstCitrus_IT.java
+src/test/resources/org/citrusframework/citrus/MyFirstCitrus_IT.xml
 ----
 
 The files above represent a test called `MyFirstCitrus_IT`. The `.java` file defines the runtime that should be used to execute
@@ -32,7 +32,7 @@ mvn citrus:create-test
 Enter test name:: MyFirstCitrus_IT
 Enter test author: Unknown::
 Enter test description:: Sample XML test
-Enter test package: com.consol.citrus::
+Enter test package: org.citrusframework.citrus::
 Choose unit test framework: (testng/junit4/junit5) testng::
 Choose target code base type: (java/xml) java:: xml
 Create test with XML schema? (y/n) n::
@@ -45,10 +45,10 @@ framework: testng
 name: MyFirstCitrus_IT
 author: Unknown
 description:
-package: com.consol.citrus
+package: org.citrusframework.citrus
  (y/n) y:: y
 
-[INFO] Successfully created new test case com.consol.citrus.MyFirstCitrus_IT
+[INFO] Successfully created new test case org.citrusframework.citrus.MyFirstCitrus_IT
 ----
 
 The command above creates the two test files (`.java` and `.xml`) using an interactive mode. The user provides the test case information
@@ -57,11 +57,11 @@ such as test name, package, runtime and so on.
 .MyFirstCitrus_IT.java
 [source,java]
 ----
-package com.consol.citrus;
+package org.citrusframework.citrus;
 
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTestSource;
-import com.consol.citrus.testng.TestNGCitrusSupport;
+import org.citrusframework.citrus.annotations.CitrusResource;
+import org.citrusframework.citrus.annotations.CitrusTestSource;
+import org.citrusframework.citrus.testng.TestNGCitrusSupport;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -117,7 +117,7 @@ that the Java class is able to find and load the XML file when running the test.
 Each XML test in Citrus defines the `@CitrusTestSource` annotation in the Java class. This annotation makes Citrus search for the
 XML file that represents the Citrus test within your classpath.
 
-In the basic example above this means that Citrus searches for a XML test file in *com/consol/citrus/MyFirstCitrus_IT.xml* .
+In the basic example above this means that Citrus searches for a XML test file in *org/citrusframework/citrus/MyFirstCitrus_IT.xml* .
 
 You can customize this path and tell Citrus to search for another XML file by using the `@CitrusTestSource` annotation properties.
 

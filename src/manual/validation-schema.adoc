@@ -20,14 +20,14 @@ in your test project. First you need to add a schema definition that points to t
 ----
 @Bean
 public SimpleXsdSchema bookstoreSchema() {
-    return new SimpleXsdSchema(new ClassPathResource("classpath:com/consol/citrus/xml/BookStore.wsdl"));
+    return new SimpleXsdSchema(new ClassPathResource("classpath:org/citrusframework/citrus/xml/BookStore.wsdl"));
 }
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<citrus:schema id="bookstoreSchema" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
+<citrus:schema id="bookstoreSchema" location="classpath:org/citrusframework/citrus/xml/BookStore.wsdl"/>
 ----
 
 Please keep in mind, that the id of the schema has to be unique within the context.
@@ -120,13 +120,13 @@ The schema repository is able to receive many schemas with different locations a
 ----
 @Bean
 public SimpleXsdSchema testSchema() {
-    return new SimpleXsdSchema(new ClassPathResource("classpath:com/consol/citrus/xml/test.xsd"));
+    return new SimpleXsdSchema(new ClassPathResource("classpath:org/citrusframework/citrus/xml/test.xsd"));
 }
 
 @Bean
 public XsdSchemaRepository schemaRepository() {
     SimpleXsdSchema bookstoreSchema = new SimpleXsdSchema(
-            new ClassPathResource("classpath:com/consol/citrus/xml/BookStore.wsdl"));
+            new ClassPathResource("classpath:org/citrusframework/citrus/xml/BookStore.wsdl"));
 
     XsdSchemaRepository repository = new XsdSchemaRepository();
     repository.getSchemas().add(bookstoreSchema);
@@ -139,11 +139,11 @@ public XsdSchemaRepository schemaRepository() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<citrus:schema id="testSchema" location="classpath:com/consol/citrus/xml/test.xsd"/>
+<citrus:schema id="testSchema" location="classpath:org/citrusframework/citrus/xml/test.xsd"/>
 
 <citrus:schema-repository id="xmlSchemaRepository">
   <citrus:schemas>
-    <citrus:schema id="bookstoreSchema" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
+    <citrus:schema id="bookstoreSchema" location="classpath:org/citrusframework/citrus/xml/BookStore.wsdl"/>
     <citrus:reference schema="testSchema"/>
     <citrus:location path="classpath:schemas/*.xsd"/>
   </citrus:schemas>

@@ -36,8 +36,8 @@ The library is built in the Spring configuration and contains a set of validatio
 [source,xml]
 ----
 <citrus:validation matcher-library id="testMatcherLibrary" prefix="foo:">
-      <citrus:matcher name="isNumber"> class="com.consol.citrus.validation.matcher.core.IsNumberValidationMatcher"/>
-      <citrus:matcher name="contains"> class="com.consol.citrus.validation.matcher.core.ContainsValidationMatcher"/>
+      <citrus:matcher name="isNumber"> class="org.citrusframework.citrus.validation.matcher.core.IsNumberValidationMatcher"/>
+      <citrus:matcher name="contains"> class="org.citrusframework.citrus.validation.matcher.core.ContainsValidationMatcher"/>
       <citrus:matcher name="customMatcher"> ref="customMatcherBean"/>
       ...
       </citrus:validation matcher-library>
