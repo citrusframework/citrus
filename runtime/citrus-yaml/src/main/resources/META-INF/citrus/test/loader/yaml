@@ -1,1 +1,1 @@
-type=com.consol.citrus.yaml.YamlTestLoader
+type=org.citrusframework.citrus.yaml.YamlTestLoader

@@ -1,2 +1,2 @@
-com.consol.citrus.cucumber.backend.CitrusObjectFactory
-com.consol.citrus.cucumber.backend.spring.CitrusSpringObjectFactory
+org.citrusframework.citrus.cucumber.backend.CitrusObjectFactory
+org.citrusframework.citrus.cucumber.backend.spring.CitrusSpringObjectFactory

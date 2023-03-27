@@ -1,1 +1,1 @@
-type=com.consol.citrus.junit.JUnit4TestEngine
+type=org.citrusframework.citrus.junit.JUnit4TestEngine

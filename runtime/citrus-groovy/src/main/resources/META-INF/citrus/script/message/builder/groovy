@@ -1,1 +1,1 @@
-type=com.consol.citrus.message.builder.script.GroovyScriptPayloadBuilder
+type=org.citrusframework.citrus.message.builder.script.GroovyScriptPayloadBuilder

@@ -19,10 +19,10 @@
   </citrus:global-variables>
 
   <!-- Listeners -->
-  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+  <bean class="org.citrusframework.citrus.report.MessageTracingTestListener"/>
 
   <!-- Text equals message validator -->
-  <bean id="textEqualsMessageValidator" class="com.consol.citrus.integration.TextEqualsMessageValidator"/>
+  <bean id="textEqualsMessageValidator" class="org.citrusframework.citrus.integration.TextEqualsMessageValidator"/>
 
   <citrus:direct-endpoint id="helloEndpoint"
                           queue="helloQueue"/>
@@ -30,7 +30,7 @@
   <citrus:queue id="helloQueue"/>
 
   <!-- Simple server implementation with status event channel -->
-  <bean id="simpleServer" class="com.consol.citrus.integration.server.SimpleServer">
+  <bean id="simpleServer" class="org.citrusframework.citrus.integration.server.SimpleServer">
     <property name="autoStart" value="false"/>
     <property name="statusEndpoint" ref="statusEndpoint"/>
   </bean>

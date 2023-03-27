@@ -1,1 +1,1 @@
-type=com.consol.citrus.xml.XmlTestLoader
+type=org.citrusframework.citrus.xml.XmlTestLoader

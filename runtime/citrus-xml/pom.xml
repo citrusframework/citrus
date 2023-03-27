@@ -65,7 +65,7 @@
                 <phase>generate-resources</phase>
                 <configuration>
                   <sources>
-                    <source>src/main/java/com/consol/citrus/xml/XmlTestCase.java</source>
+                    <source>src/main/java/org/citrusframework/citrus/xml/XmlTestCase.java</source>
                   </sources>
                   <outputDirectory>${project.build.directory}/schemas</outputDirectory>
                 </configuration>
