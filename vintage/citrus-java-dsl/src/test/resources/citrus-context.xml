@@ -19,14 +19,14 @@
            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
-    <import resource="classpath:com/consol/citrus/demo/hello-demo-ctx.xml"/>
+    <import resource="classpath:org/citrusframework/citrus/demo/hello-demo-ctx.xml"/>
     <import resource="citrus-schemas-context.xml"/>
 
     <context:property-placeholder location="classpath:citrus.properties" ignore-unresolvable="true"/>
 
     <!-- Scan before and after suite Java DSL components -->
-    <context:component-scan base-package="com.consol.citrus.integration.design.suite"/>
-    <context:component-scan base-package="com.consol.citrus.integration.runner.suite"/>
+    <context:component-scan base-package="org.citrusframework.citrus.integration.design.suite"/>
+    <context:component-scan base-package="org.citrusframework.citrus.integration.runner.suite"/>
 
     <!-- Embedded ActiveMQ JMS broker -->
     <bean class="org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ" init-method="start" destroy-method="stop">
@@ -83,9 +83,9 @@
          disabled="true"/>
 
     <!-- Listeners -->
-    <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+    <bean class="org.citrusframework.citrus.report.MessageTracingTestListener"/>
 
-    <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultMessageCorrelator"/>
+    <bean id="replyMessageCorrelator" class="org.citrusframework.citrus.message.DefaultMessageCorrelator"/>
 
     <!-- Default namespace mappings used in XPath expression evaluations -->
     <citrus:namespace-context>
@@ -97,13 +97,13 @@
          port="8071"
          auto-start="true"
          root-parent-context="true"
-         context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
+         context-config-location="classpath:org/citrusframework/citrus/ws/citrus-ws-servlet.xml"
          resource-base="src/it/resources"/>
 
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
-    <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
-    <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
-    <bean id="xmlSoapFaultValidator" class="com.consol.citrus.ws.validation.XmlSoapFaultValidator"/>
+    <bean id="soapAttachmentValidator" class="org.citrusframework.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
+    <bean id="soapFaultValidator" class="org.citrusframework.citrus.ws.validation.SimpleSoapFaultValidator"/>
+    <bean id="xmlSoapFaultValidator" class="org.citrusframework.citrus.ws.validation.XmlSoapFaultValidator"/>
 
     <citrus-ws:client id="webServiceClient"
          request-url="http://localhost:8071"
@@ -132,9 +132,9 @@
          message-factory="messageFactory"
          message-converter="wsAddressingMessageConverter"/>
 
-    <bean id="wsAddressingMessageConverter" class="com.consol.citrus.ws.message.converter.WsAddressingMessageConverter">
+    <bean id="wsAddressingMessageConverter" class="org.citrusframework.citrus.ws.message.converter.WsAddressingMessageConverter">
       <constructor-arg>
-        <bean id="wsAddressing200408" class="com.consol.citrus.ws.addressing.WsAddressingHeaders">
+        <bean id="wsAddressing200408" class="org.citrusframework.citrus.ws.addressing.WsAddressingHeaders">
             <property name="version" value="VERSION200408"/>
             <property name="action" value="sayHello"/>
             <property name="to" value="urn:CitrusHelloServer"/>
@@ -162,13 +162,13 @@
          port="8072"
          auto-start="true"
          root-parent-context="true"
-         context-config-location="classpath:com/consol/citrus/http/citrus-http-servlet.xml"
+         context-config-location="classpath:org/citrusframework/citrus/http/citrus-http-servlet.xml"
          resource-base="src/it/resources"/>
 
     <citrus-http:server id="httpStandaloneServer"
          port="8073"
          auto-start="true"
-         context-config-location="classpath:com/consol/citrus/http/citrus-http-standalone-servlet.xml"
+         context-config-location="classpath:org/citrusframework/citrus/http/citrus-http-standalone-servlet.xml"
          resource-base="src/it/resources"/>
 
     <citrus-http:server id="echoHttpServer"
@@ -189,7 +189,7 @@
          request-factory="basicAuthClientRequestFactory"
          actor="helloClient"/>
 
-    <bean id="basicAuthClientRequestFactory" class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
+    <bean id="basicAuthClientRequestFactory" class="org.citrusframework.citrus.http.client.BasicAuthClientHttpRequestFactory">
       <property name="authScope">
           <bean class="org.apache.hc.client5.http.auth.AuthScope">
             <constructor-arg value="localhost"/>

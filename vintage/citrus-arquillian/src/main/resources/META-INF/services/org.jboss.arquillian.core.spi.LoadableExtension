@@ -1,1 +1,1 @@
-com.consol.citrus.arquillian.client.CitrusExtension
+org.citrusframework.citrus.arquillian.client.CitrusExtension

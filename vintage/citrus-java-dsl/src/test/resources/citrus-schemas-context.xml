@@ -7,18 +7,18 @@
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
   <!-- Common settings -->
-  <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
+  <bean id="schemaRepository" class="org.citrusframework.citrus.xml.XsdSchemaRepository">
     <property name="schemas">
       <list>
         <bean id="sayHelloSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
-          <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
+          <property name="xsd" value="classpath:org/citrusframework/citrus/demo/sayHello.xsd"/>
         </bean>
       </list>
     </property>
   </bean>
 
-  <citrus:schema id="helloSchema" location="classpath:com/consol/citrus/demo/sayHello.xsd" />
-  <citrus:schema id="helloSchemaExtended" location="classpath:com/consol/citrus/demo/sayHelloExtended.xsd" />
+  <citrus:schema id="helloSchema" location="classpath:org/citrusframework/citrus/demo/sayHello.xsd" />
+  <citrus:schema id="helloSchemaExtended" location="classpath:org/citrusframework/citrus/demo/sayHelloExtended.xsd" />
 
   <citrus:schema-repository id="helloSchemaRepository">
     <citrus:schemas>
