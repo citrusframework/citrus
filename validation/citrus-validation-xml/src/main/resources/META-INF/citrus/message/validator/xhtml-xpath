@@ -1,2 +1,2 @@
 name=defaultXhtmlXpathMessageValidator
-type=org.citrusframework.citrus.validation.xhtml.XhtmlXpathMessageValidator
+type=org.citrusframework.validation.xhtml.XhtmlXpathMessageValidator

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="PurgeEndpointActionParserTest">
+        <actions>
+            <purge-endpoint>
+                <endpoint name="testEndpoint1"/>
+                <endpoint name="testEndpoint2"/>
+                <endpoint name="testEndpoint3"/>
+            </purge-endpoint>
+
+            <purge-endpoint>
+                <endpoint ref="testEndpoint"/>
+                <endpoint name="testEndpoint1"/>
+                <endpoint name="testEndpoint2"/>
+                <endpoint name="testEndpoint3"/>
+            </purge-endpoint>
+
+            <purge-endpoint>
+                <selector>
+                    <value>operation = 'sayHello'</value>
+                </selector>
+                <endpoint ref="testEndpoint"/>
+                <endpoint name="testEndpoint1"/>
+            </purge-endpoint>
+
+            <purge-endpoint>
+                <selector>
+                    <element name="operation" value="sayHello"/>
+                    <element name="id" value="12345"/>
+                </selector>
+                <endpoint name="testEndpoint1"/>
+            </purge-endpoint>
+        </actions>
+    </testcase>
+
+    <spring:bean id="testEndpoint" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.endpoint.Endpoint</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="testEndpoint"/>
+    </spring:bean>
+</spring:beans>

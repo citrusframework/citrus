@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="HttpClientTimeoutIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2014-01-25</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2014-01-25T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test tries to receive message from Http server instance but gets timeout.</description>
+
+    <actions>
+      <echo>
+        <message>Test: Receive Http message timeout</message>
+      </echo>
+
+      <create-variables>
+        <variable name="citrus_message_correlator_helloHttpClient" value="1"/>
+      </create-variables>
+
+      <assert exception="org.citrusframework.exceptions.ActionTimeoutException"
+              message="Action timeout after 5000 milliseconds. Failed to receive message on endpoint: 'helloHttpClient'">
+        <when>
+          <receive endpoint="helloHttpClient">
+            <message>
+              <data>
+                <![CDATA[]]>
+              </data>
+            </message>
+            <header>
+              <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+    </actions>
+  </testcase>
+</spring:beans>

@@ -1,4 +1,4 @@
-async=org.citrusframework.citrus.channel.ChannelEndpointBuilder
-asynchronous=org.citrusframework.citrus.channel.ChannelEndpointBuilder
-sync=org.citrusframework.citrus.channel.ChannelSyncEndpointBuilder
-synchronous=org.citrusframework.citrus.channel.ChannelSyncEndpointBuilder
+async=org.citrusframework.channel.ChannelEndpointBuilder
+asynchronous=org.citrusframework.channel.ChannelEndpointBuilder
+sync=org.citrusframework.channel.ChannelSyncEndpointBuilder
+synchronous=org.citrusframework.channel.ChannelSyncEndpointBuilder

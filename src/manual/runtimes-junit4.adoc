@@ -11,7 +11,7 @@ project.
 [source,xml]
 ----
 <dependency>
-  <groupId>org.citrusframework.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-junit</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -25,11 +25,11 @@ See the following sample test class that uses JUnit4.
 .JUnit4 Citrus test
 [source,java]
 ----
-package org.citrusframework.citrus.samples;
+package org.citrusframework.samples;
 
 import org.testng.annotations.Test;
-import org.citrusframework.citrus.annotations.CitrusTest;
-import org.citrusframework.citrus.junit.JUnit4CitrusSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.junit.JUnit4CitrusSupport;
 
 @Test
 public class Simple_IT extends JUnit4CitrusSupport {

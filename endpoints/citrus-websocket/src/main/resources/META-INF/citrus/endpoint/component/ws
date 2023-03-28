@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.websocket.endpoint.WebSocketEndpointComponent
+type=org.citrusframework.websocket.endpoint.WebSocketEndpointComponent

@@ -1,2 +1,2 @@
-type=org.citrusframework.citrus.groovy.xml.Groovy
+type=org.citrusframework.groovy.xml.Groovy
 ns=http://citrusframework.org/schema/xml/testcase

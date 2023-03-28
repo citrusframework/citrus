@@ -2,10 +2,10 @@ package ${package};
 
 import org.testng.annotations.Test;
 
-import org.citrusframework.citrus.annotations.CitrusTest;
-import org.citrusframework.citrus.testng.spring.TestNGCitrusSpringSupport;
+import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 
-import static org.citrusframework.citrus.actions.EchoAction.Builder.echo;
+import static org.citrusframework.actions.EchoAction.Builder.echo;
 
 /**
  * This is a sample Java DSL Citrus integration test.

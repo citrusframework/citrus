@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.testng.TestNGEngine
+type=org.citrusframework.testng.TestNGEngine

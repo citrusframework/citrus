@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+              xmlns:spring="http://www.springframework.org/schema/beans" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="TransformActionParserTest">
+        <actions>
+            <transform variable="result">
+                <xml-data>
+                    <![CDATA[
+                        <TestRequest>
+                            <Message>Hello World!</Message>
+                        </TestRequest>
+                    ]]>
+                </xml-data>
+                <xslt-data>
+                    <![CDATA[
+                        <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                        <xsl:template match="/">
+                        <html>
+                            <body>
+                                <h2>Test Request</h2>
+                                <p>Message: <xsl:value-of select="TestRequest/Message"/></p>
+                            </body>  
+                        </html>
+                        </xsl:template>
+                        </xsl:stylesheet>
+                    ]]>                 
+                </xslt-data>
+            </transform>
+
+            <transform variable="result">
+                <xml-resource file="classpath:org/citrusframework/actions/transform-source.xml"/>
+                <xslt-resource file="classpath:org/citrusframework/actions/transform.xslt"/>
+            </transform>
+        </actions>
+    </testcase>
+    
+</spring:beans>

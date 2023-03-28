@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.kafka.config.annotation.KafkaEndpointConfigParser
+type=org.citrusframework.kafka.config.annotation.KafkaEndpointConfigParser

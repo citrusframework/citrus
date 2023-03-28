@@ -29,8 +29,8 @@
           <sourceType>xmlschema</sourceType>
           <catalog>src/main/resources/catalog.xml</catalog>
           <sources>
-            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-ws-config.xsd</source>
-            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-ws-testcase.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-ws-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-ws-testcase.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
@@ -53,7 +53,7 @@
               <excludeDefaultDirectories>true</excludeDefaultDirectories>
               <filesets>
                 <fileset>
-                  <directory>${project.build.directory}/generated-sources/jaxb/org/citrusframework/citrus/model/testcase/core</directory>
+                  <directory>${project.build.directory}/generated-sources/jaxb/org/citrusframework/model/testcase/core</directory>
                   <includes>
                     <include>*.java</include>
                   </includes>

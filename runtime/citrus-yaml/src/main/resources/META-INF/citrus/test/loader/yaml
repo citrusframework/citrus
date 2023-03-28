@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.yaml.YamlTestLoader
+type=org.citrusframework.yaml.YamlTestLoader

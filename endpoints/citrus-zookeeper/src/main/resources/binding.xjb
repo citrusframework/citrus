@@ -3,7 +3,7 @@
           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
           version="3.0">
 
-  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-zookeeper-config.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-zookeeper-config.xsd">
     <globalBindings>
       <xjc:javaType
               name="java.util.Calendar"
@@ -16,16 +16,16 @@
       <xjc:simple />
     </globalBindings>
     <schemaBindings>
-      <package name="org.citrusframework.citrus.model.config.zookeeper"/>
+      <package name="org.citrusframework.model.config.zookeeper"/>
       <nameXmlTransform>
         <elementName prefix="Zookeeper" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-zookeeper-testcase.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-zookeeper-testcase.xsd">
     <schemaBindings>
-      <package name="org.citrusframework.citrus.model.testcase.zookeeper"/>
+      <package name="org.citrusframework.model.testcase.zookeeper"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>

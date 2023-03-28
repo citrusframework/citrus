@@ -33,8 +33,8 @@
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
           <sources>
-            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-zookeeper-config.xsd</source>
-            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-zookeeper-testcase.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-zookeeper-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-zookeeper-testcase.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>

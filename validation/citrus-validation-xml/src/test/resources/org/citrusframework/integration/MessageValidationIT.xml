@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="MessageValidationIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2017-05-10</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2017-03-10T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test sends messages to a message channel and receives these messages performing validation.</description>
+
+    <actions>
+      <echo>
+        <message>Test validation success</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="xml">
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <echo>
+        <message>Test validation success - auto select message type</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <echo>
+        <message>Test header validation success</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="xml"/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="xml"/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <echo>
+        <message>Test header validation success - auto select message type</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+
+      <echo>
+        <message>Test validation errors</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message type="xml">
+              <data>
+                <![CDATA[
+                  <Text>Goodbye Citrus</Text>
+                ]]>
+              </data>
+            </message>
+            <header>
+              <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test validation errors - auto select message type</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message>
+              <data>
+                <![CDATA[
+                  <Text>Goodbye Citrus</Text>
+                ]]>
+              </data>
+            </message>
+            <header>
+              <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test header validation error</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message type="xml"/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message type="xml"/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test header validation error - auto select message type</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message/>
+            <header>
+              <element name="Operation" value="sayGoodbye"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+    </actions>
+  </testcase>
+</spring:beans>

@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.validation.FooValueMatcher
+type=org.citrusframework.validation.FooValueMatcher

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/kubernetes/testcase http://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd">
+
+    <testcase name="KubernetesExecuteActionParserTest">
+        <actions>
+            <k8s:info/>
+            <k8s:info client="myK8sClient"/>
+
+            <k8s:list-pods>
+                <k8s:validate>
+                    <k8s:result>{}</k8s:result>
+                    <k8s:element path="$.apiVersion" value="v1"/>
+                    <k8s:element path="$..name.toString()" value="[a,b,c,d]"/>
+                </k8s:validate>
+            </k8s:list-pods>
+
+            <k8s:list-events/>
+            <k8s:list-pods label="pod_label"/>
+            <k8s:create-pod namespace="default">
+                <k8s:template file="classpath:templates/hello-jetty.yml"/>
+            </k8s:create-pod>
+            <k8s:get-pod name="myPod"/>
+            <k8s:delete-pod name="myPod"/>
+            <k8s:list-services label="!service_label" namespace="myNamespace"/>
+            <k8s:create-service namespace="default">
+                <k8s:template file="classpath:templates/hello-jetty-service.yml"/>
+            </k8s:create-service>
+            <k8s:get-service name="myService" namespace="myNamespace"/>
+            <k8s:delete-service name="myService" namespace="myNamespace"/>
+            <k8s:list-replication-controllers namespace="myNamespace"/>
+            <k8s:list-nodes label="node_label=active"/>
+            <k8s:list-endpoints label="endpoint_label!=active"/>
+            <k8s:list-namespaces label="namespace_label1!=active,namespace_label2=active"/>
+
+            <k8s:watch-pods label="pod_label"/>
+            <k8s:watch-services label="!service_label" namespace="myNamespace" name="myService"/>
+            <k8s:watch-replication-controllers namespace="myNamespace" name="myController"/>
+            <k8s:watch-nodes label="node_label"/>
+            <k8s:watch-namespaces label="namespace_label"/>
+        </actions>
+    </testcase>
+
+    <spring:bean id="myK8sClient" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.kubernetes.client.KubernetesClient</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myK8sClient"/>
+    </spring:bean>
+
+</spring:beans>

@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.config.xml.XmlDataDictionaryParser
+type=org.citrusframework.config.xml.XmlDataDictionaryParser

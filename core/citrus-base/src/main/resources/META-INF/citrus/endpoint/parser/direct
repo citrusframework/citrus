@@ -1,2 +1,2 @@
-async=org.citrusframework.citrus.endpoint.direct.annotation.DirectEndpointConfigParser
-sync=org.citrusframework.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser
+async=org.citrusframework.endpoint.direct.annotation.DirectEndpointConfigParser
+sync=org.citrusframework.endpoint.direct.annotation.DirectSyncEndpointConfigParser

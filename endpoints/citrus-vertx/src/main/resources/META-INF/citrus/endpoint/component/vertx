@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.vertx.endpoint.VertxEndpointComponent
+type=org.citrusframework.vertx.endpoint.VertxEndpointComponent

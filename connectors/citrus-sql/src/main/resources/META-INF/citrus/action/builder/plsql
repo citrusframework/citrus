@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.actions.ExecutePLSQLAction$Builder
+type=org.citrusframework.actions.ExecutePLSQLAction$Builder

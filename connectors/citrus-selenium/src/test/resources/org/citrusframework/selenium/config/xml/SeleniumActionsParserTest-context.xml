@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:selenium="http://www.citrusframework.org/schema/selenium/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/selenium/testcase http://www.citrusframework.org/schema/selenium/testcase/citrus-selenium-testcase.xsd">
+
+    <testcase name="SeleniumActionsParserTest">
+        <actions>
+            <selenium:start browser="mockBrowser"/>
+
+            <selenium:alert accept="true"/>
+
+            <selenium:alert accept="false">
+                <selenium:alert-text>This is a warning message!</selenium:alert-text>
+            </selenium:alert>
+
+            <selenium:find>
+                <selenium:element class-name="clickable" tag-name="button" text="Ok" displayed="true" enabled="false">
+                    <selenium:attributes>
+                        <selenium:attribute name="type" value="submit"/>
+                    </selenium:attributes>
+                    <selenium:styles>
+                        <selenium:style name="color" value="#000000"/>
+                    </selenium:styles>
+                </selenium:element>
+            </selenium:find>
+
+            <selenium:page name="userForm" action="setUserName">
+                <selenium:arguments>
+                    <selenium:argument>${username}</selenium:argument>
+                </selenium:arguments>
+            </selenium:page>
+
+            <selenium:page type="org.citrusframework.selenium.pages.UserFormPage"
+                           action="validate"
+                           validator="pageValidator"/>
+
+            <selenium:click>
+                <selenium:element id="edit-link"/>
+            </selenium:click>
+
+            <selenium:hover>
+                <selenium:element id="edit-link"/>
+            </selenium:hover>
+
+            <selenium:set-input value="new-value">
+                <selenium:element tag-name="input"/>
+            </selenium:set-input>
+
+            <selenium:check-input checked="true">
+                <selenium:element xpath="//input[@type='checkbox']"/>
+            </selenium:check-input>
+
+            <selenium:dropdown-select option="male">
+                <selenium:element name="gender"/>
+            </selenium:dropdown-select>
+
+            <selenium:dropdown-select>
+                <selenium:element id="title"/>
+                <selenium:options>
+                    <selenium:option>Mr.</selenium:option>
+                    <selenium:option>Dr.</selenium:option>
+                </selenium:options>
+            </selenium:dropdown-select>
+
+            <selenium:wait until="hidden">
+                <selenium:element id="dialog"/>
+            </selenium:wait>
+
+            <selenium:javascript>
+                <selenium:script>alert('This is awesome!')</selenium:script>
+                <selenium:errors>
+                    <selenium:error>Something went wrong</selenium:error>
+                </selenium:errors>
+            </selenium:javascript>
+
+            <selenium:screenshot browser="mockBrowser" output-dir="/tmp/storage"/>
+
+            <selenium:navigate page="back"/>
+
+            <selenium:open-window name="newWindow"/>
+            <selenium:switch-window name="switchWindow"/>
+            <selenium:close-window name="closeWindow"/>
+
+            <selenium:store-file file-path="classpath:download/file.txt"/>
+            <selenium:get-stored-file file-name="file.txt"/>
+
+            <selenium:clear-cache/>
+
+            <selenium:stop browser="mockBrowser"/>
+        </actions>
+    </testcase>
+
+    <spring:bean id="userForm" class="org.citrusframework.selenium.pages.UserFormPage"/>
+
+    <spring:bean id="pageValidator" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.selenium.model.PageValidator</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="pageValidator"/>
+    </spring:bean>
+
+    <spring:bean id="mockBrowser" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.selenium.endpoint.SeleniumBrowser</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="mockBrowser"/>
+    </spring:bean>
+
+</spring:beans>

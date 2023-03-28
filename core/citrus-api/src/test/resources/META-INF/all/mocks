@@ -1,2 +1,2 @@
-foo=org.citrusframework.citrus.spi.mocks.Foo
-bar=org.citrusframework.citrus.spi.mocks.Bar
+foo=org.citrusframework.spi.mocks.Foo
+bar=org.citrusframework.spi.mocks.Bar

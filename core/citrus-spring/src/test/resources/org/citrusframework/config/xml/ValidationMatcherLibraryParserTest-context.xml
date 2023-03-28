@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <context:annotation-config/>
+
+  <citrus:validation-matcher-library id="matcherLib" prefix="foo">
+    <citrus:matcher name="start" ref="startsWithMatcher"/>
+    <citrus:matcher name="end" ref="endsWithMatcher"/>
+    <citrus:matcher name="custom" class="org.citrusframework.validation.matcher.CustomValidationMatcher"/>
+  </citrus:validation-matcher-library>
+
+  <citrus:validation-matcher-library id="matcherLib2" prefix="bar">
+    <citrus:matcher name="isNumber" class="org.citrusframework.validation.matcher.core.IsNumberValidationMatcher"/>
+    <citrus:matcher name="custom" ref="customMatcher"/>
+  </citrus:validation-matcher-library>
+
+  <bean id="customMatcher" class="org.citrusframework.validation.matcher.CustomValidationMatcher"/>
+  <bean id="startsWithMatcher" class="org.citrusframework.validation.matcher.core.StartsWithValidationMatcher"/>
+  <bean id="endsWithMatcher" class="org.citrusframework.validation.matcher.core.EndsWithValidationMatcher"/>
+
+  <citrus:direct-endpoint id="customEndpoint"/>
+
+</beans>

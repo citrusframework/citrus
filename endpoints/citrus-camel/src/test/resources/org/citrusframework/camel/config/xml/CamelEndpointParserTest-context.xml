@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-camel="http://www.citrusframework.org/schema/camel/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd">
+
+  <citrus-camel:endpoint id="camelEndpoint1"
+                         endpoint-uri="direct:news-feed1"/>
+
+  <citrus-camel:endpoint id="camelEndpoint2"
+                         camel-context="specialCamelContext"
+                         timeout="10000"
+                         endpoint-uri="direct:news-feed2"/>
+
+  <citrus-camel:endpoint id="camelEndpoint3"
+                         message-converter="messageConverter"
+                         endpoint-uri="direct:news-feed3"
+                         actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.camel.message.CamelMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+
+  <!-- Camel context instances -->
+  <bean id="camelContext" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.apache.camel.CamelContext</value></constructor-arg>
+    <constructor-arg value="camelContext"/>
+  </bean>
+
+  <bean id="specialCamelContext" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.apache.camel.CamelContext</value></constructor-arg>
+    <constructor-arg value="specialCamelContext"/>
+  </bean>
+</beans>

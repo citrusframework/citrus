@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.endpoint.direct.DirectEndpointComponent
+type=org.citrusframework.endpoint.direct.DirectEndpointComponent

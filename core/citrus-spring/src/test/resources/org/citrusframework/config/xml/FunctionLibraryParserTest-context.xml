@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <context:annotation-config/>
+
+  <citrus:function-library id="functionLib" prefix="foo">
+    <citrus:function name="randomNr" ref="randomNumber"/>
+    <citrus:function name="randomStr" ref="randomString"/>
+    <citrus:function name="custom" class="org.citrusframework.functions.CustomFunction"/>
+  </citrus:function-library>
+
+  <citrus:function-library id="functionLib2" prefix="bar">
+    <citrus:function name="concat" class="org.citrusframework.functions.core.ConcatFunction"/>
+    <citrus:function name="custom" ref="customFunction"/>
+  </citrus:function-library>
+
+  <bean id="customFunction" class="org.citrusframework.functions.CustomFunction"/>
+  <bean id="randomNumber" class="org.citrusframework.functions.core.RandomNumberFunction"/>
+  <bean id="randomString" class="org.citrusframework.functions.core.RandomStringFunction"/>
+
+  <citrus:direct-endpoint id="customEndpoint"/>
+
+</beans>

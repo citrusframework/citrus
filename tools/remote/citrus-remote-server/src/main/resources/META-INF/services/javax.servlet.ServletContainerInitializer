@@ -1,1 +1,1 @@
-org.citrusframework.citrus.remote.servlet.CitrusRemoteServletContainerInitializer
+org.citrusframework.remote.servlet.CitrusRemoteServletContainerInitializer

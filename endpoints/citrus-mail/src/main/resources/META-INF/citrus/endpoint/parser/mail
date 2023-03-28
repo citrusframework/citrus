@@ -1,2 +1,2 @@
-client=org.citrusframework.citrus.mail.config.annotation.MailClientConfigParser
-server=org.citrusframework.citrus.mail.config.annotation.MailServerConfigParser
+client=org.citrusframework.mail.config.annotation.MailClientConfigParser
+server=org.citrusframework.mail.config.annotation.MailServerConfigParser

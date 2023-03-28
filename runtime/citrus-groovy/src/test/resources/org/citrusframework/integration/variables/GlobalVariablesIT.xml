@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+  xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="GlobalVariablesIT">
+    <meta-info>
+      <author>Philipp Komninos</author>
+      <creationdate>2010-08-13</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Philipp Komninos</last-updated-by>
+      <last-updated-on>2010-08-13T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+		Test the use of property loader with global variables and general variable support.
+		Global variables are loaded in advance to this test. Variables are printed within this test
+        to show that global property loader works fine.
+	</description>
+  
+    <variables>
+        <variable name="checkDate" value="citrus:currentDate('yyyy-MM-dd')"/>
+    </variables>
+
+    <actions>
+      <echo>
+        <message>Value of global variable "globalGreeting": ${globalGreeting}</message>
+      </echo>
+      
+      <echo>
+        <message>Value of global variable "globalWelcomingText": ${globalWelcomingText}</message>
+      </echo>
+      
+      <echo>
+        <message>Value of global variable "globalDate": ${globalDate}</message>
+      </echo>
+
+      <echo>
+        <message>Value of global sum variables: ${globalSum1}, ${globalSum2}</message>
+      </echo>
+
+      <echo>
+        <message>Verify variables support (replacement in properties)</message>
+      </echo>
+
+      <groovy>
+        <![CDATA[
+          import org.citrusframework.*
+          import org.citrusframework.variable.*
+          import org.citrusframework.context.TestContext
+          import org.citrusframework.script.GroovyAction.ScriptExecutor
+          import org.testng.Assert;
+          
+          public class GScript implements ScriptExecutor {
+              public void execute(TestContext context) {
+                  Assert.assertEquals("${globalWelcomingText}", "Hello Citrus!")
+                  Assert.assertEquals("${globalDate}", "Today is ${checkDate}!")
+                  Assert.assertEquals("${globalSum1}", "${globalSum2}")
+              }
+          }
+        ]]>
+      </groovy>
+    </actions>
+  </testcase>
+</spring:beans>

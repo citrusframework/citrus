@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.container.Timer$Builder
+type=org.citrusframework.container.Timer$Builder

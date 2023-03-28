@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.container.Assert$Builder
+type=org.citrusframework.container.Assert$Builder

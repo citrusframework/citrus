@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.container.Wait$Builder
+type=org.citrusframework.container.Wait$Builder

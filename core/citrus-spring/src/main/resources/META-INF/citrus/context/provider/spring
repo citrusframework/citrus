@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.CitrusSpringContextProvider
+type=org.citrusframework.CitrusSpringContextProvider

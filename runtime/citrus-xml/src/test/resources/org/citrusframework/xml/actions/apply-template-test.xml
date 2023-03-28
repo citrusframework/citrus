@@ -1,0 +1,48 @@
+<!--
+  ~ Copyright 2021 the original author or authors.
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements. See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License. You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<test name="ApplyTemplateTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <description>Sample test in XML</description>
+  <actions>
+    <apply-template name="myTemplate"/>
+
+    <apply-template name="print">
+      <parameters>
+        <parameter name="text" value="Hello from Citrus!"/>
+        <parameter name="message">
+          <value>
+            <![CDATA[
+              <HelloRequest>
+                 <Text>Hello from Citrus!</Text>
+              </HelloRequest>
+            ]]>
+          </value>
+        </parameter>
+      </parameters>
+    </apply-template>
+
+    <apply-template file="classpath:org/citrusframework/xml/template.xml">
+      <parameters>
+        <parameter name="message" value="Citrus rocks!"/>
+      </parameters>
+    </apply-template>
+  </actions>
+</test>

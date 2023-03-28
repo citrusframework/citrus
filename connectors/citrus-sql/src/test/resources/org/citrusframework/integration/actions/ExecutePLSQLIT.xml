@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="ExecutePLSQLIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2008-06-30</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2008-06-30T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      Execute PLSQL scripts
+    </description>
+
+    <actions>
+      <plsql datasource="testDataSource" ignore-errors="true">
+        <resource file="classpath:org/citrusframework/integration/actions/plsql.sql"/>
+      </plsql>
+
+      <plsql datasource="testDataSource" ignore-errors="true">
+        <script>
+          <![CDATA[
+            BEGIN
+							EXECUTE IMMEDIATE 'create or replace function test (v_id in number) return number is
+							  begin
+							   if v_id  is null then
+							    return 0;
+							    end if;
+							    return v_id;
+							  end;';
+						END;
+						/
+          ]]>
+        </script>
+      </plsql>
+    </actions>
+  </testcase>
+</spring:beans>

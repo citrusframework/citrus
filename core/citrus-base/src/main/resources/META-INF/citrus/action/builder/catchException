@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.container.Catch$Builder
+type=org.citrusframework.container.Catch$Builder

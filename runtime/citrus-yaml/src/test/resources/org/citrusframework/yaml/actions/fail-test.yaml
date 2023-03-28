@@ -1,0 +1,17 @@
+name: FailTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - assert:
+      exception: "org.citrusframework.exceptions.CitrusRuntimeException"
+      message: "Something went wrong"
+      when:
+        - fail:
+            message: "Something went wrong"
+  - assert:
+      exception: "org.citrusframework.exceptions.CitrusRuntimeException"
+      message: "Something went wrong"
+      when:
+        - fail:
+            message: Something went wrong

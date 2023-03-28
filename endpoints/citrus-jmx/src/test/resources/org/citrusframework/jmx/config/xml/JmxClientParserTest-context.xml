@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/jmx/config http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd">
+
+  <citrus-jmx:client id="jmxClient1"/>
+
+  <citrus-jmx:client id="jmxClient2"
+          server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
+          username="user"
+          password="s!cr!t"
+          auto-reconnect="true"
+          delay-on-reconnect="5000"
+          polling-interval="100"
+          timeout="10000"
+          notification-filter="notificationFilter"
+          message-converter="messageConverter"
+          message-correlator="messageCorrelator"
+          actor="actor"/>
+
+  <bean id="notificationFilter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">javax.management.NotificationFilter</value></constructor-arg>
+    <constructor-arg value="notificationFilter"/>
+  </bean>
+
+  <bean id="actor" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.TestActor</value></constructor-arg>
+    <constructor-arg value="actor"/>
+  </bean>
+
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.jmx.message.JmxMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+
+  <bean id="messageCorrelator" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.message.MessageCorrelator</value></constructor-arg>
+    <constructor-arg value="messageCorrelator"/>
+  </bean>
+
+</beans>

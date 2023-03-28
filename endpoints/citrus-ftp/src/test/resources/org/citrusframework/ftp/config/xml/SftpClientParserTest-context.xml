@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/sftp/config http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <citrus-sftp:client id="sftpClient1"
+                     host="localhost"
+                     port="22222"/>
+
+  <citrus-sftp:client id="sftpClient2"
+                     host="localhost"
+                     port="22222"
+                     error-strategy="throwsException"
+                     auto-read-files="false"
+                     local-passive-mode="false"
+                     username="user"
+                     password="consol"
+                     private-key-path="classpath:org/citrusframework/sftp/citrus.priv"
+                     private-key-password="consol"
+                     strict-host-checking="true"
+                     known-hosts-path="classpath:org/citrusframework/sftp/known_hosts"
+                     preferred-authentications="gssapi-with-mic"
+                     session-configs="sessionConfig"
+                     timeout="10000"/>
+
+  <citrus-sftp:client id="sftpClient3"
+                     host="localhost"
+                     port="22222"
+                     message-correlator="replyMessageCorrelator"/>
+
+  <citrus-sftp:client id="sftpClient4"
+                     host="localhost"
+                     port="22222"
+                     polling-interval="250"
+                     actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.message.MessageCorrelator</value></constructor-arg>
+    <constructor-arg value="replyMessageCorrelator"/>
+  </bean>
+
+  <util:map id="sessionConfig">
+    <entry key="PreferredAuthentications" value="gssapi-with-mic"/>
+  </util:map>
+
+</beans>

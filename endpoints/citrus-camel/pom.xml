@@ -108,7 +108,7 @@
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
           <sources>
-            <source>src/main/resources/org/citrusframework/citrus/schema/citrus-camel-config.xsd</source>
+            <source>src/main/resources/org/citrusframework/schema/citrus-camel-config.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>

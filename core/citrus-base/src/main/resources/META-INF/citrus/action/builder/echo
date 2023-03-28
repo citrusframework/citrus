@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.actions.EchoAction$Builder
+type=org.citrusframework.actions.EchoAction$Builder

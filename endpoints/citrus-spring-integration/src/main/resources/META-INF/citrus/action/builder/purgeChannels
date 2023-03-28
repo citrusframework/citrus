@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.actions.PurgeMessageChannelAction$Builder
+type=org.citrusframework.actions.PurgeMessageChannelAction$Builder

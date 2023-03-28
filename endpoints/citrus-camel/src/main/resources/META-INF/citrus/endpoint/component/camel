@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.camel.endpoint.CamelEndpointComponent
+type=org.citrusframework.camel.endpoint.CamelEndpointComponent

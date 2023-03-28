@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.groovy.GroovyTestLoader
+type=org.citrusframework.groovy.GroovyTestLoader

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/docker/testcase http://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase.xsd">
+
+    <testcase name="DockerExecuteActionParserTest">
+        <actions>
+            <docker:info/>
+            <docker:info docker-client="myDockerClient"/>
+
+            <docker:ping/>
+            <docker:version/>
+
+            <docker:pull image="image_pull"
+                    tag="image_tag"
+                    registry="docker_registry"
+                    repository="docker_repository"/>
+
+            <docker:build basedir="base_dir"
+                    dockerfile="path_to_dockerfile"
+                    no-cache="true"
+                    quiet="true"
+                    tag="image_tag"
+                    remove="false"/>
+
+            <docker:remove image="image_remove"/>
+            <docker:remove container="container_remove"/>
+
+            <docker:inspect image="image_inspect"/>
+            <docker:inspect container="container_inspect"/>
+
+            <docker:create image="image_create"
+                    cmd="echo 'Hello World'"
+                    attach-stderr="false"
+                    attach-stdin="false"
+                    attach-stdout="false"
+                    capability-add="CHOWN,KILL"
+                    capability-drop="NET_ADMIN,SYS_BOOT"
+                    domain-name="domain_name"
+                    entrypoint="bash"
+                    env="-Dsource.encoding=UTF-8"
+                    exposed-ports="tcp:8080"
+                    hostname="foo_host"
+                    name="foo_container"
+                    port-specs="8080;8088"
+                    port-bindings="8088:8080"
+                    volumes="path/to/volume"
+                    working-dir="."/>
+
+            <docker:start container="container_start"/>
+            <docker:stop container="container_stop"/>
+
+            <docker:wait container="container_wait"/>
+        </actions>
+    </testcase>
+
+    <spring:bean id="myDockerClient" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.docker.client.DockerClient</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myDockerClient"/>
+    </spring:bean>
+
+</spring:beans>

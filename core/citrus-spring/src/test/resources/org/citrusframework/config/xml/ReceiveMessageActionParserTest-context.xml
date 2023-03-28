@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="ReceiveMessageActionParserTest">
+        <actions>
+            <receive endpoint="myMessageEndpoint">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="operation" value="Test"/>
+                </header>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <message>
+                    <payload>
+                        <TestMessage xmlns="http://citrusframework.org/test">Hello Citrus</TestMessage>
+                    </payload>
+                </message>
+                <header>
+                    <fragment>
+                        <Header xmlns="http://citrusframework.org/test"><operation>hello</operation></Header>
+                    </fragment>
+                    <element name="operation" value="Test"/>
+                </header>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint" timeout="1000">
+                <selector>
+                    <element name="operation" value="Test"/>
+                </selector>
+                <message>
+                    <resource file="classpath:org/citrusframework/actions/test-request-payload.xml"/>
+                </message>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <selector>
+                    <value>operation = 'Test'</value>
+                </selector>
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <message data-dictionary="myDataDictionary">
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <extract>
+                    <header name="operation" variable="operation"/>
+                    <message path="/TestMessage/text()" variable="text"/>
+                </extract>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <message schema-validation="false">
+                    <data>
+                        <![CDATA[
+                            <ns:TestMessage xmlns:ns="http://www.consol.com">Hello Citrus</ns:TestMessage>
+                        ]]>
+                    </data>
+                    <element path="/ns:TestMessage/" value="newValue"/>
+                    <ignore path="/ns:TestMessage/ns:ignore"/>
+                    <namespace prefix="ns" value="http://www.consol.com"/>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message>
+                    <validate path="/TestMessage/text" value="Hello Citrus"/>
+                    <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message>
+                    <validate>
+                        <xpath expression="/TestMessage/text" value="Hello Citrus"/>
+                        <xpath expression="/TestMessage/foo" value="true" result-type="boolean"/>
+                    </validate>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message>
+                    <validate>
+                        <script type="groovy">
+                            assert true
+                        </script>
+                    </validate>
+                    <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message>
+                    <validate>
+                        <script type="groovy" file="classpath:org/citrusframework/actions/test-validation-script.groovy"/>
+                    </validate>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message type="json">
+                    <validate path="$.json.text" value="Hello Citrus"/>
+                    <validate path="$..foo.bar" value="true"/>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message type="json">
+                    <validate>
+                        <json-path expression="$.json.text" value="Hello Citrus"/>
+                        <json-path expression="$..foo.bar" value="true"/>
+                    </validate>
+                </message>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <message type="json">
+                    <data>
+                        <![CDATA[
+                            { "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}
+                        ]]>
+                    </data>
+                    <element path="$.FooMessage.foo" value="newValue"/>
+                    <ignore path="$.FooMessage.bar"/>
+                </message>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <message type="json">
+                    <data>
+                        <![CDATA[
+                            { "message": { "text": "Hello World!" }, { "bar": "@ignore@" }}
+                        ]]>
+                    </data>
+                </message>
+                <extract>
+                    <header name="operation" variable="operation"/>
+                    <message path="$.message.text" variable="text"/>
+                </extract>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <message validator="myValidator" header-validator="myHeaderValidator">
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="operation" value="Test"/>
+                </header>
+            </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <message validators="myValidator,defaultMessageValidator" header-validators="myHeaderValidator,defaultHeaderValidator">
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="operation" value="Test"/>
+                </header>
+            </receive>
+
+        </actions>
+    </testcase>
+
+    <spring:bean id="myMessageEndpoint" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.endpoint.Endpoint</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myMessageEndpoint"/>
+    </spring:bean>
+
+    <spring:bean id="myDataDictionary" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.variable.dictionary.DataDictionary</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myDataDictionary"/>
+    </spring:bean>
+
+    <spring:bean id="myValidator" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.validation.MessageValidator</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myValidator"/>
+    </spring:bean>
+
+    <spring:bean id="defaultMessageValidator" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.validation.MessageValidator</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="defaultMessageValidator"/>
+    </spring:bean>
+
+</spring:beans>

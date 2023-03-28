@@ -20,7 +20,7 @@ Test results:
 [source,xml]
 ----
 Execution of test: failTest failed! Nested exception is: 
-org.citrusframework.citrus.exceptions.CitrusRuntimeException:
+org.citrusframework.exceptions.CitrusRuntimeException:
 Test will fail with custom message
 
 [...]

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="ScriptMessageValidationIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2017-05-10</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2017-03-10T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test sends messages to a message channel and receives these messages performing script validation.</description>
+
+    <actions>
+      <echo>
+        <message>Test script validation success</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="plaintext">
+          <validate>
+            <script type="groovy">
+              assert receivedMessage.payload.equals("Hello Citrus");
+              assert receivedMessage.headers.get("Operation").equals("sayHello");
+            </script>
+          </validate>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="xml">
+          <validate>
+            <script type="groovy">
+            <![CDATA[
+              assert receivedMessage.payload.equals("<Text>Hello Citrus</Text>");
+              assert receivedMessage.headers.get("Operation").equals("sayHello");
+            ]]>
+            </script>
+          </validate>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            {"text": "Hello Citrus"}
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="json">
+          <validate>
+            <script type="groovy">
+              <![CDATA[
+                assert receivedMessage.payload.equals('{"text": "Hello Citrus"}');
+                assert receivedMessage.headers.get("Operation").equals("sayHello");
+              ]]>
+            </script>
+          </validate>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test script validation success - auto select message type</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data/>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <validate>
+            <script type="groovy">
+              assert receivedMessage.payload.equals("");
+              assert receivedMessage.headers.get("Operation").equals("sayHello");
+            </script>
+          </validate>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <validate>
+            <script type="groovy">
+              assert receivedMessage.payload.equals("Hello Citrus");
+              assert receivedMessage.headers.get("Operation").equals("sayHello");
+            </script>
+          </validate>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <validate>
+            <script type="groovy">
+              <![CDATA[
+              assert receivedMessage.payload.equals("<Text>Hello Citrus</Text>");
+              assert receivedMessage.headers.get("Operation").equals("sayHello");
+            ]]>
+            </script>
+          </validate>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            {"text": "Hello Citrus"}
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <validate>
+            <script type="groovy">
+              <![CDATA[
+                assert receivedMessage.payload.equals('{"text": "Hello Citrus"}');
+                assert receivedMessage.headers.get("Operation").equals("sayHello");
+              ]]>
+            </script>
+          </validate>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Test script validation errors</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message type="plaintext">
+              <validate>
+                <script type="groovy">
+                  assert receivedMessage.payload.equals("Goodbye Citrus");
+                  assert receivedMessage.headers.get("Operation").equals("sayHello");
+                </script>
+              </validate>
+            </message>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message type="xml">
+              <validate>
+                <script type="groovy">
+                  <![CDATA[
+                    assert receivedMessage.payload.equals("<Text>Goodbye Citrus</Text>");
+                    assert receivedMessage.headers.get("Operation").equals("sayHello");
+                  ]]>
+                </script>
+              </validate>
+            </message>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            {"text": "Hello Citrus"}
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message type="json">
+              <validate>
+                <script type="groovy">
+                  <![CDATA[
+                    assert receivedMessage.payload.equals('{"text": "Goodbye Citrus"}');
+                    assert receivedMessage.headers.get("Operation").equals("sayHello");
+                  ]]>
+                </script>
+              </validate>
+            </message>
+          </receive>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test script validation errors - auto select message type</message>
+      </echo>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus</data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message>
+              <validate>
+                <script type="groovy">
+                  assert receivedMessage.payload.equals("Goodbye Citrus");
+                  assert receivedMessage.headers.get("Operation").equals("sayHello");
+                </script>
+              </validate>
+            </message>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Text>Hello Citrus</Text>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message>
+              <validate>
+                <script type="groovy">
+                  <![CDATA[
+                    assert receivedMessage.payload.equals("<Text>Goodbye Citrus</Text>");
+                    assert receivedMessage.headers.get("Operation").equals("sayHello");
+                  ]]>
+                </script>
+              </validate>
+            </message>
+            <header>
+              <element name="Operation" value="sayHello"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            {"text": "Hello Citrus"}
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message>
+              <validate>
+                <script type="groovy">
+                  <![CDATA[
+                    assert receivedMessage.payload.equals('{"text": "Goodbye Citrus"}');
+                    assert receivedMessage.headers.get("Operation").equals("sayHello");
+                  ]]>
+                </script>
+              </validate>
+            </message>
+          </receive>
+        </when>
+      </assert>
+    </actions>
+  </testcase>
+</spring:beans>

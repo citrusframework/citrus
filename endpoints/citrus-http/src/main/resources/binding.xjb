@@ -3,7 +3,7 @@
           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
           version="3.0">
 
-  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-http-config.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-http-config.xsd">
     <globalBindings>
       <xjc:javaType
               name="java.util.Calendar"
@@ -16,16 +16,16 @@
       <xjc:simple />
     </globalBindings>
     <schemaBindings>
-      <package name="org.citrusframework.citrus.model.config.http"/>
+      <package name="org.citrusframework.model.config.http"/>
       <nameXmlTransform>
         <elementName prefix="Http" suffix="Model" />
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
 
-  <bindings schemaLocation="org/citrusframework/citrus/schema/citrus-http-testcase.xsd">
+  <bindings schemaLocation="org/citrusframework/schema/citrus-http-testcase.xsd">
     <schemaBindings>
-      <package name="org.citrusframework.citrus.model.testcase.http"/>
+      <package name="org.citrusframework.model.testcase.http"/>
       <nameXmlTransform>
         <elementName suffix="Model" />
       </nameXmlTransform>

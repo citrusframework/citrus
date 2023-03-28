@@ -101,7 +101,7 @@ So the request dispatching endpoint adapter is able to dynamically call several 
          mapping-strategy="mappingStrategy"/>
 
 <bean id="mappingStrategy"
-  class="org.citrusframework.citrus.endpoint.adapter.mapping.SimpleMappingStrategy">
+  class="org.citrusframework.endpoint.adapter.mapping.SimpleMappingStrategy">
     <property name="adapterMappings">
       <map>
           <entry key="sayHello" ref="helloEndpointAdapter"/>
@@ -110,7 +110,7 @@ So the request dispatching endpoint adapter is able to dynamically call several 
 </bean>
 
 <bean id="mappingKeyExtractor"
-  class="org.citrusframework.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor">
+  class="org.citrusframework.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor">
     <property name="xpathExpression" value="//TestMessage/Operation/*"/>
 </bean>
 

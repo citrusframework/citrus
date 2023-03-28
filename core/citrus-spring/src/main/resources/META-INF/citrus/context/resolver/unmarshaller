@@ -1,2 +1,2 @@
 name=unmarshallerResolver
-type=org.citrusframework.citrus.context.resolver.UnmarshallerAliasResolver
+type=org.citrusframework.context.resolver.UnmarshallerAliasResolver

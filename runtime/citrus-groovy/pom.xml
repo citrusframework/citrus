@@ -90,7 +90,7 @@
                 <phase>generate-resources</phase>
                 <configuration>
                   <sources>
-                    <source>src/main/java/org/citrusframework/citrus/groovy/xml/Groovy.java</source>
+                    <source>src/main/java/org/citrusframework/groovy/xml/Groovy.java</source>
                   </sources>
                   <outputDirectory>${project.build.directory}/schemas</outputDirectory>
                 </configuration>

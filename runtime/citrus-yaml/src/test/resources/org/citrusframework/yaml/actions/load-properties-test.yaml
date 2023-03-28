@@ -1,0 +1,8 @@
+name: LoadPropertiesTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - load:
+      properties:
+        file: "classpath:org/citrusframework/yaml/load.properties"

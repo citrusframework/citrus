@@ -1,2 +1,2 @@
 name=defaultBinaryMessageValidator
-type=org.citrusframework.citrus.validation.binary.BinaryMessageValidator
+type=org.citrusframework.validation.binary.BinaryMessageValidator

@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.http.client.HttpEndpointComponent
+type=org.citrusframework.http.client.HttpEndpointComponent

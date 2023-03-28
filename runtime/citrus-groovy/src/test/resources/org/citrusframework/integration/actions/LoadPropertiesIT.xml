@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+  xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="LoadPropertiesIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2008-05-15</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2010-08-18T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+        Loading variables from properties file (load.properties). Expect variables to be created and ready for test.
+        In addition to that test variable usage inside property file.
+    </description>
+
+    <variables>
+        <variable name="checkDate" value="citrus:currentDate('yyyy-MM-dd')"/>
+    </variables>
+
+    <actions>
+      <load>
+        <properties file="classpath:org/citrusframework/integration/actions/load.properties" />
+      </load>
+
+      <echo>
+        <message>Use variables coming from property file</message>
+      </echo>
+
+      <echo>
+        <message>Variables are: ${user}, ${welcomeText}, ${todayDate}</message>
+      </echo>
+
+      <echo>
+        <message>Verify variables support (replacement in properties)</message>
+      </echo>
+
+      <groovy>
+        <![CDATA[
+          import org.citrusframework.*
+          import org.citrusframework.variable.*
+          import org.citrusframework.context.TestContext
+          import org.citrusframework.script.GroovyAction.ScriptExecutor
+          import org.testng.Assert;
+
+          public class GScript implements ScriptExecutor {
+              public void execute(TestContext context) {
+                  Assert.assertEquals("${welcomeText}", "Hello Mr. X")
+                  Assert.assertEquals("${todayDate}", "${checkDate}")
+              }
+          }
+        ]]>
+      </groovy>
+    </actions>
+  </testcase>
+</spring:beans>

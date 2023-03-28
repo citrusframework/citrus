@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-vertx="http://www.citrusframework.org/schema/vertx/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/vertx/config http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
+
+  <citrus-vertx:endpoint id="vertxEndpoint1"
+                       address="news-feed1"/>
+
+  <citrus-vertx:endpoint id="vertxEndpoint2"
+                       host="127.0.0.1"
+                       port="10105"
+                       vertx-factory="specialVertxInstanceFactory"
+                       message-converter="messageConverter"
+                       timeout="10000"
+                       address="news-feed2"/>
+
+  <citrus-vertx:endpoint id="vertxEndpoint3"
+                       pub-sub-domain="true"
+                       address="news-feed3"/>
+
+  <citrus-vertx:endpoint id="vertxEndpoint4"
+                       address="news-feed4"
+                       actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <!-- Vert.x instance factory -->
+  <bean id="vertxInstanceFactory" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.vertx.factory.VertxInstanceFactory</value></constructor-arg>
+    <constructor-arg value="vertxInstanceFactory"/>
+  </bean>
+
+  <bean id="specialVertxInstanceFactory" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.vertx.factory.VertxInstanceFactory</value></constructor-arg>
+    <constructor-arg value="specialVertxInstanceFactory"/>
+  </bean>
+
+  <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.vertx.message.VertxMessageConverter</value></constructor-arg>
+    <constructor-arg value="messageConverter"/>
+  </bean>
+</beans>

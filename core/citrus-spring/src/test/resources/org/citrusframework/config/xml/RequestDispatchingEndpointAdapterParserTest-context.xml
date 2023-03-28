@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <citrus:dispatching-endpoint-adapter id="endpointAdapter"
+          mapping-key-extractor="mappingKeyExtractor"
+          mapping-strategy="mappingStrategy"/>
+
+  <bean id="mappingKeyExtractor" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.adapter.mapping.MappingKeyExtractor</value></constructor-arg>
+    <constructor-arg value="mappingKeyExtractor"/>
+  </bean>
+
+  <bean id="mappingStrategy" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.adapter.mapping.EndpointAdapterMappingStrategy</value></constructor-arg>
+    <constructor-arg value="mappingStrategy"/>
+  </bean>
+
+</beans>

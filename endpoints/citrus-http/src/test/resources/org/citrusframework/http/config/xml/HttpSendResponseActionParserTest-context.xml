@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+
+    <testcase name="HttpSendResponseActionParserTest">
+      <actions>
+        <http:send-response server="httpServer">
+        </http:send-response>
+
+        <http:send-response server="httpServer">
+          <http:headers status="404" reason-phrase="NOT_FOUND" version="HTTP/1.1"/>
+        </http:send-response>
+
+        <http:send-response server="httpServer">
+          <http:headers>
+            <http:header name="userId" value="1001"/>
+          </http:headers>
+          <http:body>
+            <http:data>
+              <![CDATA[
+                <user><id>1001</id><name>new_user</name></user>
+              ]]>
+            </http:data>
+          </http:body>
+        </http:send-response>
+
+        <http:send-response server="httpServer" actor="testActor"/>
+      </actions>
+    </testcase>
+
+    <spring:bean id="httpServer" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.http.server.HttpServer</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="httpServer"/>
+    </spring:bean>
+
+    <spring:bean id="testActor" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.TestActor</spring:value></spring:constructor-arg>
+      <spring:constructor-arg value="testActor"/>
+    </spring:bean>
+
+</spring:beans>

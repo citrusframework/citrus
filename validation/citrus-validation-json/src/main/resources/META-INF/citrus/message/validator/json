@@ -1,2 +1,2 @@
 name=defaultJsonMessageValidator
-type=org.citrusframework.citrus.validation.json.JsonTextMessageValidator
+type=org.citrusframework.validation.json.JsonTextMessageValidator

@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.jmx.endpoint.JmxEndpointComponent
+type=org.citrusframework.jmx.endpoint.JmxEndpointComponent

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/ssh/config http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd">
+
+  <citrus-ssh:server id="sshServer1"
+                     auto-start="false"
+                     port="22"/>
+
+  <citrus-ssh:server id="sshServer2"
+                     auto-start="false"
+                     port="10022"
+                     allowed-key-path="classpath:org/citrusframework/ssh/citrus_pub.pem"
+                     host-key-path="classpath:org/citrusframework/ssh/citrus.pem"
+                     user-home-path="/home/user"
+                     message-converter="sshMessageConverter"
+                     user="foo"
+                     password="bar"/>
+
+  <citrus-ssh:server id="sshServer3"
+                     auto-start="false"
+                     endpoint-adapter="sshServerAdapter"/>
+
+  <bean id="sshMessageConverter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.ssh.message.SshMessageConverter</value></constructor-arg>
+    <constructor-arg value="sshMessageConverter"/>
+  </bean>
+
+  <bean id="sshServerAdapter" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.endpoint.EndpointAdapter</value></constructor-arg>
+    <constructor-arg value="sshServerAdapter"/>
+  </bean>
+
+</beans>

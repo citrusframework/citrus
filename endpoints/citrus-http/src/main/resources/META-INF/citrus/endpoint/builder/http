@@ -1,2 +1,2 @@
-client=org.citrusframework.citrus.http.client.HttpClientBuilder
-server=org.citrusframework.citrus.http.server.HttpServerBuilder
+client=org.citrusframework.http.client.HttpClientBuilder
+server=org.citrusframework.http.server.HttpServerBuilder

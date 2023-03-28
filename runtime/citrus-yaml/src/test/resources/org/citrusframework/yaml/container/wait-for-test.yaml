@@ -1,0 +1,31 @@
+name: WaitForTest
+author: Christoph
+status: FINAL
+description: Sample test in YAML
+actions:
+  - waitFor:
+      description: some description
+      file:
+        path: classpath:org/citrusframework/yaml/test-request-payload.xml
+  - waitFor:
+      timeout: 10000
+      interval: 2000
+      file:
+        path: classpath:org/citrusframework/yaml/test-request-payload.xml
+  - waitFor:
+      http:
+        url: https://citrusframework.org
+  - waitFor:
+      timeout: 3000
+      http:
+        url: https://citrusframework.org/doesnotexist
+        method: GET
+        status: 404
+        timeout: 2000
+  - waitFor:
+      message:
+        name: request
+  - waitFor:
+      action:
+        echo:
+          message: Citrus rocks!

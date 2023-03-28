@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.mail.client.MailEndpointComponent
+type=org.citrusframework.mail.client.MailEndpointComponent

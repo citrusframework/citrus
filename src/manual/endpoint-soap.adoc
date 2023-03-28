@@ -8,7 +8,7 @@ NOTE: The SOAP WebService components in Citrus are kept in a separate Maven modu
 [source,xml]
 ----
 <dependency>
-  <groupId>org.citrusframework.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-ws</artifactId>
   <version>${citrus.version}</version>
 </dependency>
@@ -86,7 +86,7 @@ TIP: Up to now we have used a static endpoint request url for the SOAP message s
              message-factory="soap12MessageFactory"/>
 
 <bean id="dynamicEndpointResolver"
-       class="org.citrusframework.citrus.endpoint.resolver.DynamicEndpointUriResolver"/>
+       class="org.citrusframework.endpoint.resolver.DynamicEndpointUriResolver"/>
 ----
 
 The *dynamicEndpointResolver* bean must implement the EndpointUriResolver interface in order to resolve dynamic endpoint uri values. Citrus offers a default implementation, the *DynamicEndpointUriResolver*, which uses a specific message header for setting the dynamic endpoint uri for each message. The message header needs to specify the header *citrus_endpoint_uri* with a valid request uri. Just like this:
@@ -118,13 +118,13 @@ The client component is able to add custom interceptors that participate in the 
     <property name="securementUsername" value="admin"/>
     <property name="securementPassword" value="secret"/>
   </bean>
-  <bean class="org.citrusframework.citrus.ws.interceptor.LoggingClientInterceptor"/>
+  <bean class="org.citrusframework.ws.interceptor.LoggingClientInterceptor"/>
 </util:list>
 ----
 
 The sample above adds Wss4J WsSecurity interceptors in order to add security constraints to the request messages.
 
-NOTE: When customizing the interceptor chain all default interceptors (like logging interceptor) are lost. You need to add these interceptors explicitly as shown with the _org.citrusframework.citrus.ws.interceptor.LoggingClientInterceptor_ which
+NOTE: When customizing the interceptor chain all default interceptors (like logging interceptor) are lost. You need to add these interceptors explicitly as shown with the _org.citrusframework.ws.interceptor.LoggingClientInterceptor_ which
 is able to log request/response messages during communication.
 
 [[soap-server]]
@@ -481,14 +481,14 @@ chain on the server component as follows:
                   interceptors="serverInterceptors"/>
 
 <util:list id="serverInterceptors">
-  <bean class="org.citrusframework.citrus.ws.interceptor.SoapMustUnderstandEndpointInterceptor">
+  <bean class="org.citrusframework.ws.interceptor.SoapMustUnderstandEndpointInterceptor">
     <property name="acceptedHeaders">
       <list>
         <value>{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd}Security</value>
       </list>
     </property>
   </bean>
-  <bean class="org.citrusframework.citrus.ws.interceptor.LoggingEndpointInterceptor"/>
+  <bean class="org.citrusframework.ws.interceptor.LoggingEndpointInterceptor"/>
   <bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
     <property name="validationActions" value="Timestamp UsernameToken"/>
     <property name="validationCallbackHandler">
@@ -507,7 +507,7 @@ chain on the server component as follows:
 The custom interceptors are used to enable WsSecurity features on the soap server component via Wss4J.
 
 NOTE: When customizing the interceptor chain of the soap server component all default interceptors (like logging interceptors) are lost. You can see that we had to add
-the _org.citrusframework.citrus.ws.interceptor.LoggingEndpointInterceptor_ explicitly in order to log request/response messages for the server communication.
+the _org.citrusframework.ws.interceptor.LoggingEndpointInterceptor_ explicitly in order to log request/response messages for the server communication.
 
 [[soap-1-2]]
 == SOAP 1.2
@@ -704,14 +704,14 @@ The time you use SOAP fault validation you need to tell Citrus how to validate t
 
 [source,xml]
 ----
-<bean id="soapFaultValidator" class="org.citrusframework.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
+<bean id="soapFaultValidator" class="org.citrusframework.ws.validation.SimpleSoapAttachmentValidator"/>
 ----
 
 Citrus offers several reference implementations for these SOAP fault validators. These are:
 
-* org.citrusframework.citrus.ws.validation.SimpleSoapAttachmentValidator
-* org.citrusframework.citrus.ws.validation.SimpleSoapFaultValidator
-* org.citrusframework.citrus.ws.validation.XmlSoapFaultValidator
+* org.citrusframework.ws.validation.SimpleSoapAttachmentValidator
+* org.citrusframework.ws.validation.SimpleSoapFaultValidator
+* org.citrusframework.ws.validation.XmlSoapFaultValidator
 
 Please see the API documentation for details on the available reference implementations. Of course you can also define your own SOAP validator logic (would be great if you could share your ideas!). In the test case you can explicitly choose the validator to use:
 
@@ -789,7 +789,7 @@ Citrus is also able to validate SOAP fault details. See the following example fo
 </ws:assert-fault>
 ----
 
-The expected SOAP fault detail content is simply added to the *ws:assert* action. The *_SoapFaultValidator_* implementation defined in the Spring application context is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template. Citrus provides some default *_SoapFaultValidator_* implementations. Supported algorithms are pure String comparison (*org.citrusframework.citrus.ws.validation.SimpleSoapFaultValidator*) as well as XML tree walk-through (*org.citrusframework.citrus.ws.validation.XmlSoapFaultValidator*).
+The expected SOAP fault detail content is simply added to the *ws:assert* action. The *_SoapFaultValidator_* implementation defined in the Spring application context is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template. Citrus provides some default *_SoapFaultValidator_* implementations. Supported algorithms are pure String comparison (*org.citrusframework.ws.validation.SimpleSoapFaultValidator*) as well as XML tree walk-through (*org.citrusframework.ws.validation.XmlSoapFaultValidator*).
 
 When using the XML validation algorithm you have the complete power as known from normal message validation in receive actions. This includes schema validation or ignoring elements for instance. On the fault-detail element you are able to add some validation settings such as *schema-validation=enabled/disabled*, custom *schema-repository* and so on.
 
@@ -1008,7 +1008,7 @@ As client Citrus is able to add attachments to the SOAP message. I think it is b
         </payload>
     </message>
     <ws:attachment content-id="MySoapAttachment" content-type="text/plain">
-        <ws:resource file="classpath:org/citrusframework/citrus/ws/soapAttachment.txt"/>
+        <ws:resource file="classpath:org/citrusframework/ws/soapAttachment.txt"/>
     </ws:attachment>
 </ws:send>
 ----
@@ -1037,7 +1037,7 @@ When Citrus calls SOAP WebServices as a client we may receive SOAP responses wit
     <ws:attachment content-id="MySoapAttachment"
                       content-type="text/plain"
                       validator="mySoapAttachmentValidator">
-        <ws:resource file="classpath:org/citrusframework/citrus/ws/soapAttachment.txt"/>
+        <ws:resource file="classpath:org/citrusframework/ws/soapAttachment.txt"/>
     </ws:attachment>
 </ws:receive>
 ----
@@ -1048,7 +1048,7 @@ NOTE: The *ws:attachment* element specifies a validator instance. This validator
 
 [source,xml]
 ----
-<bean id="soapAttachmentValidator" class="org.citrusframework.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
+<bean id="soapAttachmentValidator" class="org.citrusframework.ws.validation.SimpleSoapAttachmentValidator"/>
 <bean id="mySoapAttachmentValidator" class="com.company.ws.validation.MySoapAttachmentValidator"/>
 ----
 
@@ -1074,7 +1074,7 @@ Citrus is able to both send and receive MTOM enabled SOAP messages on client and
     </data>
   </message>
   <ws:attachment content-id="IMAGE" content-type="application/octet-stream">
-    <ws:resource file="classpath:org/citrusframework/citrus/hugeImageData.png"/>
+    <ws:resource file="classpath:org/citrusframework/hugeImageData.png"/>
   </ws:attachment>
 </ws:send>
 ----
@@ -1110,7 +1110,7 @@ On the server side Citrus is also able to handle MTOM enabled SOAP messages. In 
     </data>
   </message>
   <ws:attachment content-id="IMAGE" content-type="application/octet-stream">
-    <ws:resource file="classpath:org/citrusframework/citrus/hugeImageData.png"/>
+    <ws:resource file="classpath:org/citrusframework/hugeImageData.png"/>
   </ws:attachment>
 </ws:receive>
 ----
@@ -1134,11 +1134,11 @@ Next thing that we have to talk about is inline MTOM data. This means that the c
   </message>
   <ws:attachment content-id="IMAGE" content-type="application/octet-stream"
             mtom-inline="true" encoding-type="base64Binary">
-    <ws:resource file="classpath:org/citrusframework/citrus/image.png"/>
+    <ws:resource file="classpath:org/citrusframework/image.png"/>
   </ws:attachment>
   <ws:attachment content-id="ICON" content-type="application/octet-stream"
             mtom-inline="true" encoding-type="hexBinary">
-    <ws:resource file="classpath:org/citrusframework/citrus/icon.ico"/>
+    <ws:resource file="classpath:org/citrusframework/icon.ico"/>
   </ws:attachment>
 </ws:send>
 ----
@@ -1220,10 +1220,10 @@ When providing SOAP WebService server functionality Citrus can also set basic au
              resource-base="src/it/resources"
              security-handler="basicSecurityHandler"/>
 
-<bean id="securityHandler" class="org.citrusframework.citrus.ws.security.SecurityHandlerFactory">
+<bean id="securityHandler" class="org.citrusframework.ws.security.SecurityHandlerFactory">
     <property name="users">
         <list>
-            <bean class="org.citrusframework.citrus.ws.security.User">
+            <bean class="org.citrusframework.ws.security.User">
                 <property name="name" value="citrus"/>
                 <property name="password" value="secret"/>
                 <property name="roles" value="CitrusRole"/>
@@ -1233,7 +1233,7 @@ When providing SOAP WebService server functionality Citrus can also set basic au
     <property name="constraints">
         <map>
             <entry key="/foo/*">
-                <bean class="org.citrusframework.citrus.ws.security.BasicAuthConstraint">
+                <bean class="org.citrusframework.ws.security.BasicAuthConstraint">
                     <constructor-arg value="CitrusRole"/>
                 </bean>
             </entry>
@@ -1261,9 +1261,9 @@ In Citrus WebService client you can add those header information using the commo
                          request-url="http://localhost:8090/test"
                          message-converter="wsAddressingMessageConverter"/>
 
-<bean id="wsAddressingMessageConverter" class="org.citrusframework.citrus.ws.message.converter.WsAddressingMessageConverter">
+<bean id="wsAddressingMessageConverter" class="org.citrusframework.ws.message.converter.WsAddressingMessageConverter">
   <constructor-arg>
-    <bean id="wsAddressing200408" class="org.citrusframework.citrus.ws.addressing.WsAddressingHeaders">
+    <bean id="wsAddressing200408" class="org.citrusframework.ws.addressing.WsAddressingHeaders">
         <property name="version" value="VERSION200408"/>
         <property name="action" value="http://citrus.sample/sayHello"/>
         <property name="to" value="http://citrus.sample/server"/>
@@ -1289,7 +1289,7 @@ In Citrus WebService client you can add those header information using the commo
 
 The WsAddressing header values will be used for all request messages that are sent with the soap client component _soapClient_. You can overwrite the WsAddressing
 header in each send test action in your test though. Just set the special WsAddressing message header on your request. You can use the following message header names in
-order to overwrite the default addressing headers specified in the message converter configuration (also see the class _org.citrusframework.citrus.ws.addressing.WsAddressingMessageHeaders_).
+order to overwrite the default addressing headers specified in the message converter configuration (also see the class _org.citrusframework.ws.addressing.WsAddressingMessageHeaders_).
 
 [horizontal]
 citrus_soap_ws_addressing_messageId:: addressing message id as URI
@@ -1339,7 +1339,7 @@ IMPORTANT: By default when not set explicitly on the message headers the WsAddre
 
 [source,xml]
 ----
-<bean id="wsAddressingMessageConverter" class="org.citrusframework.citrus.ws.message.converter.WsAddressingMessageConverter">
+<bean id="wsAddressingMessageConverter" class="org.citrusframework.ws.message.converter.WsAddressingMessageConverter">
   <property name="messageIdStrategy">
     <bean class="org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy"/>
   </property>
@@ -1433,7 +1433,7 @@ Now let us have a closer look at the context-config-location attribute. This con
       </property>
   </bean>
 
-  <bean id="helloServiceEndpoint" class="org.citrusframework.citrus.ws.server.WebServiceEndpoint">
+  <bean id="helloServiceEndpoint" class="org.citrusframework.ws.server.WebServiceEndpoint">
       <property name="endpointAdapter" ref="staticResponseEndpointAdapter"/>
   </bean>
 

@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.xml.XpathSegmentVariableExtractor
+type=org.citrusframework.xml.XpathSegmentVariableExtractor

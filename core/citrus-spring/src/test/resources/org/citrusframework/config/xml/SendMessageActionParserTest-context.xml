@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+    <testcase name="SendMessageActionParserTest">
+        <actions>
+            <send endpoint="myMessageEndpoint">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="operation" value="Test"/>
+                </header>
+            </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message>
+                    <payload>
+                        <TestMessage xmlns="http://citrusframework.org/test">Hello Citrus</TestMessage>
+                    </payload>
+                </message>
+                <header>
+                    <fragment>
+                        <Header xmlns="http://citrusframework.org/test"><operation>hello</operation></Header>
+                    </fragment>
+                    <element name="operation" value="Test"/>
+                </header>
+            </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message>
+                    <resource file="classpath:org/citrusframework/actions/test-request-payload.xml"/>
+                </message>
+            </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message data-dictionary="myDataDictionary">
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                    <element path="/TestMessage/text()" value="newValue"/>
+                </message>
+                <extract>
+                    <header name="operation" variable="operation"/>
+                </extract>
+            </send>
+
+            <send endpoint="channel:myMessageEndpoint">
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="intValue" value="5" type="integer"/>
+                    <element name="longValue" value="10" type="long"/>
+                    <element name="floatValue" value="10.0" type="float"/>
+                    <element name="doubleValue" value="10.0" type="double"/>
+                    <element name="byteValue" value="1" type="byte"/>
+                    <element name="shortValue" value="10" type="short"/>
+                    <element name="boolValue" value="true" type="boolean"/>
+                    <element name="stringValue" value="Hello Citrus" type="string"/>
+                </header>
+            </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message type="json">
+                    <data>
+                        <![CDATA[
+                            { "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}
+                        ]]>
+                    </data>
+                    <element path="$.FooMessage.foo" value="newValue"/>
+                </message>
+            </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message type="json" schema-validation="true" schema="fooSchema" schema-repository="fooRepository">
+                    <data>
+                        <![CDATA[
+                            { "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}
+                        ]]>
+                    </data>
+                </message>
+            </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message type="xml" schema-validation="true" schema="fooSchema" schema-repository="fooRepository">
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
+            </send>
+
+        </actions>
+    </testcase>
+
+    <spring:bean id="myMessageEndpoint" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.endpoint.Endpoint</spring:value></spring:constructor-arg>
+        <spring:constructor-arg value="myMessageEndpoint"/>
+    </spring:bean>
+
+    <spring:bean id="myDataDictionary" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg><spring:value type="java.lang.Class">org.citrusframework.variable.dictionary.DataDictionary</spring:value></spring:constructor-arg>
+      <spring:constructor-arg value="myDataDictionary"/>
+    </spring:bean>
+
+</spring:beans>

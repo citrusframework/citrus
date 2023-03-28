@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.validation.matcher.hamcrest.provider.AntPathMatcherProvider
+type=org.citrusframework.validation.matcher.hamcrest.provider.AntPathMatcherProvider

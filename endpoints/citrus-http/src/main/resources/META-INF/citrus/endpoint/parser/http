@@ -1,2 +1,2 @@
-client=org.citrusframework.citrus.http.config.annotation.HttpClientConfigParser
-server=org.citrusframework.citrus.http.config.annotation.HttpServerConfigParser
+client=org.citrusframework.http.config.annotation.HttpClientConfigParser
+server=org.citrusframework.http.config.annotation.HttpServerConfigParser

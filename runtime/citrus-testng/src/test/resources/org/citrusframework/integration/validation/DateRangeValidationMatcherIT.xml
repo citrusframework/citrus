@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+  <testcase name="DateRangeValidationMatcherIT">
+    <meta-info>
+      <author>Martin Maher</author>
+      <creationdate>2015-12-14</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Martin Maher</last-updated-by>
+      <last-updated-on>2015-12-14T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      Tests the @dateRange()@ validator
+    </description>
+
+    <variables>
+      <variable name="withinRangeTimestamp" value="2015-01-31"/>
+      <variable name="outsideRangeTimestamp" value="2015-01-28"/>
+      <variable name="rangeFrom" value="2015-01-30"/>
+      <variable name="rangeTo" value="2015-02-01"/>
+    </variables>
+
+    <actions>
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus!</data>
+        </message>
+        <header>
+          <element name="time" value="${withinRangeTimestamp}"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="plaintext">
+          <data>Hello Citrus!</data>
+        </message>
+        <header>
+          <element name="time" value="@dateRange('${rangeFrom}','${rangeTo}')@"/>
+        </header>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>Hello Citrus!</data>
+        </message>
+        <header>
+          <element name="time" value="${outsideRangeTimestamp}"/>
+        </header>
+      </send>
+
+      <assert exception="org.citrusframework.exceptions.ValidationException" message="DateRangeValidationMatcher failed for field 'time'. Date '${outsideRangeTimestamp}' not in range: ${rangeFrom} - ${rangeTo}">
+        <when>
+          <receive endpoint="helloEndpoint">
+            <message type="plaintext">
+              <data>Hello Citrus!</data>
+            </message>
+            <header>
+              <element name="time" value="@dateRange('${rangeFrom}','${rangeTo}')@"/>
+            </header>
+          </receive>
+        </when>
+      </assert>
+    </actions>
+  </testcase>
+</spring:beans>

@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.rmi.endpoint.RmiEndpointComponent
+type=org.citrusframework.rmi.endpoint.RmiEndpointComponent

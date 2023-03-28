@@ -152,7 +152,7 @@ receive("helloService")
 ----
 
 The model object requires a proper message marshaller that should be available as bean in the project context (e.g. the
-Spring application context). By default, Citrus is searching for a bean of type *org.citrusframework.citrus.xml.Marshaller*.
+Spring application context). By default, Citrus is searching for a bean of type *org.citrusframework.xml.Marshaller*.
 
 In case you have multiple message marshallers in the application context you have to tell Citrus which one to use in this
 particular receive message action.
@@ -483,7 +483,7 @@ You need to add the module to your project to use the functionality.
 [source,xml]
 ----
 <dependency>
-  <groupId>org.citrusframework.citrus</groupId>
+  <groupId>org.citrusframework</groupId>
   <artifactId>citrus-groovy</artifactId>
   <version>${citrus.version}</version>
 </dependency>

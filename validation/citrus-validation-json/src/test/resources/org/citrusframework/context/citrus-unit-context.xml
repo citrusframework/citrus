@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <citrus:schema-repository id="customJsonSchemaRepository" type="json">
+    <citrus:schemas>
+      <citrus:reference schema="jsonTestSchema"/>
+    </citrus:schemas>
+  </citrus:schema-repository>
+
+  <bean id="jsonTestSchema" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg><value type="java.lang.Class">org.citrusframework.json.schema.SimpleJsonSchema</value></constructor-arg>
+    <constructor-arg value="jsonTestSchema"/>
+  </bean>
+</beans>

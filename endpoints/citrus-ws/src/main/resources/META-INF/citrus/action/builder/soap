@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.ws.actions.SoapActionBuilder
+type=org.citrusframework.ws.actions.SoapActionBuilder

@@ -1,2 +1,2 @@
-client=org.citrusframework.citrus.ws.config.annotation.WebServiceClientConfigParser
-server=org.citrusframework.citrus.ws.config.annotation.WebServiceServerConfigParser
+client=org.citrusframework.ws.config.annotation.WebServiceClientConfigParser
+server=org.citrusframework.ws.config.annotation.WebServiceServerConfigParser

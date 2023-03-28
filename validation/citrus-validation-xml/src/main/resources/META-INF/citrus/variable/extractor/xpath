@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.validation.xml.XpathPayloadVariableExtractor$Builder
+type=org.citrusframework.validation.xml.XpathPayloadVariableExtractor$Builder

@@ -1,2 +1,2 @@
-http\://www.citrusframework.org/schema/testcase=org.citrusframework.citrus.config.handler.CitrusTestCaseNamespaceHandler
-http\://www.citrusframework.org/schema/config=org.citrusframework.citrus.config.handler.CitrusConfigNamespaceHandler
+http\://www.citrusframework.org/schema/testcase=org.citrusframework.config.handler.CitrusTestCaseNamespaceHandler
+http\://www.citrusframework.org/schema/config=org.citrusframework.config.handler.CitrusConfigNamespaceHandler

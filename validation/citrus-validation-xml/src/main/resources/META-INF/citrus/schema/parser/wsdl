@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.config.xml.WsdlSchemaParser
+type=org.citrusframework.config.xml.WsdlSchemaParser

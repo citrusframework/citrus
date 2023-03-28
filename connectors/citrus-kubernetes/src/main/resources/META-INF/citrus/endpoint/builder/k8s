@@ -1,1 +1,1 @@
-client=org.citrusframework.citrus.kubernetes.client.KubernetesClientBuilder
+client=org.citrusframework.kubernetes.client.KubernetesClientBuilder

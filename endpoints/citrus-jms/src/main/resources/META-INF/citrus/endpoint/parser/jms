@@ -1,2 +1,2 @@
-async=org.citrusframework.citrus.jms.config.annotation.JmsEndpointConfigParser
-sync=org.citrusframework.citrus.jms.config.annotation.JmsSyncEndpointConfigParser
+async=org.citrusframework.jms.config.annotation.JmsEndpointConfigParser
+sync=org.citrusframework.jms.config.annotation.JmsSyncEndpointConfigParser

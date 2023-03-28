@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:action="http://www.citrusframework.org/schema/testcase"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <context:annotation-config/>
+
+  <citrus:after-suite id="afterSuite">
+    <citrus:actions>
+      <action:echo>
+        <action:message>Hello Citrus!</action:message>
+      </action:echo>
+      <action:action reference="customAction"/>
+      <action:echo>
+        <action:message>Goob Bye Citrus!</action:message>
+      </action:echo>
+    </citrus:actions>
+  </citrus:after-suite>
+
+  <citrus:after-suite id="afterSuite2" suites="suiteA,suiteB" groups="unit,e2e">
+    <citrus:actions>
+      <action:sleep milliseconds="1000"/>
+    </citrus:actions>
+  </citrus:after-suite>
+
+  <citrus:after-suite id="afterSuite3">
+    <citrus:system>
+      <citrus:property name="after-suite" value="true"/>
+    </citrus:system>
+    <citrus:actions>
+      <action:sleep milliseconds="1000"/>
+    </citrus:actions>
+  </citrus:after-suite>
+
+  <bean id="customAction" class="org.citrusframework.actions.CustomTestAction"/>
+
+  <citrus:direct-endpoint id="customEndpoint"/>
+
+</beans>

@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.channel.ChannelEndpointComponent
+type=org.citrusframework.channel.ChannelEndpointComponent

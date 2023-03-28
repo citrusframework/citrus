@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.groovy.yaml.Groovy
+type=org.citrusframework.groovy.yaml.Groovy

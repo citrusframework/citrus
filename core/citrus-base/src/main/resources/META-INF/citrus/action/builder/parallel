@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.container.Parallel$Builder
+type=org.citrusframework.container.Parallel$Builder

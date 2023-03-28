@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.cucumber.CucumberTestEngine
+type=org.citrusframework.cucumber.CucumberTestEngine

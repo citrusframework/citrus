@@ -1,1 +1,1 @@
-type=org.citrusframework.citrus.container.RepeatUntilTrue$Builder
+type=org.citrusframework.container.RepeatUntilTrue$Builder
