@@ -89,7 +89,7 @@
 
     <!-- Default namespace mappings used in XPath expression evaluations -->
     <citrus:namespace-context>
-        <citrus:namespace prefix="def" uri="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+        <citrus:namespace prefix="def" uri="http://citrusframework.org/schemas/samples/sayHello.xsd"/>
     </citrus:namespace-context>
 
     <!-- SOAP WebService settings -->

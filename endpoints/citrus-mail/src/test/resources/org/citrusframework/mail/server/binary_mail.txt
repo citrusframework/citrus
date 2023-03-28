@@ -1,4 +1,4 @@
-Message-ID: <52A1988D.2060403@consol.de>
+Message-ID: <52A1988D.2060403@foo.bar>
 Date: Fri, 06 Dec 2013 10:27:41 +0100
 From: Foo <foo@mail.com>
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Thunderbird/24.1.1

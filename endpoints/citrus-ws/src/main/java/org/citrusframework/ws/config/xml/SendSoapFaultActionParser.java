@@ -139,7 +139,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
         /**
          * Set the fault code QName string. This can be either
          * a fault code in {@link org.springframework.ws.soap.server.endpoint.SoapFaultDefinition}
-         * or a custom QName like {http://www.consol.de/citrus}citrus:TEC-1000
+         * or a custom QName like {http://citrusframework.org}citrus:TEC-1000
          *
          * @param faultCode the faultCode to set
          */

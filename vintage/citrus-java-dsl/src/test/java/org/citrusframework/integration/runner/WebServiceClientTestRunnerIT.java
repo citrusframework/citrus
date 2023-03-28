@@ -32,17 +32,17 @@ public class WebServiceClientTestRunnerIT extends TestNGCitrusTestRunner {
         variable("correlationId", "CORR123456789");
 
         send(builder -> builder.endpoint("webServiceHelloClient")
-                .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                         "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                         "<ns0:User>User</ns0:User>" +
                         "<ns0:Text>Hello WebServer</ns0:Text>" +
                         "</ns0:HelloStandaloneRequest>")
-                .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request", "HelloRequest")
-                .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation", "sayHello"));
+                .header("{http://citrusframework.org/schemas/samples/sayHello.xsd}ns0:Request", "HelloRequest")
+                .header("{http://citrusframework.org/schemas/samples/sayHello.xsd}ns0:Operation", "sayHello"));
 
         receive(builder -> builder.endpoint("webServiceHelloClient")
-                .payload("<ns0:HelloStandaloneResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<ns0:HelloStandaloneResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                         "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                         "<ns0:User>WebServer</ns0:User>" +

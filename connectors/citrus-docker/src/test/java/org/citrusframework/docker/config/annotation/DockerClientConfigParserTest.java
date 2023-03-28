@@ -45,7 +45,7 @@ public class DockerClientConfigParserTest extends AbstractTestNGUnitTest {
             version="1.19",
             username="user",
             password="s!cr!t",
-            email="user@consol.de",
+            email="user@foo.bar",
             registry="https://index.docker.io/v1/",
             certPath="/path/to/some/cert/directory",
             configPath="/path/to/some/config/directory")
@@ -69,7 +69,7 @@ public class DockerClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getApiVersion().asWebPathPart(), "v1.19");
         Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryUsername(), "user");
         Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryPassword(), "s!cr!t");
-        Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryEmail(), "user@consol.de");
+        Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryEmail(), "user@foo.bar");
         Assert.assertEquals(dockerClient2.getEndpointConfiguration().getDockerClientConfig().getRegistryUrl(), "https://index.docker.io/v1/");
         Assert.assertEquals(((DefaultDockerClientConfig)dockerClient2.getEndpointConfiguration().getDockerClientConfig()).getDockerConfigPath(), "/path/to/some/config/directory");
     }

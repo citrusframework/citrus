@@ -36,7 +36,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
         echo("Test: Success with multiple validation mechanisms all together");
 
         send("helloRequestSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -46,7 +46,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
             .header("CorrelationId", "${correlationId}");
 
         receive("helloResponseReceiver")
-            .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>HelloService</User>" +
@@ -56,14 +56,14 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
             .validate("//pfx:HelloResponse/pfx:MessageId", "${messageId}")
             .validate("//pfx:HelloResponse/pfx:CorrelationId", "${correlationId}")
             .validate("//pfx:HelloResponse/pfx:Text", "citrus:concat('Hello ', ${user})")
-            .namespace("pfx", "http://www.consol.de/schemas/samples/sayHello.xsd")
+            .namespace("pfx", "http://citrusframework.org/schemas/samples/sayHello.xsd")
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}");
 
         echo("Test: Failure because of XML template data validation");
 
         send("helloRequestSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -75,7 +75,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
         assertException()
                 .exception(ValidationException.class)
                 .when(receive("helloResponseReceiver")
-                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>Wrong User</User>" +
@@ -85,7 +85,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
                 .validate("//pfx:HelloResponse/pfx:MessageId", "${messageId}")
                 .validate("//pfx:HelloResponse/pfx:CorrelationId", "${correlationId}")
                 .validate("//pfx:HelloResponse/pfx:Text", "citrus:concat('Hello ', ${user})")
-                .namespace("pfx", "http://www.consol.de/schemas/samples/sayHello.xsd")
+                .namespace("pfx", "http://citrusframework.org/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}")
         );
@@ -93,7 +93,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
         echo("Test: Failure because of XML groovy script validation");
 
         send("helloRequestSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -105,7 +105,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
         assertException()
             .exception(ValidationException.class)
             .when(receive("helloResponseReceiver")
-                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                "<MessageId>${messageId}</MessageId>" +
                                "<CorrelationId>${correlationId}</CorrelationId>" +
                                "<User>HelloService</User>" +
@@ -115,7 +115,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
                 .validate("//pfx:HelloResponse/pfx:MessageId", "${messageId}")
                 .validate("//pfx:HelloResponse/pfx:CorrelationId", "${correlationId}")
                 .validate("//pfx:HelloResponse/pfx:Text", "citrus:concat('Hello ', ${user})")
-                .namespace("pfx", "http://www.consol.de/schemas/samples/sayHello.xsd")
+                .namespace("pfx", "http://citrusframework.org/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}")
         );
@@ -123,7 +123,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
         echo("Test: Failure because of XML xpath validation");
 
         send("helloRequestSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -135,7 +135,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
         assertException()
             .exception(ValidationException.class)
             .when(receive("helloResponseReceiver")
-                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                "<MessageId>${messageId}</MessageId>" +
                                "<CorrelationId>${correlationId}</CorrelationId>" +
                                "<User>HelloService</User>" +
@@ -145,7 +145,7 @@ public class ValidateXmlCombinedJavaIT extends TestNGCitrusTestDesigner {
                 .validate("//pfx:HelloResponse/pfx:MessageId", "${messageId}")
                 .validate("//pfx:HelloResponse/pfx:CorrelationId", "${correlationId}")
                 .validate("//pfx:HelloResponse/pfx:Text", "Something else")
-                .namespace("pfx", "http://www.consol.de/schemas/samples/sayHello.xsd")
+                .namespace("pfx", "http://citrusframework.org/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}")
         );

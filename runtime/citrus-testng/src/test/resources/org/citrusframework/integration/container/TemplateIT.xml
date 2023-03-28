@@ -32,7 +32,7 @@
           <parameter name="param1" value="2"/>
           <parameter name="param2">
             <value><![CDATA[
-                      <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                      <HelloRequest xmlns="http://citrusframework.org/schemas/samples/sayHello.xsd">
                          <Text>Hello South ${var}</Text>
                       </HelloRequest>
                     ]]></value>

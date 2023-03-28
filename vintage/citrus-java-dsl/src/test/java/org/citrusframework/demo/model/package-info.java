@@ -5,5 +5,5 @@
 // Generiert: 2020.03.04 um 04:11:49 PM CET
 //
 
-@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://www.consol.de/schemas/samples/sayHello.xsd", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "http://citrusframework.org/schemas/samples/sayHello.xsd", elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.citrusframework.demo.model;

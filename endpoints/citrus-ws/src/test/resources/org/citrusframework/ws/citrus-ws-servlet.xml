@@ -46,7 +46,7 @@
   <bean id="exceptionResolver" class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
     <property name="exceptionMappings">
       <value>
-        org.citrusframework.exceptions.CitrusRuntimeException={http://www.citrusframework.org/faults}CITRUS:TEC-1001,Invalid request
+        org.citrusframework.exceptions.CitrusRuntimeException={http://citrusframework.org/faults}CITRUS:TEC-1001,Invalid request
       </value>
     </property>
   </bean>

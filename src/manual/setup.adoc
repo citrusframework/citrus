@@ -180,8 +180,7 @@ repositories {
 }
 ----
 
-Citrus stable release versions are available on Maven central. If you want to use the very latest next version as snapshot preview you need
-to add the ConSol Labs snapshot repository which is optional. Now lets move on with adding the Citrus libraries to the project.
+Citrus stable release versions are available on Maven central. Now lets move on with adding the Citrus libraries to the project.
 
 .Add Citrus test scoped dependencies
 [source,groovy]

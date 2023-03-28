@@ -34,7 +34,7 @@ public class SoapForkModeTestRunnerIT extends TestNGCitrusTestRunner {
 
         soap(builder -> builder.client("webServiceClient")
                 .send()
-                .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                             "<ns0:User>${user}</ns0:User>" +
@@ -45,7 +45,7 @@ public class SoapForkModeTestRunnerIT extends TestNGCitrusTestRunner {
 
         soap(builder -> builder.server("webServiceRequestReceiver")
                 .receive()
-                .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                             "<ns0:User>${user}</ns0:User>" +
@@ -56,7 +56,7 @@ public class SoapForkModeTestRunnerIT extends TestNGCitrusTestRunner {
 
         soap(builder -> builder.server("webServiceResponseSender")
                 .send()
-                .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                             "<ns0:User>WebServer</ns0:User>" +
@@ -66,7 +66,7 @@ public class SoapForkModeTestRunnerIT extends TestNGCitrusTestRunner {
 
         soap(builder -> builder.client("webServiceClient")
                 .receive()
-                .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                             "<ns0:User>WebServer</ns0:User>" +

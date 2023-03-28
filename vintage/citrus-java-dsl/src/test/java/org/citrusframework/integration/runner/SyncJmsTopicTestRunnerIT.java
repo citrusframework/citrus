@@ -36,7 +36,7 @@ public class SyncJmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
             sequential().actions(
                 sleep(1000L),
                 send(builder -> builder.endpoint("syncJmsTopicEndpoint")
-                        .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
                                 "<User>${user}</User>" +
@@ -48,7 +48,7 @@ public class SyncJmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
             sequential().actions(
                 parallel().actions(
                     receive(builder -> builder.endpoint("syncJmsTopicSubscriberEndpoint")
-                            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                     "<MessageId>${messageId}</MessageId>" +
                                     "<CorrelationId>${correlationId}</CorrelationId>" +
                                     "<User>${user}</User>" +
@@ -57,7 +57,7 @@ public class SyncJmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
                             .header("Operation", "sayHello")
                             .header("CorrelationId", "${correlationId}")),
                     receive(builder -> builder.endpoint("syncJmsTopicSubscriberEndpoint")
-                            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                     "<MessageId>${messageId}</MessageId>" +
                                     "<CorrelationId>${correlationId}</CorrelationId>" +
                                     "<User>${user}</User>" +
@@ -67,7 +67,7 @@ public class SyncJmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
                             .header("CorrelationId", "${correlationId}"))
                 ),
                 send(builder -> builder.endpoint("syncJmsTopicSubscriberEndpoint")
-                        .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
                                 "<User>HelloService</User>" +
@@ -79,7 +79,7 @@ public class SyncJmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
         );
 
         receive(builder -> builder.endpoint("syncJmsTopicEndpoint")
-                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>HelloService</User>" +

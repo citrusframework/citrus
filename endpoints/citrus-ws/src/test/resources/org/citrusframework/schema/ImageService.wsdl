@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-                  xmlns:tns="http://www.citrusframework.org/imageService/"
+                  xmlns:tns="http://citrusframework.org/imageService/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                   xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
                   name="ImageService"
-                  targetNamespace="http://www.citrusframework.org/imageService/">
+                  targetNamespace="http://citrusframework.org/imageService/">
     <wsdl:types>
-        <xsd:schema xmlns="http://www.citrusframework.org/imageService/" targetNamespace="http://www.citrusframework.org/imageService/">
+        <xsd:schema xmlns="http://citrusframework.org/imageService/" targetNamespace="http://citrusframework.org/imageService/">
             <xsd:element name="addImage">
                 <xsd:complexType>
                     <xsd:sequence>
@@ -46,7 +46,7 @@
     <wsdl:binding name="ImageServiceSOAP" type="tns:ImageService">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="addImage">
-            <soap:operation soapAction="http://www.citrusframework.org/imageService/addImage"/>
+            <soap:operation soapAction="http://citrusframework.org/imageService/addImage"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -58,7 +58,7 @@
 
     <wsdl:service name="ImageService">
         <wsdl:port binding="tns:ImageServiceSOAP" name="ImageServiceSOAP">
-            <soap:address location="http://www.citrusframework.org/imageService/"/>
+            <soap:address location="http://citrusframework.org/imageService/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

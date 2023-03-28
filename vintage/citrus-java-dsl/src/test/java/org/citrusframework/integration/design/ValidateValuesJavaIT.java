@@ -33,7 +33,7 @@ public class ValidateValuesJavaIT extends TestNGCitrusTestDesigner {
         variable("user", "Christoph");
 
         send("helloRequestSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +

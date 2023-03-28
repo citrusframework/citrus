@@ -33,7 +33,7 @@ public class SyncJmsQueueJavaIT extends TestNGCitrusTestDesigner {
         variable("user", "Christoph");
 
         send("syncJmsQueueEndpoint")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -44,7 +44,7 @@ public class SyncJmsQueueJavaIT extends TestNGCitrusTestDesigner {
             .description("Send synchronous hello request: TestFramework -> HelloService");
 
         receive("syncJmsQueueEndpoint")
-            .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                             "<MessageId>${messageId}</MessageId>" +
                             "<CorrelationId>${correlationId}</CorrelationId>" +
                             "<User>HelloService</User>" +

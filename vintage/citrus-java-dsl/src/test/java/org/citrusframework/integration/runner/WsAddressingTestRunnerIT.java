@@ -35,14 +35,14 @@ public class WsAddressingTestRunnerIT extends TestNGCitrusTestRunner {
                         .faultCode("{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand")
             .when(
                 send(builder -> builder.endpoint("wsAddressingHelloClient")
-                        .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                                 "<ns0:User>User</ns0:User>" +
                                 "<ns0:Text>Hello WebServer</ns0:Text>" +
                                 "</ns0:HelloStandaloneRequest>")
-                        .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request", "HelloRequest")
-                        .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation", "sayHello"))
+                        .header("{http://citrusframework.org/schemas/samples/sayHello.xsd}ns0:Request", "HelloRequest")
+                        .header("{http://citrusframework.org/schemas/samples/sayHello.xsd}ns0:Operation", "sayHello"))
         );
     }
 }

@@ -16,13 +16,15 @@
 
 package org.citrusframework.dsl.runner;
 
-import javax.xml.transform.Source;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.transform.Source;
 
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.main.JsonSchema;
 import org.citrusframework.TestCase;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.container.SequenceAfterTest;
@@ -62,8 +64,6 @@ import org.citrusframework.variable.dictionary.xml.NodeMappingDataDictionary;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.MarshallerAdapter;
 import org.citrusframework.xml.StringSource;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.main.JsonSchema;
 import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
@@ -79,14 +79,7 @@ import org.xml.sax.SAXParseException;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -1619,14 +1612,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
-                new DefaultMessage("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
+                new DefaultMessage("<TestRequest xmlns:pfx=\"http://citrusframework.org/schemas/test\"><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
-                                .payload("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
-                                .validateNamespace("pfx", "http://www.consol.de/schemas/test"));
+                                .payload("<TestRequest xmlns:pfx=\"http://citrusframework.org/schemas/test\"><Message>Hello World!</Message></TestRequest>")
+                                .validateNamespace("pfx", "http://citrusframework.org/schemas/test"));
             }
         };
 
@@ -1650,8 +1643,8 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()),
-                "<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(validationContext.getControlNamespaces().get("pfx"), "http://www.consol.de/schemas/test");
+                "<TestRequest xmlns:pfx=\"http://citrusframework.org/schemas/test\"><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(validationContext.getControlNamespaces().get("pfx"), "http://citrusframework.org/schemas/test");
 
     }
 

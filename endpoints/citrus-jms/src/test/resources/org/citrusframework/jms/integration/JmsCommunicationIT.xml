@@ -283,7 +283,7 @@
             <send endpoint="testMessageSender">
                 <message>
                     <payload>
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test.xsd">
                             <Message>Hello</Message>
                         </trq:TestRequest>
                     </payload>
@@ -294,7 +294,7 @@
                 <message schema-validation="false">
                     <data>
                       <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test.xsd">
                             <Message>Hello</Message>
                         </trq:TestRequest>
                       ]]>
@@ -306,7 +306,7 @@
                 <message>
                     <data>
                       <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test.xsd">
                             <Message>Hello</Message>
                         </trq:TestRequest>
                       ]]>
@@ -317,7 +317,7 @@
             <receive endpoint="testMessageReceiver" timeout="5000">
                 <message schema-validation="false">
                     <payload>
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test.xsd">
                             <Message>Hello</Message>
                         </trq:TestRequest>
                     </payload>

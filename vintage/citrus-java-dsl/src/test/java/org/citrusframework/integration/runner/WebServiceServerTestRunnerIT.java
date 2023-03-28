@@ -34,7 +34,7 @@ public class WebServiceServerTestRunnerIT extends TestNGCitrusTestRunner {
 
         parallel().actions(
             send(builder -> builder.endpoint("webServiceClient")
-                    .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                    .payload("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                             "<ns0:User>${user}</ns0:User>" +
@@ -43,7 +43,7 @@ public class WebServiceServerTestRunnerIT extends TestNGCitrusTestRunner {
                     .header("{http://citrusframework.org/test}Operation", "sayHello")),
             sequential().actions(
                 receive(builder -> builder.endpoint("webServiceRequestReceiver")
-                        .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                                 "<ns0:User>${user}</ns0:User>" +
@@ -53,7 +53,7 @@ public class WebServiceServerTestRunnerIT extends TestNGCitrusTestRunner {
                         .schemaValidation(false)
                         .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")),
                 send(builder -> builder.endpoint("webServiceResponseSender")
-                        .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                                 "<ns0:User>WebServer</ns0:User>" +
@@ -64,7 +64,7 @@ public class WebServiceServerTestRunnerIT extends TestNGCitrusTestRunner {
         );
 
         receive(builder -> builder.endpoint("webServiceClient")
-                .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                         "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                         "<ns0:User>WebServer</ns0:User>" +

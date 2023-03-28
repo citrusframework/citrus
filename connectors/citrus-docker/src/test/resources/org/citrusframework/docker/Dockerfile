@@ -1,5 +1,5 @@
 FROM ubuntu:trusty
 
-MAINTAINER Christoph Deppisch <deppisch@consol.de>
+MAINTAINER Christoph Deppisch <christophd@github.com>
 
 CMD bin/bash

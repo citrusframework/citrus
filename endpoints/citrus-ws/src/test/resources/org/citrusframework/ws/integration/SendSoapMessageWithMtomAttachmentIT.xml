@@ -33,7 +33,7 @@
                     <message>
                         <data>
                             <![CDATA[
-                                <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+                                <image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                     <isbn>1234</isbn>
                                     <image>cid:IMAGE</image>
                                     <icon></icon>
@@ -51,7 +51,7 @@
                         <message schema-validation="false">
                             <data>
                                 <![CDATA[
-                                    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+                                    <image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
                                         <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
                                         <icon></icon>
@@ -68,7 +68,7 @@
                         <message>
                             <data>
                                 <![CDATA[
-                                    <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
+                                    <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
                                         <success>true</success>
                                     </image:addImageResponse>
                                 ]]>
@@ -82,7 +82,7 @@
                 <message schema-repository="imageServiceSchemaRepository">
                     <data>
                         <![CDATA[
-                            <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
+                            <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
                                 <success>true</success>
                             </image:addImageResponse>
                         ]]>
@@ -99,7 +99,7 @@
                     <message>
                         <data>
                             <![CDATA[
-                                <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+                                <image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                     <isbn>1234</isbn>
                                     <image>cid:IMAGE</image>
                                     <icon>cid:ICON</icon>
@@ -120,7 +120,7 @@
                         <message schema-validation="false">
                             <data>
                                 <![CDATA[
-                                    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+                                    <image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
                                         <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
                                         <icon><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:ICON"/></icon>
@@ -140,7 +140,7 @@
                         <message>
                             <data>
                                 <![CDATA[
-                                    <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
+                                    <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
                                         <success>true</success>
                                     </image:addImageResponse>
                                 ]]>
@@ -154,7 +154,7 @@
                 <message schema-repository="imageServiceSchemaRepository">
                     <data>
                         <![CDATA[
-                            <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
+                            <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
                                 <success>true</success>
                             </image:addImageResponse>
                         ]]>
@@ -171,7 +171,7 @@
                     <message>
                         <data>
                             <![CDATA[
-                                <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+                                <image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                     <isbn>1234</isbn>
                                     <image>cid:IMAGE</image>
                                     <icon>cid:ICON</icon>
@@ -192,7 +192,7 @@
                         <message schema-repository="imageServiceSchemaRepository">
                             <data>
                                 <![CDATA[
-                                    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+                                    <image:addImage xmlns:image="http://citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
                                         <image>VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50ISBWYXJpYWJsZXMgJHt0ZXN0fSBzaG91bGQgbm90IGJlIHJlcGxhY2VkIQ==</image>
                                         <icon>5468697320697320612062696E6172792069636F6E206174746163686D656E7421205661726961626C657320247B746573747D2073686F756C64206E6F74206265207265706C6163656421</icon>
@@ -206,7 +206,7 @@
                         <message>
                             <data>
                                 <![CDATA[
-                                    <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
+                                    <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
                                         <success>true</success>
                                     </image:addImageResponse>
                                 ]]>
@@ -220,7 +220,7 @@
                 <message schema-repository="imageServiceSchemaRepository">
                     <data>
                         <![CDATA[
-                            <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
+                            <image:addImageResponse xmlns:image="http://citrusframework.org/imageService/">
                                 <success>true</success>
                             </image:addImageResponse>
                         ]]>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-                  xmlns:tns="http://www.citrusframework.org/TestService/"
-                  xmlns:types="http://www.citrusframework.org/test/types/"
+                  xmlns:tns="http://citrusframework.org/TestService/"
+                  xmlns:types="http://citrusframework.org/test/types/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                   name="TestService"
-                  targetNamespace="http://www.citrusframework.org/TestService/">
+                  targetNamespace="http://citrusframework.org/TestService/">
   <wsdl:types>
-    <xsd:schema xmlns="http://www.citrusframework.org/TestService/" targetNamespace="http://www.citrusframework.org/TestService/">
+    <xsd:schema xmlns="http://citrusframework.org/TestService/" targetNamespace="http://citrusframework.org/TestService/">
       <xsd:element name="sampleMessage" type="types:TestType"/>
     </xsd:schema>
 
-    <xsd:schema targetNamespace="http://www.citrusframework.org/test/types/">
+    <xsd:schema targetNamespace="http://citrusframework.org/test/types/">
       <xsd:complexType name="TestType">
         <xsd:simpleContent>
           <xsd:restriction base="xsd:string">
@@ -38,7 +38,7 @@
   <wsdl:binding name="TestServiceSOAP" type="tns:TestService">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="sampleMessage">
-      <soap:operation soapAction="http://www.citrusframework.org/sample/sampleMessage"/>
+      <soap:operation soapAction="http://citrusframework.org/sample/sampleMessage"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -50,7 +50,7 @@
 
   <wsdl:service name="TestService">
     <wsdl:port binding="tns:TestServiceSOAP" name="TestServiceSOAP">
-      <soap:address location="http://www.citrusframework.org/TestService/"/>
+      <soap:address location="http://citrusframework.org/TestService/"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

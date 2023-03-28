@@ -513,7 +513,7 @@ all test cases. We just add a bean in the basic Spring application context confi
 @Bean
 public NamespaceContextBuilder namespaceContext() {
     NamespaceContextBuilder builder = new NamespaceContextBuilder();
-    builder.getNamepspaceMappings().put("pfx", "http://www.consol.de/samples/sayHello");
+    builder.getNamepspaceMappings().put("pfx", "http://citrusframework.org/samples/sayHello");
     return builder;
 }
 ----
@@ -522,7 +522,7 @@ public NamespaceContextBuilder namespaceContext() {
 [source,xml,indent=0,role="secondary"]
 ----
 <namespace-context>
-    <namespace prefix="def" uri="http://www.consol.de/samples/sayHello"/>
+    <namespace prefix="def" uri="http://citrusframework.org/samples/sayHello"/>
 </namespace-context>
 ----
 
@@ -1036,14 +1036,14 @@ public SimpleXsdSchema helloSchema() {
     class="org.citrusframework.xml.schema.TargetNamespaceSchemaMappingStrategy"/>
 ----
 
-The *sayHello.xsd* schema file defines a target namespace (http://consol.de/schemas/sayHello.xsd)[http://consol.de/schemas/sayHello.xsd)]:
+The *sayHello.xsd* schema file defines a target namespace (http://citrusframework.org/schemas/sayHello.xsd)[http://citrusframework.org/schemas/sayHello.xsd)]:
 
 .Schema target namespace
 [source,xml]
 ----
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns="http://consol.de/schemas/sayHello.xsd"
-    targetNamespace="http://consol.de/schemas/sayHello.xsd"
+    xmlns="http://citrusframework.org/schemas/sayHello.xsd"
+    targetNamespace="http://citrusframework.org/schemas/sayHello.xsd"
     elementFormDefault="qualified"
     attributeFormDefault="unqualified">
 
@@ -1056,7 +1056,7 @@ the right schema file in the repository.
 .HelloRequest.xml
 [source,xml]
 ----
-<HelloRequest xmlns="http://consol.de/schemas/sayHello.xsd">
+<HelloRequest xmlns="http://citrusframework.org/schemas/sayHello.xsd">
    <MessageId>123456789</MessageId>
    <CorrelationId>1000</CorrelationId>
    <User>Christoph</User>

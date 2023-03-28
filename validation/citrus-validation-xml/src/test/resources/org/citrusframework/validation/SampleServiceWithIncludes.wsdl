@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/soap/"
                   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-                  xmlns:tns="http://www.citrusframework.org/SampleService/"
+                  xmlns:tns="http://citrusframework.org/SampleService/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                   name="SampleService"
-                  targetNamespace="http://www.citrusframework.org/SampleService/">
+                  targetNamespace="http://citrusframework.org/SampleService/">
   <wsdl:types>
-    <xsd:schema xmlns="http://www.citrusframework.org/SampleService/" xmlns:types="http://www.citrusframework.org/test/types/" targetNamespace="http://www.citrusframework.org/SampleService/">
+    <xsd:schema xmlns="http://citrusframework.org/SampleService/" xmlns:types="http://citrusframework.org/test/types/" targetNamespace="http://citrusframework.org/SampleService/">
       <xsd:include schemaLocation="types.xsd"/>
       <xsd:include schemaLocation="sample.xsd"/>
 
@@ -29,7 +29,7 @@
   <wsdl:binding name="SampleServiceSOAP" type="tns:SampleService">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="sampleMessage">
-      <soap:operation soapAction="http://www.citrusframework.org/sample/sampleMessage"/>
+      <soap:operation soapAction="http://citrusframework.org/sample/sampleMessage"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -41,7 +41,7 @@
 
   <wsdl:service name="SampleService">
     <wsdl:port binding="tns:SampleServiceSOAP" name="SampleServiceSOAP">
-      <soap:address location="http://www.citrusframework.org/SampleService/"/>
+      <soap:address location="http://citrusframework.org/SampleService/"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

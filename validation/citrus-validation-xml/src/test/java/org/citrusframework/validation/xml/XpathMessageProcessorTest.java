@@ -35,7 +35,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
 
     private Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text></TestMessage>");
 
-    private Message messageNamespace = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:TestMessage xmlns:ns0=\"http://www.citrusframework.org/test\">" +
+    private Message messageNamespace = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:TestMessage xmlns:ns0=\"http://citrusframework.org/test\">" +
                 "<ns0:Text>Hello World!</ns0:Text>" +
             "</ns0:TestMessage>");
 
@@ -55,7 +55,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConstructWithXPathAndDefaultNamespace() {
-        final Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage xmlns=\"http://www.citrusframework.org/test\">" +
+        final Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage xmlns=\"http://citrusframework.org/test\">" +
                 "<Text>Hello World!</Text>" +
                 "</TestMessage>");
 
@@ -87,7 +87,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConstructWithXPathAndGlobalNamespace() {
-        context.getNamespaceContextBuilder().getNamespaceMappings().put("global", "http://www.citrusframework.org/test");
+        context.getNamespaceContextBuilder().getNamespaceMappings().put("global", "http://citrusframework.org/test");
 
         final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/global:TestMessage/global:Text", "Hello!");
@@ -103,8 +103,8 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConstructWithXPathAndNestedNamespace() {
-        final Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:TestMessage xmlns:ns0=\"http://www.citrusframework.org/test\">" +
-                "<ns1:Text xmlns:ns1=\"http://www.citrusframework.org/test/text\">Hello World!</ns1:Text>" +
+        final Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:TestMessage xmlns:ns0=\"http://citrusframework.org/test\">" +
+                "<ns1:Text xmlns:ns1=\"http://citrusframework.org/test/text\">Hello World!</ns1:Text>" +
                 "</ns0:TestMessage>");
 
         final Map<String, Object> xPathExpressions = new HashMap<>();
@@ -116,7 +116,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         processor.processMessage(message, context);
 
         Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
-                .contains("<ns1:Textxmlns:ns1=\"http://www.citrusframework.org/test/text\">Hello!</ns1:Text>"));
+                .contains("<ns1:Textxmlns:ns1=\"http://citrusframework.org/test/text\">Hello!</ns1:Text>"));
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
