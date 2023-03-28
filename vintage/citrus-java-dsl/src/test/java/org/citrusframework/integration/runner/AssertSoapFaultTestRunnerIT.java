@@ -32,26 +32,26 @@ public class AssertSoapFaultTestRunnerIT extends TestNGCitrusTestRunner {
         variable("soapFaultString", "Invalid request");
 
         assertSoapFault().faultString("Invalid request")
-                .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+                .faultCode("{http://citrusframework.org/faults}TEC-1001")
                 .when(soap(builder -> builder.client("webServiceHelloClient")
                         .send()
-                        .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Message>This is invalid</ns0:Message>" +
                                 "</ns0:SoapFaultForcingRequest>")));
 
         assertSoapFault().faultString("@ignore@")
-                .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+                .faultCode("{http://citrusframework.org/faults}TEC-1001")
                 .when(soap(builder -> builder.client("webServiceHelloClient")
                         .send()
-                        .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Message>This is invalid</ns0:Message>" +
                                 "</ns0:SoapFaultForcingRequest>")));
 
         assertSoapFault().faultString("${soapFaultString}")
-                .faultCode("{http://www.citrusframework.org/faults}${soapFaultCode}")
+                .faultCode("{http://citrusframework.org/faults}${soapFaultCode}")
                 .when(soap(builder -> builder.client("webServiceHelloClient")
                         .send()
-                        .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Message>This is invalid</ns0:Message>" +
                                 "</ns0:SoapFaultForcingRequest>")));
     }

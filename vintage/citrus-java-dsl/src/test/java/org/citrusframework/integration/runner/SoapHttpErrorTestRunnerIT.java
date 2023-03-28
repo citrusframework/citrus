@@ -37,7 +37,7 @@ public class SoapHttpErrorTestRunnerIT extends TestNGCitrusTestRunner {
                             .message("Server Error [500]")
                     .when(
                     send(builder -> builder.endpoint("webServiceClient")
-                            .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                            .payload("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                     "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                     "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                                     "<ns0:User>${user}</ns0:User>" +
@@ -49,7 +49,7 @@ public class SoapHttpErrorTestRunnerIT extends TestNGCitrusTestRunner {
             ),
             sequential().actions(
                 receive(builder -> builder.endpoint("webServiceRequestReceiver")
-                        .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<ns0:HelloRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                                 "<ns0:User>${user}</ns0:User>" +

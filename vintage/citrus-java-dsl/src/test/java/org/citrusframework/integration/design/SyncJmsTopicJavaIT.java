@@ -36,7 +36,7 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusTestDesigner {
             sequential().actions(
                 sleep(2000L),
                 send("syncJmsTopicEndpoint")
-                    .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                    .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
                                    "<CorrelationId>${correlationId}</CorrelationId>" +
                                    "<User>${user}</User>" +
@@ -48,7 +48,7 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusTestDesigner {
             sequential().actions(
                 parallel().actions(
                     receive("syncJmsTopicSubscriberEndpoint")
-                        .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
                                    "<CorrelationId>${correlationId}</CorrelationId>" +
                                    "<User>${user}</User>" +
@@ -59,7 +59,7 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusTestDesigner {
                     sequential().actions(
                         sleep().milliseconds(500L),
                         receive("syncJmsTopicSubscriberEndpoint")
-                            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                        "<MessageId>${messageId}</MessageId>" +
                                        "<CorrelationId>${correlationId}</CorrelationId>" +
                                        "<User>${user}</User>" +
@@ -70,7 +70,7 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusTestDesigner {
                     )
                 ),
                 send("syncJmsTopicSubscriberEndpoint")
-                    .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                    .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                     "<MessageId>${messageId}</MessageId>" +
                                     "<CorrelationId>${correlationId}</CorrelationId>" +
                                     "<User>HelloService</User>" +
@@ -82,7 +82,7 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusTestDesigner {
         );
 
         receive("syncJmsTopicEndpoint")
-            .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                     "<MessageId>${messageId}</MessageId>" +
                                     "<CorrelationId>${correlationId}</CorrelationId>" +
                                     "<User>HelloService</User>" +

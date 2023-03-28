@@ -36,7 +36,7 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport {
 
         run(assertSoapFault()
             .faultString("Invalid request")
-            .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+            .faultCode("{http://citrusframework.org/faults}TEC-1001")
             .when(soap().client("helloSoapClient")
                 .send()
                 .message()
@@ -47,7 +47,7 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport {
 
         run(assertSoapFault()
             .faultString("@ignore@")
-            .faultCode("{http://www.citrusframework.org/faults}TEC-1001")
+            .faultCode("{http://citrusframework.org/faults}TEC-1001")
             .when(soap().client("helloSoapClient")
                 .send()
                 .message()
@@ -58,7 +58,7 @@ public class AssertSoapFaultJavaIT extends TestNGCitrusSpringSupport {
 
         run(assertSoapFault()
             .faultString("${soapFaultString}")
-            .faultCode("{http://www.citrusframework.org/faults}${soapFaultCode}")
+            .faultCode("{http://citrusframework.org/faults}${soapFaultCode}")
             .when(soap().client("helloSoapClient")
                     .send()
                     .message()

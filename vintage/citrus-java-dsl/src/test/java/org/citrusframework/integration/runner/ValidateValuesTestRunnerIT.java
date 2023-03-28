@@ -33,7 +33,7 @@ public class ValidateValuesTestRunnerIT extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +

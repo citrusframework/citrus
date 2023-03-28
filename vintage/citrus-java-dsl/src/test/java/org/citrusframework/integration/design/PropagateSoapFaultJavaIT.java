@@ -32,13 +32,13 @@ public class PropagateSoapFaultJavaIT extends TestNGCitrusTestDesigner {
         variable("soapFaultString", "Invalid request");
 
         send("webServiceFaultClient")
-            .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Message>This is invalid</ns0:Message>" +
                             "</ns0:SoapFaultForcingRequest>");
 
         receive("webServiceFaultClient")
             .payload("<SOAP-ENV:Fault xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-                                "<faultcode xmlns:CITRUS=\"http://www.citrusframework.org/faults\">CITRUS:${soapFaultCode}</faultcode>" +
+                                "<faultcode xmlns:CITRUS=\"http://citrusframework.org/faults\">CITRUS:${soapFaultCode}</faultcode>" +
                                 "<faultstring xml:lang=\"en\">${soapFaultString}</faultstring>" +
                             "</SOAP-ENV:Fault>")
             .schemaValidation(false)

@@ -34,7 +34,7 @@ public class JmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
 
         parallel().actions(
            receive(builder -> builder.endpoint("helloTopicRequestReceiver")
-                   .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                   .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -45,7 +45,7 @@ public class JmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
                    .timeout(5000)
                    .description("Receive asynchronous hello response: HelloService -> TestFramework")),
            receive(builder -> builder.endpoint("helloTopicRequestReceiver")
-                   .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                   .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -58,7 +58,7 @@ public class JmsTopicTestRunnerIT extends TestNGCitrusTestRunner {
            sequential().actions(
                sleep(1000L),
                send(builder -> builder.endpoint("helloTopicRequestSender")
-                       .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                       .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                                "<MessageId>${messageId}</MessageId>" +
                                "<CorrelationId>${correlationId}</CorrelationId>" +
                                "<User>${user}</User>" +

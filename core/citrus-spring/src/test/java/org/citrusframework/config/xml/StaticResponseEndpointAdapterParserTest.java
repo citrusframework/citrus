@@ -43,7 +43,7 @@ public class StaticResponseEndpointAdapterParserTest extends AbstractBeanDefinit
 
         adapter = adapters.get("endpointAdapter2");
         Assert.assertEquals(adapter.getMessagePayload(), "");
-        Assert.assertEquals(adapter.getMessagePayloadResource(), "classpath:coms/consol/citrus/response-data.xml");
+        Assert.assertEquals(adapter.getMessagePayloadResource(), "classpath:org/citrusframework/response-data.xml");
         Assert.assertEquals(adapter.getMessageHeader().get("Operation"), "sayHello");
     }
 }

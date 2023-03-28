@@ -126,7 +126,7 @@ Citrus will automatically marshal the XML representation of the service invocati
 Licensing
 ---------
   
-Copyright 2006-2018 ConSol Software GmbH.
+Copyright 2006-2023 the original author or authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -143,11 +143,9 @@ limitations under the License.
 Team
 ---------
 
-ConSol Software GmbH
-Christoph Deppisch
-christoph.deppisch@consol.de
+The Citrus Community
 
-http://www.citrusframework.org
+https://citrusframework.org
 
 Information
 ---------
@@ -155,6 +153,6 @@ Information
 For more information on Citrus see [www.citrusframework.org][2], including
 a complete [reference manual][3].
 
- [1]: http://www.citrusframework.org/images/brand_logo.png "Citrus"
- [2]: http://www.citrusframework.org
- [3]: http://www.citrusframework.org/reference/html/
+ [1]: https://citrusframework.org/images/brand_logo.png "Citrus"
+ [2]: https://citrusframework.org
+ [3]: https://citrusframework.org/reference/html/

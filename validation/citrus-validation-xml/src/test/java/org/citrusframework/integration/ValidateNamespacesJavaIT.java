@@ -39,63 +39,63 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport {
 
         $(send("direct:test")
             .message()
-            .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+            .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                             "<Message>Hello</Message>" +
                         "</trq:TestRequest>"));
 
         $(receive("direct:test")
             .message()
-            .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+            .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                     "<Message>Hello</Message>" +
                 "</trq:TestRequest>")
             .validate(xml()
                     .schemaValidation(false)
-                    .namespace("trq", "http://www.consol.de/schemas/test"))
+                    .namespace("trq", "http://citrusframework.org/schemas/test"))
             .timeout(5000));
 
         $(echo("Test: Success with multiple namespace validations"));
 
         $(send("direct:test")
             .message()
-            .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\" xmlns:msg=\"http://www.consol.de/schemas/message\">" +
+            .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\" xmlns:msg=\"http://citrusframework.org/schemas/message\">" +
                             "<msg:Message>Hello</msg:Message>" +
                         "</trq:TestRequest>"));
 
         $(receive("direct:test")
             .message()
-            .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\" xmlns:msg=\"http://www.consol.de/schemas/message\">" +
+            .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\" xmlns:msg=\"http://citrusframework.org/schemas/message\">" +
                     "<msg:Message>Hello</msg:Message>" +
                 "</trq:TestRequest>")
             .validate(xml()
                     .schemaValidation(false)
-                    .namespace("trq", "http://www.consol.de/schemas/test")
-                    .namespace("msg", "http://www.consol.de/schemas/message"))
+                    .namespace("trq", "http://citrusframework.org/schemas/test")
+                    .namespace("msg", "http://citrusframework.org/schemas/message"))
             .timeout(5000));
 
         $(echo("Test: Success with multiple nested namespace validations"));
 
         $(send("direct:test")
             .message()
-            .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
-                            "<msg:Message xmlns:msg=\"http://www.consol.de/schemas/message\">Hello</msg:Message>" +
+            .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
+                            "<msg:Message xmlns:msg=\"http://citrusframework.org/schemas/message\">Hello</msg:Message>" +
                         "</trq:TestRequest>"));
 
         $(receive("direct:test")
             .message()
-            .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
-                    "<msg:Message xmlns:msg=\"http://www.consol.de/schemas/message\">Hello</msg:Message>" +
+            .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
+                    "<msg:Message xmlns:msg=\"http://citrusframework.org/schemas/message\">Hello</msg:Message>" +
                 "</trq:TestRequest>")
             .validate(xml()
                         .schemaValidation(false)
-                        .namespace("trq", "http://www.consol.de/schemas/test")
-                        .namespace("msg", "http://www.consol.de/schemas/message"))
+                        .namespace("trq", "http://citrusframework.org/schemas/test")
+                        .namespace("msg", "http://citrusframework.org/schemas/message"))
             .timeout(5000));
 
         $(echo("Test: Failure because of missing namespace"));
 
         $(send("direct:test")
             .message()
-            .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+            .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                             "<Message>Hello</Message>" +
                         "</trq:TestRequest>"));
 
@@ -103,13 +103,13 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport {
             .exception(ValidationException.class)
             .when(receive("direct:test")
                 .message()
-                .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+                .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                     "</trq:TestRequest>")
                 .validate(xml()
                             .schemaValidation(false)
-                            .namespace("trq", "http://www.consol.de/schemas/test")
-                            .namespace("missing", "http://www.consol.de/schemas/missing"))
+                            .namespace("trq", "http://citrusframework.org/schemas/test")
+                            .namespace("missing", "http://citrusframework.org/schemas/missing"))
                 .timeout(5000)
         ));
 
@@ -117,7 +117,7 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport {
 
         send("direct:test")
             .message()
-            .body("<wrong:TestRequest xmlns:wrong=\"http://www.consol.de/schemas/test\">" +
+            .body("<wrong:TestRequest xmlns:wrong=\"http://citrusframework.org/schemas/test\">" +
                             "<Message>Hello</Message>" +
                         "</wrong:TestRequest>");
 
@@ -125,12 +125,12 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport {
             .exception(ValidationException.class)
             .when(receive("direct:test")
                 .message()
-                .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+                .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                     "</trq:TestRequest>")
                 .validate(xml()
                         .schemaValidation(false)
-                        .namespace("trq", "http://www.consol.de/schemas/test"))
+                        .namespace("trq", "http://citrusframework.org/schemas/test"))
                 .timeout(5000)
         );
 
@@ -138,7 +138,7 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport {
 
         send("direct:test")
             .message()
-            .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/wrong\">" +
+            .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/wrong\">" +
                             "<Message>Hello</Message>" +
                         "</trq:TestRequest>");
 
@@ -146,12 +146,12 @@ public class ValidateNamespacesJavaIT extends TestNGCitrusSpringSupport {
             .exception(ValidationException.class)
             .when(receive("direct:test")
                 .message()
-                .body("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+                .body("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                     "</trq:TestRequest>")
                 .validate(xml()
                         .schemaValidation(false)
-                        .namespace("trq", "http://www.consol.de/schemas/test"))
+                        .namespace("trq", "http://citrusframework.org/schemas/test"))
                 .timeout(5000)
         );
     }

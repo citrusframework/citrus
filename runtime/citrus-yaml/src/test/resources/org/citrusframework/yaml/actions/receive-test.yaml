@@ -72,7 +72,7 @@ actions:
         schemaValidation: false
         body:
           data: |
-            <ns:TestMessage xmlns:ns="http://www.consol.com">Hello Citrus</ns:TestMessage>
+            <ns:TestMessage xmlns:ns="http://citrusframework.org">Hello Citrus</ns:TestMessage>
         expression:
           - path: "/ns:TestMessage/"
             value: "newValue"
@@ -80,7 +80,7 @@ actions:
         - path: "/ns:TestMessage/ns:ignore"
       namespace:
         - prefix: "ns"
-          value: "http://www.consol.com"
+          value: "http://citrusframework.org"
   - receive:
       endpoint: "direct:helloQueue"
       validate:

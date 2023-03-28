@@ -93,7 +93,7 @@ public class ReceiveTest extends AbstractXmlActionTest {
                 "</TestRequest>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
-        helloQueue.send(new DefaultMessage("<ns:TestMessage xmlns:ns=\"http://www.consol.com\">Hello Citrus</ns:TestMessage>").setHeader("operation", "sayHello"));
+        helloQueue.send(new DefaultMessage("<ns:TestMessage xmlns:ns=\"http://citrusframework.org\">Hello Citrus</ns:TestMessage>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
@@ -217,7 +217,7 @@ public class ReceiveTest extends AbstractXmlActionTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<ns:TestMessage xmlns:ns=\"http://www.consol.com\">Hello Citrus</ns:TestMessage>");
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<ns:TestMessage xmlns:ns=\"http://citrusframework.org\">Hello Citrus</ns:TestMessage>");
 
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getControlMessageProcessors().size(), 1);
@@ -232,7 +232,7 @@ public class ReceiveTest extends AbstractXmlActionTest {
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().size(), 1);
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().iterator().next(), "/ns:TestMessage/ns:ignore");
         Assert.assertEquals(xmlValidationContext.getNamespaces().size(), 1);
-        Assert.assertEquals(xmlValidationContext.getNamespaces().get("ns"), "http://www.consol.com");
+        Assert.assertEquals(xmlValidationContext.getNamespaces().get("ns"), "http://citrusframework.org");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         Assert.assertEquals(action.getValidationContexts().size(), 3);

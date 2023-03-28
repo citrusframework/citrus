@@ -46,7 +46,7 @@ public class DockerClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getApiVersion().asWebPathPart(), "v1.19");
         Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryUsername(), "user");
         Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryPassword(), "s!cr!t");
-        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryEmail(), "user@consol.de");
+        Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryEmail(), "user@foo.bar");
         Assert.assertEquals(dockerClient.getEndpointConfiguration().getDockerClientConfig().getRegistryUrl(), "https://index.docker.io/v1/");
         Assert.assertEquals(((DefaultDockerClientConfig)dockerClient.getEndpointConfiguration().getDockerClientConfig()).getDockerConfigPath(), "/path/to/some/config/directory");
     }

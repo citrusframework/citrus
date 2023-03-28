@@ -16,6 +16,13 @@
 
 package org.citrusframework.docs;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.generate.xml.XmlTestGenerator;
 import org.citrusframework.util.FileUtils;
@@ -24,22 +31,16 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * @author Christoph Deppisch
  */
 public class ExcelTestDocsGeneratorTest {
 
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     @BeforeClass
     public void createSampleIT() {
-        XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
+        TestGenerator<?> generator = new XmlTestGenerator<>()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .withName("SampleIT")
@@ -48,15 +49,15 @@ public class ExcelTestDocsGeneratorTest {
 
         generator.create();
     }
-    
+
     @Test
     public void testExcelDocGeneration() throws IOException {
         ExcelTestDocsGenerator generator = ExcelTestDocsGenerator.build();
 
         generator.generateDoc();
-        
+
         String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
-        
+
         Assert.assertTrue(docContent.contains("<Author>Citrus Testframework</Author>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Citrus Test Documentation</Data>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Id</Data>"));
@@ -66,7 +67,7 @@ public class ExcelTestDocsGeneratorTest {
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Description</Data>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Date</Data>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">File</Data>"));
-        
+
         Assert.assertTrue(docContent.contains(">SampleIT<"));
         Assert.assertTrue(docContent.contains(">Christoph<"));
         Assert.assertTrue(docContent.contains(">DRAFT<"));
@@ -74,7 +75,7 @@ public class ExcelTestDocsGeneratorTest {
         Assert.assertTrue(docContent.contains(">" + dateFormat.format(new Date()) + "<"));
         Assert.assertTrue(docContent.contains(">SampleIT.xml<"));
     }
-    
+
     @Test
     public void testCustomizedExcelDocGeneration() throws IOException {
         ExcelTestDocsGenerator generator = ExcelTestDocsGenerator.build()
@@ -86,9 +87,9 @@ public class ExcelTestDocsGeneratorTest {
                         .useSrcDirectory("src" + File.separator + "test" + File.separator);
 
         generator.generateDoc();
-        
+
         String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
-        
+
         Assert.assertTrue(docContent.contains("<Author>TestFactory</Author>"));
         Assert.assertTrue(docContent.contains("<Company>TestCompany</Company>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">CustomPageTitle</Data>"));
@@ -99,7 +100,7 @@ public class ExcelTestDocsGeneratorTest {
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Beschreibung</Data>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Datum</Data>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Dateiname</Data>"));
-        
+
         Assert.assertTrue(docContent.contains(">SampleIT<"));
         Assert.assertTrue(docContent.contains(">Christoph<"));
         Assert.assertTrue(docContent.contains(">DRAFT<"));

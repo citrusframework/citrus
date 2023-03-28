@@ -93,7 +93,7 @@ The XML validation matcher implementation is the possibly most exciting one, as 
             <config>
                 <premium>true</premium>
                 <last-login>2012-02-24T23:34:23</last-login>
-                <link>http://www.citrusframework.org/customer/5</link>
+                <link>http://citrusframework.org/customer/5</link>
             </config>
           ]]></Configuration>
       </CustomerDetails>
@@ -113,7 +113,7 @@ As you can see the message payload contains some configuration as nested XML dat
                 <Configuration>citrus:cdataSection('@matchesXml('<config>
                     <premium>${isPremium}</premium>
                     <last-login>@ignore@</last-login>
-                    <link>http://www.citrusframework.org/customer/5</link>
+                    <link>http://citrusframework.org/customer/5</link>
                   </config>')@')</Configuration>
             </CustomerDetails>
         </GetCustomerMessage>

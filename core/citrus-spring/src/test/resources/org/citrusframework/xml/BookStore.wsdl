@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.citrusframework.org/bookstore/" xmlns:book="http://www.citrusframework.org/book/wsdl" xmlns:audio="http://www.citrusframework.org/bookstore/audio" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="BookStore" targetNamespace="http://www.citrusframework.org/bookstore/">
+<wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://citrusframework.org/bookstore/" xmlns:book="http://citrusframework.org/book/wsdl" xmlns:audio="http://citrusframework.org/bookstore/audio" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="BookStore" targetNamespace="http://citrusframework.org/bookstore/">
   <wsdl:types>
-    <xsd:schema xmlns="http://www.citrusframework.org/bookstore/" xmlns:book="http://www.citrusframework.org/book" xmlns:author="http://www.citrusframework.org/author" targetNamespace="http://www.citrusframework.org/bookstore/" elementFormDefault="qualified">
+    <xsd:schema xmlns="http://citrusframework.org/bookstore/" xmlns:book="http://citrusframework.org/book" xmlns:author="http://citrusframework.org/author" targetNamespace="http://citrusframework.org/bookstore/" elementFormDefault="qualified">
       <xsd:element name="addBook" type="tns:BookType"/>
       <xsd:element name="addBookResponse">
         <xsd:complexType>
@@ -18,7 +18,7 @@
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="deleteBookResponse" type="tns:BaseResponseType"/>
-      
+
       <xsd:complexType name="BookType">
         <xsd:sequence>
           <xsd:element name="author" type="xsd:string"/>
@@ -27,21 +27,21 @@
           <xsd:element name="year" type="xsd:string"/>
         </xsd:sequence>
       </xsd:complexType>
-        
+
       <xsd:complexType name="BaseResponseType">
         <xsd:sequence>
           <xsd:element name="success" type="xsd:boolean"/>
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>
-    
-    <xsd:schema targetNamespace="http://www.citrusframework.org/bookstore/audio">
-        <xsd:import namespace="http://www.citrusframework.org/bookstore/"/>
-        
+
+    <xsd:schema targetNamespace="http://citrusframework.org/bookstore/audio">
+        <xsd:import namespace="http://citrusframework.org/bookstore/"/>
+
         <xsd:element name="addBookAudio" type="audio:AudioBookType"/>
-        
+
         <xsd:element name="addBookAudioResponse" type="tns:BaseResponseType"/>
-        
+
         <xsd:complexType name="AudioBookType">
             <xsd:complexContent>
                 <xsd:extension base="tns:BookType">
@@ -53,7 +53,7 @@
         </xsd:complexType>
     </xsd:schema>
   </wsdl:types>
-  
+
   <wsdl:message name="addBook">
     <wsdl:part element="tns:addBook" name="parameters"/>
   </wsdl:message>
@@ -72,7 +72,7 @@
   <wsdl:message name="deleteBookResponse">
     <wsdl:part element="tns:deleteBookResponse" name="parameters"/>
   </wsdl:message>
-  
+
   <wsdl:portType name="BookStore">
     <wsdl:operation name="addBook">
       <wsdl:input message="tns:addBook"/>
@@ -87,11 +87,11 @@
       <wsdl:output message="tns:deleteBookResponse"/>
     </wsdl:operation>
   </wsdl:portType>
-  
+
   <wsdl:binding name="BookStoreSOAP" type="tns:BookStore">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="addBook">
-      <soap:operation soapAction="http://www.citrusframework.org/bookstore/addBook"/>
+      <soap:operation soapAction="http://citrusframework.org/bookstore/addBook"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -100,7 +100,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="addBookAudio">
-      <soap:operation soapAction="http://www.citrusframework.org/bookstore/addBookAudio"/>
+      <soap:operation soapAction="http://citrusframework.org/bookstore/addBookAudio"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -109,7 +109,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteBook">
-      <soap:operation soapAction="http://www.citrusframework.org/bookstore/deleteBook"/>
+      <soap:operation soapAction="http://citrusframework.org/bookstore/deleteBook"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -118,10 +118,10 @@
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-  
+
   <wsdl:service name="BookStore">
     <wsdl:port binding="tns:BookStoreSOAP" name="BookStoreSOAP">
-      <soap:address location="http://www.citrusframework.org/bookstore/"/>
+      <soap:address location="http://citrusframework.org/bookstore/"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

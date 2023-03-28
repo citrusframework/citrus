@@ -16,9 +16,9 @@ For example:
 
 [source]
 ----
-logs/trace/messages/MyTest.msgs 
-logs/trace/messages/FooTest.msgs 
-logs/trace/messages/SomeTest.msgs 
+logs/trace/messages/MyTest.msgs
+logs/trace/messages/FooTest.msgs
+logs/trace/messages/SomeTest.msgs
 ----
 
 Each Citrus test writes a *.msgs* file containing all messages that went over the wire during the test. By default the debug directory is set to *_logs/trace/messages/_* relative to the project test output directory. But you can set your own output directory in the configuration
@@ -42,7 +42,7 @@ Sending SOAP request:
 <Operation xmlns="http://citrusframework.org/test">sayHello</Operation>
 </SOAP-ENV:Header>
 <SOAP-ENV:Body>
-<ns0:HelloRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/sayHello.xsd">
     <ns0:MessageId>0857041782</ns0:MessageId>
     <ns0:CorrelationId>6915071793</ns0:CorrelationId>
     <ns0:User>Christoph</ns0:User>
@@ -57,7 +57,7 @@ Received SOAP response:
 <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
 <SOAP-ENV:Header/>
 <SOAP-ENV:Body>
-<ns0:HelloResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+<ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/sayHello.xsd">
     <ns0:MessageId>0857041782</ns0:MessageId>
     <ns0:CorrelationId>6915071793</ns0:CorrelationId>
     <ns0:User>WebServer</ns0:User>
@@ -75,7 +75,7 @@ For this message tracing to work we need to add logging listeners to our sender 
     request-url="http://localhost:8071"
     message-factory="messageFactory"
     interceptors="clientInterceptors"/>
-    
+
     <util:list id="clientInterceptors">
         <bean class="org.citrusframework.ws.interceptor.LoggingClientInterceptor"/>
     </util:list>

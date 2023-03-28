@@ -1340,8 +1340,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
             @Override
             public void configure() {
                 receive(messageEndpoint)
-                    .payload("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
-                    .validateNamespace("pfx", "http://www.consol.de/schemas/test");
+                    .payload("<TestRequest xmlns:pfx=\"http://citrusframework.org/schemas/test\"><Message>Hello World!</Message></TestRequest>")
+                    .validateNamespace("pfx", "http://citrusframework.org/schemas/test");
             }
         };
 
@@ -1367,8 +1367,8 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
 
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         Assert.assertEquals(((DefaultMessageBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()),
-                "<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(validationContext.getControlNamespaces().get("pfx"), "http://www.consol.de/schemas/test");
+                "<TestRequest xmlns:pfx=\"http://citrusframework.org/schemas/test\"><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(validationContext.getControlNamespaces().get("pfx"), "http://citrusframework.org/schemas/test");
     }
 
     @Test

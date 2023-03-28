@@ -112,14 +112,14 @@
         <body>
           <data>
             <![CDATA[
-                <ns:TestMessage xmlns:ns="http://www.consol.com">Hello Citrus</ns:TestMessage>
+                <ns:TestMessage xmlns:ns="http://citrusframework.org">Hello Citrus</ns:TestMessage>
             ]]>
           </data>
         </body>
         <expression path="/ns:TestMessage/" value="newValue"/>
       </message>
       <ignore path="/ns:TestMessage/ns:ignore"/>
-      <namespace prefix="ns" value="http://www.consol.com"/>
+      <namespace prefix="ns" value="http://citrusframework.org"/>
     </receive>
 
     <receive endpoint="direct:helloQueue">

@@ -28,7 +28,7 @@
           <message schema-validation="true">
             <data>
               <![CDATA[
-                <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/">
+                <sample:sampleMessage xmlns:sample="http://citrusframework.org/SampleService/">
                   <command>hello</command>
                   <message>FOO</message>
                 </sample:sampleMessage>
@@ -42,7 +42,7 @@
             <message schema-repository="sampleServiceSchemaRepository">
               <data>
                 <![CDATA[
-                  <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/">
+                  <sample:sampleMessage xmlns:sample="http://citrusframework.org/SampleService/">
                     <command>hello</command>
                     <message>FOO</message>
                   </sample:sampleMessage>
@@ -55,7 +55,7 @@
             <message>
               <data>
                 <![CDATA[
-                  <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/">
+                  <sample:sampleMessageResponse xmlns:sample="http://citrusframework.org/SampleService/">
                     <response>success</response>
                     <message>BAR</message>
                   </sample:sampleMessageResponse>
@@ -70,7 +70,7 @@
         <message schema-repository="sampleServiceSchemaRepository">
           <data>
             <![CDATA[
-              <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/">
+              <sample:sampleMessageResponse xmlns:sample="http://citrusframework.org/SampleService/">
                 <response>success</response>
                 <message>BAR</message>
               </sample:sampleMessageResponse>
@@ -89,7 +89,7 @@
             <message schema-validation="true">
               <data>
                 <![CDATA[
-                <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/">
+                <sample:sampleMessage xmlns:sample="http://citrusframework.org/SampleService/">
                   <command>hello</command>
                   <message>FOO-wrong</message>
                 </sample:sampleMessage>

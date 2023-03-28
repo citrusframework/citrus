@@ -19,7 +19,7 @@
     </citrus:static-response-adapter>
 
     <citrus:static-response-adapter id="endpointAdapter2">
-      <citrus:resource file="classpath:coms/consol/citrus/response-data.xml" />
+      <citrus:resource file="classpath:org/citrusframework/response-data.xml" />
       <citrus:header>
         <citrus:element name="Operation" value="sayHello"/>
       </citrus:header>

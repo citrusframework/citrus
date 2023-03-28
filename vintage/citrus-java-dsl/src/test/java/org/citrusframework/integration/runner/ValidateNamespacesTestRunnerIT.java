@@ -32,102 +32,102 @@ public class ValidateNamespacesTestRunnerIT extends TestNGCitrusTestRunner {
         echo("Test: Success with single namespace validation");
 
         send(builder -> builder.endpoint("testMessageSender")
-                .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+                .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                         "</trq:TestRequest>"));
 
         receive(builder -> builder.endpoint("testMessageReceiver")
-                .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+                .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                         "</trq:TestRequest>")
                 .schemaValidation(false)
-                .validateNamespace("trq", "http://www.consol.de/schemas/test")
+                .validateNamespace("trq", "http://citrusframework.org/schemas/test")
                 .timeout(5000));
 
         echo("Test: Success with multiple namespace validations");
 
         send(builder -> builder.endpoint("testMessageSender")
-                .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\" xmlns:msg=\"http://www.consol.de/schemas/message\">" +
+                .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\" xmlns:msg=\"http://citrusframework.org/schemas/message\">" +
                         "<msg:Message>Hello</msg:Message>" +
                         "</trq:TestRequest>"));
 
         receive(builder -> builder.endpoint("testMessageReceiver")
-                .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\" xmlns:msg=\"http://www.consol.de/schemas/message\">" +
+                .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\" xmlns:msg=\"http://citrusframework.org/schemas/message\">" +
                         "<msg:Message>Hello</msg:Message>" +
                         "</trq:TestRequest>")
                 .schemaValidation(false)
-                .validateNamespace("trq", "http://www.consol.de/schemas/test")
-                .validateNamespace("msg", "http://www.consol.de/schemas/message")
+                .validateNamespace("trq", "http://citrusframework.org/schemas/test")
+                .validateNamespace("msg", "http://citrusframework.org/schemas/message")
                 .timeout(5000));
 
         echo("Test: Success with multiple nested namespace validations");
 
         send(builder -> builder.endpoint("testMessageSender")
-                .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
-                        "<msg:Message xmlns:msg=\"http://www.consol.de/schemas/message\">Hello</msg:Message>" +
+                .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
+                        "<msg:Message xmlns:msg=\"http://citrusframework.org/schemas/message\">Hello</msg:Message>" +
                         "</trq:TestRequest>"));
 
         receive(builder -> builder.endpoint("testMessageReceiver")
-                .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
-                        "<msg:Message xmlns:msg=\"http://www.consol.de/schemas/message\">Hello</msg:Message>" +
+                .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
+                        "<msg:Message xmlns:msg=\"http://citrusframework.org/schemas/message\">Hello</msg:Message>" +
                         "</trq:TestRequest>")
                 .schemaValidation(false)
-                .validateNamespace("trq", "http://www.consol.de/schemas/test")
-                .validateNamespace("msg", "http://www.consol.de/schemas/message")
+                .validateNamespace("trq", "http://citrusframework.org/schemas/test")
+                .validateNamespace("msg", "http://citrusframework.org/schemas/message")
                 .timeout(5000));
 
         echo("Test: Failure because of missing namespace");
 
         send(builder -> builder.endpoint("testMessageSender")
-                .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+                .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                         "</trq:TestRequest>"));
 
         assertException().exception(ValidationException.class)
             .when(
                 receive(builder -> builder.endpoint("testMessageReceiver")
-                        .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+                        .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                                 "<Message>Hello</Message>" +
                                 "</trq:TestRequest>")
                         .schemaValidation(false)
-                        .validateNamespace("trq", "http://www.consol.de/schemas/test")
-                        .validateNamespace("missing", "http://www.consol.de/schemas/missing")
+                        .validateNamespace("trq", "http://citrusframework.org/schemas/test")
+                        .validateNamespace("missing", "http://citrusframework.org/schemas/missing")
                         .timeout(5000))
         );
 
         echo("Test: Failure because of wrong namespace prefix");
 
         send(builder -> builder.endpoint("testMessageSender")
-                .payload("<wrong:TestRequest xmlns:wrong=\"http://www.consol.de/schemas/test\">" +
+                .payload("<wrong:TestRequest xmlns:wrong=\"http://citrusframework.org/schemas/test\">" +
                         "<Message>Hello</Message>" +
                         "</wrong:TestRequest>"));
 
         assertException().exception(ValidationException.class)
             .when(
                 receive(builder -> builder.endpoint("testMessageReceiver")
-                        .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+                        .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                                 "<Message>Hello</Message>" +
                                 "</trq:TestRequest>")
                         .schemaValidation(false)
-                        .validateNamespace("trq", "http://www.consol.de/schemas/test")
+                        .validateNamespace("trq", "http://citrusframework.org/schemas/test")
                         .timeout(5000))
         );
 
         echo("Test: Failure because of wrong namespace uri");
 
         send(builder -> builder.endpoint("testMessageSender")
-                .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/wrong\">" +
+                .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/wrong\">" +
                         "<Message>Hello</Message>" +
                         "</trq:TestRequest>"));
 
         assertException().exception(ValidationException.class)
             .when(
                 receive(builder -> builder.endpoint("testMessageReceiver")
-                        .payload("<trq:TestRequest xmlns:trq=\"http://www.consol.de/schemas/test\">" +
+                        .payload("<trq:TestRequest xmlns:trq=\"http://citrusframework.org/schemas/test\">" +
                                 "<Message>Hello</Message>" +
                                 "</trq:TestRequest>")
                         .schemaValidation(false)
-                        .validateNamespace("trq", "http://www.consol.de/schemas/test")
+                        .validateNamespace("trq", "http://citrusframework.org/schemas/test")
                         .timeout(5000))
         );
     }

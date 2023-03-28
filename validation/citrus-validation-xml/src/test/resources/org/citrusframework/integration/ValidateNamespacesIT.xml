@@ -23,7 +23,7 @@
                 <message>
                     <data>
                         <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test">
                             <Message>Hello</Message>
                         </trq:TestRequest>
                         ]]>
@@ -35,13 +35,13 @@
                 <message schema-validation="false">
                     <data>
                       <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test">
                             <Message>Hello</Message>
                         </trq:TestRequest>
                       ]]>
                     </data>
                     <validate>
-                        <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
+                        <namespace prefix="trq" value="http://citrusframework.org/schemas/test"/>
                     </validate>
                 </message>
             </receive>
@@ -54,8 +54,8 @@
                 <message>
                     <data>
                         <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test"
-                                         xmlns:msg="http://www.consol.de/schemas/message">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test"
+                                         xmlns:msg="http://citrusframework.org/schemas/message">
                             <msg:Message>Hello</msg:Message>
                         </trq:TestRequest>
                         ]]>
@@ -67,15 +67,15 @@
                 <message schema-validation="false">
                     <data>
                       <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test"
-                                         xmlns:msg="http://www.consol.de/schemas/message">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test"
+                                         xmlns:msg="http://citrusframework.org/schemas/message">
                             <msg:Message>Hello</msg:Message>
                         </trq:TestRequest>
                       ]]>
                     </data>
                     <validate>
-                        <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
-                        <namespace prefix="msg" value="http://www.consol.de/schemas/message"/>
+                        <namespace prefix="trq" value="http://citrusframework.org/schemas/test"/>
+                        <namespace prefix="msg" value="http://citrusframework.org/schemas/message"/>
                     </validate>
                 </message>
             </receive>
@@ -88,8 +88,8 @@
                 <message>
                     <data>
                         <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test">
-                            <msg:Message xmlns:msg="http://www.consol.de/schemas/message">Hello</msg:Message>
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test">
+                            <msg:Message xmlns:msg="http://citrusframework.org/schemas/message">Hello</msg:Message>
                         </trq:TestRequest>
                         ]]>
                     </data>
@@ -100,14 +100,14 @@
                 <message schema-validation="false">
                     <data>
                       <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test">
-                            <msg:Message xmlns:msg="http://www.consol.de/schemas/message">Hello</msg:Message>
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test">
+                            <msg:Message xmlns:msg="http://citrusframework.org/schemas/message">Hello</msg:Message>
                         </trq:TestRequest>
                       ]]>
                     </data>
                     <validate>
-                        <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
-                        <namespace prefix="msg" value="http://www.consol.de/schemas/message"/>
+                        <namespace prefix="trq" value="http://citrusframework.org/schemas/test"/>
+                        <namespace prefix="msg" value="http://citrusframework.org/schemas/message"/>
                     </validate>
                 </message>
             </receive>
@@ -120,7 +120,7 @@
                 <message>
                     <data>
                         <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/test">
                             <Message>Hello</Message>
                         </trq:TestRequest>
                         ]]>
@@ -133,8 +133,8 @@
                   <receive endpoint="helloEndpoint" timeout="5000">
                       <message schema-validation="false">
                           <validate>
-                              <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
-                              <namespace prefix="missing" value="http://www.consol.de/schemas/missing"/>
+                              <namespace prefix="trq" value="http://citrusframework.org/schemas/test"/>
+                              <namespace prefix="missing" value="http://citrusframework.org/schemas/missing"/>
                           </validate>
                       </message>
                   </receive>
@@ -149,7 +149,7 @@
                 <message>
                     <data>
                         <![CDATA[
-                        <wrong:TestRequest xmlns:wrong="http://www.consol.de/schemas/test">
+                        <wrong:TestRequest xmlns:wrong="http://citrusframework.org/schemas/test">
                             <Message>Hello</Message>
                         </wrong:TestRequest>
                         ]]>
@@ -162,7 +162,7 @@
                   <receive endpoint="helloEndpoint" timeout="5000">
                       <message schema-validation="false">
                           <validate>
-                              <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
+                              <namespace prefix="trq" value="http://citrusframework.org/schemas/test"/>
                           </validate>
                       </message>
                   </receive>
@@ -177,7 +177,7 @@
                 <message>
                     <data>
                         <![CDATA[
-                        <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/wrong">
+                        <trq:TestRequest xmlns:trq="http://citrusframework.org/schemas/wrong">
                             <Message>Hello</Message>
                         </trq:TestRequest>
                         ]]>
@@ -190,7 +190,7 @@
                   <receive endpoint="helloEndpoint" timeout="5000">
                       <message schema-validation="false">
                           <validate>
-                              <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
+                              <namespace prefix="trq" value="http://citrusframework.org/schemas/test"/>
                           </validate>
                       </message>
                   </receive>

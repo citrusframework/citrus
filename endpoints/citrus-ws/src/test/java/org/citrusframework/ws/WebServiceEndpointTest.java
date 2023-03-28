@@ -234,7 +234,7 @@ public class WebServiceEndpointTest {
 
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(soapRequestHeaders.iterator());
 
-        when(soapRequestHeaderEntry.getName()).thenReturn(new QName("http://www.consol.de/citrus", "Operation", "citrus"));
+        when(soapRequestHeaderEntry.getName()).thenReturn(new QName("http://citrusframework.org/citrus", "Operation", "citrus"));
         when(soapRequestHeaderEntry.getText()).thenReturn("sayHello");
 
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
@@ -325,7 +325,7 @@ public class WebServiceEndpointTest {
 
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(soapRequestHeaders.iterator());
 
-        when(soapRequestHeaderEntry.getName()).thenReturn(new QName("http://www.consol.de/citrus", "Operation", "citrus"));
+        when(soapRequestHeaderEntry.getName()).thenReturn(new QName("http://citrusframework.org/citrus", "Operation", "citrus"));
         when(soapRequestHeaderEntry.getText()).thenReturn("sayHello");
 
         when(messageContext.getResponse()).thenReturn(soapResponse);
@@ -347,7 +347,7 @@ public class WebServiceEndpointTest {
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("{http://www.consol.de/citrus}citrus:Operation", "sayHello");
+        responseHeaders.put("{http://citrusframework.org/citrus}citrus:Operation", "sayHello");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
@@ -399,7 +399,7 @@ public class WebServiceEndpointTest {
 
                 Assert.assertEquals(headerQName.getLocalPart(), "Operation");
                 Assert.assertEquals(headerQName.getPrefix(), "citrus");
-                Assert.assertEquals(headerQName.getNamespaceURI(), "http://www.consol.de/citrus");
+                Assert.assertEquals(headerQName.getNamespaceURI(), "http://citrusframework.org/citrus");
                 return soapRequestHeaderEntry;
             }
         }).when(soapResponseHeader).addHeaderElement((QName)any());
@@ -436,7 +436,7 @@ public class WebServiceEndpointTest {
             }
         });
 
-        endpoint.setDefaultNamespaceUri("http://www.consol.de/citrus");
+        endpoint.setDefaultNamespaceUri("http://citrusframework.org/citrus");
         endpoint.setDefaultPrefix("citrus");
 
         StringResult soapResponsePayload = new StringResult();
@@ -474,7 +474,7 @@ public class WebServiceEndpointTest {
 
                 Assert.assertEquals(headerQName.getLocalPart(), "Operation");
                 Assert.assertEquals(headerQName.getPrefix(), "citrus");
-                Assert.assertEquals(headerQName.getNamespaceURI(), "http://www.consol.de/citrus");
+                Assert.assertEquals(headerQName.getNamespaceURI(), "http://citrusframework.org/citrus");
                 return soapRequestHeaderEntry;
             }
         }).when(soapResponseHeader).addHeaderElement((QName)any());
@@ -511,7 +511,7 @@ public class WebServiceEndpointTest {
             }
         });
 
-        endpoint.setDefaultNamespaceUri("http://www.consol.de/citrus");
+        endpoint.setDefaultNamespaceUri("http://citrusframework.org/citrus");
 
         StringResult soapResponsePayload = new StringResult();
 
@@ -549,7 +549,7 @@ public class WebServiceEndpointTest {
 
                 Assert.assertEquals(headerQName.getLocalPart(), "Operation");
                 Assert.assertEquals(headerQName.getPrefix(), "");
-                Assert.assertEquals(headerQName.getNamespaceURI(), "http://www.consol.de/citrus");
+                Assert.assertEquals(headerQName.getNamespaceURI(), "http://citrusframework.org/citrus");
                 return soapRequestHeaderEntry;
             }
         }).when(soapResponseHeader).addHeaderElement((QName)any());
@@ -1124,7 +1124,7 @@ public class WebServiceEndpointTest {
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         final SoapFault responseMessage = new SoapFault();
-        responseMessage.faultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
+        responseMessage.faultCode("{http://citrusframework.org/citrus}citrus:TEC-1000");
         responseMessage.faultString("Invalid request");
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
@@ -1179,7 +1179,7 @@ public class WebServiceEndpointTest {
 
                 Assert.assertEquals(faultQName.getLocalPart(), "TEC-1000");
                 Assert.assertEquals(faultQName.getPrefix(), "citrus");
-                Assert.assertEquals(faultQName.getNamespaceURI(), "http://www.consol.de/citrus");
+                Assert.assertEquals(faultQName.getNamespaceURI(), "http://citrusframework.org/citrus");
                 Assert.assertEquals(invocation.getArguments()[1], "Invalid request");
 
                 return soapFault;
@@ -1202,7 +1202,7 @@ public class WebServiceEndpointTest {
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         final SoapFault responseMessage = new SoapFault();
-        responseMessage.faultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
+        responseMessage.faultCode("{http://citrusframework.org/citrus}citrus:TEC-1000");
         responseMessage.faultString("Invalid request");
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
@@ -1265,7 +1265,7 @@ public class WebServiceEndpointTest {
 
                 Assert.assertEquals(faultQName.getLocalPart(), "TEC-1000");
                 Assert.assertEquals(faultQName.getPrefix(), "citrus");
-                Assert.assertEquals(faultQName.getNamespaceURI(), "http://www.consol.de/citrus");
+                Assert.assertEquals(faultQName.getNamespaceURI(), "http://citrusframework.org/citrus");
                 return null;
             }
         }).when(soapFault).addFaultSubcode((QName)any());

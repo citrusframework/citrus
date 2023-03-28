@@ -162,7 +162,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <data>
                       <![CDATA[
                         <TravelBookingRequestMessage
-                          xmlns="http://www.consol.com/schemas/TravelAgency">
+                          xmlns="http://citrusframework.org/schemas/TravelAgency">
                           <correlationId>${correlationId}</correlationId>
                           <customer>
                             <id>${customerId}</id>
@@ -203,7 +203,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <data>
                       <![CDATA[
                         <FlightBookingRequestMessage
-                          xmlns="http://www.consol.com/schemas/AirlineSchema">
+                          xmlns="http://citrusframework.org/schemas/AirlineSchema">
                           <correlationId>${correlationId}</correlationId>
                           <bookingId>???</bookingId>
                           <customer>
@@ -239,7 +239,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <data>
                       <![CDATA[
                         <FlightBookingConfirmationMessage
-                          xmlns="http://www.consol.com/schemas/AirlineSchema">
+                          xmlns="http://citrusframework.org/schemas/AirlineSchema">
                           <correlationId>${correlationId}</correlationId>
                           <bookingId>${smartAirlineBookingId}</bookingId>
                           <success>true</success>
@@ -266,7 +266,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <data>
                       <![CDATA[
                         <FlightBookingRequestMessage
-                          xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema">
+                          xmlns="http://citrusframework.org/schemas/FlightBooking/AirlineSchema">
                           <correlationId>${correlationId}</correlationId>
                           <bookingId>???</bookingId>
                           <customer>
@@ -302,7 +302,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <data>
                       <![CDATA[
                         <FlightBookingConfirmationMessage
-                          xmlns="http://www.consol.com/schemas/AirlineSchema">
+                          xmlns="http://citrusframework.org/schemas/AirlineSchema">
                           <correlationId>${correlationId}</correlationId>
                           <bookingId>${royalAirlineBookingId}</bookingId>
                           <success>true</success>
@@ -329,7 +329,7 @@ The test case definition is also a Spring configuration file. Citrus offers a cu
                     <data>
                       <![CDATA[
                         <TravelBookingResponseMessage
-                          xmlns="http://www.consol.com/schemas/TravelAgency">
+                          xmlns="http://citrusframework.org/schemas/TravelAgency">
                           <correlationId>${correlationId}</correlationId>
                           <success>true</success>
                           <flights>

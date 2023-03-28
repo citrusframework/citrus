@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *         &lt;element name="CorrelationId" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="User" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="Text" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="Fault" type="{http://www.consol.de/schemas/samples/sayHello.xsd}FaultType" minOccurs="0"/&gt;
+ *         &lt;element name="Fault" type="{http://citrusframework.org/schemas/samples/sayHello.xsd}FaultType" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;

@@ -39,7 +39,7 @@ public class HttpConditionTest extends UnitTestSupport {
 
     @Test
     public void testValidUrl() throws Exception {
-        String url = "http://www.citrusframework.org";
+        String url = "https://citrusframework.org";
         String timeout = "3000";
         String httpResponseCode = "200";
 
@@ -50,7 +50,7 @@ public class HttpConditionTest extends UnitTestSupport {
         HttpCondition testling = new HttpCondition() {
             @Override
             protected HttpURLConnection openConnection(URL url) {
-                Assert.assertEquals(url.toExternalForm(), "http://www.citrusframework.org");
+                Assert.assertEquals(url.toExternalForm(), "https://citrusframework.org");
 
                 return connection;
             }
@@ -69,7 +69,7 @@ public class HttpConditionTest extends UnitTestSupport {
 
     @Test
     public void testValidUrlVariableSupport() throws Exception {
-        context.setVariable("url", "http://www.citrusframework.org");
+        context.setVariable("url", "https://citrusframework.org");
         context.setVariable("timeout", "3000");
         context.setVariable("httpResponseCode", "200");
 
@@ -80,7 +80,7 @@ public class HttpConditionTest extends UnitTestSupport {
         HttpCondition testling = new HttpCondition() {
             @Override
             protected HttpURLConnection openConnection(URL url) {
-                Assert.assertEquals(url.toExternalForm(), "http://www.citrusframework.org");
+                Assert.assertEquals(url.toExternalForm(), "https://citrusframework.org");
 
                 return connection;
             }

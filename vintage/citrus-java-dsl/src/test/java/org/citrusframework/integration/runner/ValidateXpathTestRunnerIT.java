@@ -38,7 +38,7 @@ public class ValidateXpathTestRunnerIT extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +
@@ -51,12 +51,12 @@ public class ValidateXpathTestRunnerIT extends TestNGCitrusTestRunner {
                 .validate("//ns0:HelloResponse/ns0:MessageId", "${messageId}")
                 .validate("//ns0:HelloResponse/ns0:CorrelationId", "${correlationId}")
                 .validate("//ns0:HelloResponse/ns0:Text", "citrus:concat('Hello ', ${user})")
-                .namespace("ns0", "http://www.consol.de/schemas/samples/sayHello.xsd")
+                .namespace("ns0", "http://citrusframework.org/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}"));
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +
@@ -69,12 +69,12 @@ public class ValidateXpathTestRunnerIT extends TestNGCitrusTestRunner {
                 .validate("//ns1:HelloResponse/ns1:MessageId", "${messageId}")
                 .validate("//ns1:HelloResponse/ns1:CorrelationId", "${correlationId}")
                 .validate("//ns1:HelloResponse/ns1:Text", "citrus:concat('Hello ', ${user})")
-                .namespace("ns1", "http://www.consol.de/schemas/samples/sayHello.xsd")
+                .namespace("ns1", "http://citrusframework.org/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}"));
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +
@@ -93,7 +93,7 @@ public class ValidateXpathTestRunnerIT extends TestNGCitrusTestRunner {
         echo("Now using xpath validation elements");
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +
@@ -106,12 +106,12 @@ public class ValidateXpathTestRunnerIT extends TestNGCitrusTestRunner {
                 .xpath("//ns0:HelloResponse/ns0:MessageId", "${messageId}")
                 .xpath("//ns0:HelloResponse/ns0:CorrelationId", "${correlationId}")
                 .xpath("//ns0:HelloResponse/ns0:Text", "citrus:concat('Hello ', ${user})")
-                .namespace("ns0", "http://www.consol.de/schemas/samples/sayHello.xsd")
+                .namespace("ns0", "http://citrusframework.org/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}"));
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +
@@ -124,12 +124,12 @@ public class ValidateXpathTestRunnerIT extends TestNGCitrusTestRunner {
                 .xpath("//ns1:HelloResponse/ns1:MessageId", "${messageId}")
                 .xpath("//ns1:HelloResponse/ns1:CorrelationId", "${correlationId}")
                 .xpath("//ns1:HelloResponse/ns1:Text", "citrus:concat('Hello ', ${user})")
-                .namespace("ns1", "http://www.consol.de/schemas/samples/sayHello.xsd")
+                .namespace("ns1", "http://citrusframework.org/schemas/samples/sayHello.xsd")
                 .header("Operation", "sayHello")
                 .header("CorrelationId", "${correlationId}"));
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +
@@ -148,7 +148,7 @@ public class ValidateXpathTestRunnerIT extends TestNGCitrusTestRunner {
         echo("Test: Default namespace mapping");
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +

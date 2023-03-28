@@ -10,7 +10,7 @@
         <actions>
             <ws:send-fault endpoint="soapServer">
               <ws:fault>
-                  <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:FAULT-1000</ws:fault-code>
+                  <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:FAULT-1000</ws:fault-code>
                   <ws:fault-string>FaultString</ws:fault-string>
                   <ws:fault-detail>
                       <![CDATA[
@@ -27,7 +27,7 @@
 
             <ws:send-fault endpoint="soapServer">
               <ws:fault>
-                  <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:FAULT-1001</ws:fault-code>
+                  <ws:fault-code>{http://citrusframework.org/faults}citrus-ns:FAULT-1001</ws:fault-code>
                   <ws:fault-string>FaultString</ws:fault-string>
                   <ws:fault-actor>FaultActor</ws:fault-actor>
                   <ws:fault-detail file="classpath:org/citrusframework/ws/actions/test-fault-detail.xml"/>

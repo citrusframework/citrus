@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://www.citrusframework.org/SampleService/MessageResponse"
-           targetNamespace="http://www.citrusframework.org/SampleService/MessageResponse"
-           xmlns:types="http://www.citrusframework.org/SampleService/Types"
+           xmlns="http://citrusframework.org/SampleService/MessageResponse"
+           targetNamespace="http://citrusframework.org/SampleService/MessageResponse"
+           xmlns:types="http://citrusframework.org/SampleService/Types"
            elementFormDefault="unqualified"
            attributeFormDefault="unqualified">
 
   <!-- Import dependency XML schema to test schema loading -->
-  <xs:import namespace="http://www.citrusframework.org/SampleService/Types" schemaLocation="SampleTypes.xsd"/>
+  <xs:import namespace="http://citrusframework.org/SampleService/Types" schemaLocation="SampleTypes.xsd"/>
 
   <xs:complexType name="SampleMessageResponseType">
     <xs:sequence>

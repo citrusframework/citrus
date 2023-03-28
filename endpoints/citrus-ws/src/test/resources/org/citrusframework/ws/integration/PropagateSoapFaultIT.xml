@@ -37,7 +37,7 @@
           <data>
             <![CDATA[
               <SOAP-ENV:Fault xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-                <faultcode xmlns:CITRUS="http://www.citrusframework.org/faults">CITRUS:${soapFaultCode}</faultcode>
+                <faultcode xmlns:CITRUS="http://citrusframework.org/faults">CITRUS:${soapFaultCode}</faultcode>
                 <faultstring xml:lang="en">${soapFaultString}</faultstring>
               </SOAP-ENV:Fault>
             ]]>

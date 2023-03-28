@@ -73,12 +73,12 @@
                 <message schema-validation="false">
                     <data>
                         <![CDATA[
-                            <ns:TestMessage xmlns:ns="http://www.consol.com">Hello Citrus</ns:TestMessage>
+                            <ns:TestMessage xmlns:ns="http://citrusframework.org">Hello Citrus</ns:TestMessage>
                         ]]>
                     </data>
                     <element path="/ns:TestMessage/" value="newValue"/>
                     <ignore path="/ns:TestMessage/ns:ignore"/>
-                    <namespace prefix="ns" value="http://www.consol.com"/>
+                    <namespace prefix="ns" value="http://citrusframework.org"/>
                 </message>
             </receive>
 

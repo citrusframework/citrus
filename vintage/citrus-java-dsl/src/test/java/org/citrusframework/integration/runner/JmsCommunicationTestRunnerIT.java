@@ -36,7 +36,7 @@ public class JmsCommunicationTestRunnerIT extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +
@@ -47,7 +47,7 @@ public class JmsCommunicationTestRunnerIT extends TestNGCitrusTestRunner {
                 .description("Send asynchronous hello request: TestFramework -> HelloService"));
 
         receive(builder -> builder.endpoint("helloResponseReceiver")
-                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>HelloService</User>" +
@@ -77,7 +77,7 @@ public class JmsCommunicationTestRunnerIT extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
 
         send(builder -> builder.endpoint("helloRequestSender")
-                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                         "<MessageId>${messageId}</MessageId>" +
                         "<CorrelationId>${correlationId}</CorrelationId>" +
                         "<User>${user}</User>" +

@@ -47,11 +47,11 @@ public class FtpEndpointComponentTest {
         Assert.assertNull(((FtpClient) endpoint).getEndpointConfiguration().getPassword());
         Assert.assertEquals(((FtpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
 
-        endpoint = component.createEndpoint("ftp:ftp.consol.de", context);
+        endpoint = component.createEndpoint("ftp:ftp.foo.bar", context);
 
         Assert.assertEquals(endpoint.getClass(), FtpClient.class);
 
-        Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getHost(), "ftp.consol.de");
+        Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getHost(), "ftp.foo.bar");
         Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getPort(), 22222);
         Assert.assertNull(((FtpClient) endpoint).getEndpointConfiguration().getUser());
         Assert.assertNull(((FtpClient) endpoint).getEndpointConfiguration().getPassword());

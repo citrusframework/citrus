@@ -33,7 +33,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusTestDesigner {
         variable("user", "Christoph");
 
         send("helloRequestSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -43,7 +43,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusTestDesigner {
             .header("CorrelationId", "${correlationId}");
 
         receive("helloResponseReceiver")
-            .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>@equalsIgnoreCase('HelloService')@</User>" +
@@ -54,7 +54,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusTestDesigner {
             .header("CorrelationId", "${correlationId}");
 
         send("helloRequestSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -64,19 +64,19 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusTestDesigner {
             .header("CorrelationId", "${correlationId}");
 
         receive("helloResponseReceiver")
-            .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                            "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                            "<ns0:User>@equalsIgnoreCase('HelloService')@</ns0:User>" +
                            "<ns0:Text>xxx</ns0:Text>" +
                        "</ns0:HelloResponse>")
             .ignore("//ns0:HelloResponse/ns0:Text")
-            .namespace("ns0", "http://www.consol.de/schemas/samples/sayHello.xsd")
+            .namespace("ns0", "http://citrusframework.org/schemas/samples/sayHello.xsd")
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}");
 
         send("helloRequestSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -87,7 +87,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusTestDesigner {
 
         receive("helloResponseReceiver")
             .xsd("helloSchema")
-            .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                            "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                            "<ns0:User>@equalsIgnoreCase('HelloService')@</ns0:User>" +
@@ -97,7 +97,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusTestDesigner {
             .header("CorrelationId", "${correlationId}");
 
         send("helloRequestSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
@@ -108,7 +108,7 @@ public class ValidateXMLDataJavaIT extends TestNGCitrusTestDesigner {
 
         receive("helloResponseReceiver")
             .xsdSchemaRepository("helloSchemaRepository")
-            .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/sayHello.xsd\">" +
                            "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                            "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
                            "<ns0:User>@equalsIgnoreCase('HelloService')@</ns0:User>" +

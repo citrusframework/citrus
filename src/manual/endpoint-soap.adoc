@@ -314,8 +314,8 @@ Secondly a SOAP message is able to contain customized SOAP headers. These are ke
 [source,xml]
 ----
 <header>
-    <element name="{http://www.consol.de/sayHello}h1:Operation" value="sayHello"/>
-    <element name="{http://www.consol.de/sayHello}h1:Request" value="HelloRequest"/>
+    <element name="{http://citrusframework.org/sayHello}h1:Operation" value="sayHello"/>
+    <element name="{http://citrusframework.org/sayHello}h1:Request" value="HelloRequest"/>
 </header>
 ----
 
@@ -326,7 +326,7 @@ The key is defined as qualified QName character sequence which has a mandatory X
 <header>
     <data>
       <![CDATA[
-          <User xmlns="http://www.consol.de/schemas/sayHello">
+          <User xmlns="http://citrusframework.org/schemas/sayHello">
               <UserId>123456789</UserId>
               <Handshake>S123456789</Handshake>
           </User>
@@ -404,7 +404,7 @@ With this configuration Citrus will handle all available mime headers and pass t
 <ws:receive endpoint="helloSoapServer">
     <message>
         <payload>
-            <SoapMessageRequest xmlns="http://www.consol.de/schemas/sample.xsd">
+            <SoapMessageRequest xmlns="http://citrusframework.org/schemas/sample.xsd">
                 <Operation>Validate mime headers</Operation>
             </SoapMessageRequest>
         </payload>
@@ -455,7 +455,7 @@ With this configuration Citrus will handle all available mime headers and pass t
     <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
       <SOAP-ENV:Header/>
       <SOAP-ENV:Body>
-        <SoapMessageRequest xmlns="http://www.consol.de/schemas/sample.xsd">
+        <SoapMessageRequest xmlns="http://citrusframework.org/schemas/sample.xsd">
         <Operation>Validate mime headers</Operation>
         </SoapMessageRequest>
       </SOAP-ENV:Body>
@@ -566,12 +566,12 @@ Please keep in mind that we use the citrus-ws extension for sending SOAP faults 
 ----
 <ws:send-fault endpoint="helloSoapServer">
     <ws:fault>
-        <ws:fault-code>{http://www.citrusframework.org/faults}citrus:TEC-1000</ws:fault-code>
+        <ws:fault-code>{http://citrusframework.org/faults}citrus:TEC-1000</ws:fault-code>
         <ws:fault-string>Invalid request</ws:fault-string>
         <ws:fault-actor>SERVER</ws:fault-actor>
         <ws:fault-detail>
             <![CDATA[
-                <FaultDetail xmlns="http://www.consol.de/schemas/sayHello.xsd">
+                <FaultDetail xmlns="http://citrusframework.org/schemas/sayHello.xsd">
                     <MessageId>${messageId}</MessageId>
                     <CorrelationId>${correlationId}</CorrelationId>
                     <ErrorCode>TEC-1000</ErrorCode>
@@ -593,7 +593,7 @@ The example generates a simple SOAP fault that is sent back to the calling clien
 ----
 <ws:send-fault endpoint="helloSoapServer">
     <ws:fault>
-        <ws:fault-code>{http://www.citrusframework.org/faults}citrus:TEC-1000</ws:fault-code>
+        <ws:fault-code>{http://citrusframework.org/faults}citrus:TEC-1000</ws:fault-code>
         <ws:fault-string>Invalid request</ws:fault-string>
         <ws:fault-actor>SERVER</ws:fault-actor>
         <ws:fault-detail file="classpath:myFaultDetail.xml"/>
@@ -619,10 +619,10 @@ Server: Jetty(7.0.0.pre5)
     <SOAP-ENV:Header/>
     <SOAP-ENV:Body>
         <SOAP-ENV:Fault>
-            <faultcode xmlns:citrus="http://www.citrusframework.org/faults">citrus:TEC-1000</faultcode>
+            <faultcode xmlns:citrus="http://citrusframework.org/faults">citrus:TEC-1000</faultcode>
             <faultstring xml:lang="en">Invalid request</faultstring>
             <detail>
-                <FaultDetail xmlns="http://www.consol.de/schemas/sayHello.xsd">
+                <FaultDetail xmlns="http://citrusframework.org/schemas/sayHello.xsd">
                     <MessageId>9277832563</MessageId>
                     <CorrelationId>4346806225</CorrelationId>
                     <ErrorCode>TEC-1000</ErrorCode>
@@ -664,7 +664,7 @@ As a client we send out a request and receive a SOAP fault as response. By defau
         <message>
             <payload>
                 <SoapFaultForcingRequest
-                  xmlns="http://www.consol.de/schemas/soap">
+                  xmlns="http://citrusframework.org/schemas/soap">
                     <Message>This is invalid</Message>
                 </SoapFaultForcingRequest>
             </payload>
@@ -680,7 +680,7 @@ So far we have used the Citrus core capabilities of asserting an exception. This
 .XML DSL
 [source,xml]
 ----
-<ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
+<ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1001"
            fault-string="Invalid request">
            fault-actor="SERVER">
   <ws:when>
@@ -688,7 +688,7 @@ So far we have used the Citrus core capabilities of asserting an exception. This
         <message>
             <payload>
                 <SoapFaultForcingRequest
-                  xmlns="http://www.consol.de/schemas/soap">
+                  xmlns="http://citrusframework.org/schemas/soap">
                     <Message>This is invalid</Message>
                 </SoapFaultForcingRequest>
             </payload>
@@ -718,7 +718,7 @@ Please see the API documentation for details on the available reference implemen
 .XML DSL
 [source,xml]
 ----
-<ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
+<ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1001"
               fault-string="Invalid request"
               fault-validator="mySpecialSoapFaultValidator">
    [...]
@@ -737,7 +737,7 @@ Choose one of Spring's reference implementations or some other implementation as
 .XML DSL
 [source,xml]
 ----
-<ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
+<ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1001"
               fault-string="Invalid request"
               message-factory="mySpecialMessageFactory">
    [...]
@@ -764,11 +764,11 @@ Citrus is also able to validate SOAP fault details. See the following example fo
 .XML DSL
 [source,xml]
 ----
-<ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
+<ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1001"
            fault-string="Invalid request">
     <ws:fault-detail>
       <![CDATA[
-          <FaultDetail xmlns="http://www.consol.de/schemas/soap">
+          <FaultDetail xmlns="http://citrusframework.org/schemas/soap">
               <ErrorCode>TEC-1000</ErrorCode>
               <Text>Invalid request</Text>
           </FaultDetail>
@@ -779,7 +779,7 @@ Citrus is also able to validate SOAP fault details. See the following example fo
             <message>
                 <payload>
                     <SoapFaultForcingRequest
-                      xmlns="http://www.consol.de/schemas/soap">
+                      xmlns="http://citrusframework.org/schemas/soap">
                         <Message>This is invalid</Message>
                     </SoapFaultForcingRequest>
                 </payload>
@@ -796,11 +796,11 @@ When using the XML validation algorithm you have the complete power as known fro
 .XML DSL
 [source,xml]
 ----
-<ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
+<ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1001"
            fault-string="Invalid request">
     <ws:fault-detail schema-validation="false">
       <![CDATA[
-          <FaultDetail xmlns="http://www.consol.de/schemas/soap">
+          <FaultDetail xmlns="http://citrusframework.org/schemas/soap">
               <ErrorCode>TEC-1000</ErrorCode>
               <Text>Invalid request</Text>
           </FaultDetail>
@@ -834,7 +834,7 @@ So now that we do not raise exceptions we can leave out the assert action wrappe
 <send endpoint="soapClient">
     <message>
         <payload>
-            <SoapFaultForcingRequest xmlns="http://www.consol.de/schemas/sample.xsd">
+            <SoapFaultForcingRequest xmlns="http://citrusframework.org/schemas/sample.xsd">
                 <Message>This is invalid</Message>
             </SoapFaultForcingRequest>
         </payload>
@@ -864,12 +864,12 @@ SOAP fault messages can hold multiple SOAP fault detail elements. In the previou
 ----
 <ws:send-fault endpoint="helloSoapServer">
     <ws:fault>
-        <ws:fault-code>{http://www.citrusframework.org/faults}citrus:TEC-1000</ws:fault-code>
+        <ws:fault-code>{http://citrusframework.org/faults}citrus:TEC-1000</ws:fault-code>
         <ws:fault-string>Invalid request</ws:fault-string>
         <ws:fault-actor>SERVER</ws:fault-actor>
         <ws:fault-detail>
             <![CDATA[
-                <FaultDetail xmlns="http://www.consol.de/schemas/sayHello.xsd">
+                <FaultDetail xmlns="http://citrusframework.org/schemas/sayHello.xsd">
                     <MessageId>${messageId}</MessageId>
                     <CorrelationId>${correlationId}</CorrelationId>
                     <ErrorCode>TEC-1000</ErrorCode>
@@ -879,7 +879,7 @@ SOAP fault messages can hold multiple SOAP fault detail elements. In the previou
         </ws:fault-detail>
         <ws:fault-detail>
             <![CDATA[
-                <ErrorDetail xmlns="http://www.consol.de/schemas/sayHello.xsd">
+                <ErrorDetail xmlns="http://citrusframework.org/schemas/sayHello.xsd">
                     <ErrorCode>TEC-1000</ErrorCode>
                 </ErrorDetail>
             ]]>
@@ -906,16 +906,16 @@ Server: Jetty(7.0.0.pre5)
     <SOAP-ENV:Header/>
     <SOAP-ENV:Body>
         <SOAP-ENV:Fault>
-            <faultcode xmlns:citrus="http://www.citrusframework.org/faults">citrus:TEC-1000</faultcode>
+            <faultcode xmlns:citrus="http://citrusframework.org/faults">citrus:TEC-1000</faultcode>
             <faultstring xml:lang="en">Invalid request</faultstring>
             <detail>
-                <FaultDetail xmlns="http://www.consol.de/schemas/sayHello.xsd">
+                <FaultDetail xmlns="http://citrusframework.org/schemas/sayHello.xsd">
                     <MessageId>9277832563</MessageId>
                     <CorrelationId>4346806225</CorrelationId>
                     <ErrorCode>TEC-1000</ErrorCode>
                     <Text>Invalid request</Text>
                 </FaultDetail>
-                <ErrorDetail xmlns="http://www.consol.de/schemas/sayHello.xsd">
+                <ErrorDetail xmlns="http://citrusframework.org/schemas/sayHello.xsd">
                     <ErrorCode>TEC-1000</ErrorCode>
                 </ErrorDetail>
             </detail>
@@ -929,11 +929,11 @@ Of course we can also expect several fault detail elements when receiving a SOAP
 .XML DSL
 [source,xml]
 ----
-<ws:assert-fault fault-code="{http://www.citrusframework.org/faults}TEC-1001"
+<ws:assert-fault fault-code="{http://citrusframework.org/faults}TEC-1001"
            fault-string="Invalid request">
     <ws:fault-detail schema-validation="false">
       <![CDATA[
-          <FaultDetail xmlns="http://www.consol.de/schemas/soap">
+          <FaultDetail xmlns="http://citrusframework.org/schemas/soap">
               <ErrorCode>TEC-1000</ErrorCode>
               <Text>Invalid request</Text>
           </FaultDetail>
@@ -941,7 +941,7 @@ Of course we can also expect several fault detail elements when receiving a SOAP
     </ws:fault-detail>
     <ws:fault-detail>
       <![CDATA[
-          <ErrorDetail xmlns="http://www.consol.de/schemas/soap">
+          <ErrorDetail xmlns="http://citrusframework.org/schemas/soap">
               <ErrorCode>TEC-1000</ErrorCode>
           </ErrorDetail>
       ]]>
@@ -968,7 +968,7 @@ The mechanism on HTTP error code simulation is not different to the usual SOAP r
 <receive endpoint="helloSoapServer">
   <message>
       <payload>
-          <Message xmlns="http://consol.de/schemas/sample.xsd">
+          <Message xmlns="http://citrusframework.org/schemas/sample.xsd">
               <Text>Hello SOAP server</Text>
           </Message>
       </payload>
@@ -1002,7 +1002,7 @@ As client Citrus is able to add attachments to the SOAP message. I think it is b
 <ws:send endpoint="soapClient">
     <message>
         <payload>
-            <SoapMessageWithAttachment xmlns="http://consol.de/schemas/sample.xsd">
+            <SoapMessageWithAttachment xmlns="http://citrusframework.org/schemas/sample.xsd">
                 <Operation>Read the attachment</Operation>
             </SoapMessageWithAttachment>
         </payload>
@@ -1029,7 +1029,7 @@ When Citrus calls SOAP WebServices as a client we may receive SOAP responses wit
 <ws:receive endpoint="soapClient">
     <message>
         <payload>
-            <SoapMessageWithAttachmentRequest xmlns="http://consol.de/schemas/sample.xsd">
+            <SoapMessageWithAttachmentRequest xmlns="http://citrusframework.org/schemas/sample.xsd">
                 <Operation>Read the attachment</Operation>
             </SoapMessageWithAttachmentRequest>
         </payload>
@@ -1067,7 +1067,7 @@ Citrus is able to both send and receive MTOM enabled SOAP messages on client and
   <message>
     <data>
       <![CDATA[
-        <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+        <image:addImage xmlns:image="http://citrusframework.org/imageService/">
           <image>cid:IMAGE</image>
         </image:addImage>
       ]]>
@@ -1088,7 +1088,7 @@ Citrus builds a proper SOAP MTOM enabled message automatically adding the XOP pa
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
 <SOAP-ENV:Header></SOAP-ENV:Header>
   <SOAP-ENV:Body>
-    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+    <image:addImage xmlns:image="http://citrusframework.org/imageService/">
       <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
     </image:addImage>
   </SOAP-ENV:Body>
@@ -1103,7 +1103,7 @@ On the server side Citrus is also able to handle MTOM enabled SOAP messages. In 
   <message schema-validation="false">
     <data>
       <![CDATA[
-        <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+        <image:addImage xmlns:image="http://citrusframework.org/imageService/">
           <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
         </image:addImage>
       ]]>
@@ -1125,7 +1125,7 @@ Next thing that we have to talk about is inline MTOM data. This means that the c
   <message>
     <data>
       <![CDATA[
-        <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+        <image:addImage xmlns:image="http://citrusframework.org/imageService/">
           <image>cid:IMAGE</image>
           <icon>cid:ICON</icon>
         </image:addImage>
@@ -1150,7 +1150,7 @@ The listing above defines two inline MTOM attachments. The first attachment *cid
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
 <SOAP-ENV:Header></SOAP-ENV:Header>
   <SOAP-ENV:Body>
-    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
+    <image:addImage xmlns:image="http://citrusframework.org/imageService/">
       <image>VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50IQpWYXJpYWJsZXMgJXt0ZXN0fSBzaG91bGQgbm90IGJlIHJlcGxhY2VkIQ==</image>
       <icon>5468697320697320612062696E6172792069636F6E206174746163686D656E74210A5661726961626C657320257B746573747D2073686F756C64206E6F74206265207265706C6163656421</icon>
     </image:addImage>
@@ -1361,7 +1361,7 @@ You can separate the SOAP send action from the rest of the test case by using th
 <ws:send endpoint="soapClient" fork="true">
   <message>
     <payload>
-        <SoapRequest xmlns="http://www.consol.de/schemas/sample.xsd">
+        <SoapRequest xmlns="http://citrusframework.org/schemas/sample.xsd">
           <Operation>Read the attachment</Operation>
         </SoapRequest>
     </payload>
@@ -1378,7 +1378,7 @@ IMPORTANT: It is highly recommended to use a proper *"timeout"* setting on the S
 <ws:receive endpoint="soapClient" timeout="10000">
   <message>
     <payload>
-        <SoapResponse xmlns="http://www.consol.de/schemas/sample.xsd">
+        <SoapResponse xmlns="http://citrusframework.org/schemas/sample.xsd">
           <Operation>Did something</Operation>
           <Success>true</Success>
         </SoapResponse>
@@ -1421,7 +1421,7 @@ Now let us have a closer look at the context-config-location attribute. This con
       <property name="mappings">
           <props>
               <prop
-                  key="{http://www.consol.de/schemas/sayHello}HelloRequest">
+                  key="{http://citrusframework.org/schemas/sayHello}HelloRequest">
                   helloServiceEndpoint
               </prop>
           </props>
@@ -1440,7 +1440,7 @@ Now let us have a closer look at the context-config-location attribute. This con
   <citrus:static-response-adapter id="staticResponseEndpointAdapter">
       <citrus:payload>
           <![CDATA[
-              <HelloResponse xmlns="http://www.consol.de/schemas/sayHello">
+              <HelloResponse xmlns="http://citrusframework.org/schemas/sayHello">
                   <MessageId>123456789</MessageId>
                   <CorrelationId>CORR123456789</CorrelationId>
                   <User>WebServer</User>
@@ -1449,9 +1449,9 @@ Now let us have a closer look at the context-config-location attribute. This con
           ]]>
       </citrus:payload>
       <citrus:header>
-          <citrus:element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation"
+          <citrus:element name="{http://citrusframework.org/schemas/samples/sayHello.xsd}ns0:Operation"
                   value="sayHelloResponse"/>
-          <citrus:element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request"
+          <citrus:element name="{http://citrusframework.org/schemas/samples/sayHello.xsd}ns0:Request"
                   value="HelloRequest"/>
           <citrus:element name="citrus_soap_action"
                   value="sayHello"/>
