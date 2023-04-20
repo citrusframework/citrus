@@ -141,8 +141,32 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <failsafe.version>2.22.2</failsafe.version>
-    <surefire.version>2.22.2</surefire.version>
+    <maven.antrun.plugin.version>3.0.0</maven.antrun.plugin.version>
+    <maven.assembly.plugin.version>3.1.1</maven.assembly.plugin.version>
+    <maven.changes.plugin.version>2.12.1</maven.changes.plugin.version>
+    <maven.clean.plugin.version>3.0.0</maven.clean.plugin.version>
+    <maven.dependency.plugin.version>3.0.2</maven.dependency.plugin.version>
+    <maven.deploy.plugin.version>3.1.0</maven.deploy.plugin.version>
+    <maven.failsafe.plugin.version>2.22.2</maven.failsafe.plugin.version>
+    <maven.gpg.plugin.version>1.6</maven.gpg.plugin.version>
+    <maven.helper.plugin.version>3.0.0</maven.helper.plugin.version>
+    <maven.install.plugin.version>2.5.2</maven.install.plugin.version>
+    <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+    <maven.javadoc.plugin.version>3.3.1</maven.javadoc.plugin.version>
+    <maven.nexus-staging.plugin.version>1.6.13</maven.nexus-staging.plugin.version>
+    <maven.plugin.plugin.version>3.6.2</maven.plugin.plugin.version>
+    <maven.plugin.annotations.version>3.7.1</maven.plugin.annotations.version>
+    <maven.release.plugin.version>2.5.3</maven.release.plugin.version>
+    <maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
+    <maven.scm.plugin.version>1.11.1</maven.scm.plugin.version>
+    <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
+    <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
+    <maven.war.plugin.version>3.1.0</maven.war.plugin.version>
+    <maven.wagon.ssh.external.version>2.7</maven.wagon.ssh.external.version>
+    <apache.rat.plugin.version>0.13</apache.rat.plugin.version>
+
+    <asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
+    <jaxb.maven.plugin.version>3.1.0</jaxb.maven.plugin.version>
 
     <activemq.artemis.version>2.28.0</activemq.artemis.version>
     <apache.ant.version>1.10.13</apache.ant.version>
@@ -207,7 +231,6 @@
     <slf4j.version>2.0.6</slf4j.version>
     <snappy.version>1.1.9.1</snappy.version>
     <snakeyaml.version>2.0</snakeyaml.version>
-    <sparkjava.core.version>2.9.4</sparkjava.core.version>
     <spring.version>6.0.7</spring.version>
     <spring.ws.version>4.0.2</spring.ws.version>
     <spring.integration.version>6.0.3</spring.integration.version>
@@ -1052,27 +1075,9 @@
         <scope>provided</scope>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-core</artifactId>
-        <version>${maven.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-model</artifactId>
-        <version>${maven.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-artifact</artifactId>
-        <version>${maven.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
         <groupId>org.apache.maven.plugin-tools</groupId>
         <artifactId>maven-plugin-annotations</artifactId>
-        <version>3.7.1</version>
+        <version>${maven.plugin.annotations.version}</version>
         <scope>provided</scope>
       </dependency>
     </dependencies>
@@ -1135,7 +1140,7 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.13</version>
+          <version>${maven.nexus-staging.plugin.version}</version>
           <configuration>
             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
             <serverId>sonatype-nexus-staging</serverId>
@@ -1146,12 +1151,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.2</version>
+          <version>${maven.deploy.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.3</version>
+          <version>${maven.release.plugin.version}</version>
           <configuration>
             <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
             <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -1174,28 +1179,28 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>${maven.resource.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
+          <version>${maven.install.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-changes-plugin</artifactId>
-          <version>2.12.1</version>
+          <version>${maven.changes.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.6.2</version>
+          <version>${maven.plugin.plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>${surefire.version}</version>
+          <version>${maven.surefire.plugin.version}</version>
           <configuration>
             <failIfNoTests>false</failIfNoTests>
             <skipTests>${skip.unit.tests}</skipTests>
@@ -1206,7 +1211,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${failsafe.version}</version>
+          <version>${maven.failsafe.plugin.version}</version>
           <executions>
             <execution>
               <id>integration-tests</id>
@@ -1225,7 +1230,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>${maven.jar.plugin.version}</version>
           <configuration>
             <archive>
               <addMavenDescriptor>true</addMavenDescriptor>
@@ -1235,22 +1240,22 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>${maven.war.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>${maven.antrun.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>${maven.clean.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>${maven.dependency.plugin.version}</version>
         </plugin>
         <!-- IDE plugins -->
         <plugin>
@@ -1274,7 +1279,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>${maven.source.plugin.version}</version>
           <executions>
             <execution>
               <id>attach-sources</id>
@@ -1287,7 +1292,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.3.1</version>
+          <version>${maven.javadoc.plugin.version}</version>
           <configuration>
             <doclint>none</doclint>
           </configuration>
@@ -1303,7 +1308,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
-          <version>1.6</version>
+          <version>${maven.gpg.plugin.version}</version>
           <executions>
             <execution>
               <id>sign-artifacts</id>
@@ -1325,12 +1330,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.6</version>
+          <version>${maven.assembly.plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
-          <version>0.13</version>
+          <version>${apache.rat.plugin.version}</version>
           <configuration>
             <includes>
               <include>**/*.java</include>
@@ -1342,7 +1347,7 @@
         <plugin>
           <groupId>org.asciidoctor</groupId>
           <artifactId>asciidoctor-maven-plugin</artifactId>
-          <version>2.1.0</version>
+          <version>${asciidoctor.maven.plugin.version}</version>
           <inherited>false</inherited>
           <configuration>
             <sourceDirectory>src/manual</sourceDirectory>
@@ -1361,7 +1366,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jaxb2-maven-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>${jaxb.maven.plugin.version}</version>
           <configuration>
             <createJavaDocAnnotations>false</createJavaDocAnnotations>
           </configuration>
@@ -1396,7 +1401,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>${maven.helper.plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -1425,7 +1430,7 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-ssh-external</artifactId>
-        <version>2.7</version>
+        <version>${maven.wagon.ssh.external.version}</version>
       </extension>
     </extensions>
   </build>
