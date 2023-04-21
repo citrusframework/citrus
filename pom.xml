@@ -191,8 +191,7 @@
     <google.guava.version>31.1-jre</google.guava.version>
     <hamcrest.version>2.2</hamcrest.version>
     <htmlunit.version>4.8.0</htmlunit.version>
-    <httpclient5.version>5.2.1</httpclient5.version>
-    <httpclient.version>4.5.14</httpclient.version>
+    <httpclient.version>5.2.1</httpclient.version>
     <hsqldb.version>2.7.1</hsqldb.version>
     <jackson.version>2.14.2</jackson.version>
     <jakarta.activation.api.version>2.1.1</jakarta.activation.api.version>
@@ -522,6 +521,13 @@
         <version>${junit.jupiter.version}</version>
       </dependency>
 
+      <!-- Citrus http dependencies -->
+      <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpclient5</artifactId>
+        <version>${httpclient.version}</version>
+      </dependency>
+
       <!-- Jetty -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
@@ -740,33 +746,6 @@
         <groupId>org.jboss.shrinkwrap</groupId>
         <artifactId>shrinkwrap-impl-base</artifactId>
         <version>${shrinkwrap.impl.version}</version>
-      </dependency>
-
-      <!-- Citrus JDBC dependencies -->
-      <dependency>
-        <groupId>org.citrusframework</groupId>
-        <artifactId>citrus-db-server</artifactId>
-        <version>${citrus.db.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.httpcomponents.client5</groupId>
-        <artifactId>httpclient5</artifactId>
-        <version>${httpclient5.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient</artifactId>
-        <version>${httpclient.version}</version>
       </dependency>
 
       <!-- Cucumber -->
