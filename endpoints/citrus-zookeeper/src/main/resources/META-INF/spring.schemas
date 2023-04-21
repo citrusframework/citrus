@@ -22,7 +22,7 @@ http\://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config-
 http\://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config-3.2.1.xsd=com/consol/citrus/schema/citrus-zookeeper-config-3.2.1.xsd
 http\://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config-3.3.0.xsd=com/consol/citrus/schema/citrus-zookeeper-config-3.3.0.xsd
 http\://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config-3.3.1.xsd=com/consol/citrus/schema/citrus-zookeeper-config-3.3.1.xsd
-http\://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config-4.0.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-zookeeper-config-4.0.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config-4.0.0-M1.xsd=org/citrusframework/schema/citrus-zookeeper-config-4.0.0-M1.xsd
 http\://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config-3.4.0.xsd=com/consol/citrus/schema/citrus-zookeeper-config-3.4.0.xsd
 http\://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config.xsd=org/citrusframework/schema/citrus-zookeeper-config.xsd
 http\://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase-2.6.1.xsd=com/consol/citrus/schema/citrus-zookeeper-testcase-2.6.1.xsd
@@ -49,6 +49,6 @@ http\://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testc
 http\://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase-3.2.1.xsd=com/consol/citrus/schema/citrus-zookeeper-testcase-3.2.1.xsd
 http\://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase-3.3.0.xsd=com/consol/citrus/schema/citrus-zookeeper-testcase-3.3.0.xsd
 http\://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase-3.3.1.xsd=com/consol/citrus/schema/citrus-zookeeper-testcase-3.3.1.xsd
-http\://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase-4.0.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-zookeeper-testcase-4.0.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase-4.0.0-M1.xsd=org/citrusframework/schema/citrus-zookeeper-testcase-4.0.0-M1.xsd
 http\://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase-3.4.0.xsd=com/consol/citrus/schema/citrus-zookeeper-testcase-3.4.0.xsd
 http\://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase.xsd=org/citrusframework/schema/citrus-zookeeper-testcase.xsd
