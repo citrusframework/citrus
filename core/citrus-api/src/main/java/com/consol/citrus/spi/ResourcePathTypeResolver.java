@@ -1,20 +1,29 @@
 package com.consol.citrus.spi;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
@@ -40,6 +49,9 @@ public class ResourcePathTypeResolver implements TypeResolver {
 
     /** Base path for resources */
     private final String resourceBasePath;
+
+    /** Zip entries as String, so the archive is read only once */
+    private final List<String> zipEntriesAsString = new ArrayList<>();
 
     /**
      * Default constructor using META-INF resource base path.
@@ -99,8 +111,10 @@ public class ResourcePathTypeResolver implements TypeResolver {
         final String path = getFullResourcePath(resourcePath);
 
         try {
-            Stream.of(new PathMatchingResourcePatternResolver().getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + path + "/*"))
-                    .forEach(file -> {
+            Stream.concat(
+                    Stream.of(new PathMatchingResourcePatternResolver().getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + path + "/*")),
+                    resolveAllFromJar(path))
+                .forEach(file -> {
                         Optional<String> resourceName = Optional.ofNullable(file.getFilename());
                         if (resourceName.isEmpty()) {
                             LOG.warn(String.format("Skip unsupported resource '%s' for resource lookup", file));
@@ -128,6 +142,34 @@ public class ResourcePathTypeResolver implements TypeResolver {
         }
 
         return resources;
+    }
+
+    private Stream<Resource> resolveAllFromJar(String path) {
+        String rootAsString = ResourcePathTypeResolver.class.getProtectionDomain().getCodeSource().getLocation().toString();
+        ClassLoader classLoader = Objects.requireNonNull(ResourcePathTypeResolver.class.getClassLoader());
+        if (rootAsString.endsWith(".jar") && !rootAsString.matches(".*" + File.separator + "citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar")) {
+            return getZipEntries().stream()
+                .filter(entry -> entry.startsWith(path))
+                .map(classLoader::getResource)
+                .filter(Objects::nonNull)
+                .map(UrlResource::new);
+        }
+        return Stream.of();
+    }
+
+    private List<String> getZipEntries() {
+        if (zipEntriesAsString.isEmpty()) {
+            URL root = ResourcePathTypeResolver.class.getProtectionDomain().getCodeSource().getLocation();
+            try (ZipInputStream in = new ZipInputStream(root.openStream())) {
+                ZipEntry entry;
+                while ((entry = in.getNextEntry()) != null) {
+                    zipEntriesAsString.add(entry.getName());
+                }
+            } catch (IOException e) {
+                LOG.warn(String.format("Failed to open '%s'", root), e);
+            }
+        }
+        return zipEntriesAsString;
     }
 
     /**
