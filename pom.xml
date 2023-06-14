@@ -187,7 +187,7 @@
     <dropwizard.metrics.version>4.2.17</dropwizard.metrics.version>
     <ftpserver.version>1.2.0</ftpserver.version>
     <groovy.version>3.0.16</groovy.version>
-    <google.guava.version>31.1-jre</google.guava.version>
+    <google.guava.version>32.0.0-jre</google.guava.version>
     <hamcrest.version>2.2</hamcrest.version>
     <htmlunit.version>4.8.0</htmlunit.version>
     <httpclient.version>5.2.1</httpclient.version>
