@@ -58,7 +58,6 @@
     <module>connectors</module>
     <module>tools</module>
     <module>catalog</module>
-    <module>vintage</module>
   </modules>
 
   <developers>

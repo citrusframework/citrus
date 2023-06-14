@@ -1,6 +1,0 @@
-TEST_STMT_1
-/
-TEST_STMT_2
-/
-TEST_STMT_3
-/
