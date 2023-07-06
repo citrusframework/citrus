@@ -19,6 +19,8 @@ package org.citrusframework.endpoint.adapter;
 import org.citrusframework.TestCase;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
+import org.citrusframework.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.adapter.mapping.BeanNameMappingStrategy;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
@@ -26,6 +28,8 @@ import org.citrusframework.endpoint.direct.DirectSyncEndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.server.AbstractServer;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.util.FileUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
@@ -66,7 +70,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
         final TestContext testContext;
 
         try {
-            testContext = getTestContextFactory().getObject();
+            testContext = getTestContext();
             test = getTestCase(testContext, mappingName);
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException("Unable to find test builder with name '" +
@@ -146,6 +150,12 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
             BeanNameMappingStrategy mappingStrategy = new BeanNameMappingStrategy(new SpringBeanReferenceResolver(applicationContext));
             setMappingStrategy(mappingStrategy);
         }
+
+        SpringBeanReferenceResolver referenceResolver = new SpringBeanReferenceResolver(applicationContext);
+        ReferenceResolver fallback = new SimpleReferenceResolver();
+        fallback.bind("testContextFactory", TestContextFactoryBean.newInstance(applicationContext));
+        referenceResolver.setFallback(fallback);
+        setTestContextFactory(referenceResolver.resolve(TestContextFactory.class));
     }
 
     /**

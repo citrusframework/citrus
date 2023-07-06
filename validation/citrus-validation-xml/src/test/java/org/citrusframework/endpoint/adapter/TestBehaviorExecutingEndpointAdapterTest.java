@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package org.citrusframework.endpoint.adapter;
 
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.config.CitrusSpringConfig;
-import org.citrusframework.context.TestContextFactory;
-import org.citrusframework.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
 import org.citrusframework.endpoint.direct.DirectEndpointAdapter;
 import org.citrusframework.endpoint.direct.DirectSyncEndpoint;
@@ -29,51 +27,24 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
-import org.citrusframework.message.MessageType;
-import org.citrusframework.validation.MessageValidator;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
- * @since 1.4
+ * @since 1.3.1
  */
-@ContextConfiguration(classes = { CitrusSpringConfig.class, XmlTestExecutingEndpointAdapterTest.EndpointConfig.class })
-public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
+@ContextConfiguration(classes = { CitrusSpringConfig.class, TestBehaviorExecutingEndpointAdapterTest.EndpointConfig.class })
+public class TestBehaviorExecutingEndpointAdapterTest extends UnitTestSupport {
 
     @Autowired
-    private XmlTestExecutingEndpointAdapter endpointAdapter;
-
-    @Mock
-    private MessageValidator<?> xmlMessageValidator;
-
-    @Mock
-    private MessageValidator<?> plaintextMessageValidator;
-
-    @BeforeClass
-    public void setupMocks() {
-        MockitoAnnotations.openMocks(this);
-        when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()));
-        when(plaintextMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.PLAINTEXT.name()));
-    }
-
-    @Override
-    protected TestContextFactory createTestContextFactory() {
-        TestContextFactory contextFactory = super.createTestContextFactory();
-        contextFactory.getMessageValidatorRegistry().addMessageValidator("xml", xmlMessageValidator);
-        contextFactory.getMessageValidatorRegistry().addMessageValidator("text", plaintextMessageValidator);
-        return contextFactory;
-    }
+    private TestBehaviorExecutingEndpointAdapter endpointAdapter;
 
     /**
      * Test for handler routing by node content
@@ -81,18 +52,20 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
     @Test
     public void testRouteMessageByElementTextContent() throws Exception {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
-        mappingNameExtractor.setXpathExpression("//Test/@name");
+        mappingNameExtractor.setXpathExpression("//TestBehavior/@name");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
         Message response = endpointAdapter.handleMessage(
-                new DefaultMessage("<Test name=\"FooTest\"></Test>"));
+                new DefaultMessage("<TestBehavior name=\"FooTestBehavior\"></TestBehavior>"));
 
-        Assert.assertEquals(response.getPayload(String.class).trim(), "<Test name=\"FooTest\">OK</Test>");
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getPayload(), "<TestBehavior name=\"FooTestBehavior\">OK</TestBehavior>");
 
         response = endpointAdapter.handleMessage(
-                new DefaultMessage("<Test name=\"BarTest\"></Test>"));
+                new DefaultMessage("<TestBehavior name=\"BarTestBehavior\"></TestBehavior>"));
 
-        Assert.assertEquals(response.getPayload(String.class).trim(), "<Test name=\"BarTest\">OK</Test>");
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getPayload(), "<TestBehavior name=\"BarTestBehavior\">OK</TestBehavior>");
     }
 
     /**
@@ -105,9 +78,10 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
 
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage(
-                        "<FooBarTest></FooBarTest>"));
+                        "<FooBarTestBehavior></FooBarTestBehavior>"));
 
-        Assert.assertEquals(response.getPayload(String.class).trim(), "<FooBarTest>OK</FooBarTest>");
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getPayload(), "<FooBarTestBehavior>OK</FooBarTestBehavior>");
     }
 
     /**
@@ -121,7 +95,7 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
 
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
-                    "<FooTest>foo test please</FooTest>"));
+                    "<FooTestDesigner>foo test please</FooTestDesigner>"));
             Assert.fail("Missing exception due to bad XPath expression");
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "No result for XPath expression: '//I_DO_NOT_EXIST'");
@@ -134,32 +108,32 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
     @Test
     public void testRouteMessageWithBadHandlerConfiguration() throws Exception {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
-        mappingNameExtractor.setXpathExpression("//Test/@name");
+        mappingNameExtractor.setXpathExpression("//TestBehavior/@name");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
-                    "<Test name=\"UNKNOWN_TEST\"></Test>"));
+                    "<TestBehavior name=\"UNKNOWN_TEST\"></TestBehavior>"));
             Assert.fail("Missing exception due to unknown endpoint adapter");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to load test case");
+            Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
         }
     }
 
     @Configuration
+    @ComponentScan({"org.citrusframework.endpoint.adapter.behavior"})
     public static class EndpointConfig {
 
         private MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
 
         @Bean
-        public XmlTestExecutingEndpointAdapter testSimulator(TestContextFactoryBean testContextFactoryBean) {
-            XmlTestExecutingEndpointAdapter endpointAdapter = new XmlTestExecutingEndpointAdapter();
+        public TestBehaviorExecutingEndpointAdapter testSimulator() {
+            TestBehaviorExecutingEndpointAdapter endpointAdapter = new TestBehaviorExecutingEndpointAdapter();
             XPathPayloadMappingKeyExtractor mappingKeyExtractor = new XPathPayloadMappingKeyExtractor();
             mappingKeyExtractor.setXpathExpression("//Test/@name");
             endpointAdapter.setMappingKeyExtractor(mappingKeyExtractor);
 
             endpointAdapter.setResponseEndpointAdapter(directEndpointAdapter());
-            endpointAdapter.setTestContextFactory(testContextFactoryBean);
 
             return endpointAdapter;
         }
