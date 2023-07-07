@@ -20,9 +20,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.camel.model.ModelCamelContext;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.apache.camel.CamelContext;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
+import org.springframework.util.Assert;
 
 /**
  * @author Christoph Deppisch
@@ -62,8 +66,9 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends AbstractCamelRouteAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> {
+    public static abstract class Builder<T extends AbstractCamelRouteAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
 
+        protected ReferenceResolver referenceResolver;
         protected CamelContext camelContext;
         protected List<String> routeIds = new ArrayList<>();
 
@@ -94,6 +99,32 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
         public B routeIds(List<String> routeIds) {
             this.routeIds.addAll(routeIds);
             return self;
+        }
+
+        @Override
+        public final T build() {
+            if (camelContext == null) {
+                Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
+
+                if (referenceResolver.isResolvable("citrusCamelContext")) {
+                    camelContext = referenceResolver.resolve("citrusCamelContext", ModelCamelContext.class);
+                } else {
+                    camelContext = referenceResolver.resolve(ModelCamelContext.class);
+                }
+            }
+
+            return doBuild();
+        }
+
+        /**
+         * Subclass builds action.
+         * @return
+         */
+        protected abstract T doBuild();
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
         }
     }
 

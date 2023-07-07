@@ -176,7 +176,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
         }
 
         @Override
-        public CreateCamelRouteAction build() {
+        public CreateCamelRouteAction doBuild() {
             return new CreateCamelRouteAction(this);
         }
     }

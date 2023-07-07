@@ -167,6 +167,10 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
         private Map<String, Object> messageSelectorMap = new HashMap<>();
         private String messageSelector;
 
+        public static Builder expectTimeout() {
+            return new Builder();
+        }
+
         /**
          * Fluent API action building entry method used in Java DSL.
          * @param endpointUri

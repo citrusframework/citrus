@@ -45,6 +45,11 @@
       <artifactId>ant</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

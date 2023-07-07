@@ -81,6 +81,15 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
             return new Builder();
         }
 
+        public JsonPathMessageValidationContext.Builder expressions() {
+            return new JsonPathMessageValidationContext.Builder();
+        }
+
+        public JsonPathMessageValidationContext.Builder expression(String path, Object expectedValue) {
+            return new JsonPathMessageValidationContext.Builder()
+                    .expression(path, expectedValue);
+        }
+
         /**
          * Sets schema validation enabled/disabled for this message.
          *
@@ -135,8 +144,6 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
             this.ignoreExpressions.addAll(paths);
             return this;
         }
-
-
 
         @Override
         public JsonMessageValidationContext build() {

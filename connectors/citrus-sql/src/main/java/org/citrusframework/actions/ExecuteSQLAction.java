@@ -16,8 +16,8 @@
 
 package org.citrusframework.actions;
 
-import javax.sql.DataSource;
 import java.util.List;
+import javax.sql.DataSource;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -121,6 +121,10 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecuteSQLAction, Builder> {
 
         private boolean ignoreErrors = false;
+
+        public static Builder sql() {
+            return new Builder();
+        }
 
         public static Builder sql(DataSource dataSource) {
             Builder builder = new Builder();

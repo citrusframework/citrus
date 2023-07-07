@@ -89,6 +89,14 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
             return new Builder();
         }
 
+        public XpathMessageValidationContext.Builder expressions() {
+            return new XpathMessageValidationContext.Builder();
+        }
+
+        public XpathMessageValidationContext.Builder expression(String path, Object expectedValue) {
+            return new XpathMessageValidationContext.Builder().expression(path, expectedValue);
+        }
+
         /**
          * Convert to Xpath message validation context builder.
          * @return

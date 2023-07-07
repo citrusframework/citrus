@@ -193,6 +193,10 @@ public class GroovyAction extends AbstractTestAction {
         private String scriptTemplatePath = "classpath:org/citrusframework/script/script-template.groovy";
         private boolean useScriptTemplate = true;
 
+        public static Builder groovy() {
+            return new Builder();
+        }
+
         /**
          * Fluent API action building entry method used in Java DSL.
          * @param script

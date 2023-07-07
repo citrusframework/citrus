@@ -74,13 +74,13 @@ import static org.mockito.Mockito.*;
  */
 public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
-    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
-    private Consumer messageConsumer = Mockito.mock(Consumer.class);
-    private EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
-    private Resource resource = Mockito.mock(Resource.class);
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
+    private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
+    private final Consumer messageConsumer = Mockito.mock(Consumer.class);
+    private final EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
+    private final Resource resource = Mockito.mock(Resource.class);
+    private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testReceiveBuilderWithPayloadModel() {
@@ -704,6 +704,57 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(jsonPathExpressions.get("$.text"), "Citrus rocks!");
     }
 
+    @Test
+    public void testReceiveBuilderExtractJsonPathFromPayload() {
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
+                new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                        .setHeader("operation", "sayHello"));
+
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
+        builder.$(receive().endpoint(messageEndpoint)
+                .message()
+                .type(MessageType.JSON)
+                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                .extract(jsonPath().expression("$.text", "text")
+                        .expression("$.toString()", "payload")
+                        .expression("$.person", "person")));
+
+        Assert.assertNotNull(context.getVariable("text"));
+        Assert.assertNotNull(context.getVariable("person"));
+        Assert.assertNotNull(context.getVariable("payload"));
+        Assert.assertEquals(context.getVariable("text"), "Hello World!");
+        Assert.assertEquals(context.getVariable("payload"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
+        Assert.assertTrue(context.getVariable("person").contains("\"John\""));
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
+        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.toString()"));
+        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
+
+    }
+
     @Test(expectedExceptions = TestCaseFailedException.class)
     public void testReceiveBuilderWithJsonPathExpressionsFailure() {
         reset(messageEndpoint, messageConsumer, configuration);
@@ -741,7 +792,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                                 .message()
                                 .type(MessageType.JSON)
                                 .body("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                                .validate(jsonPath()
+                                .validate(json()
                                         .expression("$.person.name", "John")
                                         .expression("$.text", "Hello World!")));
     }
@@ -938,7 +989,6 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testDeactivateSchemaValidation() throws IOException {
-
         reset(messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
@@ -972,6 +1022,5 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                 .map(JsonMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
         Assert.assertFalse(jsonMessageValidationContext.isSchemaValidationEnabled());
-
     }
 }

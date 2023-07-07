@@ -1,70 +1,68 @@
+/*
+ * Copyright 2006-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.citrusframework.actions.dsl;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
-import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.container.SequenceAfterTest;
 import org.citrusframework.container.SequenceBeforeTest;
-import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.dsl.JsonSupport;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.json.JsonSchemaRepository;
-import org.citrusframework.json.schema.SimpleJsonSchema;
-import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.ObjectMappingPayloadBuilder;
-import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageProcessor;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
-import org.citrusframework.validation.json.report.GraciousProcessingReport;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.variable.dictionary.json.JsonMappingDataDictionary;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.main.JsonSchema;
 import org.mockito.Mockito;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
 import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
-import static org.citrusframework.dsl.JsonSupport.json;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class SendMessageActionBuilderTest extends UnitTestSupport {
 
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
-    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
-    private Producer messageProducer = Mockito.mock(Producer.class);
+    private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
+    private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
+    private final Producer messageProducer = Mockito.mock(Producer.class);
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testSendBuilderWithPayloadModel() {
@@ -184,7 +182,12 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(send(messageEndpoint).message().type(MessageType.JSON).body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}").extract(jsonPath().expression("$.text", "text").expression("$.person", "person")));
+        runner.run(send(messageEndpoint)
+                .message()
+                .type(MessageType.JSON)
+                .body("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                .extract(jsonPath().expression("$.text", "text")
+                        .expression("$.person", "person")));
 
         Assert.assertNotNull(context.getVariable("text"));
         Assert.assertNotNull(context.getVariable("person"));
@@ -219,7 +222,11 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(send(messageEndpoint).message().type(MessageType.JSON).body("{ \"TestRequest\": { \"Message\": \"?\" }}").process(jsonPath().expression("$.TestRequest.Message", "Hello World!")));
+        runner.run(send(messageEndpoint)
+                .message()
+                .type(MessageType.JSON)
+                .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                .process(jsonPath().expression("$.TestRequest.Message", "Hello World!")));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -251,7 +258,11 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(send(messageEndpoint).message().type(MessageType.JSON).body("{ \"TestRequest\": { \"Message\": \"?\" }}").dictionary(dictionary));
+        runner.run(send(messageEndpoint)
+                .message()
+                .type(MessageType.JSON)
+                .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                .dictionary(dictionary));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -286,7 +297,11 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(send(messageEndpoint).message().type(MessageType.JSON).body("{ \"TestRequest\": { \"Message\": \"?\" }}").dictionary("customDictionary"));
+        runner.run(send(messageEndpoint)
+                .message()
+                .type(MessageType.JSON)
+                .body("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                .dictionary("customDictionary"));
 
         final TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -338,7 +353,4 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
 
     }
-
-
 }
-

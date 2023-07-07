@@ -57,7 +57,7 @@ public class StopCamelRouteAction extends AbstractCamelRouteAction {
      */
     public static final class Builder extends AbstractCamelRouteAction.Builder<StopCamelRouteAction, Builder> {
         @Override
-        public StopCamelRouteAction build() {
+        public StopCamelRouteAction doBuild() {
             return new StopCamelRouteAction(this);
         }
     }

@@ -23,6 +23,7 @@ import java.util.List;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -128,7 +129,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
 
     /**
      * Gets the channelNames.
-     * @return the channelNames the channelNames to get.
+     * @return the channelNames to get.
      */
     public List<String> getChannelNames() {
         return channelNames;
@@ -136,7 +137,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
 
     /**
      * Gets the channels.
-     * @return the channels the channels to get.
+     * @return the channels to get.
      */
     public List<MessageChannel> getChannels() {
         return channels;
@@ -144,7 +145,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
 
     /**
      * Gets the messageSelector.
-     * @return the messageSelector the messageSelector to get.
+     * @return the messageSelector to get.
      */
     public MessageSelector getMessageSelector() {
         return messageSelector;
@@ -152,7 +153,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
 
     /**
      * Gets the channelResolver.
-     * @return the channelResolver the channelResolver to get.
+     * @return the channelResolver to get.
      */
     public DestinationResolver<MessageChannel> getChannelResolver() {
         return channelResolver;
@@ -161,13 +162,15 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<PurgeMessageChannelAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<PurgeMessageChannelAction, Builder> implements ReferenceResolverAware {
 
-        private List<String> channelNames = new ArrayList<>();
-        private List<MessageChannel> channels = new ArrayList<>();
+        private final List<String> channelNames = new ArrayList<>();
+        private final List<MessageChannel> channels = new ArrayList<>();
         private BeanFactory beanFactory;
         private DestinationResolver<MessageChannel> channelResolver;
         private MessageSelector messageSelector = new AllAcceptingMessageSelector();
+
+        private ReferenceResolver referenceResolver;
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -279,8 +282,22 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
             return this;
         }
 
+        public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+            return this;
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+        }
+
         @Override
         public PurgeMessageChannelAction build() {
+            if (!channelNames.isEmpty() && channelResolver == null && referenceResolver != null) {
+                this.channelResolver = channelName -> referenceResolver.resolve(channelName, MessageChannel.class);
+            }
+
             return new PurgeMessageChannelAction(this);
         }
     }

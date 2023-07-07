@@ -55,10 +55,10 @@ import static org.mockito.Mockito.when;
  */
 public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
-    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
-    private Consumer messageConsumer = Mockito.mock(Consumer.class);
-    private EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
+    private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
+    private final Consumer messageConsumer = Mockito.mock(Consumer.class);
+    private final EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
+    private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
     public void testReceiveBuilderWithValidationScript() {

@@ -16,12 +16,12 @@
 
 package org.citrusframework.actions;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import javax.sql.DataSource;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -171,6 +171,10 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
         private boolean ignoreErrors = false;
         private String script;
+
+        public static Builder plsql() {
+            return new Builder();
+        }
 
         public static Builder plsql(DataSource dataSource) {
             Builder builder = new Builder();

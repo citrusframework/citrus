@@ -16,9 +16,9 @@
 
 package org.citrusframework.http.actions;
 
-import jakarta.servlet.http.Cookie;
 import java.util.Optional;
 
+import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
