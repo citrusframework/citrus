@@ -1,4 +1,4 @@
-package org.citrusframework.integration;
+package org.citrusframework;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
@@ -19,6 +19,11 @@ public class TextEqualsMessageValidator extends DefaultMessageValidator {
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, ValidationContext validationContext) {
         Logger log = LoggerFactory.getLogger("TextEqualsMessageValidator");
+
+        if (controlMessage.getPayload(String.class).isBlank()) {
+            log.info("Skip text validation as no control message payload specified");
+            return;
+        }
 
         Assert.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload(String.class), "Validation failed - " +
                 "expected message contents not equal!");

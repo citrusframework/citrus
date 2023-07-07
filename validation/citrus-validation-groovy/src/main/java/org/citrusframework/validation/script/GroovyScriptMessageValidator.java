@@ -52,7 +52,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     private static Logger log = LoggerFactory.getLogger(GroovyScriptMessageValidator.class);
 
     /** Static code snippet for groovy script validation */
-    private Resource scriptTemplateResource;
+    private final Resource scriptTemplateResource;
 
     /**
      * Default constructor using default script template.

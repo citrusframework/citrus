@@ -16,13 +16,13 @@
 
 package org.citrusframework.validation.xml;
 
-import javax.xml.namespace.NamespaceContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.xml.namespace.NamespaceContext;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -113,7 +113,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
                 Node node = XMLUtils.findNodeByName(doc, pathExpression);
 
                 if (node == null) {
-                    throw new UnknownElementException("No element found for expression" + pathExpression);
+                    throw new UnknownElementException("No element found for expression: " + XPathExpressionResult.cutOffPrefix(pathExpression));
                 }
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {

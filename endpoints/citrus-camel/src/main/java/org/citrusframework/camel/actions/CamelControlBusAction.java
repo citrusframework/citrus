@@ -221,7 +221,7 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
         }
 
         @Override
-        public CamelControlBusAction build() {
+        public CamelControlBusAction doBuild() {
             return new CamelControlBusAction(this);
         }
 

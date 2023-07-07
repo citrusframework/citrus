@@ -67,7 +67,7 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
      */
     public static final class Builder extends AbstractCamelRouteAction.Builder<RemoveCamelRouteAction, Builder> {
         @Override
-        public RemoveCamelRouteAction build() {
+        public RemoveCamelRouteAction doBuild() {
             return new RemoveCamelRouteAction(this);
         }
     }

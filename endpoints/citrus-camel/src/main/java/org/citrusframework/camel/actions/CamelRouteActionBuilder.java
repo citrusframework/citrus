@@ -65,12 +65,12 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      * @return
      */
     public CreateCamelRouteAction.Builder create(RouteBuilder routeBuilder) {
-        if (getCamelContext() == null) {
+        if (camelContext == null) {
             context(routeBuilder.getContext());
         }
 
         CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder()
-                .context(getCamelContext())
+                .context(camelContext)
                 .route(routeBuilder);
 
         this.delegate = builder;
@@ -84,7 +84,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      */
     public CreateCamelRouteAction.Builder create(String routeContext) {
         CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder()
-                .context(getCamelContext())
+                .context(camelContext)
                 .routeContext(routeContext);
 
         this.delegate = builder;
@@ -97,7 +97,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      */
     public CamelControlBusAction.Builder controlBus() {
         CamelControlBusAction.Builder builder = new CamelControlBusAction.Builder()
-                .context(getCamelContext());
+                .context(camelContext);
 
         this.delegate = builder;
         return builder;
@@ -108,7 +108,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      */
     public StartCamelRouteAction.Builder start(String ... routes) {
         StartCamelRouteAction.Builder builder = new StartCamelRouteAction.Builder()
-                .context(getCamelContext())
+                .context(camelContext)
                 .routes(routes);
 
         this.delegate = builder;
@@ -120,7 +120,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      */
     public StopCamelRouteAction.Builder stop(String ... routes) {
         StopCamelRouteAction.Builder builder = new StopCamelRouteAction.Builder()
-                .context(getCamelContext())
+                .context(camelContext)
                 .routes(routes);
 
         this.delegate = builder;
@@ -132,7 +132,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      */
     public RemoveCamelRouteAction.Builder remove(String ... routes) {
         RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder()
-                .context(getCamelContext())
+                .context(camelContext)
                 .routes(routes);
 
         this.delegate = builder;
@@ -146,25 +146,6 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     public CamelRouteActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
         return this;
-    }
-
-    /**
-     * Gets the camel context either explicitly set before or default
-     * context from Spring application context.
-     * @return
-     */
-    protected CamelContext getCamelContext() {
-        if (camelContext == null) {
-            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-
-            if (referenceResolver.isResolvable("citrusCamelContext")) {
-                camelContext = referenceResolver.resolve("citrusCamelContext", ModelCamelContext.class);
-            } else {
-                camelContext = referenceResolver.resolve(ModelCamelContext.class);
-            }
-        }
-
-        return camelContext;
     }
 
     @Override

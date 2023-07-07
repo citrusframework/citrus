@@ -57,7 +57,7 @@ public class StartCamelRouteAction extends AbstractCamelRouteAction {
      */
     public static final class Builder extends AbstractCamelRouteAction.Builder<StartCamelRouteAction, Builder> {
         @Override
-        public StartCamelRouteAction build() {
+        public StartCamelRouteAction doBuild() {
             return new StartCamelRouteAction(this);
         }
     }

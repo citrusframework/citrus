@@ -1,3 +1,19 @@
+/*
+ * Copyright 2006-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.citrusframework.actions.dsl;
 
 import java.util.Collections;
@@ -19,6 +35,7 @@ import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.xml.XpathMessageProcessor;
+import org.citrusframework.validation.xml.XpathPayloadVariableExtractor;
 import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.mockito.Mock;
@@ -164,7 +181,44 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         final DefaultMessageBuilder messageBuilder = (DefaultMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+    }
 
+    @Test
+    public void testSendBuilderExtractFromPayload() {
+        reset(messageEndpoint, messageProducer);
+        when(messageEndpoint.createProducer()).thenReturn(messageProducer);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        doAnswer(invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
+            Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>");
+            return null;
+        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
+
+        DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
+        builder.$(send().endpoint(messageEndpoint)
+                .message()
+                .body("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                .extract(xpath().expression("/TestRequest/Message", "text")
+                                .expression("/TestRequest/Message/@lang", "language")));
+
+        Assert.assertNotNull(context.getVariable("text"));
+        Assert.assertNotNull(context.getVariable("language"));
+        Assert.assertEquals(context.getVariable("text"), "Hello World!");
+        Assert.assertEquals(context.getVariable("language"), "ENG");
+
+        final TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
     }
 
     @Test

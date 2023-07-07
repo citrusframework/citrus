@@ -31,8 +31,6 @@ import org.springframework.util.Assert;
  */
 public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
 
-    /** Bean reference resolver */
-    private ReferenceResolver referenceResolver;
     private CamelContext camelContext;
 
     private TestActionBuilder<?> delegate;
@@ -81,7 +79,7 @@ public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActio
      * @param referenceResolver
      */
     public CamelActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
-        this.referenceResolver = referenceResolver;
+        setReferenceResolver(referenceResolver);
         return this;
     }
 
@@ -103,8 +101,6 @@ public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActio
     @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         if (referenceResolver == null) {
-            this.referenceResolver = referenceResolver;
-
             if (delegate instanceof ReferenceResolverAware) {
                 ((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
             }

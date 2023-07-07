@@ -33,6 +33,7 @@ import org.citrusframework.actions.NoopTestAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.functions.FunctionUtils;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.VariableUtils;
 import org.slf4j.Logger;
@@ -203,7 +204,7 @@ public class Template extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static abstract class AbstractTemplateBuilder<T extends Template, B extends AbstractTemplateBuilder<T, B>> extends AbstractTestActionBuilder<T, B> {
+    public static abstract class AbstractTemplateBuilder<T extends Template, B extends AbstractTemplateBuilder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
 
         private String templateName;
         private final List<TestActionBuilder<?>> actions = new ArrayList<>();
@@ -297,6 +298,11 @@ public class Template extends AbstractTestAction {
         public B withReferenceResolver(ReferenceResolver referenceResolver) {
             this.referenceResolver = referenceResolver;
             return self;
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
         }
 
         /**

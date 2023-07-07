@@ -16,7 +16,6 @@
 
 package org.citrusframework.actions;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -26,7 +25,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.sql.DataSource;
 
+import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -37,7 +38,6 @@ import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -432,6 +432,10 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         private final Map<String, String> extractVariables = new HashMap<>();
         private ScriptValidationContext scriptValidationContext;
         private SqlResultSetScriptValidator validator;
+
+        public static Builder query() {
+            return new Builder();
+        }
 
         public static Builder query(DataSource dataSource) {
             Builder builder = new Builder();
