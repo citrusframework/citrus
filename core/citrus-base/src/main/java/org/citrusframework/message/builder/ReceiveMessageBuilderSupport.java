@@ -161,6 +161,28 @@ public class ReceiveMessageBuilderSupport<T extends ReceiveMessageAction, B exte
     }
 
     /**
+     * Sets explicit message validator names for this receive action.
+     *
+     * @param validators
+     * @return The modified receive message action builder
+     */
+    public final S validators(final String... validators) {
+        delegate.validators(validators);
+        return self;
+    }
+
+    /**
+     * Sets explicit header validators for this receive action.
+     *
+     * @param validators
+     * @return The modified receive message action builder
+     */
+    public final S validators(final HeaderValidator... validators) {
+        delegate.validators(validators);
+        return self;
+    }
+
+    /**
      * Sets explicit message validators for this receive action.
      *
      * @param validators
@@ -172,24 +194,24 @@ public class ReceiveMessageBuilderSupport<T extends ReceiveMessageAction, B exte
     }
 
     /**
-     * Sets explicit message validators by name.
+     * Sets explicit message validator by name.
      *
-     * @param validatorNames
+     * @param validatorName
      * @return The modified receive message action builder
      */
-    public S validator(final String... validatorNames) {
-        delegate.validator(validatorNames);
+    public S validator(final String validatorName) {
+        delegate.validator(validatorName);
         return self;
     }
 
     /**
      * Sets explicit header validator for this receive action.
      *
-     * @param validators
+     * @param validator
      * @return The modified receive message action builder
      */
-    public S validator(final HeaderValidator... validators) {
-        delegate.validator(validators);
+    public S validator(final HeaderValidator validator) {
+        delegate.validator(validator);
         return self;
     }
 

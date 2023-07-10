@@ -152,7 +152,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
 
             List<MessageProcessor> messageProcessors = new ArrayList<>();
             if (!pathExpressions.isEmpty()) {
-                messageProcessors.add(new DelegatingPathExpressionProcessor(pathExpressions));
+                messageProcessors.add(new DelegatingPathExpressionProcessor.Builder().expressions(pathExpressions).build());
             }
 
             String messageType = messageElement.getAttribute("type");

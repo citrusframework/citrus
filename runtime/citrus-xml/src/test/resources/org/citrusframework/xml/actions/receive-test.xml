@@ -119,7 +119,10 @@
         <expression path="/ns:TestMessage/" value="newValue"/>
       </message>
       <ignore path="/ns:TestMessage/ns:ignore"/>
-      <namespace prefix="ns" value="http://citrusframework.org"/>
+      <namespace prefix="ctx" value="http://citrusframework.org/test"/>
+      <validate>
+        <namespace prefix="ns" value="http://citrusframework.org"/>
+      </validate>
     </receive>
 
     <receive endpoint="direct:helloQueue">

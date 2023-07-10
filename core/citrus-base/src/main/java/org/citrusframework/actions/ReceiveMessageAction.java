@@ -614,6 +614,17 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param validators
          * @return
          */
+        public final B validators(final String... validators) {
+            Arrays.stream(validators).forEach(this::validator);
+            return self;
+        }
+
+        /**
+         * Sets explicit message validators for this receive action.
+         *
+         * @param validators
+         * @return
+         */
         @SafeVarargs
         public final B validators(final MessageValidator<? extends ValidationContext>... validators) {
             return validators(Arrays.asList(validators));
@@ -631,14 +642,25 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Sets explicit message validators by name.
+         * Sets explicit message validators for this receive action.
          *
-         * @param validatorNames
+         * @param validators
+         * @return
+         */
+        public final B validators(final HeaderValidator... validators) {
+            Stream.of(validators).forEach(this::validator);
+            return self;
+        }
+
+        /**
+         * Sets explicit message validator by name.
+         *
+         * @param validatorName
          * @return
          */
         @SuppressWarnings("unchecked")
-        public B validator(final String... validatorNames) {
-            this.validatorNames.addAll(Arrays.asList(validatorNames));
+        public B validator(final String validatorName) {
+            this.validatorNames.add(validatorName);
             return self;
         }
 
@@ -648,7 +670,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param validators
          * @return
          */
-        public B validator(final HeaderValidator... validators) {
+        public B validator(final HeaderValidator validators) {
             Stream.of(validators).forEach(getHeaderValidationContext()::addHeaderValidator);
             return self;
         }

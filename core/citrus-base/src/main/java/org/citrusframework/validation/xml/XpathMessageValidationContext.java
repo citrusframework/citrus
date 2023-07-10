@@ -20,6 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.citrusframework.builder.WithExpressions;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.message.MessageProcessorAdapter;
+import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
+import org.citrusframework.variable.VariableExtractor;
+import org.citrusframework.variable.VariableExtractorAdapter;
 import org.springframework.util.StringUtils;
 
 /**
@@ -52,7 +58,7 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
      * Fluent builder.
      */
     public static final class Builder extends XmlValidationContextBuilder<XpathMessageValidationContext, Builder>
-            implements WithExpressions<Builder> {
+            implements WithExpressions<Builder>, VariableExtractorAdapter, MessageProcessorAdapter {
 
         private final Map<String, Object> expressions = new HashMap<>();
 
@@ -74,6 +80,19 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
         public Builder expression(final String expression, final Object value) {
             this.expressions.put(expression, value);
             return this;
+        }
+        @Override
+        public MessageProcessor asProcessor() {
+            return new DelegatingPathExpressionProcessor.Builder()
+                    .expressions(expressions)
+                    .build();
+        }
+
+        @Override
+        public VariableExtractor asExtractor() {
+            return new DelegatingPayloadVariableExtractor.Builder()
+                    .expressions(expressions)
+                    .build();
         }
 
         @Override

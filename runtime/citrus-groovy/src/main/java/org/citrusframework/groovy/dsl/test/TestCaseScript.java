@@ -22,6 +22,7 @@ package org.citrusframework.groovy.dsl.test;
 import org.citrusframework.Citrus;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
+import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.container.FinallySequence;
 import org.citrusframework.context.TestContext;
@@ -52,6 +53,22 @@ public class TestCaseScript extends GroovyObjectSupport implements ActionsBuilde
 
     public ContextConfiguration configuration() {
         return new ContextConfiguration(citrus, context, basePath);
+    }
+
+    public void name(String name) {
+        runner.name(name);
+    }
+
+    public void author(String author) {
+        runner.author(author);
+    }
+
+    public void description(String description) {
+        runner.description(description);
+    }
+
+    public void status(String status) {
+        runner.status(TestCaseMetaInfo.Status.valueOf(status));
     }
 
     public void configuration(@DelegatesTo(ContextConfiguration.class) Closure<?> callable) {

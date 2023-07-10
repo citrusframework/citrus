@@ -102,6 +102,10 @@ public class ContextConfiguration {
                 ((InitializingPhase) endpoint).initialize();
             }
             citrus.getCitrusContext().bind(endpoint.getName(), endpoint);
+
+            if (context != null && !context.getReferenceResolver().equals(citrus.getCitrusContext().getReferenceResolver())) {
+                context.getReferenceResolver().bind(endpoint.getName(), endpoint);
+            }
         });
     }
 }

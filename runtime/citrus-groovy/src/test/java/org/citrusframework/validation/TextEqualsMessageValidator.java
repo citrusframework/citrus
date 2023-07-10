@@ -33,13 +33,28 @@ import org.testng.Assert;
  */
 public class TextEqualsMessageValidator extends DefaultMessageValidator {
 
+    private boolean trim = false;
+
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, ValidationContext validationContext) {
         Logger log = LoggerFactory.getLogger("TextEqualsMessageValidator");
 
+        if (controlMessage == null || controlMessage.getPayload() == null || controlMessage.getPayload(String.class).isEmpty()) {
+            LOG.debug("Skip message payload validation as no control message was defined");
+            return;
+        }
+
         log.debug("Start text equals validation ...");
 
-        Assert.assertEquals(receivedMessage.getPayload(String.class), controlMessage.getPayload(String.class), "Validation failed - " +
+        String controlPayload = controlMessage.getPayload(String.class);
+        String receivedPayload = receivedMessage.getPayload(String.class);
+
+        if (trim) {
+            controlPayload = controlPayload.trim();
+            receivedPayload = receivedPayload.trim();
+        }
+
+        Assert.assertEquals(receivedPayload, controlPayload, "Validation failed - " +
                 "expected message contents not equal!");
 
         log.info("Text validation successful: All values OK");
@@ -48,5 +63,10 @@ public class TextEqualsMessageValidator extends DefaultMessageValidator {
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return true;
+    }
+
+    public TextEqualsMessageValidator enableTrim() {
+        this.trim = true;
+        return this;
     }
 }

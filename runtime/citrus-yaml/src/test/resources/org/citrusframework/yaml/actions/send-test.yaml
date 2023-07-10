@@ -24,11 +24,13 @@ actions:
       message:
         headers:
           - data: |
+              <?xml version="1.0" encoding="UTF-8" standalone="no"?>
               <Header xmlns="http://citrusframework.org/test"><operation>hello</operation></Header>
           - name: operation
             value: "sayHello"
         body:
           data: |
+            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
             <TestMessage xmlns="http://citrusframework.org/test">Hello Citrus</TestMessage>
   - send:
       endpoint: helloEndpoint
@@ -36,7 +38,6 @@ actions:
         body:
           resource:
             file: "classpath:org/citrusframework/yaml/test-request-payload.xml"
-
   - send:
       endpoint: helloEndpoint
       message:

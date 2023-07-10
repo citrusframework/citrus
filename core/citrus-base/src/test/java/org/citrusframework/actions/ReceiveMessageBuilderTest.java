@@ -809,7 +809,7 @@ class ReceiveMessageBuilderTest {
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
-		builder.validator(name1, name2, name3);
+		builder.validators(name1, name2, name3);
 
 		//THEN
 		assertEquals(3, builder.build().getValidators().size());
@@ -825,7 +825,7 @@ class ReceiveMessageBuilderTest {
 		final HeaderValidator validator3 = mock(HeaderValidator.class);
 
 		//WHEN
-		builder.validator(validator1, validator2, validator3);
+		builder.validators(validator1, validator2, validator3);
 
 		//THEN
 
@@ -852,7 +852,7 @@ class ReceiveMessageBuilderTest {
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
-		builder.validator(name1, name2, name3);
+		builder.validators(name1, name2, name3);
 
 		//THEN
 

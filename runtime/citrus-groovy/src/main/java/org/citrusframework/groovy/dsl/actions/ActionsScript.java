@@ -57,6 +57,11 @@ public class ActionsScript {
     }
 
     public static boolean isActionScript(String script) {
+        if ((script.startsWith("package ") || script.startsWith("import "))
+                && (script.contains("actions {") || script.contains("actions{"))) {
+            return true;
+        }
+
         return script.startsWith("actions {") || script.startsWith("actions{") ||
                 script.startsWith("$actions {") || script.startsWith("$actions{") ||
                 script.startsWith("$finally {") || script.startsWith("$finally{") ||

@@ -27,7 +27,7 @@ actions:
           - data: |
               <?xml version="1.0" encoding="UTF-8" standalone="no"?>
               <Header xmlns="http://citrusframework.org/test"><operation>hello</operation></Header>
-          - name: "operation"
+          - name: operation
             value: "sayHello"
         body:
           data: |
@@ -79,8 +79,12 @@ actions:
       ignore:
         - path: "/ns:TestMessage/ns:ignore"
       namespace:
-        - prefix: "ns"
-          value: "http://citrusframework.org"
+        - prefix: "ctx"
+          value: "http://citrusframework.org/test"
+      validate:
+        - namespace:
+            - prefix: "ns"
+              value: "http://citrusframework.org"
   - receive:
       endpoint: "direct:helloQueue"
       validate:

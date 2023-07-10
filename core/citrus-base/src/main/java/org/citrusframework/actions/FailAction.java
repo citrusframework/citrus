@@ -60,6 +60,14 @@ public class FailAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static FailAction.Builder fail() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
          * @param message
          * @return
          */

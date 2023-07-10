@@ -232,7 +232,9 @@ public class ReceiveTest extends AbstractXmlActionTest {
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().size(), 1);
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().iterator().next(), "/ns:TestMessage/ns:ignore");
         Assert.assertEquals(xmlValidationContext.getNamespaces().size(), 1);
-        Assert.assertEquals(xmlValidationContext.getNamespaces().get("ns"), "http://citrusframework.org");
+        Assert.assertEquals(xmlValidationContext.getNamespaces().get("ctx"), "http://citrusframework.org/test");
+        Assert.assertEquals(xmlValidationContext.getControlNamespaces().size(), 1);
+        Assert.assertEquals(xmlValidationContext.getControlNamespaces().get("ns"), "http://citrusframework.org");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
