@@ -237,7 +237,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         for (Namespace namespace : getNamespace()) {
             namespaces.put(namespace.prefix, namespace.value);
         }
-        xmlValidationContext.setNamespaces(namespaces);
+        xmlValidationContext.namespaceContext(namespaces);
 
         //check for validate elements, these elements can either have script, xpath or namespace validation information
         //for now we only handle xpath validation

@@ -89,7 +89,7 @@ public final class MessageSupport {
         }
 
         if (!pathExpressions.isEmpty()) {
-            builder.message().process(new DelegatingPathExpressionProcessor(pathExpressions));
+            builder.message().process(new DelegatingPathExpressionProcessor.Builder().expressions(pathExpressions).build());
         }
 
         if (message.dataDictionary != null) {

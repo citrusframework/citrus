@@ -24,6 +24,8 @@ import java.util.stream.Stream;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.server.Server;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,9 +70,16 @@ public class StartServerAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<StartServerAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<StartServerAction, Builder> implements ReferenceResolverAware {
 
         private final List<Server> servers = new ArrayList<>();
+        private final List<String> serverNames = new ArrayList<>();
+
+        private ReferenceResolver referenceResolver;
+
+        public static Builder start() {
+            return new Builder();
+        }
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -94,6 +103,28 @@ public class StartServerAction extends AbstractTestAction {
             return builder;
         }
 
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param serverNames
+         * @return
+         */
+        public static Builder start(String... serverNames) {
+            Builder builder = new Builder();
+            Stream.of(serverNames).forEach(builder::server);
+            return builder;
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param server
+         * @return
+         */
+        public static Builder start(String server) {
+            Builder builder = new Builder();
+            builder.server(server);
+            return builder;
+        }
+
         public Builder server(Server server) {
             this.servers.add(server);
             return this;
@@ -108,9 +139,34 @@ public class StartServerAction extends AbstractTestAction {
             return this;
         }
 
+        public Builder server(String server) {
+            this.serverNames.add(server);
+            return this;
+        }
+
+        public Builder server(String... server) {
+            return serverNames(Arrays.asList(server));
+        }
+
+        public Builder serverNames(List<String> servers) {
+            this.serverNames.addAll(servers);
+            return this;
+        }
+
         @Override
         public StartServerAction build() {
+            if (referenceResolver != null) {
+                for (String serverName : serverNames) {
+                    server(referenceResolver.resolve(serverName, Server.class));
+                }
+            }
+
             return new StartServerAction(this);
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
         }
     }
 }

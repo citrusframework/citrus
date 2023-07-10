@@ -18,12 +18,6 @@
  */
 package org.citrusframework.xml.actions;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,6 +26,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
 import org.citrusframework.actions.ReceiveMessageAction;
@@ -251,7 +251,7 @@ public class Receive implements TestActionBuilder<ReceiveMessageAction>, Referen
         for (Namespace namespace : getNamespaces()) {
             namespaces.put(namespace.prefix, namespace.value);
         }
-        xmlValidationContext.setNamespaces(namespaces);
+        xmlValidationContext.namespaceContext(namespaces);
 
         //check for validate elements, these elements can either have script, xpath or namespace validation information
         //for now we only handle xpath validation

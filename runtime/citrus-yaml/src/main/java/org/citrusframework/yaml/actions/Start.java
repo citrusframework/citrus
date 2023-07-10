@@ -19,12 +19,10 @@
 
 package org.citrusframework.yaml.actions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.StartServerAction;
-import org.citrusframework.server.Server;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 
@@ -35,31 +33,22 @@ public class Start implements TestActionBuilder<StartServerAction>, ReferenceRes
 
     private final StartServerAction.Builder builder = new StartServerAction.Builder();
 
-    private final List<String> servers = new ArrayList<>();
-    private ReferenceResolver referenceResolver;
-
     public void setServer(String server) {
-        this.servers.add(server);
+        builder.server(server);
     }
 
     public void setServers(List<ServerRef> servers) {
-        servers.forEach(server -> this.servers.add(server.name));
+        servers.forEach(server -> builder.server(server.name));
     }
 
     @Override
     public StartServerAction build() {
-        if (referenceResolver != null) {
-            for (String server : servers) {
-                builder.server(referenceResolver.resolve(server, Server.class));
-            }
-        }
-
         return builder.build();
     }
 
     @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        this.referenceResolver = referenceResolver;
+        builder.setReferenceResolver(referenceResolver);
     }
 
     public static class ServerRef {

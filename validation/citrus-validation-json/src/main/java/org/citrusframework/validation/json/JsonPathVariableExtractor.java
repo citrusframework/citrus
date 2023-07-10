@@ -20,17 +20,23 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.json.JsonPathUtils;
-import org.citrusframework.message.Message;
-import org.citrusframework.variable.VariableExtractor;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.json.JsonPathUtils;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.message.MessageProcessorAdapter;
+import org.citrusframework.validation.PathExpressionValidationContext;
+import org.citrusframework.validation.ValidationContextAdapter;
+import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.variable.VariableExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -103,7 +109,7 @@ public class JsonPathVariableExtractor implements VariableExtractor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements VariableExtractor.Builder<JsonPathVariableExtractor, Builder> {
+    public static final class Builder implements VariableExtractor.Builder<JsonPathVariableExtractor, Builder>, MessageProcessorAdapter, ValidationContextAdapter {
         private final Map<String, Object> expressions = new LinkedHashMap<>();
 
         @Override
@@ -116,6 +122,20 @@ public class JsonPathVariableExtractor implements VariableExtractor {
         public Builder expression(final String expression, final Object variableName) {
             this.expressions.put(expression, variableName);
             return this;
+        }
+
+        @Override
+        public MessageProcessor asProcessor() {
+            return new DelegatingPathExpressionProcessor.Builder()
+                    .expressions(expressions)
+                    .build();
+        }
+
+        @Override
+        public ValidationContext asValidationContext() {
+            return new PathExpressionValidationContext.Builder()
+                    .expressions(expressions)
+                    .build();
         }
 
         @Override

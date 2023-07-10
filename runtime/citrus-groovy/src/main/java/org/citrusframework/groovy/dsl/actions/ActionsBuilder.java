@@ -25,18 +25,19 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
+import groovy.lang.Closure;
+import groovy.lang.GroovyObjectSupport;
+import groovy.lang.GroovyRuntimeException;
+import groovy.lang.MissingMethodException;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.CreateVariablesAction;
+import org.citrusframework.actions.EchoAction;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.actions.SleepAction;
 import org.citrusframework.container.Wait;
 import org.citrusframework.groovy.dsl.test.TestCaseScript;
-import groovy.lang.Closure;
-import groovy.lang.GroovyObjectSupport;
-import groovy.lang.GroovyRuntimeException;
-import groovy.lang.MissingMethodException;
 import org.springframework.util.ReflectionUtils;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
@@ -47,7 +48,7 @@ import static org.citrusframework.actions.EchoAction.Builder.echo;
 public interface ActionsBuilder {
 
     /**
-     * Short hand method running given test action builder.
+     * Shortcut method running given test action builder.
      * @param builder
      * @param <T>
      * @return
@@ -129,6 +130,25 @@ public interface ActionsBuilder {
      */
     default GroovyTestActionWrapper<ReceiveMessageAction> receive() {
         return new GroovyTestActionWrapper<>(this, new ReceiveActionBuilderWrapper());
+    }
+
+    /**
+     * Workaround method selection errors because Groovy also defines print method
+     * signatures and Groovy may not know which one of them to invoke.
+     * @param text
+     * @return
+     */
+    default GroovyTestActionWrapper<EchoAction> log(String text) {
+        return new GroovyTestActionWrapper<>(this, new EchoAction.Builder().message(text));
+    }
+
+    /**
+     * Workaround method selection errors because Groovy also defines print method
+     * signatures and Groovy may not know which one of them to invoke.
+     * @return
+     */
+    default GroovyTestActionWrapper<EchoAction> log() {
+        return new GroovyTestActionWrapper<>(this, new EchoAction.Builder());
     }
 
     default Object methodMissing(String name, Object argLine) {
@@ -220,6 +240,10 @@ public interface ActionsBuilder {
 
                     if (result instanceof TestActionBuilder) {
                         delegate = (TestActionBuilder<T>) result;
+                    } else if (result instanceof SendActionBuilderWrapper.SendMessageActionBuilderSupport.GroovyMessageBuilderSupport) {
+                        return result;
+                    } else if (result instanceof ReceiveActionBuilderWrapper.ReceiveMessageActionBuilderSupport.GroovyMessageBuilderSupport) {
+                        return result;
                     }
 
                     return this;

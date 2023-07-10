@@ -22,9 +22,12 @@ package org.citrusframework.groovy.dsl.actions;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.groovy.dsl.actions.model.BodySpec;
 import org.citrusframework.groovy.dsl.actions.model.HeaderSpec;
+import org.citrusframework.groovy.dsl.actions.model.JsonBodySpec;
+import org.citrusframework.groovy.dsl.actions.model.XmlBodySpec;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.message.builder.SendMessageBuilderSupport;
 import groovy.lang.Closure;
+import org.citrusframework.util.FileUtils;
 
 /**
  * @author Christoph Deppisch
@@ -66,6 +69,15 @@ public class SendActionBuilderWrapper extends SendMessageAction.SendMessageActio
             return this.body(new DefaultPayloadBuilder(bodySpec.get(code.call())));
         }
 
+        @Override
+        public SendMessageActionBuilderSupport body(String payload) {
+            return super.body(payload.trim());
+        }
+
+        public GroovyMessageBuilderSupport body() {
+            return new GroovyMessageBuilderSupport();
+        }
+
         public SendMessageActionBuilderSupport headers(Closure<?> callable) {
             HeaderSpec headerSpec = new HeaderSpec();
             Closure<?> code = callable.rehydrate(headerSpec, this, this);
@@ -75,6 +87,28 @@ public class SendActionBuilderWrapper extends SendMessageAction.SendMessageActio
             return this.headers(headerSpec.get());
         }
 
+        public class GroovyMessageBuilderSupport {
+
+            public SendMessageActionBuilderSupport resource(String filePath) {
+                return SendMessageActionBuilderSupport.this.body(FileUtils.getFileResource(filePath));
+            }
+
+            public SendMessageActionBuilderSupport json(Closure<?> callable) {
+                JsonBodySpec bodySpec = new JsonBodySpec();
+                Closure<?> code = callable.rehydrate(bodySpec, this, this);
+                code.setResolveStrategy(Closure.DELEGATE_ONLY);
+
+                return SendMessageActionBuilderSupport.this.body(new DefaultPayloadBuilder(bodySpec.get(code.call())));
+            }
+
+            public SendMessageActionBuilderSupport xml(Closure<?> callable) {
+                XmlBodySpec bodySpec = new XmlBodySpec();
+                Closure<?> code = callable.rehydrate(bodySpec, this, this);
+                code.setResolveStrategy(Closure.DELEGATE_ONLY);
+
+                return SendMessageActionBuilderSupport.this.body(new DefaultPayloadBuilder(bodySpec.get(code.call())));
+            }
+        }
     }
 
 }

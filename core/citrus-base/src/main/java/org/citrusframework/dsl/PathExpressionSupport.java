@@ -22,15 +22,19 @@ package org.citrusframework.dsl;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.citrusframework.builder.PathExpressionAdapter;
 import org.citrusframework.builder.WithExpressions;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
+import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
+import org.citrusframework.validation.PathExpressionValidationContext;
+import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
-import org.citrusframework.variable.VariableExtractorAdapter;
 
 /**
  * @author Christoph Deppisch
  */
-public class PathExpressionSupport implements WithExpressions<PathExpressionSupport>, VariableExtractorAdapter {
+public class PathExpressionSupport implements WithExpressions<PathExpressionSupport>, PathExpressionAdapter {
 
     private final Map<String, Object> expressions = new LinkedHashMap<>();
 
@@ -45,6 +49,20 @@ public class PathExpressionSupport implements WithExpressions<PathExpressionSupp
     @Override
     public VariableExtractor asExtractor() {
         return new DelegatingPayloadVariableExtractor.Builder()
+                .expressions(expressions)
+                .build();
+    }
+
+    @Override
+    public ValidationContext asValidationContext() {
+        return new PathExpressionValidationContext.Builder()
+                .expressions(expressions)
+                .build();
+    }
+
+    @Override
+    public MessageProcessor asProcessor() {
+        return new DelegatingPathExpressionProcessor.Builder()
                 .expressions(expressions)
                 .build();
     }

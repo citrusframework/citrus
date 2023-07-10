@@ -19,6 +19,7 @@
 
 package org.citrusframework.groovy.dsl.actions;
 
+import groovy.lang.Closure;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.groovy.dsl.actions.model.BodySpec;
 import org.citrusframework.groovy.dsl.actions.model.HeaderSpec;
@@ -26,7 +27,7 @@ import org.citrusframework.groovy.dsl.actions.model.JsonBodySpec;
 import org.citrusframework.groovy.dsl.actions.model.XmlBodySpec;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
-import groovy.lang.Closure;
+import org.citrusframework.util.FileUtils;
 
 /**
  * @author Christoph Deppisch
@@ -68,6 +69,11 @@ public class ReceiveActionBuilderWrapper extends ReceiveMessageAction.ReceiveMes
             return this.body(new DefaultPayloadBuilder(bodySpec.get(code.call())));
         }
 
+        @Override
+        public ReceiveMessageActionBuilderSupport body(String payload) {
+            return super.body(payload.trim());
+        }
+
         public GroovyMessageBuilderSupport body() {
             return new GroovyMessageBuilderSupport();
         }
@@ -82,6 +88,10 @@ public class ReceiveActionBuilderWrapper extends ReceiveMessageAction.ReceiveMes
         }
 
         public class GroovyMessageBuilderSupport {
+
+            public ReceiveMessageActionBuilderSupport resource(String filePath) {
+                return ReceiveMessageActionBuilderSupport.this.body(FileUtils.getFileResource(filePath));
+            }
 
             public ReceiveMessageActionBuilderSupport json(Closure<?> callable) {
                 JsonBodySpec bodySpec = new JsonBodySpec();

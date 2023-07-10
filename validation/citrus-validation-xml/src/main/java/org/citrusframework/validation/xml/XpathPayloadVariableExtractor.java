@@ -27,8 +27,14 @@ import javax.xml.namespace.NamespaceContext;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
+import org.citrusframework.message.DelegatingPathExpressionProcessor;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageProcessor;
+import org.citrusframework.message.MessageProcessorAdapter;
 import org.citrusframework.util.XMLUtils;
+import org.citrusframework.validation.PathExpressionValidationContext;
+import org.citrusframework.validation.ValidationContextAdapter;
+import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.xml.xpath.XPathExpressionResult;
 import org.citrusframework.xml.xpath.XPathUtils;
@@ -132,7 +138,8 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /**
      * Fluent builder.
      */
-    public static final class Builder implements VariableExtractor.Builder<XpathPayloadVariableExtractor, Builder>, XmlNamespaceAware {
+    public static final class Builder implements VariableExtractor.Builder<XpathPayloadVariableExtractor, Builder>,
+            XmlNamespaceAware, MessageProcessorAdapter, ValidationContextAdapter {
         private final Map<String, Object> expressions = new HashMap<>();
         private final Map<String, String> namespaces = new HashMap<>();
 
@@ -174,6 +181,20 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
         @Override
         public void setNamespaces(Map<String, String> namespaces) {
             namespaces(namespaces);
+        }
+
+        @Override
+        public MessageProcessor asProcessor() {
+            return new DelegatingPathExpressionProcessor.Builder()
+                    .expressions(expressions)
+                    .build();
+        }
+
+        @Override
+        public ValidationContext asValidationContext() {
+            return new PathExpressionValidationContext.Builder()
+                    .expressions(expressions)
+                    .build();
         }
 
         @Override

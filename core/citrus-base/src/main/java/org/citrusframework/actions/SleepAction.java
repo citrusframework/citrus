@@ -107,6 +107,10 @@ public class SleepAction extends AbstractTestAction {
         private String time = "5000";
         private TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 
+        public static Builder delay() {
+            return new Builder();
+        }
+
         public static Builder sleep() {
             return new Builder();
         }

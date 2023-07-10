@@ -155,12 +155,12 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"+System.getProperty("line.separator")+
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + System.getProperty("line.separator") +
                 "<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sayHello");
         Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"+System.getProperty("line.separator")+
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + System.getProperty("line.separator") +
                 "<Header xmlns=\"http://citrusframework.org/test\"><operation>hello</operation></Header>");
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
@@ -234,7 +234,9 @@ public class ReceiveTest extends AbstractYamlActionTest {
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().size(), 1);
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().iterator().next(), "/ns:TestMessage/ns:ignore");
         Assert.assertEquals(xmlValidationContext.getNamespaces().size(), 1);
-        Assert.assertEquals(xmlValidationContext.getNamespaces().get("ns"), "http://citrusframework.org");
+        Assert.assertEquals(xmlValidationContext.getNamespaces().get("ctx"), "http://citrusframework.org/test");
+        Assert.assertEquals(xmlValidationContext.getControlNamespaces().size(), 1);
+        Assert.assertEquals(xmlValidationContext.getControlNamespaces().get("ns"), "http://citrusframework.org");
 
         action = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         Assert.assertEquals(action.getValidationContexts().size(), 3);

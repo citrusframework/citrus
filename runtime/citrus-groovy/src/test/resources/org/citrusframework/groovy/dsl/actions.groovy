@@ -17,6 +17,11 @@
  * limitations under the License.
  */
 
+package org.citrusframework.groovy.dsl
+
+import static org.citrusframework.actions.EchoAction.Builder.echo
+import static org.citrusframework.container.Iterate.Builder.iterate
+
 actions {
     $(echo("Hello from Citrus!"))
 

@@ -40,11 +40,11 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
     private final Map<String, Object> pathExpressions;
 
     public DelegatingPathExpressionProcessor() {
-        this(new HashMap<>());
+        this(new Builder());
     }
 
-    public DelegatingPathExpressionProcessor(Map<String, Object> pathExpressions) {
-        this.pathExpressions = pathExpressions;
+    public DelegatingPathExpressionProcessor(Builder builder) {
+        this.pathExpressions = builder.expressions;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
         }
 
         if (!xpathExpressions.isEmpty()) {
-            final Builder<?, ?> xpathProcessor = lookupMessageProcessor("xpath", context);
+            final MessageProcessor.Builder<?, ?> xpathProcessor = lookupMessageProcessor("xpath", context);
 
             if (xpathProcessor instanceof WithExpressions) {
                 ((WithExpressions<?>) xpathProcessor).expressions(xpathExpressions);
@@ -113,4 +113,36 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
         return pathExpressions;
     }
 
+    /**
+     * Fluent builder.
+     */
+    public static final class Builder implements MessageProcessor.Builder<DelegatingPathExpressionProcessor, Builder>, WithExpressions<Builder> {
+
+        private final Map<String, Object> expressions = new HashMap<>();
+
+        /**
+         * Static entry method for fluent builder API.
+         * @return
+         */
+        public static Builder xpath() {
+            return new Builder();
+        }
+
+        @Override
+        public Builder expressions(Map<String, Object> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        @Override
+        public Builder expression(final String expression, final Object value) {
+            this.expressions.put(expression, value);
+            return this;
+        }
+
+        @Override
+        public DelegatingPathExpressionProcessor build() {
+            return new DelegatingPathExpressionProcessor(this);
+        }
+    }
 }
