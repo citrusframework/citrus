@@ -17,24 +17,23 @@
  * limitations under the License.
  */
 
-package org.citrusframework.yaml.container;
+package org.citrusframework.groovy;
 
+import org.citrusframework.UnitTestSupport;
 import org.citrusframework.container.Template;
-import org.citrusframework.yaml.YamlTemplateLoader;
-import org.citrusframework.yaml.actions.AbstractYamlActionTest;
-import org.testng.annotations.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class TemplateTest extends AbstractYamlActionTest {
+public class GroovyTemplateLoaderTest extends UnitTestSupport {
 
     @Test
     public void shouldLoadTemplate() {
-        Template template = new YamlTemplateLoader()
+        Template template = new GroovyTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())
-                .load("classpath:org/citrusframework/yaml/container/template-test.yaml");
+                .load("classpath:org/citrusframework/groovy/template.groovy");
 
         Assert.assertEquals(template.getTemplateName(), "myTemplate");
         Assert.assertEquals(template.getName(), "template:myTemplate");
@@ -42,15 +41,17 @@ public class TemplateTest extends AbstractYamlActionTest {
         Assert.assertEquals(template.getActions().size(), 1);
         Assert.assertTrue(template.isGlobalContext());
 
-        template = new YamlTemplateLoader()
+        template = new GroovyTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())
-                .load("classpath:org/citrusframework/yaml/container/template-parameters-test.yaml");
+                .load("classpath:org/citrusframework/groovy/template-parameters.groovy");
         Assert.assertEquals(template.getTemplateName(), "myTemplate");
         Assert.assertEquals(template.getName(), "template:myTemplate");
         Assert.assertEquals(template.getParameter().size(), 3);
         Assert.assertEquals(template.getParameter().get("foo"), "");
         Assert.assertEquals(template.getParameter().get("bar"), "barValue");
-        Assert.assertEquals(template.getParameter().get("baz"), "foo" + System.lineSeparator() + "bar" + System.lineSeparator() + "baz");
+        Assert.assertEquals(template.getParameter().get("baz"), "foo" + System.lineSeparator() +
+                "        bar" + System.lineSeparator() +
+                "        baz");
         Assert.assertEquals(template.getActions().size(), 2);
         Assert.assertFalse(template.isGlobalContext());
     }
