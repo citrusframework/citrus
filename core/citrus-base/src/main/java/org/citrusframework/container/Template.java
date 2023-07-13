@@ -31,9 +31,12 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.actions.NoopTestAction;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.FunctionUtils;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.SimpleReferenceResolver;
+import org.citrusframework.util.FileUtils;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.VariableUtils;
 import org.slf4j.Logger;
@@ -182,7 +185,26 @@ public class Template extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTemplateBuilder<Template, Builder> {
+    public static class Builder extends AbstractTemplateBuilder<Template, Builder> implements ReferenceResolverAware {
+
+        private String filePath;
+
+        private TemplateLoader loader;
+
+        public static Builder applyTemplate() {
+            return new Builder();
+        }
+
+        public Builder file(String filePath) {
+            this.filePath = filePath;
+            return this;
+        }
+
+        public Builder loader(TemplateLoader loader) {
+            this.loader = loader;
+            return this;
+        }
+
         /**
          * Fluent API action building entry method used in Java DSL.
          * @param name
@@ -196,6 +218,26 @@ public class Template extends AbstractTestAction {
 
         @Override
         public Template build() {
+            if (filePath != null) {
+                if (loader == null) {
+                    Optional<TemplateLoader> resolved = TemplateLoader.lookup(FileUtils.getFileExtension(filePath));
+                    if (resolved.isPresent()) {
+                        loader = resolved.get();
+                    } else {
+                        throw new CitrusRuntimeException(String.format("Failed to find proper template loader for file '%s'", filePath));
+                    }
+                }
+
+                loader.setReferenceResolver(referenceResolver);
+                Template local = loader.load(filePath);
+
+                SimpleReferenceResolver temporaryReferenceResolver = new SimpleReferenceResolver();
+                temporaryReferenceResolver.bind(local.getTemplateName(), local);
+
+                withReferenceResolver(temporaryReferenceResolver);
+                templateName(local.getTemplateName());
+            }
+
             onBuild();
             return new Template(this);
         }
@@ -211,7 +253,7 @@ public class Template extends AbstractTestAction {
         private final Map<String, String> parameter = new LinkedHashMap<>();
         private boolean globalContext = true;
 
-        private ReferenceResolver referenceResolver;
+        protected ReferenceResolver referenceResolver;
 
         public B templateName(String templateName) {
             this.templateName = templateName;

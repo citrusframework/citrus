@@ -19,11 +19,12 @@
 
 package org.citrusframework.xml;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import org.citrusframework.container.TemplateLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -34,12 +35,10 @@ import org.springframework.core.io.Resource;
 /**
  * @author Christoph Deppisch
  */
-public class TemplateLoader implements ReferenceResolverAware {
+public class XmlTemplateLoader implements TemplateLoader, ReferenceResolverAware {
 
     private final JAXBContext jaxbContext;
-    private final String source;
 
-    private Template template;
     private ReferenceResolver referenceResolver;
 
     private static final Pattern NAMESPACE_IS_SET = Pattern.compile("^\\s*<(\\w+:)?template .*xmlns(:\\w+)?=\\s*\".*>\\s*$", Pattern.DOTALL);
@@ -47,31 +46,26 @@ public class TemplateLoader implements ReferenceResolverAware {
     /**
      * Default constructor.
      */
-    public TemplateLoader(String source) {
-        this.source = source;
+    public XmlTemplateLoader() {
         try {
             jaxbContext = JAXBContext.newInstance("org.citrusframework.xml");
         } catch (JAXBException e) {
-            throw new CitrusRuntimeException("Failed to create TemplateLoader instance", e);
+            throw new CitrusRuntimeException("Failed to create XmlTemplateLoader instance", e);
         }
     }
 
-    public Template load() {
-        if (template == null) {
-            Resource xmlSource = FileUtils.getFileResource(source);
-
-            try {
-                template = jaxbContext.createUnmarshaller()
-                        .unmarshal(new StringSource(applyNamespace(FileUtils.readToString(xmlSource))), Template.class)
-                        .getValue();
-            } catch (JAXBException | IOException e) {
-                throw new CitrusRuntimeException("Failed to load XML template for source '" + source + "'", e);
-            }
-
+    @Override
+    public org.citrusframework.container.Template load(String filePath) {
+        try {
+            Resource xmlSource = FileUtils.getFileResource(filePath);
+            Template template = jaxbContext.createUnmarshaller()
+                    .unmarshal(new StringSource(applyNamespace(FileUtils.readToString(xmlSource))), Template.class)
+                    .getValue();
             template.setReferenceResolver(referenceResolver);
+            return template.build();
+        } catch (JAXBException | IOException e) {
+            throw new CitrusRuntimeException("Failed to load XML template for source '" + filePath + "'", e);
         }
-
-        return template;
     }
 
     /**
@@ -97,7 +91,7 @@ public class TemplateLoader implements ReferenceResolverAware {
      * @param referenceResolver
      * @return
      */
-    public TemplateLoader withReferenceResolver(ReferenceResolver referenceResolver) {
+    public XmlTemplateLoader withReferenceResolver(ReferenceResolver referenceResolver) {
         setReferenceResolver(referenceResolver);
         return this;
     }

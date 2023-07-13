@@ -174,7 +174,7 @@ public interface ActionsBuilder {
      * @return test action builder instance.
      */
     private TestActionBuilder<?> findTestActionBuilder(String id, Object[] args) {
-        TestActionBuilder<?> builder = TestActionBuilder.lookup(id).orElseThrow(() -> new MissingMethodException(id, TestCaseScript.class, args));
+        TestActionBuilder<?> builder = TestActionBuilder.lookup(id).orElseThrow(() -> new MissingMethodException(id, this.getClass(), args));
 
         if (args == null || args.length == 0) {
             return builder;

@@ -21,6 +21,7 @@ package org.citrusframework.yaml;
 
 import java.io.IOException;
 
+import org.citrusframework.container.TemplateLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -34,36 +35,29 @@ import org.yaml.snakeyaml.constructor.Constructor;
 /**
  * @author Christoph Deppisch
  */
-public class TemplateLoader implements ReferenceResolverAware {
+public class YamlTemplateLoader implements ReferenceResolverAware, TemplateLoader {
 
     private final Yaml yaml;
-    private final String source;
 
-    private Template template;
     private ReferenceResolver referenceResolver;
 
     /**
      * Default constructor.
      */
-    public TemplateLoader(String source) {
-        this.source = source;
+    public YamlTemplateLoader() {
         yaml = new Yaml(new Constructor(Template.class, new LoaderOptions()));
     }
 
-    public Template load() {
-        if (template == null) {
-            Resource yamlSource = FileUtils.getFileResource(source);
-
-            try {
-                template = yaml.load(FileUtils.readToString(yamlSource));
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to load YAML template for source '" + source + "'", e);
-            }
-
+    @Override
+    public org.citrusframework.container.Template load(String filePath) {
+        try {
+            Resource yamlSource = FileUtils.getFileResource(filePath);
+            Template template = yaml.load(FileUtils.readToString(yamlSource));
             template.setReferenceResolver(referenceResolver);
+            return template.build();
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to load YAML template for source '" + filePath + "'", e);
         }
-
-        return template;
     }
 
     @Override
@@ -76,7 +70,7 @@ public class TemplateLoader implements ReferenceResolverAware {
      * @param referenceResolver
      * @return
      */
-    public TemplateLoader withReferenceResolver(ReferenceResolver referenceResolver) {
+    public YamlTemplateLoader withReferenceResolver(ReferenceResolver referenceResolver) {
         setReferenceResolver(referenceResolver);
         return this;
     }

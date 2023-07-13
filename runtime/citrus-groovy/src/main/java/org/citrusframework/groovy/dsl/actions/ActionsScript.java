@@ -42,7 +42,7 @@ public class ActionsScript {
         GroovyShellUtils.run(ic, new ActionsConfiguration(runner, context), normalize(script), citrus, context);
     }
 
-    private String normalize(String script) {
+    public static String normalize(String script) {
         String normalized = GroovyShellUtils.removeComments(script);
 
         if (isActionScript(normalized)) {

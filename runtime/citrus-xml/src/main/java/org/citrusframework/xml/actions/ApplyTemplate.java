@@ -19,21 +19,20 @@
 
 package org.citrusframework.xml.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.container.Template;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.spi.SimpleReferenceResolver;
-import org.citrusframework.xml.TemplateLoader;
+import org.citrusframework.xml.XmlTemplateLoader;
 
 /**
  * @author Christoph Deppisch
@@ -43,9 +42,6 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
 
     private final Template.Builder builder = new Template.Builder();
 
-    private String filePath;
-    private ReferenceResolver referenceResolver;
-
     @XmlAttribute
     public ApplyTemplate setName(String name) {
         builder.templateName(name);
@@ -53,8 +49,14 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
     }
 
     @XmlAttribute
+    public void setTemplateName(String name) {
+        builder.templateName(name);
+    }
+
+    @XmlAttribute
     public ApplyTemplate setFile(String filePath) {
-        this.filePath = filePath;
+        builder.file(filePath);
+        builder.loader(new XmlTemplateLoader());
         return this;
     }
 
@@ -72,27 +74,12 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
 
     @Override
     public Template build() {
-        if (filePath != null) {
-            Template local = new TemplateLoader(filePath)
-                    .withReferenceResolver(referenceResolver)
-                    .load()
-                    .build();
-
-            SimpleReferenceResolver temporaryReferenceResolver = new SimpleReferenceResolver();
-            temporaryReferenceResolver.bind(local.getTemplateName(), local);
-
-            builder.withReferenceResolver(temporaryReferenceResolver);
-            builder.templateName(local.getTemplateName());
-        } else {
-            builder.withReferenceResolver(referenceResolver);
-        }
-
         return builder.build();
     }
 
     @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        this.referenceResolver = referenceResolver;
+        builder.setReferenceResolver(referenceResolver);
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

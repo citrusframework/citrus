@@ -20,7 +20,7 @@
 package org.citrusframework.xml.container;
 
 import org.citrusframework.container.Template;
-import org.citrusframework.xml.TemplateLoader;
+import org.citrusframework.xml.XmlTemplateLoader;
 import org.citrusframework.xml.actions.AbstractXmlActionTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,10 +32,9 @@ public class TemplateTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadTemplate() {
-        Template template = new TemplateLoader("classpath:org/citrusframework/xml/container/template-test.xml")
+        Template template = new XmlTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())
-                .load()
-                .build();
+                .load("classpath:org/citrusframework/xml/container/template-test.xml");
 
         Assert.assertEquals(template.getTemplateName(), "myTemplate");
         Assert.assertEquals(template.getName(), "template:myTemplate");
@@ -43,10 +42,9 @@ public class TemplateTest extends AbstractXmlActionTest {
         Assert.assertEquals(template.getActions().size(), 1);
         Assert.assertTrue(template.isGlobalContext());
 
-        template = new TemplateLoader("classpath:org/citrusframework/xml/container/template-parameters-test.xml")
+        template = new XmlTemplateLoader()
                 .withReferenceResolver(context.getReferenceResolver())
-                .load()
-                .build();
+                .load("classpath:org/citrusframework/xml/container/template-parameters-test.xml");
         Assert.assertEquals(template.getTemplateName(), "myTemplate");
         Assert.assertEquals(template.getName(), "template:myTemplate");
         Assert.assertEquals(template.getParameter().size(), 3);

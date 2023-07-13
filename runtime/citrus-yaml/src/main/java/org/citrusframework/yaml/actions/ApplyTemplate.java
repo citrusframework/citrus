@@ -25,8 +25,7 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.container.Template;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.spi.SimpleReferenceResolver;
-import org.citrusframework.yaml.TemplateLoader;
+import org.citrusframework.yaml.YamlTemplateLoader;
 
 /**
  * @author Christoph Deppisch
@@ -35,15 +34,17 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
 
     private final Template.Builder builder = new Template.Builder();
 
-    private String filePath;
-    private ReferenceResolver referenceResolver;
-
     public void setName(String name) {
         builder.templateName(name);
     }
 
+    public void setTemplateName(String name) {
+        builder.templateName(name);
+    }
+
     public void setFile(String filePath) {
-        this.filePath = filePath;
+        builder.file(filePath);
+        builder.loader(new YamlTemplateLoader());
     }
 
     public void setParameters(List<Parameter> parameters) {
@@ -56,27 +57,12 @@ public class ApplyTemplate implements TestActionBuilder<Template>, ReferenceReso
 
     @Override
     public Template build() {
-        if (filePath != null) {
-            Template local = new TemplateLoader(filePath)
-                    .withReferenceResolver(referenceResolver)
-                    .load()
-                    .build();
-
-            SimpleReferenceResolver temporaryReferenceResolver = new SimpleReferenceResolver();
-            temporaryReferenceResolver.bind(local.getTemplateName(), local);
-
-            builder.withReferenceResolver(temporaryReferenceResolver);
-            builder.templateName(local.getTemplateName());
-        } else {
-            builder.withReferenceResolver(referenceResolver);
-        }
-
         return builder.build();
     }
 
     @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        this.referenceResolver = referenceResolver;
+        builder.setReferenceResolver(referenceResolver);
     }
 
     public static class Parameter {
