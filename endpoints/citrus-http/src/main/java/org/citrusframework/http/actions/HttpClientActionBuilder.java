@@ -85,6 +85,7 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
             builder.endpoint(httpClientUri);
         }
 
+        builder.name("http:send-request");
         builder.withReferenceResolver(referenceResolver);
         builder.method(method);
 
@@ -239,6 +240,7 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
                 builder.endpoint(httpClientUri);
             }
 
+            builder.name("http:receive-response");
             builder.withReferenceResolver(referenceResolver);
             HttpClientActionBuilder.this.delegate = builder;
             return builder;
@@ -256,6 +258,7 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
                 builder.endpoint(httpClientUri);
             }
 
+            builder.name("http:receive-response");
             builder.withReferenceResolver(referenceResolver);
             builder.message().status(status);
             HttpClientActionBuilder.this.delegate = builder;

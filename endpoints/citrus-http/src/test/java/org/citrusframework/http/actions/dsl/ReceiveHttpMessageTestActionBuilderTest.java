@@ -85,7 +85,7 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = (ReceiveMessageAction) test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "http:receive-request");
 
         Assert.assertEquals(action.getEndpoint(), httpServer);
         Assert.assertEquals(action.getValidationContexts().size(), 3L);
@@ -131,7 +131,7 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = (ReceiveMessageAction) test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "http:receive-request");
 
         Assert.assertEquals(action.getEndpoint(), httpServer);
         Assert.assertEquals(action.getValidationContexts().size(), 3L);
@@ -180,7 +180,7 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = (ReceiveMessageAction) test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "http:receive-response");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getValidationContexts().size(), 3L);

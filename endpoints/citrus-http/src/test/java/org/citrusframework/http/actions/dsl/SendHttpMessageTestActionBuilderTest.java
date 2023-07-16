@@ -87,7 +87,7 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
 
         SendMessageAction action = ((SendMessageAction)(test.getActions().get(0)));
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "http:send-request");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
@@ -103,7 +103,7 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertFalse(action.isForkMode());
 
         action = ((SendMessageAction)test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "http:send-request");
 
         messageBuilder = (HttpMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -144,7 +144,7 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
         SendMessageAction action = ((SendMessageAction)(test.getActions().get(0)));
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "http:send-request");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
@@ -188,7 +188,7 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "http:send-request");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
@@ -225,7 +225,7 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "http:send-request");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
@@ -266,7 +266,7 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "http:send-request");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageBuilder.class);
