@@ -17,24 +17,24 @@
  * limitations under the License.
  */
 
-package org.citrusframework.yaml.container;
+package org.citrusframework.groovy.dsl.container;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.container.Timer;
-import org.citrusframework.yaml.YamlTestLoader;
-import org.citrusframework.yaml.actions.AbstractYamlActionTest;
+import org.citrusframework.groovy.GroovyTestLoader;
+import org.citrusframework.groovy.dsl.AbstractGroovyActionDslTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class TimerTest extends AbstractYamlActionTest {
+public class TimerTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadTimer() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/timer-test.yaml");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/timer.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

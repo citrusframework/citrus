@@ -17,25 +17,25 @@
  * limitations under the License.
  */
 
-package org.citrusframework.yaml.container;
+package org.citrusframework.groovy.dsl.container;
 
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.container.Parallel;
-import org.citrusframework.yaml.YamlTestLoader;
-import org.citrusframework.yaml.actions.AbstractYamlActionTest;
+import org.citrusframework.groovy.GroovyTestLoader;
+import org.citrusframework.groovy.dsl.AbstractGroovyActionDslTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class ParallelTest extends AbstractYamlActionTest {
+public class ParallelTest extends AbstractGroovyActionDslTest {
 
     @Test
     public void shouldLoadParallel() {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/container/parallel-test.yaml");
+        GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/container/parallel.test.groovy");
 
         testLoader.load();
         TestCase result = testLoader.getTestCase();

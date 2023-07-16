@@ -229,6 +229,16 @@ public class Timer extends AbstractActionContainer implements StopTimer {
          *
          * @param timerId a unique timer id within the test context
          */
+        public Builder id(String timerId) {
+            this.timerId = timerId;
+            return this;
+        }
+
+        /**
+         * Set the timer's id. This is useful when referencing the timer from other test actions like stop-timer
+         *
+         * @param timerId a unique timer id within the test context
+         */
         public Builder timerId(String timerId) {
             this.timerId = timerId;
             return this;

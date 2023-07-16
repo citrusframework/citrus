@@ -23,8 +23,6 @@ import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.context.StaticTestContextFactory;
 import org.citrusframework.context.TestContext;
@@ -65,20 +63,9 @@ public class AbstractYamlActionTest extends AbstractTestNGUnitTest {
     protected YamlTestLoader createTestLoader(String sourcePath) {
         YamlTestLoader testLoader = new YamlTestLoader(this.getClass(), "Test", this.getClass().getPackageName());
         CitrusAnnotations.injectAll(testLoader, citrus, context);
-        CitrusAnnotations.injectTestRunner(testLoader, new NoopTestCaseRunner(context));
+        CitrusAnnotations.injectTestRunner(testLoader, new DefaultTestCaseRunner(context));
         testLoader.setSource(sourcePath);
 
         return testLoader;
-    }
-
-    protected static class NoopTestCaseRunner extends DefaultTestCaseRunner {
-        public NoopTestCaseRunner(TestContext context) {
-            super(context);
-        }
-
-        @Override
-        public <T extends TestAction> T run(TestActionBuilder<T> builder) {
-            return builder.build();
-        }
     }
 }

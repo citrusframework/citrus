@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.http.xml;
+package org.citrusframework.http.groovy;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
@@ -26,18 +26,20 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.context.StaticTestContextFactory;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.groovy.GroovyTestLoader;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
-public class AbstractXmlActionTest extends AbstractTestNGUnitTest {
+public class AbstractGroovyActionDslTest extends AbstractTestNGUnitTest {
 
     protected Citrus citrus;
 
@@ -53,6 +55,11 @@ public class AbstractXmlActionTest extends AbstractTestNGUnitTest {
     @Override
     protected TestContext createTestContext() {
         TestContext context = super.createTestContext();
+        doAnswer(invocation -> {
+            context.getReferenceResolver().bind(invocation.getArgument(0, String.class), invocation.getArgument(1));
+            return null;
+        }).when(citrusContext).bind(any(String.class), any());
+
         when(citrusContext.getReferenceResolver()).thenReturn(context.getReferenceResolver());
         when(citrusContext.getMessageValidatorRegistry()).thenReturn(context.getMessageValidatorRegistry());
         when(citrusContext.getTestContextFactory()).thenReturn(new StaticTestContextFactory(context));
@@ -60,11 +67,10 @@ public class AbstractXmlActionTest extends AbstractTestNGUnitTest {
         return context;
     }
 
-    protected XmlTestLoader createTestLoader(String sourcePath) {
-        XmlTestLoader testLoader = new XmlTestLoader(this.getClass(), "Test", this.getClass().getPackageName());
+    protected GroovyTestLoader createTestLoader(String sourcePath) {
+        GroovyTestLoader testLoader = new GroovyTestLoader().source(sourcePath);
         CitrusAnnotations.injectAll(testLoader, citrus, context);
         CitrusAnnotations.injectTestRunner(testLoader, new DefaultTestCaseRunner(context));
-        testLoader.setSource(sourcePath);
 
         return testLoader;
     }
