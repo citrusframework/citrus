@@ -232,7 +232,7 @@ public class CamelRouteTestActionRunnerTest extends UnitTestSupport {
 
         builder.$(camel().camelContext(camelContext)
                 .controlBus()
-                .language("${camelContext.getRouteStatus('route_1')}")
+                .simple("${camelContext.getRouteStatus('route_1')}")
                 .result(ServiceStatus.Started));
 
         TestCase test = builder.getTestCase();

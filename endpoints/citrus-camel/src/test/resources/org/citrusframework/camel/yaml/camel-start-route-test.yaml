@@ -1,0 +1,15 @@
+name: "CamelStartRouteTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      startRoutes:
+        routes:
+          - "route_1"
+
+  - camel:
+      camelContext: "camelContext"
+      startRoutes:
+        routes:
+          - "route_2"
+          - "route_3"

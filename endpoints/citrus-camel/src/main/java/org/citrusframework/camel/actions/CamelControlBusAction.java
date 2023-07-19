@@ -179,11 +179,11 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
 
         /**
          * Sets a simple language expression to execute.
-         * @param simpleExpression
+         * @param expression
          * @return
          */
-        public Builder language(String simpleExpression) {
-            language("simple", simpleExpression);
+        public Builder simple(String expression) {
+            language("simple", expression);
             return this;
         }
 

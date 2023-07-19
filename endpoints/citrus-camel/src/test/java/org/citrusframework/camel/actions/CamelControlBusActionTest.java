@@ -199,7 +199,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         CamelControlBusAction action = new CamelControlBusAction.Builder()
                 .context(camelContext)
-                .language("${camelContext.getRouteStatus('${routeId}')}")
+                .simple("${camelContext.getRouteStatus('${routeId}')}")
                 .build();
         action.execute(context);
     }
@@ -229,7 +229,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         CamelControlBusAction action = new CamelControlBusAction.Builder()
                 .context(camelContext)
-                .language("${camelContext.getRouteStatus('myRoute')}")
+                .simple("${camelContext.getRouteStatus('myRoute')}")
                 .result("Started")
                 .build();
         action.execute(context);
