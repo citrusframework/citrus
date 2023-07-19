@@ -54,7 +54,7 @@ public class CamelControlBusActionParserTest extends AbstractActionParserTest<Ca
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("camelContext", CamelContext.class));
         Assert.assertEquals(action.getLanguageType(), "simple");
-        Assert.assertEquals(action.getLanguageExpression(), "${camelContext.getRouteStatus('route_3')}");
+        Assert.assertEquals(action.getLanguageExpression(), "${camelContext.getRouteController().getRouteStatus('route_3')}");
         Assert.assertEquals(action.getResult(), "Started");
     }
 }

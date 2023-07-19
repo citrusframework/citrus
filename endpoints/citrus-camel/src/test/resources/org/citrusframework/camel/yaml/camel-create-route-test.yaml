@@ -1,0 +1,29 @@
+name: "CamelCreateRouteTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      createRoutes:
+        routeContext: |
+          <routeContext xmlns="http://camel.apache.org/schema/spring">
+            <route id="route_1">
+              <from uri="direct:test1"/>
+              <to uri="mock:test1"/>
+            </route>
+  
+            <route id="route_2">
+              <from uri="direct:test2"/>
+              <to uri="mock:test2"/>
+            </route>
+          </routeContext>
+
+  - camel:
+      camelContext: "camelContext"
+      createRoutes:
+        routeContext: |
+          <routeContext xmlns="http://camel.apache.org/schema/spring">
+            <route>
+              <from uri="direct:test3"/>
+              <to uri="mock:test3"/>
+            </route>
+          </routeContext>

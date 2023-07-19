@@ -1,0 +1,26 @@
+name: "CamelControlBusTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      controlBus:
+        route: "route_1"
+        action: "start"
+
+  - camel:
+      camelContext: "camelContext"
+      controlBus:
+        route: "route_2"
+        action: "status"
+        result: "Stopped"
+
+  - camel:
+      controlBus:
+        language:
+          name: "simple"
+          expression: "${camelContext.getRouteController().getRouteStatus('route_3')}"
+        result: "Started"
+
+  - camel:
+      controlBus:
+        simple: "${camelContext.stop()}"

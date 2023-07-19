@@ -818,7 +818,7 @@ public class CamelControlBusIT extends TestNGCitrusSpringSupport {
     </camel:control-bus>
 
     <camel:control-bus camel-context="camelContext">
-      <camel:language type="simple">${camelContext.getRouteStatus('route_3')}</camel:language>
+      <camel:language type="simple">${camelContext.getRouteController().getRouteStatus('route_3')}</camel:language>
       <camel:result>Started</camel:result>
     </camel:control-bus>
   </actions>
