@@ -21,13 +21,10 @@ package org.citrusframework.groovy.dsl.actions;
 
 import java.util.function.Supplier;
 
+import groovy.lang.GroovyObjectSupport;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.actions.CreateVariablesAction;
-import org.citrusframework.actions.SleepAction;
 import org.citrusframework.container.FinallySequence;
-import org.citrusframework.container.Wait;
-import groovy.lang.GroovyObjectSupport;
 
 /**
  * @author Christoph Deppisch
@@ -35,27 +32,6 @@ import groovy.lang.GroovyObjectSupport;
 public class FinallyActionsBuilder extends GroovyObjectSupport implements ActionsBuilder, Supplier<FinallySequence.Builder> {
 
     private final FinallySequence.Builder builder = new FinallySequence.Builder();
-
-    @Override
-    public GroovyTestActionWrapper<Wait> waitFor() {
-        GroovyTestActionWrapper<Wait> waitFor = ActionsBuilder.super.waitFor();
-        builder.actions(waitFor);
-        return waitFor;
-    }
-
-    @Override
-    public GroovyTestActionWrapper<SleepAction> delay() {
-        GroovyTestActionWrapper<SleepAction> delay = ActionsBuilder.super.delay();
-        builder.actions(delay);
-        return delay;
-    }
-
-    @Override
-    public GroovyTestActionWrapper<CreateVariablesAction> createVariable(String name, String value) {
-        GroovyTestActionWrapper<CreateVariablesAction> createVariable = ActionsBuilder.super.createVariable(name, value);
-        builder.actions(createVariable);
-        return createVariable;
-    }
 
     @Override
     public <T extends TestAction> T $(TestActionBuilder<T> nested) {

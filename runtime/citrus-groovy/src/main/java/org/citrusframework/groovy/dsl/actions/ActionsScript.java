@@ -39,6 +39,8 @@ public class ActionsScript {
 
     public void execute(TestActionRunner runner, TestContext context) {
         ImportCustomizer ic = new ImportCustomizer();
+        GroovyShellUtils.autoAddImports(script, ic);
+
         GroovyShellUtils.run(ic, new ActionsConfiguration(runner, context), normalize(script), citrus, context);
     }
 

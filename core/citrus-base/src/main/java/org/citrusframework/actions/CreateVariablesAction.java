@@ -84,7 +84,7 @@ public class CreateVariablesAction extends AbstractTestAction {
      */
     public static final class Builder extends AbstractTestActionBuilder<CreateVariablesAction, Builder> {
 
-        private Map<String, String> variables = new LinkedHashMap<>();
+        private final Map<String, String> variables = new LinkedHashMap<>();
 
         public static Builder createVariable(String variableName, String value) {
             Builder builder = new Builder();

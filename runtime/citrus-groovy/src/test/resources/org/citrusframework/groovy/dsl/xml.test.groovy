@@ -33,12 +33,12 @@ configuration {
 }
 
 given:
-    - createVariables()
-            .variable("text", "Citrus rocks!")
-            .variable("language", "eng")
+    $(createVariables()
+        .variable("text", "Citrus rocks!")
+        .variable("language", "eng"))
 
 when:
-    - send().endpoint(hello)
+    $(send().endpoint(hello)
             .message {
                 body {
                     xml()
@@ -49,10 +49,10 @@ when:
                 headers {
                     operation = "sayHello"
                 }
-            }
+            })
 
 then:
-    - receive().endpoint(hello)
+    $(receive().endpoint(hello)
             .message {
                 body().xml {
                     greeting(language: '${language}') {
@@ -62,4 +62,4 @@ then:
                 headers {
                     operation = "sayHello"
                 }
-            }
+            })

@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.citrusframework.Citrus;
+import org.citrusframework.TestActionBuilder;
 import org.citrusframework.context.TestContext;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
@@ -109,5 +110,21 @@ public class GroovyShellUtils {
         } else {
             return script.trim();
         }
+    }
+
+    /**
+     * Automatically adds static imports for TestAction builders used in given script.
+     * @param source the script source code.
+     * @param ic the import customizer.
+     */
+    public static void autoAddImports(String source, ImportCustomizer ic) {
+        TestActionBuilder.lookup()
+                .entrySet()
+                .stream()
+                .filter(entry -> !entry.getKey().equals("send") && !entry.getKey().equals("receive") )
+                .filter(entry -> !source.contains("import static " + String.format("%s.%s", entry.getValue().getClass().getCanonicalName(), entry.getKey())))
+                .filter(entry -> source.contains(String.format("$(%s(", entry.getKey())) || source.contains(String.format("%s()", entry.getKey())))
+                .peek(entry -> System.out.println(entry.getKey()))
+                .forEach(entry -> ic.addStaticImport(entry.getValue().getClass().getCanonicalName(), entry.getKey()));
     }
 }

@@ -49,11 +49,14 @@ public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAwa
                 basePath = FileUtils.getBasePath(((ClassPathResource) scriptSource).getPath());
             }
 
+            String source = FileUtils.readToString(scriptSource);
+            GroovyShellUtils.autoAddImports(source, ic);
+
             testCase = runner.getTestCase();
             configurer.forEach(it -> it.accept(testCase));
             runner.start();
 
-            GroovyShellUtils.run(ic, new TestCaseScript(citrus, runner, context, basePath), FileUtils.readToString(scriptSource), citrus, context);
+            GroovyShellUtils.run(ic, new TestCaseScript(citrus, runner, context, basePath), source, citrus, context);
 
             handler.forEach(it -> it.accept(testCase));
         } catch (IOException e) {
