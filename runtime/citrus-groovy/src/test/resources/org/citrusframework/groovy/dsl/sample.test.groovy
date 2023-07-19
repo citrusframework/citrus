@@ -40,31 +40,32 @@ variables {
 }
 
 given:
-    - echo("Hello from Groovy!")
+    $(echo("Hello from Groovy!"))
 
 when:
-    - send().endpoint(hello)
+    $(send().endpoint(hello)
             .message()
             .body('${foo} #${num}')
-            .header("foo", "bar")
-    - send().endpoint("goodbye")
+            .header("foo", "bar"))
+
+    $(send().endpoint("goodbye")
             .message()
-            .body('#${num} ${foo}')
+            .body('#${num} ${foo}'))
 
 then:
-    - receive().endpoint(hello)
+    $(receive().endpoint(hello)
             .message()
             .header("foo", "bar")
-            .body("bar #1")
-    - receive().endpoint("goodbye")
+            .body("bar #1"))
+
+    $(receive().endpoint("goodbye")
             .message()
-            .body("#1 bar")
+            .body("#1 bar"))
 
 $(echo().message("Test finished successfully!"))
 
 doFinally {
-    echo("In finally bock!")
+    $(echo("In finally bock!"))
 
-    delay().milliseconds(100)
+    $(delay().milliseconds(100))
 }
-

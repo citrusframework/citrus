@@ -1,1 +1,2 @@
+name=waitFor
 type=org.citrusframework.container.Wait$Builder

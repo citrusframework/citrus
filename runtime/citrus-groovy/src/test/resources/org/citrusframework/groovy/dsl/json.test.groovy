@@ -33,11 +33,11 @@ configuration {
 }
 
 given:
-    - createVariables()
-            .variable("text", "Citrus rocks!")
+    $(createVariables()
+        .variable("text", "Citrus rocks!"))
 
 when:
-    - send().endpoint(hello)
+    $(send().endpoint(hello)
             .message {
                 body {
                     json()
@@ -49,10 +49,10 @@ when:
                 headers {
                     operation = "sayHello"
                 }
-            }
+            })
 
 then:
-    - receive().endpoint(hello)
+    $(receive().endpoint(hello)
             .message {
                 body().json {
                     greeting {
@@ -63,4 +63,4 @@ then:
                 headers {
                     operation = "sayHello"
                 }
-            }
+            })

@@ -19,12 +19,14 @@
 
 package org.citrusframework.groovy.dsl
 
+import static org.citrusframework.actions.EchoAction.Builder.print
+
 name "PrintTest"
 author "Christoph"
 status "FINAL"
 description "Sample test in Groovy"
 
 actions {
-    $(log("Hello from Citrus!"))
-    $(log().message("Hello"))
+    $(print().message("Hello from Citrus!"))
+    $(print().message("Hello"))
 }

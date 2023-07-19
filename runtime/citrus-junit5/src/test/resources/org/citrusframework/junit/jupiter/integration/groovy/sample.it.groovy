@@ -64,5 +64,5 @@ then {
 $(echo().message("Test finished successfully!"))
 
 doFinally {
-    delay().milliseconds(100)
+    $(delay().milliseconds(100))
 }
