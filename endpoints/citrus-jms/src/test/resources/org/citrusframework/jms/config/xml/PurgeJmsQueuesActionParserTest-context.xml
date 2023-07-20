@@ -15,7 +15,7 @@
                 <jms:queue name="JMS.Queue.3"/>
             </jms:purge-jms-queues>
 
-            <jms:purge-jms-queues connection-factory="myConnectionFactory" receive-timeout="125">
+            <jms:purge-jms-queues connection-factory="myConnectionFactory" timeout="125" sleep="250">
                 <jms:queue name="JMS.Queue.1"/>
                 <jms:queue name="JMS.Queue.2"/>
                 <jms:queue name="JMS.Queue.3"/>

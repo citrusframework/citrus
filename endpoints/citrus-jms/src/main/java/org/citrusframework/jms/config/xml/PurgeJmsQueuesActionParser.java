@@ -16,11 +16,11 @@
 
 package org.citrusframework.jms.config.xml;
 
-import jakarta.jms.ConnectionFactory;
-import jakarta.jms.Queue;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Queue;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
 import org.citrusframework.config.xml.DescriptionElementParser;
@@ -61,7 +61,8 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
 
         beanDefinition.addPropertyReference("connectionFactory", connectionFactory);
 
-        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("receive-timeout"), "receiveTimeout");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("timeout"), "receiveTimeout");
+        BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("sleep"), "sleepTime");
 
         List<String> queueNames = new ArrayList<String>();
         ManagedList<BeanDefinition> queueRefs = new ManagedList<BeanDefinition>();

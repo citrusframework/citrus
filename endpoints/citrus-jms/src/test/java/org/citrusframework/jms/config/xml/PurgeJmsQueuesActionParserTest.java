@@ -34,8 +34,9 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
         assertActionClassAndName(PurgeJmsQueuesAction.class, "purge-queue");
 
         PurgeJmsQueuesAction action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getReceiveTimeout());
         Assert.assertNotNull(action.getConnectionFactory());
+        Assert.assertEquals(action.getReceiveTimeout(), 100);
+        Assert.assertEquals(action.getSleepTime(), 350L);
         Assert.assertEquals(action.getQueues().size(), 0);
         Assert.assertEquals(action.getQueueNames().size(), 3);
         Assert.assertEquals(action.getQueueNames().get(0), "JMS.Queue.1");
@@ -43,8 +44,8 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
         Assert.assertEquals(action.getQueueNames().get(2), "JMS.Queue.3");
 
         action = getNextTestActionFromTest();
-        Assert.assertNotNull(action.getReceiveTimeout());
         Assert.assertEquals(action.getReceiveTimeout(), 125);
+        Assert.assertEquals(action.getSleepTime(), 250L);
         Assert.assertNotNull(action.getConnectionFactory());
         Assert.assertEquals(action.getQueues().size(), 0);
         Assert.assertEquals(action.getQueueNames().size(), 3);

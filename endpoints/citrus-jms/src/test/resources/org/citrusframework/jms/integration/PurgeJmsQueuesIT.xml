@@ -2,7 +2,7 @@
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
               xmlns:jms="http://www.citrusframework.org/schema/jms/testcase"
               xmlns:spring="http://www.springframework.org/schema/beans"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
               http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
               http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd">
@@ -15,7 +15,7 @@
 			<last-updated-by>Christoph Deppisch</last-updated-by>
 			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
 		</meta-info>
-		
+
         <description>
           It might be essential to purge some jms queues before or during the test case.
           The bean org.citrusframework.jms.actions.PurgeJmsQueuesAction offers this functionality.
@@ -45,8 +45,8 @@
                 <jms:queue name="Citrus.Queue.Dummy.Three.In"/>
                 <jms:queue name="Citrus.Queue.Dummy.Three.Out"/>
             </jms:purge-jms-queues>
-            
-            <jms:purge-jms-queues connection-factory="connectionFactory" receive-timeout="150">
+
+            <jms:purge-jms-queues connection-factory="connectionFactory" timeout="150">
                 <jms:queue name="Citrus.Queue.Dummy"/>
                 <jms:queue name="Citrus.Queue.Dummy.One.In"/>
                 <jms:queue name="Citrus.Queue.Dummy.One.Out"/>
@@ -55,7 +55,7 @@
                 <jms:queue name="Citrus.Queue.Dummy.Three.In"/>
                 <jms:queue name="Citrus.Queue.Dummy.Three.Out"/>
             </jms:purge-jms-queues>
-            
+
             <jms:purge-jms-queues>
                 <jms:queue ref="testQueue1"/>
                 <jms:queue ref="testQueue2"/>
@@ -67,5 +67,5 @@
             </jms:purge-jms-queues>
         </actions>
     </testcase>
-    
+
 </spring:beans>
