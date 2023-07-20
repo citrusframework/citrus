@@ -19,14 +19,14 @@ package org.citrusframework.camel.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.xml.StringSource;
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
+import org.citrusframework.camel.util.CamelUtils;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.xml.StringSource;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.util.StringUtils;
 
@@ -41,8 +41,6 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
 
     /** Route context as XML */
     private final String routeContext;
-
-    private volatile JAXBContext context;
 
     /**
      * Default constructor.
@@ -61,7 +59,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
         if (StringUtils.hasText(routeContext)) {
             // now lets parse the routes with JAXB
             try {
-                Object value = getJaxbContext().createUnmarshaller().unmarshal(new StringSource(context.replaceDynamicContentInString(routeContext)));
+                Object value = CamelUtils.getJaxbContext().createUnmarshaller().unmarshal(new StringSource(context.replaceDynamicContentInString(routeContext)));
                 if (value instanceof CamelRouteContextFactoryBean) {
                     CamelRouteContextFactoryBean factoryBean = (CamelRouteContextFactoryBean) value;
                     routesToUse = factoryBean.getRoutes();
@@ -93,24 +91,6 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
         } catch (Exception e) {
             throw new CitrusRuntimeException(String.format("Failed to create route definitions in context '%s'", camelContext.getName()), e);
         }
-    }
-
-    /**
-     * Creates new Camel JaxB context.
-     * @return
-     * @throws JAXBException
-     */
-    public JAXBContext getJaxbContext() throws JAXBException {
-        if (context == null) {
-            synchronized (this) {
-                context = JAXBContext.newInstance("org.apache.camel:org.apache.camel.model:org.apache.camel.model.cloud:" +
-                        "org.apache.camel.model.config:org.apache.camel.model.dataformat:org.apache.camel.model.language:" +
-                        "org.apache.camel.model.loadbalancer:org.apache.camel.model.rest:org.apache.camel.model.transformer:" +
-                        "org.apache.camel.model.validator:org.apache.camel.core.xml:org.apache.camel.spring.xml", this.getClass().getClassLoader());
-            }
-        }
-
-        return context;
     }
 
     /**
