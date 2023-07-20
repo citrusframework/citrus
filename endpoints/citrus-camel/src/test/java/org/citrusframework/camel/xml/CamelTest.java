@@ -17,21 +17,17 @@
  *  limitations under the License.
  */
 
-package org.citrusframework.camel.yaml;
+package org.citrusframework.camel.xml;
 
-import java.util.List;
+import org.citrusframework.xml.actions.XmlTestActionBuilder;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-import org.citrusframework.camel.actions.RemoveCamelRouteAction;
+public class CamelTest {
 
-public class RemoveRoutes implements CamelRouteActionBuilderWrapper<RemoveCamelRouteAction.Builder> {
-    private final RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder();
-
-    public void setRoutes(List<String> routeIds) {
-        builder.routeIds(routeIds);
-    }
-
-    @Override
-    public RemoveCamelRouteAction.Builder getBuilder() {
-        return builder;
+    @Test
+    public void shouldLookupTestActionBuilder() {
+        Assert.assertTrue(XmlTestActionBuilder.lookup("camel").isPresent());
+        Assert.assertEquals(XmlTestActionBuilder.lookup("camel").get().getClass(), Camel.class);
     }
 }

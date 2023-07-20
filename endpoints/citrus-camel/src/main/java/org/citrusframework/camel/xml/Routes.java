@@ -17,21 +17,33 @@
  *  limitations under the License.
  */
 
-package org.citrusframework.camel.yaml;
+package org.citrusframework.camel.xml;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.citrusframework.camel.actions.RemoveCamelRouteAction;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
-public class RemoveRoutes implements CamelRouteActionBuilderWrapper<RemoveCamelRouteAction.Builder> {
-    private final RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder();
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "route"
+})
+public class Routes {
+    @XmlElement
+    protected List<Route> route;
 
-    public void setRoutes(List<String> routeIds) {
-        builder.routeIds(routeIds);
+    public List<Route> getRoutes() {
+        if (route == null) {
+            route = new ArrayList<>();
+        }
+
+        return route;
     }
 
-    @Override
-    public RemoveCamelRouteAction.Builder getBuilder() {
-        return builder;
+    public void setRoutes(List<Route> routes) {
+        this.route = routes;
     }
 }

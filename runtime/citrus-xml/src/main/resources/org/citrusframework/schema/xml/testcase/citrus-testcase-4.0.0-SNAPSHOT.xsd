@@ -700,6 +700,7 @@
   <xs:element name="sql" type="tns:Sql"/>
   <xs:element name="groovy" type="tns:Groovy"/>
   <xs:element name="http" type="tns:Http"/>
+  <xs:element name="camel" type="tns:Camel"/>
 
   <xs:complexType name="Plsql">
     <xs:sequence>
@@ -791,6 +792,105 @@
         <xs:attribute name="use-script-template" type="xs:boolean"/>
       </xs:extension>
     </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="Camel">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="create-routes">
+          <xs:annotation>
+            <xs:documentation>Creates new Camel routes on the fly</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:any processContents="skip" namespace="http://camel.apache.org/schema/spring"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="start-routes">
+          <xs:annotation>
+            <xs:documentation>Start Camel routes on context</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="route" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="stop-routes">
+          <xs:annotation>
+            <xs:documentation>Start Camel routes on context</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="route" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="remove-routes">
+          <xs:annotation>
+            <xs:documentation>Start Camel routes on context</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="route" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="id" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="control-bus">
+          <xs:annotation>
+            <xs:documentation>Executes operations on Camel control bus</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:choice>
+                <xs:element name="route">
+                  <xs:complexType>
+                    <xs:attribute name="id" type="xs:string" use="required"/>
+                    <xs:attribute name="action" use="required">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="start"/>
+                          <xs:enumeration value="stop"/>
+                          <xs:enumeration value="suspend"/>
+                          <xs:enumeration value="resume"/>
+                          <xs:enumeration value="status"/>
+                          <xs:enumeration value="stats"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="language">
+                  <xs:complexType>
+                    <xs:simpleContent>
+                      <xs:extension base="xs:string">
+                        <xs:attribute name="type" type="xs:string" default="simple"/>
+                      </xs:extension>
+                    </xs:simpleContent>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+              <xs:element name="result" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="camel-context" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="Http">
