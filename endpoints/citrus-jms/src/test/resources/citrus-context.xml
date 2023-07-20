@@ -158,7 +158,7 @@
 
   <citrus:before-test id="defaultBeforeTest">
     <citrus:actions>
-      <citrus-jms-test:purge-jms-queues connection-factory="connectionFactory" receive-timeout="10">
+      <citrus-jms-test:purge-jms-queues connection-factory="connectionFactory" timeout="10">
         <citrus-jms-test:queue name="Citrus.HelloService.Request.Queue"/>
         <citrus-jms-test:queue name="Citrus.HelloService.Response.Queue"/>
         <citrus-jms-test:queue name="Citrus.HelloService.InOut.Queue"/>

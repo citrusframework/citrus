@@ -16,6 +16,10 @@
 
 package org.citrusframework.jms.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import jakarta.jms.Connection;
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
@@ -25,15 +29,11 @@ import jakarta.jms.Queue;
 import jakarta.jms.QueueConnection;
 import jakarta.jms.QueueConnectionFactory;
 import jakarta.jms.Session;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,8 +255,8 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
      */
     public static final class Builder extends AbstractTestActionBuilder<PurgeJmsQueuesAction, Builder> implements ReferenceResolverAware {
 
-        private List<String> queueNames = new ArrayList<>();
-        private List<Queue> queues = new ArrayList<>();
+        private final List<String> queueNames = new ArrayList<>();
+        private final List<Queue> queues = new ArrayList<>();
         private ConnectionFactory connectionFactory;
         private long receiveTimeout = 100;
         private long sleepTime = 350;
@@ -365,7 +365,8 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
         @Override
         public PurgeJmsQueuesAction build() {
-            if (referenceResolver != null
+            if (connectionFactory == null &&
+                    referenceResolver != null
                     && referenceResolver.isResolvable("connectionFactory")) {
                 connectionFactory(referenceResolver.resolve("connectionFactory", ConnectionFactory.class));
             }

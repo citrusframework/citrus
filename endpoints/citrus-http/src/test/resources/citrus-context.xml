@@ -168,7 +168,7 @@
 
   <citrus:before-test id="defaultBeforeTest">
     <citrus:actions>
-      <citrus-jms-test:purge-jms-queues connection-factory="connectionFactory" receive-timeout="10">
+      <citrus-jms-test:purge-jms-queues connection-factory="connectionFactory" timeout="10">
         <citrus-jms-test:queue name="${jms.queue.http.request.forward}"/>
         <citrus-jms-test:queue name="${jms.queue.http.request.ack}"/>
       </citrus-jms-test:purge-jms-queues>

@@ -1,0 +1,14 @@
+name: "PurgeQueuesTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - purgeQueues:
+      queue: "JMS.Queue.1"
+
+  - purgeQueues:
+      connectionFactory: "myConnectionFactory"
+      timeout: 125
+      sleep: 250
+      queues:
+        - "JMS.Queue.2"
+        - "JMS.Queue.3"
