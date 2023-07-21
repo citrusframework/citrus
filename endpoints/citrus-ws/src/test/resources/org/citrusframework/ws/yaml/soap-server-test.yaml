@@ -1,0 +1,82 @@
+name: "SoapServerTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - soap:
+      server: "soapServer"
+      receiveRequest:
+        message:
+          soapAction: "myAction"
+          body:
+            data: <TestMessage>Hello Citrus</TestMessage>
+          attachments:
+            - contentId: "MySoapAttachment"
+              contentType: "text/plain"
+              content: |
+                This is an attachment!
+  - soap:
+      server: "soapServer"
+      sendResponse:
+        message:
+          body:
+            data: <TestResponse>Hello User</TestResponse>
+          attachments:
+            - contentId: "MySoapAttachment"
+              contentType: "text/plain"
+              content: |
+                This is an attachment!
+
+  - soap:
+      server: "soapServer"
+      receiveRequest:
+        attachmentValidator: "mySoapAttachmentValidator"
+        message:
+          body:
+            data: <TestMessage>Hello Citrus</TestMessage>
+          attachments:
+            - contentId: "MySoapAttachment"
+              contentType: "application/xml"
+              charset: "UTF-8"
+              resource: "classpath:org/citrusframework/ws/actions/test-attachment.xml"
+  - soap:
+      server: "soapServer"
+      sendResponse:
+        message:
+          body:
+            data: <TestResponse>Hello User</TestResponse>
+          attachments:
+            - contentId: "MySoapAttachment"
+              contentType: "application/xml"
+              charset: "UTF-8"
+              resource: "classpath:org/citrusframework/ws/actions/test-attachment.xml"
+
+  - soap:
+      server: "soapServer"
+      receiveRequest:
+        message:
+          body:
+            data: <TestMessage>Hello Citrus</TestMessage>
+          attachments:
+            - contentId: "FirstSoapAttachment"
+              contentType: "text/plain"
+              content: |
+                This is an attachment!
+            - contentId: "SecondSoapAttachment"
+              contentType: "application/xml"
+              charset: "UTF-8"
+              resource: "classpath:org/citrusframework/ws/actions/test-attachment.xml"
+  - soap:
+      server: "soapServer"
+      sendResponse:
+        message:
+          body:
+            data: <TestResponse>Hello User</TestResponse>
+          attachments:
+            - contentId: "FirstSoapAttachment"
+              contentType: "text/plain"
+              content: |
+                This is an attachment!
+            - contentId: "SecondSoapAttachment"
+              contentType: "application/xml"
+              charset: "UTF-8"
+              resource: "classpath:org/citrusframework/ws/actions/test-attachment.xml"

@@ -130,6 +130,14 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
     }
 
     /**
+     * Gets mtom enabled.
+     * @return
+     */
+    public boolean isMtomEnabled() {
+        return mtomEnabled;
+    }
+
+    /**
      * Action builder.
      */
     public static final class Builder extends SendSoapMessageBuilder<SendSoapMessageAction, Builder.SendSoapMessageBuilderSupport, Builder> {
@@ -268,7 +276,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
         }
 
         /**
-         * Sets the charset name for this send action builder's attachment.
+         * Sets the charset name for this send action builder's most recent attachment.
          * @param charsetName
          * @return
          */
@@ -307,7 +315,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @return
          */
         public M contentType(String contentType) {
-            soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
+            soapMessage.contentType(contentType);
             return self;
         }
 
@@ -317,7 +325,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @return
          */
         public M accept(String accept) {
-            soapMessage.header(SoapMessageHeaders.HTTP_ACCEPT, accept);
+            soapMessage.accept(accept);
             return self;
         }
 

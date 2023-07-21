@@ -1,0 +1,43 @@
+name: "SendSoapFaultTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - soap:
+      server: "soapServer"
+      receiveRequest:
+        message:
+          body:
+            data: <TestMessage>Hello Citrus</TestMessage>
+  - soap:
+      server: "soapServer"
+      sendFault:
+        message:
+          faultCode: "{http://citrusframework.org/faults}citrus-ns:FAULT-1000"
+          faultString: "FaultString"
+          faultDetails:
+            - content: |
+                <ns0:FaultDetail xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                    <ns0:DetailId>1000</ns0:DetailId>
+                </ns0:FaultDetail>
+          headers:
+            - name: operation
+              value: sendFault
+
+  - soap:
+      server: "soapServer"
+      receiveRequest:
+        message:
+          body:
+            data: <TestMessage>Hello Citrus</TestMessage>
+  - soap:
+      server: "soapServer"
+      sendFault:
+        message:
+          faultCode: "{http://citrusframework.org/faults}citrus-ns:FAULT-1001"
+          faultString: "FaultString"
+          faultActor: "FaultActor"
+          faultDetails:
+            - resource: "classpath:org/citrusframework/ws/actions/test-fault-detail.xml"
+          headers:
+            - name: operation
+              value: sendFault

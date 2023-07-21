@@ -31,10 +31,11 @@ public class SendSoapMessageActionParserTest extends AbstractActionParserTest<Se
     public void testSendMessageActionParser() {
         assertActionCount(5);
         assertActionClassAndName(SendSoapMessageAction.class, "send");
-        
+
         // 1st action
         SendSoapMessageAction action = getNextTestActionFromTest();
         Assert.assertFalse(action.isForkMode());
+        Assert.assertFalse(action.isMtomEnabled());
         Assert.assertEquals(action.getAttachments().size(), 1L);
         Assert.assertEquals(action.getAttachments().get(0).getContent().trim(), "This is an attachment!");
         Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());

@@ -30,7 +30,6 @@ import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.message.SoapMessage;
-import org.citrusframework.ws.message.SoapMessageHeaders;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -288,7 +287,7 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
              * @return
              */
             public SoapFaultMessageBuilderSupport status(HttpStatus status) {
-                soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, status.value());
+                soapMessage.status(status);
                 return this;
             }
 
@@ -299,7 +298,17 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
              * @return
              */
             public SoapFaultMessageBuilderSupport statusCode(Integer statusCode) {
-                soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, statusCode);
+                soapMessage.statusCode(statusCode);
+                return this;
+            }
+
+            /**
+             * Sets the response status reason phrase.
+             * @param reasonPhrase
+             * @return
+             */
+            public SoapFaultMessageBuilderSupport reasonPhrase(String reasonPhrase) {
+                soapMessage.reasonPhrase(reasonPhrase);
                 return this;
             }
         }

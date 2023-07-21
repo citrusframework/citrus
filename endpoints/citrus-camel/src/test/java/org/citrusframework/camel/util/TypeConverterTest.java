@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.util.DefaultTypeConverter;
+import org.citrusframework.util.GroovyTypeConverter;
 import org.citrusframework.util.SpringBeanTypeConverter;
 import org.citrusframework.util.TypeConversionUtils;
 import org.citrusframework.util.TypeConverter;
@@ -43,10 +44,11 @@ public class TypeConverterTest {
             TypeConversionUtils.loadDefaultConverter();
 
             Map<String, TypeConverter> converters = TypeConverter.lookup();
-            Assert.assertEquals(converters.size(), 2L);
+            Assert.assertEquals(converters.size(), 3L);
             Assert.assertEquals(converters.get(TypeConverter.APACHE_CAMEL).getClass(), CamelTypeConverter.class);
             Assert.assertEquals(converters.get(TypeConverter.APACHE_CAMEL), TypeConverter.lookupDefault());
 
+            Assert.assertEquals(converters.get(TypeConverter.GROOVY).getClass(), GroovyTypeConverter.class);
             Assert.assertEquals(converters.get(TypeConverter.SPRING).getClass(), SpringBeanTypeConverter.class);
 
             Assert.assertFalse(TypeConverter.lookup().containsKey(TypeConverter.DEFAULT));

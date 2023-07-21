@@ -22,21 +22,24 @@ import org.citrusframework.message.MessageHeaders;
  * @author Christoph Deppisch
  */
 public abstract class SoapMessageHeaders {
-    
+
     /**
      * Prevent instantiation.
      */
     private SoapMessageHeaders() {
     }
-    
+
     /** Citrus ws specific header prefix */
     public static final String SOAP_PREFIX = MessageHeaders.PREFIX + "soap_";
 
     /** Special header prefix for http transport headers in SOAP message sender */
     public static final String HTTP_PREFIX = MessageHeaders.PREFIX + "http_";
-    
+
     /** Special status code header */
     public static final String HTTP_STATUS_CODE = HTTP_PREFIX + "status_code";
+
+    /** Special status reason phrase header */
+    public static final String HTTP_REASON_PHRASE = HTTP_PREFIX + "reason_phrase";
 
     /** Server context path */
     public static final String HTTP_CONTEXT_PATH = HTTP_PREFIX + "context_path";

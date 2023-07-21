@@ -16,23 +16,25 @@
 
 package org.citrusframework.ws.message;
 
-import jakarta.activation.DataHandler;
-import jakarta.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.http.MediaType;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.Attachment;
@@ -63,7 +65,7 @@ public class SoapAttachment implements Attachment, Serializable {
     private String contentId = null;
 
     /** Chosen charset of content body */
-    private String charsetName = "UTF-8";
+    private String charsetName = StandardCharsets.UTF_8.name();
 
     /** send mtom attachments inline as hex or base64 coded */
     private boolean mtomInline = false;
@@ -98,7 +100,7 @@ public class SoapAttachment implements Attachment, Serializable {
         soapAttachment.setContentId(contentId);
         soapAttachment.setContentType(attachment.getContentType());
 
-        if (attachment.getContentType().startsWith("text")) {
+        if (attachment.getContentType().startsWith("text/") || attachment.getContentType().equals(MediaType.APPLICATION_XML_VALUE)) {
             try {
                 soapAttachment.setContent(FileUtils.readToString(attachment.getInputStream()).trim());
             } catch (IOException e) {
@@ -120,6 +122,32 @@ public class SoapAttachment implements Attachment, Serializable {
      */
     public SoapAttachment(String content) {
         this.content = content;
+    }
+
+    /**
+     * Constructor using fields.
+     * @param contentId
+     * @param contentType
+     * @param content
+     */
+    public SoapAttachment(String contentId, String contentType, String content) {
+        this.contentId = contentId;
+        this.contentType = contentType;
+        this.content = content;
+    }
+
+    /**
+     * Constructor using fields.
+     * @param contentId
+     * @param contentType
+     * @param content
+     * @param charsetName
+     */
+    public SoapAttachment(String contentId, String contentType, String content, String charsetName) {
+        this.contentId = contentId;
+        this.contentType = contentType;
+        this.content = content;
+        this.charsetName = charsetName;
     }
 
     @Override
@@ -191,7 +219,8 @@ public class SoapAttachment implements Attachment, Serializable {
     public String getContent() {
         if (content != null) {
             return context != null ? context.replaceDynamicContentInString(content) : content;
-        } else if (StringUtils.hasText(getContentResourcePath()) && getContentType().startsWith("text")) {
+        } else if (StringUtils.hasText(getContentResourcePath()) &&
+                (getContentType().startsWith("text/") || getContentType().equals(MediaType.APPLICATION_XML_VALUE))) {
             try {
                 String fileContent = FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(getContentResourcePath()).getInputStream(), Charset.forName(charsetName));
                 return context != null ? context.replaceDynamicContentInString(fileContent) : fileContent;

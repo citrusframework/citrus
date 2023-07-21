@@ -47,7 +47,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.DefaultTestActionBuilder.action;
-import static org.citrusframework.ws.actions.AssertSoapFault.Builder.assertSoapFault;
+import static org.citrusframework.ws.actions.SoapActionBuilder.soap;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -58,15 +58,15 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
     public static final String INTERNAL_SERVER_ERROR = "Internal server error";
     public static final String SOAP_FAULT_VALIDATOR = "soapFaultValidator";
 
-    private Resource resource = Mockito.mock(Resource.class);
-    private SoapFaultValidator soapFaultValidator = Mockito.mock(SoapFaultValidator.class);
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
+    private final Resource resource = Mockito.mock(Resource.class);
+    private final SoapFaultValidator soapFaultValidator = Mockito.mock(SoapFaultValidator.class);
+    private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
-    private SoapMessage soapMessage = Mockito.mock(SoapMessage.class);
-    private SoapBody soapBody = Mockito.mock(SoapBody.class);
-    private SoapFault soapFault = Mockito.mock(SoapFault.class);
-    private SoapFaultDetail soapFaultDetail = Mockito.mock(SoapFaultDetail.class);
-    private SoapFaultDetailElement soapFaultDetailElement = Mockito.mock(SoapFaultDetailElement.class);
+    private final SoapMessage soapMessage = Mockito.mock(SoapMessage.class);
+    private final SoapBody soapBody = Mockito.mock(SoapBody.class);
+    private final SoapFault soapFault = Mockito.mock(SoapFault.class);
+    private final SoapFaultDetail soapFaultDetail = Mockito.mock(SoapFaultDetail.class);
+    private final SoapFaultDetailElement soapFaultDetailElement = Mockito.mock(SoapFaultDetailElement.class);
 
     @Test
     public void testAssertSoapFaultBuilder() {
@@ -89,7 +89,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                            .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                             .faultString(INTERNAL_SERVER_ERROR)
                         .when(action(context -> {
                             throw new SoapFaultClientException(soapMessage);
@@ -129,12 +131,14 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
-                .faultString(INTERNAL_SERVER_ERROR)
-                .validator(soapFaultValidator)
-                .when(action(context -> {
-                    throw new SoapFaultClientException(soapMessage);
-                })));
+        runner.run(soap().client("soapClient")
+                    .assertFault()
+                        .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                        .faultString(INTERNAL_SERVER_ERROR)
+                        .validator(soapFaultValidator)
+                    .when(action(context -> {
+                        throw new SoapFaultClientException(soapMessage);
+                    })));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -174,7 +178,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                                .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .validator(SOAP_FAULT_VALIDATOR)
                         .when(action(context -> {
@@ -219,7 +225,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                                .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                         .when(action(context -> {
                             throw new SoapFaultClientException(soapMessage);
@@ -265,7 +273,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                                .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><message>Something went wrong</message></ErrorDetail>")
                         .when(action(context -> {
@@ -313,7 +323,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                                .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
                                 .faultDetail("<MessageDetail><message>Something went wrong</message></MessageDetail>")
@@ -363,7 +375,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                                .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetailResource(resource)
                         .when(action(context -> {
@@ -410,7 +424,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                                .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetailResource("classpath:org/citrusframework/ws/actions/dsl/soap-fault-detail.xml")
                         .when(action(context -> {
@@ -460,7 +476,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                                .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
                                 .faultDetailResource(resource)
@@ -507,7 +525,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                                .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .validator(soapFaultValidator)
                         .when(action(context -> {
@@ -552,7 +572,9 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
         context.setReferenceResolver(referenceResolver);
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        runner.run(soap().client("soapClient")
+                        .assertFault()
+                                .faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultActor("MyActor")
                         .when(action(context -> {
