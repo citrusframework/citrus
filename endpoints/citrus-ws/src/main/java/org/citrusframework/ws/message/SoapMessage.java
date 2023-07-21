@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.springframework.http.HttpStatus;
 
 /**
  * SOAP message representation holding additional elements like SOAP action, header fragment data and
@@ -38,7 +39,7 @@ public class SoapMessage extends DefaultMessage {
     private static final long serialVersionUID = 3289201140229458069L;
 
     /** Optional list of SOAP attachments */
-    private List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
+    private final List<SoapAttachment> attachments = new ArrayList<>();
 
     /** enable/disable mtom attachments */
     private boolean mtomEnabled = false;
@@ -64,7 +65,7 @@ public class SoapMessage extends DefaultMessage {
      * @param payload
      */
     public SoapMessage(Object payload) {
-        this(payload, new LinkedHashMap<String, Object>());
+        this(payload, new LinkedHashMap<>());
     }
 
     /**
@@ -95,6 +96,64 @@ public class SoapMessage extends DefaultMessage {
     @Override
     public SoapMessage addHeaderData(String headerData) {
         return (SoapMessage) super.addHeaderData(headerData);
+    }
+
+    /**
+     * Sets the Http request content type header.
+     *
+     * @param contentType The content type header value to use
+     * @return The altered HttpMessage
+     */
+    public SoapMessage contentType(final String contentType) {
+        setHeader(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
+        return this;
+    }
+
+    /**
+     * Sets the Http accepted content type header for response.
+     *
+     * @param accept The accept header value to set
+     * @return The altered HttpMessage
+     */
+    public SoapMessage accept(final String accept) {
+        setHeader(SoapMessageHeaders.HTTP_ACCEPT, accept);
+        return this;
+    }
+
+
+
+    /**
+     * Sets the Http response status code.
+     *
+     * @param statusCode The status code header to respond with
+     * @return The altered HttpMessage
+     */
+    public SoapMessage status(final HttpStatus statusCode) {
+        statusCode(statusCode.value());
+        reasonPhrase(statusCode.name());
+        return this;
+    }
+
+    /**
+     * Sets the Http response status code header.
+     *
+     * @param statusCode The status code header value to respond with
+     * @return The altered HttpMessage
+     */
+    public SoapMessage statusCode(final Integer statusCode) {
+        setHeader(SoapMessageHeaders.HTTP_STATUS_CODE, statusCode);
+        return this;
+    }
+
+    /**
+     * Sets the Http response reason phrase header.
+     *
+     * @param reasonPhrase The reason phrase header value to use
+     * @return The altered HttpMessage
+     */
+    public SoapMessage reasonPhrase(final String reasonPhrase) {
+        setHeader(SoapMessageHeaders.HTTP_REASON_PHRASE, reasonPhrase);
+        return this;
     }
 
     /**

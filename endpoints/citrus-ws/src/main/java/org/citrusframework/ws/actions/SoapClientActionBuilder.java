@@ -71,6 +71,23 @@ public class SoapClientActionBuilder implements TestActionBuilder.DelegatingTest
         return builder;
     }
 
+        /**
+     * Generic response builder for expecting response messages on client.
+     * @return
+     */
+    public AssertSoapFault.Builder assertFault() {
+        AssertSoapFault.Builder builder = new AssertSoapFault.Builder();
+        if (soapClient != null) {
+            builder.endpoint(soapClient);
+        } else {
+            builder.endpoint(soapClientUri);
+        }
+
+        builder.withReferenceResolver(referenceResolver);
+        this.delegate = builder;
+        return builder;
+    }
+
     /**
      * Generic request builder with request method and path.
      * @return

@@ -107,7 +107,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** List of variable extractors responsible for creating variables from received message content */
     private final List<VariableExtractor> variableExtractors;
 
-    /** List of processors that handle the receive message */
+    /** List of processors that handle the received message */
     private final List<MessageProcessor> messageProcessors;
 
     /** List of processors that handle the control message builder */

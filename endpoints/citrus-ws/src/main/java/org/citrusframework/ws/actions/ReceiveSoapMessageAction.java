@@ -106,6 +106,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         private final List<SoapAttachment> attachments = new ArrayList<>();
         private SoapAttachmentValidator attachmentValidator = new SimpleSoapAttachmentValidator();
+        private String attachmentValidatorName;
 
         public Builder() {
             message(new StaticMessageBuilder(soapMessage))
@@ -122,6 +123,14 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         @Override
         public ReceiveSoapMessageAction doBuild() {
+            if (referenceResolver != null) {
+                if (attachmentValidatorName != null) {
+                    attachmentValidator = referenceResolver.resolve(attachmentValidatorName, SoapAttachmentValidator.class);
+                } else if (referenceResolver.isResolvable(SoapAttachmentValidator.class)) {
+                    attachmentValidator = referenceResolver.resolve(SoapAttachmentValidator.class);
+                }
+            }
+
             return new ReceiveSoapMessageAction(this);
         }
     }
@@ -241,6 +250,16 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
         }
 
         /**
+         * Set explicit SOAP attachment validator name.
+         * @param validator
+         * @return
+         */
+        public SoapMessageBuilderSupport attachmentValidatorName(String validator) {
+            delegate.attachmentValidatorName = validator;
+            return this;
+        }
+
+        /**
          * Set explicit SOAP attachment validator.
          * @param validator
          * @return
@@ -256,7 +275,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
          * @return
          */
         public SoapMessageBuilderSupport contentType(String contentType) {
-            soapMessage.header(SoapMessageHeaders.HTTP_CONTENT_TYPE, contentType);
+            soapMessage.contentType(contentType);
             return this;
         }
 
@@ -266,7 +285,17 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
          * @return
          */
         public SoapMessageBuilderSupport accept(String accept) {
-            soapMessage.header(SoapMessageHeaders.HTTP_ACCEPT, accept);
+            soapMessage.accept(accept);
+            return this;
+        }
+
+        /**
+         * Sets the response status reason phrase.
+         * @param reasonPhrase
+         * @return
+         */
+        public SoapMessageBuilderSupport reasonPhrase(String reasonPhrase) {
+            soapMessage.reasonPhrase(reasonPhrase);
             return this;
         }
 
@@ -276,7 +305,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
          * @return
          */
         public SoapMessageBuilderSupport status(HttpStatus status) {
-            soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, status.value());
+            soapMessage.status(status);
             return this;
         }
 
@@ -286,7 +315,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
          * @return
          */
         public SoapMessageBuilderSupport statusCode(Integer statusCode) {
-            soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, statusCode);
+            soapMessage.statusCode(statusCode);
             return this;
         }
 

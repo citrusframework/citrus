@@ -76,7 +76,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
-        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1003");
+        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1005");
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
@@ -93,7 +93,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
-        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1003");
+        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1006");
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
@@ -109,7 +109,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
-        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1003");
+        Assert.assertEquals(action.getFaultCode(), "{http://citrusframework.org/faults}FAULT-1007");
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetails().size(), 1L);

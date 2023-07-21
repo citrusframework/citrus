@@ -27,13 +27,16 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.container.AbstractActionContainer;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.validation.SimpleSoapFaultValidator;
+import org.citrusframework.ws.validation.SoapFaultDetailValidationContext;
 import org.citrusframework.ws.validation.SoapFaultValidationContext;
 import org.citrusframework.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
@@ -213,7 +216,7 @@ public class AssertSoapFault extends AbstractActionContainer {
 
     /**
      * Gets the faultActor.
-     * @return the faultActor the faultActor to get.
+     * @return the faultActor.
      */
     public String getFaultActor() {
         return faultActor;
@@ -221,7 +224,7 @@ public class AssertSoapFault extends AbstractActionContainer {
 
     /**
      * Gets the validationContext.
-     * @return the validationContext the validationContext to get.
+     * @return the validationContext.
      */
     public SoapFaultValidationContext getValidationContext() {
         return validationContext;
@@ -233,11 +236,15 @@ public class AssertSoapFault extends AbstractActionContainer {
     public static class Builder extends AbstractTestContainerBuilder<AssertSoapFault, Builder> implements ReferenceResolverAware {
 
         private TestActionBuilder<?> action;
+
+        protected Endpoint endpoint;
+        protected String endpointUri;
+
         private String faultString;
         private String faultCode;
         private String faultActor;
-        private List<String> faultDetails = new ArrayList<>();
-        private List<String> faultDetailResourcePaths = new ArrayList<>();
+        private final List<String> faultDetails = new ArrayList<>();
+        private final List<String> faultDetailResourcePaths = new ArrayList<>();
         private String validatorName;
         private SoapFaultValidator validator;
         private SoapFaultValidationContext.Builder validationContext;
@@ -273,8 +280,39 @@ public class AssertSoapFault extends AbstractActionContainer {
         @Override
         public Builder actions(TestActionBuilder<?>... actions) {
             this.action = actions[0];
+
+            if (this.action instanceof MessageBuilderSupport.MessageActionBuilder<?,?,?>) {
+                if (this.endpointUri != null) {
+                    ((MessageBuilderSupport.MessageActionBuilder<?, ?, ?>) this.action).endpoint(endpointUri);
+                }
+
+                if (this.endpoint != null) {
+                    ((MessageBuilderSupport.MessageActionBuilder<?, ?, ?>) this.action).endpoint(endpoint);
+                }
+            }
             return super.actions(actions[0]);
         }
+
+        /**
+         * Sets the message endpoint to send messages to.
+         * @param messageEndpoint
+         * @return
+         */
+        public Builder endpoint(Endpoint messageEndpoint) {
+            this.endpoint = messageEndpoint;
+            return this;
+        }
+
+        /**
+         * Sets the message endpoint uri to send messages to.
+         * @param messageEndpointUri
+         * @return
+         */
+        public Builder endpoint(String messageEndpointUri) {
+            this.endpointUri = messageEndpointUri;
+            return this;
+        }
+
         /**
          * Expect fault code in SOAP fault message.
          * @param code
@@ -379,6 +417,19 @@ public class AssertSoapFault extends AbstractActionContainer {
         }
 
         /**
+         * Specifies the validationContext.
+         * @param validationContext
+         */
+        public Builder validateDetail(SoapFaultDetailValidationContext.Builder validationContext) {
+            if (this.validationContext == null) {
+                this.validationContext = new SoapFaultValidationContext.Builder();
+            }
+
+            this.validationContext.detail(validationContext.build());
+            return this;
+        }
+
+        /**
          * Sets the Spring bean application context.
          * @param referenceResolver
          */
@@ -408,15 +459,14 @@ public class AssertSoapFault extends AbstractActionContainer {
                     validator(referenceResolver.resolve(validatorName, SoapFaultValidator.class));
                 }
 
-                if (validator == null) {
-                    if (referenceResolver.isResolvable("soapFaultValidator")) {
-                        validator(referenceResolver.resolve("soapFaultValidator", SoapFaultValidator.class));
-                    } else {
-                        validator = new SimpleSoapFaultValidator();
-                    }
+                if (validator == null && referenceResolver.isResolvable("soapFaultValidator")) {
+                    validator(referenceResolver.resolve("soapFaultValidator", SoapFaultValidator.class));
                 }
             }
 
+            if (validator == null) {
+                validator = new SimpleSoapFaultValidator();
+            }
             return new AssertSoapFault(this);
         }
     }

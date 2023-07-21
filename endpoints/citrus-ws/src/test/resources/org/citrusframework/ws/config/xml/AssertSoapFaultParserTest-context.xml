@@ -49,7 +49,7 @@
                 </ws:when>
             </ws:assert-fault>
 
-            <ws:assert-fault fault-code="{http://citrusframework.org/faults}FAULT-1003"
+            <ws:assert-fault fault-code="{http://citrusframework.org/faults}FAULT-1005"
                        fault-string="FaultString"
                        fault-actor="FaultActor">
                 <ws:fault-detail schema-repository="fooSchemaRepository">
@@ -62,7 +62,7 @@
                 </ws:when>
             </ws:assert-fault>
 
-            <ws:assert-fault fault-code="{http://citrusframework.org/faults}FAULT-1003"
+            <ws:assert-fault fault-code="{http://citrusframework.org/faults}FAULT-1006"
                        fault-string="FaultString"
                        fault-actor="FaultActor">
                 <ws:fault-detail schema="fooSchema">
@@ -75,7 +75,7 @@
                 </ws:when>
             </ws:assert-fault>
 
-            <ws:assert-fault fault-code="{http://citrusframework.org/faults}FAULT-1003"
+            <ws:assert-fault fault-code="{http://citrusframework.org/faults}FAULT-1007"
                        fault-string="FaultString"
                        fault-actor="FaultActor">
                 <ws:fault-detail schema-validation="false">

@@ -38,7 +38,7 @@ public class SoapFaultValidationContext extends DefaultValidationContext {
      */
     public static final class Builder implements ValidationContext.Builder<SoapFaultValidationContext, Builder> {
 
-        private List<SoapFaultDetailValidationContext> validationContexts = new ArrayList<>();
+        private final List<SoapFaultDetailValidationContext> validationContexts = new ArrayList<>();
 
         /**
          * Static entry method for fluent builder API.
@@ -86,7 +86,7 @@ public class SoapFaultValidationContext extends DefaultValidationContext {
 
     /**
      * Gets the validationContexts.
-     * @return the validationContexts the validationContexts to get.
+     * @return the validationContexts.
      */
     public List<SoapFaultDetailValidationContext> getValidationContexts() {
         return validationContexts;
