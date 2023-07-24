@@ -32,7 +32,7 @@
                     </data>
                 </message>
                 <ws:attachment content-id="MySoapAttachment" content-type="application/xml" charset-name="UTF-8">
-                    <ws:resource file="classpath:org/citrusframework/ws/actions/test-attachment.txt"/>
+                    <ws:resource file="classpath:org/citrusframework/ws/actions/test-attachment.xml"/>
                 </ws:attachment>
             </ws:send>
 
@@ -45,31 +45,31 @@
                     </data>
                 </message>
                 <ws:attachment content-id="FirstSoapAttachment" content-type="text/plain">
-                  <ws:data>
-                    <![CDATA[This is an attachment!]]>
-                  </ws:data>
+                    <ws:data>
+                        <![CDATA[This is an attachment!]]>
+                    </ws:data>
                 </ws:attachment>
                 <ws:attachment content-id="SecondSoapAttachment" content-type="application/xml" charset-name="UTF-8">
-                  <ws:resource file="classpath:org/citrusframework/ws/actions/test-attachment.txt"/>
+                    <ws:resource file="classpath:org/citrusframework/ws/actions/test-attachment.xml"/>
                 </ws:attachment>
             </ws:send>
 
             <ws:send endpoint="mySoapClient" fork="true">
-              <message>
-                <data>
-                  <![CDATA[
-                      <TestMessage>Hello Citrus</TestMessage>
-                  ]]>
-                </data>
-              </message>
+                <message>
+                    <data>
+                        <![CDATA[
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
+                    </data>
+                </message>
             </ws:send>
 
             <ws:send endpoint="mySoapClient" fork="true">
                 <message schema-validation="true" schema="fooSchema" schema-repository="fooRepository">
                     <data>
                         <![CDATA[
-                      <TestMessage>Hello Citrus</TestMessage>
-                  ]]>
+                            <TestMessage>Hello Citrus</TestMessage>
+                        ]]>
                     </data>
                 </message>
             </ws:send>

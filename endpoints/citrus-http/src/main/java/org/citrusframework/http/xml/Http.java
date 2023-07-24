@@ -19,16 +19,16 @@
 
 package org.citrusframework.http.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.ReceiveMessageAction;
@@ -721,6 +721,10 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             }
 
             return validates;
+        }
+
+        public void setValidates(List<Receive.Validate> validates) {
+            this.validates = validates;
         }
 
         public Message.Extract getExtract() {
