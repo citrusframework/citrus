@@ -700,6 +700,7 @@
   <xs:element name="sql" type="tns:Sql"/>
   <xs:element name="groovy" type="tns:Groovy"/>
   <xs:element name="http" type="tns:Http"/>
+  <xs:element name="soap" type="tns:Soap"/>
   <xs:element name="camel" type="tns:Camel"/>
 
   <xs:complexType name="Plsql">
@@ -999,6 +1000,161 @@
         <xs:attribute name="reason-phrase" type="xs:string"/>
         <xs:attribute name="version" type="xs:string"/>
         <xs:attribute name="content-type" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Soap">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="receive-request">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="selector" type="xs:string" minOccurs="0"/>
+              <xs:element name="message" type="tns:SoapRequest"/>
+              <xs:element name="validate" minOccurs="0" maxOccurs="unbounded" type="tns:Validate"/>
+              <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+            </xs:sequence>
+            <xs:attribute name="timeout" type="xs:int"/>
+            <xs:attribute name="select" type="xs:string"/>
+            <xs:attribute name="validator" type="xs:string"/>
+            <xs:attribute name="validators" type="xs:string"/>
+            <xs:attribute name="header-validator" type="xs:string"/>
+            <xs:attribute name="header-validators" type="xs:string"/>
+            <xs:attribute name="attachment-validator" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="receive-response">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="selector" type="xs:string" minOccurs="0"/>
+              <xs:element name="message" type="tns:SoapResponse"/>
+              <xs:element name="validate" minOccurs="0" maxOccurs="unbounded" type="tns:Validate"/>
+              <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+            </xs:sequence>
+            <xs:attribute name="timeout" type="xs:int"/>
+            <xs:attribute name="select" type="xs:string"/>
+            <xs:attribute name="validator" type="xs:string"/>
+            <xs:attribute name="validators" type="xs:string"/>
+            <xs:attribute name="header-validator" type="xs:string"/>
+            <xs:attribute name="header-validators" type="xs:string"/>
+            <xs:attribute name="attachment-validator" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="send-request">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="message" type="tns:SoapRequest"/>
+              <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+            </xs:sequence>
+            <xs:attribute name="uri" type="xs:string"/>
+            <xs:attribute name="fork" type="xs:boolean"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="send-response">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="message" type="tns:SoapResponse"/>
+              <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="send-fault">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="message" type="tns:SoapFault"/>
+              <xs:element name="extract" minOccurs="0" maxOccurs="unbounded" type="tns:Extract"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="assert-fault">
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="tns:SoapFault">
+                <xs:sequence>
+                  <xs:element name="when" type="tns:TestActions"/>
+                </xs:sequence>
+                <xs:attribute name="validator" type="xs:string"/>
+              </xs:extension>
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="actor" type="xs:string"/>
+    <xs:attribute name="client" type="xs:string"/>
+    <xs:attribute name="server" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="SoapMessageType">
+    <xs:complexContent>
+      <xs:extension base="tns:MessageType">
+        <xs:sequence>
+          <xs:element name="attachment" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:choice>
+                <xs:element name="content" type="xs:string"/>
+                <xs:element name="resource">
+                  <xs:complexType>
+                    <xs:attribute name="file" use="required" type="xs:string"/>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+              <xs:attribute name="content-id" type="xs:string"/>
+              <xs:attribute name="content-type" type="xs:string"/>
+              <xs:attribute name="charset" type="xs:string"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="SoapRequest">
+    <xs:complexContent>
+      <xs:extension base="tns:SoapMessageType">
+        <xs:attribute name="soap-action" type="xs:string"/>
+        <xs:attribute name="mtom-enabled" type="xs:boolean"/>
+        <xs:attribute name="path" type="xs:string"/>
+        <xs:attribute name="content-type" type="xs:string"/>
+        <xs:attribute name="accept" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="SoapResponse">
+    <xs:complexContent>
+      <xs:extension base="tns:SoapMessageType">
+        <xs:attribute name="status" type="xs:string"/>
+        <xs:attribute name="reason-phrase" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="content-type" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="SoapFault">
+    <xs:complexContent>
+      <xs:extension base="tns:SoapResponse">
+        <xs:sequence>
+          <xs:element name="fault-detail" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:choice>
+                <xs:element name="content" type="xs:string"/>
+                <xs:element name="resource">
+                  <xs:complexType>
+                    <xs:attribute name="file" use="required" type="xs:string"/>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="fault-code" type="xs:string"/>
+        <xs:attribute name="fault-string" type="xs:string"/>
+        <xs:attribute name="fault-actor" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

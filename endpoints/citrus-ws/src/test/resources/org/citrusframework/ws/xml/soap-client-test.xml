@@ -1,0 +1,168 @@
+<!--
+  ~ Copyright 2021 the original author or authors.
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements. See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License. You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<test name="SoapClientTest" author="Christoph" status="FINAL" xmlns="http://citrusframework.org/schema/xml/testcase"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://citrusframework.org/schema/xml/testcase http://citrusframework.org/schema/xml/testcase/citrus-testcase.xsd">
+  <actions>
+    <soap client="soapClient">
+      <send-request>
+        <message soap-action="myAction">
+          <body>
+            <data>
+              <![CDATA[
+                  <TestMessage>Hello Citrus</TestMessage>
+              ]]>
+            </data>
+          </body>
+          <attachment content-id="MySoapAttachment" content-type="text/plain">
+            <content>
+              <![CDATA[This is an attachment!]]>
+            </content>
+          </attachment>
+        </message>
+      </send-request>
+    </soap>
+
+    <soap client="soapClient">
+      <receive-response>
+        <message>
+          <body>
+            <data>
+              <![CDATA[
+                  <?xml version="1.0" encoding="UTF-8"?><TestResponse>Hello User</TestResponse>
+              ]]>
+            </data>
+          </body>
+          <attachment content-id="MySoapAttachment" content-type="text/plain">
+            <content>
+              <![CDATA[This is an attachment!]]>
+            </content>
+          </attachment>
+        </message>
+      </receive-response>
+    </soap>
+
+    <soap client="soapClient">
+      <send-request>
+        <message>
+          <body>
+            <data>
+              <![CDATA[
+                  <TestMessage>Hello Citrus</TestMessage>
+              ]]>
+            </data>
+          </body>
+          <attachment content-id="MySoapAttachment" content-type="application/xml" charset="UTF-8">
+            <resource file="classpath:org/citrusframework/ws/actions/test-attachment.xml"/>
+          </attachment>
+        </message>
+      </send-request>
+    </soap>
+
+    <soap client="soapClient">
+      <receive-response attachment-validator="mySoapAttachmentValidator">
+        <message>
+          <body>
+            <data>
+              <![CDATA[
+                  <?xml version="1.0" encoding="UTF-8"?><TestResponse>Hello User</TestResponse>
+              ]]>
+            </data>
+          </body>
+          <attachment content-id="MySoapAttachment" content-type="application/xml" charset="UTF-8">
+            <resource file="classpath:org/citrusframework/ws/actions/test-attachment.xml"/>
+          </attachment>
+        </message>
+      </receive-response>
+    </soap>
+
+    <soap client="soapClient">
+      <send-request>
+        <message>
+          <body>
+            <data>
+              <![CDATA[
+                  <TestMessage>Hello Citrus</TestMessage>
+              ]]>
+            </data>
+          </body>
+          <attachment content-id="FirstSoapAttachment" content-type="text/plain">
+            <content>
+              <![CDATA[This is an attachment!]]>
+            </content>
+          </attachment>
+          <attachment content-id="SecondSoapAttachment" content-type="application/xml" charset="UTF-8">
+            <resource file="classpath:org/citrusframework/ws/actions/test-attachment.xml"/>
+          </attachment>
+        </message>
+      </send-request>
+    </soap>
+
+    <soap client="soapClient">
+      <receive-response>
+        <message>
+          <body>
+            <data>
+              <![CDATA[
+                  <?xml version="1.0" encoding="UTF-8"?><TestResponse>Hello User</TestResponse>
+              ]]>
+            </data>
+          </body>
+          <attachment content-id="FirstSoapAttachment" content-type="text/plain">
+            <content>
+              <![CDATA[This is an attachment!]]>
+            </content>
+          </attachment>
+          <attachment content-id="SecondSoapAttachment" content-type="application/xml" charset="UTF-8">
+            <resource file="classpath:org/citrusframework/ws/actions/test-attachment.xml"/>
+          </attachment>
+        </message>
+      </receive-response>
+    </soap>
+
+    <soap client="soapClient">
+      <send-request>
+        <message mtom-enabled="true">
+          <body>
+            <data>
+              <![CDATA[
+                  <TestMessage>Hello Citrus</TestMessage>
+              ]]>
+            </data>
+          </body>
+        </message>
+      </send-request>
+    </soap>
+
+    <soap client="soapClient">
+      <receive-response>
+        <message>
+          <body>
+            <data>
+              <![CDATA[
+                  <?xml version="1.0" encoding="UTF-8"?><TestResponse>Hello User</TestResponse>
+              ]]>
+            </data>
+          </body>
+        </message>
+      </receive-response>
+    </soap>
+  </actions>
+</test>

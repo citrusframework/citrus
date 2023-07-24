@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.ws.yaml;
+package org.citrusframework.ws.xml;
 
 import java.io.IOException;
 import java.util.Queue;
@@ -40,7 +40,7 @@ import org.citrusframework.ws.message.SoapMessage;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.citrusframework.ws.validation.SimpleSoapFaultValidator;
 import org.citrusframework.ws.validation.SoapFaultValidator;
-import org.citrusframework.yaml.YamlTestLoader;
+import org.citrusframework.xml.XmlTestLoader;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -51,7 +51,7 @@ import static org.citrusframework.ws.endpoint.builder.WebServiceEndpoints.soap;
 /**
  * @author Christoph Deppisch
  */
-public class AssertSoapFaultTest extends AbstractYamlActionTest {
+public class AssertSoapFaultTest extends AbstractXmlActionTest {
 
     private final int port = SocketUtils.findAvailableTcpPort(8080);
     private final String uri = "http://localhost:" + port + "/test";
@@ -94,7 +94,7 @@ public class AssertSoapFaultTest extends AbstractYamlActionTest {
 
     @Test
     public void shouldLoadSoapClientActions() throws IOException {
-        YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/yaml/assert-soap-fault-test.yaml");
+        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/ws/xml/assert-soap-fault-test.xml");
 
         context.setVariable("port", port);
 

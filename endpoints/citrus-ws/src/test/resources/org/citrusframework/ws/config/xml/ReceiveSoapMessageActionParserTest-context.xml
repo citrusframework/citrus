@@ -33,7 +33,7 @@
                 </message>
                 <ws:attachment content-id="MySoapAttachment" content-type="application/xml"
                                charset-name="UTF-8" validator="mySoapAttachmentValidator">
-                    <ws:resource file="classpath:org/citrusframework/ws/actions/test-attachment.txt"/>
+                    <ws:resource file="classpath:org/citrusframework/ws/actions/test-attachment.xml"/>
                 </ws:attachment>
             </ws:receive>
 
@@ -52,7 +52,7 @@
                 </ws:attachment>
                 <ws:attachment content-id="SecondSoapAttachment" content-type="application/xml"
                                charset-name="UTF-8">
-                    <ws:resource file="classpath:org/citrusframework/ws/actions/test-attachment.txt"/>
+                    <ws:resource file="classpath:org/citrusframework/ws/actions/test-attachment.xml"/>
                 </ws:attachment>
             </ws:receive>
         </actions>
