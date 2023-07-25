@@ -37,6 +37,9 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.introspector.BeanAccess;
+import org.yaml.snakeyaml.introspector.Property;
+import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 /**
  * Loads test case from given YAML source.
@@ -54,6 +57,31 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
     public YamlTestLoader() {
         Constructor constructor = new Constructor(YamlTestCase.class, new LoaderOptions());
 
+        constructor.setPropertyUtils(new PropertyUtils() {
+            @Override
+            public Property getProperty(Class<?> type, String name, BeanAccess beanAccess) {
+                if (name.indexOf('-') > -1) {
+                    return super.getProperty(type, cameCase(name), beanAccess);
+                }
+
+                return super.getProperty(type, name, beanAccess);
+            }
+
+            private static String cameCase(String input) {
+                StringBuilder result = new StringBuilder();
+                for (int i = 0; i < input.length(); i++) {
+                    if (input.charAt(i) == '-') {
+                        if (i == input.length() -1) {
+                            continue;
+                        }
+                        result.append(String.valueOf(input.charAt(++i)).toUpperCase());
+                    } else {
+                        result.append(input.charAt(i));
+                    }
+                }
+                return result.toString();
+            }
+        });
         Map<String, TestActionBuilder<?>> builders = YamlTestActionBuilder.lookup();
         if (!builders.isEmpty()) {
             TypeDescription actions = new TypeDescription(TestActions.class);

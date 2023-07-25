@@ -1,0 +1,125 @@
+name: "SeleniumTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - selenium:
+      browser: "seleniumBrowser"
+      start: {}
+
+  - selenium:
+      alert:
+        accept: true
+
+  - selenium:
+      alert:
+        accept: false
+        text: This is a warning message!
+
+  - selenium:
+      find:
+        element:
+          class-name: "clickable"
+        validate:
+          tag-name: "button"
+          text: "Ok"
+          displayed: true
+          enabled: true
+          attributes:
+            - name: "type"
+              value: "submit"
+          styles:
+            - name: "color"
+              value: "#000000"
+
+  - selenium:
+      page:
+        name: "userForm"
+        action: "setUserName"
+        argument: ${username}
+
+  - selenium:
+      page:
+        type: "org.citrusframework.selenium.pages.UserFormPage"
+        action: "validate"
+        validator: "pageValidator"
+
+  - selenium:
+      click:
+        element:
+          id: "edit-link"
+
+  - selenium:
+      hover:
+        element:
+          id: "edit-link"
+
+  - selenium:
+      set-input:
+        value: "new-value"
+        element:
+          tag-name: "input"
+
+  - selenium:
+      check-input:
+        checked: true
+        element:
+          xpath: "//input[@type: 'checkbox']"
+
+  - selenium:
+      dropdown-select:
+        option: "male"
+        element:
+          name: "gender"
+
+  - selenium:
+      dropdown-select:
+        element:
+          id: "title"
+        options:
+          - "Mr."
+          - "Dr."
+
+  - selenium:
+      wait-until:
+        condition: "hidden"
+        element:
+          id: "dialog"
+
+  - selenium:
+      javaScript:
+        script: "alert('This is awesome!')"
+        errors:
+          - Something went wrong
+
+  - selenium:
+      browser: seleniumBrowser
+      screenshot:
+        output-dir: "/tmp/storage"
+
+  - selenium:
+      navigate:
+        page: "back"
+
+  - selenium:
+      open-window:
+        name: "newWindow"
+  - selenium:
+      switch-window:
+        name: "switchWindow"
+  - selenium:
+      close-window:
+        name: "closeWindow"
+
+  - selenium:
+      store-file:
+        file-path: "classpath:download/file.txt"
+  - selenium:
+      get-stored-file:
+        file-name: "file.txt"
+
+  - selenium:
+      clear-cache: {}
+
+  - selenium:
+      stop:
+        browser: "seleniumBrowser"
