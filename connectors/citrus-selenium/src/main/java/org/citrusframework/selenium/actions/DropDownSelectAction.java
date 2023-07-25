@@ -120,7 +120,7 @@ public class DropDownSelectAction extends FindElementAction {
     public static class Builder extends ElementActionBuilder<DropDownSelectAction, Builder> {
 
         private String option;
-        private List<String> options = new ArrayList<>();
+        private final List<String> options = new ArrayList<>();
 
         public Builder option(String option) {
             this.option = option;

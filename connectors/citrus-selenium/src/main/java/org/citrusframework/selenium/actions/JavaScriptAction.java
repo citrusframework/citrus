@@ -119,8 +119,8 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     public static class Builder extends AbstractSeleniumAction.Builder<JavaScriptAction, Builder> {
 
         private String script;
-        private List<Object> arguments = new ArrayList<>();
-        private List<String> expectedErrors = new ArrayList<>();
+        private final List<Object> arguments = new ArrayList<>();
+        private final List<String> expectedErrors = new ArrayList<>();
 
         /**
          * Add script.
@@ -129,6 +129,25 @@ public class JavaScriptAction extends AbstractSeleniumAction {
          */
         public Builder script(String script) {
             this.script = script;
+            return this;
+        }
+
+        /**
+         * Add script arguments.
+         * @param args
+         * @return
+         */
+        public Builder arguments(Object... args) {
+            return arguments(Arrays.asList(args));
+        }
+
+        /**
+         * Add script arguments.
+         * @param args
+         * @return
+         */
+        public Builder arguments(List<Object> args) {
+            this.arguments.addAll(args);
             return this;
         }
 
@@ -147,7 +166,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
          * @param errors
          * @return
          */
-        public Builder errors(String ... errors) {
+        public Builder errors(String... errors) {
             return errors(Arrays.asList(errors));
         }
 
@@ -158,6 +177,16 @@ public class JavaScriptAction extends AbstractSeleniumAction {
          */
         public Builder errors(List<String> errors) {
             this.expectedErrors.addAll(errors);
+            return this;
+        }
+
+        /**
+         * Add expected error.
+         * @param error
+         * @return
+         */
+        public Builder error(String error) {
+            this.expectedErrors.add(error);
             return this;
         }
 

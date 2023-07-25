@@ -35,7 +35,44 @@ import org.w3c.dom.Element;
 public class FindElementActionParser extends AbstractBrowserActionParser {
 
     @Override
-    protected void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
+    protected final void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
+        parseElementSelector(beanDefinition, element, parserContext);
+        parseElement(beanDefinition, element, parserContext);
+    }
+
+    protected void parseElement(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
+        Element webElement = DomUtils.getChildElementByTagName(element, "element");
+        if (webElement != null) {
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("tag-name"), "tagName");
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("text"), "text");
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("displayed"), "displayed");
+            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("enabled"), "enabled");
+
+            Element attributesContainerElement = DomUtils.getChildElementByTagName(webElement, "attributes");
+            if (attributesContainerElement != null) {
+                Map<String, String> attributes = new HashMap<>();
+                List<Element> attributeElements = DomUtils.getChildElementsByTagName(attributesContainerElement, "attribute");
+                for (Element attribute : attributeElements) {
+                    attributes.put(attribute.getAttribute("name"), attribute.getAttribute("value"));
+                }
+
+                beanDefinition.addPropertyValue("attributes", attributes);
+            }
+
+            Element stylesContainerElement = DomUtils.getChildElementByTagName(webElement, "styles");
+            if (stylesContainerElement != null) {
+                Map<String, String> styles = new HashMap<>();
+                List<Element> styleElements = DomUtils.getChildElementsByTagName(stylesContainerElement, "style");
+                for (Element style : styleElements) {
+                    styles.put(style.getAttribute("name"), style.getAttribute("value"));
+                }
+
+                beanDefinition.addPropertyValue("styles", styles);
+            }
+        }
+    }
+
+    protected void parseElementSelector(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
         Element webElement = DomUtils.getChildElementByTagName(element, "element");
         if (webElement != null) {
             String propertyValue = null;
@@ -66,33 +103,6 @@ public class FindElementActionParser extends AbstractBrowserActionParser {
 
             beanDefinition.addPropertyValue("property", property);
             beanDefinition.addPropertyValue("propertyValue", propertyValue);
-
-            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("tag-name"), "tagName");
-            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("text"), "text");
-            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("displayed"), "displayed");
-            BeanDefinitionParserUtils.setPropertyValue(beanDefinition, webElement.getAttribute("enabled"), "enabled");
-
-            Element attributesContainerElement = DomUtils.getChildElementByTagName(webElement, "attributes");
-            if (attributesContainerElement != null) {
-                Map<String, String> attributes = new HashMap<>();
-                List<Element> attributeElements = DomUtils.getChildElementsByTagName(attributesContainerElement, "attribute");
-                for (Element attribute : attributeElements) {
-                    attributes.put(attribute.getAttribute("name"), attribute.getAttribute("value"));
-                }
-
-                beanDefinition.addPropertyValue("attributes", attributes);
-            }
-
-            Element stylesContainerElement = DomUtils.getChildElementByTagName(webElement, "styles");
-            if (stylesContainerElement != null) {
-                Map<String, String> styles = new HashMap<>();
-                List<Element> styleElements = DomUtils.getChildElementsByTagName(stylesContainerElement, "style");
-                for (Element style : styleElements) {
-                    styles.put(style.getAttribute("name"), style.getAttribute("value"));
-                }
-
-                beanDefinition.addPropertyValue("styles", styles);
-            }
         }
     }
 
@@ -153,6 +163,15 @@ public class FindElementActionParser extends AbstractBrowserActionParser {
             builder.text(text);
         }
 
+        /**
+         * Sets the tagName.
+         *
+         * @param tagName
+         */
+        public void setTagName(String tagName) {
+            builder.tagName(tagName);
+        }
+
         @Override
         public FindElementAction getObject() throws Exception {
             return getObject(builder);
@@ -197,16 +216,6 @@ public class FindElementActionParser extends AbstractBrowserActionParser {
          */
         public void setPropertyValue(String propertyValue) {
             this.propertyValue = propertyValue;
-        }
-
-
-        /**
-         * Sets the tagName.
-         *
-         * @param tagName
-         */
-        public void setTagName(String tagName) {
-            getBuilder().tagName(tagName);
         }
 
         /**

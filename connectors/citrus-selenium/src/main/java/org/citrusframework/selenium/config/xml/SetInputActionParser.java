@@ -29,9 +29,7 @@ import org.w3c.dom.Element;
 public class SetInputActionParser extends FindElementActionParser {
 
     @Override
-    protected void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
-        super.parseAction(beanDefinition, element, parserContext);
-
+    protected void parseElement(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("value"), "value");
     }
 

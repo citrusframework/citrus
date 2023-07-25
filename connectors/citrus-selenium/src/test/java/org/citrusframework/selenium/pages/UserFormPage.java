@@ -38,7 +38,7 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
     private WebElement userName;
 
     /**
-     * Sets the user name.
+     * Sets the username.
      */
     public void setUserName(String value, TestContext context) {
         userName.clear();

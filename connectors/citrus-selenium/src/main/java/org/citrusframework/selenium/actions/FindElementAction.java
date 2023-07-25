@@ -64,27 +64,28 @@ public class FindElementAction extends AbstractSeleniumAction {
         this.displayed = builder.displayed;
         this.enabled = builder.enabled;
         this.text = builder.text;
+        this.tagName = builder.tagName;
     }
 
     /**
      * Constructor with name.
      * @param name
      */
-    public FindElementAction(String name, ElementActionBuilder<?, ?> builder) {
+    protected FindElementAction(String name, ElementActionBuilder<?, ?> builder) {
         super(name, builder);
 
         this.by = builder.by;
         this.property = builder.property;
         this.propertyValue = builder.propertyValue;
-        this.tagName = builder.tagName;
     }
 
     @Override
     protected final void execute(SeleniumBrowser browser, TestContext context) {
-        WebElement element = browser.getWebDriver().findElement(createBy(context));
+        By findBy = createBy(context);
+        WebElement element = browser.getWebDriver().findElement(findBy);
 
         if (element == null) {
-            throw new CitrusRuntimeException(String.format("Failed to find element '%s' on page", property + "=" + propertyValue));
+            throw new CitrusRuntimeException(String.format("Failed to find element '%s' on page", findBy));
         }
 
         validate(element, browser, context);
@@ -262,11 +263,12 @@ public class FindElementAction extends AbstractSeleniumAction {
      */
     public static class Builder extends ElementActionBuilder<FindElementAction, Builder> {
 
-        private Map<String, String> attributes = new HashMap<>();
-        private Map<String, String> styles = new HashMap<>();
+        private final Map<String, String> attributes = new HashMap<>();
+        private final Map<String, String> styles = new HashMap<>();
         private boolean displayed = true;
         private boolean enabled = true;
         private String text;
+        private String tagName;
 
         /**
          * Add text validation.
@@ -275,6 +277,16 @@ public class FindElementAction extends AbstractSeleniumAction {
          */
         public Builder text(String text) {
             this.text = text;
+            return this;
+        }
+
+        /**
+         * Add tag name validation.
+         * @param tagName
+         * @return
+         */
+        public Builder tagName(String tagName) {
+            this.tagName = tagName;
             return this;
         }
 
@@ -336,7 +348,6 @@ public class FindElementAction extends AbstractSeleniumAction {
         protected By by;
         protected String property;
         protected String propertyValue;
-        private String tagName;
 
         public B element(By by) {
             this.by = by;
@@ -346,16 +357,6 @@ public class FindElementAction extends AbstractSeleniumAction {
         public B element(String property, String propertyValue) {
             this.property = property;
             this.propertyValue = propertyValue;
-            return self;
-        }
-
-        /**
-         * Add tag name validation.
-         * @param tagName
-         * @return
-         */
-        public B tagName(String tagName) {
-            this.tagName = tagName;
             return self;
         }
     }

@@ -40,9 +40,9 @@ import static org.mockito.Mockito.when;
  */
 public class FindElementActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
-    private WebDriver webDriver = Mockito.mock(WebDriver.class);
-    private WebElement element = Mockito.mock(WebElement.class);
+    private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
+    private final WebDriver webDriver = Mockito.mock(WebDriver.class);
+    private final WebElement element = Mockito.mock(WebElement.class);
 
     @BeforeMethod
     public void setup() {
@@ -192,7 +192,7 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
         };
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find element 'id=myButton' on page")
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find element 'By.id: myButton' on page")
     public void testElementNotFound() {
         when(webDriver.findElement(any(By.class))).thenReturn(null);
 

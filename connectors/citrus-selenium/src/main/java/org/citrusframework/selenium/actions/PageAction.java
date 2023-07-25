@@ -165,7 +165,7 @@ public class PageAction extends AbstractSeleniumAction {
         private WebPage page;
         private String type;
         private String action;
-        private List<String> arguments = new ArrayList<>();
+        private final List<String> arguments = new ArrayList<>();
         private PageValidator validator;
 
         /**
