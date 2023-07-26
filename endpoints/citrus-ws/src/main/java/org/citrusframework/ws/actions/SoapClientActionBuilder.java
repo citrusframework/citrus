@@ -66,6 +66,7 @@ public class SoapClientActionBuilder implements TestActionBuilder.DelegatingTest
             builder.endpoint(soapClientUri);
         }
 
+        builder.name("soap:receive-response");
         builder.withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
@@ -83,6 +84,7 @@ public class SoapClientActionBuilder implements TestActionBuilder.DelegatingTest
             builder.endpoint(soapClientUri);
         }
 
+        builder.name("soap:assert-fault");
         builder.withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
@@ -100,6 +102,7 @@ public class SoapClientActionBuilder implements TestActionBuilder.DelegatingTest
             builder.endpoint(soapClientUri);
         }
 
+        builder.name("soap:send-request");
         builder.withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
