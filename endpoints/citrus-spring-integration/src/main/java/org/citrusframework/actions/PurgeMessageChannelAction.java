@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.citrusframework.AbstractTestActionBuilder;
-import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +49,6 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
     /** List of channels to be purged */
     private final List<MessageChannel> channels;
 
-    /** The parent bean factory used for channel name resolving */
-    private final BeanFactory beanFactory;
-
     /** Channel resolver instance */
     private final DestinationResolver<MessageChannel> channelResolver;
 
@@ -71,7 +68,6 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
 
         this.channelNames = builder.channelNames;
         this.channels = builder.channels;
-        this.beanFactory = builder.beanFactory;
         this.channelResolver = builder.channelResolver;
         this.messageSelector = builder.messageSelector;
     }
@@ -274,11 +270,6 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
 
         public Builder beanFactory(BeanFactory beanFactory) {
             this.beanFactory = beanFactory;
-
-            if (channelResolver == null) {
-                channelResolver = new BeanFactoryChannelResolver(beanFactory);
-            }
-
             return this;
         }
 
@@ -294,8 +285,12 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
 
         @Override
         public PurgeMessageChannelAction build() {
-            if (!channelNames.isEmpty() && channelResolver == null && referenceResolver != null) {
-                this.channelResolver = channelName -> referenceResolver.resolve(channelName, MessageChannel.class);
+            if (channelResolver == null) {
+                if (beanFactory != null) {
+                    channelResolver = new BeanFactoryChannelResolver(beanFactory);
+                } else if (!channelNames.isEmpty() && referenceResolver != null) {
+                    channelResolver = channelName -> referenceResolver.resolve(channelName, MessageChannel.class);
+                }
             }
 
             return new PurgeMessageChannelAction(this);

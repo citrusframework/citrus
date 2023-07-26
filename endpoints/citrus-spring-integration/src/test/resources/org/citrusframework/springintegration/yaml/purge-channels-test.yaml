@@ -1,0 +1,16 @@
+name: "PurgeChannelsTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - purgeChannels:
+      channel: "testChannel"
+
+  - purgeChannels:
+      channelResolver: "channelResolver"
+      channels:
+        - "testChannel1"
+        - "testChannel2"
+
+  - purgeChannels:
+      messageSelector: "messageSelector"
+      channel: "testChannel3"
