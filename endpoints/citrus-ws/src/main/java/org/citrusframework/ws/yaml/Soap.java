@@ -41,7 +41,6 @@ import org.citrusframework.ws.actions.SoapClientActionBuilder;
 import org.citrusframework.ws.actions.SoapServerActionBuilder;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessageHeaders;
-import org.citrusframework.ws.validation.SoapFaultDetailValidationContext;
 import org.citrusframework.yaml.TestActions;
 import org.citrusframework.yaml.actions.Message;
 import org.citrusframework.yaml.actions.Receive;
@@ -419,8 +418,6 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             if (faultDetail.resource != null) {
                 assertFault.faultDetailResource(faultDetail.resource);
             }
-
-            assertFault.validateDetail(new SoapFaultDetailValidationContext.Builder());
         }
 
         if (soapFault.validator != null) {

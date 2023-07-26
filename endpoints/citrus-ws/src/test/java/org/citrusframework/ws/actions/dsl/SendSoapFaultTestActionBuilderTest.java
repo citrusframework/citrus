@@ -85,7 +85,7 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "soap:send-fault");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
@@ -129,7 +129,7 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "soap:send-fault");
 
         Assert.assertEquals(action.getEndpointUri(), "soapServer");
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
@@ -171,7 +171,7 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "soap:send-fault");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
@@ -211,7 +211,7 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "soap:send-fault");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
@@ -251,7 +251,7 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "soap:send-fault");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);
@@ -294,7 +294,7 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
-        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getName(), "soap:send-fault");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageBuilder.class);

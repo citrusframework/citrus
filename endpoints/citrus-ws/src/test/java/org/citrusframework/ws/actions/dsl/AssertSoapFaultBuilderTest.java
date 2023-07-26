@@ -100,7 +100,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -143,7 +143,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -190,7 +190,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -236,7 +236,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -285,7 +285,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -336,7 +336,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -387,7 +387,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -436,7 +436,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -489,7 +489,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -537,7 +537,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
@@ -584,7 +584,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap:assert-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 

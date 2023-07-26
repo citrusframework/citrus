@@ -99,7 +99,7 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "soap:receive-request");
 
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), server);
@@ -141,7 +141,7 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "soap:receive-request");
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), server);
@@ -184,7 +184,7 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "soap:receive-request");
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), server);
@@ -232,7 +232,7 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "soap:receive-request");
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), server);
@@ -286,7 +286,7 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "soap:receive-request");
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), server);
@@ -347,12 +347,12 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveSoapMessageAction.class);
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "soap:receive-request");
         Assert.assertEquals(action.getEndpointUri(), "replyMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
         action = ((ReceiveSoapMessageAction)test.getActions().get(1));
-        Assert.assertEquals(action.getName(), "receive");
+        Assert.assertEquals(action.getName(), "soap:receive-request");
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
     }

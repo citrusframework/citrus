@@ -452,6 +452,10 @@ public class AssertSoapFault extends AbstractActionContainer {
         public AssertSoapFault doBuild() {
             if (validationContext == null) {
                 this.validationContext = new SoapFaultValidationContext.Builder();
+
+                if (!faultDetailResourcePaths.isEmpty() || !faultDetails.isEmpty()) {
+                    this.validationContext.detail(new SoapFaultDetailValidationContext.Builder().build());
+                }
             }
 
             if (referenceResolver != null) {
