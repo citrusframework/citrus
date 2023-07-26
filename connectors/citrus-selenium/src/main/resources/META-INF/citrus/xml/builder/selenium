@@ -1,0 +1,2 @@
+type=org.citrusframework.selenium.xml.Selenium
+ns=http://citrusframework.org/schema/xml/testcase

@@ -702,6 +702,7 @@
   <xs:element name="http" type="tns:Http"/>
   <xs:element name="soap" type="tns:Soap"/>
   <xs:element name="camel" type="tns:Camel"/>
+  <xs:element name="selenium" type="tns:Selenium"/>
 
   <xs:complexType name="Plsql">
     <xs:sequence>
@@ -1157,6 +1158,243 @@
         <xs:attribute name="fault-actor" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Selenium">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="start">
+          <xs:complexType>
+            <xs:attribute name="browser" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="stop">
+          <xs:complexType>
+            <xs:attribute name="browser" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="clear-cache"/>
+
+        <xs:element name="find">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="WebElementType"/>
+              <xs:element name="validate">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="attributes" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="attribute" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" type="xs:string" use="required"/>
+                              <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="styles" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="style" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" type="xs:string" use="required"/>
+                              <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="text" type="xs:string"/>
+                  <xs:attribute name="tag-name" type="xs:string"/>
+                  <xs:attribute name="displayed" type="xs:boolean"/>
+                  <xs:attribute name="enabled" type="xs:boolean"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="page">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="arguments" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="argument" type="xs:string" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="type" type="xs:string"/>
+            <xs:attribute name="validator" type="xs:string"/>
+            <xs:attribute name="action" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="click">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="WebElementType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="hover">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="WebElementType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="set-input">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="WebElementType"/>
+            </xs:sequence>
+            <xs:attribute name="value" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="check-input">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="WebElementType"/>
+            </xs:sequence>
+            <xs:attribute name="checked" type="xs:boolean" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="dropdown-select">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="WebElementType"/>
+              <xs:element name="options" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="option" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="option" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="wait">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" type="WebElementType"/>
+            </xs:sequence>
+            <xs:attribute name="until" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="javascript">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="script"/>
+              <xs:element name="arguments" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="argument" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="errors" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="error" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="argument" type="xs:string"/>
+            <xs:attribute name="error" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="screenshot">
+          <xs:complexType>
+            <xs:attribute name="output-dir" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="navigate">
+          <xs:complexType>
+            <xs:attribute name="page" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="open-window">
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="close-window">
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="switch-window">
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="store-file">
+          <xs:complexType>
+            <xs:attribute name="file-path" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="get-stored-file">
+          <xs:complexType>
+            <xs:attribute name="file-name" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="alert">
+          <xs:annotation>
+            <xs:documentation>Access current alert dialog and perform action (accept, dismiss)</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="text" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="text" type="xs:string"/>
+            <xs:attribute name="accept" type="xs:boolean" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="browser" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="WebElementType">
+    <xs:sequence>
+      <xs:element name="property">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+          <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="tag-name" type="xs:string"/>
+    <xs:attribute name="class-name" type="xs:string"/>
+    <xs:attribute name="css-selector" type="xs:string"/>
+    <xs:attribute name="link-text" type="xs:string"/>
+    <xs:attribute name="xpath" type="xs:string"/>
   </xs:complexType>
 
 </xs:schema>
