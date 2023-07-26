@@ -17,12 +17,11 @@
  *  limitations under the License.
  */
 
-package org.citrusframework.jms.xml;
+package org.citrusframework.springintegration.xml;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.jms.ConnectionFactory;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -33,37 +32,38 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
-import org.citrusframework.jms.actions.PurgeJmsQueuesAction;
+import org.citrusframework.actions.PurgeMessageChannelAction;
+import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.springframework.integration.core.MessageSelector;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.core.DestinationResolver;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
         "description",
-        "queues",
+        "channels",
 })
-@XmlRootElement(name = "purge-jms-queues")
-public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceResolverAware {
+@XmlRootElement(name = "purge-channels")
+public class PurgeChannels implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
     @XmlTransient
-    private final PurgeJmsQueuesAction.Builder builder = new PurgeJmsQueuesAction.Builder();
+    private final PurgeMessageChannelAction.Builder builder = new PurgeMessageChannelAction.Builder();
 
     @XmlElement
     private String description;
     @XmlAttribute
     private String actor;
 
-    @XmlAttribute
-    protected String connectionFactory;
+    @XmlAttribute(name = "channel-resolver")
+    protected String channelResolver;
 
-    @XmlAttribute
-    protected String timeout;
+    @XmlAttribute(name = "message-selector")
+    protected String messageSelector;
 
-    @XmlAttribute
-    protected String sleep;
-
-    @XmlElement(name = "queue")
-    protected List<Queue> queues;
+    @XmlElement(name = "channel")
+    protected List<Channel> channels;
 
     @XmlTransient
     private ReferenceResolver referenceResolver;
@@ -84,40 +84,32 @@ public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceReso
         return actor;
     }
 
-    public void setConnectionFactory(String connectionFactory) {
-        this.connectionFactory = connectionFactory;
+    public void setChannelResolver(String channelResolver) {
+        this.channelResolver = channelResolver;
     }
 
-    public String getConnectionFactory() {
-        return connectionFactory;
+    public String getChannelResolver() {
+        return channelResolver;
     }
 
-    public void setTimeout(String timeout) {
-        this.timeout = timeout;
+    public void setMessageSelector(String messageSelector) {
+        this.messageSelector = messageSelector;
     }
 
-    public String getTimeout() {
-        return timeout;
+    public String getMessageSelector() {
+        return messageSelector;
     }
 
-    public void setSleep(String sleep) {
-        this.sleep = sleep;
+    public void setChannels(List<Channel> channels) {
+        this.channels = channels;
     }
 
-    public String getSleep() {
-        return sleep;
-    }
-
-    public void setQueues(List<Queue> queues) {
-        this.queues = queues;
-    }
-
-    public List<Queue> getQueues() {
-        if (queues == null) {
-            queues = new ArrayList<>();
+    public List<Channel> getChannels() {
+        if (channels == null) {
+            channels = new ArrayList<>();
         }
 
-        return queues;
+        return channels;
     }
 
     @Override
@@ -125,31 +117,34 @@ public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceReso
         builder.setReferenceResolver(referenceResolver);
         builder.description(description);
 
-        for (Queue queue : getQueues()) {
-            if (queue.name != null) {
-                builder.queue(queue.getName());
+        for (Channel channel : getChannels()) {
+            if (channel.name != null) {
+                builder.channel(channel.getName());
             }
 
-            if (queue.ref != null && referenceResolver != null) {
-                builder.queue(referenceResolver.resolve(queue.ref, jakarta.jms.Queue.class));
+            if (channel.ref != null && referenceResolver != null) {
+                builder.channel(referenceResolver.resolve(channel.ref, MessageChannel.class));
             }
-        }
-
-        if (timeout != null) {
-            builder.timeout(Long.parseLong(timeout));
-        }
-
-        if (sleep != null) {
-            builder.sleep(Long.parseLong(sleep));
         }
 
         if (referenceResolver != null) {
+            if (referenceResolver instanceof SpringBeanReferenceResolver) {
+                builder.beanFactory(((SpringBeanReferenceResolver) referenceResolver).getApplicationContext());
+                builder.withApplicationContext(((SpringBeanReferenceResolver) referenceResolver).getApplicationContext());
+            }
+
             if (actor != null) {
                 builder.actor(referenceResolver.resolve(actor, TestActor.class));
             }
 
-            if (connectionFactory != null) {
-                builder.connectionFactory(referenceResolver.resolve(connectionFactory, ConnectionFactory.class));
+            if (channelResolver != null) {
+                builder.channelResolver(referenceResolver.resolve(channelResolver, DestinationResolver.class));
+            } else {
+                builder.channelResolver(referenceResolver);
+            }
+
+            if (messageSelector != null) {
+                builder.selector(referenceResolver.resolve(messageSelector, MessageSelector.class));
             }
         }
 
@@ -163,7 +158,7 @@ public class PurgeQueues implements TestActionBuilder<TestAction>, ReferenceReso
 
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {})
-    public static class Queue {
+    public static class Channel {
         @XmlAttribute
         protected String name;
 
