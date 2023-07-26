@@ -111,6 +111,16 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
     /**
      * Navigate action.
      */
+    public NavigateAction.Builder navigate() {
+        NavigateAction.Builder builder = new NavigateAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Navigate action.
+     */
     public NavigateAction.Builder navigate(String page) {
         NavigateAction.Builder builder = new NavigateAction.Builder()
                 .page(page)
@@ -185,6 +195,26 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
     }
 
     /**
+     * Set input action.
+     */
+    public SetInputAction.Builder setInput() {
+		SetInputAction.Builder builder = new SetInputAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Check input action.
+     */
+    public CheckInputAction.Builder checkInput() {
+		CheckInputAction.Builder builder = new CheckInputAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
      * Check input action.
      */
     public CheckInputAction.Builder checkInput(boolean checked) {
@@ -248,11 +278,31 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
 
     /**
      * Store file.
+     */
+    public StoreFileAction.Builder store() {
+        StoreFileAction.Builder builder = new StoreFileAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Store file.
      * @param filePath
      */
     public StoreFileAction.Builder store(String filePath) {
         StoreFileAction.Builder builder = new StoreFileAction.Builder()
                 .filePath(filePath)
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Get stored file.
+     */
+    public GetStoredFileAction.Builder getStored() {
+        GetStoredFileAction.Builder builder = new GetStoredFileAction.Builder()
                 .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
@@ -275,6 +325,16 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public WaitUntilAction.Builder waitUntil() {
         WaitUntilAction.Builder builder = new WaitUntilAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Execute JavaScript.
+     */
+    public JavaScriptAction.Builder javascript() {
+        JavaScriptAction.Builder builder = new JavaScriptAction.Builder()
                 .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
@@ -337,6 +397,16 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Switch window.
      */
     public SwitchWindowAction.Builder focus() {
+        SwitchWindowAction.Builder builder = new SwitchWindowAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Switch window.
+     */
+    public SwitchWindowAction.Builder switchWindow() {
         SwitchWindowAction.Builder builder = new SwitchWindowAction.Builder()
                 .browser(seleniumBrowser);
         this.delegate = builder;
