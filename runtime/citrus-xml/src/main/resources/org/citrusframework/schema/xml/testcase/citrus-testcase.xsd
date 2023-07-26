@@ -696,8 +696,12 @@
   <xs:element name="trace-variables" type="tns:TraceVariables"/>
   <xs:element name="transform" type="tns:Transform"/>
   <xs:element name="wait-for" type="tns:WaitFor"/>
+
+  <!-- Additional modules -->
   <xs:element name="plsql" type="tns:Plsql"/>
   <xs:element name="sql" type="tns:Sql"/>
+  <xs:element name="purge-jms-queues" type="tns:PurgeQueues"/>
+  <xs:element name="purge-channels" type="tns:PurgeChannels"/>
   <xs:element name="groovy" type="tns:Groovy"/>
   <xs:element name="http" type="tns:Http"/>
   <xs:element name="soap" type="tns:Soap"/>
@@ -784,6 +788,41 @@
     </xs:sequence>
     <xs:attribute name="datasource" type="xs:string" use="required"/>
     <xs:attribute name="ignore-errors" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="PurgeQueues">
+    <xs:annotation>
+      <xs:documentation>Continuously receives messages from a destination until no more messages are left - emulating the purge operation</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="queue" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string"/>
+          <xs:attribute name="ref" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="connection-factory" type="xs:string"/>
+    <xs:attribute name="timeout" type="xs:int"/>
+    <xs:attribute name="sleep" type="xs:int"/>
+  </xs:complexType>
+
+  <xs:complexType name="PurgeChannels">
+    <xs:annotation>
+      <xs:documentation>Continuously receives messages from a Spring Integration message channel destination until no more messages are left - emulating the purge operation</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="channel" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string"/>
+          <xs:attribute name="ref" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="channel-resolver" type="xs:string"/>
+    <xs:attribute name="message-selector" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="Groovy">
