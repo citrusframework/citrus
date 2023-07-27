@@ -19,8 +19,6 @@
 
 package org.citrusframework.groovy.dsl;
 
-import java.io.IOException;
-
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.ReceiveMessageAction;
@@ -51,6 +49,8 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 
@@ -87,13 +87,13 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
 
         helloQueue.send(new DefaultMessage("Hello from Citrus!").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
-        helloQueue.send(new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + System.lineSeparator() +
+        helloQueue.send(new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "                <TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>")
                                 .addHeaderData("<Header xmlns=\"http://citrusframework.org/test\"><operation>hello</operation></Header>")
                                 .setHeader("operation", "sayHello"));
-        helloQueue.send(new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        helloQueue.send(new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
@@ -159,12 +159,12 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"+System.getProperty("line.separator")+
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "                <TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sayHello");
         Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"+System.getProperty("line.separator")+
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "                <Header xmlns=\"http://citrusframework.org/test\"><operation>hello</operation></Header>");
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
@@ -378,5 +378,4 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(headerValidationContext.getValidators().get(0), context.getReferenceResolver().resolve("myHeaderValidator", HeaderValidator.class));
         Assert.assertEquals(headerValidationContext.getValidators().get(1), context.getReferenceResolver().resolve("defaultHeaderValidator", HeaderValidator.class));
     }
-
 }

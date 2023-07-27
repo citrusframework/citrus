@@ -16,29 +16,28 @@
 
 package org.citrusframework.mail.server;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-
+import com.icegreen.greenmail.mail.MailAddress;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.mail.message.CitrusMailMessageHeaders;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.TestUtils;
-import com.icegreen.greenmail.mail.MailAddress;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -59,32 +58,29 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
+        doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
-                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+            Assert.assertNotNull(message.getPayload());
+            Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+            Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
-                try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
-
-                return null;
+            try {
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
+                                MailServer.class).getInputStream()))));
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
+
+            return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
@@ -100,38 +96,40 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
+        doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
+            Assert.assertNotNull(message.getPayload());
+            Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
 
-                // compare the Date as a Date rather than a String, otherwise this test fails outside of the
-                // "+1" timezone
-                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-                Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
-                Assert.assertEquals(actualDate, expectedDateDate);
+            // compare the Date as a Date rather than a String, otherwise this test fails outside of the
+            // "+1" timezone
+            Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+            Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
+            Assert.assertEquals(actualDate, expectedDateDate);
 
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
-                try {
-                    Assert.assertEquals(TestUtils.normalizeLineEndings(message.getPayload(String.class)),
-                            TestUtils.normalizeLineEndings(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
-
-                return null;
+            try {
+                Assert.assertEquals(
+                        TestUtils.normalizeLineEndings(
+                                StringUtils.trimAllWhitespace(message.getPayload(String.class))
+                        ),
+                        TestUtils.normalizeLineEndings(
+                                StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream())))
+                        )
+                );
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
+
+            return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
@@ -140,7 +138,6 @@ public class MailServerTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testBinaryMessage() throws IOException, MessagingException {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
@@ -149,38 +146,36 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
+        doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@foo.bar>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
+            Assert.assertNotNull(message.getPayload());
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@foo.bar>");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
 
-                // compare the Date as a Date rather than a String, otherwsie this test fails outside of the
-                // "+1" timezone
-                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-                Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
-                Assert.assertEquals(actualDate, expectedDateDate);
+            // compare the Date as a Date rather than a String, otherwsie this test fails outside of the
+            // "+1" timezone
+            Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+            Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
+            Assert.assertEquals(actualDate, expectedDateDate);
 
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
-                try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
-
-                return null;
+            try {
+                Assert.assertEquals(
+                        StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail.xml",MailServer.class).getInputStream())))
+                );
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
+
+            return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
@@ -189,31 +184,27 @@ public class MailServerTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void testAutoAcceptDisabled() throws IOException {
+    public void testAutoAcceptDisabled() {
         MailServer mailServer = new MailServer();
         mailServer.setEndpointAdapter(endpointAdapterMock);
 
         reset(endpointAdapterMock);
 
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
+        doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
+            Assert.assertNotNull(message.getPayload());
 
-                try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-request.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
-
-                return new DefaultMessage(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-response.xml",
-                        MailServer.class).getInputStream())));
+            try {
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-request.xml",
+                                MailServer.class).getInputStream()))));
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
+
+            return new DefaultMessage(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-response.xml",
+                    MailServer.class).getInputStream())));
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         mailServer.setAutoAccept(false);
@@ -221,8 +212,7 @@ public class MailServerTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void testAutoAcceptDisabledWithTimeout() throws IOException {
+    public void testAutoAcceptDisabledWithTimeout() {
         MailServer mailServer = new MailServer();
         mailServer.setEndpointAdapter(endpointAdapterMock);
 
@@ -235,12 +225,10 @@ public class MailServerTest {
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Did not receive accept response"));
         }
-
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void testAutoAcceptDisabledWithInvalidAcceptResponse() throws IOException {
+    public void testAutoAcceptDisabledWithInvalidAcceptResponse() {
         MailServer mailServer = new MailServer();
         mailServer.setEndpointAdapter(endpointAdapterMock);
 
@@ -253,11 +241,9 @@ public class MailServerTest {
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to read accept response"));
         }
-
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testTextMessageSplitting() throws IOException, MessagingException {
         MailServer mailServer = new MailServer();
         mailServer.setEndpointAdapter(endpointAdapterMock);
@@ -265,32 +251,29 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
+        doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
-                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+            Assert.assertNotNull(message.getPayload());
+            Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+            Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
-                try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
-
-                return null;
+            try {
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
+                                MailServer.class).getInputStream()))));
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
+
+            return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
@@ -299,7 +282,6 @@ public class MailServerTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testMultipartMessageSplitting() throws IOException, MessagingException {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         MailServer mailServer = new MailServer();
@@ -308,81 +290,80 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
+        doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
+            Assert.assertNotNull(message.getPayload());
+            Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
 
-                // compare dates as Date rather than String otherwise this test fails outside
-                // of the "+1" timezone
-                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-                Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
-                Assert.assertEquals(actualDate, expectedDateDate);
+            // compare dates as Date rather than String otherwise this test fails outside
+            // of the "+1" timezone
+            Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+            Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
+            Assert.assertEquals(actualDate, expectedDateDate);
 
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=utf-8");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=utf-8");
 
-                try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_1.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
-
-                return null;
+            try {
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_1.xml",
+                                MailServer.class).getInputStream()))));
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
-        }).doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
+            return null;
+        }).doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                // compare dates as Date rather than String otherwise this test fails outside
-                // of the "+1" timezone
-                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-                Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
-                Assert.assertEquals(actualDate, expectedDateDate);
+            Assert.assertNotNull(message.getPayload());
+            Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
 
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/html; charset=utf-8");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "index.html");
+            // compare dates as Date rather than String otherwise this test fails outside
+            // of the "+1" timezone
+            Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+            Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
+            Assert.assertEquals(actualDate, expectedDateDate);
 
-                try {
-                    Assert.assertEquals(TestUtils.normalizeLineEndings(message.getPayload(String.class)),
-                            TestUtils.normalizeLineEndings(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_2.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/html; charset=utf-8");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "index.html");
 
-                return null;
+            try {
+                Assert.assertEquals(
+                        TestUtils.normalizeLineEndings(
+                                StringUtils.trimAllWhitespace(message.getPayload(String.class))
+                        ),
+                        TestUtils.normalizeLineEndings(
+                                StringUtils.trimAllWhitespace(
+                                        FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_2.xml", MailServer.class).getInputStream()))
+                                )
+                        )
+                );
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
+
+            return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
         Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
         mailServer.deliver(message);
-
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testBinaryMessageSplitting() throws IOException, MessagingException {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         MailServer mailServer = new MailServer();
@@ -391,115 +372,104 @@ public class MailServerTest {
 
         reset(endpointAdapterMock);
 
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
+        doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@foo.bar>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
+            Assert.assertNotNull(message.getPayload());
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@foo.bar>");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
 
 
-                // compare dates as Date rather than String otherwise this test fails outside
-                // of the "+1" timezone
-                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-                Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
-                Assert.assertEquals(actualDate, expectedDateDate);
+            // compare dates as Date rather than String otherwise this test fails outside
+            // of the "+1" timezone
+            Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+            Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
+            Assert.assertEquals(actualDate, expectedDateDate);
 
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=ISO-8859-15; format=flowed");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=ISO-8859-15; format=flowed");
 
-                try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_1.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
-
-                return null;
+            try {
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_1.xml",
+                                MailServer.class).getInputStream()))));
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
-        }).doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@foo.bar>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
+            return null;
+        }).doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                // compare dates as Date rather than String otherwise this test fails outside
-                // of the "+1" timezone
-                Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-                Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
-                Assert.assertEquals(actualDate, expectedDateDate);
+            Assert.assertNotNull(message.getPayload());
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@foo.bar>");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
 
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "image/png");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
+            // compare dates as Date rather than String otherwise this test fails outside
+            // of the "+1" timezone
+            Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+            Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
+            Assert.assertEquals(actualDate, expectedDateDate);
 
-                try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_2.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "image/png");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
 
-                return null;
+            try {
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_2.xml",
+                                MailServer.class).getInputStream()))));
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
+
+            return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
         Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
         mailServer.deliver(message);
-
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testSimulateError() throws IOException, MessagingException {
         MailServer mailServer = new MailServer();
         mailServer.setEndpointAdapter(endpointAdapterMock);
 
         reset(endpointAdapterMock);
 
-        doAnswer(new Answer<Message>() {
-            @Override
-            public Message answer(InvocationOnMock invocation) throws Throwable {
-                Message message = (Message) invocation.getArguments()[0];
+        doAnswer((Answer<Message>) invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
 
-                Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
-                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
-                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+            Assert.assertNotNull(message.getPayload());
+            Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+            Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
+            Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
-                try {
-                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
-                                    MailServer.class).getInputStream()))));
-                } catch (IOException e) {
-                    Assert.fail(e.getMessage());
-                }
-
-                return new DefaultMessage(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("error-response.xml",
-                        MailServer.class).getInputStream())));
+            try {
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
+                                MailServer.class).getInputStream()))));
+            } catch (IOException e) {
+                Assert.fail(e.getMessage());
             }
+
+            return new DefaultMessage(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("error-response.xml",
+                    MailServer.class).getInputStream())));
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
         MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());

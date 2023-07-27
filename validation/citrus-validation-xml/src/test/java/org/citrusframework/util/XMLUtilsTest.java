@@ -17,12 +17,6 @@
 package org.citrusframework.util;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Map;
-import javax.xml.XMLConstants;
-
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -31,6 +25,12 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import javax.xml.XMLConstants;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Map;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -377,8 +377,8 @@ public class XMLUtilsTest {
 
         Document doc = XMLUtils.parseMessagePayload(payload);
 
-        Assert.assertEquals(XMLUtils.serialize(doc), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<testRequest xmlns=\"http://citrusframework.org/test-default\">ÄäÖöÜü</testRequest>" + System.getProperty("line.separator"));
+        Assert.assertEquals(XMLUtils.serialize(doc), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<testRequest xmlns=\"http://citrusframework.org/test-default\">ÄäÖöÜü</testRequest>\n");
     }
 
     @Test

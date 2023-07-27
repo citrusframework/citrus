@@ -16,9 +16,6 @@
 
 package org.citrusframework.validation.xml;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
@@ -44,14 +41,17 @@ import org.citrusframework.validation.xhtml.XhtmlMessageValidator;
 import org.citrusframework.validation.xhtml.XhtmlXpathMessageValidator;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 /**
  * @author Christoph Deppisch
@@ -70,7 +70,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.openMocks(this);
+        openMocks(this);
         TestContextFactory factory = super.createTestContextFactory();
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
@@ -173,7 +173,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -198,7 +197,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -224,7 +222,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -248,7 +245,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -279,7 +275,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .process(processor)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -310,7 +305,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .process(processor)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -347,7 +341,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .process(processor)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -384,7 +377,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .process(processor)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -420,7 +412,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .process(processor)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -449,7 +440,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -480,7 +470,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -574,7 +563,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(context.getVariable("myOperation"));
         Assert.assertEquals(context.getVariable("myOperation"), "sayHello");
-
     }
 
     @Test
@@ -603,7 +591,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -634,7 +621,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -665,7 +651,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -696,7 +681,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -731,7 +715,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -765,7 +748,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
     }
 
     @Test
@@ -805,7 +787,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello,ByeBye");
-
     }
 
     @Test
@@ -846,7 +827,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
     }
 
     @Test
@@ -887,7 +867,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
     }
 
     @Test
@@ -928,7 +907,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
     }
 
     @Test
@@ -973,7 +951,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
     }
 
     @Test
@@ -997,7 +974,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -1025,7 +1001,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -1054,7 +1029,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -1083,7 +1057,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -1113,7 +1086,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -1162,7 +1134,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -1218,7 +1189,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         testCase.addTestAction(receiveAction);
         testCase.execute(context);
-
     }
 
     @Test
