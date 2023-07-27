@@ -20,7 +20,7 @@
 package org.citrusframework.groovy.dsl
 
 configuration {
-    load("./configuration.groovy")
+    load("org/citrusframework/groovy/dsl/configuration.groovy")
 
     queues {
         queue('say-hello')

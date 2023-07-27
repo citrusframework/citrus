@@ -100,5 +100,4 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
         CitrusAnnotations.injectTestRunner(testLoader, runner);
         return testLoader;
     }
-
 }

@@ -16,6 +16,13 @@
 
 package org.citrusframework.util;
 
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.Completable;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -23,14 +30,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.citrusframework.CitrusSettings;
-import org.citrusframework.Completable;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * Utility class for test cases providing several utility
@@ -55,8 +54,6 @@ public abstract class TestUtils {
 
     /**
      * Wait for container completion with default timeout.
-     * @param container
-     * @param context
      */
     public static void waitForCompletion(final Completable container,
                                          final TestContext context) {
@@ -65,9 +62,6 @@ public abstract class TestUtils {
 
     /**
      * Wait for container completion using default thread executor.
-     * @param container
-     * @param context
-     * @param timeout
      */
     public static void waitForCompletion(final Completable container,
                                          final TestContext context, long timeout) {
@@ -78,11 +72,6 @@ public abstract class TestUtils {
     /**
      * Uses given scheduler to wait for container to finish properly. Method polls for done state on container for given
      * amount of time.
-     *
-     * @param scheduledExecutor
-     * @param container
-     * @param context
-     * @param timeout
      */
     public static void waitForCompletion(final ScheduledExecutorService scheduledExecutor,
                                          final Completable container,
@@ -133,11 +122,9 @@ public abstract class TestUtils {
 
     /**
      * Normalize the text by trimming whitespace and replacing line endings by a linux representation.
-     * @param text
-     * @return
      */
     public static String normalizeLineEndings(String text) {
-        return text != null ? StringUtils.trimAllWhitespace(text.replace("\r\n", "\n").replace("&#13;\n", "\n") ): null;
+        return text != null ? text.replace("\r\n", "\n").replace("&#13;", ""): null;
     }
 
     private static Thread createWaitingThread(final Runnable runnable, TestContext context) {

@@ -16,9 +16,6 @@
 
 package org.citrusframework.variable.dictionary.xml;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
@@ -28,6 +25,9 @@ import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -63,10 +63,10 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText name=\"bar\">No changes</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>Hello!</Text>\n" +
+                "    <OtherText name=\"bar\">No changes</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -82,10 +82,10 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText name=\"bar\">Hello!</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>Hello!</Text>\n" +
+                "    <OtherText name=\"bar\">Hello!</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -101,10 +101,10 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">" + System.getProperty("line.separator") +
-                "    <ns1:Text>Hello!</ns1:Text>" + System.getProperty("line.separator") +
-                "    <ns1:OtherText name=\"bar\">No changes</ns1:OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">\n" +
+                "    <ns1:Text>Hello!</ns1:Text>\n" +
+                "    <ns1:OtherText name=\"bar\">No changes</ns1:OtherText>\n" +
                 "</ns1:TestMessage>");
     }
 
@@ -126,10 +126,10 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setNamespaceContextBuilder(namespaceContextBuilder);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">" + System.getProperty("line.separator") +
-                "    <ns1:Text>Hello!</ns1:Text>" + System.getProperty("line.separator") +
-                "    <ns1:OtherText name=\"bar\">No changes</ns1:OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">\n" +
+                "    <ns1:Text>Hello!</ns1:Text>\n" +
+                "    <ns1:OtherText name=\"bar\">No changes</ns1:OtherText>\n" +
                 "</ns1:TestMessage>");
     }
 
@@ -147,10 +147,10 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText name=\"bar\">No changes</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>Hello!</Text>\n" +
+                "    <OtherText name=\"bar\">No changes</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -163,10 +163,10 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.initialize();
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText name=\"bar\">GoodBye!</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>Hello!</Text>\n" +
+                "    <OtherText name=\"bar\">GoodBye!</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -182,10 +182,10 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>Hello World!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText name=\"bar\">No changes</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>Hello World!</Text>\n" +
+                "    <OtherText name=\"bar\">No changes</OtherText>\n" +
                 "</TestMessage>");
     }
 

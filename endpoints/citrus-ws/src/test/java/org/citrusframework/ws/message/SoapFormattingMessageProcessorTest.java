@@ -16,7 +16,9 @@
 
 package org.citrusframework.ws.message;
 
-import org.citrusframework.message.*;
+import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -40,7 +42,7 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
 
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains(System.lineSeparator()));
+        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
@@ -56,9 +58,9 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
 
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains(System.lineSeparator()));
+        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
         Assert.assertEquals(message.getFaultDetails().size(), 1L);
-        Assert.assertTrue(message.getFaultDetails().get(0).contains(System.lineSeparator()));
+        Assert.assertTrue(message.getFaultDetails().get(0).contains("\n"));
     }
 
     @Test
@@ -69,5 +71,4 @@ public class SoapFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         messageProcessor.process(message, context);
         Assert.assertEquals(message.getPayload(String.class), "This is plaintext");
     }
-
 }

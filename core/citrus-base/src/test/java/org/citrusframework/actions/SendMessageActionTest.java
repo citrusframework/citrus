@@ -16,12 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
@@ -44,14 +38,20 @@ import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,12 +61,11 @@ import static org.mockito.Mockito.when;
  */
 public class SendMessageActionTest extends UnitTestSupport {
 
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private Producer producer = Mockito.mock(Producer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    private Endpoint endpoint = mock(Endpoint.class);
+    private Producer producer = mock(Producer.class);
+    private EndpointConfiguration endpointConfiguration = mock(EndpointConfiguration.class);
 
     @Test
-    @SuppressWarnings("rawtypes")
 	public void testSendMessageWithMessagePayloadData() {
 		TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
@@ -93,18 +92,16 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
 		sendAction.execute(context);
-
 	}
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResource() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -123,11 +120,9 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadDataVariablesSupport() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
@@ -152,20 +147,18 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResourceVariablesSupport() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload-with-variables.xml"));
 
         context.setVariable("myText", "Hello World!");
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -184,18 +177,16 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResourceFunctionsSupport() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload-with-functions.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -214,11 +205,9 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElements() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
@@ -246,11 +235,9 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .process(processor)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessageHeaders() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -279,11 +266,9 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithHeaderValuesVariableSupport() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -314,7 +299,6 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
@@ -370,7 +354,6 @@ public class SendMessageActionTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithExtractHeaderValues() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -411,11 +394,9 @@ public class SendMessageActionTest extends UnitTestSupport {
 
         Assert.assertNotNull(context.getVariable("myOperation"));
         Assert.assertNotNull(context.getVariable("correlationId"));
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testMissingMessagePayload() {
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -432,11 +413,9 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithUTF16Encoding() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<?xml version=\"1.0\" encoding=\"UTF-16\"?><TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -459,11 +438,9 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithISOEncoding() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -486,11 +463,9 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithUnsupportedEncoding() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<?xml version=\"1.0\" encoding=\"MyUnsupportedEncoding\"?><TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -515,14 +490,13 @@ public class SendMessageActionTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageWithMessagePayloadResourceISOEncoding() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-iso-encoding.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -541,7 +515,6 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
@@ -566,7 +539,6 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .build();
         testCase.addTestAction(sendAction);
         testCase.execute(context);
-
     }
 
     @Test
@@ -590,7 +562,6 @@ public class SendMessageActionTest extends UnitTestSupport {
                 .build();
         testCase.addTestAction(sendAction);
         testCase.execute(context);
-
     }
 
     @Test
@@ -600,7 +571,7 @@ public class SendMessageActionTest extends UnitTestSupport {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
-        DataDictionary<String> dictionary = Mockito.mock(DataDictionary.class);
+        DataDictionary<String> dictionary = mock(DataDictionary.class);
         reset(endpoint, producer, endpointConfiguration);
         when(dictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
         when(dictionary.isGlobalScope()).thenReturn(false);
@@ -635,8 +606,8 @@ public class SendMessageActionTest extends UnitTestSupport {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
-        DataDictionary<String> dictionary = Mockito.mock(DataDictionary.class);
-        DataDictionary<String> globalDictionary = Mockito.mock(DataDictionary.class);
+        DataDictionary<String> dictionary = mock(DataDictionary.class);
+        DataDictionary<String> globalDictionary = mock(DataDictionary.class);
         reset(endpoint, producer, endpointConfiguration);
         when(dictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
         when(globalDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
@@ -681,8 +652,8 @@ public class SendMessageActionTest extends UnitTestSupport {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        DataDictionary<String> inboundDictionary = Mockito.mock(DataDictionary.class);
-        DataDictionary<String> outboundDictionary = Mockito.mock(DataDictionary.class);
+        DataDictionary<String> inboundDictionary = mock(DataDictionary.class);
+        DataDictionary<String> outboundDictionary = mock(DataDictionary.class);
         reset(endpoint, producer, endpointConfiguration);
         when(inboundDictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
         when(outboundDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);

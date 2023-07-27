@@ -16,12 +16,13 @@
 
 package org.citrusframework.report;
 
-import java.io.File;
-
 import org.citrusframework.TestResult;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.TestUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -42,15 +43,17 @@ public class JUnitReporterTest {
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
         String testSuiteFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), reporter.getSuiteName())));
 
-        Assert.assertEquals(reportFile, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"1\" errors=\"0\" skipped=\"0\" failures=\"0\">" + System.lineSeparator() +
-                "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>" + System.lineSeparator() +
-                "</testsuite>");
+        Assert.assertEquals(TestUtils.normalizeLineEndings(reportFile), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                        "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"1\" errors=\"0\" skipped=\"0\" failures=\"0\">\n" +
+                        "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
+                        "</testsuite>"
+        );
 
-        Assert.assertEquals(testSuiteFile, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<testsuite name=\"" + reporter.getSuiteName() + "\" time=\"0.0\" tests=\"1\" errors=\"0\" skipped=\"0\" failures=\"0\">" + System.lineSeparator() +
-                "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>" + System.lineSeparator() +
-                "</testsuite>");
+        Assert.assertEquals(TestUtils.normalizeLineEndings(testSuiteFile), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                        "<testsuite name=\"" + reporter.getSuiteName() + "\" time=\"0.0\" tests=\"1\" errors=\"0\" skipped=\"0\" failures=\"0\">\n" +
+                        "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
+                        "</testsuite>"
+        );
     }
 
     @Test
@@ -62,10 +65,10 @@ public class JUnitReporterTest {
 
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
 
-        Assert.assertEquals(reportFile, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"0\">" + System.lineSeparator() +
-                "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>" + System.lineSeparator() +
-                "    <testcase name=\"barTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>" + System.lineSeparator() +
+        Assert.assertEquals(TestUtils.normalizeLineEndings(reportFile), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"0\">\n" +
+                "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
+                "    <testcase name=\"barTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
                 "</testsuite>");
     }
 
@@ -79,13 +82,18 @@ public class JUnitReporterTest {
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
         String testSuiteFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), reporter.getSuiteName())));
 
-        Assert.assertTrue(reportFile.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\">" + System.lineSeparator() +
-                "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>" + System.lineSeparator() +
-                "    <testcase name=\"barTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\">" + System.lineSeparator() +
-                "      <failure type=\"java.lang.NullPointerException\" message=\"Something went wrong!\">" + System.lineSeparator() +
-                "        <![CDATA[" + System.lineSeparator() +
-                "        java.lang.NullPointerException: Something went wrong!"));
+        Assert.assertTrue(
+                TestUtils.normalizeLineEndings(reportFile)
+                        .startsWith(
+                                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                                        "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\">\n" +
+                                        "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
+                                        "    <testcase name=\"barTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\">\n" +
+                                        "      <failure type=\"java.lang.NullPointerException\" message=\"Something went wrong!\">\n" +
+                                        "        <![CDATA[\n" +
+                                        "        java.lang.NullPointerException: Something went wrong!"
+                        )
+        );
 
         Assert.assertTrue(testSuiteFile.contains("<testsuite name=\"" + reporter.getSuiteName() + "\""));
         Assert.assertTrue(testSuiteFile.contains("tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\""));
@@ -101,10 +109,10 @@ public class JUnitReporterTest {
 
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
 
-        Assert.assertEquals(reportFile, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"1\" failures=\"0\">" + System.lineSeparator() +
-                "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>" + System.lineSeparator() +
-                "    <testcase name=\"barTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>" + System.lineSeparator() +
+        Assert.assertEquals(TestUtils.normalizeLineEndings(reportFile), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"1\" failures=\"0\">\n" +
+                "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
+                "    <testcase name=\"barTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
                 "</testsuite>");
     }
 
@@ -118,13 +126,18 @@ public class JUnitReporterTest {
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
         String testSuiteFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), reporter.getSuiteName())));
 
-        Assert.assertTrue(reportFile.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-            "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\">" + System.lineSeparator() +
-            "    <testcase name=\"foo&quot;Test\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>" + System.lineSeparator() +
-            "    <testcase name=\"bar&quot;Test\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\">" + System.lineSeparator() +
-            "      <failure type=\"java.lang.NullPointerException\" message=\"Something &quot;went wrong!\">" + System.lineSeparator() +
-            "        <![CDATA[" + System.lineSeparator() +
-            "        java.lang.NullPointerException: Something \"went wrong!"));
+        Assert.assertTrue(
+                TestUtils.normalizeLineEndings(reportFile)
+                        .startsWith(
+                                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                                        "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\">\n" +
+                                        "    <testcase name=\"foo&quot;Test\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
+                                        "    <testcase name=\"bar&quot;Test\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\">\n" +
+                                        "      <failure type=\"java.lang.NullPointerException\" message=\"Something &quot;went wrong!\">\n" +
+                                        "        <![CDATA[\n" +
+                                        "        java.lang.NullPointerException: Something \"went wrong!"
+                        )
+        );
 
         Assert.assertTrue(testSuiteFile.contains("<testsuite name=\"" + reporter.getSuiteName() + "\""));
         Assert.assertTrue(testSuiteFile.contains("tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\""));
@@ -141,11 +154,16 @@ public class JUnitReporterTest {
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
         String testSuiteFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), reporter.getSuiteName())));
 
-        assertTrue(reportFile.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\">" + System.lineSeparator() +
-                "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>" + System.lineSeparator() +
-                "    <testcase name=\"barTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\">" + System.lineSeparator() +
-                "      <failure type=\"\" message=\"Something went wrong!\">"));
+        assertTrue(
+                TestUtils.normalizeLineEndings(reportFile)
+                        .startsWith(
+                                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                                        "<testsuite name=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\">\n" +
+                                        "    <testcase name=\"fooTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
+                                        "    <testcase name=\"barTest\" classname=\"org.citrusframework.report.JUnitReporterTest\" time=\"0.0\">\n" +
+                                        "      <failure type=\"\" message=\"Something went wrong!\">"
+                        )
+        );
 
         assertTrue(testSuiteFile.contains("<testsuite name=\"" + reporter.getSuiteName() + "\""));
         assertTrue(testSuiteFile.contains("tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\""));
