@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.cucumber.core.eventbus.RandomUuidGenerator;
+import io.cucumber.core.eventbus.UuidGenerator;
 import org.citrusframework.TestClass;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.main.AbstractTestEngine;
@@ -69,6 +71,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
                 annotationOptions = new CucumberOptionsAnnotationParser()
                         .withOptionsProvider(GenericCucumberOptions::new)
                         .parse(Class.forName(testClass.getName()))
+                        .setUuidGeneratorClass(RandomUuidGenerator.class)
                         .addDefaultGlueIfAbsent()
                         .build(propertiesFileOptions);
             } catch (ClassNotFoundException e) {
@@ -178,6 +181,11 @@ public class CucumberTestEngine extends AbstractTestEngine {
         @Override
         public SnippetType snippets() {
             return SnippetType.UNDERSCORE;
+        }
+
+        @Override
+        public Class<? extends UuidGenerator> uuidGenerator() {
+            return getOptionValue("uuidGenerator");
         }
 
         @Override

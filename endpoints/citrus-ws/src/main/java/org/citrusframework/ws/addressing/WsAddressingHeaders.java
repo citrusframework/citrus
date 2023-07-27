@@ -18,21 +18,27 @@ package org.citrusframework.ws.addressing;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.ws.soap.addressing.core.EndpointReference;
+import javax.xml.namespace.QName;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.springframework.ws.soap.addressing.core.EndpointReference;
 
 /**
  * Value object holding ws addressing information which is translated into the message header.
  * Message id is optional - if not set here it is generated automatically.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class WsAddressingHeaders {
     /** Addressing headers version */
     private WsAddressingVersion version;
-    
+
+    /** List of defined must understand headers */
+    private List<String> mustUnderstandHeaders = new ArrayList<>();
+
     /** Action */
     private URI action;
 
@@ -82,7 +88,7 @@ public class WsAddressingHeaders {
     public void setAction(URI action) {
         this.action = action;
     }
-    
+
     /**
      * Sets the action from uri string.
      * @param action the action to set
@@ -110,7 +116,7 @@ public class WsAddressingHeaders {
     public void setTo(URI to) {
         this.to = to;
     }
-    
+
     /**
      * Sets the to uri by string.
      * @param to the to to set
@@ -138,7 +144,7 @@ public class WsAddressingHeaders {
     public void setMessageId(URI messageId) {
         this.messageId = messageId;
     }
-    
+
     /**
      * Sets the message id from uri string.
      * @param messageId the messageId to set
@@ -166,7 +172,7 @@ public class WsAddressingHeaders {
     public void setFrom(EndpointReference from) {
         this.from = from;
     }
-    
+
     /**
      * Sets the from endpoint reference by string.
      * @param from the from to set
@@ -194,7 +200,7 @@ public class WsAddressingHeaders {
     public void setReplyTo(EndpointReference replyTo) {
         this.replyTo = replyTo;
     }
-    
+
     /**
      * Sets the reply to endpoint reference by string.
      * @param replyTo the replyTo to set
@@ -222,7 +228,7 @@ public class WsAddressingHeaders {
     public void setFaultTo(EndpointReference faultTo) {
         this.faultTo = faultTo;
     }
-    
+
     /**
      * Sets the fault to endpoint reference by string.
      * @param faultTo the faultTo to set
@@ -233,5 +239,38 @@ public class WsAddressingHeaders {
         } catch (URISyntaxException e) {
             throw new CitrusRuntimeException("Invalid faultTo uri", e);
         }
+    }
+
+    /**
+     * Gets the list of specified must understand headers.
+     * @return
+     */
+    public List<String> getMustUnderstandHeaders() {
+        return mustUnderstandHeaders;
+    }
+
+    /**
+     * Sets the list of defined must understand headers.
+     * @param mustUnderstandHeaders
+     */
+    public void setMustUnderstandHeaders(List<String> mustUnderstandHeaders) {
+        this.mustUnderstandHeaders = mustUnderstandHeaders;
+    }
+
+    /**
+     * Determines if given header needs to set must understand flag.
+     * @param header
+     * @return
+     */
+    public boolean isMustUnderstand(QName header) {
+        return this.mustUnderstandHeaders.contains(header.toString()) || this.mustUnderstandHeaders.contains(header.getPrefix() + ":" + header.getLocalPart());
+    }
+
+    /**
+     * Determines if this addressing headers instance has defined must understand headers.
+     * @return true, when at least one must understand header is defined.
+     */
+    public boolean hasMustUnderstandHeaders() {
+        return !this.mustUnderstandHeaders.isEmpty();
     }
 }

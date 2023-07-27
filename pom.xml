@@ -140,112 +140,112 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
 
-    <maven.antrun.plugin.version>3.0.0</maven.antrun.plugin.version>
-    <maven.assembly.plugin.version>3.1.1</maven.assembly.plugin.version>
+    <maven.antrun.plugin.version>3.1.0</maven.antrun.plugin.version>
+    <maven.assembly.plugin.version>3.6.0</maven.assembly.plugin.version>
     <maven.changes.plugin.version>2.12.1</maven.changes.plugin.version>
-    <maven.clean.plugin.version>3.0.0</maven.clean.plugin.version>
-    <maven.dependency.plugin.version>3.0.2</maven.dependency.plugin.version>
-    <maven.deploy.plugin.version>3.1.0</maven.deploy.plugin.version>
+    <maven.clean.plugin.version>3.3.1</maven.clean.plugin.version>
+    <maven.dependency.plugin.version>3.6.0</maven.dependency.plugin.version>
+    <maven.deploy.plugin.version>3.1.1</maven.deploy.plugin.version>
     <maven.failsafe.plugin.version>2.22.2</maven.failsafe.plugin.version>
-    <maven.gpg.plugin.version>1.6</maven.gpg.plugin.version>
-    <maven.helper.plugin.version>3.0.0</maven.helper.plugin.version>
-    <maven.install.plugin.version>2.5.2</maven.install.plugin.version>
-    <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
-    <maven.javadoc.plugin.version>3.3.1</maven.javadoc.plugin.version>
+    <maven.gpg.plugin.version>3.1.0</maven.gpg.plugin.version>
+    <maven.helper.plugin.version>3.4.0</maven.helper.plugin.version>
+    <maven.install.plugin.version>3.1.1</maven.install.plugin.version>
+    <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
+    <maven.javadoc.plugin.version>3.5.0</maven.javadoc.plugin.version>
     <maven.nexus-staging.plugin.version>1.6.13</maven.nexus-staging.plugin.version>
-    <maven.plugin.plugin.version>3.6.2</maven.plugin.plugin.version>
-    <maven.plugin.annotations.version>3.7.1</maven.plugin.annotations.version>
-    <maven.release.plugin.version>2.5.3</maven.release.plugin.version>
-    <maven.resource.plugin.version>3.0.2</maven.resource.plugin.version>
+    <maven.plugin.plugin.version>3.9.0</maven.plugin.plugin.version>
+    <maven.plugin.annotations.version>3.9.0</maven.plugin.annotations.version>
+    <maven.release.plugin.version>3.0.1</maven.release.plugin.version>
+    <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.1</maven.scm.plugin.version>
-    <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
+    <maven.source.plugin.version>3.3.0</maven.source.plugin.version>
     <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
-    <maven.war.plugin.version>3.1.0</maven.war.plugin.version>
+    <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
     <maven.wagon.ssh.external.version>2.7</maven.wagon.ssh.external.version>
-    <apache.rat.plugin.version>0.13</apache.rat.plugin.version>
+    <apache.rat.plugin.version>0.15</apache.rat.plugin.version>
 
-    <asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
+    <asciidoctor.maven.plugin.version>2.2.4</asciidoctor.maven.plugin.version>
     <jaxb.maven.plugin.version>3.1.0</jaxb.maven.plugin.version>
 
-    <activemq.artemis.version>2.28.0</activemq.artemis.version>
+    <activemq.artemis.version>2.30.0</activemq.artemis.version>
     <apache.ant.version>1.10.13</apache.ant.version>
-    <apache.camel.version>4.0.0-M2</apache.camel.version>
-    <arquillian.version>1.6.0.Final</arquillian.version>
+    <apache.camel.version>4.0.0-RC1</apache.camel.version>
+    <arquillian.version>1.7.0.Final</arquillian.version>
     <bouncycastle.version>1.70</bouncycastle.version>
-    <byte.buddy.version>1.14.2</byte.buddy.version>
+    <byte.buddy.version>1.14.5</byte.buddy.version>
     <citrus.db.version>0.1.4</citrus.db.version>
     <commons.dbcp2.version>2.9.0</commons.dbcp2.version>
     <commons.cli.version>1.5.0</commons.cli.version>
-    <commons.codec.version>1.15</commons.codec.version>
-    <commons.io.version>2.11.0</commons.io.version>
+    <commons.codec.version>1.16.0</commons.codec.version>
+    <commons.io.version>2.13.0</commons.io.version>
     <commons.lang.version>2.6</commons.lang.version>
     <commons.logging.api.version>1.1</commons.logging.api.version>
     <commons.logging.version>1.2</commons.logging.version>
     <commons.net.version>3.9.0</commons.net.version>
-    <cucumber.version>7.11.1</cucumber.version>
-    <docker-java.version>3.3.0</docker-java.version>
-    <dropwizard.metrics.version>4.2.17</dropwizard.metrics.version>
+    <cucumber.version>7.13.0</cucumber.version>
+    <docker-java.version>3.3.2</docker-java.version>
+    <dropwizard.metrics.version>4.2.19</dropwizard.metrics.version>
     <ftpserver.version>1.2.0</ftpserver.version>
-    <groovy.version>3.0.16</groovy.version>
-    <google.guava.version>32.0.0-jre</google.guava.version>
+    <groovy.version>3.0.18</groovy.version>
+    <google.guava.version>32.1.1-jre</google.guava.version>
     <hamcrest.version>2.2</hamcrest.version>
-    <htmlunit.version>4.8.0</htmlunit.version>
+    <htmlunit.version>4.10.0</htmlunit.version>
     <httpclient.version>5.2.1</httpclient.version>
-    <hsqldb.version>2.7.1</hsqldb.version>
-    <jackson.version>2.14.2</jackson.version>
-    <jakarta.activation.api.version>2.1.1</jakarta.activation.api.version>
+    <hsqldb.version>2.7.2</hsqldb.version>
+    <jackson.version>2.15.2</jackson.version>
+    <jakarta.activation.api.version>2.1.2</jakarta.activation.api.version>
     <jakarta.activation.version>2.0.1</jakarta.activation.version>
     <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
     <jakarta.jms-api.version>3.1.0</jakarta.jms-api.version>
     <jakarta.mail.version>2.0.1</jakarta.mail.version>
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
     <jakarta.validation.version>3.0.2</jakarta.validation.version>
-    <jakarta.websocket-api.version>2.1.0</jakarta.websocket-api.version>
+    <jakarta.websocket-api.version>2.1.1</jakarta.websocket-api.version>
     <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
     <jakarta.xml.soap-api.version>3.0.0</jakarta.xml.soap-api.version>
     <javapoet.version>1.11.1</javapoet.version>
     <jaxb.version>4.0.2</jaxb.version>
-    <jetty.version>11.0.14</jetty.version>
+    <jetty.version>11.0.15</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
     <jsch.version>0.1.55</jsch.version>
-    <json-path.version>2.7.0</json-path.version>
+    <json-path.version>2.8.0</json-path.version>
     <json.schema.validator.version>2.2.14</json.schema.validator.version>
-    <json-smart.version>2.4.9</json-smart.version>
+    <json-smart.version>2.5.0</json-smart.version>
     <jtidy.version>r938</jtidy.version>
-    <junit.jupiter.version>5.9.2</junit.jupiter.version>
+    <junit.jupiter.version>5.10.0</junit.jupiter.version>
     <junit.version>4.13.2</junit.version>
     <junixsocket.version>2.6.2</junixsocket.version>
     <k8s.client.version>1.4.34</k8s.client.version>
     <k8s.model.version>1.0.65</k8s.model.version>
-    <kafka.version>3.4.0</kafka.version>
+    <kafka.version>3.5.1</kafka.version>
     <log4j2.version>2.20.0</log4j2.version>
-    <mockito.version>5.2.0</mockito.version>
+    <mockito.version>5.4.0</mockito.version>
     <mockftpserver.version>3.1.0</mockftpserver.version>
     <okhttp.version>4.10.0</okhttp.version>
-    <saaj.version>3.0.0</saaj.version>
-    <selenium.version>4.8.1</selenium.version>
+    <saaj.version>3.0.2</saaj.version>
+    <selenium.version>4.10.0</selenium.version>
     <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
     <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
-    <slf4j.version>2.0.6</slf4j.version>
-    <snappy.version>1.1.10.1</snappy.version>
+    <slf4j.version>2.0.7</slf4j.version>
+    <snappy.version>1.1.10.3</snappy.version>
     <snakeyaml.version>2.0</snakeyaml.version>
-    <spring.version>6.0.7</spring.version>
-    <spring.ws.version>4.0.2</spring.ws.version>
-    <spring.integration.version>6.0.3</spring.integration.version>
+    <spring.version>6.0.11</spring.version>
+    <spring.ws.version>4.0.5</spring.ws.version>
+    <spring.integration.version>6.1.2</spring.integration.version>
     <spring.restdocs.version>3.0.0</spring.restdocs.version>
     <sshd.version>2.10.0</sshd.version>
     <greenmail.version>2.0.0</greenmail.version>
     <swagger.version>1.6.9</swagger.version>
     <swagger.parser.version>1.0.64</swagger.parser.version>
-    <testng.version>7.7.1</testng.version>
-    <vertx.version>4.4.0</vertx.version>
+    <testng.version>7.8.0</testng.version>
+    <vertx.version>4.4.4</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
-    <xbean-spring.version>4.22</xbean-spring.version>
+    <xbean-spring.version>4.23</xbean-spring.version>
     <xmlbeans.version>3.0.0</xmlbeans.version>
     <xmlbeans-xpath.version>2.6.0</xmlbeans-xpath.version>
     <xerces.version>2.12.2</xerces.version>
     <xstream.version>1.4.20</xstream.version>
-    <zookeeper.version>3.8.1</zookeeper.version>
+    <zookeeper.version>3.8.2</zookeeper.version>
 
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>

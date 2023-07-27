@@ -127,6 +127,11 @@
             <constructor-arg value="urn:ClientFaultResolver"/>
           </bean>
         </property>
+        <property name="mustUnderstandHeaders">
+          <list>
+            <value>wsa:To</value>
+          </list>
+        </property>
       </bean>
     </constructor-arg>
   </bean>
