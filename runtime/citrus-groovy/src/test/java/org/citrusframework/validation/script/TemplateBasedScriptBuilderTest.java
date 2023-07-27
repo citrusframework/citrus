@@ -27,13 +27,12 @@ public class TemplateBasedScriptBuilderTest {
 
     @Test
     public void testTemplateScriptResource() {
-        Assert.assertEquals(TemplateBasedScriptBuilder.fromTemplateResource(
-                new ClassPathResource("org/citrusframework/validation/script/script-template.groovy"))
-                .withCode("BODY")
-                .build(), "+++HEAD+++" +
-                System.getProperty("line.separator") +
-                System.getProperty("line.separator") + "BODY" +
-                System.getProperty("line.separator") +
-                System.getProperty("line.separator") + "+++TAIL+++" + System.getProperty("line.separator"));
+        Assert.assertEquals(
+                TemplateBasedScriptBuilder.fromTemplateResource(new ClassPathResource("org/citrusframework/validation/script/script-template.groovy")).withCode("BODY").build(), "+++HEAD+++\n" +
+                "\n" +
+                "BODY\n" +
+                "\n" +
+                "+++TAIL+++\n"
+        );
     }
 }

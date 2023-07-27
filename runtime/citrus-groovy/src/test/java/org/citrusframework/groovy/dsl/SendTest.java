@@ -19,8 +19,6 @@
 
 package org.citrusframework.groovy.dsl;
 
-import java.io.IOException;
-
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.SendMessageAction;
@@ -44,6 +42,8 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 
@@ -113,19 +113,19 @@ public class SendTest extends AbstractGroovyActionDslTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + System.getProperty("line.separator") +
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "            <TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sayHello");
         Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + System.getProperty("line.separator") +
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "            <Header xmlns=\"http://citrusframework.org/test\"><operation>hello</operation></Header>");
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
 
         Assert.assertNull(action.getDataDictionary());
 
-        controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + System.getProperty("line.separator") +
+        controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "            <TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>")
                 .setHeader("operation", "sayHello");
         receivedMessage = helloQueue.receive();
@@ -142,9 +142,9 @@ public class SendTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
 
-        controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
         receivedMessage = helloQueue.receive();
         headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());

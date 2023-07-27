@@ -22,8 +22,8 @@ package org.citrusframework.yaml.container;
 import org.citrusframework.container.Template;
 import org.citrusframework.yaml.YamlTemplateLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
-import org.testng.annotations.Test;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -50,9 +50,8 @@ public class TemplateTest extends AbstractYamlActionTest {
         Assert.assertEquals(template.getParameter().size(), 3);
         Assert.assertEquals(template.getParameter().get("foo"), "");
         Assert.assertEquals(template.getParameter().get("bar"), "barValue");
-        Assert.assertEquals(template.getParameter().get("baz"), "foo" + System.lineSeparator() + "bar" + System.lineSeparator() + "baz");
+        Assert.assertEquals(template.getParameter().get("baz"), "foo\nbar\nbaz");
         Assert.assertEquals(template.getActions().size(), 2);
         Assert.assertFalse(template.isGlobalContext());
     }
-
 }

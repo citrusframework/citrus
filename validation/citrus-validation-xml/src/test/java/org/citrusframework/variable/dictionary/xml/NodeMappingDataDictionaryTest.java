@@ -16,9 +16,6 @@
 
 package org.citrusframework.variable.dictionary.xml;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -26,6 +23,9 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -45,10 +45,10 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>Hello!</Text>\n" +
+                "    <OtherText>No changes</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -65,10 +65,10 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.STARTS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText>Bye!</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>Hello!</Text>\n" +
+                "    <OtherText>Bye!</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -84,10 +84,10 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText>Hello!</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>Hello!</Text>\n" +
+                "    <OtherText>Hello!</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -103,10 +103,10 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text name=\"newName\">Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText name=\"goodbyeText\">No changes</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text name=\"newName\">Hello!</Text>\n" +
+                "    <OtherText name=\"goodbyeText\">No changes</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -122,10 +122,10 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text name=\"newName\">Hello World!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText name=\"newName\">No changes</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text name=\"newName\">Hello World!</Text>\n" +
+                "    <OtherText name=\"newName\">No changes</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -143,10 +143,10 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text name=\"TEXT\">Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text name=\"TEXT\">Hello!</Text>\n" +
+                "    <OtherText>No changes</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -161,10 +161,10 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.initialize();
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text name=\"newName\">Hello!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text name=\"newName\">Hello!</Text>\n" +
+                "    <OtherText>No changes</OtherText>\n" +
                 "</TestMessage>");
     }
 
@@ -179,12 +179,12 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>" + System.getProperty("line.separator") +
-                "        <value>Hello!</value>" + System.getProperty("line.separator") +
-                "    </Text>" + System.getProperty("line.separator") +
-                "    <OtherText/>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>\n" +
+                "        <value>Hello!</value>\n" +
+                "    </Text>\n" +
+                "    <OtherText/>\n" +
                 "</TestMessage>");
     }
 
@@ -199,10 +199,10 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestMessage>" + System.getProperty("line.separator") +
-                "    <Text>Hello World!</Text>" + System.getProperty("line.separator") +
-                "    <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestMessage>\n" +
+                "    <Text>Hello World!</Text>\n" +
+                "    <OtherText>No changes</OtherText>\n" +
                 "</TestMessage>");
     }
 }

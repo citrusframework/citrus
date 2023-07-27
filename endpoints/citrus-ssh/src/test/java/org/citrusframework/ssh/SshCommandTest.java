@@ -16,13 +16,6 @@
 
 package org.citrusframework.ssh;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
@@ -34,12 +27,19 @@ import org.citrusframework.ssh.model.SshMarshaller;
 import org.citrusframework.ssh.model.SshRequest;
 import org.citrusframework.ssh.model.SshResponse;
 import org.citrusframework.xml.StringResult;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -75,7 +75,7 @@ public class SshCommandTest {
     }
 
     @Test
-    public void base() throws IOException {
+    public void base() {
         String input = "Hello world";
         String output = "Think positive!";
         String error = "Error, Error";
@@ -104,7 +104,7 @@ public class SshCommandTest {
     @Test
     public void ioException() throws IOException {
         InputStream i = Mockito.mock(InputStream.class);
-        when(i.readAllBytes()).thenThrow(new IOException("No"));
+        doThrow(new IOException("No")).when(i).readAllBytes();
         i.close();
 
         exitCallback.onExit(1,"No");
@@ -113,14 +113,6 @@ public class SshCommandTest {
         cmd.run();
     }
 
-    /**
-     * Prepare actions.
-     * @param pInput
-     * @param pOutput
-     * @param pError
-     * @param pExitCode
-     */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void prepare(String pInput, String pOutput, String pError, int pExitCode) {
         StringResult request = new StringResult();
         marshaller.marshal(new SshRequest(COMMAND, pInput), request);
@@ -135,18 +127,11 @@ public class SshCommandTest {
         cmd.setInputStream(new ByteArrayInputStream(pInput.getBytes()));
     }
 
-    /**
-     * Special report matcher for mocking reasons.
-     * @param expected
-     * @return
-     */
     public Message eqMessage(final String expected) {
-        argThat(new ArgumentMatcher<Object>() {
-            public boolean matches(Object argument) {
-                Message msg = (Message) argument;
-                String payload = (String) msg.getPayload();
-                return expected.equals(payload);
-            }
+        argThat(argument -> {
+            Message msg = (Message) argument;
+            String payload = (String) msg.getPayload();
+            return expected.equals(payload);
         });
         return null;
     }

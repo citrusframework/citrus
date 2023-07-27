@@ -49,11 +49,10 @@ public class GroovyTemplateLoaderTest extends UnitTestSupport {
         Assert.assertEquals(template.getParameter().size(), 3);
         Assert.assertEquals(template.getParameter().get("foo"), "");
         Assert.assertEquals(template.getParameter().get("bar"), "barValue");
-        Assert.assertEquals(template.getParameter().get("baz"), "foo" + System.lineSeparator() +
-                "        bar" + System.lineSeparator() +
+        Assert.assertEquals(template.getParameter().get("baz"), "foo\n" +
+                "        bar\n" +
                 "        baz");
         Assert.assertEquals(template.getActions().size(), 2);
         Assert.assertFalse(template.isGlobalContext());
     }
-
 }

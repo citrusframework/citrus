@@ -19,8 +19,6 @@
 
 package org.citrusframework.xml.actions;
 
-import java.io.IOException;
-
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.ReceiveMessageAction;
@@ -31,6 +29,7 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.TestUtils;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.TextEqualsMessageValidator;
@@ -49,6 +48,8 @@ import org.citrusframework.xml.XmlTestLoader;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 
@@ -71,7 +72,7 @@ public class ReceiveTest extends AbstractXmlActionTest {
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/receive-test.xml");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
-        context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new TextEqualsMessageValidator().enableTrim());
+        context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new TextEqualsMessageValidator().enableTrim().normalizeLineEndings());
         context.getReferenceResolver().bind("helloQueue", helloQueue);
         context.getReferenceResolver().bind("helloEndpoint", direct().asynchronous().queue(helloQueue).build());
 
@@ -83,13 +84,13 @@ public class ReceiveTest extends AbstractXmlActionTest {
 
         helloQueue.send(new DefaultMessage("Hello from Citrus!").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
-        helloQueue.send(new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" + System.lineSeparator() +
+        helloQueue.send(new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
                 "<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>")
                                 .addHeaderData("<Header xmlns=\"http://citrusframework.org/test\"><operation>hello</operation></Header>")
                                 .setHeader("operation", "sayHello"));
-        helloQueue.send(new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        helloQueue.send(new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
         helloQueue.send(new DefaultMessage("<TestMessage>Hello Citrus</TestMessage>").setHeader("operation", "sayHello"));
@@ -155,11 +156,11 @@ public class ReceiveTest extends AbstractXmlActionTest {
         Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageBuilder);
         messageBuilder = (DefaultMessageBuilder)action.getMessageBuilder();
 
-        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"+System.getProperty("line.separator")+"<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
+        Assert.assertEquals(TestUtils.normalizeLineEndings(messageBuilder.buildMessagePayload(context, action.getMessageType()).toString()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "sayHello");
         Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1);
-        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"+System.getProperty("line.separator")+"<Header xmlns=\"http://citrusframework.org/test\">"+System.getProperty("line.separator")+"  <operation>hello</operation>"+System.getProperty("line.separator")+"</Header>");
+        Assert.assertEquals(TestUtils.normalizeLineEndings(messageBuilder.buildMessageHeaderData(context).get(0).trim()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<Header xmlns=\"http://citrusframework.org/test\">\n  <operation>hello</operation>\n</Header>");
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getControlMessageProcessors().size(), 0);
 
@@ -384,5 +385,4 @@ public class ReceiveTest extends AbstractXmlActionTest {
         Assert.assertEquals(headerValidationContext.getValidatorNames().get(0), "myHeaderValidator");
         Assert.assertEquals(headerValidationContext.getValidatorNames().get(1), "defaultHeaderValidator");
     }
-
 }

@@ -16,10 +16,6 @@
 
 package org.citrusframework.validation.xml;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
@@ -36,20 +32,28 @@ import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
-import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private Producer producer = Mockito.mock(Producer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    private Endpoint endpoint = mock(Endpoint.class);
+    private Producer producer = mock(Producer.class);
+    private EndpointConfiguration endpointConfiguration = mock(EndpointConfiguration.class);
 
     @Override
     protected TestContextFactory createTestContextFactory() {
@@ -60,7 +64,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsXPath() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
@@ -72,9 +75,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             .expressions(overwriteElements)
             .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -94,11 +97,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .process(processor)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsDotNotation() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
@@ -110,9 +111,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .expressions(overwriteElements)
                 .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -132,11 +133,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .process(processor)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsXPathWithNamespace() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -149,9 +148,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .expressions(overwriteElements)
                 .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
-                "    <ns0:Message>Hello World!</ns0:Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">\n" +
+                "    <ns0:Message>Hello World!</ns0:Message>\n" +
                 "</ns0:TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -171,11 +170,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .process(processor)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsXPathWithDefaultNamespace() {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
@@ -188,9 +185,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .expressions(overwriteElements)
                 .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.getProperty("line.separator") +
-                "<TestRequest xmlns=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest xmlns=\"http://citrusframework.org/unittest\">\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
@@ -210,7 +207,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .process(processor)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test
@@ -236,7 +232,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .message(messageBuilder)
                 .build();
         sendAction.execute(context);
-
     }
 
     @Test

@@ -16,7 +16,9 @@
 
 package org.citrusframework.xml;
 
-import org.citrusframework.message.*;
+import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,7 +32,7 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
     private XmlFormattingMessageProcessor messageProcessor = new XmlFormattingMessageProcessor();
 
     @Test
-    public void testProcessMessage() throws Exception {
+    public void testProcessMessage() {
         Message message = new DefaultMessage("<root>"
                     + "<element attribute='attribute-value'>"
                         + "<sub-element>text-value</sub-element>"
@@ -38,11 +40,11 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
                 + "</root>");
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains(System.lineSeparator()));
+        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
-    public void testProcessMessageExplicitType() throws Exception {
+    public void testProcessMessageExplicitType() {
         Message message = new DefaultMessage("<root>"
                     + "<element attribute='attribute-value'>"
                         + "<sub-element>text-value</sub-element>"
@@ -51,15 +53,14 @@ public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.XML.name());
         messageProcessor.process(message, context);
 
-        Assert.assertTrue(message.getPayload(String.class).contains(System.lineSeparator()));
+        Assert.assertTrue(message.getPayload(String.class).contains("\n"));
     }
 
     @Test
-    public void testProcessNonXmlMessage() throws Exception {
+    public void testProcessNonXmlMessage() {
         Message message = new DefaultMessage("This is plaintext");
         message.setType(MessageType.PLAINTEXT.name());
         messageProcessor.process(message, context);
         Assert.assertEquals(message.getPayload(String.class), "This is plaintext");
     }
-
 }

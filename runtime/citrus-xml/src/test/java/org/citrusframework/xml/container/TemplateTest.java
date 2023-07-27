@@ -50,10 +50,13 @@ public class TemplateTest extends AbstractXmlActionTest {
         Assert.assertEquals(template.getParameter().size(), 3);
         Assert.assertEquals(template.getParameter().get("foo"), "");
         Assert.assertEquals(template.getParameter().get("bar"), "barValue");
-        Assert.assertEquals(template.getParameter().get("baz"), System.lineSeparator() + "        foo" + System.lineSeparator() +
-                "        bar" + System.lineSeparator() + "        baz" + System.lineSeparator() + "      ");
+        Assert.assertEquals(template.getParameter().get("baz"),
+                "\n" +
+                        "        foo\n" +
+                        "        bar\n" +
+                        "        baz\n" +
+                        "      ");
         Assert.assertEquals(template.getActions().size(), 2);
         Assert.assertFalse(template.isGlobalContext());
     }
-
 }

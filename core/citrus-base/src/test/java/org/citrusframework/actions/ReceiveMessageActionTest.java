@@ -16,12 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
@@ -53,6 +47,12 @@ import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -60,6 +60,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 /**
  * @author Christoph Deppisch
@@ -89,7 +90,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        MockitoAnnotations.openMocks(this);
+        openMocks(this);
         when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
 
         TestContextFactory factory = super.createTestContextFactory();
@@ -100,7 +101,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithEndpointUri() {
         TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
@@ -131,7 +131,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithVariableEndpointName() {
         context.setVariable("varEndpoint", "direct:mockQueue");
         TestActor testActor = new TestActor();
@@ -163,7 +162,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
 	public void testReceiveMessageWithMessagePayloadData() {
 		TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
@@ -201,14 +199,13 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 	}
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessagePayloadResource() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -234,11 +231,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessagePayloadDataVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
@@ -270,20 +265,18 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessagePayloadResourceVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload-with-variables.xml"));
 
         context.setVariable("myText", "Hello World!");
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -309,18 +302,16 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessagePayloadResourceFunctionsSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload-with-functions.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
-                "<TestRequest>" + System.lineSeparator() +
-                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<TestRequest>\n" +
+                "    <Message>Hello World!</Message>\n" +
                 "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -346,11 +337,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageOverwriteMessageElements() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
@@ -390,11 +379,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessageHeaders() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -430,11 +417,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithMessageHeadersVariablesSupport() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -472,11 +457,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithUnknownVariablesInMessageHeaders() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -519,7 +502,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithUnknownVariableInMessagePayload() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>${myText}</Message></TestRequest>"));
@@ -556,7 +538,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithExtractVariablesFromHeaders() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -599,11 +580,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
         Assert.assertNotNull(context.getVariable("myOperation"));
         Assert.assertEquals(context.getVariable("myOperation"), "sayHello");
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithExtractVariables() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -640,11 +619,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveMessageWithTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -675,11 +652,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveSelectedWithMessageSelector() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -714,11 +689,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveSelectedWithMessageSelectorAndTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -754,11 +727,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveSelectedWithMessageSelectorMap() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -794,11 +765,9 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveSelectedWithMessageSelectorMapAndTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
@@ -835,7 +804,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -876,7 +844,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     }
 
     @Test
-    @SuppressWarnings({ "unchecked" })
     public void testReceiveEmptyMessagePayloadAsExpected() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder(""));
@@ -906,7 +873,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
-
     }
 
     @Test
@@ -943,7 +909,6 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .build();
         testCase.addTestAction(receiveAction);
         testCase.execute(context);
-
     }
 
     @Test
