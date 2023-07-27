@@ -23,6 +23,9 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.sshd.server.Environment;
+import org.apache.sshd.server.ExitCallback;
+import org.apache.sshd.server.channel.ChannelSession;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -31,17 +34,12 @@ import org.citrusframework.ssh.model.SshMarshaller;
 import org.citrusframework.ssh.model.SshRequest;
 import org.citrusframework.ssh.model.SshResponse;
 import org.citrusframework.xml.StringResult;
-import org.apache.sshd.server.Environment;
-import org.apache.sshd.server.ExitCallback;
-import org.apache.sshd.server.channel.ChannelSession;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.argThat;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -55,7 +53,7 @@ public class SshCommandTest {
     private SshCommand cmd;
     private EndpointAdapter adapter;
 
-    private static String COMMAND = "shutdown";
+    private static final String COMMAND = "shutdown";
     private SshMarshaller marshaller;
     private ExitCallback exitCallback;
 
@@ -106,7 +104,7 @@ public class SshCommandTest {
     @Test
     public void ioException() throws IOException {
         InputStream i = Mockito.mock(InputStream.class);
-        doThrow(new IOException("No")).when(i).transferTo(any());
+        when(i.readAllBytes()).thenThrow(new IOException("No"));
         i.close();
 
         exitCallback.onExit(1,"No");

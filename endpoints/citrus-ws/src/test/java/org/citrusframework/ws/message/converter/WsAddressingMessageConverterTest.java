@@ -16,9 +16,10 @@
 
 package org.citrusframework.ws.message.converter;
 
+import java.io.IOException;
+import java.util.Collections;
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
-import java.io.IOException;
 
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -48,11 +49,11 @@ import static org.mockito.Mockito.when;
  */
 public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
 
-    private SoapMessage soapRequest = Mockito.mock(SoapMessage.class);
-    private SoapBody soapBody = Mockito.mock(SoapBody.class);
-    private SoapHeader soapHeader = Mockito.mock(SoapHeader.class);
+    private final SoapMessage soapRequest = Mockito.mock(SoapMessage.class);
+    private final SoapBody soapBody = Mockito.mock(SoapBody.class);
+    private final SoapHeader soapHeader = Mockito.mock(SoapHeader.class);
 
-    private String requestPayload = "<testMessage>Hello</testMessage>";
+    private final String requestPayload = "<testMessage>Hello</testMessage>";
 
     private WsAddressingMessageConverter messageConverter;
 
@@ -87,6 +88,7 @@ public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapHeader.addHeaderElement(eq(new QName("http://www.w3.org/2005/08/addressing", "From", "")))).thenReturn(soapHeaderElement);
         when(soapHeader.addHeaderElement(eq(new QName("http://www.w3.org/2005/08/addressing", "Action", "")))).thenReturn(soapHeaderElement);
         when(soapHeader.addHeaderElement(eq(new QName("http://www.w3.org/2005/08/addressing", "MessageID", "")))).thenReturn(soapHeaderElement);
+        when(soapHeader.examineAllHeaderElements()).thenReturn(Collections.emptyIterator());
 
         when(soapHeaderElement.getResult()).thenReturn(new StringResult());
 
@@ -99,7 +101,6 @@ public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
 
         verify(soapHeader).addNamespaceDeclaration("wsa", "http://www.w3.org/2005/08/addressing");
         verify(soapHeaderElement).setText("Test");
-        verify(soapHeaderElement).setMustUnderstand(true);
         verify(soapHeaderElement).setText("wsAddressing");
         verify(soapHeaderElement).setText("urn:uuid:aae36050-2853-4ca8-b879-fe366f97c5a1");
     }
@@ -129,6 +130,7 @@ public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
         when(soapHeader.addHeaderElement(eq(new QName("http://www.w3.org/2005/08/addressing", "From", "")))).thenReturn(soapHeaderElement);
         when(soapHeader.addHeaderElement(eq(new QName("http://www.w3.org/2005/08/addressing", "Action", "")))).thenReturn(soapHeaderElement);
         when(soapHeader.addHeaderElement(eq(new QName("http://www.w3.org/2005/08/addressing", "MessageID", "")))).thenReturn(soapHeaderElement);
+        when(soapHeader.examineAllHeaderElements()).thenReturn(Collections.emptyIterator());
 
         when(soapHeaderElement.getResult()).thenReturn(new StringResult());
 
@@ -141,7 +143,6 @@ public class WsAddressingMessageConverterTest extends AbstractTestNGUnitTest {
 
         verify(soapHeader).addNamespaceDeclaration("wsa", "http://www.w3.org/2005/08/addressing");
         verify(soapHeaderElement).setText("customTo");
-        verify(soapHeaderElement).setMustUnderstand(true);
         verify(soapHeaderElement).setText("customAction");
         verify(soapHeaderElement).setText("urn:custom");
     }

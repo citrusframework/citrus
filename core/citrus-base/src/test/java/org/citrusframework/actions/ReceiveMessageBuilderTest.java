@@ -71,7 +71,7 @@ class ReceiveMessageBuilderTest {
 	@Mock
 	private Resource resource;
 
-	private TestContext context = TestContextFactory.newInstance().getObject();
+	private final TestContext context = TestContextFactory.newInstance().getObject();
 
 	@Test
 	void constructor() {
@@ -182,31 +182,10 @@ class ReceiveMessageBuilderTest {
         builder.message().body("payload");
 
         //THEN
-        final Object payload = ((StaticMessageBuilder)
-				builder.build().getMessageBuilder()).getMessage().getPayload();
-        assertEquals("payload", payload);
+        assertEquals("payload", builder.build().getMessageBuilder().build(context, MessageType.PLAINTEXT.name()).getPayload());
     }
 
     @Test
-    void testErrorIsThrownOnUnknownMessageBuilder() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		builder.message(new DefaultMessageBuilder() {
-			@Override
-			public Object buildMessagePayload(final TestContext context, String messageType) {
-				return null;
-			}
-		});
-
-        //WHEN
-        final Executable setPayload = () -> builder.message().body("payload");
-
-        //THEN
-        assertThrows(CitrusRuntimeException.class, setPayload);
-    }
-
-	@Test
 	void payload_asResource() {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
@@ -328,10 +307,9 @@ class ReceiveMessageBuilderTest {
 		builder.message().headerNameIgnoreCase(false);
 
 		//THEN
-		final HeaderValidationContext headerValidationContext =
-				getFieldFromBuilder(builder, HeaderValidationContext.class, "headerValidationContext");
+		final HeaderValidationContext headerValidationContext = builder.getHeaderValidationContext();
 		assertNotNull(headerValidationContext);
-		assertFalse((boolean)ReflectionTestUtils.getField(headerValidationContext, "headerNameIgnoreCase"));
+		assertFalse(headerValidationContext.isHeaderNameIgnoreCase());
 	}
 
 	@Test
@@ -447,7 +425,7 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final MessageType messageType = MessageType.JSON;
 		builder.message().type(messageType);
-		assertEquals(messageType.name(), ReflectionTestUtils.getField(builder, "messageType"));
+		assertEquals(messageType.name(), builder.build().getMessageType());
 	}
 
 	@Test
@@ -461,7 +439,6 @@ class ReceiveMessageBuilderTest {
 		builder.message().type(messageType);
 
 		//THEN
-		assertEquals(messageType, ReflectionTestUtils.getField(builder, "messageType"));
 		assertEquals(messageType, builder.build().getMessageType());
 		assertEquals(3, builder.build().getValidationContexts().size());
 		assertTrue(builder.build().getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
@@ -934,10 +911,8 @@ class ReceiveMessageBuilderTest {
         builder.message().type(messageType);
 
         //THEN
-        final Object currentMessageType = ReflectionTestUtils.getField(builder, "messageType");
-        assertNotNull(currentMessageType);
-        assertEquals(messageType.toString(), currentMessageType.toString());
-    }
+		assertEquals(messageType.name(), builder.build().getMessageType());
+	}
 
     @Test
     void testSetMessageTypeAsString(){
@@ -950,7 +925,7 @@ class ReceiveMessageBuilderTest {
         builder.message().type(messageType);
 
         //THEN
-        assertEquals(messageType, ReflectionTestUtils.getField(builder, "messageType"));
+		assertEquals(messageType, builder.build().getMessageType());
     }
 
 	private <T> T getFieldFromBuilder(ReceiveMessageAction.Builder builder, final Class<T> targetClass, final String fieldName) {

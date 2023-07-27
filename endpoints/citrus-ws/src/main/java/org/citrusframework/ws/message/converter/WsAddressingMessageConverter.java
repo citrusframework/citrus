@@ -16,10 +16,14 @@
 
 package org.citrusframework.ws.message.converter;
 
+import java.net.URI;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.ws.addressing.*;
+import org.citrusframework.ws.addressing.WsAddressingHeaders;
+import org.citrusframework.ws.addressing.WsAddressingMessageHeaders;
+import org.citrusframework.ws.addressing.WsAddressingVersion;
 import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
@@ -27,9 +31,9 @@ import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
 import org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy;
-import org.springframework.ws.soap.addressing.version.*;
-
-import java.net.URI;
+import org.springframework.ws.soap.addressing.version.Addressing10;
+import org.springframework.ws.soap.addressing.version.Addressing200408;
+import org.springframework.ws.soap.addressing.version.AddressingVersion;
 
 /**
  * Ws addressing aware message converter implementation. Adds addressing header information to SOAP header.
@@ -112,6 +116,14 @@ public class WsAddressingMessageConverter extends SoapMessageConverter {
         }
 
         version.addAddressingHeaders(soapMessage, map);
+
+        if (addressingHeaders.hasMustUnderstandHeaders()) {
+            soapMessage.getSoapHeader().examineAllHeaderElements().forEachRemaining(header -> {
+                if (addressingHeaders.isMustUnderstand(header.getName())) {
+                    header.setMustUnderstand(true);
+                }
+            });
+        }
     }
 
     /**
