@@ -16,12 +16,13 @@
 
 package org.citrusframework.mail.client;
 
-import java.util.Properties;
-
+import jakarta.mail.Authenticator;
 import org.citrusframework.endpoint.AbstractEndpointConfiguration;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
@@ -41,14 +42,14 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
     /** Password */
     private String password;
 
+    /** An optional username + password authenticator **/
+    private Authenticator authenticator;
+
     /** Protocol */
     private String protocol = JavaMailSenderImpl.DEFAULT_PROTOCOL;
 
     /** Java mail properties */
-    private Properties javaMailProperties;
-
-    /** Mail sender implementation */
-    private JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+    private Properties javaMailProperties = new Properties();
 
     /** Mail message marshaller converts from XML to mail message object */
     private MailMarshaller marshaller = new MailMarshaller();
@@ -56,24 +57,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
     /** Mail message converter */
     private MailMessageConverter messageConverter = new MailMessageConverter();
 
-    /**
-     * Gets the mail protocol.
-     * @return the mail protocol.
-     */
-    public String getProtocol() {
-        return protocol;
-    }
-
-    /**
-     * Set the mail protocol. Default is "smtp".
-     * @param protocol
-     */
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-        javaMailSender.setProtocol(protocol);
-    }
-
-    /**
+      /**
      * Gets the mail host.
      * @return the mail host.
      */
@@ -83,11 +67,11 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /**
      * Set the mail server host, typically an SMTP host.
-     * @param host
+     * @param host the mail server host.
      */
     public void setHost(String host) {
         this.host = host;
-        javaMailSender.setHost(host);
+        getJavaMailProperties().setProperty("mail."+ getProtocol()+".host", host);
     }
 
     /**
@@ -101,11 +85,11 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
     /**
      * Set the mail server port.
      * Default is the Java mail port for SMTP (25).
-     * @param port
+     * @param port the mail server port.
      */
     public void setPort(int port) {
         this.port = port;
-        javaMailSender.setPort(port);
+        getJavaMailProperties().put("mail."+getProtocol()+".port", "25");
     }
 
     /**
@@ -117,19 +101,18 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
     }
 
     /**
-     * Set the username for accessing the mail host. Underlying mail seesion
+     * Set the username for accessing the mail host. The underlying mail session
      * has to be configured with the property <code>"mail.smtp.auth"</code> set to
      * <code>true</code>.
-     * @param username
+     * @param username the username for accessing the mail host.
      */
     public void setUsername(String username) {
         this.username = username;
-        javaMailSender.setUsername(username);
     }
 
     /**
      * Gets the mail password.
-     * @return the mail ppassword.
+     * @return the mail password.
      */
     public String getPassword() {
         return password;
@@ -139,11 +122,42 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * Set the password for accessing the mail host. Underlying mail seesion
      * has to be configured with the property <code>"mail.smtp.auth"</code> set to
      * <code>true</code>.
-     * @param password
+     * @param password the password for accessing the mail host.
      */
     public void setPassword(String password) {
         this.password = password;
-        javaMailSender.setPassword(password);
+    }
+
+    /**
+     * Gets the authenticator.
+     * @return The authenticator.
+     */
+    public Authenticator getAuthenticator() {
+        return authenticator;
+    }
+
+    /**
+     * Sets the authenticator.
+     * @param authenticator the authenticator.
+     */
+    public void setAuthenticator(Authenticator authenticator) {
+        this.authenticator = authenticator;
+    }
+
+    /**
+     * Gets the mail protocol.
+     * @return the mail protocol.
+     */
+    public String getProtocol() {
+        return protocol;
+    }
+
+    /**
+     * Set the mailing protocol. Default is "smtp".
+     * @param protocol the mailing protocol.
+     */
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
     /**
@@ -157,16 +171,15 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
     /**
      * Set JavaMail properties for the mail session such as <code>"mail.smtp.auth"</code>
      * when using username and password. New session is created when properties are set.
-     * @param javaMailProperties
+     * @param javaMailProperties all mailing properties.
      */
     public void setJavaMailProperties(Properties javaMailProperties) {
         this.javaMailProperties = javaMailProperties;
-        javaMailSender.setJavaMailProperties(javaMailProperties);
     }
 
     /**
      * Gets the mail message marshaller implementation.
-     * @return
+     * @return the mail message marshaller.
      */
     public MailMarshaller getMarshaller() {
         return marshaller;
@@ -174,31 +187,15 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /**
      * Sets the mail message marshaller implementation.
-     * @param marshaller
+     * @param marshaller the mail message marshaller.
      */
     public void setMarshaller(MailMarshaller marshaller) {
         this.marshaller = marshaller;
     }
 
     /**
-     * Gets the Java mail sender implementation.
-     * @return
-     */
-    public JavaMailSenderImpl getJavaMailSender() {
-        return javaMailSender;
-    }
-
-    /**
-     * Sets the Java mail sender implementation.
-     * @param javaMailSender
-     */
-    public void setJavaMailSender(JavaMailSenderImpl javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
-
-    /**
      * Gets the mail message converter.
-     * @return
+     * @return the mail message converter.
      */
     public MailMessageConverter getMessageConverter() {
         return messageConverter;
@@ -206,7 +203,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /**
      * Sets the mail message converter.
-     * @param messageConverter
+     * @param messageConverter the mail message converter.
      */
     public void setMessageConverter(MailMessageConverter messageConverter) {
         this.messageConverter = messageConverter;

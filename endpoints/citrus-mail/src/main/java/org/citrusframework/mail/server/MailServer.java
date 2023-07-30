@@ -16,13 +16,13 @@
 
 package org.citrusframework.mail.server;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Stack;
-import java.util.stream.Collectors;
-import javax.xml.transform.Source;
-
+import com.icegreen.greenmail.mail.MailAddress;
+import com.icegreen.greenmail.user.GreenMailUser;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
+import jakarta.mail.AuthenticationFailedException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.mail.client.MailEndpointConfiguration;
 import org.citrusframework.mail.message.CitrusMailMessageHeaders;
@@ -36,23 +36,23 @@ import org.citrusframework.mail.model.MailRequest;
 import org.citrusframework.mail.model.MailResponse;
 import org.citrusframework.message.Message;
 import org.citrusframework.server.AbstractServer;
-import com.icegreen.greenmail.mail.MailAddress;
-import com.icegreen.greenmail.user.GreenMailUser;
-import com.icegreen.greenmail.util.GreenMail;
-import com.icegreen.greenmail.util.ServerSetup;
-import jakarta.mail.AuthenticationFailedException;
-import jakarta.mail.Session;
-import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.MimeMailMessage;
+
+import javax.xml.transform.Source;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Stack;
+import java.util.stream.Collectors;
 
 /**
  * Mail server implementation starts new SMTP server instance and listens for incoming mail messages. Incoming mail messages
  * are converted to XML representation and forwarded to some message endpoint adapter (e.g. forwarding mail content to
  * a message channel).
- *
- * By default incoming messages are accepted automatically. When auto accept is disabled the endpoint adapter is invoked with
+ * <p>
+ * By default, incoming messages are accepted automatically. When auto accept is disabled the endpoint adapter is invoked with
  * accept request and test case has to decide accept outcome in response.
- *
+ * <p>
  * In case of incoming multipart mail messages the server is able to split the body parts into separate XML messages
  * handled by the endpoint adapter.
  *
@@ -105,6 +105,7 @@ public class MailServer extends AbstractServer {
             deliver(msg.getMessage());
             return user;
         });
+
         smtpServer.start();
     }
 
@@ -140,8 +141,8 @@ public class MailServer extends AbstractServer {
         return acceptResponse.isAccept();
     }
 
-    public void deliver(MimeMessage msg) {
-        MimeMailMessage mimeMailMessage = new MimeMailMessage(msg);
+    public void deliver(MimeMessage mimeMessage) {
+        MimeMailMessage mimeMailMessage = new MimeMailMessage(mimeMessage);
         MailMessage request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration(), null);
         Message response = invokeEndpointAdapter(request);
 
@@ -161,7 +162,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Invokes the endpoint adapter with constructed mail message and headers.
-     * @param mail
      */
     protected Message invokeEndpointAdapter(MailMessage mail) {
         if (splitMultipart) {
@@ -174,10 +174,7 @@ public class MailServer extends AbstractServer {
     /**
      * Split mail message into several messages. Each body and each attachment results in separate message
      * invoked on endpoint adapter. Mail message response if any should be sent only once within test case.
-     * However latest mail response sent by test case is returned, others are ignored.
-     *
-     * @param bodyPart
-     * @param messageHeaders
+     * However, latest mail response sent by test case is returned, others are ignored.
      */
     private Message split(BodyPart bodyPart, Map<String, Object> messageHeaders) {
         MailMessage mailRequest = createMailMessage(messageHeaders, bodyPart.getContent(), bodyPart.getContentType());
@@ -209,10 +206,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Creates a new mail message model object from message headers.
-     * @param messageHeaders
-     * @param body
-     * @param contentType
-     * @return
      */
     protected MailMessage createMailMessage(Map<String, Object> messageHeaders, String body, String contentType) {
         return MailMessage.request(messageHeaders)
@@ -236,19 +229,18 @@ public class MailServer extends AbstractServer {
     }
 
     /**
-     * Return new mail session if not already created before.
-     * @return
+     * Return a new mail session if not already created before.
      */
     public synchronized Session getSession() {
-        if (this.mailSession == null) {
-            this.mailSession = Session.getInstance(this.javaMailProperties);
+        if (mailSession == null) {
+            mailSession = Session.getInstance(javaMailProperties);
         }
-        return this.mailSession;
+
+        return mailSession;
     }
 
     /**
      * Is auto accept enabled.
-     * @return
      */
     public boolean isAutoAccept() {
         return autoAccept;
@@ -256,7 +248,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Enable/disable auto accept feature.
-     * @param autoAccept
      */
     public void setAutoAccept(boolean autoAccept) {
         this.autoAccept = autoAccept;
@@ -264,7 +255,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Gets the mail message marshaller.
-     * @return
      */
     public MailMarshaller getMarshaller() {
         return marshaller;
@@ -272,7 +262,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Sets the mail message marshaller.
-     * @param marshaller
      */
     public void setMarshaller(MailMarshaller marshaller) {
         this.marshaller = marshaller;
@@ -280,7 +269,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Gets the Java mail properties.
-     * @return
      */
     public Properties getJavaMailProperties() {
         return javaMailProperties;
@@ -288,7 +276,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Sets the Java mail properties.
-     * @param javaMailProperties
      */
     public void setJavaMailProperties(Properties javaMailProperties) {
         this.javaMailProperties = javaMailProperties;
@@ -296,7 +283,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Gets the server port.
-     * @return
      */
     public int getPort() {
         return port;
@@ -304,7 +290,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Sets the server port.
-     * @param port
      */
     public void setPort(int port) {
         this.port = port;
@@ -312,7 +297,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Gets the smtp server instance.
-     * @return
      */
     public GreenMail getSmtpServer() {
         return smtpServer;
@@ -320,7 +304,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Sets the smtp server instance.
-     * @param smtpServer
      */
     public void setSmtpServer(GreenMail smtpServer) {
         this.smtpServer = smtpServer;
@@ -328,7 +311,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Gets the split multipart message.
-     * @return
      */
     public boolean isSplitMultipart() {
         return splitMultipart;
@@ -336,7 +318,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Sets the split multipart message.
-     * @param splitMultipart
      */
     public void setSplitMultipart(boolean splitMultipart) {
         this.splitMultipart = splitMultipart;
@@ -344,7 +325,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Gets the message converter.
-     * @return
      */
     public MailMessageConverter getMessageConverter() {
         return messageConverter;
@@ -352,7 +332,6 @@ public class MailServer extends AbstractServer {
 
     /**
      * Sets the message converter.
-     * @param messageConverter
      */
     public void setMessageConverter(MailMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
