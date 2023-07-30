@@ -16,10 +16,9 @@
 
 package org.citrusframework.mail.client;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-
+import jakarta.mail.Authenticator;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
@@ -28,19 +27,23 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
-import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.util.StringUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4
  */
 public class MailClient extends AbstractEndpoint implements Producer, InitializingPhase {
-    /** Logger */
+
     private static Logger log = LoggerFactory.getLogger(MailClient.class);
+
+    private MailSender mailSender = new MailSender();
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -51,7 +54,6 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
 
     /**
      * Default constructor using endpoint configuration.
-     * @param endpointConfiguration
      */
     public MailClient(MailEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
@@ -69,7 +71,12 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
         }
 
         MimeMailMessage mimeMessage = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
-        getEndpointConfiguration().getJavaMailSender().send(mimeMessage.getMimeMessage());
+
+        try {
+            mailSender.send(mimeMessage.getMimeMessage());
+        } catch (MessagingException e) {
+            throw new CitrusRuntimeException("Failed to send mail message!", e);
+        }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         Message mailMessage;
@@ -103,8 +110,6 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
     /**
      * Creates a message consumer for this endpoint. Consumer receives
      * messages on this endpoint.
-     *
-     * @return
      */
     @Override
     public Consumer createConsumer() {
@@ -113,18 +118,31 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
 
     @Override
     public void initialize() {
-        if (StringUtils.hasText(getEndpointConfiguration().getJavaMailSender().getUsername()) ||
-                StringUtils.hasText(getEndpointConfiguration().getJavaMailSender().getPassword())) {
-
-            Properties javaMailProperties = getEndpointConfiguration().getJavaMailSender().getJavaMailProperties();
-
-            javaMailProperties.setProperty("mail.smtp.auth", "true");
-            getEndpointConfiguration().getJavaMailSender().setJavaMailProperties(javaMailProperties);
+        if (!StringUtils.hasText(getEndpointConfiguration().getProtocol())) {
+            throw new CitrusRuntimeException("A mailing protocol must be configured!");
         }
 
-        if (!StringUtils.hasText(getEndpointConfiguration().getJavaMailSender().getProtocol())) {
-            getEndpointConfiguration().getJavaMailSender().setProtocol("smtp");
+        if (StringUtils.hasText(getEndpointConfiguration().getUsername()) ||
+                StringUtils.hasText(getEndpointConfiguration().getPassword())) {
+
+            getEndpointConfiguration().getJavaMailProperties().setProperty("mail." + getEndpointConfiguration().getProtocol() + ".auth", "true");
+            getEndpointConfiguration().setAuthenticator(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(getEndpointConfiguration().getUsername(), getEndpointConfiguration().getPassword());
+                }
+            });
+        }
+
+        if (StringUtils.hasText(getEndpointConfiguration().getHost())) {
+            getEndpointConfiguration().getJavaMailProperties().setProperty("mail." + getEndpointConfiguration().getProtocol() + ".host", getEndpointConfiguration().getHost());
+        }
+        if (getEndpointConfiguration().getPort() > 0) {
+            getEndpointConfiguration().getJavaMailProperties().setProperty("mail." + getEndpointConfiguration().getProtocol() + ".port", String.valueOf(getEndpointConfiguration().getPort()));
         }
     }
 
+    void setMailSender(MailSender mailSenderMock) {
+        this.mailSender = mailSenderMock;
+    }
 }
