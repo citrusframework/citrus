@@ -18,6 +18,7 @@ package org.citrusframework.mail.message;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
+import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimePart;
 import javax.xml.transform.Source;
@@ -70,7 +71,10 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
         MailRequest mailMessage = getMailRequest(message, endpointConfiguration);
 
         try {
-            MimeMessage mimeMessage = endpointConfiguration.getJavaMailSender().createMimeMessage();
+            Session session = Session.getInstance(endpointConfiguration.getJavaMailProperties(), endpointConfiguration.getAuthenticator());
+            session.setDebug(log.isDebugEnabled());
+
+            MimeMessage mimeMessage = new MimeMessage(session);
             MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessageHelper(mimeMessage,
                     mailMessage.getBody().hasAttachments(),
                     parseCharsetFromContentType(mailMessage.getBody().getContentType())));

@@ -137,7 +137,7 @@
       </echo>
 
       <parallel>
-        <assert exception="org.springframework.mail.MailSendException">
+        <assert exception="org.citrusframework.exceptions.CitrusRuntimeException">
           <when>
             <send endpoint="advancedMailClient">
               <description>

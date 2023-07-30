@@ -40,28 +40,30 @@ public class MailClientParserTest extends AbstractBeanDefinitionParserTest {
         // 1st mail sender
         MailClient sender = senders.get("mailClient1");
         Assert.assertEquals(sender.getName(), "mailClient1");
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getHost(), "localhost");
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getPort(), 25000);
+        Assert.assertEquals(sender.getEndpointConfiguration().getHost(), "localhost");
+        Assert.assertEquals(sender.getEndpointConfiguration().getPort(), 25000);
+        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailProperties().getProperty("mail.smtp.host"), "localhost");
+        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailProperties().getProperty("mail.smtp.port"), "25000");
         Assert.assertNull(sender.getActor());
 
         // 2nd mail sender
         sender = senders.get("mailClient2");
         Assert.assertEquals(sender.getName(), "mailClient2");
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getHost(), "localhost");
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getPort(), 25000);
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getUsername(), "mailus");
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getPassword(), "secret");
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getJavaMailProperties().get("mail.smtp.auth"), "true");
+        Assert.assertEquals(sender.getEndpointConfiguration().getHost(), "localhost");
+        Assert.assertEquals(sender.getEndpointConfiguration().getPort(), 25000);
+        Assert.assertEquals(sender.getEndpointConfiguration().getUsername(), "mailus");
+        Assert.assertEquals(sender.getEndpointConfiguration().getPassword(), "secret");
+        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailProperties().get("mail.smtp.auth"), "true");
         Assert.assertNull(sender.getActor());
 
         // 3rd mail sender
         sender = senders.get("mailClient3");
         Assert.assertEquals(sender.getName(), "mailClient3");
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getHost(), "localhost");
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getPort(), 25000);
+        Assert.assertEquals(sender.getEndpointConfiguration().getHost(), "localhost");
+        Assert.assertEquals(sender.getEndpointConfiguration().getPort(), 25000);
         Assert.assertNotNull(sender.getActor());
         Assert.assertEquals(sender.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
         Assert.assertEquals(sender.getEndpointConfiguration().getMarshaller(), beanDefinitionContext.getBean("marshaller", MailMarshaller.class));
-        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getJavaMailProperties().get("mail.transport.protocol"), "smtp");
+        Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailProperties().get("mail.transport.protocol"), "smtp");
     }
 }

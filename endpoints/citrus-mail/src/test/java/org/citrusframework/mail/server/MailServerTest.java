@@ -25,12 +25,14 @@ import org.citrusframework.mail.message.CitrusMailMessageHeaders;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.TestUtils;
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -41,24 +43,31 @@ import java.util.Date;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
-public class MailServerTest {
+class MailServerTest {
 
-    private final EndpointAdapter endpointAdapterMock = Mockito.mock(EndpointAdapter.class);
+    private AutoCloseable mockitoContext;
+
+    @Mock
+    private EndpointAdapter endpointAdapterMock;
+
+    private MailServer fixture;
+
+    @BeforeMethod
+    void beforeMethodSetup() {
+        mockitoContext = MockitoAnnotations.openMocks(this);
+
+        fixture = new MailServer();
+        fixture.setEndpointAdapter(endpointAdapterMock);
+    }
 
     @Test
-    public void testTextMessage() throws IOException, MessagingException {
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
-
-        reset(endpointAdapterMock);
-
-        doAnswer((Answer<Message>) invocation -> {
+    void testTextMessage() throws IOException, MessagingException {
+        doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
@@ -73,30 +82,36 @@ public class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
-                                MailServer.class).getInputStream()))));
+                Assert.assertEquals(
+                        StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(
+                                FileCopyUtils.copyToString(
+                                        new InputStreamReader(
+                                                new ClassPathResource("text_mail.xml", MailServer.class).getInputStream()
+                                        )
+                                )
+                        )
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
 
             return null;
-        }).when(endpointAdapterMock).handleMessage(any(Message.class));
+        })
+                .when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
-        Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
-        mailServer.deliver(message);
+        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
+        fixture.deliver(message);
+
+        // Because of autoAccept = true
+        Assert.assertTrue(fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
     }
 
     @Test
-    public void testMultipartMessage() throws IOException, MessagingException {
+    void testMultipartMessage() throws IOException, MessagingException {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
 
-        reset(endpointAdapterMock);
-
-        doAnswer((Answer<Message>) invocation -> {
+        doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
@@ -107,8 +122,7 @@ public class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
 
-            // compare the Date as a Date rather than a String, otherwise this test fails outside of the
-            // "+1" timezone
+            // compare the Date as a Date rather than a String, otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
             Assert.assertEquals(actualDate, expectedDateDate);
@@ -122,7 +136,13 @@ public class MailServerTest {
                                 StringUtils.trimAllWhitespace(message.getPayload(String.class))
                         ),
                         TestUtils.normalizeLineEndings(
-                                StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream())))
+                                StringUtils.trimAllWhitespace(
+                                        FileCopyUtils.copyToString(
+                                                new InputStreamReader(
+                                                        new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream()
+                                                )
+                                        )
+                                )
                         )
                 );
             } catch (IOException e) {
@@ -132,21 +152,18 @@ public class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
-        Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
-        mailServer.deliver(message);
+        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
+        fixture.deliver(message);
+
+        // Because of autoAccept = true
+        Assert.assertTrue(fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
     }
 
     @Test
-    public void testBinaryMessage() throws IOException, MessagingException {
+    void testBinaryMessage() throws IOException, MessagingException {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
-
-        reset(endpointAdapterMock);
-
-        doAnswer((Answer<Message>) invocation -> {
+        doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
@@ -157,8 +174,7 @@ public class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
 
-            // compare the Date as a Date rather than a String, otherwsie this test fails outside of the
-            // "+1" timezone
+            // compare the Date as a Date rather than a String, otherwsie this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
             Assert.assertEquals(actualDate, expectedDateDate);
@@ -167,10 +183,9 @@ public class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
             try {
-                Assert.assertEquals(
-                        StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail.xml",MailServer.class).getInputStream())))
-                );
+                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail.xml",
+                                MailServer.class).getInputStream()))));
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
@@ -178,49 +193,54 @@ public class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
-        Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
-        mailServer.deliver(message);
+        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
+        fixture.deliver(message);
+
+        // Because of autoAccept = true
+        Assert.assertTrue(fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
     }
 
     @Test
-    public void testAutoAcceptDisabled() {
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
-
-        reset(endpointAdapterMock);
-
-        doAnswer((Answer<Message>) invocation -> {
+    void testAutoAcceptDisabled() {
+        doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-request.xml",
-                                MailServer.class).getInputStream()))));
+                Assert.assertEquals(
+                        StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(
+                                FileCopyUtils.copyToString(
+                                        new InputStreamReader(
+                                                new ClassPathResource("accept-request.xml", MailServer.class).getInputStream())
+                                )
+                        )
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
 
-            return new DefaultMessage(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-response.xml",
-                    MailServer.class).getInputStream())));
+            return new DefaultMessage(
+                    FileCopyUtils.copyToString(
+                            new InputStreamReader(
+                                    new ClassPathResource("accept-response.xml",MailServer.class).getInputStream()
+                            )
+                    )
+            );
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        mailServer.setAutoAccept(false);
-        Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
+        fixture.setAutoAccept(false);
+        Assert.assertTrue(fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
     }
 
     @Test
-    public void testAutoAcceptDisabledWithTimeout() {
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
-
-        reset(endpointAdapterMock);
+    void testAutoAcceptDisabledWithTimeout() {
         when(endpointAdapterMock.handleMessage(any(Message.class))).thenReturn(null);
-        mailServer.setAutoAccept(false);
+        fixture.setAutoAccept(false);
+
         try {
-            mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com")));
+            fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com")));
             Assert.fail("Missing runtime exception due to missing accept response");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Did not receive accept response"));
@@ -228,15 +248,12 @@ public class MailServerTest {
     }
 
     @Test
-    public void testAutoAcceptDisabledWithInvalidAcceptResponse() {
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
-
-        reset(endpointAdapterMock);
+    void testAutoAcceptDisabledWithInvalidAcceptResponse() {
         when(endpointAdapterMock.handleMessage(any(Message.class))).thenReturn(new DefaultMessage(99L));
-        mailServer.setAutoAccept(false);
+        fixture.setAutoAccept(false);
+
         try {
-            mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com")));
+            fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com")));
             Assert.fail("Missing runtime exception due to invalid accept response");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to read accept response"));
@@ -244,14 +261,10 @@ public class MailServerTest {
     }
 
     @Test
-    public void testTextMessageSplitting() throws IOException, MessagingException {
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
-        mailServer.setSplitMultipart(true);
+    void testTextMessageSplitting() throws IOException, MessagingException {
+        fixture.setSplitMultipart(true);
 
-        reset(endpointAdapterMock);
-
-        doAnswer((Answer<Message>) invocation -> {
+        doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
@@ -266,9 +279,15 @@ public class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
-                                MailServer.class).getInputStream()))));
+                Assert.assertEquals(
+                        StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+                        StringUtils.trimAllWhitespace(
+                                FileCopyUtils.copyToString(
+                                        new InputStreamReader(
+                                                new ClassPathResource("text_mail.xml", MailServer.class).getInputStream())
+                                )
+                        )
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
@@ -276,21 +295,20 @@ public class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
-        Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
-        mailServer.deliver(message);
+        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
+        fixture.deliver(message);
+
+        // Because of autoAccept = true
+        Assert.assertTrue(fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
     }
 
     @Test
-    public void testMultipartMessageSplitting() throws IOException, MessagingException {
+    void testMultipartMessageSplitting() throws IOException, MessagingException {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
-        mailServer.setSplitMultipart(true);
 
-        reset(endpointAdapterMock);
+        fixture.setSplitMultipart(true);
 
-        doAnswer((Answer<Message>) invocation -> {
+        doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
@@ -301,8 +319,7 @@ public class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
 
-            // compare dates as Date rather than String otherwise this test fails outside
-            // of the "+1" timezone
+            // compare dates as Date rather than String otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
             Assert.assertEquals(actualDate, expectedDateDate);
@@ -319,7 +336,7 @@ public class MailServerTest {
             }
 
             return null;
-        }).doAnswer((Answer<Message>) invocation -> {
+        }).doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
@@ -330,8 +347,7 @@ public class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
 
-            // compare dates as Date rather than String otherwise this test fails outside
-            // of the "+1" timezone
+            // compare dates as Date rather than String otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2006-10-26T13:10:50+0200");
             Assert.assertEquals(actualDate, expectedDateDate);
@@ -358,21 +374,20 @@ public class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
-        Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
-        mailServer.deliver(message);
+        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
+        fixture.deliver(message);
+
+        // Because of autoAccept = true
+        Assert.assertTrue(fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
     }
 
     @Test
-    public void testBinaryMessageSplitting() throws IOException, MessagingException {
+    void testBinaryMessageSplitting() throws IOException, MessagingException {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
-        mailServer.setSplitMultipart(true);
 
-        reset(endpointAdapterMock);
+        fixture.setSplitMultipart(true);
 
-        doAnswer((Answer<Message>) invocation -> {
+        doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
@@ -383,9 +398,7 @@ public class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
 
-
-            // compare dates as Date rather than String otherwise this test fails outside
-            // of the "+1" timezone
+            // compare dates as Date rather than String otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
             Assert.assertEquals(actualDate, expectedDateDate);
@@ -402,7 +415,7 @@ public class MailServerTest {
             }
 
             return null;
-        }).doAnswer((Answer<Message>) invocation -> {
+        }).doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
@@ -413,8 +426,7 @@ public class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
 
-            // compare dates as Date rather than String otherwise this test fails outside
-            // of the "+1" timezone
+            // compare dates as Date rather than String otherwise this test fails outside the "+1" timezone
             Date actualDate = dateFormat.parse((String)message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
             Date expectedDateDate = dateFormat.parse("2013-12-06T10:27:41+0100");
             Assert.assertEquals(actualDate, expectedDateDate);
@@ -434,19 +446,16 @@ public class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
-        Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
-        mailServer.deliver(message);
+        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
+        fixture.deliver(message);
+
+        // Because of autoAccept = true
+        Assert.assertTrue(fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
     }
 
     @Test
-    public void testSimulateError() throws IOException, MessagingException {
-        MailServer mailServer = new MailServer();
-        mailServer.setEndpointAdapter(endpointAdapterMock);
-
-        reset(endpointAdapterMock);
-
-        doAnswer((Answer<Message>) invocation -> {
+    void testSimulateError() throws IOException, MessagingException {
+        doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
 
             Assert.assertNotNull(message.getPayload());
@@ -472,14 +481,19 @@ public class MailServerTest {
                     MailServer.class).getInputStream())));
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(mailServer.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
-        Assert.assertTrue(mailServer.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
+        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
+        Assert.assertTrue(fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
 
         try {
-            mailServer.deliver(message);
+            fixture.deliver(message);
             throw new CitrusRuntimeException("Missing reject exception due to simulated error");
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "443 Failed!");
         }
+    }
+
+    @AfterMethod
+    void afterMethodTeardown() throws Exception {
+        mockitoContext.close();
     }
 }

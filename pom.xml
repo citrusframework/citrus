@@ -168,6 +168,7 @@
     <jaxb.maven.plugin.version>3.1.0</jaxb.maven.plugin.version>
 
     <activemq.artemis.version>2.30.0</activemq.artemis.version>
+    <angus-mail.version>2.0.2</angus-mail.version>
     <apache.ant.version>1.10.13</apache.ant.version>
     <apache.camel.version>4.0.0-RC1</apache.camel.version>
     <arquillian.version>1.7.0.Final</arquillian.version>
@@ -188,16 +189,15 @@
     <ftpserver.version>1.2.0</ftpserver.version>
     <groovy.version>3.0.18</groovy.version>
     <google.guava.version>32.1.1-jre</google.guava.version>
+    <greenmail.version>2.0.0</greenmail.version>
     <hamcrest.version>2.2</hamcrest.version>
     <htmlunit.version>4.10.0</htmlunit.version>
     <httpclient.version>5.2.1</httpclient.version>
     <hsqldb.version>2.7.2</hsqldb.version>
     <jackson.version>2.15.2</jackson.version>
-    <jakarta.activation.api.version>2.1.2</jakarta.activation.api.version>
-    <jakarta.activation.version>2.0.1</jakarta.activation.version>
-    <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
+    <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
     <jakarta.jms-api.version>3.1.0</jakarta.jms-api.version>
-    <jakarta.mail.version>2.0.1</jakarta.mail.version>
+    <jakarta.mail.version>2.0.2</jakarta.mail.version>
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
     <jakarta.validation.version>3.0.2</jakarta.validation.version>
     <jakarta.websocket-api.version>2.1.1</jakarta.websocket-api.version>
@@ -234,9 +234,8 @@
     <spring.integration.version>6.1.2</spring.integration.version>
     <spring.restdocs.version>3.0.0</spring.restdocs.version>
     <sshd.version>2.10.0</sshd.version>
-    <greenmail.version>2.0.0</greenmail.version>
     <swagger.version>1.6.9</swagger.version>
-    <swagger.parser.version>1.0.64</swagger.parser.version>
+    <swagger.parser.version>2.1.16</swagger.parser.version>
     <testng.version>7.8.0</testng.version>
     <vertx.version>4.4.4</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
@@ -267,16 +266,6 @@
         <version>${jakarta.jms-api.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>jakarta.activation</groupId>
-        <artifactId>jakarta.activation-api</artifactId>
-        <version>${jakarta.activation.api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.sun.activation</groupId>
-        <artifactId>jakarta.activation</artifactId>
-        <version>${jakarta.activation.version}</version>
-      </dependency>
       <dependency>
         <groupId>com.sun.xml.messaging.saaj</groupId>
         <artifactId>saaj-impl</artifactId>
@@ -589,14 +578,14 @@
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
+        <groupId>jakarta.annotation</groupId>
+        <artifactId>jakarta.annotation-api</artifactId>
+        <version>${jakarta.annotation-api.version}</version>
+      </dependency>
+      <dependency>
         <groupId>jakarta.servlet</groupId>
         <artifactId>jakarta.servlet-api</artifactId>
         <version>${jakarta.servlet-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.annotation</groupId>
-        <artifactId>jakarta.annotation-api</artifactId>
-        <version>${jakarta.annotation.version}</version>
       </dependency>
       <dependency>
         <groupId>jakarta.websocket</groupId>
@@ -646,14 +635,14 @@
 
       <!-- Citrus mail dependencies -->
       <dependency>
-        <groupId>com.sun.mail</groupId>
-        <artifactId>jakarta.mail</artifactId>
-        <version>${jakarta.mail.version}</version>
-      </dependency>
-      <dependency>
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail</artifactId>
         <version>${greenmail.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.angus</groupId>
+        <artifactId>jakarta.mail</artifactId>
+        <version>${jakarta.mail.version}</version>
       </dependency>
 
       <!-- Citrus vert.x dependencies -->
@@ -857,6 +846,10 @@
           <exclusion>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>mailapi</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -1353,11 +1346,6 @@
               <groupId>org.glassfish.jaxb</groupId>
               <artifactId>jaxb-xjc</artifactId>
               <version>${jaxb.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>jakarta.activation</groupId>
-              <artifactId>jakarta.activation-api</artifactId>
-              <version>${jakarta.activation.api.version}</version>
             </dependency>
             <dependency>
               <groupId>jakarta.xml.bind</groupId>
