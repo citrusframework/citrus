@@ -33,5 +33,11 @@ public class EchoActionJavaIT extends TestNGCitrusSpringSupport {
         run(echo("Hello Citrus!"));
 
         run(echo("Today is citrus:currentDate()"));
+
+        $(context -> {
+            context.setVariable("today", "citrus:currentDate()");
+        });
+
+        run(echo("Today is ${today}"));
     }
 }

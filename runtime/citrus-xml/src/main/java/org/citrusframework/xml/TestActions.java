@@ -19,6 +19,12 @@
 
 package org.citrusframework.xml;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
@@ -26,32 +32,9 @@ import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAnyElement;
 import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlElementRefs;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.xml.actions.Action;
-import org.citrusframework.xml.actions.ApplyTemplate;
-import org.citrusframework.xml.actions.CreateVariables;
-import org.citrusframework.xml.actions.Echo;
-import org.citrusframework.xml.actions.ExpectTimeout;
-import org.citrusframework.xml.actions.Fail;
-import org.citrusframework.xml.actions.LoadProperties;
-import org.citrusframework.xml.actions.Print;
-import org.citrusframework.xml.actions.PurgeEndpoint;
-import org.citrusframework.xml.actions.Receive;
-import org.citrusframework.xml.actions.Sleep;
-import org.citrusframework.xml.actions.Start;
-import org.citrusframework.xml.actions.Stop;
-import org.citrusframework.xml.actions.StopTime;
-import org.citrusframework.xml.actions.StopTimer;
-import org.citrusframework.xml.actions.TraceVariables;
-import org.citrusframework.xml.actions.Transform;
-import org.citrusframework.xml.actions.XmlTestActionBuilder;
+import org.citrusframework.xml.actions.*;
 import org.citrusframework.xml.container.Assert;
 import org.citrusframework.xml.container.Async;
 import org.citrusframework.xml.container.Catch;
@@ -76,8 +59,10 @@ public class TestActions {
     @XmlElementRefs({
             @XmlElementRef(name = "action", type = Action.class, required = false),
             @XmlElementRef(name = "echo", type = Echo.class, required = false),
+            @XmlElementRef(name = "ant", type = AntRun.class, required = false),
             @XmlElementRef(name = "print", type = Print.class, required = false),
             @XmlElementRef(name = "sleep", type = Sleep.class, required = false),
+            @XmlElementRef(name = "delay", type = Delay.class, required = false),
             @XmlElementRef(name = "receive", type = Receive.class, required = false),
             @XmlElementRef(name = "create-variables", type = CreateVariables.class, required = false),
             @XmlElementRef(name = "load", type = LoadProperties.class, required = false),
@@ -98,6 +83,7 @@ public class TestActions {
             @XmlElementRef(name = "stop-time", type = StopTime.class, required = false),
             @XmlElementRef(name = "start", type = Start.class, required = false),
             @XmlElementRef(name = "stop", type = Stop.class, required = false),
+            @XmlElementRef(name = "trace", type = TraceVariables.class, required = false),
             @XmlElementRef(name = "trace-variables", type = TraceVariables.class, required = false),
             @XmlElementRef(name = "purge-endpoint", type = PurgeEndpoint.class, required = false),
             @XmlElementRef(name = "transform", type = Transform.class, required = false),

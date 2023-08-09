@@ -3,35 +3,69 @@
 
 Iterations are very powerful elements when describing complex logic. The container executes the embedded actions several times. The container will continue with looping as long as the defined breaking condition string evaluates to *_true_* . In case the condition evaluates to *_false_* the iteration will break an finish execution.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="iterateTest">
-    <actions>
-        <iterate index="i" condition="i lt 5">
-            <echo>
-                <message>index is: ${i}</message>
-            </echo>
-        </iterate>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void iterateTest() {
-    iterate().condition("i lt 5").index("i"))
+    $(iterate().condition("i lt 5").index("i"))
         .actions(
-            echo("index is: ${i}")
-        );
+            echo().message("index is: ${i}")
+        )
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="IterateTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <iterate index="i" condition="i lt 5">
+            <actions>
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </actions>
+        </iterate>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: IterateTest
+actions:
+  - iterate:
+      index: "i"
+      condition: "i lt 5"
+      actions:
+        - echo:
+            message: "index is: ${i}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="IterateTest">
+        <actions>
+            <iterate index="i" condition="i lt 5">
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </iterate>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The attribute "index" automatically defines a new variable that holds the actual loop index starting at "1". This index variable is available as a normal variable inside the iterate container. Therefore it is possible to print out the actual loop index in the echo action as shown in the above example.
 
-The condition string is mandatory and describes the actual end of the loop. In iterate containers the loop will break in case the condition evaluates to *_false_* .
+The condition string is mandatory and describes the actual end of the loop.
+In iterate containers the loop will break in case the condition evaluates to *_false_*.
 
 The condition string can be any Boolean expression and supports several operators:
 
@@ -49,30 +83,79 @@ IMPORTANT: It is very important to notice that the condition is evaluated before
 
 Now the boolean expression evaluation as described above is limited to very basic operation such as *lower than*, *greater than* and so on. We also can use Hamcrest matchers in conditions that are way more powerful than that.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="iterateTest">
-    <actions>
-        <iterate index="i" condition="@assertThat(lessThan(5))@">
-            <echo>
-                <message>index is: ${i}</message>
-            </echo>
-        </iterate>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void iterateTest() {
-    iterate().condition(lessThan(5)).index("i"))
+    $(iterate().condition(assertThat(lessThan(5)).index("i"))
         .actions(
-            echo("index is: ${i}")
-        );
+            echo().message("index is: ${i}")
+        )
+    );
 }
 ----
 
-In the example above we use Hamcrest matchers as condition. You can combine Hamcrest matchers and create very powerful condition evaluations here.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="IterateTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <iterate index="i" condition="@assertThat(lessThan(5))@">
+            <actions>
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </actions>
+        </iterate>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: IterateTest
+actions:
+  - iterate:
+      index: "i"
+      condition: "@assertThat(lessThan(5))@"
+      actions:
+        - echo:
+            message: "index is: ${i}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="IterateTest">
+        <actions>
+            <iterate index="i" condition="@assertThat(lessThan(5))@">
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </iterate>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+In the example above we use Hamcrest matchers as a condition expression.
+In Java you may use the `org.citrusframework.container.HamcrestConditionExpression.assertThat(org.hamcrest.Matcher<?>)` method.
+This way you can combine Hamcrest matchers and create very powerful condition evaluations here.
+
+The Hamcrest expression evaluation in Citrus gets added with this module:
+
+.citrus-validation-hamcrest Module
+[source,xml]
+----
+<dependency>
+    <groupId>org.citrusframework</groupId>
+    <artifactId>citrus-validation-hamcrest</artifactId>
+    <version>${citrus.version}</version>
+</dependency>
+----
+
+You need to add this module to your project accordingly when using the Hamcrest matcher support.

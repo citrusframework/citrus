@@ -23,10 +23,13 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.xml.namespace.QName;
+
+import jakarta.xml.bind.JAXBElement;
 import org.citrusframework.generate.AbstractTemplateBasedTestGenerator;
 import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.javadsl.JavaTestGenerator;
-import org.citrusframework.model.testcase.core.EchoModel;
+import org.citrusframework.model.testcase.core.EchoActionType;
 import org.citrusframework.model.testcase.core.ObjectFactory;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.StringResult;
@@ -114,9 +117,9 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
      */
     protected List<Object> getActions() {
         List<Object> actions = new ArrayList<>();
-        EchoModel echo = new EchoModel();
+        EchoActionType echo = new EchoActionType();
         echo.setMessage("TODO: Code the test " + getName());
-        actions.add(echo);
+        actions.add(new JAXBElement<>(new QName("http://www.citrusframework.org/schema/testcase", "echo"), EchoActionType.class, echo));
         return actions;
     }
 

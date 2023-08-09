@@ -7,24 +7,42 @@ The test immediately continues to execute the next test actions, which will be e
 the async container.
 
 This mechanism comes in handy when a test action should be forked to the rest of the test. In send operations we were
-already able to achieve this by setting `fork="true"`. With async containers, we're able to execute all 
+already able to achieve this by setting `fork="true"`. With async containers, we're able to execute all
 kinds of test actions asynchronous.
 
 See some example to find out how it works.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="asyncTest">
+@CitrusTest
+public void asyncTest() {
+    $(async()
+        .actions(
+            send(fooEndpoint)
+                .message(fooRequest()),
+            receive(fooEndpoint)
+                .message(fooResponse())
+        )
+    );
+
+    $(echo().message("Continue with test"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="AsyncTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
         <async>
             <actions>
                 <send endpoint="fooEndpoint">
-                    <message>...</message>
+                    <message><!-- ... --></message>
                 </send>
                 <receive endpoint="fooEndpoint">
-                    <message>...</message>
-                </echo>
+                    <message><!-- ... --></message>
+                </receive>
             </actions>
         </async>
 
@@ -32,114 +50,222 @@ See some example to find out how it works.
           <message>Continue with test</message>
         </echo>
     </actions>
-</testcase>
+</test>
 ----
 
-.Java DSL
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: AsyncTest
+actions:
+  - async:
+      actions:
+        - send:
+            endpoint: "fooEndpoint"
+            message: {}
+        - receive:
+            endpoint: "fooEndpoint"
+            message: {}
+  - echo:
+      message: "Continue with test"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="AsyncTest">
+        <actions>
+            <async>
+                <actions>
+                    <send endpoint="fooEndpoint">
+                        <message><!-- ... --></message>
+                    </send>
+                    <receive endpoint="fooEndpoint">
+                        <message><!-- ... --></message>
+                    </receive>
+                </actions>
+            </async>
+
+            <echo>
+              <message>Continue with test</message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+The nested `send` and `receive` actions get executed in parallel to the other test actions in that test case.
+So the test will not wait for these actions to finish before executing next actions.
+Of course possible errors inside the async container will also cause the whole test case to fail.
+And the test will definitely wait for all async actions to be finished before finishing the whole test case.
+This safely lets us execute test actions in parallel to each other.
+
+The async container also supports success and error callback actions.
+
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void asyncTest() {
-    async().actions(
+    $(async()
+        .actions(
             send(fooEndpoint)
                 .message(fooRequest()),
             receive(fooEndpoint)
                 .message(fooResponse())
-        );
+        )
+        .successActions(
+            echo().message("Success!")
+        )
+        .errorActions(
+            echo().message("Error!")
+        )
+    );
 
-    echo("Continue with test");
+    $(echo().message("Continue with test"));
 }
 ----
 
-The nested `send` and `receive` actions get executed in parallel to the other test actions in that test case. So the
-test will not wait for these actions to finish before executing next actions. Of course possible errors inside the async
-container will also cause the whole test case to fail. And the test will definitely wait for all async actions to be
-finished before finishing the whole test case. This safely lets us execute test actions in parallel to each other.
-
-The async container also supports success and error callback actions.
-
-.XML DSL
-[source,xml]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-<testcase name="asyncTest">
+<test name="AsyncTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
         <async>
             <actions>
                 <send endpoint="fooEndpoint">
-                    <message>...</message>
+                    <message><!-- ... --></message>
                 </send>
                 <receive endpoint="fooEndpoint">
-                    <message>...</message>
-                </echo>
+                    <message><!-- ... --></message>
+                </receive>
+            </actions>
+            <success>
+                <echo><message>Success!</message></echo>
+            </success>
+            <error>
+                <echo><message>Failed!</message></echo>
+            </error>
+        </async>
+
+        <echo>
+          <message>Continue with test</message>
+        </echo>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: AsyncTest
+actions:
+  - async:
+      actions:
+        - send:
+            endpoint: "fooEndpoint"
+            message: {}
+        - receive:
+            endpoint: "fooEndpoint"
+            message: {}
+      success:
+        - echo:
+            message: "Success!"
+      error:
+        - echo:
+            message: "Error!"
+  - echo:
+      message: "Continue with test"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="AsyncTest">
+        <actions>
+            <async>
+                <actions>
+                    <send endpoint="fooEndpoint">
+                        <message><!-- ... --></message>
+                    </send>
+                    <receive endpoint="fooEndpoint">
+                        <message><!-- ... --></message>
+                    </receive>
+                </actions>
                 <success>
                     <echo><message>Success!</message></echo>
                 </success>
                 <error>
                     <echo><message>Failed!</message></echo>
                 </error>
-            </actions>
-        </async>
+            </async>
 
-        <echo>
-          <message>Continue with test</message>
-        </echo>
-    </actions>
-</testcase>
+            <echo>
+              <message>Continue with test</message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 So you can add test actions which are executed based on the async test actions outcome `success` or `error`.
 
-If you are using this container to send or receive messages, you have to use the unique correlation ID of the
-message to link the actions concerning this message. Otherwise the testcase might associate a send or receive action
-with the wrong message. Please note that this ID is **not** passed to your system under test. The
-management of correlation IDs as well as the assignment to messages is done internally. Only the mapping
-between the request and response has to be done by the author of the test. As you can see in the following example, the
-value of the header `MessageHeaders.ID` is stored in the variable `request#1` respectively `request#2`. This variable is
-reused in the receive action to identify the correct response from the server.
+If you are using this container to send or receive messages, you have to use the unique correlation ID of the message to link the actions concerning this message.
+Otherwise the testcase might associate a `send` or `receive` action with the wrong message.
+Please note that this ID is **not** provided to your system under test.
+The management of correlation IDs as well as the assignment to messages is done internally.
+Only the mapping between the request and response has to be done by the author of the test.
+As you can see in the following example, the value of the header `MessageHeaders.ID` is stored in the variable `request#1` respectively `request#2`.
+This variable is reused in the `receive` action to identify the correct response from the server.
 
-.Java DSL
+.Java
 [source,java]
 ----
 @CitrusTest
 public void testAsync() {
 
-    async().actions(
-        http(b -> b.client(httpClient)
-                .send()
-                .post("/foo")
-                .extractFromHeader(MessageHeaders.ID, "request#1")
-                .payload("{ \"info\": \"foo\"}")),
+    $(async()
+        .actions(
+            http().client(httpClient)
+                    .send()
+                    .post("/foo")
+                    .extract(fromHeaders().header(MessageHeaders.ID, "request#1")
+                    .payload("{ \"info\": \"foo\"}"),
 
-        //SUT echoing the input
+            //SUT echoing the input
 
-        http(b -> b.client(httpClient)
-                .receive()
-                .response(HttpStatus.OK)
-                .payload("{ \"info\": \"foo\"}")
-                .selector(
-                    Collections.singletonMap(
-                        MessageHeaders.ID,
-                        "${request#1}")))
-
+            http().client(httpClient)
+                    .receive()
+                    .response(HttpStatus.OK)
+                    .payload("{ \"info\": \"foo\"}")
+                    .selector(
+                        Collections.singletonMap(
+                            MessageHeaders.ID, "${request#1}"))
+        )
     );
 
-    async().actions(
-        http(b -> b.client(httpClient)
-                .send()
-                .post("/boo")
-                .extractFromHeader(MessageHeaders.ID, "request#2")
-                .payload("{ \"info\": \"boo\"}")),
+    $(async()
+        .actions(
+            http().client(httpClient)
+                    .send()
+                    .post("/boo")
+                    .extract(fromHeaders().header(MessageHeaders.ID, "request#2")
+                    .payload("{ \"info\": \"boo\"}"),
 
-        //SUT echoing the input
+            //SUT echoing the input
 
-        http(b -> b.client(httpClient)
-                .receive()
-                .response(HttpStatus.OK)
-                .payload("{ \"info\": \"boo\"}")
-                .selector(
-                    Collections.singletonMap(
-                        MessageHeaders.ID,
-                        "${request#2}")))
+            http().client(httpClient)
+                    .receive()
+                    .response(HttpStatus.OK)
+                    .payload("{ \"info\": \"boo\"}")
+                    .selector(
+                        Collections.singletonMap(
+                            MessageHeaders.ID, "${request#2}"))
+        )
     );
 }
 ----

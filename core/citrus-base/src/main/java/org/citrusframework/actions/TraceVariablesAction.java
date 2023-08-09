@@ -87,6 +87,14 @@ public class TraceVariablesAction extends AbstractTestAction {
          * Fluent API action building entry method used in Java DSL.
          * @return
          */
+        public static Builder trace() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
         public static Builder traceVariables() {
             return new Builder();
         }

@@ -1,36 +1,87 @@
 [[actions-catch-exceptions]]
 == Catch exceptions
 
-In the previous chapter we have seen how to expect failures in Citrus with assert action. Now the assert action is designed for single actions to be monitored and for failures to be expected in any case. The *'catch'* action in contrary can hold several nested test actions and exception failure is optional.
+In the previous chapter we have seen how to expect failures in Citrus with assert action.
+Now the assert action is designed for single actions to be monitored and for failures to be expected in any case.
+The *'catch'* action in contrary can hold several nested test actions and exception failure is optional.
 
-The nested actions are error proof for the chosen exception type. This means possible exceptions are caught and ignored - the test case will not fail for this exception type. But only for this particular exception type! Other exception types that occur during execution do cause the test to fail as usual.
+The nested actions are error proof for the chosen exception type.
+This means possible exceptions are caught and ignored - the test case will not fail for this exception type.
+But only for this particular exception type! Other exception types that occur during execution do cause the test to fail as usual.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="catchExceptionTest">
-    <actions>
-        <catch exception="org.citrusframework.exceptions.CitrusRuntimeException">
-            <echo>
-                <message>Current date is: ${date}</message>
-            </echo>
-        </catch>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
-public void catchTest() {
-    catchException().exception(CitrusRuntimeException.class)
-                    .when(echo("Current date is: ${date}"));
+public void catchFailureTest() {
+    $(catchException()
+        .exception(CitrusRuntimeException.class)
+        .when(
+            echo().message("Current date is: ${date}")
+        );
+    );
 }
 ----
 
-IMPORTANT: Note that there is no validation available in a catch block. So catching exceptions is just to make a test more stable towards errors that can occur. The caught exception does not cause any failure in the test. The test case may continue with execution as if there was not failure. Also notice that the catch action is also happy when no exception at all is raised. In contrary to that the assert action requires the exception and an assert action is failing in positive processing.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CatchFailureTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <catch exception="org.citrusframework.exceptions.CitrusRuntimeException">
+            <when>
+                <echo>
+                    <message>Current date is: ${date}</message>
+                </echo>
+            </when>
+        </assert>
+    </actions>
+</test>
+----
 
-Catching exceptions like this may only fit to very error prone action blocks where failures do not harm the test case success. Otherwise a failure in a test action should always reflect to the whole test case to fail with errors.
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: "CatchFailureTest"
+actions:
+  - catch:
+      exception: "org.citrusframework.exceptions.CitrusRuntimeException"
+      when:
+        - echo:
+            message: 'Current date is: ${date}'
+----
 
-NOTE: Java developers might ask why not use try-catch Java block instead? The answer is simple yet very important to understand. The test method is called by the Java DSL test case builder for building the Citrus test. This can be referred to as the design time of the test. After the building test method was processed the test gets executed, which can be called the runtime of the test. This means that a try-catch block within the design time method will never perform during the test run. The only reliable way to add the catch capability to the test as part of the test case runtime is to use the Citrus test action which gets executed during test runtime.
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="catchExceptionTest">
+        <actions>
+            <catch exception="org.citrusframework.exceptions.CitrusRuntimeException">
+                <echo>
+                    <message>Current date is: ${date}</message>
+                </echo>
+            </catch>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+IMPORTANT: Note that there is no validation available in a catch block.
+So catching exceptions is just to make a test more stable towards errors that can occur.
+The caught exception does not cause any failure in the test.
+The test case may continue with execution as if there was no failure.
+Also notice that the catch action is also happy when no exception at all is raised.
+In contrary to that the assert action requires the exception and an assert action is failing in positive processing.
+
+Catching exceptions like this may only fit to very error-prone action blocks where failures do not harm the test case success.
+Otherwise, a failure in a test action should always reflect to the whole test case to fail with errors.
+
+NOTE: Java developers might ask why not use try-catch Java block instead?
+The answer is simple yet very important to understand.
+The test method is called by the Java DSL test case builder for building the Citrus test.
+This can be referred to as the design time of the test.
+After the building test method was processed the test gets executed, which can be called the runtime of the test.
+This means that a try-catch block within the design time method will never perform during the test run.
+The only reliable way to add the catch capability to the test as part of the test case runtime is to use the Citrus test action which gets executed during test runtime.

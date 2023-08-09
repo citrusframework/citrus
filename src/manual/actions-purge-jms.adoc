@@ -1,10 +1,75 @@
 [[actions-purging-jms-destinations]]
 == Purging JMS destinations
 
-Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending messages to the same JMS destinations. A test case should only receive those messages that actually belong to it. Therefore it is a good idea to purge all JMS queue destinations between the test cases. Obsolete messages that are stuck in a JMS queue for some reason are then removed so that the following test case is not offended.
+Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending messages to the same JMS destinations. A test case should only receive those messages that actually belong to it.
 
-NOTE: Citrus provides special support for JMS related features. We have to activate those JMS features in our test case by adding a special "jms" namespace and schema definition location to the test case XML.
+Therefore, it is a good idea to purge all JMS queue destinations between the test cases. Obsolete messages that are stuck in a JMS queue for some reason are then removed so that the following test case is not offended.
 
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Autowired
+@Qualifier("connectionFactory")
+private ConnectionFactory connectionFactory;
+
+@CitrusTest
+public void purgeJmsQueuesTest() {
+    $(purgeQueues()
+        .connectionFactory(connectionFactory)
+        .queue("JMS.Queue.1")
+        .queue("JMS.Queue.2")
+        .queue("JMS.Queue.3")
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="PurgeJmsQueuesTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <purge-jms-queues connection-factory="connectionFactory">
+            <queue name="JMS.Queue.1"/>
+            <queue name="JMS.Queue.2"/>
+            <queue name="JMS.Queue.3"/>
+        </purge-jms-queues>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: PurgeJmsQueuesTest
+actions:
+  - purge-queues:
+      connection-factory: "connectionFactory"
+      queues:
+        - "JMS.Queue.1"
+        - "JMS.Queue.2"
+        - "JMS.Queue.3"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="purgeJmsQueuesTest">
+      <actions>
+          <jms:purge-jms-queues connection-factory="connectionFactory">
+              <jms:queue name="JMS.Queue.1"/>
+              <jms:queue name="JMS.Queue.2"/>
+              <jms:queue name="JMS.Queue.3"/>
+          </jms:purge-jms-queues>
+      </actions>
+    </testcase>
+</spring:beans>
+----
+
+NOTE: Citrus provides special support for JMS related features when using the Spring XML bean integration. You have to activate those JMS features in our test case by adding a special "jms" namespace and schema definition location to the test case XML.
+
+.Spring XML
 [source,xml]
 ----
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
@@ -24,90 +89,47 @@ NOTE: Citrus provides special support for JMS related features. We have to activ
 </beans>
 ----
 
-Now we are ready to use the JMS features in our test case in order to purge some JMS queues. This can be done with following action definition:
-
-.XML DSL
-[source,xml]
-----
-<testcase name="purgeTest">
-  <actions>
-      <jms:purge-jms-queues>
-          <jms:queue name="Some.JMS.QUEUE.Name"/>
-          <jms:queue name="Another.JMS.QUEUE.Name"/>
-          <jms:queue name="My.JMS.QUEUE.Name"/>
-      </jms:purge-jms-queues>
-      
-      <jms:purge-jms-queues connection-factory="connectionFactory">
-          <jms:queue name="Some.JMS.QUEUE.Name"/>
-          <jms:queue name="Another.JMS.QUEUE.Name"/>
-          <jms:queue name="My.JMS.QUEUE.Name"/>
-      </jms:purge-jms-queues>
-  </actions>
-</testcase>
-----
-
 Notice that we have referenced the *jms* namespace when using the *purge-jms-queues* test action.
-
-.Java DSL designer
-[source,java]
-----
-@Autowired
-@Qualifier("connectionFactory")
-private ConnectionFactory connectionFactory;
-
-@CitrusTest
-public void purgeTest() {
-    purgeQueues()
-        .queue("Some.JMS.QUEUE.Name")
-        .queue("Another.JMS.QUEUE.Name");
-        
-    purgeQueues(connectionFactory)
-        .timeout(150L) // custom timeout in ms
-        .queue("Some.JMS.QUEUE.Name")
-        .queue("Another.JMS.QUEUE.Name");
-}
-----
-
-.Java DSL runner
-[source,java]
-----
-@Autowired
-@Qualifier("connectionFactory")
-private ConnectionFactory connectionFactory;
-
-@CitrusTest
-public void purgeTest() {
-    purgeQueues(action ->
-        action.queue("Some.JMS.QUEUE.Name")
-            .queue("Another.JMS.QUEUE.Name"));
-
-    purgeQueues(action -> action.connectionFactory(connectionFactory)
-            .timeout(150L) // custom timeout in ms
-            .queue("Some.JMS.QUEUE.Name")
-            .queue("Another.JMS.QUEUE.Name"));
-}
-----
 
 Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which should ease up this tasks a lot. The test suite offers a very simple way to purge the destinations between the tests. See link:#before-suite[testsuite-before-test]for more information about this.
 
 As you can see in the next example it is quite easy to specify a group of destinations in the Spring configuration that get purged before a test is executed.
 
-[source,xml]
+.Spring Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:before-test id="purgeBeforeTest">
-    <citrus:actions>
-        <jms:purge-jms-queues>
-            <jms:queue name="Some.JMS.QUEUE.Name"/>
-            <jms:queue name="Another.JMS.QUEUE.Name"/>
-        </jms:purge-jms-queues>
-    </citrus:actions>
-</citrus:before-test>
+@Bean
+public SequenceBeforeTest beforeTest() {
+    return SequenceBeforeTest.Builder.beforeTest()
+            .actions(
+                purgeQueues()
+                    .queue("fooChannel")
+                    .queue("barChannel")
+            );
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:citrus="http://www.citrusframework.org/schema/config">
+    <citrus:before-test id="purgeBeforeTest">
+        <citrus:actions>
+            <jms:purge-jms-queues>
+                <jms:queue name="fooChannel"/>
+                <jms:queue name="barChannel"/>
+            </jms:purge-jms-queues>
+        </citrus:actions>
+    </citrus:before-test>
+</spring:beans>
 ----
 
 NOTE: Please keep in mind that the JMS related configuration components in Citrus belong to a separate XML namespace *jms:* . We have to add this namespace declaration to each test case XML and Spring bean XML configuration file as described at the very beginning of this section.
 
 The syntax for purging the destinations is the same as we used it inside the test case. So now we are able to purge JMS destinations with given destination names. But sometimes we do not want to rely on queue or topic names as we retrieve destinations over JNDI for instance. We can deal with destinations coming from JNDI lookup like follows:
 
+.Spring XML
 [source,xml]
 ----
 <jee:jndi-lookup id="jmsQueueHelloRequestIn" jndi-name="jms/jmsQueueHelloRequestIn"/>
@@ -125,57 +147,66 @@ The syntax for purging the destinations is the same as we used it inside the tes
 
 We just use the attribute *'ref'* instead of *'name'* and Citrus is looking for a bean reference for that identifier that resolves to a JMS destination. You can use the JNDI bean references inside a test case, too.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="purgeTest">
-  <actions>
-      <jms:purge-jms-queues>
-          <jms:queue ref="jmsQueueHelloRequestIn"/>
-          <jms:queue ref="jmsQueueHelloResponseOut"/>
-      </jms:purge-jms-queues>
-  </actions>
-</testcase>
+@Autowired
+@Qualifier("jmsQueue1")
+private Queue jmsQueue1;
+
+@Autowired
+@Qualifier("jmsQueue2")
+private Queue jmsQueue2;
+
+@CitrusTest
+public void purgeJmsQueuesTest() {
+    $(purgeQueues()
+        .queue(jmsQueue1)
+        .queue(jmsQueue1)
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="PurgeJmsQueuesTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <purge-jms-queues>
+            <queue ref="jmsQueue1"/>
+            <queue ref="jmsQueue2"/>
+        </purge-jms-queues>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: PurgeJmsQueuesTest
+actions:
+  - purge-queues:
+      queue: jmsQueue1
+  - purge-queues:
+      queue: jmsQueue2
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="purgeJmsQueuesTest">
+      <actions>
+          <jms:purge-jms-queues>
+              <jms:queue ref="jmsQueue1"/>
+              <jms:queue ref="jmsQueue2"/>
+          </jms:purge-jms-queues>
+      </actions>
+    </testcase>
+</spring:beans>
 ----
 
 Of course you can use queue object references also in Java DSL test cases. Here we easily can use Spring's dependency injection with autowiring to get the object references from the IoC container.
-
-.Java DSL designer
-[source,java]
-----
-@Autowired
-@Qualifier("jmsQueueHelloRequestIn")
-private Queue jmsQueueHelloRequestIn;
-
-@Autowired
-@Qualifier("jmsQueueHelloResponseOut")
-private Queue jmsQueueHelloResponseOut;
-
-@CitrusTest
-public void purgeTest() {
-    purgeQueues()
-        .queue(jmsQueueHelloRequestIn)
-        .queue(jmsQueueHelloResponseOut);
-}
-----
-
-.Java DSL runner
-[source,java]
-----
-@Autowired
-@Qualifier("jmsQueueHelloRequestIn")
-private Queue jmsQueueHelloRequestIn;
-
-@Autowired
-@Qualifier("jmsQueueHelloResponseOut")
-private Queue jmsQueueHelloResponseOut;
-
-@CitrusTest
-public void purgeTest() {
-    purgeQueues(action ->
-        action.queue(jmsQueueHelloRequestIn)
-            .queue(jmsQueueHelloResponseOut));
-}
-----
 
 NOTE: You can mix queue name and queue object references as you like within one single purge queue test action.

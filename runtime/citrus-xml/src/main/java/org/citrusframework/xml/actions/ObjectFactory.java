@@ -46,6 +46,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link AntRun }
+     *
+     */
+    public AntRun createAntRun() {
+        return new AntRun();
+    }
+
+    /**
      * Create an instance of {@link Echo }
      *
      */
@@ -147,6 +155,15 @@ public class ObjectFactory {
      */
     public TraceVariables createTraceVariables() {
         return new TraceVariables();
+    }
+
+
+    /**
+     * Create an instance of {@link Trace }
+     *
+     */
+    public Trace createTrace() {
+        return new Trace();
     }
 
     /**

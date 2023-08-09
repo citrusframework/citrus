@@ -24,7 +24,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.StopTimerAction.Builder.stopTimer;
-import static org.citrusframework.actions.StopTimerAction.Builder.stopTimers;
 
 /**
  * @author Martin Maher
@@ -37,7 +36,7 @@ public class StopTimerTestActionBuilderTest extends UnitTestSupport {
         final String timerId = "timerId1";
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(stopTimer(timerId));
-        builder.$(stopTimers());
+        builder.$(StopTimerAction.Builder.stopTimer());
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);

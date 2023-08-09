@@ -19,6 +19,7 @@
 
 package org.citrusframework.groovy.dsl
 
+import static org.citrusframework.actions.TraceVariablesAction.Builder.trace
 import static org.citrusframework.actions.TraceVariablesAction.Builder.traceVariables
 
 name "TraceVariablesTest"
@@ -33,6 +34,6 @@ variables {
 
 actions {
     $(traceVariables())
-    $(traceVariables().variable("foo"))
-    $(traceVariables().variables("foo", "bar"))
+    $(trace().variable("foo"))
+    $(trace().variables("foo", "bar"))
 }

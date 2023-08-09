@@ -5,33 +5,64 @@ The test framework is written in Java and runs inside a Java virtual machine. Th
 
 The action syntax looks like follows:
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<java class="org.citrusframework.test.util.InvocationDummy">
-    <constructor>
-        <argument type="">Test Invocation</argument>
-    </constructor>
-    <method name="invoke">
-        <argument type="String[]">1,2</argument>
-    </method>
-</java>
+@CitrusTest
+public void javaActionTest() {
+    $(java("org.citrusframework.test.util.InvocationDummy")
+        .constructorArgs("Test Invocation")
+        .method("invoke")
+        .methodArgs(new String[] { "1","2" })
+    );
 
-<java class="org.citrusframework.test.util.InvocationDummy">
-    <constructor>
-        <argument type="">Test Invocation</argument>
-    </constructor>
-    <method name="invoke">
-        <argument type="int">4</argument>
-        <argument type="String">Test Invocation</argument>
-        <argument type="boolean">true</argument>
-    </method>
-</java>
-    
-<java class="org.citrusframework.test.util.InvocationDummy">
-    <method name="main">
-        <argument type="String[]">4,Test,true </argument>
-    </method>
-</java>
+    $(java(new InvocationDummy("Test Invocation"))
+        .method("invoke")
+        .methodArgs(new Object[] { 4, "Test Invocation", true })
+    );
+
+    $(java(InvocationDummy.class)
+        .method("main")
+        .methodArgs(new String[] { "4", "Test Invocation", "true" })
+    );
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JavaTest">
+        <actions>
+            <java class="org.citrusframework.test.util.InvocationDummy">
+                <constructor>
+                    <argument type="">Test Invocation</argument>
+                </constructor>
+                <method name="invoke">
+                    <argument type="String[]">1,2</argument>
+                </method>
+            </java>
+
+            <java class="org.citrusframework.test.util.InvocationDummy">
+                <constructor>
+                    <argument type="">Test Invocation</argument>
+                </constructor>
+                <method name="invoke">
+                    <argument type="int">4</argument>
+                    <argument type="String">Test Invocation</argument>
+                    <argument type="boolean">true</argument>
+                </method>
+            </java>
+
+            <java class="org.citrusframework.test.util.InvocationDummy">
+                <method name="main">
+                    <argument type="String[]">4,Test,true </argument>
+                </method>
+            </java>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The Java class is specified by fully qualified class name. Constructor arguments are added using the <constructor> element with a list of <argument> child elements. The type of the argument is defined within the respective attribute "type". By default the type would be String.
@@ -44,7 +75,18 @@ Simple data types are defined by their name (int, boolean, float etc.). Be sure 
 
 Besides instantiating a fully new object instance for a class how about reusing a bean instance available in Spring bean container. Simply use the *ref* attribute and refer to an existing bean in Spring application context.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+InvocationDummy invocationDummy = new InvocationDummy("Test Invocation");
+$(java(invocationDummy)
+    .method("invoke")
+    .methodArgs(new Object[] { 4, "Test Invocation", true })
+);
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <java ref="invocationDummy">
     <method name="invoke">
@@ -55,7 +97,6 @@ Besides instantiating a fully new object instance for a class how about reusing 
 </java>
 
 <bean id="invocationDummy" class="org.citrusframework.test.util.InvocationDummy"/>
-    
 ----
 
 The method is invoked on the Spring bean instance. This is very useful as you can inject other objects (e.g. via Autowiring) to the Spring bean instance before method invocation in test takes place. This enables you to execute any Java logic inside a test case.

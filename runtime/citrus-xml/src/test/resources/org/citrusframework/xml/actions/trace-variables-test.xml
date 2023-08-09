@@ -29,11 +29,11 @@
   <actions>
     <trace-variables/>
 
-    <trace-variables variable="foo"/>
+    <trace variable="foo"/>
 
-    <trace-variables>
+    <trace>
       <variable name="foo"/>
       <variable name="bar"/>
-    </trace-variables>
+    </trace>
   </actions>
 </test>

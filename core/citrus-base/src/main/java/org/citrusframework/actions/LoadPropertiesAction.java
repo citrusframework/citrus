@@ -105,6 +105,14 @@ public class LoadPropertiesAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder load() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
          * @param filePath
          * @return
          */

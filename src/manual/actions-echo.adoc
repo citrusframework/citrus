@@ -3,40 +3,76 @@
 
 The <echo> action prints messages to the console/logger. This functionality is useful when debugging test runs. The property "message" defines the text that is printed. Tester might use it to print out debug messages and variables as shown the next code example:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="echoTest">
+@CitrusTest
+public void echoTest() {
+    variable("date", "citrus:currentDate()");
+
+    $(echo().message("Hello Test Framework"));
+    $(echo().message("Current date is: ${date}"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="EchoTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <variables>
-        <variable name="date" value="citrus:currentDate()"/>
+        <variable name="today" value="citrus:currentDate()"/>
     </variables>
     <actions>
         <echo>
             <message>Hello Test Framework</message>
         </echo>
-        
+
         <echo>
             <message>Current date is: ${date}</message>
         </echo>
     </actions>
-</testcase>
+</test>
 ----
 
-.Java DSL
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void echoTest() {
-    variable("date", "citrus:currentDate()");
-    
-    echo("Hello Test Framework");
-    echo("Current date is: ${date}");
-}
+name: EchoTest
+variables:
+  - name: "today"
+    value: "citrus:currentDate()"
+actions:
+  - echo:
+      message: "Hello Test Framework"
+  - echo:
+      message: "Current date is: ${date}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="EchoTest">
+        <variables>
+            <variable name="today" value="citrus:currentDate()"/>
+        </variables>
+        <actions>
+            <echo>
+                <message>Hello Test Framework</message>
+            </echo>
+
+            <echo>
+                <message>Current date is: ${today}</message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 Result on the console:
 
-[source,xml]
+[source,text]
 ----
 Hello Test Framework
 Current time is: 05.08.2008

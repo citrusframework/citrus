@@ -1,5 +1,9 @@
 <style>
 
+    html, body {
+        font-family: Helvetica,sans-serif;
+    }
+
     h1, h2, h3, h4, h5, h6, #toctitle {
         color: #3b73af;
     }
@@ -18,7 +22,7 @@
     }
 
     .switch {
-        border-width: 1px 1px 0 1px;
+        border-width: 1px 0 0 1px !important;
         border-style: solid;
         border-color: #3b73af !important;
         display: inline-block;
@@ -26,14 +30,26 @@
 
     .switch--item {
         padding: 10px;
+        border-right: 1px solid !important;
         background-color: #ffffff !important;
+        min-width: 5em;
         color: #3b73af !important;
         display: inline-block;
         cursor: pointer;
     }
 
+    .switch--item:hover {
+        background-color: #efefef !important;
+    }
+
     .switch--item.selected {
         background-color: #3b73af !important;
         color: #ffffff !important;
+    }
+
+    .listingblock>.content {
+        border-width: 1px 1px 1px 1px;
+        border-style: solid;
+        border-color: #3b73af !important;
     }
 </style>

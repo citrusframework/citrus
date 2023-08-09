@@ -16,12 +16,12 @@
 
 package org.citrusframework.actions;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import java.io.IOException;
-import java.nio.charset.Charset;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.CitrusSettings;
@@ -196,6 +196,15 @@ public class TransformAction extends AbstractTestAction {
          * @param variable
          */
         public Builder result(String variable) {
+            this.targetVariable = variable;
+            return this;
+        }
+
+        /**
+         * Set the target variable for the result
+         * @param variable
+         */
+        public Builder variable(String variable) {
             this.targetVariable = variable;
             return this;
         }

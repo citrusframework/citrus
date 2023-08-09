@@ -169,6 +169,7 @@
         <xs:element ref="tns:start"/>
         <xs:element ref="tns:stop"/>
         <xs:element ref="tns:trace-variables"/>
+        <xs:element ref="tns:trace"/>
         <xs:element ref="tns:purge-endpoint"/>
         <xs:element ref="tns:transform"/>
         <xs:element ref="tns:apply-template"/>
@@ -448,7 +449,8 @@
       <xs:element name="endpoint" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>
           <xs:sequence/>
-          <xs:attribute name="name" type="xs:string" use="required"/>
+          <xs:attribute name="name" type="xs:string"/>
+          <xs:attribute name="ref" type="xs:string"/>
         </xs:complexType>
       </xs:element>
     </xs:sequence>
@@ -495,8 +497,8 @@
     </xs:sequence>
     <xs:attribute name="condition" type="xs:string" use="required"/>
     <xs:attribute name="index" type="xs:string"/>
-    <xs:attribute name="startsWith" type="xs:int" use="required"/>
-    <xs:attribute name="step" type="xs:int" use="required"/>
+    <xs:attribute name="startsWith" type="xs:int"/>
+    <xs:attribute name="step" type="xs:int"/>
   </xs:complexType>
 
   <xs:complexType name="Sequential">
@@ -519,7 +521,7 @@
       <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="index" type="xs:string"/>
-    <xs:attribute name="startsWith" type="xs:int" use="required"/>
+    <xs:attribute name="startsWith" type="xs:int"/>
     <xs:attribute name="until" type="xs:string" use="required"/>
   </xs:complexType>
 
@@ -528,10 +530,10 @@
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="actions" type="tns:TestActions" minOccurs="0"/>
     </xs:sequence>
-    <xs:attribute name="autoSleep" type="xs:long" use="required"/>
-    <xs:attribute name="auto-sleep" type="xs:long" use="required"/>
+    <xs:attribute name="autoSleep" type="xs:long"/>
+    <xs:attribute name="auto-sleep" type="xs:long"/>
     <xs:attribute name="index" type="xs:string"/>
-    <xs:attribute name="startsWith" type="xs:int" use="required"/>
+    <xs:attribute name="startsWith" type="xs:int"/>
     <xs:attribute name="until" type="xs:string" use="required"/>
   </xs:complexType>
 
@@ -606,7 +608,7 @@
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="actions" type="tns:TestActions"/>
     </xs:sequence>
-    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="id" type="xs:string"/>
     <xs:attribute name="delay" type="xs:long"/>
     <xs:attribute name="fork" type="xs:boolean"/>
     <xs:attribute name="interval" type="xs:long"/>
@@ -693,6 +695,7 @@
   <xs:element name="stop-time" type="tns:StopTime"/>
   <xs:element name="stop-timer" type="tns:StopTimer"/>
   <xs:element name="timer" type="tns:Timer"/>
+  <xs:element name="trace" type="tns:TraceVariables"/>
   <xs:element name="trace-variables" type="tns:TraceVariables"/>
   <xs:element name="transform" type="tns:Transform"/>
   <xs:element name="wait-for" type="tns:WaitFor"/>

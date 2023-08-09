@@ -10,7 +10,7 @@ actions:
         - name: "testEndpoint3"
   - purge:
       endpoints:
-        - name: testEndpoint
+        - ref: testEndpoint
   - purge:
       select: "operation = 'sayHello'"
       endpoints:

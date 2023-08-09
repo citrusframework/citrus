@@ -58,6 +58,10 @@ public class TestActions implements Supplier<TestActionBuilder<?>> {
         this.builder = builder;
     }
 
+    public void setAnt(AntRun builder) {
+        this.builder = builder;
+    }
+
     public void setEcho(Echo builder) {
         this.builder = builder;
     }

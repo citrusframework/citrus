@@ -420,11 +420,23 @@
         <xs:attribute name="milliseconds" type="xs:string"/>
     </xs:complexType>
 
+    <xs:complexType name="DelayActionType">
+        <xs:complexContent>
+            <xs:extension base="SleepActionType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="EchoActionType">
         <xs:sequence>
             <xs:element ref="description" minOccurs="0"/>
             <xs:element name="message" type="xs:string" minOccurs="0"/>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PrintActionType">
+        <xs:complexContent>
+            <xs:extension base="EchoActionType"/>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="TraceVariablesActionType">
@@ -904,10 +916,12 @@
             <xs:element ref="plsql"/>
             <xs:element ref="java"/>
             <xs:element ref="sleep"/>
+            <xs:element ref="delay"/>
             <xs:element ref="trace-variables"/>
             <xs:element ref="create-variables"/>
             <xs:element ref="trace-time"/>
             <xs:element ref="echo"/>
+            <xs:element ref="print"/>
             <xs:element ref="expect-timeout"/>
             <xs:element ref="purge-endpoint"/>
             <xs:element ref="purge-jms-queues"/>
@@ -978,7 +992,9 @@
     <xs:element name="sql" type="SqlActionType"/>
     <xs:element name="java" type="JavaActionType"/>
     <xs:element name="sleep" type="SleepActionType"/>
+    <xs:element name="delay" type="DelayActionType"/>
     <xs:element name="echo" type="EchoActionType"/>
+    <xs:element name="print" type="PrintActionType"/>
     <xs:element name="trace-variables" type="TraceVariablesActionType"/>
     <xs:element name="purge-endpoint" type="PurgeEndpointActionType"/>
     <xs:element name="purge-jms-queues" type="PurgeJmsQueuesActionType"/>

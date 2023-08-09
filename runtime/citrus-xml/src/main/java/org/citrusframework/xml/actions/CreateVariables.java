@@ -19,6 +19,11 @@
 
 package org.citrusframework.xml.actions;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -26,11 +31,6 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlValue;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.CreateVariablesAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -87,6 +87,9 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "variableValue"
+    })
     public static class Variable {
 
         @XmlElement(name = "value")
@@ -127,7 +130,9 @@ public class CreateVariables implements TestActionBuilder<CreateVariablesAction>
         })
         public static class Value {
 
+            @XmlElement
             protected Script script;
+            @XmlElement
             protected String data;
 
             public Script getScript() {

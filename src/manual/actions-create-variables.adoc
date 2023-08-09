@@ -1,12 +1,36 @@
 [[actions-create-variables]]
 == Create variables
 
-As you know variables usually are defined at the beginning of the test case (link:#test-variables[test-variables]). It might also be helpful to reset existing variables as well as to define new variables during the test. The action <create-variables> is able to declare new variables or overwrite existing ones.
+As you know variables usually are defined at the beginning of the test case (link:#test-variables[test-variables]).
+It might also be helpful to reset existing variables as well as to define new variables during the test.
+The action `<create-variables>` is able to declare new variables or overwrite existing ones.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="createVariablesTest">
+@CitrusTest
+public void createVariableTest() {
+    variable("myVariable", "12345");
+    variable("id", "54321");
+
+    $(echo()
+        .message("Current variable value: ${myVariable}"));
+
+    $(createVariable("myVariable", "${id}"));
+    $(createVariable("newVariable", "this is a test"));
+
+    $(echo()
+        .message("Current variable value: ${myVariable}"));
+
+    $(echo()
+        .message("New variable 'newVariable' has the value: ${newVariable}"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="CreateVariablesTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <variables>
         <variable name="myVariable" value="12345"/>
         <variable name="id" value="54321"/>
@@ -15,42 +39,83 @@ As you know variables usually are defined at the beginning of the test case (lin
         <echo>
             <message>Current variable value: ${myVariable}</message>
         </echo>
-        
+
         <create-variables>
             <variable name="myVariable" value="${id}"/>
             <variable name="newVariable" value="'this is a test'"/>
         </create-variables>
-        
+
         <echo>
             <message>Current variable value: ${myVariable} </message>
         </echo>
-    
+
         <echo>
-            <message>
-              New variable 'newVariable' has the value: ${newVariable}
-            </message>
+            <message>New variable 'newVariable' has the value: ${newVariable}</message>
         </echo>
     </actions>
-</testcase>
+</test>
 ----
 
-.Java DSL
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void createVariableTest() {
-    variable("myVariable", "12345");
-    variable("id", "54321");
-    
-    echo("Current variable value: ${myVariable}");
-
-    createVariable("myVariable", "${id}");
-    createVariable("newVariable", "this is a test");
-    
-    echo("Current variable value: ${myVariable}");
-    
-    echo("New variable 'newVariable' has the value: ${newVariable}");
-}
+name: "CreateVariablesTest"
+variables:
+  - name: "myVariable"
+    value: "12345"
+  - name: "id"
+    value: "54321"
+actions:
+  - echo:
+      message: "Current variable value: ${myVariable}"
+  - create-variable:
+      variables:
+        - name: "myVariable"
+          value: "${id}"
+        - name: "newVariable"
+          value: "this is a test"
+  - echo:
+      message: "Current variable value: ${myVariable}"
+  - echo:
+      message: "New variable 'newVariable' has the value: ${newVariable}"
 ----
 
-NOTE: Please note the difference between the *variable()* method and the *createVariable()* method. The first initializes the test case with the test variables. So all variables defined with this method are valid from the very beginning of the test. In contrary to that the *createVariable()* is executed within the test action chain. The newly created variables are then valid for the rest of the test. Trailing actions can reference the variables as usual with the variable expression.
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="createVariablesTest">
+        <variables>
+            <variable name="myVariable" value="12345"/>
+            <variable name="id" value="54321"/>
+        </variables>
+        <actions>
+            <echo>
+                <message>Current variable value: ${myVariable}</message>
+            </echo>
+
+            <create-variables>
+                <variable name="myVariable" value="${id}"/>
+                <variable name="newVariable" value="'this is a test'"/>
+            </create-variables>
+
+            <echo>
+                <message>Current variable value: ${myVariable} </message>
+            </echo>
+
+            <echo>
+                <message>
+                  New variable 'newVariable' has the value: ${newVariable}
+                </message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+NOTE: Please note the difference between the *variable()* method and the *createVariable()* method.
+The first initializes the test case with the test variables.
+So all variables defined with this method are valid from the very beginning of the test.
+In contrary to that the *createVariable()* is executed within the test action chain. The newly created variables are then valid for the rest of the test.
+Trailing actions can reference the variables as usual with the variable expression.

@@ -1,0 +1,125 @@
+[[actions-stop-timer]]
+== Stop Timer
+
+The <stop-timer> action can be used for stopping either a specific timer (link:#containers-timer[containers-timer]) or all timers running within a test. This action is useful when timers are started in the background (using parallel or fork=true) and you wish to stop these timers at the end of the test. Some examples of using this action are provided below:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void timerTest() {
+    $(timer()
+      .id("forkedTimer")
+      .fork(true)
+      .actions(sleep(50L))
+    );
+
+    $(timer()
+      .fork(true)
+      .actions(sleep(50L))
+    );
+
+    $(timer()
+      .repeatCount(5)
+      .actions(sleep(50L))
+    );
+
+    $(stopTimer("forkedTimer"));
+
+    $(doFinally().actions(
+      stopTimer()
+    ));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TimerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <timer id="forkedTimer" fork="true">
+            <actions>
+                <sleep milliseconds="50" />
+            </actions>
+        </timer>
+
+        <timer fork="true">
+            <actions>
+                <sleep milliseconds="50" />
+            </actions>
+        </timer>
+
+        <timer repeatCount="5">
+            <actions>
+                <sleep milliseconds="50" />
+            </actions>
+        </timer>
+
+        <stop-timer id="forkedTimer" />
+    </actions>
+
+    <finally>
+        <stop-timer/>
+    </finally>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TimerTest
+actions:
+  - timer:
+      id: "forkedTimer"
+      fork: true
+      actions:
+        - sleep:
+            milliseconds: "50"
+  - timer:
+      fork: true
+      actions:
+        - sleep:
+            milliseconds: "50"
+  - timer:
+      repeatCount: 5
+      actions:
+        - sleep:
+            milliseconds: "50"
+  - stop-timer:
+      id: "forkedTimer"
+finally:
+  - stop-timer: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="TimerTest">
+        <actions>
+            <timer id="forkedTimer" fork="true">
+                <sleep milliseconds="50" />
+            </timer>
+
+            <timer fork="true">
+                <sleep milliseconds="50" />
+            </timer>
+
+            <timer repeatCount="5">
+                <sleep milliseconds="50" />
+            </timer>
+
+            <stop-timer timerId="forkedTimer" />
+        </actions>
+
+        <finally>
+            <stop-timer/>
+        </finally>
+    </testcase>
+</spring:beans>
+----
+
+In the above example 3 timers are started, the first 2 in the background and the third in the test execution thread. Timer #3 has a repeatCount set to 5 so it will terminate automatically after 5 runs. Timer #1 and #2 however have no repeatCount set so they will execute until they are told to stop.
+
+Timer #1 is stopped explicitly using the first stopTimer action. Here the stopTimer action includes the name of the timer to stop. This is convenient when you wish to terminate a specific timer. However since no timerId was set for timer #2, you can terminate this (and all other timers) using the 'stopTimer' action with no explicit timerId set.

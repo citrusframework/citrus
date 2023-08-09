@@ -1,44 +1,65 @@
 [[actions-load]]
-== Load
+== Load Properties
 
 You are able to load properties from external property files and store them as test variables. The action will require a file resource either from class path or file system in order to read the property values.
 
 Let us look at an example to get an idea about this action:
 
 .Content of load.properties
-[source,xml]
+[source,properties]
 ----
 username=Mickey Mouse
 greeting.text=Hello Test Framework
 ----
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="loadPropertiesTest">
+@CitrusTest
+public void loadPropertiesTest() {
+    $(load().filePath("file:tests/resources/load.properties"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="LoadPropertiesTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
         <load>
             <properties file="file:tests/resources/load.properties"/>
         </load>
-        
-        <trace-variables/>
     </actions>
-</testcase>
+</test>
 ----
 
-.Java DSL
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void loadPropertiesTest() {
-    load("file:tests/resources/load.properties");
-    
-    traceVariables();
-}
+name: LoadPropertiesTest
+actions:
+  - load:
+      properties:
+        file: "file:tests/resources/load.properties"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="LoadPropertiesTest">
+        <actions>
+            <load>
+                <properties file="file:tests/resources/load.properties"/>
+            </load>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 .Output
-[source,xml]
+[source,text]
 ----
 Current value of variable username = Mickey Mouse
 Current value of variable greeting.text = Hello Test Framework

@@ -1,12 +1,28 @@
 [[actions-sleep]]
 == Sleep
 
-This action shows how to make the test framework sleep for a given amount of time. The attribute 'time' defines the amount of time to wait in seconds. As shown in the next example decimal values are supported too. When no waiting time is specified the default time of 50000 milliseconds applies.
+This action shows how to make the test framework execution stop for a given amount of time.
+The attribute 'time' defines the amount of time to wait in seconds.
+As shown in the next example decimal values are supported too.
+When no waiting time is specified the default time of 50000 milliseconds applies.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="sleepTest">
+@CitrusTest
+public void sleepTest() {
+    $(sleep().seconds(3.5));
+
+    $(sleep().milliseconds(500));
+
+    $(sleep());
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SleepTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
         <sleep seconds="3.5"/>
 
@@ -14,18 +30,40 @@ This action shows how to make the test framework sleep for a given amount of tim
 
         <sleep/>
     </actions>
-</testcase>
+</test>
 ----
 
-.Java DSL
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void sleepTest() {
-    sleep(500); // sleep 500 milliseconds
-
-    sleep(); // sleep default time
-}
+name: SleepTest
+actions:
+  - sleep:
+      seconds: "3.5"
+  - sleep:
+      milliseconds: "500"
+  - sleep: {}
 ----
 
-When should somebody use this action? To us this action was always very useful in case the test needed to wait until an application had done some work. For example in some cases the application took some time to write some data into the database. We waited then a small amount of time in order to avoid unnecessary test failures, because the test framework simply validated the database too early. Or as another example the test may wait a given time until retry mechanisms are triggered in the tested application and then proceed with the test actions.
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="SleepTest">
+        <actions>
+            <sleep seconds="3.5"/>
+
+            <sleep milliseconds="500"/>
+
+            <sleep/>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+When should somebody use this action?
+To us this action was always very useful in case the test needed to wait until an application had done some work.
+For example in some cases the application took some time to write some data into the database.
+We waited then a small amount of time in order to avoid unnecessary test failures, because the test framework simply validated the database too early.
+Or as another example the test may wait a given time until retry mechanisms are triggered in the tested application and then proceed with the test actions.
