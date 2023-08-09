@@ -128,7 +128,7 @@ public class StopTimeAction extends AbstractTestAction {
         public static Builder stopTime(String id, String suffix) {
             Builder builder = new Builder();
             builder.id(id);
-            builder.suffix(id);
+            builder.suffix(suffix);
             return builder;
         }
 

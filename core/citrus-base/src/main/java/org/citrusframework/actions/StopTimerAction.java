@@ -66,7 +66,7 @@ public class StopTimerAction extends AbstractTestAction {
          * Fluent API action building entry method used in Java DSL.
          * @return
          */
-        public static Builder stopTimers() {
+        public static Builder stopTimer() {
             return new Builder();
         }
 

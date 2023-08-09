@@ -1,0 +1,82 @@
+[[actions-print]]
+== Print
+
+The <print> action prints messages to the console/logger.
+This functionality is useful when debugging test runs.
+The property "message" defines the text that is printed.
+Tester might use it to print out debug messages and variables as shown the next code example:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void printTest() {
+    variable("date", "citrus:currentDate()");
+
+    $(print().message("Hello Test Framework"));
+    $(print().message("Current date is: ${date}"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="PrintTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <variables>
+        <variable name="today" value="citrus:currentDate()"/>
+    </variables>
+    <actions>
+        <print>
+            <message>Hello Test Framework</message>
+        </print>
+
+        <print>
+            <message>Current date is: ${date}</message>
+        </print>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: PrintTest
+variables:
+  - name: "today"
+    value: "citrus:currentDate()"
+actions:
+  - print:
+      message: "Hello Test Framework"
+  - print:
+      message: "Current date is: ${date}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="PrintTest">
+        <variables>
+            <variable name="today" value="citrus:currentDate()"/>
+        </variables>
+        <actions>
+            <print>
+                <message>Hello Test Framework</message>
+            </print>
+
+            <print>
+                <message>Current date is: ${today}</message>
+            </print>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+Result on the console:
+
+[source,text]
+----
+Hello Test Framework
+Current time is: 05.08.2008
+----

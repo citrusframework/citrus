@@ -3,30 +3,76 @@
 
 Now we have a look at the opportunity to add custom test actions to the test case flow. Let us start this section with an example:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="ActionReferenceTest">
+@CitrusTest
+public void actionReferenceTest() {
+    $(action().reference("clearDatabase"));
+    $(action().reference("mySpecialAction"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ActionReferenceTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
-        <action reference="cleanUpDatabase"/>
+        <action reference="clearDatabase"/>
         <action reference="mySpecialAction"/>
     </actions>
-</testcase>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ActionReferenceTest
+actions:
+  - action:
+      ref: "clearDatabase"
+  - action:
+      ref: "mySpecialAction"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ActionReferenceTest">
+        <actions>
+            <action reference="clearDatabase"/>
+            <action reference="mySpecialAction"/>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The generic <action> element references Spring beans that implement the Java interface *_org.citrusframework.TestAction_* . This is a very fast way to add your own action implementations to a Citrus test case. This way you can easily implement your own actions in Java and include them into the test case.
 
 In the example above the called actions are special database cleanup implementations. The actions are defined as Spring beans in the Citrus configuration and get referenced by their bean name or id.
 
-[source,xml]
+.Spring Bean
+[source,java,indent=0,role="primary"]
 ----
-<bean id="cleanUpDatabase" class="my.domain.citrus.actions.SpecialDatabaseCleanupAction">
-    <property name="dataSource" ref="testDataSource"/>
+@Bean
+public SpecialDatabaseCleanupAction clearDatabase(DataSource ds) {
+    return new SpecialDatabaseCleanupAction(ds);
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<bean id="clearDatabase" class="my.domain.citrus.actions.SpecialDatabaseCleanupAction">
+    <constructor-arg ref="myDataSource"/>
 </bean>
 ----
 
 The Spring application context holds your custom bean implementations. You can set properties and use the full Spring power while implementing your custom test action in Java. Let us have a look on how such a Java class may look like.
 
+.SpecialDatabaseCleanupAction
 [source,java]
 ----
 import org.citrusframework.actions.AbstractTestAction;
@@ -51,37 +97,37 @@ All you need to do in your Java class is to implement the Citrus *_org.citrusfra
 
 When using the Java test case DSL you are also quite comfortable with including your custom test actions.
 
-.Java DSL
+.Java
 [source,java]
 ----
 @Autowired
-private SpecialDatabaseCleanupAction cleanUpDatabaseAction;
+private SpecialDatabaseCleanupAction clearDatabaseAction;
 
 @CitrusTest
-public void genericActionTest() {
-    echo("Now let's include our special test action");
+public void actionReferenceTest() {
+    $(echo().message("Now let's include our special test action"));
 
-    action(cleanUpDatabaseAction);
+    $(clearDatabaseAction);
 
-    echo("That's it!");
+    $(echo().message("That's it!"));
 }
 ----
 
-Using anonymous class implementations is also possible.
+Using anonymous class uses as Lambda expression is also possible.
 
-.Java DSL
+.Java
 [source,java]
 ----
 @CitrusTest
 public void genericActionTest() {
-    echo("Now let's call our special test action anonymously");
+    $(echo().message("Now let's call our special test action anonymously"));
 
-    action(new AbstractTestAction() {
-        public void doExecute(TestContext context) {
-            // do something
-        }
+    $(context -> {
+        // do something
     });
 
-    echo("That's it!");
+    $(echo().message("That's it!"));
 }
 ----
+
+The test action receives a single argument `context` which represent the `org.citrusframework.context.TestContext`. The context provides access to test variables and shared components resolvable via reference resolver API.

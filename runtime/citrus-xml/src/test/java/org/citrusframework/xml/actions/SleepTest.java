@@ -47,19 +47,4 @@ public class SleepTest extends AbstractXmlActionTest {
         Assert.assertEquals(((SleepAction) result.getTestAction(0)).getTime(), "500");
         Assert.assertEquals(((SleepAction) result.getTestAction(0)).getTimeUnit(), TimeUnit.MILLISECONDS);
     }
-
-    @Test
-    public void shouldLoadDelay() {
-        XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/xml/actions/delay-test.xml");
-
-        testLoader.load();
-        TestCase result = testLoader.getTestCase();
-        Assert.assertEquals(result.getName(), "DelayTest");
-        Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 1L);
-        Assert.assertEquals(result.getTestAction(0).getClass(), SleepAction.class);
-        Assert.assertEquals(((SleepAction) result.getTestAction(0)).getTime(), "500");
-        Assert.assertEquals(((SleepAction) result.getTestAction(0)).getTimeUnit(), TimeUnit.MILLISECONDS);
-    }
 }

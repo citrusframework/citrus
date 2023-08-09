@@ -3,65 +3,142 @@
 
 Timers are very useful containers when you wish to execute a collection of test actions several times at regular intervals. The timer component generates an event which in turn triggers the execution of the nested test actions associated with timer. This can be useful in a number of test scenarios for example when Citrus needs to simulate a heart beat or if you are debugging a test and you wist to query the contents of the database, to mention just a few. The following code sample should demonstrate the power and flexibility of timers:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="timerTest">
-      <actions>
+@CitrusTest
+public void timerTest() {
+    $(timer()
+        .id("forkedTimer")
+        .interval(100L)
+        .fork(true)
+        .actions(
+            echo()
+                .message("I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)"),
+            sleep().milliseconds(50L)
+        )
+    );
+
+    $(timer()
+        .repeatCount(3)
+        .interval(100L)
+        .delay(50L)
+        .actions(
+            sleep().milliseconds(50L),
+            echo().message("I'm going to repeat this message 3 times before the next test actions are executed")
+        )
+    );
+
+    $(echo()
+        .message("Test almost complete. Make sure all timers running in the background are stopped")
+    );
+
+    $(doFinally().actions(
+        stopTimer("forkedTimer")
+    ));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="TimerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
         <timer id="forkedTimer" interval="100" fork="true">
-          <echo>
-            <message>I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)</message>
-          </echo>
-          <sleep milliseconds="50" />
+            <actions>
+                <echo>
+                    <message>I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)</message>
+                </echo>
+                <sleep milliseconds="50" />
+            </actions>
         </timer>
 
         <timer repeatCount="3" interval="100" delay="50">
-          <sleep milliseconds="50" />
-          <echo>
-            <message>I'm going to repeat this message 3 times before the next test actions are executed</message>
-          </echo>
+            <actions>
+                <sleep milliseconds="50" />
+                <echo>
+                    <message>I'm going to repeat this message 3 times before the next test actions are executed</message>
+                </echo>
+            </actions>
         </timer>
 
         <echo>
           <message>Test almost complete. Make sure all timers running in the background are stopped</message>
         </echo>
-      </actions>
-      <finally>
-        <stop-timer timerId="forkedTimer" />
-      </finally>
+    </actions>
+
+    <finally>
+        <stop-timer id="forkedTimer" />
+    </finally>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: TimerTest
+actions:
+  - timer:
+      id: forkedTimer
+      fork: true
+      delay: 5000
+      interval: 100
+      repeatCount: 1
+      actions:
+        - echo:
+            message: |
+              I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)
+        - sleep:
+            milliseconds: 50
+  - timer:
+      delay: 50
+      interval: 100
+      repeatCount: 3
+      actions:
+        - sleep:
+            milliseconds: 50
+        - echo:
+            message: |
+              I'm going to repeat this message 3 times before the next test actions are executed
+  - echo:
+      message: |
+        Test almost complete. Make sure all timers running in the background are stopped
+finally:
+  - stop-timer:
+      id: "forkedTimer"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="TimerTest">
+        <actions>
+            <timer id="forkedTimer" interval="100" fork="true">
+              <echo>
+                <message>I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)</message>
+              </echo>
+              <sleep milliseconds="50" />
+            </timer>
+
+            <timer repeatCount="3" interval="100" delay="50">
+              <sleep milliseconds="50" />
+              <echo>
+                <message>I'm going to repeat this message 3 times before the next test actions are executed</message>
+              </echo>
+            </timer>
+
+            <echo>
+              <message>Test almost complete. Make sure all timers running in the background are stopped</message>
+            </echo>
+        </actions>
+
+        <finally>
+            <stop-timer timerId="forkedTimer" />
+        </finally>
     </testcase>
-----
-
-.Java DSL
-[source,java]
-----
-@CitrusTest
-public void timerTest() {
-
-    timer()
-        .timerId("forkedTimer")
-        .interval(100L)
-        .fork(true)
-        .actions(
-            echo("I'm going to run in the background and let some other test actions run (nested action run ${forkedTimer-index} times)"),
-            sleep(50L)
-        );
-
-    timer()
-        .repeatCount(3)
-        .interval(100L)
-        .delay(50L)
-        .actions(
-            sleep(50L),
-            echo("I'm going to repeat this message 3 times before the next test actions are executed")
-        );
-
-    echo("Test almost complete. Make sure all timers running in the background are stopped");
-
-    doFinally().actions(
-        stopTimer("forkedTimer")
-    );
-}
+</spring:beans>
 ----
 
 In the above example the first timer (timerId = forkedTimer) is started in the background. By default timers are run in the current thread of execution but to start it in the background just use "fork=true". Every 100 milliseconds this timer emits an event which will result in the nested actions being executed. The nested 'echo' action outputs the number of times this timer has already been executed. It does this with the help of an 'index' variable, in this example ${forkedTimer-index}, which is named according to the timer *id* with the suffix '-index'. No limit is set on the number of times this timer should run so it will keep on running until either a nested test action fails or it is instructed to stop (more on this below).

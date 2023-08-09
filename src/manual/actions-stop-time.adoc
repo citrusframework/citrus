@@ -1,51 +1,110 @@
 [[actions-stop-time]]
 == Stop time
 
-Time measurement during a test can be very helpful. The <trace-time> action creates and monitors multiple time lines. The action offers the attribute _id_ to identify a time line.
-The tester can of course use more than one time line with different ids simultaneously.
+Time measurement during a test can be very helpful.
+The `<trace-time>` action creates and monitors multiple timelines.
+The action offers the attribute _id_ to identify a timeline.
+The tester can of course use more than one timeline with different ids simultaneously.
 
-Read the next example and you will understand the mix of different time lines:
+Read the next example, and you will understand the mix of different timelines:
 
-.XML DSL
-[source,xml]
-----
-<testcase name="StopTimeTest">
-  <actions>
-    <trace-time/>
-    
-    <trace-time id="time_line_id"/>
-    
-    <sleep seconds="3.5"/>
-    
-    <trace-time id=" time_line_id "/>
-    
-    <sleep milliseconds="5000"/>
-    
-    <trace-time/>
-    
-    <trace-time id=" time_line_id "/>
-  </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
-public void stopTimeTest() {
-    stopTime();
-    stopTime("time_line_id");
-    sleep(3.5); // do something
-    stopTime("time_line_id");
-    sleep(5000); // do something
-    stopTime();
-    stopTime("time_line_id");
+public void sleepTest() {
+    $(stopTime());
+
+    $(stopTime().id("time_line_id"));
+
+    $(sleep().seconds(3.5));
+
+    $(stopTime().id(" time_line_id "));
+
+    $(sleep().milliseconds(5000));
+
+    $(stopTime());
+
+    $(stopTime().id(" time_line_id "));
+
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SleepTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <stop-time/>
+
+        <stop-time id="time_line_id"/>
+
+        <sleep seconds="3.5"/>
+
+        <stop-time id=" time_line_id "/>
+
+        <sleep milliseconds="5000"/>
+
+        <stop-time/>
+
+        <stop-time id=" time_line_id "/>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SleepTest
+actions:
+  - stop-time: {}
+
+  - stop-time:
+      id: "time_line_id"
+
+  - sleep:
+      seconds: "3.5"
+
+  - stop-time:
+      id: "time_line_id"
+
+  - sleep:
+      milliseconds: "5000"
+
+  - stop-time: {}
+
+  - stop-time:
+      id: "time_line_id"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="SleepTest">
+        <actions>
+            <trace-time/>
+
+            <trace-time id="time_line_id"/>
+
+            <sleep seconds="3.5"/>
+
+            <trace-time id=" time_line_id "/>
+
+            <sleep milliseconds="5000"/>
+
+            <trace-time/>
+
+            <trace-time id=" time_line_id "/>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The test output looks like follows:
 
-[source,xml]
+[source,text]
 ----
 Starting TimeWatcher:
 Starting TimeWatcher: time_line_id
@@ -54,40 +113,83 @@ TimeWatcher after 8500 seconds
 TimeWatcher time_line_id after 8500 milliseconds
 ----
 
-IMPORTANT: Time line ids should not exist as test variables before the action is called for the first time. This would break the time line initialization.
+IMPORTANT: Timeline ids should not exist as test variables before the action is called for the first time. This would break the timeline initialization.
 
-NOTE: In case no time line id is specified the framework will measure the time for a default time line. To print out the current elapsed time for a time line you simply have to place the
-`<trace-time> action into the action chain again and again, using the respective time line identifier. The elapsed time will be printed out to the console every time.
+NOTE: In case no timeline id is specified the framework will measure the time for a default timeline. To print out the current elapsed time for a timeline you simply have to place the
+`<trace-time> action into the action chain again and again, using the respective timeline identifier. The elapsed time will be printed out to the console every time.
 
-Each time line is stored as test variable in the test case. By default you will have the following test variables set for each time line:
+Each timeline is stored as test variable in the test case. By default you will have the following test variables set for each timeline:
 
 [horizontal]
-CITRUS_TIMELINE:: first timestamp of time line
+CITRUS_TIMELINE:: first timestamp of timeline
 CITRUS_TIMELINE_VALUE:: latest time measurement value (time passed since first timestamp in milliseconds)
 
-According to your time line id you will get different test variable names. Also you can customize the time value suffix (default: *_VALUE*):
+According to your timeline id you will get different test variable names. Also you can customize the time value suffix (default: *_VALUE*):
 
-.XML DSL
-[source,xml ]
-----
-<trace-time id="custom_watcher" suffix="_1st"/>
-<sleep/>
-<trace-time id="custom_watcher" suffix="_2nd"/>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
-stopTime("custom_watcher", "_1st");
-sleep();
-stopTime("custom_watcher", "_2nd");
+public void sleepTest() {
+    $(stopTime().id("custom_watcher").suffix("_1st"));
+
+    $(sleep());
+
+    $(stopTime().id(" custom_watcher ").suffix("_2nd"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SleepTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <stop-time id="custom_watcher" suffix="_1st"/>
+
+        <sleep/>
+
+        <stop-time id="custom_watcher" suffix="_2nd"/>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SleepTest
+actions:
+  - stop-time:
+      id: "custom_watcher"
+      suffix: "_1st"
+
+  - sleep: {}
+
+  - stop-time:
+      id: "custom_watcher"
+      suffix: "_2nd"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="SleepTest">
+        <actions>
+            <trace-time id="custom_watcher" suffix="_1st"/>
+
+            <sleep/>
+
+            <trace-time id="custom_watcher" suffix="_2nd"/>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 You will get following test variables set:
 
 [horizontal]
-custom_watcher:: first timestamp of time line
+custom_watcher:: first timestamp of timeline
 custom_watcher_1st:: time passed since start
 custom_watcher_2nd:: time passed since start
 

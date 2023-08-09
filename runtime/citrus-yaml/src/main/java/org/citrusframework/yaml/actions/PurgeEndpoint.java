@@ -86,7 +86,16 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
     @Override
     public PurgeEndpointAction build() {
         builder.withReferenceResolver(referenceResolver);
-        getEndpoints().forEach(endpoint -> builder.endpoint(endpoint.name));
+
+        for (Endpoint endpoint : endpoints) {
+            if (endpoint.getName() != null) {
+                builder.endpoint(endpoint.name);
+            }
+
+            if (referenceResolver != null && endpoint.getRef() != null) {
+                builder.endpoint(referenceResolver.resolve(endpoint.ref, org.citrusframework.endpoint.Endpoint.class));
+            }
+        }
         return builder.build();
     }
 
@@ -98,12 +107,21 @@ public class PurgeEndpoint implements TestActionBuilder<PurgeEndpointAction>, Re
     public static class Endpoint {
 
         protected String name;
+        protected String ref;
 
         public String getName() {
             return name;
         }
         public void setName(String value) {
             this.name = value;
+        }
+
+        public void setRef(String ref) {
+            this.ref = ref;
+        }
+
+        public String getRef() {
+            return ref;
         }
     }
 

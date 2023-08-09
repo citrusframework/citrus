@@ -4,120 +4,195 @@
 Parallel containers execute embedded test actions concurrently to each other. Every action in this container will be
 executed in a separate Java thread. The following example should clarify the usage:
 
-.XML DSL
-[source,xml]
-----
-<testcase name="parallelTest">
-    <actions>
-        <parallel>
-            <sleep/>
-            
-            <sequential>
-                <sleep/>
-                <echo>
-                    <message>1</message>
-                </echo>
-            </sequential>
-            
-            <echo>
-                <message>2</message>
-            </echo>
-            
-            <echo>
-                <message>3</message>
-            </echo>
-            
-            <iterate condition="i lt= 5" 
-                        index="i">
-                <echo>
-                    <message>10</message>
-                </echo>
-            </iterate>
-        </parallel>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
-public void paralletTest() {
-    parallel().actions(
-        sleep(),
-        sequential().actions(
+public void parallelTest() {
+    $(parallel()
+        .actions(
             sleep(),
-            echo("1")
-        ),
-        echo("2"),
-        echo("3"),
-        iterate().condition("i lt= 5").index("i"))
-            .actions(
-                echo("10")
-            )
-    );
-}
-----
-
-By default, test actions are processed and executed one action after another. Since the first action is a sleep of
-five seconds, the whole test would stop and wait for 5 seconds. Things are different inside the parallel
-container. Here, the descending test actions will not wait, but execute at the same time.
-
-If you are using this container to send or receive messages, you have to use the unique correlation ID of the
-message to link the actions concerning this message. Otherwise the testcase might associate a send or receive action
-with the wrong message. Please note that this ID is **not** passed to your system under test. The
-management of correlation IDs as well as the assignment to messages is done internally. Only the mapping
-between the request and response has to be done by the author of the test. As you can see in the following example, the
-value of the header `MessageHeaders.ID` is stored in the variable `request#1` respectively `request#2`. This variable is
-reused in the receive action to identify the correct response from the server.
-
-.Java DSL
-[source,java]
-----
-@CitrusTest
-public void paralletTest() {
-
-    parallel().actions(
-        sequential().actions(
-                http(b -> b.client(httpClient)
-                        .send()
-                        .post("/foo")
-                        .extractFromHeader(MessageHeaders.ID, "request#1")
-                        .payload("{ \"info\": \"foo\"}")),
-
-                //SUT echoing the input
-
-                http(b -> b.client(httpClient)
-                        .receive()
-                        .response(HttpStatus.OK)
-                        .payload("{ \"info\": \"foo\"}")
-                        .selector(
-                            Collections.singletonMap(
-                                MessageHeaders.ID,
-                                "${request#1}")))
-        ),
-        sequential().actions(
-                http(b -> b.client(httpClient)
-                         .send()
-                         .post("/boo")
-                         .extractFromHeader(MessageHeaders.ID, "request#2")
-                         .payload("{ \"info\": \"boo\"}")),
-
-                //SUT echoing the input
-
-                http(b -> b.client(httpClient)
-                         .receive()
-                         .response(HttpStatus.OK)
-                         .payload("{ \"info\": \"boo\"}")
-                         .selector(
-                            Collections.singletonMap(
-                                MessageHeaders.ID,
-                                "${request#2}")))
+            sequential().actions(
+                sleep(),
+                echo("1")
+            ),
+            echo("2"),
+            echo("3"),
+            iterate().condition("i lt= 5").index("i"))
+                .actions(
+                    echo("10")
+                )
         )
     );
 }
 ----
 
-NOTE: Containers can easily wrap other containers. The example shows a simple combination of sequential and
-parallel containers that will achieve more complex execution logic. Actions inside the sequential container will execute
-one after another. But actions in parallel will be executed at the same time.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ParallelTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <parallel>
+            <actions>
+                <sleep/>
+
+                <sequential>
+                    <actions>
+                        <sleep/>
+                        <echo>
+                            <message>1</message>
+                        </echo>
+                    </actions>
+                </sequential>
+
+                <echo>
+                    <message>2</message>
+                </echo>
+
+                <echo>
+                    <message>3</message>
+                </echo>
+
+                <iterate condition="i lt= 5"
+                            index="i">
+                    <actions>
+                        <echo>
+                            <message>10</message>
+                        </echo>
+                    </actions>
+                </iterate>
+            </actions>
+        </parallel>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ParallelTest
+actions:
+  - parallel:
+      actions:
+        - sleep: {}
+        - sequential:
+            actions:
+              - sleep: {}
+              - echo:
+                  message: "1"
+        - echo:
+            message: "2"
+        - echo:
+            message: "3"
+        - iterate:
+            index: "i"
+            condition: "i lt 5"
+            actions:
+              - echo:
+                  message: "10"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ParallelTest">
+        <actions>
+            <parallel>
+                <sleep/>
+
+                <sequential>
+                    <sleep/>
+                    <echo>
+                        <message>1</message>
+                    </echo>
+                </sequential>
+
+                <echo>
+                    <message>2</message>
+                </echo>
+
+                <echo>
+                    <message>3</message>
+                </echo>
+
+                <iterate condition="i lt= 5"
+                            index="i">
+                    <echo>
+                        <message>10</message>
+                    </echo>
+                </iterate>
+            </parallel>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+By default, test actions are processed and executed one action after another.
+Since the first action is a sleep of five seconds, the whole test would stop and wait for 5 seconds.
+Things are different inside the parallel container.
+Here, the descending test actions will not wait, but execute at the same time.
+
+If you are using this container to send or receive messages, you have to use the unique correlation ID of the message to link the actions concerning this message.
+Otherwise, the testcase might associate a send or receive action with the wrong message.
+Please note that this ID is **not** passed to your system under test.
+The management of correlation IDs as well as the assignment to messages is done internally.
+Only the mapping between the request and response has to be done by the author of the test.
+As you can see in the following example, the value of the header `MessageHeaders.ID` is stored in the variable `request#1` respectively `request#2`.
+This variable is reused in the `receive` action to identify the correct response from the server.
+
+.Java
+[source,java]
+----
+@CitrusTest
+public void paralletTest() {
+
+    $(parallel()
+        .actions(
+            sequential()
+                .actions(
+                    http().client(httpClient)
+                            .send()
+                            .post("/foo")
+                            .extract(fromHeaders().header(MessageHeaders.ID, "request#1")
+                            .payload("{ \"info\": \"foo\"}"),
+
+                    //SUT echoing the input
+
+                    http().client(httpClient)
+                            .receive()
+                            .response(HttpStatus.OK)
+                            .payload("{ \"info\": \"foo\"}")
+                            .selector(
+                                Collections.singletonMap(
+                                    MessageHeaders.ID, "${request#1}"))
+                ),
+
+            sequential()
+                .actions(
+                    http().client(httpClient)
+                         .send()
+                         .post("/boo")
+                         .extract(fromHeaders().header(MessageHeaders.ID, "request#2")
+                         .payload("{ \"info\": \"boo\"}"),
+
+                    //SUT echoing the input
+
+                    http().client(httpClient)
+                         .receive()
+                         .response(HttpStatus.OK)
+                         .payload("{ \"info\": \"boo\"}")
+                         .selector(
+                            Collections.singletonMap(
+                                MessageHeaders.ID, "${request#2}"))
+                )
+        )
+    );
+}
+----
+
+NOTE: Containers can easily wrap other containers.
+The example shows a simple combination of sequential and parallel containers that will achieve more complex execution logic.
+Actions inside the sequential container will execute one after another.
+But actions in parallel will be executed at the same time.

@@ -12,38 +12,29 @@ ways of constructing a message with body and header values.
 .Java
 [source,java,indent=0,role="primary"]
 ----
-import org.testng.annotations.Test;
-import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.testng.TestNGCitrusSupport;
+@CitrusTest
+public void sendMessageTest() {
+    variable("text", "Hello Citrus!");
+    variable("messageId", "Mx1x123456789");
 
-@Test
-public class SendMessageTest extends TestNGCitrusSupport {
-
-    @CitrusTest(name = "SendMessageTest")
-    public void sendMessageTest() {
-        description("Basic send message example");
-
-        variable("text", "Hello Citrus!");
-        variable("messageId", "Mx1x123456789");
-
-        send("helloService")
-                .message()
-                .name("helloMessage")
-                .body("<TestMessage>" +
-                        "<Text>${text}</Text>" +
-                      "</TestMessage>")
-                .header("Operation", "sayHello")
-                .header("RequestTag", "${messageId}");
-    }
+    $(send("helloService")
+        .message()
+        .name("helloMessage")
+        .header("Operation", "sayHello")
+        .header("RequestTag", "${messageId}")
+        .body("""
+            <HelloMessage>
+                <Text>Hello Citrus!</Text>
+            </HelloMessage>
+        """)
+    );
 }
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<testcase name="SendMessageTest">
-    <description>Basic send message example</description>
-
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <variables>
         <variable name="text" value="Hello Citrus!"/>
         <variable name="messageId" value="Mx1x123456789"/>
@@ -52,19 +43,78 @@ public class SendMessageTest extends TestNGCitrusSupport {
     <actions>
         <send endpoint="helloService">
             <message name="helloMessage">
-                <payload>
-                    <TestMessage>
-                        <Text>${text}</Text>
-                    </TestMessage>
-                </payload>
+                <headers>
+                    <header name="Operation" value="sayHello"/>
+                    <header name="MessageId" value="${messageId}"/>
+                </headers>
+                <body>
+                    <![CDATA[
+                    <HelloMessage>
+                        <Text>Hello Citrus!</Text>
+                    </HelloMessage>
+                    ]]>
+                </body>
             </message>
-            <header>
-                <element name="Operation" value="sayHello"/>
-                <element name="MessageId" value="${messageId}"/>
-            </header>
         </send>
     </actions>
-</testcase>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ReceiveMessageTest
+variables:
+    - name: "text"
+      value: "Hello Citrus!"
+    - name: "messageId"
+      value: "Mx1x123456789"
+actions:
+  - send:
+      endpoint: "helloService"
+      message:
+        name: "helloMessage"
+        headers:
+          - name: "Operation"
+            value: "sayHello"
+          - name: "MessageId"
+            value: '${messageId}'
+        body: |
+          <HelloMessage>
+              <Text>Hello Citrus!</Text>
+          </HelloMessage>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="SendMessageTest">
+        <variables>
+            <variable name="text" value="Hello Citrus!"/>
+            <variable name="messageId" value="Mx1x123456789"/>
+        </variables>
+
+        <actions>
+            <send endpoint="helloService">
+                <message name="helloMessage">
+                    <payload>
+                        <![CDATA[
+                        <HelloMessage>
+                            <Text>${text}</Text>
+                        </HelloMessage>
+                        ]]>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="MessageId" value="${messageId}"/>
+                </header>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The message name is optional and defines the message identifier in the local message store. This message name is very useful
@@ -100,190 +150,469 @@ several possibilities for you to define message content in Citrus:
 [[send-message-body]]
 === Send message body
 
-The most important thing when dealing with sending actions is to prepare the message payload and header. You can specify
-the body as nested String value.
+The most important thing when dealing with sending actions is to prepare the message payload and header.
+You can specify the body as nested String value.
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-send("helloService")
-    .message()
-    .body("...");
-----
-
-.XML
-[source,xml,indent=0,role="secondary"]
-----
-<send endpoint="helloService">
-  <message>
-    <payload>
-        <!-- message payload as XML -->
-    </payload>
-  </message>
-</send>
-----
-
-.XML CDATA
-[source,xml,indent=0,role="secondary"]
-----
-<send endpoint="helloService">
-  <message>
-    <data>
-      <![CDATA[
-        <!-- message payload as XML -->
-      ]]>
-    </data>
-  </message>
-</send>
-----
-
-NOTE: In XML you can use nested XML elements or CDATA sections. Sometimes the nested XML message payload elements may cause
-XSD schema validation rule violations. This is because of variable values not fitting the XSD schema rules for example.
-In this scenario you could also use simple CDATA sections as payload data. In this case you need to use the *_`&lt;data&gt;`_*
-element in contrast to the *_`&lt;payload&gt;`_* element that we have used in our examples so far.
-
-With this alternative you can skip the XML schema validation from your IDE at design time. Unfortunately you will lose
-the XSD auto completion features many XML editors offer when constructing your payload.
-
-External file resource holding the message payload The syntax would be: `&lt;resource file=&quot;classpath:path/to/request.xml&quot; /&gt;`
-The file path prefix indicates the resource type, so the file location is resolved either as file system resource (file:)
-or classpath resource (classpath:).
-
-.Java
-[source,java,indent=0,role="primary"]
-----
-send("helloService")
-    .message()
-    .body(new ClassPathResource("path/to/request.xml"));
-----
-
-.XML
-[source,xml,indent=0,role="secondary"]
-----
-<send endpoint="helloService">
-  <message>
-    <resource file="classpath:path/to/request.xml" />
-  </message>
-</send>
-----
-
-In addition to defining message payloads as normal Strings and via external file resource (classpath and file system) you can also
-use model objects as payload data in Java DSL. The object will get serialized autoamtically with a marshaller or object mapper loaded
-from the Citrus context.
-
-.Message body model objects
-[source,java]
-----
-send("helloService")
-    .message()
-    .payloadModel(new TestRequest("Hello Citrus!"));
-----
-
-The model object requires a proper message marshaller that should be available as bean in the project context (e.g. the
-Spring application context). By default, Citrus is searching for a bean of type *org.citrusframework.xml.Marshaller*.
-
-In case you have multiple message marshallers in the application context you have to tell Citrus which one to use in this
-particular send message action.
-
-.Explicit marshaller/mapper
-[source,java]
-----
-send("helloService")
-    .message()
-    .payloadModel(new TestRequest("Hello Citrus!"), "myMessageMarshallerBean");
-----
-
-Now Citrus will marshal the message payload with the message marshaller bean named *myMessageMarshallerBean* . This way
-you can have multiple message marshaller implementations active in your project (XML, Json, and so on).
-
-You can also use a Citrus message object as body. Citrus provides different message implementations with fluent APIs to
-have a convenient way of setting properties (e.g. HttpMessage, MailMessage, FtpMessage, SoapMessage, ...). Or you just use
-the default message implementation or maybe a custom implementation.
-
-[source,java]
-----
-send("helloService")
-    .message(new DefaultMessage("Hello World!")));
-----
-
-you can explicitly overwrite some message values in the body before sending takes place. You can think of overwriting specific
-message elements with variable values. Also you can overwrite values using XPath (link:#xml-xpath-validation[xpath]) or
-JsonPath (link:#json-path-validation[json-path]) expressions.
-
-.Java
-[source,java,indent=0,role="primary"]
-----
-send(someEndpoint)
-    .message()
-    .body(new ClassPathResource("path/to/request.xml"))
-    .process(jsonPath()
-        .expression("$.user.name", "Penny")
-        .expression("$['user']['name']", "${userName}"));
-----
-
-.XML
-[source,xml,indent=0,role="secondary"]
-----
-<receive endpoint="someEndpoint">
-  <message type="json">
-    <resource file="classpath:path/to/request.xml" />
-    <element path="$.user.name" value="Penny"/>
-    <element path="$['user']['name']" value="${userName}"/>
-  </message>
-</receive>
-----
-
-[[send-message-headers]]
-=== Send message headers
-
-Defining the message header is an essential part. So Citrus uses name-value pairs like "Operation" and "MessageId" in the
-next example to set message header entries. Depending on what message endpoint is used and which message transport underneath
-the header values will be shipped in different ways. In JMS the headers go to the header section of the message, in Http we
-set mime headers accordingly, in SOAP we can access the SOAP header elements and so on. Citrus aims to do the hard work for
-you. So Citrus knows how to set headers on different message transports.
-
-.Java
-[source,java,indent=0,role="primary"]
-----
-send("helloService")
-    .message()
-    .body("<TestMessage>" +
-            "<Text>Hello!</Text>" +
-        "</TestMessage>")
-    .header("Operation", "sayHello");
+@CitrusTest
+public void sendMessageTest() {
+    $(send("helloService")
+        .message()
+        .body("""
+            <HelloMessage>
+                <Text>Hello Citrus!</Text>
+            </HelloMessage>
+        """)
+    );
 }
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<send endpoint="helloService">
-    <message>
-        <payload>
-            <TestMessage>
-                <Text>Hello!</Text>
-            </TestMessage>
-        </payload>
-    </message>
-    <header>
-        <element name="Operation" value="sayHello"/>
-    </header>
-</receive>
+<test name="SendMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="helloService">
+            <message>
+                <body>
+                    <![CDATA[
+                    <HelloMessage>
+                        <Text>Hello Citrus!</Text>
+                    </HelloMessage>
+                    ]]>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
 ----
 
-The message headers to send are defined by a simple name and value pair. Of course you can use test variables in header
-values as well.
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SendMessageTest
+actions:
+  - send:
+      endpoint: "helloService"
+      message:
+        body: |
+          <HelloMessage>
+              <Text>Hello Citrus!</Text>
+          </HelloMessage>
+----
 
-This is basically how to send messages in Citrus. The test case is responsible for constructing the message content while
-the predefined message endpoint holds transport specific settings. Test cases reference endpoint components to publish
-messages to the outside world. The variable support in message payload and message header enables you to add dynamic values
-before sending out the message.
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="SendMessageTest">
+        <actions>
+            <send endpoint="helloService">
+                <message>
+                    <payload>
+                        <![CDATA[
+                        <HelloMessage>
+                            <Text>Hello Citrus!</Text>
+                        </HelloMessage>
+                        ]]>
+                    </payload>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+A simple way of defining the message body content is to provide the message body as a String.
+You can do this in the different supported languages by embedding the message content in the body section of the `send` action.
+
+In XML you can embed the content as a `CDATA` section and in Java, or YAML you may want to use text blocks.
+
+When the message body content is an XML payload you can also use nested XML elements in the XML domain specific languages as the next example shows:
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="helloService">
+            <message name="helloRequest">
+                <body>
+                    <HelloMessage xmlns="http://sample.org/">
+                        <Text>Hello Citrus!</Text>
+                    </HelloMessage>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ReceiveMessageTest">
+        <actions>
+            <send endpoint="helloService">
+              <message>
+                <payload>
+                  <HelloMessage xmlns="http://sample.org/">
+                      <Text>Hello Citrus!</Text>
+                  </HelloMessage>
+                </payload>
+              </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+NOTE: In XML you can use nested XML elements or CDATA sections. Sometimes the nested XML message payload elements may cause
+XSD schema violations. This is because of variable values not fitting the XSD schema rules for example.
+In this scenario you could also use simple CDATA sections as payload data. In this case you need to use the *_`&lt;data&gt;`_*
+element in contrast to the *_`&lt;payload&gt;`_* element that we have used in our examples so far.
+
+With this alternative you can skip the XML schema validation from your IDE at design time. Unfortunately you will lose
+the XSD auto-completion features many XML editors offer when constructing your payload.
+
+Message body content may be quite huge, so you can also load the message content form an external file resource.
+The file path is given as either a classpath or file system resource.
+
+When writing tests in Java you can use one of the classpath or file system resource implementations to resolve the file path.
+In XML and other languages you may use a resource path given as: `file=&quot;classpath:path/to/request.xml&quot;`.
+The file path prefix indicates the file resource type (`file:` or `classpath:`), so the file location is resolved either as file system resource (`file:`)
+or classpath resource (`classpath:`).
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void sendMessageTest() {
+    $(send("helloService")
+        .message()
+        .body(new ClassPathResource("path/to/request.xml"))
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SendMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="helloService">
+            <message>
+                <body>
+                    <resource file="classpath:path/to/request.xml"/>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SendMessageTest
+actions:
+  - send:
+      endpoint: "helloService"
+      message:
+        body:
+          resource:
+            file: "classpath:path/to/request.xml"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="SendMessageTest">
+        <actions>
+            <send endpoint="helloService">
+                <message>
+                    <resource file="classpath:path/to/request.xml" />
+                </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+In addition to defining message payloads as normal Strings and via external file resource (classpath and file system) you can also
+provide a POJO model object as a message payload.
+The model object will be serialized with a marshaller or object mapper implementation which gets loaded from the Citrus context.
+
+You can use the marshalling message payload builders in a `send` action as follows.
+
+.Marshalling message payload builder
+[source,java]
+----
+$(send("helloService")
+    .message()
+    .body(marshal(new TestRequest("Hello Citrus!")))
+);
+----
+
+The `send` action uses the marshalling message builder provided with Citrus and just provides the model object `new TestRequest()`.
+The marshalling message builder automatically loads a proper XML message marshaller that should be available as a bean in the project context (e.g. the
+Spring application context). By default, Citrus is searching for a bean of type *org.citrusframework.xml.Marshaller*.
+You can add the marshaller to your project context as a bean.
+
+.Marshaller bean
+[source,java]
+----
+@Bean
+public Marshaller xmlMarshaller() {
+    return new Jaxb2Marshaller();
+}
+----
+
+Now Citrus is able to automatically resolve the marshaller from the project context as soon as the `receive` action uses the model object in combination with the `marshal` instruction.
+
+When you have multiple message marshaller instances in your project context you have to tell Citrus which one to use in this particular receive message action.
+
+.Reference message marshaller
+[source,java]
+----
+$(send("helloService")
+    .message()
+    .body(marshal(new TestRequest("Hello Citrus!"), "myMessageMarshallerBean"))
+);
+----
+
+Now Citrus will marshal the message body with the message marshaller bean named *myMessageMarshallerBean*.
+This way you can have multiple message marshaller implementations in your project (XML, JSON, and so on).
+
+You can implement your own message payload builder or use one of the provided Citrus message payload builders.
+
+.Custom message payload builder
+[source,java,indent=0]
+----
+@Autowired
+private MessagePayloadBuilder mySpecialPayloadBuilder = new FooPayloadBuilder();
+
+$(send("helloService")
+    .message()
+    .body(mySpecialPayloadBuilder)
+);
+----
+
+The message payload builder must implement the `MessagePayloadBuilder` interface with the method `buildPayload(TestContext context)`.
+
+.MessagePayloadBuilder interface
+[source,java,indent=0]
+----
+public class FooPayloadBuilder implements MessagePayloadBuilder {
+
+    @Override
+    public Object buildPayload(TestContext context) {
+        // return some special payload
+        return new FooModel();
+    }
+}
+----
+
+You can also use a Citrus message instance directly.
+Citrus provides different message implementations with fluent APIs to
+have a convenient way of setting properties (e.g. HttpMessage, MailMessage, FtpMessage, SoapMessage, ...).
+
+.Citrus message object
+[source,java]
+----
+$(send("helloService")
+    .message(new DefaultMessage("Hello World!"))
+);
+----
+
+You can explicitly overwrite some message values in the body before the validations is performed.
+This is for overwriting specific message elements with variable values for instance.
+Also, you can overwrite values using XPath (link:#xml-xpath-validation[xpath]) or
+JsonPath (link:#json-path-validation[json-path]) expressions.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void jsonPathTest() {
+    $(receive("someEndpoint")
+        .message()
+        .type(MessageType.JSON)
+        .body(new ClassPathResource("path/to/request.xml"))
+        .process(jsonPath()
+            .expression("$.user.name", "Penny")
+            .expression("$['user']['name']", "${userName}"));
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="JsonPathTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="someEndpoint">
+            <message type="json">
+                <body>
+                    <resource file="classpath:path/to/request.xml" />
+                </body>
+                <expression path="$.user.name" value="Penny"/>
+                <expression path="$['user']['name']" value="${userName}"/>
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JsonPathTest
+actions:
+  - receive:
+      endpoint: "someEndpoint"
+      message:
+        type: json
+        resource:
+          file: "classpath:path/to/request.xml"
+        expression:
+          - path: '$.user.name'
+            value: "Penny"
+          - path: '$["user"]["name"]'
+            value: '${userName}'
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JsonPathTest">
+        <actions>
+            <receive endpoint="someEndpoint">
+                <message type="json">
+                    <resource file="classpath:path/to/request.xml" />
+                    <element path="$.user.name" value="Penny"/>
+                    <element path="$['user']['name']" value="${userName}"/>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+[[send-message-headers]]
+=== Send message headers
+
+Defining the message header is an essential part.
+Citrus uses name-value pairs like "Operation" and "MessageId" in the
+next example to set message header entries.
+
+Depending on what message endpoint and which message transport underneath is used the header values will be shipped in different ways.
+In JMS for instance the headers go to the header section of the message, in Http we set mime headers accordingly, in SOAP we can access the SOAP header elements and so on.
+Citrus knows how to set headers on different message transports and aims to do the hard work for you .
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void messageHeaderTest() {
+    $(send("helloService")
+        .message()
+        .header("Operation", "sayHello")
+        .body("""
+            <TestMessage xmlns="http://citrusframework.org/schema">
+                <Text>Hello!</Text>
+            </TestMessage>
+        """)
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="MessageHeaderTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="someEndpoint">
+            <message>
+                <headers>
+                    <header name="Operation" value="sayHello"/>
+                </headers>
+                <body>
+                    <payload>
+                        <TestMessage xmlns="http://citrusframework.org/schema">
+                            <Text>Hello!</Text>
+                        </TestMessage>
+                    </payload>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: MessageHeaderTest
+actions:
+  - send:
+      endpoint: "helloService"
+      message:
+        headers:
+          - name: "Operation"
+            value: "sayHello"
+        body:
+          data: |
+            <TestMessage xmlns="http://citrusframework.org/schema">
+                <Text>Hello!</Text>
+            </TestMessage>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="MessageHeaderTest">
+        <actions>
+            <send endpoint="helloService">
+                <message>
+                    <payload>
+                        <TestMessage xmlns="http://citrusframework.org/schema">
+                            <Text>Hello!</Text>
+                        </TestMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                </header>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+The message headers to send are defined by a simple name and value pairs.
+Of course you can use test variables in header values as well.
+
+This is basically how to send messages in Citrus.
+The test case is responsible for constructing the message content while the predefined message endpoint holds transport specific settings.
+Test cases reference endpoint components to publish messages to the outside world.
+The variable support in message payload and message header enables you to add dynamic values before sending out the message.
 
 [[send-groovy-markupbuilder]]
-=== Groovy XML Markup builder
+=== Groovy Markup builder
 
-With the Groovy markup builder you can build XML message body content in a simple way, without having to write the typical
-XML overhead.
+With the Groovy markup builder you can build XML message body content in a simple way, without having to write the typical XML overhead.
 
 IMPORTANT: The Groovy test action support lives in a separate module.
 You need to add the module to your project to use the functionality.
@@ -298,34 +627,80 @@ You need to add the module to your project to use the functionality.
 </dependency>
 ----
 
-For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML
-section or the nested body XML data we write a Groovy script snippet.
+For example, we use a Groovy script to construct the XML message to be sent out.
+Instead of a plain CDATA XML section or the nested body XML data we write a Groovy script snippet.
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
-String script = "markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd'){\n" +
-                    "Message('Hello World!')\n" +
-                "}";
-messageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(script));
-
-send("helloService")
-    .message(messageBuilder);
+@CitrusTest
+public void scriptMessageBuilderTest() {
+    $(send("helloService")
+        .message()
+        .body(new GroovyScriptPayloadBuilder("""
+                    markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
+                        Message('Hello World!')
+                    }
+        """))
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<send endpoint="helloService">
-  <message>
-    <builder type="groovy">
-        markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
-            Message('Hello World!')
-        }
-    </builder>
-  </message>
-</send>
+<test name="ScriptMessageBuilderTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="helloService">
+            <message>
+                <body>
+                    <builder type="groovy">
+                        markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
+                            Message('Hello World!')
+                        }
+                    </builder>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ScriptMessageBuilderTest
+actions:
+  - send:
+      endpoint: "helloService"
+      message:
+        builder:
+          type: "groovy"
+          value: |
+            markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
+                Message('Hello World!')
+            }
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ScriptMessageBuilderTest">
+        <actions>
+            <send endpoint="helloService">
+              <message>
+                <builder type="groovy">
+                    markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
+                        Message('Hello World!')
+                    }
+                </builder>
+              </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The Groovy markup builder generates the XML message body with following content:
@@ -353,23 +728,62 @@ The Groovy markup builder script may also be used as external file resource:
 .Java
 [source,java,indent=0,role="primary"]
 ----
-DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
-messageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:path/to/helloRequest.groovy"));
-
-send("helloService")
-    .message(messageBuilder);
+@CitrusTest
+public void scriptMessageBuilderTest() {
+    $(send("helloService")
+        .message()
+        .body(new GroovyFileResourcePayloadBuilder("classpath:path/to/helloRequest.groovy"))
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<send endpoint="helloService">
-  <message>
-    <builder type="groovy" file="classpath:path/to/helloRequest.groovy"/>
-  </message>
-</send>
+<test name="ScriptMessageBuilderTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="helloService">
+            <message>
+                <body>
+                    <builder type="groovy" file="classpath:path/to/helloRequest.groovy"/>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
 ----
 
-The markup builder implementation in Groovy offers great possibilities in defining message body content. We do not need
-to write XML tag overhead and we can construct complex message body content with Groovy logic like iterations and conditional
-elements. For detailed markup builder descriptions please see the official Groovy documentation.
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ScriptMessageBuilderTest
+actions:
+  - send:
+      endpoint: "helloService"
+      message:
+        builder:
+          type: "groovy"
+          file: "classpath:path/to/helloRequest.groovy"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ScriptMessageBuilderTest">
+        <actions>
+            <send endpoint="helloService">
+              <message>
+                <builder type="groovy" file="classpath:path/to/helloRequest.groovy"/>
+              </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+The markup builder implementation in Groovy offers great possibilities in defining message body content.
+We do not need to write XML the tag overhead anymore.
+The approach also enables us to construct complex message body content with Groovy script logic like iterations and conditional elements.
+For detailed markup builder descriptions please see the official Groovy documentation.

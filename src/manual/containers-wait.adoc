@@ -19,25 +19,61 @@ and bind it to the test action.
 
 Next let us have a look at a simple example:
 
-.XML DSL
-[source,xml]
-----
-<testcase name="waitTest">
-    <actions>
-        <wait seconds="10" interval="2000" >
-          <http url="http://sample.org/resource" statusCode="200" timeout="2000" />
-        <wait/>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void waitTest() {
-    waitFor().http().seconds(10L).interval(2000L).url("http://sample.org/resource");
+    $(waitFor()
+        .time(Duration.ofMillis(10000))
+        .interval(2000)
+        .http()
+            .url("http://sample.org/resource")
+            .status(200)
+            .timeout(2000);
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="WaitTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <wait-for timeout="10" interval="2000">
+          <http url="http://sample.org/resource" status="200" timeout="2000" />
+        </wait-for>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: WaitTest
+actions:
+  - wait-for:
+      timeout: "10"
+      interval: "2000"
+      http:
+        url: path/to/resource/file.txt
+        status: 200
+        timeout: 2000
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="WaitTest">
+        <actions>
+            <wait seconds="10" interval="2000">
+              <http url="http://sample.org/resource" status="200" timeout="2000" />
+            </wait>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The example waits for some Http server resource to be available with *Http 200 OK* response. Citrus will use *HEAD* request method by default. You can set the request method with the *method* attribute on the Http condition.
@@ -47,25 +83,56 @@ The example waits for some Http server resource to be available with *Http 200 O
 
 Next let us have a look at the file condition usage:
 
-.XML DSL
-[source,xml]
-----
-<testcase name="waitTest">
-    <actions>
-        <wait seconds="10" interval="2000" >
-          <file path="path/to/resource/file.txt" />
-        <wait/>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void waitTest() {
-    waitFor().file().path("path/to/resource/file.txt");
+    $(waitFor()
+        .time(Duration.ofMillis(10000))
+        .interval(2000)
+        .file().path("path/to/resource/file.txt")
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="WaitTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <wait-for timeout="10" interval="2000">
+          <file path="path/to/resource/file.txt" />
+        </wait-for>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: WaitTest
+actions:
+  - wait-for:
+      timeout: "10"
+      interval: "2000"
+      file:
+        path: path/to/resource/file.txt
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="WaitTest">
+        <actions>
+            <wait seconds="10" interval="2000">
+              <file path="path/to/resource/file.txt" />
+            </wait>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 Citrus checks for the file to exist under the given path. Only if the file exists the test will continue with further test actions.
@@ -75,25 +142,56 @@ Citrus checks for the file to exist under the given path. Only if the file exist
 
 Next let us have a look at the message condition usage:
 
-.XML DSL
-[source,xml]
-----
-<testcase name="waitTest">
-    <actions>
-        <wait seconds="10" interval="2000" >
-          <message name="helloRequest" />
-        <wait/>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void waitTest() {
-    waitFor().message().name("helloRequest");
+    $(waitFor()
+        .time(Duration.ofMillis(10000))
+        .interval(2000)
+        .message().name("helloRequest")
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="WaitTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <wait-for timeout="10" interval="2000">
+          <message name="helloRequest" />
+        </wait-for>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: WaitTest
+actions:
+  - wait-for:
+      timeout: "10"
+      interval: "2000"
+      message:
+        name: "helloRequest"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="WaitTest">
+        <actions>
+            <wait seconds="10" interval="2000">
+              <message name="helloRequest" />
+            </wait>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 Citrus checks for the message with the name *helloRequest* in the local message store. Only if the message with the given name is found the test will continue with further test actions. The local message
@@ -104,33 +202,77 @@ store is automatically filled with all exchanged messages (send or receive) in a
 
 Now we would like to wait for some other test action to execute.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="waitTest">
-    <actions>
-        <wait seconds="10" interval="2000" >
-          <action>
-            <receive endpoint="jmsEndpoint">
-                <message>
-                    <payload>Wait for me!</payload>
-                </message>
-            </receive>
-          </action>
-        <wait/>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void waitTest() {
-    waitFor()
+    $(waitFor()
+        .time(Duration.ofMillis(10000))
+        .interval(2000)
         .execution()
-        .action(receive(jmsEndpoint).payload("Wait for me!"));
+        .action(
+            receive(jmsEndpoint)
+                .message()
+                .body("Wait for me!")
+        )
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="WaitTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <wait-for timeout="10" interval="2000">
+          <action>
+            <receive endpoint="jmsEndpoint">
+                <message>
+                    <body><data>Wait for me!</data></body>
+                </message>
+            </receive>
+          </action>
+        </wait-for>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: WaitTest
+actions:
+  - wait-for:
+      timeout: "10"
+      interval: "2000"
+      action:
+        receive:
+          endpoint: "jmsEndpoint"
+          message:
+            body: |
+              Wait for me!
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="WaitTest">
+        <actions>
+            <wait seconds="10" interval="2000">
+              <action>
+                <receive endpoint="jmsEndpoint">
+                    <message>
+                        <payload>Wait for me!</payload>
+                    </message>
+                </receive>
+              </action>
+            </wait>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 You can add any test action to the wait condition so you can execute any other action and wait for its success. This enables us to also use the full send and receive operations on other message transports.

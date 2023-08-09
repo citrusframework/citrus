@@ -83,6 +83,9 @@
                     <xs:attribute name="name" type="xs:string"/>
                     <xs:attribute name="type" default="xml" type="xs:string"/>
                     <xs:attribute name="data-dictionary" type="xs:string"/>
+                    <xs:attribute name="schema-validation" type="xs:boolean"/>
+                    <xs:attribute name="schema" type="xs:string"/>
+                    <xs:attribute name="schema-repository" type="xs:string"/>
                 </xs:complexType>
             </xs:element>
             <xs:element name="header" minOccurs="0">
@@ -417,11 +420,23 @@
         <xs:attribute name="milliseconds" type="xs:string"/>
     </xs:complexType>
 
+    <xs:complexType name="DelayActionType">
+        <xs:complexContent>
+            <xs:extension base="SleepActionType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="EchoActionType">
         <xs:sequence>
             <xs:element ref="description" minOccurs="0"/>
             <xs:element name="message" type="xs:string" minOccurs="0"/>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PrintActionType">
+        <xs:complexContent>
+            <xs:extension base="EchoActionType"/>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="TraceVariablesActionType">
@@ -458,6 +473,37 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PurgeJmsQueuesActionType">
+        <xs:annotation>
+            <xs:documentation>Continuously receives messages from a destination until no more messages are left - emulating the purge operation</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:element name="queue" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string"/>
+                    <xs:attribute name="ref" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="connection-factory" type="xs:string"/>
+        <xs:attribute name="timeout" type="xs:int"/>
+        <xs:attribute name="sleep" type="xs:int"/>
+    </xs:complexType>
+
+    <xs:complexType name="PurgeChannelActionType">
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:element name="channel" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string"/>
+                    <xs:attribute name="ref" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="message-selector" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="CreateVariablesActionType">
@@ -870,12 +916,16 @@
             <xs:element ref="plsql"/>
             <xs:element ref="java"/>
             <xs:element ref="sleep"/>
+            <xs:element ref="delay"/>
             <xs:element ref="trace-variables"/>
             <xs:element ref="create-variables"/>
             <xs:element ref="trace-time"/>
             <xs:element ref="echo"/>
+            <xs:element ref="print"/>
             <xs:element ref="expect-timeout"/>
             <xs:element ref="purge-endpoint"/>
+            <xs:element ref="purge-jms-queues"/>
+            <xs:element ref="purge-channel"/>
             <xs:element ref="call-template"/>
             <xs:element ref="input"/>
             <xs:element ref="iterate"/>
@@ -942,9 +992,13 @@
     <xs:element name="sql" type="SqlActionType"/>
     <xs:element name="java" type="JavaActionType"/>
     <xs:element name="sleep" type="SleepActionType"/>
+    <xs:element name="delay" type="DelayActionType"/>
     <xs:element name="echo" type="EchoActionType"/>
+    <xs:element name="print" type="PrintActionType"/>
     <xs:element name="trace-variables" type="TraceVariablesActionType"/>
     <xs:element name="purge-endpoint" type="PurgeEndpointActionType"/>
+    <xs:element name="purge-jms-queues" type="PurgeJmsQueuesActionType"/>
+    <xs:element name="purge-channel" type="PurgeChannelActionType"/>
     <xs:element name="create-variables" type="CreateVariablesActionType"/>
     <xs:element name="trace-time" type="TraceTimeActionType"/>
     <xs:element name="expect-timeout" type="ExpectTimeoutActionType"/>

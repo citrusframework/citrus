@@ -220,8 +220,8 @@ public class JavaAction extends AbstractTestAction {
         private Object instance;
         private String className;
         private String methodName;
-        private List<Object> methodArgs = new ArrayList<>();
-        private List<Object> constructorArgs = new ArrayList<>();
+        private final List<Object> methodArgs = new ArrayList<>();
+        private final List<Object> constructorArgs = new ArrayList<>();
 
         /**
          * Fluent API action building entry method used in Java DSL.

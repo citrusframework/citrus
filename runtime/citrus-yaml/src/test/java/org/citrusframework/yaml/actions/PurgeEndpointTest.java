@@ -72,9 +72,9 @@ public class PurgeEndpointTest extends AbstractYamlActionTest {
         Assert.assertNull(action.getMessageSelector());
         Assert.assertNotNull(action.getMessageSelectorMap());
         Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
-        Assert.assertEquals(action.getEndpoints().size(), 0);
-        Assert.assertEquals(action.getEndpointNames().size(), 1);
-        Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint");
+        Assert.assertEquals(action.getEndpointNames().size(), 0);
+        Assert.assertEquals(action.getEndpoints().size(), 1);
+        Assert.assertEquals(action.getEndpoints().get(0), context.getReferenceResolver().resolve("testEndpoint"));
 
         action = (PurgeEndpointAction) result.getTestAction(actionIndex++);
         Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");

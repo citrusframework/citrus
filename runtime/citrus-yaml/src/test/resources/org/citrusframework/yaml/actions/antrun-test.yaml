@@ -1,0 +1,31 @@
+name: AntRunTest
+author: Christoph
+status: FINAL
+description: "Sample test in YAML"
+actions:
+  - ant:
+      build-file: "classpath:org/citrusframework/yaml/build.xml"
+      execute:
+        target: "sayHello"
+
+  - ant:
+      build-file: "classpath:org/citrusframework/yaml/build.xml"
+      execute:
+        targets: "sayHello,sayGoodbye"
+
+  - ant:
+      build-file: "classpath:org/citrusframework/yaml/build.xml"
+      execute:
+        target: "sayHello"
+      properties:
+        - name: "welcomeText"
+          value: "Hello World!"
+        - name: "goodbyeText"
+          value: "Goodbye!"
+
+  - ant:
+      build-file: "classpath:org/citrusframework/yaml/build.xml"
+      build-listener: "logger"
+      execute:
+        target: "sayHello"
+      property-file: "classpath:org/citrusframework/yaml/build.properties"

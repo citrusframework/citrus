@@ -1,15 +1,32 @@
 [[actions-assert-failure]]
 == Assert failure
 
-Citrus test actions fail with Java exceptions and error messages. This gives you the opportunity to expect an action to fail during test execution. You can simple assert a Java exception to be thrown during execution. See the example for an assert action definition in a test case:
+Citrus test actions fail with Java exceptions and error messages.
+This gives you the opportunity to expect an action to fail during test execution.
+You can simply assert a Java exception to be thrown during execution. See the example for an assert action definition in a test case:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="assertFailureTest">
+@CitrusTest
+public void assertFailureTest() {
+    $(assertException()
+            .exception(org.citrusframework.exceptions.CitrusRuntimeException.class)
+            .message("Unknown variable ${date}")
+            .when(
+                echo().message("Current date is: ${date}")
+            )
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="AssertFailureTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
         <assert exception="org.citrusframework.exceptions.CitrusRuntimeException"
-                   message="Unknown variable ${date}">
+                message="Unknown variable ${date}">
             <when>
                 <echo>
                     <message>Current date is: ${date}</message>
@@ -17,22 +34,48 @@ Citrus test actions fail with Java exceptions and error messages. This gives you
             </when>
         </assert>
     </actions>
-</testcase>
+</test>
 ----
 
-.Java DSL
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void assertTest() {
-    assertException().exception(org.citrusframework.exceptions.CitrusRuntimeException.class)
-                     .message("Unknown variable ${date}")
-                .when(echo("Current date is: ${date}"));
-}
+name: "AssertFailureTest"
+actions:
+  - assert:
+      exception: "org.citrusframework.exceptions.CitrusRuntimeException"
+      message: 'Unknown variable ${date}'
+      when:
+        - echo:
+            message: 'Current date is: ${date}'
 ----
 
-NOTE: Note that the assert action requires an exception. In case no exception is thrown by the embedded test action the assertion and the test case will fail!
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="AssertFailureTest">
+        <actions>
+            <assert exception="org.citrusframework.exceptions.CitrusRuntimeException"
+                    message="Unknown variable ${date}">
+                <when>
+                    <echo>
+                        <message>Current date is: ${date}</message>
+                    </echo>
+                </when>
+            </assert>
+        </actions>
+    </testcase>
+</spring:beans>
+----
 
-The assert action always wraps a single test action, which is then monitored for failure. In case the nested test action fails with error you can validate the error in its type and error message (optional). The failure has to fit the expected one exactly otherwise the assertion fails itself.
+NOTE: Note that the assert action requires an exception.
+In case no exception is thrown by the embedded test action the assertion and the test case will fail!
 
-IMPORTANT: Important to notice is the fact that asserted exceptions do not cause failure of the test case. As you except the failure to happen the test continues with its work once the assertion is done successfully.
+The assert action always wraps a single test action, which is then monitored for failure.
+In case the nested test action fails with error you can validate the error in its type and error message (optional).
+The failure has to fit the expected one exactly otherwise the assertion fails itself.
+
+IMPORTANT: Important to notice is the fact that asserted exceptions do not cause failure of the test case.
+As you except the failure to happen the test continues with its work once the assertion is done successfully.

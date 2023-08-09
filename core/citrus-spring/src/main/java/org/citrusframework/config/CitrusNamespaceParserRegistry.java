@@ -54,10 +54,12 @@ public final class CitrusNamespaceParserRegistry {
         registerParser("receive", new ReceiveMessageActionParser());
         registerParser("java", new JavaActionParser());
         registerParser("sleep", new SleepActionParser());
+        registerParser("delay", new DelayActionParser());
         registerParser("trace-variables", new TraceVariablesActionParser());
         registerParser("create-variables", new CreateVariablesActionParser());
         registerParser("trace-time", new StopTimeActionParser());
         registerParser("echo", new EchoActionParser());
+        registerParser("print", new PrintActionParser());
         registerParser("expect-timeout", new ReceiveTimeoutActionParser());
         registerParser("purge-endpoint", new PurgeEndpointActionParser());
         registerParser("action", new ActionParser());

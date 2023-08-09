@@ -1,46 +1,70 @@
-[[containers-repeat-on-error-until-true]]
-== Repeat on error until true
+[[containers-repeat-on-error]]
+== Repeat on error
 
 The next looping container is called repeat-on-error-until-true. This container repeats a group of actions in case one embedded action failed with error. In case of an error inside the container the loop will try to execute *_all_* embedded actions again in order to seek for overall success. The execution continues until all embedded actions were processed successfully *_or_* the ending condition evaluates to true and the error-loop will lead to final failure.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="iterateTest">
-    <actions>
-        <repeat-onerror-until-true index="i" condition="i = 5">
-            <echo>
-                <message>index is: ${i}</message>
-            </echo>
-            <fail/>
-        </repeat-onerror-until-true>
-    </actions>
-</testcase>
-----
-
-.Java DSL designer
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void repeatOnErrorTest() {
-    repeatOnError(
-        echo("index is: ${i}"),
-        fail("Force loop to fail!")
-    ).until("i = 5").index("i");
-}
-----
-
-.Java DSL runner
-[source,java]
-----
-@CitrusTest
-public void repeatOnErrorTest() {
-    repeatOnError().until("i = 5").index("i"))
+    $(repeatOnError().until("i = 5").index("i"))
         .actions(
-            echo("index is: ${i}"),
-            fail("Force loop to fail!")
-        );
+            echo().message("index is: ${i}"),
+            fail().message("Force loop to fail!")
+        )
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="RepeatOnErrorTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <repeat-on-error index="i" until="i = 5">
+            <actions>
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+                <fail message="Force loop to fail!"/>
+            </actions>
+        </repeat-on-error>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: RepeatOnErrorTest
+actions:
+  - repeat-on-error:
+      index: "i"
+      until: "i = 5"
+      actions:
+        - echo:
+            message: "index is: ${i}"
+        - fail:
+            message: "Force loop to fail!"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="RepeatOnErrorTest">
+        <actions>
+            <repeat-onerror-until-true index="i" condition="i = 5">
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+                <fail message="Force loop to fail!"/>
+            </repeat-onerror-until-true>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 In the code example the error-loop continues four times as the <fail> action definitely fails the test. During the fifth iteration The condition "i=5" evaluates to true and the loop breaks its processing leading to a final failure as the test actions were not successful.
@@ -51,35 +75,92 @@ The repeat-on-error container also offers an automatic sleep mechanism. This aut
 
 We can avoid unstable test cases that are based on these runtime conditions with the auto-sleep functionality.
 
-.XML DSL
-[source,xml]
-----
-<repeat-onerror-until-true auto-sleep="1000" condition="i = 5" index="i">
-    <echo>
-        <sql datasource="testDataSource">
-            <statement>
-              SELECT COUNT(1) AS CNT_ORDERS 
-              FROM ORDERS 
-              WHERE CUSTOMER_ID='${customerId}'
-            </statement>
-            <validate column="CNT_ORDERS" value="1"/>
-        </sql>
-    </echo>
-</repeat-onerror-until-true>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void repeatOnErrorTest() {
-    repeatOnError().until("i = 5").index("i").autoSleep(1000))
+    $(repeatOnError().until("i = 5").index("i").autoSleep(1000))
         .actions(
-            query(action -> action.dataSource(testDataSource)
-                .statement("SELECT COUNT(1) AS CNT_ORDERS FROM ORDERS WHERE CUSTOMER_ID='${customerId}'")
-                .validate("CNT_ORDERS", "1"))
-        );
+            sql()
+                .dataSource(testDataSource)
+                .query()
+                .statement("""
+                    SELECT COUNT(1) AS CNT_ORDERS
+                    FROM ORDERS
+                    WHERE CUSTOMER_ID='${customerId}'
+                """)
+                .validate("CNT_ORDERS", 1)
+        )
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="RepeatOnErrorTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <repeat-on-error auto-sleep="1000" until="i = 5" index="i">
+            <actions>
+                <sql datasource="testDataSource">
+                    <statements>
+                        <statement>
+                          SELECT COUNT(1) AS CNT_ORDERS
+                          FROM ORDERS
+                          WHERE CUSTOMER_ID='${customerId}'
+                        </statement>
+                    </statements>
+                    <validate column="CNT_ORDERS" value="1"/>
+                </sql>
+            </actions>
+        </repeat-on-error>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: RepeatOnErrorTest
+actions:
+  - repeat-on-error:
+      index: "i"
+      until: "i = 5"
+      auto-sleep: 1000
+      actions:
+        - sql:
+            dataSource: "testDataSource"
+            statements:
+              - statement: |
+                  SELECT COUNT(1) AS CNT_ORDERS
+                  FROM ORDERS
+                  WHERE CUSTOMER_ID='${customerId}'
+            validate:
+              - column: "CNT_ORDERS"
+                value: 1
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="RepeatOnErrorTest">
+        <actions>
+            <repeat-onerror-until-true auto-sleep="1000" condition="i = 5" index="i">
+                <sql datasource="testDataSource">
+                    <statement>
+                      SELECT COUNT(1) AS CNT_ORDERS
+                      FROM ORDERS
+                      WHERE CUSTOMER_ID='${customerId}'
+                    </statement>
+                    <validate column="CNT_ORDERS" value="1"/>
+                </sql>
+            </repeat-onerror-until-true>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 We surrounded the database check with a repeat-onerror container having the auto-sleep property set to 1000 milliseconds. The repeat container will try to check the database up to five times with an automatic sleep of 1 second before every iteration. This gives the system under test up to five seconds time to store the new entry to the database. The test case is very stable and just fits to the hardware environment. On slow test environments the test may need several iterations to successfully read the database entry. On very fast environments the test may succeed right on the first try.

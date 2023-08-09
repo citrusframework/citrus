@@ -31,6 +31,8 @@ import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -233,14 +235,21 @@ public class AntRunAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<AntRunAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<AntRunAction, Builder> implements ReferenceResolverAware {
 
         private String buildFilePath;
         private String target;
         private String targets;
-        private Properties properties = new Properties();
+        private final Properties properties = new Properties();
         private String propertyFilePath;
         private BuildListener buildListener;
+        private String buildListenerName;
+
+        private ReferenceResolver referenceResolver;
+
+        public static Builder antrun() {
+            return new Builder();
+        }
 
         public static Builder antrun(String buildFilePath) {
             Builder builder = new Builder();
@@ -313,8 +322,26 @@ public class AntRunAction extends AbstractTestAction {
             return this;
         }
 
+        /**
+         * Adds custom build listener implementation.
+         * @param buildListener
+         */
+        public Builder listenerName(String buildListener) {
+            this.buildListenerName = buildListener;
+            return this;
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+        }
+
         @Override
         public AntRunAction build() {
+            if (buildListenerName != null && referenceResolver != null) {
+                listener(referenceResolver.resolve(buildListenerName, BuildListener.class));
+            }
+
             return new AntRunAction(this);
         }
     }

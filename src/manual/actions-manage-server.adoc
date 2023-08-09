@@ -5,25 +5,104 @@ Citrus is working with server components that are started and stopped within a t
 
 Let me explain with a simple sample test case:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="sleepTest">
+@Autowired
+@Qualifier("myMailServer")
+private MailServer myMailServer;
+
+@CitrusTest
+public void manageServerTest() {
+    $(start()
+        .server(myMailServer));
+
+    $(sequential()
+        .actions(...)); // do something
+
+    $(stop()
+        .server(myMailServer));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ManageServerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
         <start server="myMailServer"/>
 
-        <sleep/>
+        <sequential>
+            <!-- do something -->
+        </sequential>
 
         <stop server="myMailServer"/>
     </actions>
-</testcase>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ManageServerTest
+actions:
+  - start:
+      server: "myMailServer"
+  - sequential:
+      actions: {}
+  - stop:
+      server: "myMailServer"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="manageServerTest">
+        <actions>
+            <start server="myMailServer"/>
+
+            <sequential>
+                <!-- do something -->
+            </sequential>
+
+            <stop server="myMailServer"/>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The start and stop server test action receive a server name which references a Spring bean component of type *org.citrusframework.server.Server* in your basic Spring application context. The server instance is started or stopped within the test case. As you can see in the next listing we can also start and stop multiple server instances within a single test action.
 
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="sleepTest">
+@Autowired
+@Qualifier("myMailServer")
+private MailServer myMailServer;
+
+@Autowired
+@Qualifier("myFtpServer")
+private FtpServer myFtpServer;
+
+@CitrusTest
+public void manageServerTest() {
+    $(start()
+        .server(myMailServer, myFtpServer));
+
+    $(sequential()
+        .actions(...)); // do something
+
+    $(stop()
+        .server(myMailServer, myFtpServer));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ManageServerTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <actions>
         <start>
             <servers>
@@ -32,7 +111,9 @@ The start and stop server test action receive a server name which references a S
             </servers>
         </start>
 
-        <sleep/>
+        <sequential>
+            <!-- do something -->
+        </sequential>
 
         <stop>
             <servers>
@@ -41,28 +122,57 @@ The start and stop server test action receive a server name which references a S
             </servers>
         </stop>
     </actions>
-</testcase>
+</test>
 ----
 
-When using the Java DSL the best way to reference a server instance is to autowire the Spring bean via dependency injection. The Spring framework takes case on injecting the proper Spring bean component defined in the Spring application context. This way you can easily start and stop server instances within Java DSL test cases.
-
-.Java DSL
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
 ----
-@Autowired
-@Qualifier("myFtpServer")
-private FtpServer myFtpServer;
-
-@CitrusTest
-public void startStopServerTest() {
-    start(myFtpServer);
-
-    sleep();
-
-    stop(myFtpServer);
-}
+name: ManageServerTest
+actions:
+  - start:
+      servers:
+        - "myMailServer"
+        - "myFtpServer"
+  - sequential:
+      actions: {}
+  - stop:
+      servers:
+        - "myMailServer"
+        - "myFtpServer"
 ----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="manageServerTest">
+        <actions>
+            <start>
+                <servers>
+                    <server name="myMailServer"/>
+                    <server name="myFtpServer"/>
+                </servers>
+            </start>
+
+            <sequential>
+                <!-- do something -->
+            </sequential>
+
+            <stop>
+                <servers>
+                    <server name="myMailServer"/>
+                    <server name="myFtpServer"/>
+                </servers>
+            </stop>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+When using the Java DSL the best way to reference a server instance is to autowire the Spring bean via dependency injection. The Spring framework takes care of injecting the proper Spring bean component defined in the Spring application context. This way you can easily start and stop server instances within Java DSL test cases.
 
 NOTE: Starting and stopping server instances is a synchronous test action. This means that your test case is waiting for the server to start before other test actions take place. Startup times and shut down of server instances may delay your test accordingly.
 
-As you can see starting and stopping Citrus server instances is very easy. You can also write your own server implementations by implementing the interface *org.citrusframework.server.Server* . All custom server implementations can then be started and stopped during a test case.
+As you can see starting and stopping Citrus server instances is very easy. You can also write your own server implementations by implementing the interface *org.citrusframework.server.Server*. All custom server implementations can then be started and stopped during a test case.

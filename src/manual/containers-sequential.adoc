@@ -5,34 +5,64 @@ The sequential container executes the embedded test actions in strict sequence. 
 
 For now the sequential container seems not very sensational - one might say boring - because it simply groups a pair of test actions to sequential execution.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="sequentialTest">
-    <actions>
-        <sequential>
-            <trace-time/>
-            <sleep/>
-            <echo>
-                <message>Hallo TestFramework</message>
-            </echo>
-            <trace-time/>
-        </sequential>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void sequentialTest() {
-    sequential()
+    $(sequential()
         .actions(
-            stopTime(),
-            sleep(1.0),
-            echo("Hello Citrus"),
-            stopTime()
-        );
+            sleep().seconds(1),
+            echo("Hello Citrus!")
+        )
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="SequentialTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <sequential>
+            <actions>
+                <sleep seconds="1"/>
+                <echo>
+                    <message>Hello Citrus!</message>
+                </echo>
+            </actions>
+        </sequential>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SequentialTest
+actions:
+  - sequential:
+      actions:
+        - sleep:
+            seconds: 1
+        - echo:
+            message: "Hello Citrus!"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="SequentialTest">
+        <actions>
+            <sequential>
+                <sleep seconds="1"/>
+                <echo>
+                    <message>Hello Citrus!</message>
+                </echo>
+            </sequential>
+        </actions>
+    </testcase>
+</spring:beans>
 ----

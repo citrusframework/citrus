@@ -22,7 +22,6 @@ package org.citrusframework.sql.groovy
 import java.nio.charset.StandardCharsets
 
 import static org.citrusframework.actions.ExecuteSQLAction.Builder.sql
-import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query
 
 name "SqlQueryTest"
 author "Christoph"
@@ -36,34 +35,39 @@ actions {
         .statement("insert into message values (1001, 'Citrus rocks!')")
     )
 
-    $(query()
+    $(sql()
         .dataSource(dataSource)
+        .query()
         .statement("select text from message where id=1000")
         .validate("text", "Hello from Citrus!")
         .extract("text", "greeting")
     )
 
-    $(query()
+    $(sql()
         .dataSource(dataSource)
+        .query()
         .statement("select text from message where id>=1000")
         .validate("text", "Hello from Citrus!", "Citrus rocks!")
     )
 
-    $(query()
+    $(sql()
         .dataSource(dataSource)
+        .query()
         .statement("select * from message where id>=1000")
         .validate("id", "1000", "1001")
         .validate("text", "Hello from Citrus!", "Citrus rocks!")
     )
 
-    $(query()
+    $(sql()
         .dataSource(dataSource)
+        .query()
         .statement("select * from message where id>=1000")
         .validateScript("assert rows.size() == 2", "groovy")
     )
 
-    $(query()
+    $(sql()
         .dataSource(dataSource)
+        .query()
         .statement("select * from message where id>=1000")
         .validateScriptResource("classpath:org/citrusframework/sql/validate.groovy", "groovy", StandardCharsets.UTF_8)
     )

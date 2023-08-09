@@ -1,0 +1,119 @@
+[[actions-expect-timeout]]
+== Expect timeout
+
+In some cases it might be necessary to validate that a message is *not* present on a destination. This means that this action expects a timeout when receiving a message from an endpoint destination. For instance the tester intends to ensure that no message is sent to a certain destination in a time period. In that case the timeout would not be a test aborting error but the expected behavior. And in contrast to the normal behavior when a message is received in the time period the test will fail with error.
+
+In order to validate such a timeout situation the action <expectTimout> shall help. The usage is very simple as the following example shows:
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Autowired
+@Qualifier("myEndpoint")
+private Endpoint myEndpoint;
+
+@CitrusTest
+public void expectTimeoutTest() {
+    $(expectTimeout()
+            .endpoint(myEndpoint)
+            .timeout(500)
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ExpectTimeoutTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <expect-timeout endpoint="myEndpoint" wait="500"/>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ExpectTimeoutTest
+actions:
+  - expect-timeout:
+      endpoint: "myEndpoint"
+      wait: "500"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ExpectTimeoutTest">
+        <actions>
+            <expect-timeout endpoint="myEndpoint" wait="500"/>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+The action offers two attributes:
+
+[horizontal]
+endpoint:: Reference to a message endpoint that will try to receive messages.
+wait/timeout:: Time period to wait for messages to arrive
+
+Sometimes you may want to add some selector on the timeout receiving action. This way you can very selective check on a message to not be present on a message destination. This is possible with defining a message selector on the test action as follows.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Autowired
+@Qualifier("myEndpoint")
+private Endpoint myEndpoint;
+
+@CitrusTest
+public void expectTimeoutTest() {
+    $(expectTimeout()
+            .endpoint(myEndpoint)
+            .timeout(500)
+            .selector("MessageId = '123456789'")
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ExpectTimeoutTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <expect-timeout endpoint="myEndpoint" wait="500">
+            <selector>MessageId='123456789'</selector>
+        </expect-timeout>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ExpectTimeoutTest
+actions:
+  - expect-timeout:
+      endpoint: "myEndpoint"
+      wait: "500"
+      selector:
+        value: "MessageId='123456789'"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ExpectTimeoutTest">
+        <actions>
+            <expect-timeout endpoint="myEndpoint" wait="500">
+                <select>MessageId='123456789'<select/>
+            </expect-timeout>
+        </actions>
+    </testcase>
+</spring:beans>
+----

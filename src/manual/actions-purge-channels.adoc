@@ -1,116 +1,106 @@
 [[actions-purging-message-channels]]
-== Purging message channels
+== Purging Spring Message Channels
 
-Message channels define central messaging destinations in Citrus. These are namely in memory message queues holding messages for test cases. These messages may become obsolete during a test run, especially when test cases fail and stop in their message consumption. Purging these message channel destinations is essential in these scenarios in order to not influence upcoming test cases. Each test case should only receive those messages that actually refer to the test model. Therefore it is a good idea to purge all message channel destinations between the test cases. Obsolete messages that get stuck in a message channel destination for some reason are then removed so that upcoming test case are not broken.
+The Spring Integration project defines message channels as a central messaging destination.
+These are in-memory message queues holding messages for test cases.
+Messages that are queued on a channel may become obsolete during a test run, especially when test cases fail and stop in their message consumption.
+Purging these message channel destinations is essential in these scenarios in order to avoid bad influence on upcoming test cases.
+Each test case should only receive those messages that actually refer to the test model.
+Therefore, it is a good idea to purge all message channel destinations between the test cases.
+Obsolete messages that get stuck in a message channel destination for some reason are then removed so that upcoming test case are not broken.
 
 Following action definition purges all messages from a list of message channels:
 
-.XML DSL
-[source,xml]
-----
-<testcase name="purgeChannelTest">
-  <actions>
-      <purge-channel>
-          <channel name="someChannelName"/>
-          <channel name="anotherChannelName"/>
-      </purge-channel>
-
-      <purge-channel>
-          <channel ref="someChannel"/>
-          <channel ref="anotherChannel"/>
-      </purge-channel>
-  </actions>
-</testcase>
-----
-
-As you can see the test action supports channel names as well as channel references to Spring bean instances. When using channel references you refer to the Spring bean id or name in your application context.
-
-The Java DSL works quite similar as you can read from next examples:
-
-.Java DSL designer
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @Autowired
-@Qualifier("channelResolver")
-private DestinationResolver<MessageChannel> channelResolver;
+@Qualifier("someChannelName")
+private MessageChannel someChannel;
+
+@Autowired
+@Qualifier("anotherChannelName")
+private MessageChannel anotherChannel;
 
 @CitrusTest
-public void purgeTest() {
-    purgeChannels()
+public void purgeChannelTest() {
+    $(purgeChannels()
         .channelResolver(channelResolver)
-        .channelNames("ch1", "ch2", "ch3")
-        .channel("ch4");
+        .channelNames("someChannelName", "anotherChannelName")
+    );
+
+    $(purgeChannels()
+        .channels(someChannel, anotherChannel)
+    );
 }
 ----
 
-.Java DSL runner
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-@Autowired
-@Qualifier("channelResolver")
-private DestinationResolver<MessageChannel> channelResolver;
+<test name="PurgeChannelTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <purge-channels channel-resolver="channelResolver">
+            <channel name="someChannelName"/>
+            <channel name="anotherChannelName"/>
+        </purge-channels>
 
-@CitrusTest
-public void purgeTest() {
-    purgeChannels(action ->
-        action.channelResolver(channelResolver)
-                .channelNames("ch1", "ch2", "ch3")
-                .channel("ch4"));
-}
-----
-
-The channel resolver reference is optional. By default Citrus will automatically use a Spring application context channel resolver so you just have to use the respective Spring bean names that are configured in the Spring application context. However setting a custom channel resolver may be adequate for you in some special cases.
-
-While speaking of Spring application context bean references the next example uses such bean references for channels to purge.
-
-.Java DSL designer
-[source,java]
-----
-@Autowired
-@Qualifier("channel1")
-private MessageChannel channel1;
-
-@Autowired
-@Qualifier("channel2")
-private MessageChannel channel2;
-
-@Autowired
-@Qualifier("channel3")
-private MessageChannel channel3;
-
-@CitrusTest
-public void purgeTest() {
-    purgeChannels()
-        .channels(channel1, channel2)
-        .channel(channel3);
-}
+        <purge-channels>
+            <channel ref="someChannel"/>
+            <channel ref="anotherChannel"/>
+        </purge-channels>
+    </actions>
+</test>
 ----
 
-.Java DSL runner
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
 ----
-@Autowired
-@Qualifier("channel1")
-private MessageChannel channel1;
-
-@Autowired
-@Qualifier("channel2")
-private MessageChannel channel2;
-
-@Autowired
-@Qualifier("channel3")
-private MessageChannel channel3;
-
-@CitrusTest
-public void purgeTest() {
-    purgeChannels(action ->
-        action.channels(channel1, channel2)
-                .channel(channel3));
-}
+name: PurgeChannelTest
+actions:
+  - purge-channels:
+      channel-resolver: "channelResolver"
+      channels:
+        - "someChannelName"
+        - "anotherChannelName"
+  - purge-channels:
+      channel: someChannel
+  - purge-channels:
+      channel: anotherChannel
 ----
 
-Message selectors enable you to selectively remove messages from the destination. All messages that pass the message selection logic get deleted the other messages will remain unchanged inside the channel destination. The message selector is a Spring bean that implements a special message selector interface. A possible implementation could be a selector deleting all messages that are older than five seconds:
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="PurgeChannelTest">
+      <actions>
+          <purge-channel>
+              <channel name="someChannelName"/>
+              <channel name="anotherChannelName"/>
+          </purge-channel>
 
+          <purge-channel>
+              <channel ref="someChannel"/>
+              <channel ref="anotherChannel"/>
+          </purge-channel>
+      </actions>
+    </testcase>
+</spring:beans>
+----
+
+As you can see the test action supports channel names as well as channel references to Spring bean instances.
+When using channel references you refer to the bean id or name in your application context.
+
+The channel resolver reference is optional and points to a channel resolver that is used to resolve names to actual channel instances.
+By default, Citrus will automatically use a Spring application context channel resolver, so you just have to use the respective Spring bean names that are configured in the Spring application context.
+However, setting a custom channel resolver may be adequate for you in some special cases.
+
+Message selectors enable you to selectively remove messages from the destination.
+All messages that pass the message selection logic get deleted the other messages will remain unchanged inside the channel destination. The message selector is a Spring bean that implements a special message selector interface. A possible implementation could be a selector deleting all messages that are older than five seconds:
+
+.Message selector implementation
 [source,java]
 ----
 import org.springframework.messaging.Message;
@@ -133,7 +123,17 @@ NOTE: The message selector returns *false* for those messages that should be del
 
 You simply define the message selector as a new Spring bean in the Citrus application context and reference it in your test action property.
 
-[source,xml]
+.Spring Bean
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public MessageSelector specialMessageSelector() {
+    return new TimeBasedMessageSelector();
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <bean id="specialMessageSelector"
     class="org.citrusframework.special.TimeBasedMessageSelector"/>
@@ -141,45 +141,50 @@ You simply define the message selector as a new Spring bean in the Citrus applic
 
 Now let us have a look at how you reference the selector in your test case:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void purgeChannelTest() {
+    $(purgeChannels()
+        .selector(specialMessageSelector)
+        .channels(someChannel, anotherChannel)
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="PurgeChannelTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <purge-channels message-selector="specialMessageSelector">
+            <channel ref="someChannel"/>
+            <channel ref="anotherChannel"/>
+        </purge-channels>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: PurgeChannelTest
+actions:
+  - purge-channels:
+      message-selector: "specialMessageSelector"
+      channels:
+        - "someChannel"
+        - "anotherChannel"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
 <purge-channel message-selector="specialMessageSelector">
-  <channel name="someChannelName"/>
-  <channel name="anotherChannelName"/>
+  <channel ref="someChannel"/>
+  <channel red="anotherChannel"/>
 </purge-channel>
-----
-
-.Java DSL designer
-[source,java]
-----
-
-@Autowired
-@Qualifier("specialMessageSelector")
-private MessageSelector specialMessageSelector;
-
-@CitrusTest
-public void purgeTest() {
-    purgeChannels()
-        .channelNames("ch1", "ch2", "ch3")
-        .selector(specialMessageSelector);
-}
-----
-
-.Java DSL runner
-[source,java]
-----
-
-@Autowired
-@Qualifier("specialMessageSelector")
-private MessageSelector specialMessageSelector;
-
-@CitrusTest
-public void purgeTest() {
-    purgeChannels(action ->
-        action.channelNames("ch1", "ch2", "ch3")
-                .selector(specialMessageSelector));
-}
 ----
 
 In the examples above we use a message selector implementation that gets injected via Spring IoC container.
@@ -188,18 +193,36 @@ Purging channels in each test case every time is quite exhausting because every 
 
 When using the special action sequence before test cases we are able to purge channel destinations every time a test case executes. See the upcoming example to find out how the action is defined in the Spring configuration application context.
 
-[source,xml]
+.Spring Bean
+[source,java,indent=0,role="primary"]
 ----
-<citrus:before-test id="purgeBeforeTest">
-    <citrus:actions>
-        <purge-channel>
-            <channel name="fooChannel"/>
-            <channel name="barChannel"/>
-        </purge-channel>
-    </citrus:actions>
-</citrus:before-test>
+@Bean
+public SequenceBeforeTest beforeTest() {
+    return SequenceBeforeTest.Builder.beforeTest()
+            .actions(
+                purgeChannels()
+                    .channel("fooChannel")
+                    .channel("barChannel")
+            );
+}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:citrus="http://www.citrusframework.org/schema/config">
+    <citrus:before-test id="purgeBeforeTest">
+        <citrus:actions>
+            <purge-channel>
+                <channel name="fooChannel"/>
+                <channel name="barChannel"/>
+            </purge-channel>
+        </citrus:actions>
+    </citrus:before-test>
+</spring:beans>
 ----
 
 Just use this before-test bean in the Spring bean application context and the purge channel action is active. Obsolete messages that are waiting on the message channels for consumption are purged before the next test in line is executed.
 
-TIP: Purging message channels becomes also very interesting when working with server instances in Citrus. Each server component automatically has an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}* is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.
+TIP: Purging message channels becomes also very interesting when working with server instances in Citrus. Each server component automatically has an inbound message channel where incoming messages are stored internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}* is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.

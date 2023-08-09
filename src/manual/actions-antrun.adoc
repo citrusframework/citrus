@@ -5,10 +5,26 @@ The <ant> action loads a build.xml Ant file and executes one or more targets in 
 
 See this basic Ant run example to see how it works within your test case:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="AntRunTest">
+@CitrusTest
+public void antRunTest() {
+    variable("today", "citrus:currentDate()");
+
+    $(antrun()
+        .buildFilePath("classpath:org/citrusframework/actions/build.xml")
+        .target("sayHello")
+        .property("date", "${today}")
+        .property("welcomeText", "$Hello!"))
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="AntRunTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <variables>
         <variable name="today" value="citrus:currentDate()"/>
     </variables>
@@ -21,48 +37,62 @@ See this basic Ant run example to see how it works within your test case:
             </properties>
         </ant>
     </actions>
-</testcase>
+</test>
 ----
 
-.Java DSL designer
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void antRunTest() {
-    variable("today", "citrus:currentDate()");
-    
-    antrun("classpath:org/citrusframework/actions/build.xml")
-        .target("sayHello")
-        .property("date", "${today}")
-        .property("welcomeText", "$Hello!");
-}
+name: AntRunTest
+variables:
+  - name: "today"
+    value: "citrus:currentDate()"
+actions:
+  - ant:
+      build-file: "classpath:org/citrusframework/actions/build.xml"
+      execute:
+        target: "sayHello"
+      properties:
+        - name: "date"
+          value: "${today}"
+        - name: "welcomeText"
+          value: "Hello!"
 ----
 
-.Java DSL runner
-[source,java]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void antRunTest() {
-    variable("today", "citrus:currentDate()");
-
-    antrun(action -> action.buildFilePath("classpath:org/citrusframework/actions/build.xml")
-                .target("sayHello")
-                .property("date", "${today}")
-                .property("welcomeText", "$Hello!"));
-}
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="AntRunTest">
+        <variables>
+            <variable name="today" value="citrus:currentDate()"/>
+        </variables>
+        <actions>
+            <ant build-file="classpath:org/citrusframework/actions/build.xml">
+                <execute target="sayHello"/>
+                <properties>
+                    <property name="date" value="${today}"/>
+                    <property name="welcomeText" value="Hello!"/>
+                </properties>
+            </ant>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The respective build.xml Ant file must provide the target to call. For example:
 
+.build.xml
 [source,xml]
 ----
 <project name="citrus-build" default="sayHello">
     <property name="welcomeText" value="Welcome to Citrus!"></property>
-    
+
     <target name="sayHello">
         <echo message="${welcomeText} - Today is ${date}"></echo>
     </target>
-    
+
     <target name="sayGoodbye">
         <echo message="Goodbye everybody!"></echo>
     </target>
@@ -73,10 +103,25 @@ As you can see you can pass custom build properties to the Ant build execution. 
 
 You can also call multiple targets within one single build run by using a comma separated list of target names:
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<testcase name="AntRunTest">
+@CitrusTest
+public void antRunTest() {
+    variable("today", "citrus:currentDate()");
+
+    $(antrun()
+        .buildFilePath("classpath:org/citrusframework/actions/build.xml")
+        .targets("sayHello", "sayGoodbye")
+        .property("date", "${today}"))
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="AntRunTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <variables>
         <variable name="today" value="citrus:currentDate()"/>
     </variables>
@@ -88,81 +133,110 @@ You can also call multiple targets within one single build run by using a comma 
             </properties>
         </ant>
     </actions>
-</testcase>
+</test>
 ----
 
-.Java DSL designer
-[source,java]
+.YAML
+[source,yaml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void antRunTest() {
-    variable("today", "citrus:currentDate()");
-    
-    antrun("classpath:org/citrusframework/actions/build.xml")
-        .targets("sayHello", "sayGoodbye")
-        .property("date", "${today}");
-}
+name: AntRunTest
+variables:
+  - name: "today"
+    value: "citrus:currentDate()"
+actions:
+  - ant:
+      build-file: "classpath:org/citrusframework/actions/build.xml"
+      execute:
+        targets: "sayHello,sayGoodbye"
+      properties:
+        - name: "date"
+          value: "${today}"
 ----
 
-.Java DSL runner
-[source,java]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void antRunTest() {
-    variable("today", "citrus:currentDate()");
-
-    antrun(action -> action.buildFilePath("classpath:org/citrusframework/actions/build.xml")
-                .targets("sayHello", "sayGoodbye")
-                .property("date", "${today}"));
-}
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="AntRunTest">
+        <variables>
+            <variable name="today" value="citrus:currentDate()"/>
+        </variables>
+        <actions>
+            <ant build-file="classpath:org/citrusframework/actions/build.xml">
+                <execute targets="sayHello,sayGoodbye"/>
+                <properties>
+                    <property name="date" value="${today}"/>
+                </properties>
+            </ant>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The build properties can live in external file resource as an alternative to the inline property definitions. You just have to use the respective file resource path and all nested properties get loaded as build properties.
 
 In addition to that you can also define a custom build listener. The build listener must implement the Ant API interface *org.apache.tools.ant.BuildListener* . During the Ant build run the build listener is called with several callback methods (e.g. buildStarted(), buildFinished(), targetStarted(), targetFinished(), …). This is how you can add additional logic to the Ant build run from Citrus. A custom build listener could manage the fail state of your test case, in particular by raising some exception forcing the test case to fail accordingly.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="AntRunTest">
-    <actions>
-        <ant build-file="classpath:org/citrusframework/actions/build.xml"
-                build-listener="customBuildListener">
-            <execute target="sayHello"/>
-            <properties file="classpath:org/citrusframework/actions/build.properties"/>
-        </ant>
-    </actions>
-</testcase>
-----
-
-.Java DSL designer
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @Autowired
 private BuildListener customBuildListener;
 
 @CitrusTest
 public void antRunTest() {
-    antrun("classpath:org/citrusframework/actions/build.xml")
+    $(antrun()
+        .buildFilePath("classpath:org/citrusframework/actions/build.xml")
         .target("sayHello")
         .propertyFile("classpath:org/citrusframework/actions/build.properties")
-        .listener(customBuildListener);
+        .listener(customBuildListener))
+    );
 }
 ----
 
-.Java DSL runner
-[source,java]
+.XML
+[source,xml,indent=0,role="secondary"]
 ----
-@Autowired
-private BuildListener customBuildListener;
+<test name="AntRunTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <ant build-file="classpath:org/citrusframework/actions/build.xml"
+             build-listener="customBuildListener">
+            <execute target="sayHello"/>
+            <properties  file="classpath:org/citrusframework/actions/build.properties" />
+        </ant>
+    </actions>
+</test>
+----
 
-@CitrusTest
-public void antRunTest() {
-    antrun(action -> action.buildFilePath("classpath:org/citrusframework/actions/build.xml")
-            .target("sayHello")
-            .propertyFile("classpath:org/citrusframework/actions/build.properties")
-            .listener(customBuildListener));
-}
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: AntRunTest
+actions:
+  - ant:
+      build-file: "classpath:org/citrusframework/actions/build.xml"
+      build-listener: "customBuildListener"
+      execute:
+        target: "sayHello"
+      properties-file: "classpath:org/citrusframework/actions/build.properties"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="AntRunTest">
+        <actions>
+            <ant build-file="classpath:org/citrusframework/actions/build.xml"
+                 build-listener="customBuildListener">
+                <execute target="sayHello"/>
+                <properties file="classpath:org/citrusframework/actions/build.properties"/>
+            </ant>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The *customBuildListener* used in the example above should reference a Spring bean in the Citrus application context. The bean implements the interface *org.apache.tools.ant.BuildListener* and controls the Ant build run.

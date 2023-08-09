@@ -1,64 +1,146 @@
-[[containers-repeat-until-true]]
-== Repeat until true
+[[containers-repeat]]
+== Repeat
 
 Quite similar to the previously described iterate container this repeating container will execute its actions in a loop according to an ending condition. The condition describes a Boolean expression using the operators as described in the previous chapter.
 
 NOTE: The loop continues its work until the provided condition evaluates to *true* . It is very important to notice that the repeat loop will execute the actions before evaluating the condition. This means the actions get executed `n-1` times.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="iterateTest">
-    <actions>
-        <repeat-until-true index="i" condition="(i = 3) or (i = 5)">
-            <echo>
-                <message>index is: ${i}</message>
-            </echo>
-        </repeat-until-true>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void repeatTest() {
-    repeat().until("(i gt 5) or (i = 3)").index("i"))
+    $(repeat().until("(i gt 5) or (i = 3)").index("i")
         .actions(
             echo("index is: ${i}")
-        );
+        )
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="RepeatTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <repeat index="i" until="(i = 3) or (i = 5)">
+            <actions>
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </actions>
+        </repeat>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: RepeatTest
+actions:
+  - repeat:
+      index: "i"
+      until: "(i = 3) or (i = 5)"
+      actions:
+        - echo:
+            message: "index is: ${i}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="RepeatTest">
+        <actions>
+            <repeat-until-true index="i" condition="(i = 3) or (i = 5)">
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </repeat-until-true>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 As you can see the repeat container is only executed when the iterating condition expression evaluates to *false* . By the time the condition is *true* execution is discontinued. You can use basic logical operators such as *and*, *or* and so on.
 
 A more powerful way is given by Hamcrest matchers that are directly supported in condition expressions.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="iterateTest">
-    <actions>
-        <repeat-until-true index="i" condition="@assertThat(anyOf(is(3), is(5))@">
-            <echo>
-                <message>index is: ${i}</message>
-            </echo>
-        </repeat-until-true>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void repeatTest() {
-    repeat().until(anyOf(is(3), is(5)).index("i"))
+    $(repeat().until(assertThat(anyOf(is(3), is(5))).index("i")
         .actions(
             echo("index is: ${i}")
-        );
+        )
+    );
 }
 ----
 
-The Hamcrest matcher usage simplifies the reading a lot. And it empowers you to combine more complex condition expressions. So I personally prefer this syntax.
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="RepeatTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <repeat index="i" until="@assertThat(anyOf(is(3), is(5))@">
+            <actions>
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </actions>
+        </repeat>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: RepeatTest
+actions:
+  - repeat:
+      index: "i"
+      until: "@assertThat(anyOf(is(3), is(5))@"
+      actions:
+        - echo:
+            message: "index is: ${i}"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="RepeatTest">
+        <actions>
+            <repeat-until-true index="i" condition="@assertThat(anyOf(is(3), is(5))@">
+                <echo>
+                    <message>index is: ${i}</message>
+                </echo>
+            </repeat-until-true>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+The Hamcrest matcher usage simplifies the reading a lot.
+In addition to that it empowers you to combine more complex condition expressions.
+In Java you may use the `org.citrusframework.container.HamcrestConditionExpression.assertThat(org.hamcrest.Matcher<?>)` method.
+
+The Hamcrest expression evaluation in Citrus gets added with this module:
+
+.citrus-validation-hamcrest Module
+[source,xml]
+----
+<dependency>
+    <groupId>org.citrusframework</groupId>
+    <artifactId>citrus-validation-hamcrest</artifactId>
+    <version>${citrus.version}</version>
+</dependency>
+----
+
+You need to add this module to your project accordingly when using the Hamcrest matcher support.

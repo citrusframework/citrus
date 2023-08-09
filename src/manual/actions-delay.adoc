@@ -1,0 +1,69 @@
+[[actions-delay]]
+== Delay
+
+This action shows how to make the test framework execution stop for a given amount of time.
+The attribute 'time' defines the amount of time to wait in seconds.
+As shown in the next example decimal values are supported too.
+When no waiting time is specified the default time of 50000 milliseconds applies.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void delayTest() {
+    $(delay().seconds(3.5));
+
+    $(delay().milliseconds(500));
+
+    $(delay());
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DelayTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <delay seconds="3.5"/>
+
+        <delay milliseconds="500"/>
+
+        <delay/>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DelayTest
+actions:
+  - delay:
+      seconds: "3.5"
+  - delay:
+      milliseconds: "500"
+  - delay: {}
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="DelayTest">
+        <actions>
+            <delay seconds="3.5"/>
+
+            <delay milliseconds="500"/>
+
+            <delay/>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+When should somebody use this action?
+To us this action was always very useful in case the test needed to wait until an application had done some work.
+For example in some cases the application took some time to write some data into the database.
+We waited then a small amount of time in order to avoid unnecessary test failures, because the test framework simply validated the database too early.
+Or as another example the test may wait a given time until retry mechanisms are triggered in the tested application and then proceed with the test actions.

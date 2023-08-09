@@ -132,6 +132,10 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
             return builder;
         }
 
+        public ExecuteSQLQueryAction.Builder query() {
+            return new ExecuteSQLQueryAction.Builder().dataSource(dataSource);
+        }
+
         /**
          * Ignore errors during execution.
          * @param ignoreErrors boolean flag to set

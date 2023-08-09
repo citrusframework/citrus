@@ -5,54 +5,119 @@ Now we deal with conditional executions of test actions. Nested actions inside a
 
 See some example to find out how it works with the conditional expression string.
 
-.XML DSL
-[source,xml]
-----
-<testcase name="conditionalTest">
-    <variables>
-      <variable name="index" value="5"/>
-      <variable name="shouldSleep" value="true"/>
-    </variables>
-
-    <actions>
-        <conditional expression="${index} = 5">
-            <sleep seconds="10"/>
-        </conditional>
-
-        <conditional expression="${shouldSleep}">
-            <sleep seconds="10"/>
-        </conditional>
-
-        <conditional expression="@assertThat('${shouldSleep}', 'anyOf(is(true), isEmptyString())')@">
-            <sleep seconds="10"/>
-        </conditional>
-    </actions>
-</testcase>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void conditionalTest() {
     variable("index", 5);
     variable("shouldSleep", true);
 
-    conditional().when("${index} = 5"))
+    $(conditional().when("${index} = 5")
         .actions(
             sleep(10000L)
-        );
+        )
+    );
 
-    conditional().when("${shouldSleep}"))
+    $(conditional().when("${shouldSleep}")
         .actions(
             sleep(10000L)
-        );
+        )
+    );
 
-    conditional().when("${shouldSleep}", anyOf(is("true"), isEmptyString()))
+    $(conditional().when("${shouldSleep}", anyOf(is("true"), isEmptyString()))
         .actions(
             sleep(10000L)
-        );
+        )
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ConditionalTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <variables>
+      <variable name="index" value="5"/>
+      <variable name="shouldSleep" value="true"/>
+    </variables>
+
+    <actions>
+        <conditional when="${index} = 5">
+            <actions>
+                <sleep seconds="10"/>
+            </actions>
+        </conditional>
+
+        <conditional when="${shouldSleep}">
+            <actions>
+                <sleep seconds="10"/>
+            </actions>
+        </conditional>
+
+        <conditional when="@assertThat('${shouldSleep}', 'anyOf(is(true), isEmptyString())')@">
+            <actions>
+                <sleep seconds="10"/>
+            </actions>
+        </conditional>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ConditionalTest
+variables:
+  - name: "index"
+    value: 5
+  - name: "shouldSleep"
+    value: true
+
+actions:
+  - conditional:
+      when: '${index} = 5'
+      actions:
+        - sleep:
+            seconds: 10
+  - conditional:
+      when: '${shouldSleep}'
+      actions:
+        - sleep:
+            seconds: 10
+  - conditional:
+      when: '@assertThat("${shouldSleep}", "anyOf(is(true), isEmptyString())")@'
+      actions:
+        - sleep:
+            seconds: 10
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ConditionalTest">
+        <variables>
+          <variable name="index" value="5"/>
+          <variable name="shouldSleep" value="true"/>
+        </variables>
+
+        <actions>
+            <conditional expression="${index} = 5">
+                <sleep seconds="10"/>
+            </conditional>
+
+            <conditional expression="${shouldSleep}">
+                <sleep seconds="10"/>
+            </conditional>
+
+            <conditional expression="@assertThat('${shouldSleep}', 'anyOf(is(true), isEmptyString())')@">
+                <sleep seconds="10"/>
+            </conditional>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The nested sleep action is executed in case the variable ${index} is equal to the value '5'. This conditional execution of test actions is useful when dealing with different test environments such as different operating systems for instance. The conditional container also supports expressions that evaluate to the character sequence "true" or "false" as shown in the ${shouldSleep} example.

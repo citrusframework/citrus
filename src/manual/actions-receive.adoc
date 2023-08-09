@@ -11,32 +11,91 @@ expectations.
 .Java
 [source,java,indent=0,role="primary"]
 ----
-receive("helloService")
-    .message()
-    .name("helloRequest")
-    .body("<TestMessage>" +
-                "<Text>${text}</Text>" +
-            "</TestMessage>")
-    .header("Operation", "sayHello")
-    .header("MessageId", "${messageId}");
+@CitrusTest
+public void receiveMessageTest() {
+    $(receive("helloService")
+        .message()
+        .name("helloRequest")
+        .header("Operation", "sayHello")
+        .header("MessageId", "${messageId}")
+        .body("""
+            <HelloMessage>
+                <Text>Hello Citrus!</Text>
+            </HelloMessage>
+        """)
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="helloService">
-    <message name="helloRequest">
-        <payload>
-            <TestMessage>
-                <Text>${text}</Text>
-            </TestMessage>
-        </payload>
-    </message>
-    <header>
-        <element name="Operation" value="sayHello"/>
-        <element name="MessageId" value="${messageId}"/>
-    </header>
-</receive>
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="helloService">
+            <message name="helloRequest">
+                <headers>
+                    <header name="Operation" value="sayHello"/>
+                    <header name="MessageId" value="${messageId}"/>
+                </headers>
+                <body>
+                    <![CDATA[
+                    <HelloMessage>
+                        <Text>Hello Citrus!</Text>
+                    </HelloMessage>
+                    ]]>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ReceiveMessageTest
+actions:
+  - receive:
+      endpoint: "helloService"
+      message:
+        name: "helloRequest"
+        headers:
+          - name: "Operation"
+            value: "sayHello"
+          - name: "MessageId"
+            value: '${messageId}'
+        body: |
+          <HelloMessage>
+              <Text>Hello Citrus!</Text>
+          </HelloMessage>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ReceiveMessageTest">
+        <actions>
+            <receive endpoint="helloService">
+                <message name="helloRequest">
+                    <payload>
+                        <![CDATA[
+                        <HelloMessage>
+                            <Text>Hello Citrus!</Text>
+                        </HelloMessage>
+                        ]]>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="MessageId" value="${messageId}"/>
+                </header>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The message name is optional and defines the message identifier in the link:#local-message-store[local message store]. This
@@ -67,143 +126,369 @@ Let us have a closer look at the validation options and features step by step.
 [[receive-message-body]]
 === Validate message body
 
-The most detailed validation of incoming messages is to define some expected message body. The Citrus message validator will
-then perform a detailed message body comparison. The incoming message has to match exactly to the expected message body.
+The most detailed validation of incoming messages is to define some expected message body.
+The Citrus message validator will then perform a detailed message body comparison.
+The incoming message has to match exactly to the expected message body.
 The different message validator implementations in Citrus provide deep comparison of message structures such as XML, JSON and so on.
 
-So by defining an expected message body we validate the incoming message in syntax and semantics. In case a difference is
-identified by the message validator the validation and the test case fails with respective exceptions. This is how you can
-define message body content in receive action:
+So by defining an expected message body we validate the incoming message in syntax and semantics.
+In case a difference is identified by the message validator the validation and the test case fails with respective exceptions.
+This is how you can define message body content in receive action:
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-receive("helloService")
-    .message()
-    .body("...");
+@CitrusTest
+public void receiveMessageTest() {
+    $(receive("helloService")
+        .message()
+        .body("""
+            <HelloMessage>
+                <Text>Hello Citrus!</Text>
+            </HelloMessage>
+        """)
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="helloService">
-  <message>
-    <payload>
-      <!-- message payload as XML -->
-    </payload>
-  </message>
-</receive>
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="helloService">
+            <message>
+                <body>
+                    <![CDATA[
+                    <HelloMessage>
+                        <Text>Hello Citrus!</Text>
+                    </HelloMessage>
+                    ]]>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
 ----
 
-.XML CDATA
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ReceiveMessageTest
+actions:
+  - receive:
+      endpoint: "helloService"
+      message:
+        body: |
+          <HelloMessage>
+              <Text>Hello Citrus!</Text>
+          </HelloMessage>
+----
+
+.Spring XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="helloService">
-  <message>
-    <data>
-      <![CDATA[
-        <!-- message payload as XML -->
-      ]]>
-    </data>
-  </message>
-</receive>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ReceiveMessageTest">
+        <actions>
+            <receive endpoint="helloService">
+                <message>
+                    <payload>
+                        <![CDATA[
+                        <HelloMessage>
+                            <Text>Hello Citrus!</Text>
+                        </HelloMessage>
+                        ]]>
+                    </payload>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+A simple way of defining the expected message body content is to provide the message body as a String.
+You can do this in the different supported languages by embedding the message content in the body section of the `receive` action.
+
+In XML you can embed the content as a `CDATA` section and in Java, or YAML you may want to use text blocks.
+
+When the message body content is an XML payload you can also use nested XML elements in the XML domain specific languages as the next example shows:
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="helloService">
+            <message name="helloRequest">
+                <body>
+                    <HelloMessage xmlns="http://sample.org/">
+                        <Text>Hello Citrus!</Text>
+                    </HelloMessage>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ReceiveMessageTest">
+        <actions>
+            <receive endpoint="helloService">
+              <message>
+                <payload>
+                  <HelloMessage xmlns="http://sample.org/">
+                      <Text>Hello Citrus!</Text>
+                  </HelloMessage>
+                </payload>
+              </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 NOTE: In XML you can use nested XML elements or CDATA sections. Sometimes the nested XML message payload elements may cause
-XSD schema validation rule violations. This is because of variable values not fitting the XSD schema rules for example.
+XSD schema violations. This is because of variable values not fitting the XSD schema rules for example.
 In this scenario you could also use simple CDATA sections as payload data. In this case you need to use the *_`&lt;data&gt;`_*
 element in contrast to the *_`&lt;payload&gt;`_* element that we have used in our examples so far.
 
 With this alternative you can skip the XML schema validation from your IDE at design time. Unfortunately you will lose
-the XSD auto completion features many XML editors offer when constructing your payload.
+the XSD auto-completion features many XML editors offer when constructing your payload.
 
-External file resource holding the message payload The syntax would be: `&lt;resource file=&quot;classpath:path/to/request.xml&quot; /&gt;`
-The file path prefix indicates the resource type, so the file location is resolved either as file system resource (file:)
-or classpath resource (classpath:).
+Message body content may be quite huge, so you can also load the message content form an external file resource.
+The file path is given as either a classpath or file system resource.
+
+When writing tests in Java you can use one of the classpath or file system resource implementations to resolve the file path.
+In XML and other languages you may use a resource path given as: `file=&quot;classpath:path/to/request.xml&quot;`.
+The file path prefix indicates the file resource type (`file:` or `classpath:`), so the file location is resolved either as file system resource (`file:`)
+or classpath resource (`classpath:`).
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-receive("helloService")
-    .message()
-    .body(new ClassPathResource("path/to/request.xml"));
+@CitrusTest
+public void receiveMessageTest() {
+    $(receive("helloService")
+        .message()
+        .body(new ClassPathResource("path/to/request.xml"))
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="helloService">
-  <message>
-    <resource file="classpath:path/to/request.xml" />
-  </message>
-</receive>
+<test name="ReceiveMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="helloService">
+            <message>
+                <body>
+                    <resource file="classpath:path/to/request.xml"/>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ReceiveMessageTest
+actions:
+  - receive:
+      endpoint: "helloService"
+      message:
+        body:
+          resource:
+            file: "classpath:path/to/request.xml"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ReceiveMessageTest">
+        <actions>
+            <receive endpoint="helloService">
+                <message>
+                    <resource file="classpath:path/to/request.xml" />
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 In addition to defining message payloads as normal Strings and via external file resource (classpath and file system) you can also
-use model objects as payload data in Java DSL. The object will get serialized autoamtically with a marshaller or object mapper loaded
-from the Citrus context.
+provide a POJO model object as a message payload.
+The model object will be serialized with a marshaller or object mapper implementation which gets loaded from the Citrus context.
 
-.Message body model objects
+You can use the marshalling message payload builders in a `receive` action as follows.
+
+.Marshalling message payload builder
 [source,java]
 ----
-receive("helloService")
+$(receive("helloService")
     .message()
-    .payloadModel(new TestRequest("Hello Citrus!"));
+    .body(marshal(new TestRequest("Hello Citrus!")))
+);
 ----
 
-The model object requires a proper message marshaller that should be available as bean in the project context (e.g. the
+The `receive` action uses the marshalling message builder provided with Citrus and just provides the model object `new TestRequest()`.
+The marshalling message builder automatically loads a proper XML message marshaller that should be available as a bean in the project context (e.g. the
 Spring application context). By default, Citrus is searching for a bean of type *org.citrusframework.xml.Marshaller*.
+You can add the marshaller to your project context as a bean.
 
-In case you have multiple message marshallers in the application context you have to tell Citrus which one to use in this
-particular receive message action.
-
-.Explicit marshaller/mapper
+.Marshaller bean
 [source,java]
 ----
-receive("helloService")
-    .message()
-    .payloadModel(new TestRequest("Hello Citrus!"), "myMessageMarshallerBean");
+@Bean
+public Marshaller xmlMarshaller() {
+    return new Jaxb2Marshaller();
+}
 ----
 
-Now Citrus will marshal the message body with the message marshaller bean named *myMessageMarshallerBean* . This way you
-can have multiple message marshaller implementations active in your project (XML, JSON, and so on).
+Now Citrus is able to automatically resolve the marshaller from the project context as soon as the `receive` action uses the model object in combination with the `marshal` instruction.
 
-You can also use a Citrus message object as body. Citrus provides different message implementations with fluent APIs to
-have a convenient way of setting properties (e.g. HttpMessage, MailMessage, FtpMessage, SoapMessage, ...). Or you just use
-the default message implementation or maybe a custom implementation.
+When you have multiple message marshaller instances in your project context you have to tell Citrus which one to use in this particular receive message action.
+
+.Reference message marshaller
+[source,java]
+----
+$(receive("helloService")
+    .message()
+    .body(marshal(new TestRequest("Hello Citrus!"), "myMessageMarshallerBean"))
+);
+----
+
+Now Citrus will marshal the message body with the message marshaller bean named *myMessageMarshallerBean*.
+This way you can have multiple message marshaller implementations in your project (XML, JSON, and so on).
+
+You can implement your own message payload builder or use one of the provided Citrus message payload builders.
+
+.Custom message payload builder
+[source,java,indent=0]
+----
+@Autowired
+private MessagePayloadBuilder mySpecialPayloadBuilder = new FooPayloadBuilder();
+
+$(receive("helloService")
+    .message()
+    .body(mySpecialPayloadBuilder)
+);
+----
+
+The message payload builder must implement the `MessagePayloadBuilder` interface with the method `buildPayload(TestContext context)`.
+
+.MessagePayloadBuilder interface
+[source,java,indent=0]
+----
+public class FooPayloadBuilder implements MessagePayloadBuilder {
+
+    @Override
+    public Object buildPayload(TestContext context) {
+        // return some special payload
+        return new FooModel();
+    }
+}
+----
+
+You can also use a Citrus message instance directly.
+Citrus provides different message implementations with fluent APIs to
+have a convenient way of setting properties (e.g. HttpMessage, MailMessage, FtpMessage, SoapMessage, ...).
 
 .Citrus message object
 [source,java]
 ----
-receive("helloService")
-    .message(new DefaultMessage("Hello World!")));
+$(receive("helloService")
+    .message(new DefaultMessage("Hello World!"))
+);
 ----
 
-You can explicitly overwrite some message values in the body before validations take place. You can think of overwriting specific
-message elements with variable values. Also you can overwrite values using XPath (link:#xml-xpath-validation[xpath]) or
+You can explicitly overwrite some message values in the body before the validations is performed.
+This is for overwriting specific message elements with variable values for instance.
+Also, you can overwrite values using XPath (link:#xml-xpath-validation[xpath]) or
 JsonPath (link:#json-path-validation[json-path]) expressions.
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-receive(someEndpoint)
-    .message()
-    .body(new ClassPathResource("path/to/request.xml"))
-    .validate(jsonPath()
-        .expression("$.user.name", "Penny")
-        .expression("$['user']['name']", "${userName}"));
+@CitrusTest
+public void jsonPathTest() {
+    $(receive("someEndpoint")
+        .message()
+        .type(MessageType.JSON)
+        .body(new ClassPathResource("path/to/request.xml"))
+        .validate(jsonPath()
+            .expression("$.user.name", "Penny")
+            .expression("$['user']['name']", "${userName}"))
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="someEndpoint">
-  <message type="json">
-    <resource file="classpath:path/to/request.xml" />
-  </message>
-  <validate path="$.user.name" value="Penny"/>
-  <validate path="$['user']['name']" value="${userName}"/>
-</receive>
+<test name="JsonPathTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="someEndpoint">
+            <message type="json">
+                <body>
+                    <resource file="classpath:path/to/request.xml" />
+                </body>
+            </message>
+            <validate path="$.user.name" value="Penny"/>
+            <validate path="$['user']['name']" value="${userName}"/>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JsonPathTest
+actions:
+  - receive:
+      endpoint: "someEndpoint"
+      message:
+        type: json
+        resource:
+          file: "classpath:path/to/request.xml"
+        validate:
+          jsonPath:
+            - expression: '$.user.name'
+              value: "Penny"
+            - expression: '$["user"]["name"]'
+              value: '${userName}'
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JsonPathTest">
+        <actions>
+            <receive endpoint="someEndpoint">
+                <message type="json">
+                    <resource file="classpath:path/to/request.xml" />
+                    <validate path="$.user.name" value="Penny"/>
+                    <validate path="$['user']['name']" value="${userName}"/>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 In addition to that you can ignore some elements that are skipped in comparison. We will describe this later on in this section.
@@ -212,46 +497,101 @@ Now lets continue with message header validation.
 [[receive-message-headers]]
 === Validate message headers
 
-Message headers are used widely in enterprise messaging. The message headers are part of the message semantics and need
-to be validated, too. Citrus can validate message header by name and value.
+Message headers are used widely in enterprise messaging.
+The message headers often represent a critical part of the message semantics and need to be validated, too.
+Citrus is able to validate message headers by name and value.
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-receive("helloService")
-    .message()
-    .body("<TestMessage>" +
-            "<Text>Hello!</Text>" +
-        "</TestMessage>")
-    .header("Operation", "sayHello");
+@CitrusTest
+public void messageHeaderTest() {
+    $(receive("helloService")
+        .message()
+        .header("Operation", "sayHello")
+        .body("""
+            <TestMessage xmlns="http://citrusframework.org/schema">
+                <Text>Hello!</Text>
+            </TestMessage>
+        """)
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="helloService">
-    <message>
-        <payload>
-            <TestMessage>
-                <Text>Hello!</Text>
-            </TestMessage>
-        </payload>
-    </message>
-    <header>
-        <element name="Operation" value="sayHello"/>
-    </header>
-</receive>
+<test name="MessageHeaderTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="someEndpoint">
+            <message>
+                <headers>
+                    <header name="Operation" value="sayHello"/>
+                </headers>
+                <body>
+                    <payload>
+                        <TestMessage xmlns="http://citrusframework.org/schema">
+                            <Text>Hello!</Text>
+                        </TestMessage>
+                    </payload>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
 ----
 
-The expected message headers are defined by a name and value pair. Citrus will check that the expected message header is
-present and will check the value. In case the message header is not found or the value does not match Citrus will raise
-an exception and the test fails. You can use validation matchers (link:#validation-matcher[validation-matcher]) for a more
-powerful validation of header values, too.
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: MessageHeaderTest
+actions:
+  - receive:
+      endpoint: "helloService"
+      message:
+        headers:
+          - name: "Operation"
+            value: "sayHello"
+        body:
+          data: |
+            <TestMessage xmlns="http://citrusframework.org/schema">
+                <Text>Hello!</Text>
+            </TestMessage>
+----
 
-Header definition in Java DSL is straight forward as we just define name and value as usual. This completes the message
-validation when receiving a message in Citrus. The message validator implementations may add additional validation capabilities
-such as XML schema validation or XPath and JSONPath validation. Please refer to the respective chapters in this guide to
-learn more about that.
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="MessageHeaderTest">
+        <actions>
+            <receive endpoint="helloService">
+                <message>
+                    <payload>
+                        <TestMessage xmlns="http://citrusframework.org/schema">
+                            <Text>Hello!</Text>
+                        </TestMessage>
+                    </payload>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                </header>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+The expected message headers are defined by a name and value pair.
+Citrus will check that the expected message header is present and will verify the value accordingly.
+In case the message header is not found or the value does not match Citrus will raise
+an exception and the test fails.
+You can use validation matchers (link:#validation-matcher[validation-matcher]) for a more powerful validation of header values, too.
+
+Header definition in Java DSL is straight forward as we just define name and value as usual.
+This completes tha basic message validation in Citrus.
+The individual message validator implementations may add additional validation capabilities such as XML schema validation or XPath and JSONPath validation. Please refer to the respective chapters in this guide to learn more about that.
 
 [[receive-message-ignore]]
 === Ignore elements
@@ -264,60 +604,145 @@ You can use a path expressions (e.g. Xpath, JsonPath) to ignoring a very specifi
 .Java
 [source,java,indent=0,role="primary"]
 ----
-receive(someEndpoint)
-    .message()
-    .type(MessageType.JSON)
-    .body("{\"users\":" +
-            "[{" +
-                "\"name\": \"Jane\"," +
-                "\"token\": \"?\"," +
-                "\"lastLogin\": 0" +
-            "}," +
-            "{" +
-                "\"name\": \"Penny\"," +
-                "\"token\": \"?\"," +
-                "\"lastLogin\": 0" +
-            "}," +
-            "{" +
-                "\"name\": \"Mary\"," +
-                "\"token\": \"?\"," +
-                "\"lastLogin\": 0" +
-            "}]" +
-        "}")
-    .validate(json()
-                .ignore("$.users[*].token")
-                .ignore("$..lastLogin"));
+@CitrusTest
+public void ignorePathTest() {
+    $(receive(someEndpoint)
+        .message()
+        .type(MessageType.JSON)
+        .body("""
+            {
+              "users":
+              [{
+                "name": "Jane",
+                "token": "?",
+                "lastLogin": 0
+              },
+              {
+                "name": "Penny",
+                "token": "?",
+                "lastLogin": 0
+              },
+              {
+                "name": "Mary",
+                "token": "?",
+                "lastLogin": 0
+              }]
+            }
+        """)
+        .validate(json()
+                    .ignore("$.users[*].token")
+                    .ignore("$..lastLogin"))
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="someEndpoint">
-    <message type="json">
-      <data>
-        {
-          "users":
-          [{
-            "name": "Jane",
-            "token": "?",
-            "lastLogin": 0
-          },
-          {
-            "name": "Penny",
-            "token": "?",
-            "lastLogin": 0
-          },
-          {
-            "name": "Mary",
-            "token": "?",
-            "lastLogin": 0
-          }]
-        }
-      </data>
-      <ignore expression="$.users[*].token" />
-      <ignore expression="$..lastLogin" />
-    </message>
-</receive>
+<test name="IgnorePathTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="someEndpoint">
+            <message type="json">
+                <body>
+                    <data>
+                    {
+                      "users":
+                      [{
+                        "name": "Jane",
+                        "token": "?",
+                        "lastLogin": 0
+                      },
+                      {
+                        "name": "Penny",
+                        "token": "?",
+                        "lastLogin": 0
+                      },
+                      {
+                        "name": "Mary",
+                        "token": "?",
+                        "lastLogin": 0
+                      }]
+                    }
+                    </data>
+                </body>
+            </message>
+            <ignore path="$..lastLogin" />
+            <ignore path="$.users[*].token" />
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: IgnorePathTest
+actions:
+  - receive:
+      endpoint: "someEndpoint"
+      message:
+        type: "json"
+        body:
+          data: |
+            {
+              "users":
+              [{
+                "name": "Jane",
+                "token": "?",
+                "lastLogin": 0
+              },
+              {
+                "name": "Penny",
+                "token": "?",
+                "lastLogin": 0
+              },
+              {
+                "name": "Mary",
+                "token": "?",
+                "lastLogin": 0
+              }]
+            }
+          ignore:
+            - path: "$.users[*].token"
+            - path: "$..lastLogin"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="IgnorePathTest">
+        <actions>
+            <receive endpoint="someEndpoint">
+                <message type="json">
+                    <data>
+                    {
+                      "users":
+                      [{
+                        "name": "Jane",
+                        "token": "?",
+                        "lastLogin": 0
+                      },
+                      {
+                        "name": "Penny",
+                        "token": "?",
+                        "lastLogin": 0
+                      },
+                      {
+                        "name": "Mary",
+                        "token": "?",
+                        "lastLogin": 0
+                      }]
+                    }
+                    </data>
+                    <ignore path="$.users[*].token" />
+                    <ignore path="$..lastLogin" />
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The sample above adds JsonPath expressions as ignore statements. This means that we explicitly leave out the evaluated elements
@@ -327,77 +752,156 @@ timestamp values in milliseconds.
 The path evaluation is very powerful when it comes to select a set of objects and elements. This is how you can ignore
 several elements with path expressions.
 
-As an alternative you can also use the `@ignore@` placholder in the message content. The placholder tells Citrus to skip the
-element in validation.
+As an alternative you can also use the `@ignore@` placeholder in the message content. The placeholder tells Citrus to skip the element in validation.
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-receive(someEndpoint)
-    .message()
-    .type(MessageType.JSON)
-    .body("{\"users\":" +
-            "[{" +
-                "\"name\": \"Jane\"," +
-                "\"token\": \"@ignore@\"," +
-                "\"lastLogin\": \"@ignore@\"" +
-            "}," +
-            "{" +
-                "\"name\": \"Penny\"," +
-                "\"token\": \"@ignore@\"," +
-                "\"lastLogin\": \"@ignore@\"" +
-            "}," +
-            "{" +
-                "\"name\": \"Mary\"," +
-                "\"token\": \"@ignore@\"," +
-                "\"lastLogin\": \"@ignore@\"" +
-            "}]" +
-        "}");
+@CitrusTest
+public void ignorePathTest() {
+    $(receive(someEndpoint)
+        .message()
+        .type(MessageType.JSON)
+        .body("""
+            {
+              "users":
+              [{
+                "name": "Jane",
+                "token": "@ignore@",
+                "lastLogin": "@ignore@"
+              },
+              {
+                "name": "Penny",
+                "token": "@ignore@",
+                "lastLogin": "@ignore@"
+              },
+              {
+                "name": "Mary",
+                "token": "@ignore@",
+                "lastLogin": "@ignore@"
+              }]
+            }
+        """)
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="someEndpoint">
-    <message type="json">
-      <data>
-        {
-          "users":
-          [{
-            "name": "Jane",
-            "token": "@ignore@",
-            "lastLogin": "@ignore@"
-          },
-          {
-            "name": "Penny",
-            "token": "@ignore@",
-            "lastLogin": "@ignore@"
-          },
-          {
-            "name": "Mary",
-            "token": "@ignore@",
-            "lastLogin": "@ignore@"
-          }]
-        }
-      </data>
-    </message>
-</receive>
+<test name="IgnorePathTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="someEndpoint">
+            <message type="json">
+                <body>
+                    <data>
+                    {
+                      "users":
+                      [{
+                        "name": "Jane",
+                        "token": "@ignore@",
+                        "lastLogin": "@ignore@"
+                      },
+                      {
+                        "name": "Penny",
+                        "token": "@ignore@",
+                        "lastLogin": "@ignore@"
+                      },
+                      {
+                        "name": "Mary",
+                        "token": "@ignore@",
+                        "lastLogin": "@ignore@"
+                      }]
+                    }
+                    </data>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
 ----
 
-NOTE: You can also ignore sub-trees in XML and whole objects and arrays in Json with the ignore expression/placeholder.
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: IgnorePathTest
+actions:
+  - receive:
+      endpoint: "someEndpoint"
+      message:
+        type: "json"
+        body:
+          data: |
+            {
+              "users":
+              [{
+                "name": "Jane",
+                "token": "@ignore@",
+                "lastLogin": "@ignore@"
+              },
+              {
+                "name": "Penny",
+                "token": "@ignore@",
+                "lastLogin": "@ignore@"
+              },
+              {
+                "name": "Mary",
+                "token": "@ignore@",
+                "lastLogin": "@ignore@"
+              }]
+            }
+----
 
-IMPORTANT: The ignore expression as well as the ignore placeholder will only skip the value matching validations for the selected
-element or object. The element still has to be present in the message structure. In case the element is missing for any reason the
-validation fails even for ignored values.
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="IgnorePathTest">
+        <actions>
+            <receive endpoint="someEndpoint">
+                <message type="json">
+                  <data>
+                    {
+                      "users":
+                      [{
+                        "name": "Jane",
+                        "token": "@ignore@",
+                        "lastLogin": "@ignore@"
+                      },
+                      {
+                        "name": "Penny",
+                        "token": "@ignore@",
+                        "lastLogin": "@ignore@"
+                      },
+                      {
+                        "name": "Mary",
+                        "token": "@ignore@",
+                        "lastLogin": "@ignore@"
+                      }]
+                    }
+                  </data>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+NOTE: You can also ignore a whole sub-tree in XML and whole objects and arrays in Json with the ignore expression/placeholder.
+
+IMPORTANT: The `ignore` expression as well as the `@ignore@` placeholder will only skip the value matching validations for the selected element or object.
+The element still has to be present in the message structure. In case the element is missing for any reason the validation fails even for ignored values.
 
 [[receive-message-selectors]]
 === Message selectors
 
-The `&lt;selector&gt;` element inside the receiving action defines key-value pairs in order to filter the messages being
-received. The filter applies to the message headers. This means that a receiver will only accept messages matching a header
-element value. In messaging applications the header information often holds message ids, correlation ids, operation names
-and so on. With this information given you can explicitly listen for messages that belong to your test case. This is very
-helpful to avoid receiving messages that are still available on the message destination.
+The `&lt;selector&gt;` element inside the receiving action defines key-value pairs in order to filter the messages being received.
+The filter applies to the message headers.
+This means that a receiver will only accept messages matching a header element value.
+In messaging applications the header information often holds message ids, correlation ids, operation names and so on.
+With this information given you can explicitly listen for messages that belong to your test case.
+This is very helpful to avoid receiving messages that are still available on the message destination.
 
 Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in
 retry situations where the application error handling automatically tries to solve a communication problem that occurred
@@ -414,25 +918,72 @@ Let us have a closer look at a message selector inside a receiving action:
 .Java
 [source,java,indent=0,role="primary"]
 ----
-Map<String, String> selectorMap = new HasMap<>();
-selectorMap.put("correlationId", "Cx1x123456789");
-selectorMap.put("operation", "getOrders");
+@CitrusTest
+public void selectorTest() {
+    Map<String, String> selectorMap = new HasMap<>();
+    selectorMap.put("correlationId", "Cx1x123456789");
+    selectorMap.put("operation", "getOrders");
 
-receive("someEndpoint")
-    .selector(selectorMap)
-    .message();
+    $(receive(someEndpoint)
+        .selector(selectorMap)
+        .message()
+        .body("...")
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="someEndpoint">
-  <selector>
-    <element name="correlationId" value="Cx1x123456789"/>
-    <element name="operation" value="getOrders"/>
-  </selector>
-  ...
-</receive>
+<test name="SelectorTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="someEndpoint">
+            <selector>
+                <element name="correlationId" value="Cx1x123456789"/>
+                <element name="operation" value="getOrders"/>
+            </selector>
+            <message>
+                <!-- -->
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SelectorTest
+actions:
+  - receive:
+      endpoint: "someEndpoint"
+      selector:
+        element:
+          - name: correlationId
+            value: "Cx1x123456789"
+          - name: operation
+            value: "getOrders"
+      message:
+        # ...
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="SelectorTest">
+        <actions>
+            <receive endpoint="someEndpoint">
+              <selector>
+                <element name="correlationId" value="Cx1x123456789"/>
+                <element name="operation" value="getOrders"/>
+              </selector>
+              <!-- ... -->
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 This example shows how message selectors work. The selector will only accept messages that meet the correlation id and the
@@ -449,32 +1000,75 @@ in constructing the selection logic yourself. This way you can use *AND* logical
 .Java
 [source,java,indent=0,role="primary"]
 ----
-receive("someEndpoint")
-    .selector("correlationId='Cx1x123456789' AND operation='getOrders'")
-    .message();
+@CitrusTest
+public void selectorTest() {
+    $(receive(someEndpoint)
+        .selector("correlationId = 'Cx1x123456789' AND operation = 'getOrders'")
+        .message()
+        .body("...")
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="someEndpoint">
-  <selector>
-    <value>
-        correlationId = 'Cx1x123456789' AND operation = 'getOrders'
-    </value>
-  </selector>
-  ...
-</receive>
+<test name="SelectorTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="someEndpoint">
+            <selector>
+                <value>
+                    correlationId = 'Cx1x123456789' AND operation = 'getOrders'
+                </value>
+            </selector>
+            <message>
+                <!-- -->
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: SelectorTest
+actions:
+  - receive:
+      endpoint: "someEndpoint"
+      selector:
+        value: "correlationId = 'Cx1x123456789' AND operation = 'getOrders'"
+      message:
+        # ...
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="SelectorTest">
+        <actions>
+            <receive endpoint="someEndpoint">
+              <selector>
+                <value>
+                    correlationId = 'Cx1x123456789' AND operation = 'getOrders'
+                </value>
+              </selector>
+              <!-- ... -->
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 IMPORTANT: In case you want to run tests in parallel message selectors become essential in your test cases. The different
 tests running at the same time will steal messages from each other when you lack of message selection mechanisms.
 
 [[receive-groovy-markupbuilder]]
-=== Groovy XML Markup builder
+=== Groovy Markup builder
 
-With the Groovy markup builder you can build XML message body content in a simple way, without having to write the typical
-XML overhead.
+With the Groovy markup builder you can build XML message body content in a simple way, without having to write the typical XML overhead.
 
 IMPORTANT: The Groovy test action support lives in a separate module.
 You need to add the module to your project to use the functionality.
@@ -489,39 +1083,85 @@ You need to add the module to your project to use the functionality.
 </dependency>
 ----
 
-For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML
-section or the nested body XML data we write a Groovy script snippet.
+For example, we use a Groovy script to construct the XML message to be sent out.
+Instead of a plain CDATA XML section or the nested body XML data we write a Groovy script snippet.
 
 .Java
 [source,java,indent=0,role="primary"]
 ----
-DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
-String script = "markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd'){\n" +
-                    "Message('Hello World!')\n" +
-                "}";
-messageBuilder.setPayloadBuilder(new GroovyScriptPayloadBuilder(script));
-
-receive("helloService")
-    .message(messageBuilder);
+@CitrusTest
+public void scriptMessageBuilderTest() {
+    $(receive("helloService")
+        .message()
+        .body(new GroovyScriptPayloadBuilder("""
+                    markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
+                        Message('Hello World!')
+                    }
+        """))
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="helloService">
-  <message>
-    <builder type="groovy">
-        markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
-            Message('Hello World!')
-        }
-    </builder>
-  </message>
-</receive>
+<test name="ScriptMessageBuilderTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="helloService">
+            <message>
+                <body>
+                    <builder type="groovy">
+                        markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
+                            Message('Hello World!')
+                        }
+                    </builder>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ScriptMessageBuilderTest
+actions:
+  - receive:
+      endpoint: "helloService"
+      message:
+        builder:
+          type: "groovy"
+          value: |
+            markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
+                Message('Hello World!')
+            }
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ScriptMessageBuilderTest">
+        <actions>
+            <receive endpoint="helloService">
+              <message>
+                <builder type="groovy">
+                    markupBuilder.TestRequest(xmlns: 'https://citrus.schemas/samples/sayHello.xsd') {
+                        Message('Hello World!')
+                    }
+                </builder>
+              </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The Groovy markup builder generates the XML message body with following content:
 
-.Genereted markup
+.Generated markup
 [source,xml]
 ----
 <TestRequest xmlns="https://citrus.schemas/samples/sayHello.xsd">
@@ -544,23 +1184,62 @@ The Groovy markup builder script may also be used as external file resource:
 .Java
 [source,java,indent=0,role="primary"]
 ----
-DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
-messageBuilder.setPayloadBuilder(new GroovyFileResourcePayloadBuilder("classpath:path/to/helloRequest.groovy"));
-
-receive("helloService")
-    .message(messageBuilder);
+@CitrusTest
+public void scriptMessageBuilderTest() {
+    $(receive("helloService")
+        .message()
+        .body(new GroovyFileResourcePayloadBuilder("classpath:path/to/helloRequest.groovy"))
+    );
+}
 ----
 
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<receive endpoint="helloService">
-  <message>
-    <builder type="groovy" file="classpath:path/to/helloRequest.groovy"/>
-  </message>
-</receive>
+<test name="ScriptMessageBuilderTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="helloService">
+            <message>
+                <body>
+                    <builder type="groovy" file="classpath:path/to/helloRequest.groovy"/>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
 ----
 
-The markup builder implementation in Groovy offers great possibilities in defining message body content. We do not need
-to write XML tag overhead and we can construct complex message body content with Groovy logic like iterations and conditional
-elements. For detailed markup builder descriptions please see the official Groovy documentation.
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: ScriptMessageBuilderTest
+actions:
+  - receive:
+      endpoint: "helloService"
+      message:
+        builder:
+          type: "groovy"
+          file: "classpath:path/to/helloRequest.groovy"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="ScriptMessageBuilderTest">
+        <actions>
+            <receive endpoint="helloService">
+              <message>
+                <builder type="groovy" file="classpath:path/to/helloRequest.groovy"/>
+              </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
+----
+
+The markup builder implementation in Groovy offers great possibilities in defining message body content.
+We do not need to write XML the tag overhead anymore.
+The approach also enables us to construct complex message body content with Groovy script logic like iterations and conditional elements.
+For detailed markup builder descriptions please see the official Groovy documentation.
