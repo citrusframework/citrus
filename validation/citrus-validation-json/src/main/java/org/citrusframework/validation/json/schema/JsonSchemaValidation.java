@@ -16,30 +16,29 @@
 
 package org.citrusframework.validation.json.schema;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.schema.ValidationMessage;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.json.schema.SimpleJsonSchema;
 import org.citrusframework.message.Message;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.IsJsonPredicate;
 import org.citrusframework.validation.SchemaValidator;
-import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.report.DevNullProcessingReport;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This class is responsible for the validation of json messages against json schemas / json schema repositories.
@@ -47,7 +46,6 @@ import org.slf4j.LoggerFactory;
  */
 public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidationContext> {
 
-    /** The logger */
     private Logger log = LoggerFactory.getLogger(JsonSchemaValidation.class);
 
     private final JsonSchemaFilter jsonSchemaFilter;
@@ -64,7 +62,6 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
 
     /**
      * Constructor using filter implementation.
-     * @param jsonSchemaFilter
      */
     public JsonSchemaValidation(JsonSchemaFilter jsonSchemaFilter) {
         this.jsonSchemaFilter = jsonSchemaFilter;
@@ -74,13 +71,13 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
     public void validate(Message message, TestContext context, JsonMessageValidationContext validationContext) {
         log.debug("Starting Json schema validation ...");
 
-        ProcessingReport report = validate(message,
+        GraciousProcessingReport report = validate(message,
                 findSchemaRepositories(context),
                 validationContext,
                 context.getReferenceResolver());
+
         if (!report.isSuccess()) {
             log.error("Failed to validate Json schema for message:\n" + message.getPayload(String.class));
-
             throw new ValidationException(constructErrorMessage(report));
         }
 
@@ -89,21 +86,20 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
 
     /**
      * Constructs the error message of a failed validation based on the processing report passed from
-     * com.github.fge.jsonschema.core.report
+     * {@link ValidationMessage}.
+     *
      * @param report The report containing the error message
      * @return A string representation of all messages contained in the report
      */
-    private String constructErrorMessage(ProcessingReport report) {
+    private String constructErrorMessage(GraciousProcessingReport report) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Json validation failed: ");
-        report.forEach(processingMessage -> stringBuilder.append(processingMessage.getMessage()));
+        report.getValidationMessages().forEach(processingMessage -> stringBuilder.append("\n\t").append(processingMessage.getMessage()));
         return stringBuilder.toString();
     }
 
     /**
      * Find json schema repositories in test context.
-     * @param context
-     * @return
      */
     private List<JsonSchemaRepository> findSchemaRepositories(TestContext context) {
         return new ArrayList<>(context.getReferenceResolver().resolveAll(JsonSchemaRepository.class).values());
@@ -111,60 +107,68 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
 
     /**
      * Validates the given message against a list of JsonSchemaRepositories under consideration of the actual context
-     * @param message The message to be validated
+     *
+     * @param message            The message to be validated
      * @param schemaRepositories The schema repositories to be used for validation
-     * @param validationContext The context of the validation to be used for the validation
-     * @param referenceResolver holding bean references for lookup.
+     * @param validationContext  The context of the validation to be used for the validation
+     * @param referenceResolver  holding bean references for lookup.
      * @return A report holding the results of the validation
      */
-    public ProcessingReport validate(Message message,
-                                     List<JsonSchemaRepository> schemaRepositories,
-                                     JsonMessageValidationContext validationContext,
-                                     ReferenceResolver referenceResolver) {
+    public GraciousProcessingReport validate(Message message,
+                                            List<JsonSchemaRepository> schemaRepositories,
+                                            JsonMessageValidationContext validationContext,
+                                            ReferenceResolver referenceResolver) {
         return validate(message, jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolver));
     }
 
     /**
      * Validates a message against all schemas contained in the given json schema repository
-     * @param message The message to be validated
+     *
+     * @param message     The message to be validated
      * @param jsonSchemas The list of json schemas to iterate over
      */
     private GraciousProcessingReport validate(Message message, List<SimpleJsonSchema> jsonSchemas) {
         if (jsonSchemas.isEmpty()) {
             return new GraciousProcessingReport(true);
         } else {
-            List<ProcessingReport> processingReports = new LinkedList<>();
+            GraciousProcessingReport processingReport = new GraciousProcessingReport();
             for (SimpleJsonSchema simpleJsonSchema : jsonSchemas) {
-                processingReports.add(validate(message, simpleJsonSchema));
+                processingReport.mergeWith(validate(message, simpleJsonSchema));
             }
-            return new GraciousProcessingReport(processingReports);
+            return processingReport;
         }
     }
 
     /**
-     * Validates a given message against a given json schema
-     * @param message The message to be validated
+     * Validates a given message against a given json schema.
+     *
+     * @param message          The message to be validated
      * @param simpleJsonSchema The json schema to validate against
      * @return returns the report holding the result of the validation
      */
-    private ProcessingReport validate(Message message, SimpleJsonSchema simpleJsonSchema) {
+    private Set<ValidationMessage> validate(Message message, SimpleJsonSchema simpleJsonSchema) {
         try {
             JsonNode receivedJson = objectMapper.readTree(message.getPayload(String.class));
             if (receivedJson.isEmpty()) {
-                return new DevNullProcessingReport();
+                return Collections.emptySet();
             } else {
-                return simpleJsonSchema.getSchema().validate(receivedJson);
+                return simpleJsonSchema.getSchema().validate(
+                        objectMapper.readTree(
+                                message.getPayload(String.class)
+                        )
+                );
             }
-        } catch (IOException | ProcessingException e) {
+        } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to validate Json schema", e);
         }
     }
 
 
     /**
+     * Checks whether the supplied message type is supported by the message.
      *
-     * @param messageType
-     * @param message
+     * @param messageType the message type to check
+     * @param message the message
      * @return true if the message or message type is supported by this validator
      */
     @Override

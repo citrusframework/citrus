@@ -16,46 +16,60 @@
 
 package org.citrusframework.validation.json.schema;
 
+import org.citrusframework.json.JsonSchemaRepository;
+import org.citrusframework.json.schema.SimpleJsonSchema;
+import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.message.Message;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.validation.SchemaValidator;
+import org.citrusframework.validation.context.SchemaValidationContext;
+import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.json.report.GraciousProcessingReport;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.json.JsonSchemaRepository;
-import org.citrusframework.json.schema.SimpleJsonSchema;
-import org.citrusframework.message.DefaultMessage;
-import org.citrusframework.message.Message;
-import org.citrusframework.validation.DefaultMessageHeaderValidator;
-import org.citrusframework.validation.MessageValidator;
-import org.citrusframework.validation.SchemaValidator;
-import org.citrusframework.validation.context.SchemaValidationContext;
-import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.json.JsonPathMessageValidator;
-import org.citrusframework.validation.json.JsonTextMessageValidator;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class JsonSchemaValidationTest {
 
-    private ReferenceResolver referenceResolverMock = mock(ReferenceResolver.class);
-    private JsonMessageValidationContext validationContextMock = mock(JsonMessageValidationContext.class);
-    private JsonSchemaFilter jsonSchemaFilterMock = mock(JsonSchemaFilter.class);
-    private JsonSchemaValidation validator = new JsonSchemaValidation(jsonSchemaFilterMock);
+    @Mock
+    private ReferenceResolver referenceResolverMock;
+
+    @Mock
+    private JsonMessageValidationContext validationContextMock;
+
+    @Mock
+    private JsonSchemaFilter jsonSchemaFilterMock;
+    
+    private JsonSchemaValidation fixture;
+
+    @BeforeMethod
+    void beforeMethodSetup() {
+        MockitoAnnotations.openMocks(this);
+        fixture = new JsonSchemaValidation(jsonSchemaFilterMock);
+    }
 
     @Test
-    public void testValidJsonMessageSuccessfullyValidated() throws Exception {
-
-        //GIVEN
-        //Setup json schema repositories
+    public void testValidJsonMessageSuccessfullyValidated() {
+        // Setup json schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository1");
         Resource schemaResource = new ClassPathResource("org/citrusframework/validation/ProductsSchema.json");
@@ -63,14 +77,14 @@ public class JsonSchemaValidationTest {
         schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
 
-        //Add json schema repositories to a list
+        // Add json schema repositories to a list
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
 
-        //Mock the filter behavior
+        // Mock the filter behavior
         when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, referenceResolverMock))
                 .thenReturn(Collections.singletonList(schema));
 
-        //Create the received message
+        // Create the received message
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
                 "                \"id\": 2,\n" +
@@ -86,22 +100,19 @@ public class JsonSchemaValidationTest {
                 "            ]");
 
 
-        //WHEN
-        ProcessingReport report = validator.validate(
+        GraciousProcessingReport report = fixture.validate(
                 receivedMessage,
                 schemaRepositories,
                 validationContextMock,
                 referenceResolverMock);
 
-        //THEN
-        Assert.assertTrue(report.isSuccess());
+        assertTrue(report.isSuccess());
+        assertEquals(0, report.getValidationMessages().size());
     }
 
     @Test
-    public void testInvalidJsonMessageValidationIsNotSuccessful() throws Exception {
-
-        //GIVEN
-        //Setup json schema repositories
+    public void testInvalidJsonMessageValidationIsNotSuccessful() {
+        // Setup json schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository1");
         Resource schemaResource = new ClassPathResource("org/citrusframework/validation/ProductsSchema.json");
@@ -109,10 +120,10 @@ public class JsonSchemaValidationTest {
         schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
 
-        //Add json schema repositories to a list
+        // Add json schema repositories to a list
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
 
-        //Mock the filter behavior
+        // Mock the filter behavior
         when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, referenceResolverMock))
                 .thenReturn(Collections.singletonList(schema));
 
@@ -129,21 +140,19 @@ public class JsonSchemaValidationTest {
                 "              }\n" +
                 "            ]");
 
-        //WHEN
-        ProcessingReport report = validator.validate(
+        GraciousProcessingReport report = fixture.validate(
                 receivedMessage,
                 schemaRepositories,
                 validationContextMock,
                 referenceResolverMock);
 
-        //THEN
-        Assert.assertFalse(report.isSuccess());
+        assertFalse(report.isSuccess());
+        assertEquals(1, report.getValidationMessages().size());
     }
 
     @Test
-    public void testValidationIsSuccessfulIfOneSchemaMatches() throws Exception {
-
-        //GIVEN
+    public void testValidationIsSuccessfulIfOneSchemaMatches() {
+        // Setup json schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository1");
 
@@ -157,10 +166,10 @@ public class JsonSchemaValidationTest {
         schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
 
-        //Add json schema repositories to a list
+        // Add json schema repositories to a list
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
 
-        //Mock the filter behavior
+        // Mock the filter behavior
         when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, referenceResolverMock))
                 .thenReturn(Collections.singletonList(schema));
 
@@ -178,42 +187,43 @@ public class JsonSchemaValidationTest {
                 "              }\n" +
                 "            ]");
 
-        //WHEN
-        ProcessingReport report = validator.validate(
+        GraciousProcessingReport report = fixture.validate(
                 receivedMessage,
                 schemaRepositories,
                 validationContextMock,
                 referenceResolverMock);
 
-        //THEN
-        Assert.assertTrue(report.isSuccess());
+        assertTrue(report.isSuccess());
+        assertEquals(0, report.getValidationMessages().size());
     }
 
     @Test
-    public void testValidationOfJsonSchemaRepositoryList() throws Exception {
-
-        //GIVEN
+    public void testValidationIsSuccessfulIfOneSchemaMatchesWithRepositoryMerge() {
         List<JsonSchemaRepository> repositoryList = new LinkedList<>();
 
-        //Setup Repository 1 - does not contain the valid schema
+        // Setup Repository 1 - does not contain the valid schema
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository1");
 
         Resource schemaResource = new ClassPathResource("org/citrusframework/validation/BookSchema.json");
-        SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
-        schema.initialize();
-        jsonSchemaRepository.getSchemas().add(schema);
+        SimpleJsonSchema invalidSchema = new SimpleJsonSchema(schemaResource);
+        invalidSchema.initialize();
+        jsonSchemaRepository.getSchemas().add(invalidSchema);
         repositoryList.add(jsonSchemaRepository);
 
-        //Setup Repository 2 - contains the valid schema
+        // Setup Repository 2 - contains the valid schema
         jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository2");
 
         schemaResource = new ClassPathResource("org/citrusframework/validation/ProductsSchema.json");
-        schema = new SimpleJsonSchema(schemaResource);
-        schema.initialize();
-        jsonSchemaRepository.getSchemas().add(schema);
+        SimpleJsonSchema validSchema = new SimpleJsonSchema(schemaResource);
+        validSchema.initialize();
+        jsonSchemaRepository.getSchemas().add(validSchema);
         repositoryList.add(jsonSchemaRepository);
+
+        // Mock the filter behavior
+        when(jsonSchemaFilterMock.filter(repositoryList,  validationContextMock, referenceResolverMock))
+                .thenReturn(List.of(invalidSchema, validSchema));
 
         Message receivedMessage = new DefaultMessage("[\n" +
                 "              {\n" +
@@ -229,42 +239,37 @@ public class JsonSchemaValidationTest {
                 "              }\n" +
                 "            ]");
 
-        //WHEN
-        ProcessingReport report = validator.validate(
+        GraciousProcessingReport report = fixture.validate(
                 receivedMessage,
                 repositoryList,
                 validationContextMock,
                 referenceResolverMock);
 
-        //THEN
-        Assert.assertTrue(report.isSuccess());
+        assertTrue(report.isSuccess());
+        assertEquals(1, report.getValidationMessages().size());
     }
 
     @Test
     public void testJsonSchemaFilterIsCalled() {
-
-        //GIVEN
         List<JsonSchemaRepository> repositoryList = Collections.singletonList(mock(JsonSchemaRepository.class));
         Message message = mock(Message.class);
         JsonMessageValidationContext jsonMessageValidationContext = mock(JsonMessageValidationContext.class);
 
-        //WHEN
-        validator.validate(message, repositoryList, jsonMessageValidationContext, referenceResolverMock);
+        fixture.validate(message, repositoryList, jsonMessageValidationContext, referenceResolverMock);
 
-        //THEN
         verify(jsonSchemaFilterMock).filter(repositoryList, jsonMessageValidationContext, referenceResolverMock);
     }
 
     @Test
     public void testLookup() {
         Map<String, SchemaValidator<? extends SchemaValidationContext>> validators = SchemaValidator.lookup();
-        Assert.assertEquals(validators.size(), 1L);
-        Assert.assertNotNull(validators.get("defaultJsonSchemaValidator"));
-        Assert.assertEquals(validators.get("defaultJsonSchemaValidator").getClass(), JsonSchemaValidation.class);
+        assertEquals(validators.size(), 1L);
+        assertNotNull(validators.get("defaultJsonSchemaValidator"));
+        assertEquals(validators.get("defaultJsonSchemaValidator").getClass(), JsonSchemaValidation.class);
     }
 
     @Test
     public void testTestLookup() {
-        Assert.assertTrue(SchemaValidator.lookup("json").isPresent());
+        assertTrue(SchemaValidator.lookup("json").isPresent());
     }
 }
