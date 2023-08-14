@@ -16,26 +16,25 @@
 
 package org.citrusframework.json.schema;
 
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.springframework.core.io.Resource;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import com.github.fge.jackson.JsonLoader;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import org.springframework.core.io.Resource;
-
 /**
- * Adapter between the resource reference from the bean configuration and the
- * usable SimpleJsonSchema for validation.
- * @since 2.7.3
+ * Adapter between the resource reference from the bean configuration and the usable {@link SimpleJsonSchema} for
+ * validation.
  */
 public class SimpleJsonSchema implements InitializingPhase {
 
     /** Default json schema factory */
-    private JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.byDefault();
+    private JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
 
     /** The Resource of the json schema passed from the bean config */
     private Resource json;
@@ -53,9 +52,9 @@ public class SimpleJsonSchema implements InitializingPhase {
 
     @Override
     public void initialize() {
-        try {
-            schema = jsonSchemaFactory.getJsonSchema(JsonLoader.fromFile(json.getFile()));
-        } catch (ProcessingException | IOException e) {
+        try (FileInputStream fileInputStream = new FileInputStream(json.getFile())) {
+            schema = jsonSchemaFactory.getSchema(fileInputStream);
+        } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to load Json schema", e);
         }
     }

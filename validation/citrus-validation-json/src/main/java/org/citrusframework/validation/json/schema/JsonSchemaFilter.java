@@ -32,21 +32,20 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.StringUtils;
 
 /**
- * This class is responsible for filtering JsonSchemas based on a
- * JsonMessageValidationContext and the application context
- * @since 2.7.3
+ * This class is responsible for filtering {@link SimpleJsonSchema}s based on a {@link JsonMessageValidationContext}.
  */
 public class JsonSchemaFilter {
 
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * Filters the all schema repositories based on the configuration in the jsonMessageValidationContext
-     * and returns a list of relevant schemas for the validation
+     * Filters the all schema repositories based on the configuration in the {@code jsonMessageValidationContext} and
+     * returns a list of the relevant underlying {@link SimpleJsonSchema}s for the validation.
+     *
      * @param schemaRepositories The repositories to be filtered
      * @param jsonMessageValidationContext The context for the json message validation
-     * @param referenceResolver holding bean references for lookup.
-     * @return A list of json schemas relevant for the validation based on the configuration
+     * @param referenceResolver holding bean references for lookup
+     * @return a list of json schemas relevant for the validation based on the configuration
      */
     public List<SimpleJsonSchema> filter(List<JsonSchemaRepository> schemaRepositories,
                                          JsonMessageValidationContext jsonMessageValidationContext,
@@ -60,13 +59,6 @@ public class JsonSchemaFilter {
         }
     }
 
-    /**
-     * Extracts the the schema specified in the jsonMessageValidationContext from the application context
-     * @param jsonMessageValidationContext The message validation context containing the name of the schema to extract
-     * @param referenceResolver holding bean references for lookup.
-     * @return A list containing the relevant schema
-     * @throws CitrusRuntimeException If no matching schema was found
-     */
     private List<SimpleJsonSchema> getSchemaFromContext(JsonMessageValidationContext jsonMessageValidationContext,
                                                         ReferenceResolver referenceResolver) {
         try {
@@ -85,13 +77,6 @@ public class JsonSchemaFilter {
         }
     }
 
-    /**
-     * Filters the schema repositories by the name configured in the jsonMessageValidationContext
-     * @param schemaRepositories The List of schema repositories to filter
-     * @param jsonMessageValidationContext The validation context of the json message containing the repository name
-     * @return The list of json schemas found in the matching repository
-     * @throws CitrusRuntimeException If no matching repository was found
-     */
     private List<SimpleJsonSchema> filterByRepositoryName(List<JsonSchemaRepository> schemaRepositories,
                                                           JsonMessageValidationContext jsonMessageValidationContext) {
         for (JsonSchemaRepository jsonSchemaRepository : schemaRepositories) {
@@ -108,11 +93,6 @@ public class JsonSchemaFilter {
                 "\"" + jsonMessageValidationContext.getSchemaRepository() + "\".");
     }
 
-    /**
-     * Merges the list of given schema repositories to one unified list of json schemas
-     * @param schemaRepositories The list of json schemas to merge
-     * @return A list of all json schemas contained in the repositories
-     */
     private List<SimpleJsonSchema> mergeRepositories(List<JsonSchemaRepository> schemaRepositories) {
         return schemaRepositories.stream()
                 .map(JsonSchemaRepository::getSchemas)

@@ -16,12 +16,8 @@
 
 package org.citrusframework.actions.dsl;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.schema.JsonSchema;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
@@ -48,16 +44,18 @@ import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathVariableExtractor;
-import org.citrusframework.validation.json.report.GraciousProcessingReport;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.main.JsonSchema;
 import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
@@ -67,7 +65,11 @@ import static org.citrusframework.dsl.PathExpressionSupport.path;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -846,7 +848,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithJsonSchemaRepository() throws ProcessingException {
+    public void testReceiveBuilderWithJsonSchemaRepository() {
         SimpleJsonSchema schema = applicationContext.getBean("jsonTestSchema", SimpleJsonSchema.class);
 
         reset(schema, messageEndpoint, messageConsumer, configuration);
@@ -859,7 +861,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "sayHello"));
 
         JsonSchema jsonSchemaMock = mock(JsonSchema.class);
-        when(jsonSchemaMock.validate(any())).thenReturn(new GraciousProcessingReport(true));
+        when(jsonSchemaMock.validate(any())).thenReturn(Collections.emptySet());
         when(schema.getSchema()).thenReturn(jsonSchemaMock);
 
         context.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
@@ -895,7 +897,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithJsonSchema() throws ProcessingException {
+    public void testReceiveBuilderWithJsonSchema() {
         SimpleJsonSchema schema = applicationContext.getBean("jsonTestSchema", SimpleJsonSchema.class);
 
         reset(schema, messageEndpoint, messageConsumer, configuration);
@@ -908,7 +910,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "sayHello"));
 
         JsonSchema jsonSchemaMock = mock(JsonSchema.class);
-        when(jsonSchemaMock.validate(any())).thenReturn(new GraciousProcessingReport(true));
+        when(jsonSchemaMock.validate(any())).thenReturn(Collections.emptySet());
         when(schema.getSchema()).thenReturn(jsonSchemaMock);
 
         context.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
@@ -944,7 +946,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testActivateSchemaValidation() throws Exception {
+    public void testActivateSchemaValidation() {
         SimpleJsonSchema schema = applicationContext.getBean("jsonTestSchema", SimpleJsonSchema.class);
 
         reset(schema, messageEndpoint, messageConsumer, configuration);
@@ -957,7 +959,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "sayHello"));
 
         JsonSchema jsonSchemaMock = mock(JsonSchema.class);
-        when(jsonSchemaMock.validate(any())).thenReturn(new GraciousProcessingReport(true));
+        when(jsonSchemaMock.validate(any())).thenReturn(Collections.emptySet());
         when(schema.getSchema()).thenReturn(jsonSchemaMock);
 
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
@@ -988,7 +990,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testDeactivateSchemaValidation() throws IOException {
+    public void testDeactivateSchemaValidation() {
         reset(messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
