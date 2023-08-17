@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         version: [ 18, 19 ]
-        os: [ ubuntu-20.04 ]
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up JDK
@@ -37,9 +37,9 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.version }}
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache Maven packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
