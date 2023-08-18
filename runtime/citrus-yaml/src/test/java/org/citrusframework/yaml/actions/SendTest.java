@@ -56,7 +56,7 @@ public class SendTest extends AbstractYamlActionTest {
     final DataDictionary<?> myDataDictionary = Mockito.mock(DataDictionary.class);
 
     private final DefaultMessageHeaderValidator headerValidator = new DefaultMessageHeaderValidator();
-    private final TextEqualsMessageValidator validator = new TextEqualsMessageValidator().enableTrim();
+    private final TextEqualsMessageValidator validator = new TextEqualsMessageValidator().enableTrim().normalizeLineEndings();
 
     @Test
     public void shouldLoadSend() throws IOException {

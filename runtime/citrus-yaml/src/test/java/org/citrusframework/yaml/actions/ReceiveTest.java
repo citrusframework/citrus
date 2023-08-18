@@ -71,7 +71,7 @@ public class ReceiveTest extends AbstractYamlActionTest {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/receive-test.yaml");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
-        context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new TextEqualsMessageValidator().enableTrim());
+        context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new TextEqualsMessageValidator().enableTrim().normalizeLineEndings());
         context.getReferenceResolver().bind("helloQueue", helloQueue);
         context.getReferenceResolver().bind("helloEndpoint", direct().asynchronous().queue(helloQueue).build());
 

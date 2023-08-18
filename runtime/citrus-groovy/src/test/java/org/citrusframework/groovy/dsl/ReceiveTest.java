@@ -73,7 +73,7 @@ public class ReceiveTest extends AbstractGroovyActionDslTest {
         GroovyTestLoader testLoader = createTestLoader("classpath:org/citrusframework/groovy/dsl/receive.test.groovy");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
-        context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new TextEqualsMessageValidator().enableTrim());
+        context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new TextEqualsMessageValidator().enableTrim().normalizeLineEndings());
         context.getReferenceResolver().bind("defaultHeaderValidator", new DefaultHeaderValidator());
         context.getReferenceResolver().bind("myHeaderValidator", new DefaultHeaderValidator());
         context.getReferenceResolver().bind("helloQueue", helloQueue);

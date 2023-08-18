@@ -25,6 +25,8 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.UnknownElementException;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageDirection;
@@ -34,6 +36,7 @@ import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.message.builder.FileResourcePayloadBuilder;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.citrusframework.util.TestUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
@@ -43,7 +46,6 @@ import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -61,6 +63,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.expectThrows;
 
 /**
  * @author Christoph Deppisch
@@ -113,8 +117,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(mockQueue.receive(15000)).thenReturn(controlMessage);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -144,8 +148,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(mockQueue.receive(5000)).thenReturn(controlMessage);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -181,8 +185,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -217,11 +221,11 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
@@ -251,8 +255,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -288,11 +292,11 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
@@ -323,11 +327,11 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            Assert.assertEquals(TestUtils.normalizeLineEndings(received.getPayload(String.class).trim()), control.getPayload(String.class).trim());
             new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
             return null;
         }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
@@ -363,8 +367,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .build();
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -403,8 +407,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -443,8 +447,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -481,8 +485,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -517,8 +521,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -539,18 +543,20 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
     @Test
     public void testReceiveMessageWithExtractVariablesFromHeaders() {
+        String headerKey = "Operation";
+        String headerValue = "sayHello";
+
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(Map.of(headerKey, headerValue)));
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Operation", "myOperation");
-
+        String extractionKey = "myOperation";
         MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor.Builder()
-                .headers(headers)
+                .headers(Map.of(headerKey, extractionKey))
                 .build();
 
         Map<String, Object> controlHeaders = new HashMap<>();
-        controlHeaders.put("Operation", "sayHello");
+        controlHeaders.put(headerKey, headerValue);
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -562,8 +568,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -578,8 +584,42 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
                 .build();
         receiveAction.execute(context);
 
-        Assert.assertNotNull(context.getVariable("myOperation"));
-        Assert.assertEquals(context.getVariable("myOperation"), "sayHello");
+        Assert.assertNotNull(context.getVariable(extractionKey));
+        Assert.assertEquals(context.getVariable(extractionKey), headerValue);
+    }
+
+    @Test
+    public void testReceiveMessageWithExtractVariablesFromHeadersInvalidKey() {
+        String headerKey = "Operation";
+        String headerValue = "sayHello";
+
+        DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(Map.of(headerKey, headerValue)));
+
+        String extractionKey = "myOperation";
+        MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor.Builder()
+                .headers(Map.of("invalid-header-key", extractionKey))
+                .build();
+
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        reset(endpoint, consumer, endpointConfiguration);
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .message(controlMessageBuilder)
+                .process(headerVariableExtractor)
+                .build();
+
+        UnknownElementException exception = expectThrows(UnknownElementException.class, () -> receiveAction.execute(context));
+        assertEquals(exception.getMessage(), "Could not find header element invalid-header-key in received header");
     }
 
     @Test
@@ -601,8 +641,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -637,8 +677,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -658,6 +698,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     public void testReceiveSelectedWithMessageSelector() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(Map.of("Operation", "sayHello")));
 
         String messageSelector = "Operation = 'sayHello'";
 
@@ -674,8 +715,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -695,6 +736,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     public void testReceiveSelectedWithMessageSelectorAndTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(Map.of("Operation", "sayHello")));
 
         String messageSelector = "Operation = 'sayHello'";
 
@@ -711,8 +753,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -733,6 +775,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     public void testReceiveSelectedWithMessageSelectorMap() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(Map.of("Operation", "sayHello")));
 
         Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
@@ -750,8 +793,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -771,6 +814,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     public void testReceiveSelectedWithMessageSelectorMapAndTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(Map.of("Operation", "sayHello")));
 
         Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
@@ -788,8 +832,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -810,6 +854,7 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
     public void testMessageTimeout() {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
+        controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(Map.of("Operation", "sayHello")));
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -820,8 +865,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -859,8 +904,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -893,8 +938,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -929,8 +974,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(disabledActor);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -970,8 +1015,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -1019,8 +1064,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
@@ -1067,8 +1112,8 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
+            Message control = invocationOnMock.getArgument(0);
+            Message received = invocationOnMock.getArgument(1);
             List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
             Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
