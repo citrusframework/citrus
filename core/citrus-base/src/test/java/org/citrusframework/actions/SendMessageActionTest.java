@@ -33,6 +33,7 @@ import org.citrusframework.message.builder.DefaultHeaderBuilder;
 import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.message.builder.FileResourcePayloadBuilder;
 import org.citrusframework.messaging.Producer;
+import org.citrusframework.util.TestUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
@@ -688,7 +689,7 @@ public class SendMessageActionTest extends UnitTestSupport {
     }
 
     private void validateMessageToSend(Message toSend, Message controlMessage) {
-        Assert.assertEquals(toSend.getPayload(String.class).trim(), controlMessage.getPayload(String.class).trim());
+        Assert.assertEquals(TestUtils.normalizeLineEndings(toSend.getPayload(String.class).trim()), controlMessage.getPayload(String.class).trim());
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
         validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext());
     }

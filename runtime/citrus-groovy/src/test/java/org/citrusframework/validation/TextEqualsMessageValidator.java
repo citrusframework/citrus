@@ -21,6 +21,7 @@ package org.citrusframework.validation;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
+import org.citrusframework.util.TestUtils;
 import org.citrusframework.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import org.testng.Assert;
  */
 public class TextEqualsMessageValidator extends DefaultMessageValidator {
 
+    private boolean normalizeLineEndings = false;
     private boolean trim = false;
 
     @Override
@@ -54,6 +56,11 @@ public class TextEqualsMessageValidator extends DefaultMessageValidator {
             receivedPayload = receivedPayload.trim();
         }
 
+        if (normalizeLineEndings) {
+            controlPayload = TestUtils.normalizeLineEndings(controlPayload);
+            receivedPayload = TestUtils.normalizeLineEndings(receivedPayload);
+        }
+
         Assert.assertEquals(receivedPayload, controlPayload, "Validation failed - " +
                 "expected message contents not equal!");
 
@@ -63,6 +70,11 @@ public class TextEqualsMessageValidator extends DefaultMessageValidator {
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return true;
+    }
+
+    public TextEqualsMessageValidator normalizeLineEndings() {
+        this.normalizeLineEndings = true;
+        return this;
     }
 
     public TextEqualsMessageValidator enableTrim() {
