@@ -22,7 +22,7 @@ public void containerTest() {
 }
 ----
 
-Now the three nested actions are added to the action *sequential* container rather than to the test case itself although we are using the same action Java DSL methods as outside the container. This mechanism is only working because Citrus is handling test action containers with special care.
+Now the three nested actions are added to the action *sequential* container rather than to the test case itself although we are using the same action Java DSL methods outside the container. This mechanism is only working because Citrus is handling test action containers with special care.
 
 A custom test action container implementation could look like this:
 
@@ -74,7 +74,7 @@ public void containerTest() {
 
 The custom container implementation now works fine with the automatically nested echo actions. And we are able to use the usual Java DSL syntactic sugar for test actions like *echo* .
 
-In a next step we add a custom superclass for all our test classes which provides a helper method for the custom container implementation in order to have a even more comfortable syntax.
+In a next step we add a custom superclass for all our test classes which provides a helper method for the custom container implementation in order to have an even more comfortable syntax.
 
 .Container creating helper method
 [source,java]

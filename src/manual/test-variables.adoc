@@ -48,7 +48,7 @@ like '&amp;', '&lt;', '&gt;'. In general, you can apply to the Java naming conve
 == Global variables
 
 You can work with different variable scopes (local or global). Local variables are accessible throughout a single test.
-Global variables are visible for all tests yet global variables are immutable, so tests cannot change its value.
+Global variables are visible for all tests yet global variables are immutable, so tests cannot change their values.
 
 This is a good opportunity to declare constant values for all tests. As these variables are global we need to add those
 to the basic Citrus context. The following example demonstrates how to add global variables in Citrus:
@@ -229,7 +229,7 @@ sections.
 == Path expressions
 
 Some elements in message body might be of dynamic nature. Just think of generated identifiers or timestamps. This is the right
-time to use test variables and dynamic message element overwrite. You can overwrite a specific elements in the message body
+time to use test variables and dynamic message element overwrite. You can overwrite specific elements in the message body
 with path expressions (XPath or JsonPath).
 
 [[variables-json-path-expressions]]
@@ -266,7 +266,7 @@ Let's have a look at this simple sample Json message body:
 }
 ----
 
-Citrus can load the file content and used it as message body when sending or receiving messages in a test case. You can apply
+Citrus can load the file content and uses it as message body when sending or receiving messages in a test case. You can apply
 JsonPath expressions in order to manipulate the message content.
 
 [source,xml]
@@ -309,7 +309,7 @@ The JsonPath expressions set the username to *Admin* . The *admin* boolean prope
 status values were set to *closed*. In case a JsonPath expression should fail to find a matching element within the message
 structure the test case will fail.
 
-With this JsonPath mechanism ou are able to manipulate message content before it is sent or received within Citrus. This
+With this JsonPath mechanism you are able to manipulate message content before it is sent or received within Citrus. This
 makes life very easy when using message resource files that are reused across multiple test cases.
 
 [[variables-xpath-expressions]]
@@ -333,7 +333,7 @@ takes place.
 </message>
 ----
 
-The program listing above shows ways of setting variable values inside a message template. First you can simply place a variable
+The program listing above shows ways of setting variable values inside a message template. First you can simply place variable
 expressions inside the message (see how `${messageId}` is used in the sample). In addition to that you can also use path
 expressions to explicitly overwrite message elements before message processing takes place.
 
@@ -361,7 +361,7 @@ being interpreted as test variable expression. You can do this by using the vari
 .Plain text message content with escapes
 [source,text]
 ----
-This is a escaped variable expression ${//escaped//} and should not lead to unknown variable exceptions within Citrus.
+This is an escaped variable expression ${//escaped//} and should not lead to unknown variable exceptions within Citrus.
 ----
 
 The escaped expression `${//escaped//}` above will result in the string *${escaped}* where _escaped_ is not treated as a
@@ -376,5 +376,5 @@ will get the following result after processing.
 .Parsed plain text mesage content
 [source,text]
 ----
-This is a escaped variable expression ${escaped} and should not lead to unknown variable exceptions within Citrus.
+This is an escaped variable expression ${escaped} and should not lead to unknown variable exceptions within Citrus.
 ----

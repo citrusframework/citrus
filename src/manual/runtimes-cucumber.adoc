@@ -51,7 +51,7 @@ comfortable way to specify a custom object factory is to add this property to th
 cucumber.object-factory=org.citrusframework.cucumber.backend.CitrusObjectFactory
 ----
 
-This special object factory takes care on creating all step definition instances. The object factory is able to inject
+This special object factory takes care of creating all step definition instances. The object factory is able to inject
 `@CitrusResource` annotated fields in step classes. We will see this later on in the examples. The usage of this special
 object factory is mandatory in order to combine Citrus and Cucumber capabilities.
 
@@ -157,7 +157,7 @@ public class EchoSteps {
 }
 ----
 
-The step definition class is a normal POJO that uses a some annotations such as `@CitrusResource` annotated `TestCaseRunner`.
+The step definition class is a normal POJO that uses some annotations such as `@CitrusResource` annotated `TestCaseRunner`.
 The Citrus backend injects the test runner instance at runtime.
 
 The step definition contains normal @Given, @When or @Then annotated methods that match the scenario descriptions in our
@@ -170,7 +170,7 @@ use Citrus test action runner Java API to run integration tests with behavior dr
 [[cucumber-xml-steps]]
 === Cucumber XML steps
 
-The previous section handled glue code in Java in in form of step definitions accessing the Java test runner fluent API.
+The previous section handled glue code in Java in form of step definitions accessing the Java test runner fluent API.
 This chapter deals with the same concept with just XML configuration.
 
 Citrus provides a separate configuration namespace and schema definition for Cucumber related step definitions. Include
@@ -306,7 +306,7 @@ This completes the description of how to add XML step definitions to the cucumbe
 === Cucumber Spring support
 
 Cucumber provides support for Spring dependency injection in step definition classes. The Cucumber Spring capabilities
-are included in a separate module. So we first of all we have to add this dependency to our project:
+are included in a separate module. So first of all we have to add this dependency to our project:
 
 [source,xml]
 ----
@@ -370,7 +370,7 @@ public class EchoSteps {
 
 As you can see we used Spring autowiring mechanism for the *echoEndpoint* field in the step definition. Also be sure to
 define the *@ContextConfiguration* annotation on the step definition. The Cucumber Spring support loads the Spring application
-context and takes care on dependency injection. We use the Citrus *CitrusSpringConfig* Java configuration because this is
+context and takes care of dependency injection. We use the Citrus *CitrusSpringConfig* Java configuration because this is
 the main entrance for Citrus test cases. You can add custom beans and further Spring related configuration to this Spring
 application context. If you want to add more beans for autowiring do so in the Citrus Spring configuration. Usually this
 is the default *citrus-context.xml* which is automatically loaded.

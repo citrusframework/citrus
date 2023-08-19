@@ -169,7 +169,7 @@ public class ResourceInjection_IT extends TestNGCitrusSupport {
 ----
 
 First of all the method parameters must be annotated with `@Optional` because the values are not injected by TestNG itself
-but by the Citrus base test class. Finally, the parameter requires the `@CitrusResource` annotations in order to mark the
+but by the Citrus base test class. Finally, the parameter requires the `@CitrusResource` annotation in order to mark the
 parameter for Citrus resource injection.
 
 Now each method uses its own resource instances which makes sure that parallel test execution can take place without having

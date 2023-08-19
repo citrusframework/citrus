@@ -2,7 +2,7 @@
 [[preface]]
 = Preface
 
-Integration tests are a critical part software testing. In contrast to unit tests where the primary goal is to verify a
+Integration tests are a critical part of software testing. In contrast to unit tests where the primary goal is to verify a
 single class or method in isolation to other parts of the software the integration tests look at a wider scope with
 several components and software parts interacting with each other.
 
@@ -14,7 +14,7 @@ challenge.
 In a typical enterprise application and middleware scenario automated integration testing of message-based interfaces is exhausting
 and sometimes barely possible. Usually the tester is forced to simulate several interface partners in an end-to-end integration test.
 
-The first thing that comes to ones mind is manual testing. No doubt manual testing is fast. In a long term perspective
+The first thing that comes to one's mind is manual testing. No doubt manual testing is fast. In a long term perspective
 manual testing is time-consuming and causes severe problems regarding maintainability as they are error prone and not repeatable.
 
 Citrus provides a complete test automation tool for integration testing of message-based enterprise applications. You can test

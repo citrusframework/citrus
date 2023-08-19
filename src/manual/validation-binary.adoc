@@ -93,7 +93,7 @@ send("someEndpoint")
 === Base64 message validation
 
 Another way to validate binary message content is to use base64 String encoding. The binary data is encoded as base64
-character sequence and there fore is comparable with an expected content.
+character sequence and therefore is comparable with an expected content.
 
 The received message content does not have to be base64 encoded. Citrus is doing this conversion automatically before validation
 takes place. The binary data can be anything e.g. images, pdf or gzip content.

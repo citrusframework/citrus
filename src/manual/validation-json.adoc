@@ -40,7 +40,7 @@ the received Json data structure are ignored then.
 TIP: The Json validation mode (strict or soft) is settable via environment variable `CITRUS_JSON_MESSAGE_VALIDATION_STRICT` or
 system property `citrus.json.message.validation.strict=false`. This will set soft mode to all Json text message validators.
 
-You can also overwrite this default message validators for Json by placing a bean into the Spring Application context. The
+You can also overwrite these default message validators for Json by placing a bean into the Spring Application context. The
 bean uses a default name as identifier. Then your custom bean will overwrite the default validator:
 
 .Java
@@ -119,7 +119,7 @@ The message receiving action in our test case specifies a message format type `t
 for some message validator implementation capable of validating Json messages. As we have added the proper message validator
 to the Spring application context Citrus will pick the right validator and Json message validation is performed on this message.
 
-As you can see you we can use test variables as well as ignore element syntax here, too. Citrus is able to handle
+As you can see you can use test variables as well as ignore element syntax here, too. Citrus is able to handle
 different Json element orders when comparing received and expected Json object. We can also use Json arrays and nested objects.
 The default Json message validator implementation in Citrus is very powerful in comparing Json objects.
 
@@ -169,7 +169,7 @@ has access to the incoming Json message object *json*. We can use the Groovy Jso
 through the Json structure. The Groovy Json slurper object *json* is automatically injected in the validation script. This
 way you can access the Json object elements in your code doing some assertions.
 
-There is even more object injection for the validation script. With the automatically added object *_receivedMessage_* You
+There is even more object injection for the validation script. With the automatically added object *_receivedMessage_* you
 have access to the Citrus message object for this receive action. This enables you to do whatever you want with the message body or header.
 
 .Java
@@ -446,7 +446,7 @@ receive(someEndpoint)
 ----
 
 The object functions do return special Json object related properties such as the set of *keys* for an object or the size
-of an Json array.
+of a Json array.
 
 Now lets get even more comfortable validation capabilities with matchers. Citrus supports Hamcrest matchers which gives
 us a very powerful way of validating Json object elements and arrays. See the following examples that demonstrate how this works:
@@ -487,7 +487,7 @@ The Json schema validation in Citrus is based on the drafts provided by http://j
 Because Json schema is a fast evolving project, only Json schema V3 and V4 are currently supported.
 
 IMPORTANT: In contrast to the XML validation, the Json validation is an optional feature. You have to activate it
-withing every receive-message action by setting `schema-validation="true"`
+within every receive-message action by setting `schema-validation="true"`
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -522,7 +522,7 @@ the schema validation with `schemaValidation(true)`. The schema references a bea
 the application context). Read more about how to declare schemas in link:#schema-definition[schema validation].
 
 We encourage you to add Json schema validation to your test cases as soon as possible, because we think that message validation
-is a important part of integration testing.
+is an important part of integration testing.
 
 === Json schema repositories
 
@@ -572,7 +572,7 @@ public SimpleJsonSchema productSchema() {
 
 In reference to the current Json schema definition, it is not possible to create a direct reference between a Json
 message and a set of schemas, as it would be possible with XML namespaces. Because of that, Citrus follows a rule set
-for choosing the relevant schemas based on the configuration withing the test case in relation to the given context.
+for choosing the relevant schemas based on the configuration within the test case in relation to the given context.
 The following table assumes that the Json schema validation is activated for the test action.
 
 |===
