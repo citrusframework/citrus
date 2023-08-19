@@ -37,7 +37,7 @@ public DomXmlMessageValidator defaultXmlMessageValidator() {
 ----
 
 The default XML message validator is very powerful when it comes to compare XML structures. The validator supports namespaces
-with different prefixes and attributes als well as namespace qualified attributes. See the following sections for a detailed
+with different prefixes and attributes as well as namespace qualified attributes. See the following sections for a detailed
 description of all capabilities.
 
 [[xml-payload-validation]]
@@ -166,7 +166,7 @@ receive("someEndpoint")
 </receive>
 ----
 
-The header data has not name but uses a complex XML fragment as a value. In SOAP this header fragment will be added as
+The header data has no name but uses a complex XML fragment as a value. In SOAP this header fragment will be added as
 a `SOAP-ENV:Header` then. Please read more about this in link:#soap-headers[SOAP support].
 
 [[xml-ignore-validation]]
@@ -175,7 +175,7 @@ a `SOAP-ENV:Header` then. Please read more about this in link:#soap-headers[SOAP
 Some elements in the message payload might not apply for validation at all. Just think of communication timestamps or dynamic
 values that have been generated from a foreign service.
 
-You as a tester may not be able to predict such a timestamp or dynamically value for expected validation. This is why you can
+You as a tester may not be able to predict such a timestamp or dynamic value for expected validation. This is why you can
 safely ignore elements and attributes in the XML message validation.
 
 .Java
@@ -348,10 +348,10 @@ receive("someEndpoint")
 </receive>
 ----
 
-In the example above we use different expression result types. First we want to make sure nor */TestRequest/Error* element
+In the example above we use different expression result types. First we want to make sure no */TestRequest/Error* element
 is present. This can be done with a boolean result type and *false* value. Second we want to validate the number of found
 elements for the expression */TestRequest/Status[.='success']* . The XPath expression evaluates to a node list that results
-in its list size to be checked. And last not least we evaluate to a *node-set* result type where all values in the node list
+in its list size to be checked. And last but not least we evaluate to a *node-set* result type where all values in the node list
 will be translated to a comma delimited string value.
 
 You can use even more powerful validation expressions with matcher implementations. With validation matchers you are able to
@@ -624,7 +624,7 @@ split-cdata-sections:: *false*
 element-content-whitespace:: *true*
 
 The parameters are also described in https://www.w3.org/TR/DOM-Level-3-Core/core.html#DOMConfiguration[W3C DOM configuration] documentation. We can customize the default settings by adding
-a _XmlConfigurer_ Spring bean to the Citrus application context.
+an _XmlConfigurer_ Spring bean to the Citrus application context.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -703,7 +703,7 @@ receive("someEndpoint")
 </receive>
 ----
 
-The Groovy XmlSlurper validation script goes right into the message-tag instead of a XML control template or XPath validation.
+The Groovy XmlSlurper validation script goes right into the message-tag instead of an XML control template or XPath validation.
 The Groovy script supports Java *_assert_* statements for message element validation. Citrus automatically injects the root
 element *_root_* to the validation script. This is the Groovy XmlSlurper object and the start of element navigation. Based on
 this root element you can access child elements and attributes with a dot notated syntax. Just use the element names separated
@@ -856,7 +856,7 @@ The connection between incoming XML messages and xsd schema files in the reposit
 we will discuss later in this chapter. By default, Citrus picks the right schema based on the target namespace that is
 defined inside the schema definition. The target namespace of the schema definition has to match the namespace of the
 root element in the received XML message. With this mapping strategy you will not have to wire XML messages and schema
-files manually all is done automatically by the Citrus schema repository at runtime. All you need to do is to register
+files manually, all is done automatically by the Citrus schema repository at runtime. All you need to do is to register
 all available schema definition files regardless of which target namespace or nature inside the Citrus schema
 repository.
 
@@ -930,7 +930,7 @@ schema repository. So incoming XML messages that refer to the WSDL file can be v
 [[schema-collections]]
 ==== Schema collections
 
-Sometimes a XML schema definition is separated into multiple files. This is a problem for the Citrus schema repository
+Sometimes an XML schema definition is separated into multiple files. This is a problem for the Citrus schema repository
 as the schema mapping strategy then is not able to pick the right file for validation, in particular when working with
 target namespace values as key for the schema mapping strategy. As a solution for this problem you have to put all
 schemas with the same target namespace value into a schema collection.
@@ -1068,7 +1068,7 @@ the right schema file in the repository.
 ==== Root QName Mapping Strategy
 
 The next possibility for mapping incoming request messages to a schema definition is via the XML root element QName.
-Each XML message payload starts with a root element that usually declares the type of a XML message. According to this
+Each XML message payload starts with a root element that usually declares the type of an XML message. According to this
 root element you can set up mappings in the schema repository.
 
 .Java
@@ -1134,7 +1134,7 @@ public SimpleXsdSchema goodbyeSchema() {
 ----
 
 The listing above defines two root qname mappings - one for *HelloRequest* and one for *GoodbyeRequest* message types.
-An incoming message of type <HelloRequest> is then mapped to the respective schema and so on. With this dedicated
+An incoming message of type <HelloRequest> is then mapped to the respective schema and so on. With these dedicated
 mappings you are able to control which schema is used on a XML request, regardless of target namespace definitions.
 
 [[schema-mapping-strategy-chain]]
@@ -1255,7 +1255,7 @@ receive("someEndpoint")
 </receive>
 ----
 
-The system under test may also send the message with a inline DTD definition. So validation will succeed.
+The system under test may also send the message with an inline DTD definition. So validation will succeed.
 
 In most cases the DTD is referenced as external .dtd file resource. You can do this in your expected message template
 as well.

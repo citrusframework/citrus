@@ -8,7 +8,7 @@ testing workflow without having to code everything from scratch. In particular C
 that you need as predefined components ready for you to use. The goal is to minimize the coding effort for you so you can
 concentrate on the test logic itself.
 
-Exactly the same approach is used in Citrus to provide ready-to-use endpoint component for connecting to different message
+Exactly the same approach is used in Citrus to provide ready-to-use endpoint components for connecting to different message
 transports. There are several ways in an enterprise application to exchange messages with some other application. We have
 synchronous interfaces like Http and SOAP WebServices. We have asynchronous messaging with JMS or file transfer FTP interfaces.
 
@@ -21,10 +21,10 @@ The next figure shows a typical message sending endpoint component in Citrus:
 image:figure_002.jpg[figure_002.jpg]
 
 The endpoint producer publishes messages to a destination. This destination can be a JMS queue/topic, a SOAP WebService
-endpoint, a Http URL, a FTP folder destination and so on. The producer just takes a previously defined message definition
+endpoint, an Http URL, an FTP folder destination and so on. The producer just takes a previously defined message definition
 (header and body) and sends it to the message destination.
 
-Similar to that Citrus defines the several endpoint consumer components to consume messages from destinations. This can be
+Similar to that Citrus defines several endpoint consumer components to consume messages from destinations. This can be
 a simple subscription on message channels and JMS queues/topics. In case of SOAP WebServices and Http GET/POST things are
 more complicated as we have to provide a server component that clients can connect to. We will handle server related communication
 in more detail later on. For now the endpoint consumer component in its most simple way is defined like this:

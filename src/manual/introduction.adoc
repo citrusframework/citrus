@@ -55,6 +55,6 @@ query between requests).
 
 In fact a Citrus test case is nothing but a normal JUnit or TestNG test case. This makes it very straight forward to run the tests from
 your favorite Java IDE (Eclipse, IntelliJ, VSCode, ...) and as part of your software build process (Maven or Gradle). The Citrus
-test become repeatable and give you fully automated integration tests to ensure software quality and interface stability.
+tests become repeatable and give you fully automated integration tests to ensure software quality and interface stability.
 
 The following reference guide walks through all Citrus capabilities and shows how to have a great integration test experience.

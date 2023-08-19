@@ -78,4 +78,4 @@ In case the nested test action fails with error you can validate the error in it
 The failure has to fit the expected one exactly otherwise the assertion fails itself.
 
 IMPORTANT: Important to notice is the fact that asserted exceptions do not cause failure of the test case.
-As you except the failure to happen the test continues with its work once the assertion is done successfully.
+As you expect the failure to happen the test continues with its work once the assertion is done successfully.

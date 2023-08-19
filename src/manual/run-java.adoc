@@ -273,7 +273,7 @@ The behavior is applied to the test case by calling the *apply()* method. As a r
 its logic at this point of the test execution. The same behavior can now be called in multiple test cases so we have a reusable
 set of test actions.
 
-A behavior may use different variable names then the test and vice versa. No doubt the behavior will fail as soon as special
+A behavior may use different variable names than the test and vice versa. No doubt the behavior will fail as soon as special
 variables with respective values are not present. Unknown variables cause the behavior and the whole test to fail with errors.
 
 So a good approach would be to harmonize variable usage across behaviors and test cases, so that templates and test cases
@@ -349,7 +349,7 @@ The sample above wraps the call to the custom service `myService` in an abstract
 This way the service call becomes part of the Citrus test execution and failures are reported properly. Also you have access to the
 current test context which holds the list of test variables as well as many other Citrus related test objects (e.g. message store).
 
-This is why you should wrap custom code in a test action an run that code via the test action runner methods. You can also put your custom code in
+This is why you should wrap custom code in a test action and run that code via the test action runner methods. You can also put your custom code in
 a test action implementation and reference the logic from multiple tests.
 
 [[java-bind-to-registry]]
@@ -400,7 +400,7 @@ public class InjectEndpoint_IT extends TestNGCitrusSupport {
 ----
 
 The `@CitrusEndpoint` annotation injects the endpoint resolving the instance with the given name `foo`.
-Test methods can use this endpoint in the following in send and receive actions.
+Test methods can use this endpoint in the following send and receive actions.
 
 [[java-bind-to-registry-annotation]]
 === @BindToRegistry
@@ -550,7 +550,7 @@ public class RunnerInjection_IT extends JUnit4CitrusSupport {
 
 The parameter requires the `@CitrusResource` annotations in order to mark the parameter for Citrus resource injection.
 
-Now each method uses its own runner instances which makes sure that parallel test execution can take place without having
+Now each method uses its own runner instance which makes sure that parallel test execution can take place without having
 the risk of side effects on other tests running at the same time.
 
 [[java-resource-injection-test-context]]
@@ -594,7 +594,7 @@ public class TestContextInjection_IT extends JUnit4CitrusSupport {
 }
 ----
 
-As you can see the tst method defines a parameter of type *org.citrusframework.context.TestContext*. The annotation *@CitrusResource*
+As you can see the test method defines a parameter of type *org.citrusframework.context.TestContext*. The annotation *@CitrusResource*
 tells Citrus to inject this parameter with the according instance of the context for this test.
 
 Now you have access to the context and all its capabilities such as variable management. As an alternative you can inject
@@ -622,9 +622,9 @@ public class TestContextInjection_IT extends JUnit4CitrusSupport {
 === Endpoint injection
 
 Endpoints play a significant role when sending/receiving messages over various transports. An endpoint defines how to connect
-to a message transport (e.g. Http endpoint URL, JMS mesage broker connection, Kafka connection and topic selection).
+to a message transport (e.g. Http endpoint URL, JMS message broker connection, Kafka connection and topic selection).
 
-Endpoints can live inside the Citrus context (e.g. in SPring application context) or you can inject the endpoint into the test class
+Endpoints can live inside the Citrus context (e.g. in Spring application context) or you can inject the endpoint into the test class
 with given configuration.
 
 .Endpoint injection

@@ -105,7 +105,7 @@ mvn citrus:create-test
 The command above starts an interactive command line interface that helps you to create a test.
 
 Once you have written the Citrus test cases you can execute them automatically in your Maven software build lifecycle.
-The tests will be included into your projects integration-test phase using the Maven failsafe plugin. Here is a sample
+The tests will be included into your project's integration-test phase using the Maven failsafe plugin. Here is a sample
 failsafe configuration for Citrus.
 
 .Maven failsafe plugin
@@ -127,7 +127,7 @@ failsafe configuration for Citrus.
  </plugin>
 ----
 
-The Citrus test sources go to the default Maven test source directory `src/test/java` and `src/test/resources`:
+The Citrus test sources go to the default Maven test source directory `src/test/java` and `src/test/resources`.
 
 You are now ready to call the usual Maven *verify* goal (`mvn verify`) in order to build your project and run the tests.
 The Citrus integration tests are executed automatically during the build process.
@@ -144,7 +144,7 @@ mvn verify
 mvn verify -Dit.test=MyFirstCitrusIT
 ----
 
-IMPORTANT: The Maven failsafe plugin by default executed tests with specific name pattern. This is because integration
+IMPORTANT: The Maven failsafe plugin by default executes tests with specific name pattern. This is because integration
 tests should not execute in Maven unit test phase, too. Your integration tests should follow
 the failsafe name pattern with each test name beginning or ending with *'IT'*.
 

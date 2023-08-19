@@ -147,5 +147,5 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
 }
 ----
 
-The example above creates a *AddBookRequestMessage* object and puts this as payload to a send action. In combination with
+The example above creates an *AddBookRequestMessage* object and puts this as payload to a send action. In combination with
 a marshaller instance Citrus is able to create a proper XML message payload then.

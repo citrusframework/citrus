@@ -67,14 +67,14 @@ variation for leveraging the BDD (Behavior Driven Development) style Given-When-
 You can also inject the current `TestContext` in order to get access to the current test variables used by Citrus.
 
 NOTE: You can also combine Citrus with the Spring framework and its dependency injection and IoC capabilities. In order to
-enable Spring support in Citrus add the `citrus-spring` module to your project and use the `@ExtendsWith(CitrusSpringExtension.class)`
+enable Spring support in Citrus add the `citrus-spring` module to your project and use the `@ExtendWith(CitrusSpringExtension.class)`
 annotation. With the Spring support in Citrus the test is able to load components via the Spring application context.
 
 [[junit5-endpoint-injection]]
 === Endpoint injection
 
 In addition to injecting test resources you can also inject endpoints via `@CitrusEndpoint` annotated field injection in
-your test class. This enabled you to inject endpoint components that are defined in the Citrus context configuration.
+your test class. This enables you to inject endpoint components that are defined in the Citrus context configuration.
 
 .JUnit5 Citrus endpoint injection
 [source,java]
@@ -141,8 +141,8 @@ public class SpringBean_IT {
 }
 ----
 
-The test now uses the `@CitrusSpringSupport` annotation which combines the `@ExtendsWith(CitrusSpringExtension.class)`
-and `@ExtendsWith(SpringExtension.class)` annotation. This way the test combines the Spring application context management with
+The test now uses the `@CitrusSpringSupport` annotation which combines the `@ExtendWith(CitrusSpringExtension.class)`
+and `@ExtendWith(SpringExtension.class)` annotation. This way the test combines the Spring application context management with
 the Citrus Java DSL functionality.
 
 You can load Spring beans with `@Autowired` into your test. Also you can use the `@CitrusResource` annotations to inject
