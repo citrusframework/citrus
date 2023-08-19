@@ -12,7 +12,7 @@ NOTE: Why is Citrus related to unit test frameworks although it represents a fra
 and TestNG for Java test execution. Both unit testing frameworks offer various ways of execution and are widely supported
 by other tools (e.g. continuous build, build lifecycle, development IDE).
 
-You can write the Citrus test code in a Java domain specific language or in form of an link:#runtime-xml-tests[XML test]
+You can write the Citrus test code in a Java domain specific language or in form of an link:#run-xml-tests[XML test]
 declaration file that gets loaded as part of the test. The Java domain specific language in Citrus is a set of classes
 and methods to leverage the test code in form of a fluent API. Users can simply configure a test action with the different
 options using a fluent builder pattern style DSL.
