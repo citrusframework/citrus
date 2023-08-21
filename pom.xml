@@ -170,7 +170,7 @@
     <activemq.artemis.version>2.30.0</activemq.artemis.version>
     <angus-mail.version>2.0.2</angus-mail.version>
     <apache.ant.version>1.10.13</apache.ant.version>
-    <apache.camel.version>4.0.0-RC1</apache.camel.version>
+    <apache.camel.version>4.0.0</apache.camel.version>
     <arquillian.version>1.7.0.Final</arquillian.version>
     <bouncycastle.version>1.70</bouncycastle.version>
     <byte.buddy.version>1.14.5</byte.buddy.version>
