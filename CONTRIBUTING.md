@@ -93,11 +93,11 @@ release date of the milestone, if specified.
 
 You need following software on your machine in order to start developing:
 
-* Java 11+
+* Java 17+
   Installed JDK plus JAVA_HOME environment variable set
   up and pointing to your Java installation directory. Used to compile and build the Citrus code.
 
-* Maven 3.6.3+
+* Maven 3.8.4+
   Citrus projects will fit best with [Maven](https://maven.apache.org).
   However, it is not required to use Maven. You can also run tests using [Gradle](https://gradle.org/) for instance.
 
