@@ -8,7 +8,7 @@ Iterations are very powerful elements when describing complex logic. The contain
 ----
 @CitrusTest
 public void iterateTest() {
-    $(iterate().condition("i lt 5").index("i"))
+    $(iterate().condition("i lt 5").index("i")
         .actions(
             echo().message("index is: ${i}")
         )

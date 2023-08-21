@@ -14,7 +14,7 @@
 			For instance the tester intends to ensure that no message is sent to a certain queue. In that case the JMS 
 			receive timeout would not be a test aborting error. The timout would rather be the expected behaviour.
 			
-			In order to validate such a timeout situation the beans receiveTimout_xxx can be used. They expect the JMS timeout
+ 			In order to validate such a timeout situation the beans receiveTimeout_xxx can be used. They expect the JMS timeout
 			to happen and fail if a message is received. The bean usage is very simple.
 			
 			The bean offers two properties:

@@ -180,8 +180,8 @@ receive(someEndpoint)
     .type(MessageType.JSON)
     .validate(groovy()
         .script("assert receivedMessage.getPayload(String.class).contains(\"Hello Citrus!\")\n" +
-                "assert receivedMessage.getHeader("Operation") == 'sayHello'\n" +
-                "context.setVariable("request_body", receivedMessage.getPayload(String.class))"));
+                "assert receivedMessage.getHeader(\"Operation\") == 'sayHello'\n" +
+                "context.setVariable(\"request_body\", receivedMessage.getPayload(String.class))"));
 ----
 
 .XML
@@ -393,7 +393,7 @@ final Map<String, Object> validationMap = new HashMap<>();
 validationMap.put("$.user.name", "Penny");
 validationMap.put("$['user']['name']", "${userName}");
 validationMap.put("$.user.aliases", "[\"penny\",\"jenny\",\"nanny\"]");
-validationMap.put(""$.user[?(@.admin)].password", "@startsWith('$%00')@");
+validationMap.put("$.user[?(@.admin)].password", "@startsWith('$%00')@");
 validationMap.put("$.user.address[?(@.type='office')]", "{\"city\":\"Munich\",\"street\":\"Company Street\",\"type\":\"office\"}");
 
 receive(someEndpoint)

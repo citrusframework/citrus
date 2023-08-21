@@ -33,7 +33,6 @@ import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 @CitrusSupport
 public class Simple_IT {
@@ -86,7 +85,6 @@ import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.junit.jupiter.CitrusSupport;
 import org.citrusframework.http.client.HttpClient;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpStatus;
 
 @CitrusSupport

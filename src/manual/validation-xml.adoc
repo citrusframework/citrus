@@ -677,7 +677,7 @@ receive("someEndpoint")
                               "assert root.MessageId.text() == '${messageId}'\n" +
                               "assert root.CorrelationId.text() == '${correlationId}'\n")
                               "assert root.Text.text() == 'Hello ' + context.getVariable(\"user\")"))
-    .header("Operation, "sayHello")
+    .header("Operation", "sayHello")
     .header("CorrelationId", "${correlationId}")
     .timeout(5000L);
 ----
@@ -724,7 +724,7 @@ payload or header.
 ----
 receive("someEndpoint")
     .validate(groovy().script("assert receivedMessage.getPayload(String.class).contains(\"Hello Citrus!\")\n" +
-                              "assert receivedMessage.getHeader("Operation") == 'sayHello'\n" +
+                              "assert receivedMessage.getHeader(\"Operation\") == 'sayHello'\n" +
                               "context.setVariable(\"request_payload\", receivedMessage.getPayload(String.class))"))
     .timeout(5000L);
 ----
@@ -806,8 +806,8 @@ resources that belong to our test context.
 public XsdSchemaRepository schemaRepository() {
     XsdSchemaRepository repository = new XsdSchemaRepository();
     repository.getSchemas().add(travelAgencySchema());
-    repository.getSchemas().add(royalArilineSchema());
-    repository.getSchemas().add(smartArilineSchema());
+    repository.getSchemas().add(royalAirlineSchema());
+    repository.getSchemas().add(smartAirlineSchema());
     return repository;
 }
 
@@ -818,13 +818,13 @@ public SimpleXsdSchema travelAgencySchema() {
 }
 
 @Bean
-public SimpleXsdSchema royalArilineSchema() {
+public SimpleXsdSchema royalAirlineSchema() {
     return new SimpleXsdSchema(
             new ClassPathResource("classpath:citrus/flightbooking/RoyalAirlineSchema.xsd"));
 }
 
 @Bean
-public SimpleXsdSchema smartArilineSchema() {
+public SimpleXsdSchema smartAirlineSchema() {
     return new SimpleXsdSchema(
             new ClassPathResource("classpath:citrus/flightbooking/SmartAirlineSchema.xsd"));
 }
@@ -837,13 +837,13 @@ public SimpleXsdSchema smartArilineSchema() {
     <citrus:schemas>
         <citrus:schema id="travelAgencySchema"
             location="classpath:citrus/flightbooking/TravelAgencySchema.xsd"/>
-        <citrus:schema id="royalArilineSchema"
+        <citrus:schema id="royalAirlineSchema"
             location="classpath:citrus/flightbooking/RoyalAirlineSchema.xsd"/>
-        <citrus:reference schema="smartArilineSchema"/>
+        <citrus:reference schema="smartAirlineSchema"/>
     </citrus:schemas>
 </citrus:schema-repository>
 
-<citrus:schema id="smartArilineSchema"
+<citrus:schema id="smartAirlineSchema"
       location="classpath:citrus/flightbooking/SmartAirlineSchema.xsd"/>
 ----
 
@@ -911,7 +911,7 @@ In Citrus you can directly set the WSDL file as location of a schema definition 
 [source,java,indent=0,role="primary"]
 ----
 @Bean
-public WsdlXsdSchema arilineWsdl() {
+public WsdlXsdSchema airlineWsdl() {
     return new WsdlXsdSchema(
             new ClassPathResource("classpath:citrus/flightbooking/AirlineSchema.wsdl"));
 }
@@ -920,7 +920,7 @@ public WsdlXsdSchema arilineWsdl() {
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
-<citrus:schema id="arilineWsdl"
+<citrus:schema id="airlineWsdl"
     location="classpath:citrus/flightbooking/AirlineSchema.wsdl"/>
 ----
 
@@ -1314,7 +1314,7 @@ list. Just add the *jtidy* dependency to your Maven project POM.
     <groupId>net.sf.jtidy</groupId>
     <artifactId>jtidy</artifactId>
     <version>r938</version>
-  </dependency>
+</dependency>
 ----
 
 Please refer to the *jtidy* project documentation for the latest versions. Now everything is ready. As usual the Citrus

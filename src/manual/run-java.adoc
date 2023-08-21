@@ -420,7 +420,7 @@ public class CitrusRegisterEndpoint_IT extends TestNGCitrusSupport {
     private MessageQueue queue = new DefaultMessageQueue("fooQueue");
 
     @BindToRegistry
-    public void foo() {
+    public FooEndpoint foo() {
         return new FooEndpoint();
     }
 }
