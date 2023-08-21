@@ -126,7 +126,7 @@ This helps us to reach several goals:
 `v2.7-bugfix` instead of master and that the target branch for the pull request is `v2.7-bugfix` as well .
 
 The pull request workflow is as follows: 
-* Every pull request will be built via [Travis CI](https://travis-ci.org/citrusframework). It's mandatory that
+* Every pull request will be built via [GitHub Actions](https://github.com/citrusframework/citrus/actions/workflows/build.yml). It's mandatory that
   the build of the pull request is successful before the review begins. 
 * A maintainer will [review](#review-criteria) your changes and provide feedback to you.
 * If the pull request is project internal, it is required that the 
