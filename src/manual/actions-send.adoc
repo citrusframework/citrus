@@ -527,6 +527,7 @@ public void messageHeaderTest() {
     $(send("helloService")
         .message()
         .header("Operation", "sayHello")
+        .header("MessageId", "${messageId}")
         .body("""
             <TestMessage xmlns="http://citrusframework.org/schema">
                 <Text>Hello!</Text>

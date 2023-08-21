@@ -27,13 +27,13 @@ See the following sample test class that uses JUnit4.
 ----
 package org.citrusframework.samples;
 
-import org.testng.annotations.Test;
+import org.junit.Test;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.junit.JUnit4CitrusSupport;
 
-@Test
 public class Simple_IT extends JUnit4CitrusSupport {
 
+    @Test
     @CitrusTest(name = "Simple_IT")
     public void simpleTest() {
         description("First example showing the basic Java DSL!");

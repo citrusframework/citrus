@@ -8,7 +8,7 @@ The next looping container is called repeat-on-error-until-true. This container 
 ----
 @CitrusTest
 public void repeatOnErrorTest() {
-    $(repeatOnError().until("i = 5").index("i"))
+    $(repeatOnError().until("i = 5").index("i")
         .actions(
             echo().message("index is: ${i}"),
             fail().message("Force loop to fail!")
@@ -80,7 +80,7 @@ We can avoid unstable test cases that are based on these runtime conditions with
 ----
 @CitrusTest
 public void repeatOnErrorTest() {
-    $(repeatOnError().until("i = 5").index("i").autoSleep(1000))
+    $(repeatOnError().until("i = 5").index("i").autoSleep(1000)
         .actions(
             sql()
                 .dataSource(testDataSource)
