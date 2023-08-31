@@ -293,7 +293,7 @@ public class TransformAction extends AbstractTestAction {
          */
         public Builder xsltFile(String xsltResourcePath, String charset) {
             this.xsltResourcePath = xsltResourcePath;
-            this.xmlResourceCharset = charset;
+            this.xsltResourceCharset = charset;
             return this;
         }
 
