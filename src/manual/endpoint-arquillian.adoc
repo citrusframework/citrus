@@ -192,7 +192,7 @@ This is how to combine Citrus and Arquillian in order to build integration tests
 
 In the previous sections we have used the Citrus *TestDesigner* in order to construct a Citrus test case to execute within the Arquillian boundaries. The nature of the test designer is to aggregate all Java DSL method calls in order to build a complete Citrus test case before execution is done via the Citrus framework. This approach can cause some unexpected behavior when mixing the Citrus Java DSL method calls with Arquillian test logic. Lets describe this by having a look at an example where th mixture of test designer and pure Java test logic causes unseen problems.
 
-[source,xml]
+[source,java]
 ----
 @Test
 @CitrusTest

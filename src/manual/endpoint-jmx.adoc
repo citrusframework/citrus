@@ -70,123 +70,305 @@ In this example above we connect to a remote mbean server via RMI using the defa
 
 Now that we have setup the client component we can use it in a test case to access a managed bean.
 
-.XML DSL
-[source,xml]
-----
-<send endpoint="jmxClient">
-    <message>
-        <payload>
-            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
-              <mbean>java.lang:type=Memory</mbean>
-              <attribute name="Verbose"/>
-            </mbean-invocation>
-        </payload>
-    </message>
-</send>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
-public void jmxClientTest() {
-    send(jmxClient)
+public void jmxMessageTest() {
+    $(send(jmxClient)
         .message(JmxMessage.invocation("java.lang:type=Memory")
-            .attribute("Verbose"));
+            .attribute("Verbose"))
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="JmxMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="jmxClient">
+            <message>
+                <body>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>java.lang:type=Memory</mbean>
+                          <attribute name="Verbose"/>
+                        </mbean-invocation>
+                    </payload>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JmxMessageTest
+actions:
+  - send:
+      endpoint: "jmxClient"
+      message:
+        body: |
+          <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>java.lang:type=Memory</mbean>
+              <attribute name="Verbose"/>
+          </mbean-invocation>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JmxMessageTest">
+        <actions>
+            <send endpoint="jmxClient">
+                <message>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>java.lang:type=Memory</mbean>
+                          <attribute name="Verbose"/>
+                        </mbean-invocation>
+                    </payload>
+                </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 As you can see we just used a normal send action referencing the jmx client component that we have just added. The message payload is a XML representation of the managed bean access. This is a special Citrus XML representation. Citrus will convert this XML payload to the actuel managed bean access. In the example above we try to access a managed bean with object name *java.lang:type=Memory* . The object name is defined in JMX specification and consists of a key *java.lang:type* and a value *Memory* . So we identify the managed bean on the server by its type.
 
 Now that we have access to the managed bean we can read its managed attributes such as *Verbose* . This is a boolean type attribute so the mbean invocation result will be a respective Boolean object. We can validate the managed bean attribute access in a receive action.
 
-.XML DSL
-[source,xml]
-----
-<receive endpoint="jmxClient">
-    <message>
-        <payload>
-            <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
-              <object type="java.lang.Boolean" value="false"/>
-            </mbean-result>
-        </payload>
-    </message>
-</receive>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
-public void jmxClientTest() {
-    receive(jmxClient)
-        .message(JmxMessage.result(false));
+public void jmxMessageTest() {
+    $(receive(jmxClient)
+        .message(JmxMessage.result(false))
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="JmxMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="jmxClient">
+            <message>
+                <body>
+                    <payload>
+                        <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <object type="java.lang.Boolean" value="false"/>
+                        </mbean-result>
+                    </payload>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JmxMessageTest
+actions:
+  - receive:
+      endpoint: "jmxClient"
+      message:
+        body: |
+          <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <object type="java.lang.Boolean" value="false"/>
+          </mbean-result>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JmxMessageTest">
+        <actions>
+            <receive endpoint="jmxClient">
+                <message>
+                    <payload>
+                        <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <object type="java.lang.Boolean" value="false"/>
+                        </mbean-result>
+                    </payload>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 In the sample above we receive the mbean result and expect a *java.lang.Boolean* object return value. The return value content is also validated within the mbean result payload.
 
 Some managed bean attributes might also be settable for us. So wen can define the attribute access as write operation by specifying a value in the send action payload.
 
-.XML DSL
-[source,xml]
-----
-<send endpoint="jmxClient">
-    <message>
-        <payload>
-            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
-              <mbean>java.lang:type=Memory</mbean>
-              <attribute name="Verbose" value="true" type="java.lang.Boolean"/>
-            </mbean-invocation>
-        </payload>
-    </message>
-</send>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
-public void jmxClientTest() {
-    send(jmxClient)
+public void jmxMessageTest() {
+    $(send(jmxClient)
         .message(JmxMessage.invocation("java.lang:type=Memory")
-            .attribute("Verbose", true));
+            .attribute("Verbose", true))
+    );
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="JmxMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="jmxClient">
+            <message>
+                <body>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>java.lang:type=Memory</mbean>
+                          <attribute name="Verbose" value="true" type="java.lang.Boolean"/>
+                        </mbean-invocation>
+                    </payload>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JmxMessageTest
+actions:
+  - send:
+      endpoint: "jmxClient"
+      message:
+        body: |
+          <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>java.lang:type=Memory</mbean>
+              <attribute name="Verbose" value="true" type="java.lang.Boolean"/>
+          </mbean-invocation>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JmxMessageTest">
+        <actions>
+            <send endpoint="jmxClient">
+                <message>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>java.lang:type=Memory</mbean>
+                          <attribute name="Verbose" value="true" type="java.lang.Boolean"/>
+                        </mbean-invocation>
+                    </payload>
+                </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 Now we have write access to the managed attribute *Verbose* . We do specify the value and its type *java.lang.Boolean* . This is how we can set attribute values on managed beans.
 
 Last not least we are able to access managed bean operations.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="jmxClient">
-    <message>
-        <payload>
-            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+@CitrusTest
+public void jmxMessageTest() {
+    $(send(jmxClient)
+        .message(JmxMessage.invocation("org.citrusframework.jmx.mbean:type=HelloBean")
+            .operation("sayHello")
+            .parameter("Hello JMX!"))
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="JmxMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="jmxClient">
+            <message>
+                <body>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
+                          <operation name="sayHello">
+                            >parameter>
+                              >param type="java.lang.String" value="Hello JMX!"/>
+                            >/parameter>
+                          >/operation>
+                        </mbean-invocation>
+                    </payload>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JmxMessageTest
+actions:
+  - send:
+      endpoint: "jmxClient"
+      message:
+        body: |
+          <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
               <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
               <operation name="sayHello">
                 >parameter>
                   >param type="java.lang.String" value="Hello JMX!"/>
                 >/parameter>
               >/operation>
-            </mbean-invocation>
-        </payload>
-    </message>
-</send>
+          </mbean-invocation>
 ----
 
-.Java DSL
-[source,java]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void jmxClientTest() {
-    send(jmxClient)
-        .message(JmxMessage.invocation("org.citrusframework.jmx.mbean:type=HelloBean")
-            .operation("sayHello")
-            .parameter("Hello JMX!"));
-}
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JmxMessageTest">
+        <actions>
+            <send endpoint="jmxClient">
+                <message>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
+                          <operation name="sayHello">
+                            >parameter>
+                              >param type="java.lang.String" value="Hello JMX!"/>
+                            >/parameter>
+                          >/operation>
+                        </mbean-invocation>
+                    </payload>
+                </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 In the example above we access a custom managed bean and invoke its operation *sayHello* . We are also using operation parameters for the invocation. This should call the managed bean operation and return its result if any as usual.
@@ -201,7 +383,7 @@ The server side is always a little bit more tricky because we need to simulate c
 [source,xml]
 ----
 <citrus-jmx:server id="jmxServer"
-      server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
+      server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi">
     <citrus-jmx:mbeans>
         <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.HelloBean"/>
         <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.NewsBean" objectDomain="org.citrusframework.news" objectName="name=News"/>
@@ -219,7 +401,7 @@ Besides using the whole server-url as property we can also construct the connect
       host="localhost"
       port="1099"
       protocol="rmi"
-      binding="jmxrmi"
+      binding="jmxrmi">
     <citrus-jmx:mbeans>
         <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.HelloBean"/>
         <citrus-jmx:mbean type="org.citrusframework.jmx.mbean.NewsBean" objectDomain="org.citrusframework.news" objectName="name=News"/>
@@ -240,7 +422,7 @@ Right now we have to use the qualified class name of the managed bean in the def
 [source,xml]
 ----
 <citrus-jmx:server id="jmxServer"
-server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi"
+server-url="service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi">
     <citrus-jmx:mbeans>
         <citrus-jmx:mbean name="fooBean" objectDomain="foo.object.domain" objectName="type=FooBean">
             <citrus-jmx:operations>
@@ -265,102 +447,259 @@ The generic bean definition needs to define all operations and attributes that a
 
 Now we can use the server component in a test case to receive some incoming managed bean access.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="jmxServer">
-    <message>
-        <payload>
-            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+@CitrusTest
+public void jmxMessageTest() {
+    $(receive(jmxServer)
+        .message(JmxMessage.invocation("org.citrusframework.jmx.mbean:type=HelloBean")
+            .operation("sayHello")
+            .parameter("Hello JMX!"))
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="JmxMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="jmxServer">
+            <message>
+                <body>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
+                          <operation name="sayHello">
+                            >parameter>
+                              >param type="java.lang.String" value="Hello JMX!"/>
+                            >/parameter>
+                          </operation>
+                        </mbean-invocation>
+                    </payload>
+                </body>
+            </message>
+        </receive>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JmxMessageTest
+actions:
+  - receive:
+      endpoint: "jmxServer"
+      message:
+        body: |
+          <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
               <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
               <operation name="sayHello">
                 >parameter>
                   >param type="java.lang.String" value="Hello JMX!"/>
                 >/parameter>
               </operation>
-            </mbean-invocation>
-        </payload>
-    </message>
-</receive>
+          </mbean-invocation>
 ----
 
-.Java DSL
-[source,java]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void jmxServerTest() {
-    receive(jmxServer)
-        .message(JmxMessage.invocation("org.citrusframework.jmx.mbean:type=HelloBean")
-            .operation("sayHello")
-            .parameter("Hello JMX!"));
-}
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JmxMessageTest">
+        <actions>
+            <receive endpoint="jmxServer">
+                <message>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>org.citrusframework.jmx.mbean:type=HelloBean</mbean>
+                          <operation name="sayHello">
+                            >parameter>
+                              >param type="java.lang.String" value="Hello JMX!"/>
+                            >/parameter>
+                          </operation>
+                        </mbean-invocation>
+                    </payload>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 In this very first example we expect a managed bean access to the bean *org.citrusframework.jmx.mbean:type=HelloBean* . We further expect the operation *sayHello* to be called with respective parameter values. Now we have to define the operation result that will be returned to the calling client as operation result.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<send endpoint="jmxServer">
-    <message>
-        <payload>
+@CitrusTest
+public void jmxMessageTest() {
+    $(send(jmxServer)
+        .message(JmxMessage.result("Hello from JMX!"))
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="JmxMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="jmxServer">
+            <message>
+                <body>
+                    <payload>
+                        <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+                            <object type="java.lang.String" value="Hello from JMX!"/>
+                        </mbean-result>
+                    </payload>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JmxMessageTest
+actions:
+  - send:
+      endpoint: "jmxServer"
+      message:
+        body: |
           <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
             <object type="java.lang.String" value="Hello from JMX!"/>
           </mbean-result>
-        </payload>
-    </message>
-</send>
 ----
 
-.Java DSL
-[source,java]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void jmxServerTest() {
-    send(jmxServer)
-        .message(JmxMessage.result("Hello from JMX!"));
-}
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JmxMessageTest">
+        <actions>
+            <send endpoint="jmxServer">
+                <message>
+                    <payload>
+                        <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+                            <object type="java.lang.String" value="Hello from JMX!"/>
+                        </mbean-result>
+                    </payload>
+                </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The operation returns a String *Hello from JMX!* . This is how we can expect operation calls on managed beans. Now we already have seen that managed beans also expose attributes. The next example is handling incoming attribute read access.
 
-.XML DSL
-[source,xml]
+.Java
+[source,java,indent=0,role="primary"]
 ----
-<receive endpoint="jmxServer">
-    <message>
-        <payload>
-            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+@CitrusTest
+public void jmxMessageTest() {
+    $(receive(jmxServer)
+        .message(JmxMessage.invocation("org.citrusframework.news:name=News")
+            .attribute("newsCount"))
+    );
+
+    $(send(jmxServer)
+        .message(JmxMessage.result(100))
+    );
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="JmxMessageTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <receive endpoint="jmxServer">
+            <message>
+                <body>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>org.citrusframework.news:name=News</mbean>
+                            >attribute name="newsCount"/>
+                        </mbean-invocation>
+                    </payload>
+                </body>
+            </message>
+        </receive>
+        <send endpoint="jmxServer">
+            <message>
+                <body>
+                    <payload>
+                        <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+                            <object type="java.lang.Integer" value="100"/>
+                        </mbean-result>
+                    </payload>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JmxMessageTest
+actions:
+  - receive:
+      endpoint: "jmxServer"
+      message:
+        body: |
+          <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
               <mbean>org.citrusframework.news:name=News</mbean>
                 >attribute name="newsCount"/>
-            </mbean-invocation>
-        </payload>
-    </message>
-</receive>
-
-<send endpoint="jmxServer">
-    <message>
-        <payload>
+          </mbean-invocation>
+  - send:
+      endpoint: "jmxServer"
+      message:
+        body: |
           <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
             <object type="java.lang.Integer" value="100"/>
           </mbean-result>
-        </payload>
-    </message>
-</send>
 ----
 
-.Java DSL
-[source,java]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
 ----
-@CitrusTest
-public void jmxServerTest() {
-    receive(jmxServer)
-        .message(JmxMessage.invocation("org.citrusframework.news:name=News")
-            .attribute("newsCount");
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="JmxMessageTest">
+        <actions>
+            <receive endpoint="jmxServer">
+                <message>
+                    <payload>
+                        <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+                          <mbean>org.citrusframework.news:name=News</mbean>
+                            >attribute name="newsCount"/>
+                        </mbean-invocation>
+                    </payload>
+                </message>
+            </receive>
 
-    send(jmxServer)
-        .message(JmxMessage.result(100));
-}
+            <send endpoint="jmxServer">
+                <message>
+                    <payload>
+                        <mbean-result xmlns="http://www.citrusframework.org/schema/jmx/message">
+                            <object type="java.lang.Integer" value="100"/>
+                        </mbean-result>
+                    </payload>
+                </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The receive action expects read access to the *NewsBean* attribute *newsCount* and returns a result object of type *java.lang.Integer* . This way we can expect all attribute access to our managed beans. Write operations will have a attribute value specified.

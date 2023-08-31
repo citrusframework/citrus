@@ -29,7 +29,7 @@ by configuration. The Citrus-JDBC-Driver is available on maven central under
 application, please make sure that the driver configuration matches the Citrus-JDBC-Server configuration in your
 tests.
 
-.Examplce jdbc driver configuration
+.Example jdbc driver configuration
 [source,xml]
 ----
 <systemProperties>
@@ -68,19 +68,8 @@ public JdbcServer jdbcServer() {
 To setup a JDBC endpoint within your tests, just configure it as any other endpoint via e.g.  XML, Spring Bean or by
 Citrus Annotations.
 
-.XML DSL example
-[source,xml]
-----
-<citrus-jdbc:server id="testServer"
-                      host="citrus-jdbc-test-server"
-                      port="4567"
-                      database-name="test-db"
-                      max-connections="50"
-                      auto-start="true"/>
-----
-
-.Spring Bean example
-[source,java]
+.Spring Bean
+[source,java,indent=0,role="primary"]
 ----
 @Bean
 public JdbcServer jdbcServer() {
@@ -96,8 +85,19 @@ public JdbcServer jdbcServer() {
 }
 ----
 
-.Citrus Annotations example
-[source,java]
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-jdbc:server id="testServer"
+                      host="citrus-jdbc-test-server"
+                      port="4567"
+                      database-name="test-db"
+                      max-connections="50"
+                      auto-start="true"/>
+----
+
+.Citrus Annotations
+[source,java,indent=0,role="secondary"]
 ----
 @CitrusEndpoint
 @JdbcServerConfig(

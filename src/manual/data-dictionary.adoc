@@ -163,28 +163,70 @@ You can overwrite the dictionary scope. For instance in order to use an explicit
 
 We set the global scope property to *false* so the dictionary is handled in explicit scope. This means that you have to set the data dictionary explicitly in your test actions:
 
-.XML DSL
-[source,xml]
-----
-<send endpoint="myEndpoint">
-  <message data-dictionary="specialDataDictionary">
-    <payload>
-      <TestMessage>Hello Citrus</TestMessage>
-    </payload>
-  </message>
-</send>
-----
-
-.Java DSL
-[source,java]
+.Java
+[source,java,indent=0,role="primary"]
 ----
 @CitrusTest
 public void dictionaryTest() {
-    send(myEndpoint)
+    $(send(myEndpoint)
         .message()
         .body("<TestMessage>Hello Citrus</TestMessage>")
-        .dictionary("specialDataDictionary");
+        .dictionary("specialDataDictionary"));
 }
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="DictionaryTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <send endpoint="myEndpoint">
+            <message data-dictionary="specialDataDictionary">
+                <body>
+                    <data>
+                    <![CDATA[
+                        <TestMessage>Hello Citrus</TestMessage>
+                    ]]>
+                    </data>
+                </body>
+            </message>
+        </send>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: DictionaryTest
+actions:
+  - send:
+      endpoint: "myEndpoint"
+      message:
+        dataDictionary: specialDataDictionary
+        body: |
+          <TestMessage>Hello Citrus</TestMessage>
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <testcase name="DictionaryTest">
+        <actions>
+            <send endpoint="myEndpoint">
+                <message data-dictionary="specialDataDictionary">
+                    <data>
+                    <![CDATA[
+                        <TestMessage>Hello Citrus</TestMessage>
+                    ]]>
+                    </data>
+                </message>
+            </send>
+        </actions>
+    </testcase>
+</spring:beans>
 ----
 
 The sample above is a sending test action with an explicit data dictionary reference set. Before sending the message the dictionary is asked for translation. So all matching message element values will be set by the dictionary accordingly. Other global data dictionaries do also apply for this message but the explicit dictionary will always overwrite the message element values.
@@ -213,7 +255,7 @@ Now with the path mapping strategy set to *STARS_WITH* all message element path 
     <Property>XXX</Property>
     <PropertyName>XXX</PropertyName>
     <PropertyValue>XXX</PropertyValue>
-  </TestMessage>
+</TestMessage>
 ----
 
 All child elements of *TestMessage* starting with *Property* will be translated with this data dictionary. In the resulting message payload Citrus will use a random string as value for these elements as we used the *citrus:randomString()* function in the dictionary mapping.
@@ -245,7 +287,7 @@ Again let us see some sample message payload for this dictionary usage:
       <PropertyValue>XXX</PropertyValue>
     </Property>
   </Properties>
-  </TestMessage>
+</TestMessage>
 ----
 
 In this sample all message elements ending with *Id* would be translated with a random number. No matter where in the message tree the elements are located. This is quite useful but also very powerful. So be careful to use this strategy in global data dictionaries as it may translate message elements that you would not expect in the first place.
