@@ -38,6 +38,10 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
         this.testCase.setIncremental(true);
     }
 
+    public TestContext getContext() {
+        return context;
+    }
+
     @Override
     public void start() {
         testCase.start(context);
