@@ -131,8 +131,8 @@
   </scm>
 
   <organization>
-    <name>ConSol Software GmbH</name>
-    <url>https://www.consol.com/</url>
+    <name>Citrus Framework Community</name>
+    <url>https://citrusframework.org</url>
   </organization>
 
   <mailingLists>
@@ -1225,6 +1225,16 @@
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
           <version>1.6.13</version>
+          <dependencies>
+            <!--
+              TODO: Remove after OSSRH-66257, NEXUS-26993 are fixed,
+            -->
+            <dependency>
+              <groupId>com.thoughtworks.xstream</groupId>
+              <artifactId>xstream</artifactId>
+              <version>${xstream.version}</version>
+            </dependency>
+          </dependencies>
           <configuration>
             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
             <serverId>sonatype-nexus-staging</serverId>
