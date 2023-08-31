@@ -35,6 +35,7 @@ http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-3.3.1.xs
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-3.4.0.xsd=com/consol/citrus/schema/citrus-camel-config-3.4.0.xsd
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-4.0.0-M1.xsd=org/citrusframework/schema/citrus-camel-config-4.0.0-M1.xsd
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-4.0.0-M2.xsd=org/citrusframework/schema/citrus-camel-config-4.0.0-M2.xsd
+http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-4.0.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-camel-config-4.0.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd=org/citrusframework/schema/citrus-camel-config.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-2.3.xsd=com/consol/citrus/schema/citrus-camel-testcase-2.3.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-2.4.xsd=com/consol/citrus/schema/citrus-camel-testcase-2.4.xsd
@@ -68,4 +69,5 @@ http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-3.3.
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-3.4.0.xsd=com/consol/citrus/schema/citrus-camel-testcase-3.4.0.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-4.0.0-M1.xsd=org/citrusframework/schema/citrus-camel-testcase-4.0.0-M1.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-4.0.0-M2.xsd=org/citrusframework/schema/citrus-camel-testcase-4.0.0-M2.xsd
+http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase-4.0.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-camel-testcase-4.0.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/camel/testcase/citrus-camel-testcase.xsd=org/citrusframework/schema/citrus-camel-testcase.xsd
