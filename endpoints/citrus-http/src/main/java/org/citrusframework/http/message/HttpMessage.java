@@ -36,6 +36,7 @@ import org.citrusframework.message.Message;
 import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -127,25 +128,16 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http response status code.
-     *
-     * @param statusCode The status code header to respond with
-     * @return The altered HttpMessage
-     */
-    public HttpMessage status(final HttpStatus statusCode) {
-        statusCode(statusCode.value());
-        reasonPhrase(statusCode.name());
-        return this;
-    }
-
-    /**
      * Sets the Http response status code header.
      *
      * @param statusCode The status code header value to respond with
      * @return The altered HttpMessage
      */
-    public HttpMessage statusCode(final Integer statusCode) {
-        setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, statusCode);
+    public HttpMessage status(final HttpStatusCode statusCode) {
+        setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, statusCode.value());
+        if (HttpStatus.resolve(statusCode.value()) != null) {
+            setHeader(HttpMessageHeaders.HTTP_REASON_PHRASE, HttpStatus.resolve(statusCode.value()).name());
+        }
         return this;
     }
 
@@ -392,19 +384,18 @@ public class HttpMessage extends DefaultMessage {
      *
      * @return The status code of the message
      */
-    public HttpStatus getStatusCode() {
+    public HttpStatusCode getStatusCode() {
         final Object statusCode = getHeader(HttpMessageHeaders.HTTP_STATUS_CODE);
 
         if (statusCode != null) {
-            if (statusCode instanceof HttpStatus) {
-                return (HttpStatus) statusCode;
+            if (statusCode instanceof HttpStatusCode) {
+                return (HttpStatusCode) statusCode;
             } else if (statusCode instanceof Integer) {
-                return HttpStatus.valueOf((Integer) statusCode);
+                return HttpStatusCode.valueOf((Integer) statusCode);
             } else {
-                return HttpStatus.valueOf(Integer.valueOf(statusCode.toString()));
+                return HttpStatusCode.valueOf(Integer.valueOf(statusCode.toString()));
             }
         }
-
         return null;
     }
 
@@ -546,7 +537,7 @@ public class HttpMessage extends DefaultMessage {
             }
 
             if (statusLine.length > 1) {
-                response.status(HttpStatus.valueOf(Integer.valueOf(statusLine[1])));
+                response.status(HttpStatusCode.valueOf(Integer.valueOf(statusLine[1])));
             }
 
             return parseHttpMessage(reader, response);

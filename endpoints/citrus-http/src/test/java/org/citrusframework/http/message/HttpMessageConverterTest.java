@@ -20,12 +20,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.messaging.MessageHeaders;
 import org.testng.annotations.BeforeMethod;
@@ -320,6 +315,19 @@ public class HttpMessageConverterTest {
     }
 
     @Test
+    public void testCustomStatusCodeIsSetOnOutbound(){
+
+        //GIVEN
+        message.setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, "555");
+
+        //WHEN
+        final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
+
+        //THEN
+        assertEquals(HttpStatusCode.valueOf(555), ((ResponseEntity<?>) httpEntity).getStatusCode());
+    }
+
+    @Test
     public void testSpringIntegrationHeaderMapperIsUsedOnOutbound(){
 
         //GIVEN
@@ -441,6 +449,20 @@ public class HttpMessageConverterTest {
 
         //THEN
         assertEquals(HttpStatus.FORBIDDEN, httpMessage.getStatusCode());
+    }
+
+    @Test
+    public void testCustomStatusCodeIsSetOnInbound(){
+
+        //GIVEN
+        final ResponseEntity<?> responseEntity = new ResponseEntity<>(null, null, 555);
+
+        //WHEN
+        final HttpMessage httpMessage =
+                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
+
+        //THEN
+        assertEquals(HttpStatusCode.valueOf(555), httpMessage.getStatusCode());
     }
 
     @Test
