@@ -51,15 +51,14 @@ import org.w3c.dom.Node;
  * @author Christoph Deppisch
  */
 public class XpathPayloadVariableExtractor implements VariableExtractor {
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
 
     /** Map defines xpath expressions and target variable names */
     private final Map<String, Object> xPathExpressions;
 
     /** Namespace definitions used in xpath expressions */
     private final Map<String, String> namespaces;
-
-    /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
 
     public XpathPayloadVariableExtractor() {
         this(new Builder());
@@ -142,6 +141,10 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             XmlNamespaceAware, MessageProcessorAdapter, ValidationContextAdapter {
         private final Map<String, Object> expressions = new HashMap<>();
         private final Map<String, String> namespaces = new HashMap<>();
+
+        public static Builder fromXpath() {
+            return new Builder();
+        }
 
         /**
          * Adds explicit namespace declaration for later path validation expressions.
