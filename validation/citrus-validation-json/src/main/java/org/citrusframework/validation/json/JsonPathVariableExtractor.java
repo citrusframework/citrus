@@ -112,6 +112,10 @@ public class JsonPathVariableExtractor implements VariableExtractor {
     public static final class Builder implements VariableExtractor.Builder<JsonPathVariableExtractor, Builder>, MessageProcessorAdapter, ValidationContextAdapter {
         private final Map<String, Object> expressions = new LinkedHashMap<>();
 
+        public static Builder fromJsonPath() {
+            return new Builder();
+        }
+
         @Override
         public Builder expressions(Map<String, Object> expressions) {
             this.expressions.putAll(expressions);
