@@ -100,14 +100,13 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
             if (frameworkMethod.getMethod().getAnnotation(CitrusTestSource.class) != null) {
                 testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName(),
                         frameworkMethod.getSource(), frameworkMethod.getSourceType());
-
-                CitrusAnnotations.injectTestRunner(testLoader, runner);
             } else {
                 testLoader = new DefaultTestLoader();
                 testLoader.configureTestCase(t -> testCase = t);
             }
 
             CitrusAnnotations.injectAll(testLoader, citrus, ctx);
+            CitrusAnnotations.injectTestRunner(testLoader, runner);
             testLoader.doWithTestCase(t -> JUnit4Helper.invokeTestMethod(this, frameworkMethod, ctx));
             testLoader.load();
         }
