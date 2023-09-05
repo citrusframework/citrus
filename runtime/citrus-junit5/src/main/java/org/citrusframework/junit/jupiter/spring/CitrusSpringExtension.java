@@ -22,11 +22,11 @@ package org.citrusframework.junit.jupiter.spring;
 import java.lang.reflect.Method;
 
 import org.citrusframework.Citrus;
+import org.citrusframework.CitrusSpringContext;
 import org.citrusframework.CitrusSpringContextProvider;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.junit.jupiter.CitrusExtension;
 import org.citrusframework.junit.jupiter.CitrusExtensionHelper;
-import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -55,7 +55,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  * @author Christoph Deppisch
  */
 public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecutionCallback, InvocationInterceptor,
-        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback, AfterAllCallback {
+        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback {
 
     private Citrus citrus;
     private ApplicationContext applicationContext;
@@ -65,11 +65,6 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
     public void beforeAll(ExtensionContext extensionContext) {
         CitrusExtensionHelper.setCitrus(getCitrus(extensionContext), extensionContext);
         delegate.beforeAll(extensionContext);
-    }
-
-    @Override
-    public void afterAll(ExtensionContext extensionContext) throws Exception {
-        delegate.afterAll(extensionContext);
     }
 
     @Override
@@ -119,12 +114,30 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
      */
     protected Citrus getCitrus(ExtensionContext extensionContext) {
         ApplicationContext ctx = SpringExtension.getApplicationContext(extensionContext);
-        if (applicationContext == null) {
+        Citrus existing = null;
+        if (!CitrusExtensionHelper.requiresCitrus(extensionContext)) {
+            existing = CitrusExtensionHelper.getCitrus(extensionContext);
+        }
+
+        if (applicationContext == null || !applicationContext.equals(ctx)) {
             applicationContext = ctx;
-            citrus = Citrus.newInstance(new CitrusSpringContextProvider(ctx));
-        } else if (!applicationContext.equals(ctx)) {
-            applicationContext = ctx;
-            citrus = Citrus.newInstance(new CitrusSpringContextProvider(ctx));
+        }
+
+        if (citrus == null) {
+            if (existing != null && existing.getCitrusContext() instanceof CitrusSpringContext  &&
+                    ((CitrusSpringContext) existing.getCitrusContext()).getApplicationContext().equals(applicationContext)) {
+                citrus = existing;
+            } else {
+                citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
+
+                if (existing != null) {
+                    citrus.getCitrusContext().handleTestResults(existing.getCitrusContext().getTestResults());
+                }
+            }
+        } else if (existing == null ||
+                !(existing.getCitrusContext() instanceof CitrusSpringContext) ||
+                !((CitrusSpringContext) existing.getCitrusContext()).getApplicationContext().equals(applicationContext)) {
+            citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         }
 
         return citrus;

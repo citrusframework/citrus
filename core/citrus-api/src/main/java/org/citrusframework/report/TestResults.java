@@ -20,7 +20,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.citrusframework.TestResult;
 
@@ -34,11 +36,11 @@ public class TestResults {
     private static final long serialVersionUID = 1L;
 
     /** Common decimal format for percentage calculation in report **/
-    private static DecimalFormat decFormat = new DecimalFormat("0.0");
+    private static final DecimalFormat decFormat = new DecimalFormat("0.0");
     private static final String ZERO_PERCENTAGE = "0.0";
 
     /** Collected test results */
-    private List<TestResult> results = Collections.synchronizedList(new ArrayList<TestResult>());
+    private final Set<TestResult> results = Collections.synchronizedSet(new LinkedHashSet<>());
 
     /**
      * Provides access to results as list generated from synchronized result list.

@@ -29,7 +29,6 @@ import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -55,7 +54,7 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
  * @author Christoph Deppisch
  */
 public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor,
-        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback, AfterAllCallback {
+        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback {
 
     /** Test suite name */
     private static final String SUITE_NAME = "citrus-junit5-suite";
@@ -76,41 +75,25 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
 
         if (beforeSuite) {
             beforeSuite = false;
-      // Assertion: If the beforeAll callback is called for a test, the annotated tags are currently
-      // included by the groups filter of surefire / failsafe or no specific filter is defined and
-      // all groups / tags will run anyway.
-      final String[] tags = extensionContext.getTags().toArray(new String[0]);
-      extensionContext.getTestClass().map(Class::getName).or(() ->
-          extensionContext.getTestMethod().map(method -> method.getDeclaringClass().getName()+":"+method.getName())
-      ).ifPresentOrElse(suiteName ->
-              CitrusExtensionHelper
-                  .getCitrus(extensionContext)
-                  .beforeSuite(suiteName, tags),
-          () -> CitrusExtensionHelper
-              .getCitrus(extensionContext)
-              .beforeSuite(SUITE_NAME, tags)
-      );
-        }
-    }
 
-    @Override
-    public void afterAll(ExtensionContext extensionContext) throws Exception {
-        if (afterSuite) {
-            afterSuite = false;
-      // Assertion: If the afterAll callback is called for a test, the annotated tags are currently
-      // included by the groups filter of surefire / failsafe or no specific filter is defined and
-      // all groups / tags did run anyway.
-      final String[] tags = extensionContext.getTags().toArray(new String[0]);
-      extensionContext.getTestClass().map(Class::getName).or(() ->
-          extensionContext.getTestMethod().map(meth -> meth.getDeclaringClass().getName()+":"+meth.getName())
-      ).ifPresentOrElse(suiteName ->
-              CitrusExtensionHelper
-                  .getCitrus(extensionContext)
-                  .afterSuite(suiteName, tags),
-          () -> CitrusExtensionHelper
-              .getCitrus(extensionContext)
-              .afterSuite(SUITE_NAME, tags)
-      );
+            // Assertion: If the beforeAll callback is called for a test, the annotated tags are currently
+            // included by the groups filter of surefire / failsafe or no specific filter is defined and
+            // all groups / tags will run anyway.
+
+            //initialize "after all test run hook"
+            String[] tags = extensionContext.getTags().toArray(new String[0]);
+            String suiteName = extensionContext.getTestClass()
+                    .map(Class::getName)
+                    .orElseGet(() ->
+                        extensionContext.getTestMethod()
+                                .map(meth -> meth.getDeclaringClass().getName()+ ":" + meth.getName())
+                                .orElse(SUITE_NAME)
+                    );
+
+            extensionContext.getRoot().getStore(ExtensionContext.Namespace.GLOBAL).put("afterSuiteCallback",
+                            new AfterSuiteCallback(extensionContext, suiteName, tags));
+
+            CitrusExtensionHelper.getCitrus(extensionContext).beforeSuite(suiteName, tags);
         }
     }
 
@@ -209,6 +192,27 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
          * Runs tasks on given Citrus context after test.
          */
         default void after(CitrusContext context) {
+        }
+    }
+
+    private static class AfterSuiteCallback implements ExtensionContext.Store.CloseableResource {
+
+        private final ExtensionContext extensionContext;
+        private final String suiteName;
+        private final String[] tags;
+
+        public AfterSuiteCallback(ExtensionContext extensionContext, String suiteName, String... tags) {
+            this.extensionContext = extensionContext;
+            this.suiteName = suiteName;
+            this.tags = tags;
+        }
+
+        @Override
+        public void close() throws Throwable {
+            if (afterSuite) {
+                afterSuite = false;
+                CitrusExtensionHelper.getCitrus(extensionContext).afterSuite(suiteName, tags);
+            }
         }
     }
 }

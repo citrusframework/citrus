@@ -16,23 +16,7 @@ import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;
 import org.citrusframework.message.MessageProcessors;
-import org.citrusframework.report.DefaultTestReporters;
-import org.citrusframework.report.FailureStackTestListener;
-import org.citrusframework.report.MessageListener;
-import org.citrusframework.report.MessageListenerAware;
-import org.citrusframework.report.MessageListeners;
-import org.citrusframework.report.TestActionListener;
-import org.citrusframework.report.TestActionListenerAware;
-import org.citrusframework.report.TestActionListeners;
-import org.citrusframework.report.TestListener;
-import org.citrusframework.report.TestListenerAware;
-import org.citrusframework.report.TestListeners;
-import org.citrusframework.report.TestReporter;
-import org.citrusframework.report.TestReporterAware;
-import org.citrusframework.report.TestReporters;
-import org.citrusframework.report.TestSuiteListener;
-import org.citrusframework.report.TestSuiteListenerAware;
-import org.citrusframework.report.TestSuiteListeners;
+import org.citrusframework.report.*;
 import org.citrusframework.spi.ReferenceRegistry;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.SimpleReferenceResolver;
@@ -326,6 +310,16 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
             if (value instanceof MessageValidator) {
                 getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) value);
             }
+        }
+    }
+
+    public TestResults getTestResults() {
+        return testReporters.getTestResults();
+    }
+
+    public void handleTestResults(TestResults testResults) {
+        if (!getTestResults().equals(testResults)) {
+            testResults.doWithResults(result -> getTestResults().addResult(result));
         }
     }
 
