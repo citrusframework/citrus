@@ -3,6 +3,9 @@
 
 The framework generates different reports and results after a test run for you. These report and result pages will help you to get an overview of the test cases that were executed and which one were failing.
 
+TIP: You can overwrite the default reporters, described in the next chapters, with custom implementations. Just add your customized reporter implementation
+as a bean to the Citrus context and use one of the default bean identifiers - _citrusLoggingReporter_,  _citrusJunitReporter_ or _citrusHtmlReporter_.
+
 [[console-logging]]
 == Console logging
 

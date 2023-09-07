@@ -1,7 +1,6 @@
 package org.citrusframework.report;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -9,13 +8,11 @@ import java.util.List;
  */
 public class DefaultTestReporters extends TestReporters {
 
-    public static final List<TestReporter> DEFAULT_REPORTERS = Arrays.asList(
-            new LoggingReporter(),
-            new HtmlReporter(),
-            new JUnitReporter()
-    );
+    public static final Map<String, TestReporter> DEFAULT_REPORTERS = Map.of("citrusLoggingReporter", new LoggingReporter(),
+        "citrusHtmlReporter",new HtmlReporter(),
+        "citrusJunitReporter",new JUnitReporter());
 
     public DefaultTestReporters() {
-        DEFAULT_REPORTERS.forEach(this::addTestReporter);
+        DEFAULT_REPORTERS.values().forEach(this::addTestReporter);
     }
 }

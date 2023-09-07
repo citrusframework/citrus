@@ -1,5 +1,6 @@
 package org.citrusframework.reporter;
 
+import org.citrusframework.report.DefaultTestReporters;
 import org.citrusframework.report.TestReporter;
 import org.citrusframework.report.TestReporters;
 import org.springframework.beans.BeansException;
@@ -40,9 +41,22 @@ public class TestReportersFactory implements FactoryBean<TestReporters>, Applica
         if (applicationContext != null) {
             applicationContext.getBeansOfType(TestReporter.class)
                     .forEach((key, value) -> reporters.addTestReporter(value));
+
+            addMissingDefaultReporters();
         }
 
         return reporters;
+    }
+
+    /**
+     * Adds default reporters, that have not explicitly been overridden in application context.
+     */
+    private void addMissingDefaultReporters() {
+        DefaultTestReporters.DEFAULT_REPORTERS.forEach((reporterName, reporter) -> {
+            if (!applicationContext.containsBean(reporterName)) {
+                reporters.addTestReporter(reporter);
+            }
+        });
     }
 
     @Override
