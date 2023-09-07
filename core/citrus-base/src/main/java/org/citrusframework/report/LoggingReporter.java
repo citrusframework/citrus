@@ -33,6 +33,11 @@ import org.springframework.util.StringUtils;
 /**
  * Simple logging reporter printing test start and ending to the console/logger.
  * <p/>
+ * This class provides an option for disablement, allowing you to suppress logging for specific instances
+ * and delegate the logging to another facility, which could potentially be a subclass of {@link LoggingReporter}.
+ * It's important to note that when an instance of this class is disabled, it will not perform any logging,
+ * irrespective of the severity level.
+ * <p/>
  * Implementation note: The disablement of the reporter is achieved by using a {@link org.slf4j.helpers.NOPLogger},
  * meaning that this class should primarily focus on logging operations and not extend beyond that functionality.
  *
