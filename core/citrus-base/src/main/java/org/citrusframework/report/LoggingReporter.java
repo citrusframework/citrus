@@ -27,23 +27,44 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.NOPLoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
  * Simple logging reporter printing test start and ending to the console/logger.
+ * <p/>
+ * This class provides an option for disablement, allowing you to suppress logging for specific instances
+ * and delegate the logging to another facility, which could potentially be a subclass of {@link LoggingReporter}.
+ * It's important to note that when an instance of this class is disabled, it will not perform any logging,
+ * irrespective of the severity level.
+ * <p/>
+ * Implementation note: The disablement of the reporter is achieved by using a {@link org.slf4j.helpers.NOPLogger},
+ * meaning that this class should primarily focus on logging operations and not extend beyond that functionality.
  *
  * @author Christoph Deppisch
  */
 public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener {
 
     /** Inbound message logger */
-    private static final Logger INBOUND_MSG_LOGGER = LoggerFactory.getLogger("Logger.Message_IN");
+    private static Logger inboundMessageLogger = LoggerFactory.getLogger("Logger.Message_IN");
+
+    /** The inbound message logger used when the reporter is enabled */
+    private static final Logger enabledInboundMessageLogger = inboundMessageLogger;
 
     /** Outbound message logger */
-    private static final Logger OUTBOUND_MSG_LOGGER = LoggerFactory.getLogger("Logger.Message_OUT");
+    private static Logger outboundMessageLogger = LoggerFactory.getLogger("Logger.Message_OUT");
+
+    /** The inbound message logger used when the reporter is enabled */
+    private static final Logger enabledOutboundMessageLogger = outboundMessageLogger;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
+
+    /** The standard logger used when the reporter is enabled */
+    private static final Logger enabledLog = log;
+
+    /** A {@link org.slf4j.helpers.NOPLogger} used in case the reporter is not enabled. */
+    private static final Logger noOpLogger = new NOPLoggerFactory().getLogger(LoggingReporter.class.getName());
 
     @Override
     public void generate(TestResults testResults) {
@@ -228,12 +249,12 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onInboundMessage(Message message, TestContext context) {
-        INBOUND_MSG_LOGGER.debug(message.print(context));
+        inboundMessageLogger.debug(message.print(context));
     }
 
     @Override
     public void onOutboundMessage(Message message, TestContext context) {
-        OUTBOUND_MSG_LOGGER.debug(message.print(context));
+        outboundMessageLogger.debug(message.print(context));
     }
 
     /**
@@ -283,5 +304,24 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
      */
     protected boolean isDebugEnabled() {
         return log.isDebugEnabled();
+    }
+
+    /**
+     * Sets the enablement state of the reporter.
+     */
+    public void setEnabled(boolean enabled) {
+        if (enabled) {
+            log = enabledLog;
+            inboundMessageLogger = enabledInboundMessageLogger;
+            outboundMessageLogger = enabledOutboundMessageLogger;
+        } else {
+            log = noOpLogger;
+            inboundMessageLogger = noOpLogger;
+            outboundMessageLogger = noOpLogger;
+        }
+    }
+
+    protected boolean isEnabled() {
+        return log != noOpLogger;
     }
 }
