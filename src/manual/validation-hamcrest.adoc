@@ -29,6 +29,17 @@ receive("someEndpoint")
         .expression("node-set:/TestRequest/OrderType", hasSize(3));
 ----
 
+NOTE: If you want to match text containing any of the following characters: ' , ( )
+You need to enclose the respective string in quotation marks when defining your matcher.
+If you intend to match an actual single quote, it should be escaped with a backslash (\').
+
+For example:
+[source,xml]
+----
+anyOf(equalTo('text containing a \\' (quote) and a , (comma)  '), anyOf(isEmptyOrNullString()))
+anyOf(equalTo('text containing a backslash and quote \\\\' and a , (comma)  '), anyOf(isEmptyOrNullString()))
+----
+
 .XML
 [source,xml,indent=0,role="secondary"]
 ----
