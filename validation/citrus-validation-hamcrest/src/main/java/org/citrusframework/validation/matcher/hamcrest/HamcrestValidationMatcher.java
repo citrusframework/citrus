@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.citrusframework.context.TestContext;
@@ -84,11 +85,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
         }
 
         String matcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
-        String[] matcherParameter = matcherExpression.trim().substring(matcherName.length() + 1, matcherExpression.trim().length() - 1).split(",");
 
-        for (int i = 0; i < matcherParameter.length; i++) {
-            matcherParameter[i] = VariableUtils.cutOffSingleQuotes(matcherParameter[i].trim());
-        }
+        String[] matcherParameter = determineNestedMatcherParameters(matcherExpression.trim()
+            .substring(matcherName.length() + 1, matcherExpression.trim().length() - 1));
 
         try {
             Matcher matcher = getMatcher(matcherName, matcherParameter, context);
@@ -125,6 +124,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
      * @return
      */
     private Matcher<?> getMatcher(String matcherName, String[] matcherParameter, TestContext context) {
+
         try {
             if (context.getReferenceResolver().isResolvable(matcherName, HamcrestMatcherProvider.class) ||
                     HamcrestMatcherProvider.canResolve(matcherName)) {
@@ -160,7 +160,11 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
 
                     if (matcherExpression.contains("(") && matcherExpression.contains(")")) {
                         String nestedMatcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
-                        String[] nestedMatcherParameter = matcherExpression.trim().substring(nestedMatcherName.length() + 1, matcherExpression.trim().length() - 1).split(",");
+                        String[] nestedMatcherParameter = matcherExpression.trim()
+                            .substring(
+                                nestedMatcherName.length() + 1,
+                                matcherExpression.trim().length() - 1)
+                            .split(",");
 
                         return (Matcher<?>) matcherMethod.invoke(null, getMatcher(nestedMatcherName, nestedMatcherParameter,context));
                     }
@@ -174,8 +178,13 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                     List<Matcher<?>> nestedMatchers = new ArrayList<>();
                     for (String matcherExpression : matcherParameter) {
                         String nestedMatcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
-                        String nestedMatcherParameter = matcherExpression.trim().substring(nestedMatcherName.length() + 1, matcherExpression.trim().length() - 1);
-                        nestedMatchers.add(getMatcher(nestedMatcherName, new String[] { nestedMatcherParameter }, context));
+                        String[] nestedMatcherParameters = determineNestedMatcherParameters(
+                            matcherExpression.trim().
+                                substring(
+                                    nestedMatcherName.length() + 1,
+                                    matcherExpression.trim().length() - 1));
+
+                        nestedMatchers.add(getMatcher(nestedMatcherName, nestedMatcherParameters, context));
                     }
 
                     return (Matcher<?>) matcherMethod.invoke(null, nestedMatchers);
@@ -183,6 +192,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
             }
 
             if (matchers.contains(matcherName)) {
+
+                unescapeQuotes(matcherParameter);
+
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, String.class);
 
                 if (matcherMethod == null) {
@@ -198,7 +210,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, double.class, double.class);
 
                 if (matcherMethod != null) {
-                    return (Matcher<?>) matcherMethod.invoke(null, Double.valueOf(matcherParameter[0]), matcherParameter.length > 1 ? Double.parseDouble(matcherParameter[1]) : 0.0D);
+                    return (Matcher<?>) matcherMethod.invoke(
+                        null,
+                        Double.valueOf(matcherParameter[0]), matcherParameter.length > 1 ? Double.parseDouble(matcherParameter[1]) : 0.0D);
                 }
 
                 matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, Comparable.class);
@@ -209,6 +223,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
             }
 
             if (collectionMatchers.contains(matcherName)) {
+
+                unescapeQuotes(matcherParameter);
+
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, int.class);
 
                 if (matcherMethod != null) {
@@ -229,6 +246,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
             }
 
             if (mapMatchers.contains(matcherName)) {
+
+                unescapeQuotes(matcherParameter);
+
                 Method matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Object.class);
 
                 if (matcherMethod != null) {
@@ -243,6 +263,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
             }
 
             if (optionMatchers.contains(matcherName)) {
+
+                unescapeQuotes(matcherParameter);
+
                 Method matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Object[].class);
 
                 if (matcherMethod != null) {
@@ -252,7 +275,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Collection.class);
 
                 if (matcherMethod != null) {
-                    return (Matcher<?>) matcherMethod.invoke(null, new Object[] { getCollection(StringUtils.arrayToCommaDelimitedString(matcherParameter)) });
+                    return (Matcher<?>) matcherMethod.invoke(
+                        null,
+                        new Object[] { getCollection(StringUtils.arrayToCommaDelimitedString(matcherParameter)) });
                 }
             }
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -263,6 +288,18 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
     }
 
     /**
+     * Unescape the quotes in search expressions  (\\' -> ').
+     * @param matcherParameters to unescape
+     */
+    private static void unescapeQuotes(String[] matcherParameters) {
+        if (matcherParameters != null) {
+            for (int i=0; i< matcherParameters.length; i++) {
+                matcherParameters[i] = matcherParameters[i].replace("\\'","'");
+            }
+        }
+    }
+
+    /**
      * Try to find matcher provider using different lookup strategies. Looks into reference resolver and resource path for matcher provider.
      * @param matcherName
      * @param context
@@ -270,7 +307,8 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
      */
     private Optional<HamcrestMatcherProvider> lookupMatcherProvider(String matcherName, TestContext context) {
         // try to find matcher provider via reference
-        Optional<HamcrestMatcherProvider> matcherProvider = context.getReferenceResolver().resolveAll(HamcrestMatcherProvider.class)
+        Optional<HamcrestMatcherProvider> matcherProvider = context.getReferenceResolver()
+            .resolveAll(HamcrestMatcherProvider.class)
                 .values()
                 .stream()
                 .filter(provider -> provider.getName().equals(matcherName))
@@ -363,6 +401,35 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
     }
 
     /**
+     * Extracts parameters for a matcher from the raw parameter expression.
+     * Parameters refer to the contained parameters and matchers (first level),
+     * excluding nested ones.
+     * <p/>
+     * For example, given the expression:<br/>
+     * {@code "oneOf(greaterThan(5.0), allOf(lessThan(-1.0), greaterThan(-2.0)))"}
+     * <p/>
+     * The extracted parameters are:<br/>
+     * {@code "greaterThan(5.0)", "allOf(lessThan(-1.0), greaterThan(-2.0))"}.
+     * <p/>
+     * Note that nested container expressions "allOf(lessThan(-1.0), greaterThan(-2.0))" in
+     * the second parameter are treated as a single expression. They need to be treated
+     * separately in a recursive call to this method, when the parameters for the
+     * respective allOf() expression are extracted.
+     *
+     * @param rawExpression the full parameter expression of a container matcher
+     */
+    public String[] determineNestedMatcherParameters(final String rawExpression) {
+        if (!StringUtils.hasText(rawExpression)) {
+            return new String[0];
+        }
+
+        Tokenizer tokenizer = new Tokenizer();
+        String tokenizedExpression = tokenizer.tokenize(rawExpression);
+        return tokenizer.restoreInto(tokenizedExpression.split(","));
+
+    }
+
+    /**
      * Numeric value comparable automatically converts types to numeric values for
      * comparison.
      */
@@ -418,4 +485,92 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
         }
     }
 
+    /**
+     * Class that provides functionality to replace expressions that match
+     * {@link Tokenizer#TEXT_PARAMETER_PATTERN} with simple tokens of the form $$n$$.
+     * The reason for this is, that complex nested expressions
+     * may contain characters that interfere with further processing - e.g. ''', '(' and ')'
+     */
+    private static class Tokenizer {
+
+        private static final String START_TOKEN = "_TOKEN-";
+
+        private static final String END_TOKEN = "-TOKEN_";
+
+        /**
+         * Regular expression with three alternative parts (ored) to match:
+         * <ol>
+         *   <li> `(sometext)` - Quoted parameter block of a matcher.</li>
+         *   <li> 'sometext' - Quoted text used as a parameter to a string matcher.</li>
+         *   <li> (unquotedtext) - Unquoted text used as a parameter to a string matcher. This expression is non-greedy, meaning the first closing bracket will terminate the match.</li>
+         * </ol>
+         * <p/>
+         * Please note:
+         * - 'sometext' may contain an escaped quote.
+         * - 'unquotedtext' must not contain brackets or commas.
+         * <p/>
+         * To match quotes, commas, or brackets, you must quote the text. To match a quote, it should be escaped with a backslash.
+         * Therefore, the regex expressions explicitly match the escaped quote -> \\\\'
+         */
+        private static final Pattern TEXT_PARAMETER_PATTERN = Pattern.compile(
+            "(?<quoted1>\\('(?:[^']|\\\\')*[^\\\\]'\\))"
+                + "|(?<quoted2>('(?:[^']|\\\\')*[^\\\\]'))"
+                + "|(?<unquoted>\\(((?:[^']|\\\\')*?)[^\\\\]?\\))"
+        );
+
+        private final List<String> originalTokenValues = new ArrayList<>();
+
+        /**
+         * Tokenize the given raw expression
+         *
+         * @param rawExpression
+         * @return the expression with all relevant subexpressions replaced by tokens
+         */
+        public String tokenize(String rawExpression) {
+            java.util.regex.Matcher matcher = TEXT_PARAMETER_PATTERN.matcher(rawExpression);
+            StringBuilder builder = new StringBuilder();
+
+            while (matcher.find()) {
+                String matchedValue = findMatchedValue(matcher);
+                originalTokenValues.add(matchedValue);
+                matcher.appendReplacement(builder, START_TOKEN + originalTokenValues.size() + END_TOKEN);
+            }
+
+            matcher.appendTail(builder);
+            return builder.toString();
+        }
+
+        /**
+         * @param matcher the matcher that was used to match
+         * @return the value of the group, that was actually matched
+         */
+        private String findMatchedValue(java.util.regex.Matcher matcher) {
+            String matchedValue = matcher.group("quoted1");
+            matchedValue = matchedValue != null ? matchedValue : matcher.group("quoted2");
+            return matchedValue != null ? matchedValue : matcher.group("unquoted");
+        }
+
+        /**
+         * Restore the tokens back into the given expressions.
+         *
+         * @param expressions containing strings with tokens, generated by this tokenizer.
+         * @return expressions with the tokens being replaced with their original values.
+         */
+        public String[] restoreInto(String[] expressions) {
+
+            for (int i = 0; i < expressions.length; i++) {
+                expressions[i] = VariableUtils.cutOffSingleQuotes(
+                    replaceTokens(expressions[i], originalTokenValues).trim());
+            }
+
+            return expressions;
+        }
+
+        private String replaceTokens(String expression, List<String> params) {
+            for (int i = 0; i < params.size(); i++) {
+                expression = expression.replace(START_TOKEN + (i + 1) + END_TOKEN, params.get(i));
+            }
+            return expression;
+        }
+    }
 }
