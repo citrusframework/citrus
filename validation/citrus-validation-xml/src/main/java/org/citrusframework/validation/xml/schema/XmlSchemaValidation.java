@@ -36,13 +36,13 @@ import java.util.List;
 public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidationContext> {
 
     /** Logger */
-    private Logger log = LoggerFactory.getLogger(XmlSchemaValidation.class);
+    private static final Logger logger = LoggerFactory.getLogger(XmlSchemaValidation.class);
 
     /** Transformer factory */
     private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     /**
-     * Validate message with a XML schema.
+     * Validate message with an XML schema.
      *
      * @param message
      * @param context
@@ -66,7 +66,7 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
                 return;
             }
 
-            log.debug("Starting XML schema validation ...");
+            logger.debug("Starting XML schema validation ...");
 
             XmlValidator validator = null;
             XsdSchemaRepository schemaRepository = null;
@@ -80,7 +80,7 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
             } else if (schemaRepositories.size() > 0) {
                 schemaRepository = schemaRepositories.stream().filter(repository -> repository.canValidate(doc)).findFirst().orElseThrow(() -> new CitrusRuntimeException(String.format("Failed to find proper schema " + "repository for validating element '%s(%s)'", doc.getFirstChild().getLocalName(), doc.getFirstChild().getNamespaceURI())));
             } else {
-                log.warn("Neither schema instance nor schema repository defined - skipping XML schema validation");
+                logger.warn("Neither schema instance nor schema repository defined - skipping XML schema validation");
                 return;
             }
 
@@ -113,18 +113,18 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
 
             SAXParseException[] results = validator.validate(new DOMSource(doc));
             if (results.length == 0) {
-                log.info("XML schema validation successful: All values OK");
+                logger.info("XML schema validation successful: All values OK");
             } else {
-                log.error("XML schema validation failed for message:\n" + XMLUtils.prettyPrint(message.getPayload(String.class)));
+                logger.error("XML schema validation failed for message:\n" + XMLUtils.prettyPrint(message.getPayload(String.class)));
 
                 // Report all parsing errors
-                log.debug("Found " + results.length + " schema validation errors");
+                logger.debug("Found " + results.length + " schema validation errors");
                 StringBuilder errors = new StringBuilder();
                 for (SAXParseException e : results) {
                     errors.append(e.toString());
                     errors.append("\n");
                 }
-                log.debug(errors.toString());
+                logger.debug(errors.toString());
 
                 throw new ValidationException("XML schema validation failed:", results[0]);
             }
