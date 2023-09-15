@@ -143,14 +143,18 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * @param context
      */
     protected void executeStatements(List<String> statements, List<Map<String, Object>> allResultRows, Map<String, List<String>> columnValuesMap, TestContext context) {
-        for (String stmt : statements) {
-            validateSqlStatement(stmt);
-            final String toExecute;
+        if (getJdbcTemplate() == null) {
+            throw new CitrusRuntimeException("No JdbcTemplate configured for query execution!");
+        }
 
-            if (stmt.trim().endsWith(";")) {
-                toExecute = context.replaceDynamicContentInString(stmt.trim().substring(0, stmt.trim().length()-1));
+        for (String statement : statements) {
+            validateSqlStatement(statement);
+
+            final String toExecute;
+            if (statement.trim().endsWith(";")) {
+                toExecute = context.replaceDynamicContentInString(statement.trim().substring(0, statement.trim().length() - 1));
             } else {
-                toExecute = context.replaceDynamicContentInString(stmt.trim());
+                toExecute = context.replaceDynamicContentInString(statement.trim());
             }
 
             if (log.isDebugEnabled()) {
@@ -333,11 +337,12 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
     /**
      * Does some simple validation on the SQL statement.
-     * @param stmt The statement which is to be validated.
+     * @param statement The statement which is to be validated.
      */
-    protected void validateSqlStatement(String stmt) {
-        if (!stmt.toLowerCase().startsWith("select")) {
-            throw new CitrusRuntimeException("Missing keyword SELECT in statement: " + stmt);
+    protected void validateSqlStatement(String statement) {
+        String trimmedStatement = statement.toLowerCase().trim();
+        if (!(trimmedStatement.startsWith("select") || trimmedStatement.startsWith("with"))) {
+            throw new CitrusRuntimeException("Missing SELECT or WITH keyword in statement: " + trimmedStatement);
         }
     }
 
