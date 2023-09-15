@@ -20,6 +20,7 @@ import org.citrusframework.generate.provider.MessageActionProvider;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.model.testcase.http.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
@@ -40,8 +41,13 @@ public class ReceiveHttpResponseActionProvider implements MessageActionProvider<
         response.setBody(body);
 
         ReceiveResponseModel.Headers responseHeaders = new ReceiveResponseModel.Headers();
-        responseHeaders.setStatus(message.getStatusCode().toString());
-        responseHeaders.setReasonPhrase(message.getStatusCode().getReasonPhrase());
+        if (message.getStatusCode() instanceof HttpStatus) {
+            responseHeaders.setStatus(((HttpStatus) message.getStatusCode()).toString());
+            responseHeaders.setReasonPhrase(((HttpStatus) message.getStatusCode()).getReasonPhrase());
+        } else {
+            responseHeaders.setStatus("Status" + message.getStatusCode().value());
+            responseHeaders.setReasonPhrase("Custom Status Code " + message.getStatusCode().value());
+        }
 
         message.getHeaders().entrySet().stream()
                 .filter(entry -> !entry.getKey().startsWith(MessageHeaders.PREFIX))

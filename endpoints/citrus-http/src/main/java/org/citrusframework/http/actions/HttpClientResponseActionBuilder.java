@@ -26,6 +26,7 @@ import org.citrusframework.http.message.HttpMessageUtils;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 /**
  * @author Christoph Deppisch
@@ -95,7 +96,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
          * @return
          */
         public HttpMessageBuilderSupport statusCode(Integer statusCode) {
-            httpMessage.statusCode(statusCode);
+            httpMessage.status(HttpStatusCode.valueOf(statusCode));
             return this;
         }
 
