@@ -32,7 +32,7 @@ import org.springframework.web.socket.WebSocketMessage;
 public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(WebSocketConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketConsumer.class);
 
     /**
      * Endpoint configuration
@@ -52,12 +52,12 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        LOG.info(String.format("Waiting %s ms for Web Socket message ...", timeout));
+        logger.info(String.format("Waiting %s ms for Web Socket message ...", timeout));
 
         WebSocketMessage<?> message = receive(endpointConfiguration, timeout);
         Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(message, endpointConfiguration, context);
 
-        LOG.info("Received Web Socket message");
+        logger.info("Received Web Socket message");
         context.onInboundMessage(receivedMessage);
 
         return receivedMessage;
@@ -77,15 +77,15 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
             long sleep = timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft;
-            if (LOG.isDebugEnabled()) {
+            if (logger.isDebugEnabled()) {
                 String msg = "Waiting for message on '%s' - retrying in %s ms";
-                LOG.debug(String.format(msg, endpointUri, (sleep)));
+                logger.debug(String.format(msg, endpointUri, (sleep)));
             }
 
             try {
                 Thread.sleep(sleep);
             } catch (InterruptedException e) {
-                LOG.warn(String.format("Thread interrupted while waiting for message on '%s'", endpointUri), e);
+                logger.warn(String.format("Thread interrupted while waiting for message on '%s'", endpointUri), e);
             }
 
             message = config.getHandler().getMessage();

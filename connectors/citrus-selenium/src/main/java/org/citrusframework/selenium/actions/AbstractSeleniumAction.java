@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractSeleniumAction extends AbstractTestAction implements SeleniumAction {
 
     /** Logger */
-    protected Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /** Selenium browser instance  */
     private final SeleniumBrowser browser;
@@ -45,8 +45,8 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
 
     @Override
     public void doExecute(TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Executing Selenium browser command '%s'", getName()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Executing Selenium browser command '%s'", getName()));
         }
 
         SeleniumBrowser browserToUse = browser;
@@ -61,7 +61,7 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
 
         execute(browserToUse, context);
 
-        log.info(String.format("Selenium browser command execution successful: '%s'", getName()));
+        logger.info(String.format("Selenium browser command execution successful: '%s'", getName()));
     }
 
     protected abstract void execute(SeleniumBrowser browser, TestContext context);

@@ -40,7 +40,7 @@ public class StartServerAction extends AbstractTestAction {
     private final List<Server> servers;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(StartServerAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(StartServerAction.class);
 
     /**
      * Default constructor.
@@ -55,7 +55,7 @@ public class StartServerAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         for (Server server : servers) {
             server.start();
-            log.info("Started server: " + server.getName());
+            logger.info("Started server: " + server.getName());
         }
     }
 

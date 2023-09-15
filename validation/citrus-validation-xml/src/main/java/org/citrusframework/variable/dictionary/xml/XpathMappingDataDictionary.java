@@ -44,7 +44,7 @@ import org.w3c.dom.NodeList;
 public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingPhase {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XpathMappingDataDictionary.class);
+    private static final Logger logger = LoggerFactory.getLogger(XpathMappingDataDictionary.class);
 
     private NamespaceContextBuilder namespaceContextBuilder;
 
@@ -57,8 +57,8 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
                     buildNamespaceContext(node, context), XPathConstants.NODESET);
 
             if (findings != null && containsNode(findings, node)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(String.format("Data dictionary setting element '%s' value: %s",
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Data dictionary setting element '%s' value: %s",
                             XMLUtils.getNodesPathName(node), expressionEntry.getValue()));
                 }
                 return convertIfNecessary(expressionEntry.getValue(), value, context);
@@ -107,7 +107,7 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
     public void initialize() {
         if (getPathMappingStrategy() != null &&
                 !getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.EXACT)) {
-            LOG.warn(String.format("%s ignores path mapping strategy other than %s",
+            logger.warn(String.format("%s ignores path mapping strategy other than %s",
                     getClass().getSimpleName(), DataDictionary.PathMappingStrategy.EXACT));
         }
 

@@ -58,8 +58,8 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
         }
 
         if (getTransactionManager() != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Using transaction manager: " + getTransactionManager().getClass().getName());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Using transaction manager: " + getTransactionManager().getClass().getName());
             }
 
             TransactionTemplate transactionTemplate = new TransactionTemplate(getTransactionManager());
@@ -90,16 +90,16 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
                     toExecute = context.replaceDynamicContentInString(stmt.trim());
                 }
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Executing SQL statement: " + toExecute);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Executing SQL statement: " + toExecute);
                 }
 
                 getJdbcTemplate().execute(toExecute);
 
-                log.info("SQL statement execution successful");
+                logger.info("SQL statement execution successful");
             } catch (Exception e) {
                 if (ignoreErrors) {
-                    log.error("Ignoring error while executing SQL statement: " + e.getLocalizedMessage());
+                    logger.error("Ignoring error while executing SQL statement: " + e.getLocalizedMessage());
                 } else {
                     throw new CitrusRuntimeException(e);
                 }

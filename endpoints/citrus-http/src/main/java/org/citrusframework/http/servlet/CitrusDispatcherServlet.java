@@ -50,7 +50,7 @@ import org.springframework.web.util.UrlPathHelper;
 public class CitrusDispatcherServlet extends DispatcherServlet {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusDispatcherServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusDispatcherServlet.class);
 
     /** Http server hosting the servlet */
     private HttpServer httpServer;
@@ -153,7 +153,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
                 } else if (interceptor instanceof WebRequestInterceptor) {
                     handlerInterceptors.add(new WebRequestHandlerInterceptorAdapter((WebRequestInterceptor) interceptor));
                 } else {
-                    log.warn("Unsupported interceptor type: {}", interceptor.getClass().getName());
+                    logger.warn("Unsupported interceptor type: {}", interceptor.getClass().getName());
                 }
             }
         }

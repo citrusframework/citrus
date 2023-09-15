@@ -17,11 +17,11 @@
  * limitations under the License.
  */
 
-package org.citrusframework.log;
+package org.citrusframework.logger;
 
 /**
  * Modifier masks output that gets printed to an output stream. Usually used
- * to mask sensitive data like passwords and secrets when printed to the log output.
+ * to mask sensitive data like passwords and secrets when printed to the logger output.
  *
  * @author Christoph Deppisch
  */
@@ -29,8 +29,8 @@ package org.citrusframework.log;
 public interface LogModifier {
 
     /**
-     * Mask given log statement and apply custom modifications before
-     * the log is printed to the output stream.
+     * Mask given logger statement and apply custom modifications before
+     * the logger is printed to the output stream.
      * @param statement
      * @return
      */

@@ -39,7 +39,7 @@ public class CreateVariablesAction extends AbstractTestAction {
     private final Map<String, String> variables;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CreateVariablesAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreateVariablesAction.class);
 
     /**
      * Default constructor.
@@ -65,7 +65,7 @@ public class CreateVariablesAction extends AbstractTestAction {
             //check if value is variable or function (and resolve it if yes)
             value = context.replaceDynamicContentInString(value);
 
-            log.info("Setting variable: " + key + " to value: " + value);
+            logger.info("Setting variable: " + key + " to value: " + value);
 
             context.setVariable(key, value);
         }

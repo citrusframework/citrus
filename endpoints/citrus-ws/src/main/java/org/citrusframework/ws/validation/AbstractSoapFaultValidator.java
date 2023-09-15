@@ -38,7 +38,7 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(AbstractSoapFaultValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSoapFaultValidator.class);
 
     @Override
     public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault,
@@ -47,7 +47,7 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
         if (controlFault.getFaultString() != null &&
                 !controlFault.getFaultString().equals(receivedFault.getFaultString())) {
             if (controlFault.getFaultString().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
-                log.debug("SOAP fault-string is ignored by placeholder - skipped fault-string validation");
+                logger.debug("SOAP fault-string is ignored by placeholder - skipped fault-string validation");
             } else if (ValidationMatcherUtils.isValidationMatcherExpression(controlFault.getFaultString())) {
                 ValidationMatcherUtils.resolveValidationMatcher("SOAP fault string", receivedFault.getFaultString(), controlFault.getFaultString(), context);
             } else {

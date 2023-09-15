@@ -59,7 +59,7 @@ import org.springframework.ws.soap.SoapMessageFactory;
 public class SoapJmsMessageConverter extends JmsMessageConverter implements InitializingPhase, ReferenceResolverAware {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(SoapJmsMessageConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(SoapJmsMessageConverter.class);
 
     /** Soap message factory - either set explicitly or auto configured through application context */
     private SoapMessageFactory soapMessageFactory;
@@ -123,7 +123,7 @@ public class SoapJmsMessageConverter extends JmsMessageConverter implements Init
     public Message createJmsMessage(org.citrusframework.message.Message message, Session session, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
         String payload = message.getPayload(String.class);
 
-        LOG.debug("Creating SOAP message from payload: " + payload);
+        logger.debug("Creating SOAP message from payload: " + payload);
 
         try {
             SoapMessage soapMessage = soapMessageFactory.createWebServiceMessage();

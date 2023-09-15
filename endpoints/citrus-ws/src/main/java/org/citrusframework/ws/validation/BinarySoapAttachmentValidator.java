@@ -35,12 +35,12 @@ import java.util.Optional;
 public class BinarySoapAttachmentValidator extends AbstractSoapAttachmentValidator {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(BinarySoapAttachmentValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(BinarySoapAttachmentValidator.class);
 
     @Override
     protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
-        if (log.isDebugEnabled()) {
-            log.debug("Validating binary SOAP attachment content ...");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating binary SOAP attachment content ...");
         }
 
         try {
@@ -51,8 +51,8 @@ public class BinarySoapAttachmentValidator extends AbstractSoapAttachmentValidat
             throw new CitrusRuntimeException("Binary SOAP attachment validation failed", e);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Validating binary SOAP attachment content: OK");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating binary SOAP attachment content: OK");
         }
     }
 }

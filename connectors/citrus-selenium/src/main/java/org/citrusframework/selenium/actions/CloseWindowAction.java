@@ -22,6 +22,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Close opened window by name.
@@ -30,6 +32,9 @@ import org.citrusframework.selenium.endpoint.SeleniumHeaders;
  * @since 2.7
  */
 public class CloseWindowAction extends AbstractSeleniumAction implements SeleniumAction {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(CloseWindowAction.class);
 
     /** Window name */
     private final String windowName;
@@ -54,13 +59,13 @@ public class CloseWindowAction extends AbstractSeleniumAction implements Seleniu
             throw new CitrusRuntimeException("Failed to find window for handle " + context.getVariable(windowName));
         }
 
-        log.info("Current window: " + browser.getWebDriver().getWindowHandle());
-        log.info("Window to close: " + context.getVariable(windowName));
+        logger.info("Current window: " + browser.getWebDriver().getWindowHandle());
+        logger.info("Window to close: " + context.getVariable(windowName));
 
         if (browser.getWebDriver().getWindowHandle().equals((context.getVariable(windowName)))) {
             browser.getWebDriver().close();
 
-            log.info("Switch back to main window!");
+            logger.info("Switch back to main window!");
             if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_LAST_WINDOW)) {
                 browser.getWebDriver().switchTo().window(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW));
                 context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW));

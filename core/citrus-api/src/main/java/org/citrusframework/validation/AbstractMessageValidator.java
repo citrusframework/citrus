@@ -22,8 +22,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.context.ValidationContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Base abstract implementation for message validators. Calls method to finds a proper validation context
@@ -32,9 +30,6 @@ import org.slf4j.LoggerFactory;
  * @author Christoph Deppisch
  */
 public abstract class AbstractMessageValidator<T extends ValidationContext> implements MessageValidator<T> {
-
-    /** Logger */
-    protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public final void validateMessage(Message receivedMessage, Message controlMessage, TestContext context,

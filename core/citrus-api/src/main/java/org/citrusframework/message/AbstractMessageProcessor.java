@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractMessageProcessor implements MessageProcessor, MessageDirectionAware, MessageTypeSelector {
 
     /** Logger */
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /** Inbound/Outbound direction */
     private MessageDirection direction = MessageDirection.UNBOUND;
@@ -39,7 +39,7 @@ public abstract class AbstractMessageProcessor implements MessageProcessor, Mess
         if (supportsMessageType(message.getType())) {
             processMessage(message, context);
         } else {
-            log.debug(String.format("Message processor '%s' skipped for message type: %s", getName(), message.getType()));
+            logger.debug(String.format("Message processor '%s' skipped for message type: %s", getName(), message.getType()));
         }
     }
 

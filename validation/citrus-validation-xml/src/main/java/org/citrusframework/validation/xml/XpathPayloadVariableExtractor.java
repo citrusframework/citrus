@@ -52,7 +52,7 @@ import org.w3c.dom.Node;
  */
 public class XpathPayloadVariableExtractor implements VariableExtractor {
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
+    private static final Logger logger = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
 
     /** Map defines xpath expressions and target variable names */
     private final Map<String, Object> xPathExpressions;
@@ -81,8 +81,8 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             return;
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Reading XML elements with XPath");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Reading XML elements with XPath");
         }
 
         NamespaceContext nsContext = context.getNamespaceContextBuilder().buildContext(message, namespaces);
@@ -94,8 +94,8 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
                     .orElseThrow(() -> new CitrusRuntimeException(String.format("Variable name must be set on " +
                             "extractor path expression '%s'", pathExpression)));
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Evaluating XPath expression: " + pathExpression);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Evaluating XPath expression: " + pathExpression);
             }
 
             Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));

@@ -70,7 +70,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     private final long sleepTime;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(PurgeJmsQueuesAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(PurgeJmsQueuesAction.class);
 
     /**
      * Default constructor.
@@ -88,7 +88,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     @SuppressWarnings("PMD.CloseResource") //suppress since session/connection closed via JmsUtils
     @Override
     public void doExecute(TestContext context) {
-        LOG.debug("Purging JMS queues...");
+        logger.debug("Purging JMS queues...");
 
         Connection connection = null;
         Session session = null;
@@ -106,14 +106,14 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             }
 
         } catch (JMSException e) {
-            LOG.error("Error while establishing jms connection", e);
+            logger.error("Error while establishing jms connection", e);
             throw new CitrusRuntimeException(e);
         } finally {
             JmsUtils.closeSession(session);
             JmsUtils.closeConnection(connection, true);
         }
 
-        LOG.info("Purged JMS queues");
+        logger.info("Purged JMS queues");
     }
 
     /**
@@ -144,8 +144,8 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
      * @throws JMSException
      */
     private void purgeDestination(Destination destination, Session session, String destinationName) throws JMSException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Try to purge destination " + destinationName);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Try to purge destination " + destinationName);
         }
 
         int messagesPurged = 0;
@@ -156,19 +156,19 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
                 message = (receiveTimeout >= 0) ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
 
                 if (message != null) {
-                    LOG.debug("Removed message from destination " + destinationName);
+                    logger.debug("Removed message from destination " + destinationName);
                     messagesPurged++;
 
                     try {
                         Thread.sleep(sleepTime);
                     } catch (InterruptedException e) {
-                        LOG.warn("Interrupted during wait", e);
+                        logger.warn("Interrupted during wait", e);
                     }
                 }
             } while (message != null);
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Purged " + messagesPurged + " messages from destination");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Purged " + messagesPurged + " messages from destination");
             }
         } finally {
             JmsUtils.closeMessageConsumer(messageConsumer);

@@ -43,7 +43,7 @@ public class RootQNameMessageSelector extends AbstractMessageSelector {
     public static final String SELECTOR_ID = "root-qname";
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(RootQNameMessageSelector.class);
+    private static final Logger logger = LoggerFactory.getLogger(RootQNameMessageSelector.class);
 
     /**
      * Default constructor using fields.
@@ -69,7 +69,7 @@ public class RootQNameMessageSelector extends AbstractMessageSelector {
         try {
             doc = XMLUtils.parseMessagePayload(getPayloadAsString(message));
         } catch (LSException e) {
-            log.warn("Root QName message selector ignoring not well-formed XML message payload", e);
+            logger.warn("Root QName message selector ignoring not well-formed XML message payload", e);
             return false; // non XML message - not accepted
         }
 

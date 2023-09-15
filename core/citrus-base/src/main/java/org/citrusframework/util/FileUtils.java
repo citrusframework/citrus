@@ -54,7 +54,7 @@ import org.springframework.util.ResourceUtils;
 public abstract class FileUtils {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(FileUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
     public static final String FILE_EXTENSION_JAVA = ".java";
     public static final String FILE_EXTENSION_XML = ".xml";
@@ -125,8 +125,8 @@ public abstract class FileUtils {
             }
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Reading file resource: '%s' (encoding is '%s')", resource.getFilename(), charset.displayName()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Reading file resource: '%s' (encoding is '%s')", resource.getFilename(), charset.displayName()));
         }
         return readToString(resource.getInputStream(), charset);
     }
@@ -170,8 +170,8 @@ public abstract class FileUtils {
      * @param file
      */
     public static void writeToFile(String content, File file, Charset charset) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Writing file resource: '%s' (encoding is '%s')", file.getName(), charset.displayName()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Writing file resource: '%s' (encoding is '%s')", file.getName(), charset.displayName()));
         }
 
         if (!file.getParentFile().exists()) {

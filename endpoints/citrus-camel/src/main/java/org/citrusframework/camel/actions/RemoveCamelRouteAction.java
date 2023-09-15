@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(RemoveCamelRouteAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(RemoveCamelRouteAction.class);
 
     /**
      * Default constructor.
@@ -50,7 +50,7 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
                 }
 
                 if (camelContext.removeRoute(route)) {
-                    log.info(String.format("Removed Camel route '%s' from context '%s'", route, camelContext.getName()));
+                    logger.info(String.format("Removed Camel route '%s' from context '%s'", route, camelContext.getName()));
                 } else {
                     throw new CitrusRuntimeException(String.format("Failed to remove Camel route '%s' from context '%s'", route, camelContext.getName()));
                 }

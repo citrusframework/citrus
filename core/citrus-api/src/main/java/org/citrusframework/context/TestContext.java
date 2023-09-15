@@ -43,7 +43,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.VariableNullValueException;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.functions.FunctionUtils;
-import org.citrusframework.log.LogModifier;
+import org.citrusframework.logger.LogModifier;
 import org.citrusframework.message.DefaultMessageStore;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageDirection;
@@ -79,7 +79,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     /**
      * Logger
      */
-    private static final Logger LOG = LoggerFactory.getLogger(TestContext.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestContext.class);
 
     /**
      * Local variables
@@ -252,8 +252,8 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
             throw new VariableNullValueException("Trying to set variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + ", but variable value is null");
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Setting variable: %s with value: '%s'", VariableUtils.cutOffVariablesPrefix(variableName), value));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Setting variable: %s with value: '%s'", VariableUtils.cutOffVariablesPrefix(variableName), value));
         }
 
         variables.put(VariableUtils.cutOffVariablesPrefix(variableName), value);
@@ -820,8 +820,8 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
             } else if (MessageDirection.INBOUND.equals(direction)) {
                 messageListeners.onInboundMessage(message, this);
             }
-        } else if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
+        } else if (logger.isDebugEnabled()) {
+            logger.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
         }
     }
 

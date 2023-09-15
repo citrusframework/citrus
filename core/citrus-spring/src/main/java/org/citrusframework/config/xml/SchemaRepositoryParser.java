@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
 public class SchemaRepositoryParser implements BeanDefinitionParser {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SchemaRepositoryParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(SchemaRepositoryParser.class);
 
     private static final String LOCATION = "location";
     private static final String LOCATIONS = "locations";
@@ -85,7 +85,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
         }
 
         BeanDefinitionParser parser = TYPE_RESOLVER.resolve(type);
-        log.info(String.format("Found schema repository bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + type));
+        logger.info(String.format("Found schema repository bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + type));
         SCHEMA_REPOSITORY_PARSER.put(type, parser);
         return parser;
     }

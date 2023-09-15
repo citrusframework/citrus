@@ -41,7 +41,7 @@ import java.security.PublicKey;
 class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SinglePublicKeyAuthenticator.class);
+    private static final Logger logger = LoggerFactory.getLogger(SinglePublicKeyAuthenticator.class);
 
     private PublicKey allowedKey;
     private String user;
@@ -100,7 +100,7 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
             }
         } catch (IOException e) {
             // Ignoring, returning null
-            log.warn("Failed to get key from PEM file", e);
+            logger.warn("Failed to get key from PEM file", e);
         } finally {
             IoUtils.closeQuietly(isr,r);
         }

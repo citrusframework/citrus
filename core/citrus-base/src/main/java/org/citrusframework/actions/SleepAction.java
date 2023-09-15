@@ -38,7 +38,7 @@ public class SleepAction extends AbstractTestAction {
     private final TimeUnit timeUnit;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(SleepAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(SleepAction.class);
 
     /**
      * Default constructor.
@@ -56,7 +56,7 @@ public class SleepAction extends AbstractTestAction {
         String duration = context.resolveDynamicValue(time);
 
         try {
-            LOG.info(String.format("Sleeping %s %s", duration, timeUnit));
+            logger.info(String.format("Sleeping %s %s", duration, timeUnit));
 
             if (duration.indexOf(".") > 0) {
                 switch (timeUnit) {
@@ -77,7 +77,7 @@ public class SleepAction extends AbstractTestAction {
                 timeUnit.sleep(Long.parseLong(duration));
             }
 
-            LOG.info(String.format("Returning after %s %s", duration, timeUnit));
+            logger.info(String.format("Returning after %s %s", duration, timeUnit));
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }

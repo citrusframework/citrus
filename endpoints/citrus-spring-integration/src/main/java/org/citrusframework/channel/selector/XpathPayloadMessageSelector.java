@@ -44,7 +44,7 @@ public class XpathPayloadMessageSelector extends AbstractMessageSelector {
     public static final String SELECTOR_PREFIX = "xpath:";
     
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XpathPayloadMessageSelector.class);
+    private static final Logger logger = LoggerFactory.getLogger(XpathPayloadMessageSelector.class);
     
     /**
      * Default constructor using fields.
@@ -60,7 +60,7 @@ public class XpathPayloadMessageSelector extends AbstractMessageSelector {
         try {
             doc = XMLUtils.parseMessagePayload(getPayloadAsString(message));
         } catch (LSException e) {
-            log.warn("Ignoring non XML message for XPath message selector (" + e.getClass().getName() + ")");
+            logger.warn("Ignoring non XML message for XPath message selector (" + e.getClass().getName() + ")");
             return false; // non XML message - not accepted
         }
         
@@ -82,7 +82,7 @@ public class XpathPayloadMessageSelector extends AbstractMessageSelector {
 
             return evaluate(value);
         } catch (XPathParseException e) {
-            log.warn("Could not evaluate XPath expression for message selector - ignoring message (" + e.getClass().getName() + ")");
+            logger.warn("Could not evaluate XPath expression for message selector - ignoring message (" + e.getClass().getName() + ")");
             return false; // wrong XML message - not accepted
         }
     }

@@ -33,17 +33,17 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
     private boolean ignoreAllWhitespaces = false;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SimpleSoapAttachmentValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimpleSoapAttachmentValidator.class);
 
     @Override
     protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
         String receivedContent = StringUtils.trimWhitespace(receivedAttachment.getContent());
         String controlContent = StringUtils.trimWhitespace(controlAttachment.getContent());
 
-        if (log.isDebugEnabled()) {
-            log.debug("Validating SOAP attachment content ...");
-            log.debug("Received attachment content: " + receivedContent);
-            log.debug("Control attachment content: " + controlContent);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating SOAP attachment content ...");
+            logger.debug("Received attachment content: " + receivedContent);
+            logger.debug("Control attachment content: " + controlContent);
         }
 
         if (receivedContent != null) {
@@ -62,8 +62,8 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
                         + null + "'");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Validating attachment content: OK");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating attachment content: OK");
         }
     }
 

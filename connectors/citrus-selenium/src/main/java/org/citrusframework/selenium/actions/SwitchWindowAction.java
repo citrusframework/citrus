@@ -22,12 +22,17 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
 public class SwitchWindowAction extends AbstractSeleniumAction implements SeleniumAction {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(SwitchWindowAction.class);
 
     /** Window to select */
     private final String windowName;
@@ -58,11 +63,11 @@ public class SwitchWindowAction extends AbstractSeleniumAction implements Seleni
             context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, lastWindow);
 
             browser.getWebDriver().switchTo().window(targetWindow);
-            log.info("Switch window focus to " + windowName);
+            logger.info("Switch window focus to " + windowName);
 
             context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, targetWindow);
         } else {
-            log.info("Skip switch window action as window is already focused");
+            logger.info("Skip switch window action as window is already focused");
         }
     }
 

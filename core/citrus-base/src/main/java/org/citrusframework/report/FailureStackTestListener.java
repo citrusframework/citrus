@@ -43,7 +43,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class FailureStackTestListener extends AbstractTestListener {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(FailureStackTestListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(FailureStackTestListener.class);
 
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
@@ -82,7 +82,7 @@ public class FailureStackTestListener extends AbstractTestListener {
 
             reader.parse(new InputSource(testFileResource.getInputStream()));
         } catch (Exception e) {
-            log.warn("Failed to locate line numbers for failure stack trace", e);
+            logger.warn("Failed to locate line numbers for failure stack trace", e);
         }
 
         return failureStack;

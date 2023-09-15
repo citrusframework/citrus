@@ -26,7 +26,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class CitrusSpringBackend extends CitrusBackend {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusSpringBackend.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusSpringBackend.class);
 
     /**
      * Constructor using resource loader.
@@ -70,7 +70,7 @@ public class CitrusSpringBackend extends CitrusBackend {
             for (URI gluePath : gluePaths) {
                 String xmlStepConfigLocation = "classpath*:" + ClasspathSupport.resourceNameOfPackageName(ClasspathSupport.packageName(gluePath)) + "/**/*Steps.xml";
 
-                log.info(String.format("Loading XML step definitions %s", xmlStepConfigLocation));
+                logger.info(String.format("Loading XML step definitions %s", xmlStepConfigLocation));
 
                 ApplicationContext ctx;
                 if (instance.getCitrusContext() instanceof CitrusSpringContext) {
@@ -82,8 +82,8 @@ public class CitrusSpringBackend extends CitrusBackend {
                 Map<String, StepTemplate> xmlSteps = ctx.getBeansOfType(StepTemplate.class);
 
                 for (StepTemplate stepTemplate : xmlSteps.values()) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(String.format("Found XML step definition: %s %s", stepTemplate.getName(), stepTemplate.getPattern().pattern()));
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Found XML step definition: %s %s", stepTemplate.getName(), stepTemplate.getPattern().pattern()));
                     }
                     glue.addStepDefinition(new XmlStepDefinition(stepTemplate, lookup));
                 }

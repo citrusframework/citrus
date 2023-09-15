@@ -19,6 +19,8 @@ package org.citrusframework.selenium.actions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -26,6 +28,9 @@ import org.springframework.util.StringUtils;
  * @since 2.7
  */
 public class StartBrowserAction extends AbstractSeleniumAction {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(OpenWindowAction.class);
 
     /**
      * Allow already started browser.
@@ -44,15 +49,15 @@ public class StartBrowserAction extends AbstractSeleniumAction {
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
         if (!allowAlreadyStarted && browser.isStarted()) {
-            log.warn("There are some open web browsers. They will be stopped.");
+            logger.warn("There are some open web browsers. They will be stopped.");
             browser.stop();
         } else if (browser.isStarted()) {
-            log.info("Browser already started - skip start action");
+            logger.info("Browser already started - skip start action");
             context.setVariable(SeleniumHeaders.SELENIUM_BROWSER, browser.getName());
             return;
         }
 
-        log.info("Opening browser of type {}", browser.getEndpointConfiguration().getBrowserType());
+        logger.info("Opening browser of type {}", browser.getEndpointConfiguration().getBrowserType());
         browser.start();
 
         if (StringUtils.hasText(getBrowser().getEndpointConfiguration().getStartPageUrl())) {

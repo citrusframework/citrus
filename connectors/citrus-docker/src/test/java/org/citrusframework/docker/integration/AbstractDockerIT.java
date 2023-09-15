@@ -37,7 +37,7 @@ import org.testng.annotations.BeforeSuite;
 public class AbstractDockerIT extends TestNGCitrusSpringSupport {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(AbstractDockerIT.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractDockerIT.class);
 
     /** Docker connection state, checks connectivity only once per test run */
     private static boolean connected = false;
@@ -57,7 +57,7 @@ public class AbstractDockerIT extends TestNGCitrusSpringSupport {
 
                 connected = future.get(5000, TimeUnit.MILLISECONDS);
             } catch (Exception e) {
-                log.warn("Skipping Docker test execution as no proper Docker environment is available on host system!", e);
+                logger.warn("Skipping Docker test execution as no proper Docker environment is available on host system!", e);
             }
         }
     }

@@ -33,7 +33,7 @@ import org.springframework.util.CollectionUtils;
 public class SequenceAfterTest extends AbstractTestBoundaryActionContainer implements AfterTest {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(SequenceAfterTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(SequenceAfterTest.class);
 
     @Override
     public void doExecute(TestContext context) {
@@ -41,11 +41,11 @@ public class SequenceAfterTest extends AbstractTestBoundaryActionContainer imple
             return;
         }
 
-        LOG.info("Entering after test block");
+        logger.info("Entering after test block");
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Executing " + actions.size() + " actions after test");
-            LOG.debug("");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing " + actions.size() + " actions after test");
+            logger.debug("");
         }
 
         for (TestActionBuilder<?> actionBuilder : actions)  {

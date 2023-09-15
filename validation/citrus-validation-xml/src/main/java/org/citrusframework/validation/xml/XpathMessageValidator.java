@@ -49,7 +49,7 @@ import org.w3c.dom.Node;
 public class XpathMessageValidator extends AbstractMessageValidator<XpathMessageValidationContext> {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XpathMessageValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(XpathMessageValidator.class);
 
     private NamespaceContextBuilder namespaceContextBuilder;
 
@@ -62,7 +62,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
             throw new ValidationException("Unable to validate message elements - receive message payload was empty");
         }
 
-        LOG.debug("Start XPath element validation ...");
+        logger.debug("Start XPath element validation ...");
 
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
         NamespaceContext namespaceContext = getNamespaceContextBuilder(context)
@@ -115,12 +115,12 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
             //do the validation of actual and expected value for element
             ValidationUtils.validateValues(xPathResult, expectedValue, xPathExpression, context);
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");
             }
         }
 
-        LOG.info("XPath element validation successful: All elements OK");
+        logger.info("XPath element validation successful: All elements OK");
     }
 
     @Override

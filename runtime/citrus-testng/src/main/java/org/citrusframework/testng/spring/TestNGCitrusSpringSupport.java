@@ -47,8 +47,6 @@ import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.TestNGHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
@@ -73,9 +71,6 @@ import org.testng.annotations.Listeners;
 @Listeners( { TestNGCitrusSpringMethodInterceptor.class } )
 public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
         implements GherkinTestActionRunner {
-
-    /** Logger */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Citrus instance */
     protected Citrus citrus;

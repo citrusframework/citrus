@@ -63,7 +63,7 @@ import org.springframework.util.StringUtils;
 public class ZooExecuteAction extends AbstractTestAction {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(ZooExecuteAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZooExecuteAction.class);
 
     /** Zookeeper client instance  */
     private final ZooClient zookeeperClient;
@@ -109,14 +109,14 @@ public class ZooExecuteAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         try {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Executing zookeeper command '%s'", command.getName()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Executing zookeeper command '%s'", command.getName()));
             }
             command.execute(zookeeperClient, context);
 
             validateCommandResult(command, context);
 
-            log.info(String.format("Zookeeper command execution successful: '%s'", command.getName()));
+            logger.info(String.format("Zookeeper command execution successful: '%s'", command.getName()));
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -196,8 +196,8 @@ public class ZooExecuteAction extends AbstractTestAction {
             processor.process(commandResult, context);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Validating Zookeeper response");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating Zookeeper response");
         }
 
         if (StringUtils.hasText(expectedCommandResult)) {
@@ -211,7 +211,7 @@ public class ZooExecuteAction extends AbstractTestAction {
             getPathValidator(context).validateMessage(commandResult, null, context, Collections.singletonList(jsonPathMessageValidationContext));
         }
 
-        log.info("Zookeeper command result validation successful - all values OK!");
+        logger.info("Zookeeper command result validation successful - all values OK!");
 
         if (command.getResultCallback() != null) {
             command.getResultCallback().doWithCommandResult(command.getCommandResult(), context);

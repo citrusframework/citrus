@@ -18,6 +18,8 @@ package org.citrusframework.ws.interceptor;
 
 import javax.xml.transform.TransformerException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.MessageContext;
@@ -31,6 +33,9 @@ import org.springframework.ws.soap.SoapEnvelopeException;
  */
 public class LoggingClientInterceptor extends LoggingInterceptorSupport implements ClientInterceptor {
 
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(LoggingClientInterceptor.class);
+
     /**
      * Write SOAP request to logger before sending.
      */
@@ -38,7 +43,7 @@ public class LoggingClientInterceptor extends LoggingInterceptorSupport implemen
         try {
             logRequest("Sending SOAP request", messageContext, false);
         } catch (SoapEnvelopeException | TransformerException e) {
-            log.warn("Unable to write SOAP request to logger", e);
+            logger.warn("Unable to write SOAP request to logger", e);
         }
 
         return true;
@@ -51,7 +56,7 @@ public class LoggingClientInterceptor extends LoggingInterceptorSupport implemen
         try {
             logResponse("Received SOAP response", messageContext, true);
         } catch (SoapEnvelopeException | TransformerException e) {
-            log.warn("Unable to write SOAP response to logger", e);
+            logger.warn("Unable to write SOAP response to logger", e);
         }
 
         return true;
@@ -64,7 +69,7 @@ public class LoggingClientInterceptor extends LoggingInterceptorSupport implemen
         try {
             logResponse("Received SOAP fault", messageContext, true);
         } catch (SoapEnvelopeException | TransformerException e) {
-            log.warn("Unable to write SOAP fault to logger", e);
+            logger.warn("Unable to write SOAP fault to logger", e);
         }
 
         return true;

@@ -47,7 +47,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpre
     /**
      * Logger
      */
-    private static final Logger LOG = LoggerFactory.getLogger(WeekdayValidationMatcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(WeekdayValidationMatcher.class);
 
     @Override
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
@@ -72,7 +72,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher, ControlExpre
             cal.setTime(dateFormat.parse(value));
 
             if (cal.get(Calendar.DAY_OF_WEEK) == Weekday.valueOf(weekday).getConstantValue()) {
-                LOG.info("Weekday validation matcher successful - All values OK");
+                logger.info("Weekday validation matcher successful - All values OK");
             } else {
                 throw new ValidationException(this.getClass().getSimpleName() + " failed for field '" + fieldName + "'" +
                         ". Received invalid week day '" + value + "', expected date to be a '" + weekday + "'");

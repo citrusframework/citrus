@@ -40,7 +40,7 @@ public class ComponentLifecycleProcessor implements DestructionAwareBeanPostProc
     private ReferenceResolver referenceResolver;
 
     /** Logger */
-    private final static Logger LOG = LoggerFactory.getLogger(ComponentLifecycleProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComponentLifecycleProcessor.class);
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -53,8 +53,8 @@ public class ComponentLifecycleProcessor implements DestructionAwareBeanPostProc
         }
 
         if (bean instanceof InitializingPhase) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Initializing component '%s'", beanName));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Initializing component '%s'", beanName));
             }
             ((InitializingPhase) bean).initialize();
         }
@@ -65,8 +65,8 @@ public class ComponentLifecycleProcessor implements DestructionAwareBeanPostProc
     @Override
     public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
         if (requiresDestruction(bean)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Destroying component '%s'", beanName));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Destroying component '%s'", beanName));
             }
             ((ShutdownPhase) bean).destroy();
         }

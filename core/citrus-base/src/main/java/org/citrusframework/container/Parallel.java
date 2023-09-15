@@ -45,7 +45,7 @@ public class Parallel extends AbstractActionContainer {
     private final List<CitrusRuntimeException> exceptions = new ArrayList<>();
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(Parallel.class);
+    private static final Logger logger = LoggerFactory.getLogger(Parallel.class);
 
     /**
      * Default constructor.
@@ -67,7 +67,7 @@ public class Parallel extends AbstractActionContainer {
             try {
                 threads.pop().join();
             } catch (InterruptedException e) {
-                LOG.error("Unable to join thread", e);
+                logger.error("Unable to join thread", e);
             }
         }
 
@@ -106,10 +106,10 @@ public class Parallel extends AbstractActionContainer {
             try {
                 action.execute(context);
             } catch (CitrusRuntimeException e) {
-                LOG.error("Parallel test action raised error", e);
+                logger.error("Parallel test action raised error", e);
                 exceptionHandler.accept(e);
             } catch (Exception | AssertionError e) {
-                LOG.error("Parallel test action raised error", e);
+                logger.error("Parallel test action raised error", e);
                 exceptionHandler.accept(new CitrusRuntimeException(e));
             }
         }

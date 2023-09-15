@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public interface ValidationMatcher {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(ValidationMatcher.class);
+    Logger logger = LoggerFactory.getLogger(ValidationMatcher.class);
 
     /** Message validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/validation/matcher";
@@ -51,8 +51,8 @@ public interface ValidationMatcher {
         if (matcher.isEmpty()) {
             matcher.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
-            if (LOG.isDebugEnabled()) {
-                matcher.forEach((k, v) -> LOG.debug(String.format("Found validation matcher '%s' as %s", k, v.getClass())));
+            if (logger.isDebugEnabled()) {
+                matcher.forEach((k, v) -> logger.debug(String.format("Found validation matcher '%s' as %s", k, v.getClass())));
             }
         }
         return matcher;

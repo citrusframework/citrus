@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public interface TemplateLoader extends ReferenceResolverAware {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(Function.class);
+    Logger logger = LoggerFactory.getLogger(Function.class);
 
     /** Function resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/template/loader";
@@ -37,7 +37,7 @@ public interface TemplateLoader extends ReferenceResolverAware {
             TemplateLoader instance = TYPE_RESOLVER.resolve(name);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve template loader from resource '%s/%s'", RESOURCE_PATH, name));
+            logger.warn(String.format("Failed to resolve template loader from resource '%s/%s'", RESOURCE_PATH, name));
         }
 
         return Optional.empty();

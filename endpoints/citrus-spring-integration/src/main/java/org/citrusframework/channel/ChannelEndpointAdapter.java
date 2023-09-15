@@ -43,7 +43,7 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
     private final ChannelSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(ChannelEndpointAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChannelEndpointAdapter.class);
 
     /**
      * Default constructor using endpoint configuration.
@@ -61,7 +61,7 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
 
     @Override
     public Message handleMessageInternal(Message request) {
-        LOG.debug("Forwarding request to message channel ...");
+        logger.debug("Forwarding request to message channel ...");
 
         TestContext context = getTestContext();
         Message replyMessage = null;
@@ -73,7 +73,7 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
                 replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
             }
         } catch (ActionTimeoutException e) {
-            LOG.warn(e.getMessage());
+            logger.warn(e.getMessage());
         }
 
         return replyMessage;

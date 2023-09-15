@@ -54,7 +54,7 @@ public class JsonPathVariableExtractor implements VariableExtractor {
     private final Map<String, Object> jsonPathExpressions;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(JsonPathVariableExtractor.class);
+    private static final Logger logger = LoggerFactory.getLogger(JsonPathVariableExtractor.class);
 
     public JsonPathVariableExtractor() {
         this(new Builder());
@@ -72,8 +72,8 @@ public class JsonPathVariableExtractor implements VariableExtractor {
     public void extractVariables(Message message, TestContext context) {
         if (CollectionUtils.isEmpty(jsonPathExpressions)) {return;}
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Reading JSON elements with JSONPath");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Reading JSON elements with JSONPath");
         }
 
         try {
@@ -88,8 +88,8 @@ public class JsonPathVariableExtractor implements VariableExtractor {
                         .orElseThrow(() -> new CitrusRuntimeException(String.format("Variable name must be set on " +
                                 "extractor path expression '%s'", jsonPathExpression)));
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Evaluating JSONPath expression: " + jsonPathExpression);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Evaluating JSONPath expression: " + jsonPathExpression);
                 }
 
                 Object jsonPathResult = JsonPathUtils.evaluate(readerContext, jsonPathExpression);

@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultFunctionLibrary extends FunctionLibrary {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultFunctionLibrary.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultFunctionLibrary.class);
 
     /**
      * Default constructor adding default function implementations.
@@ -91,8 +91,8 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
     private void lookupFunctions() {
         Function.lookup().forEach((k, m) -> {
             getMembers().put(k, m);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Register function '%s' as %s", k, m.getClass()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Register function '%s' as %s", k, m.getClass()));
             }
         });
     }

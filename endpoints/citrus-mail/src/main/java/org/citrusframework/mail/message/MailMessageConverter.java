@@ -61,7 +61,7 @@ import org.springframework.util.StringUtils;
 public class MailMessageConverter implements MessageConverter<MimeMailMessage, MimeMailMessage, MailEndpointConfiguration> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MailMessageConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(MailMessageConverter.class);
 
     /** Mail delivery date format */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
@@ -72,7 +72,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
 
         try {
             Session session = Session.getInstance(endpointConfiguration.getJavaMailProperties(), endpointConfiguration.getAuthenticator());
-            session.setDebug(log.isDebugEnabled());
+            session.setDebug(logger.isDebugEnabled());
 
             MimeMessage mimeMessage = new MimeMessage(session);
             MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessageHelper(mimeMessage,
@@ -311,7 +311,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    log.warn("Failed to close reader", e);
+                    logger.warn("Failed to close reader", e);
                 }
             }
         }
@@ -369,7 +369,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    log.warn("Failed to close reader", e);
+                    logger.warn("Failed to close reader", e);
                 }
             }
         }

@@ -40,7 +40,7 @@ import org.springframework.context.ApplicationContext;
 public class CitrusSpringObjectFactory implements ObjectFactory {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusSpringObjectFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusSpringObjectFactory.class);
 
     /** Test runner */
     private TestCaseRunner runner;
@@ -81,7 +81,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
                 context = contextFactoryBean.getObject();
                 initializeCitrus(context, contextFactoryBean.getApplicationContext());
             } catch (CucumberBackendException e) {
-                log.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
+                logger.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
                 context = CitrusInstanceManager.getOrDefault().getCitrusContext().createTestContext();
             }
         }
@@ -114,7 +114,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
 
             if (citrusContext instanceof CitrusSpringContext
                     && !((CitrusSpringContext) citrusContext).getApplicationContext().equals(applicationContext)) {
-                log.warn("Citrus instance has already been initialized - creating new instance and shutting down current instance");
+                logger.warn("Citrus instance has already been initialized - creating new instance and shutting down current instance");
                 citrusContext.close();
             } else {
                 return;

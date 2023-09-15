@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 public class AbstractAsyncTestActionTest extends UnitTestSupport {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractAsyncTestActionTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractAsyncTestActionTest.class);
 
     @Test
     public void testOnSuccess() throws Exception {
@@ -44,7 +44,7 @@ public class AbstractAsyncTestActionTest extends UnitTestSupport {
         new AbstractAsyncTestAction() {
             @Override
             public void doExecuteAsync(TestContext context) {
-                LOG.info("Success!");
+                logger.info("Success!");
             }
 
             @Override

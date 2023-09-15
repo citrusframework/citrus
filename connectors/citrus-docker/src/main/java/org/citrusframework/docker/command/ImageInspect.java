@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class ImageInspect extends AbstractDockerCommand<InspectImageResponse> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ImageInspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImageInspect.class);
 
     /**
      * Default constructor initializing the command name.
@@ -46,7 +46,7 @@ public class ImageInspect extends AbstractDockerCommand<InspectImageResponse> {
         InspectImageResponse response = command.exec();
 
         setCommandResult(response);
-        log.debug(response.toString());
+        logger.debug(response.toString());
     }
 
     /**

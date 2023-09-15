@@ -56,7 +56,7 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
     private XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XsdSchemaRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(XsdSchemaRepository.class);
 
     /**
      * Find the matching schema for document using given schema mapping strategy.
@@ -110,13 +110,13 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
         } else if (resource.getFilename().endsWith(".wsdl")) {
             addWsdlSchema(resource);
         } else {
-            LOG.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
+            logger.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
         }
     }
 
     private void addWsdlSchema(Resource resource) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Loading WSDL schema resource " + resource.getFilename());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Loading WSDL schema resource " + resource.getFilename());
         }
 
         WsdlXsdSchema wsdl = new WsdlXsdSchema(resource);
@@ -125,8 +125,8 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
     }
 
     private void addXsdSchema(Resource resource) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Loading XSD schema resource " + resource.getFilename());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Loading XSD schema resource " + resource.getFilename());
         }
 
         SimpleXsdSchema schema = new SimpleXsdSchema(resource);

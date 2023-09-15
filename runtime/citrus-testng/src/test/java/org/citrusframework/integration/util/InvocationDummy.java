@@ -32,33 +32,33 @@ public class InvocationDummy {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(InvocationDummy.class);
+    private static final Logger logger = LoggerFactory.getLogger(InvocationDummy.class);
 
     public InvocationDummy() {
-        if (log.isDebugEnabled()) {
-            log.debug("Constructor without argument");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Constructor without argument");
         }
     }
 
     public InvocationDummy(String arg) {
         checkNotVariable(arg);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Constructor with argument: " + arg);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Constructor with argument: " + arg);
         }
     }
 
     public void invoke() {
-    	if (log.isDebugEnabled()) {
-            log.debug("Methode invoke no arguments");
+    	if (logger.isDebugEnabled()) {
+            logger.debug("Methode invoke no arguments");
         }
     }
 
     public void invoke(String text) {
         checkNotVariable(text);
 
-    	if (log.isDebugEnabled()) {
-            log.debug("Methode invoke with string argument: '" + text + "'");
+    	if (logger.isDebugEnabled()) {
+            logger.debug("Methode invoke with string argument: '" + text + "'");
         }
     }
 
@@ -67,8 +67,8 @@ public class InvocationDummy {
 
             checkNotVariable(args[i]);
 
-            if (log.isDebugEnabled()) {
-                log.debug("Methode invoke with argument: " + args[i]);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Methode invoke with argument: " + args[i]);
             }
         }
     }
@@ -76,11 +76,11 @@ public class InvocationDummy {
     public void invoke(Integer arg1, String arg2, Boolean arg3) {
         checkNotVariable(arg2);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Method invoke with arguments:");
-            log.debug("arg1: " + arg1);
-            log.debug("arg2: " + arg2);
-            log.debug("arg3: " + arg3);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Method invoke with arguments:");
+            logger.debug("arg1: " + arg1);
+            logger.debug("arg2: " + arg2);
+            logger.debug("arg3: " + arg3);
         }
     }
 
@@ -96,8 +96,8 @@ public class InvocationDummy {
         for (int i = 0; i < args.length; i++) {
             checkNotVariable(args[i]);
 
-            if (log.isDebugEnabled()) {
-                log.debug("arg" + i + ": " + args[i]);
+            if (logger.isDebugEnabled()) {
+                logger.debug("arg" + i + ": " + args[i]);
             }
         }
     }

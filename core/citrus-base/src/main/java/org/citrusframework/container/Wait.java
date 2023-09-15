@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 public class Wait extends AbstractTestAction {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(Wait.class);
+    private static final Logger logger = LoggerFactory.getLogger(Wait.class);
 
     /** Condition to be met */
     private final Condition condition;
@@ -84,8 +84,8 @@ public class Wait extends AbstractTestAction {
         while (timeLeft > 0) {
             timeLeft -= intervalMs;
 
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Waiting for condition %s", condition.getName()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Waiting for condition %s", condition.getName()));
             }
 
             ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -94,12 +94,12 @@ public class Wait extends AbstractTestAction {
             try {
                 conditionSatisfied = future.get(intervalMs, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | TimeoutException | ExecutionException e) {
-                log.warn(String.format("Condition check interrupted with '%s'", e.getClass().getSimpleName()));
+                logger.warn(String.format("Condition check interrupted with '%s'", e.getClass().getSimpleName()));
             }
             executor.shutdown();
 
             if (Boolean.TRUE.equals(conditionSatisfied)) {
-                log.info(condition.getSuccessMessage(context));
+                logger.info(condition.getSuccessMessage(context));
                 return;
             }
 
@@ -108,7 +108,7 @@ public class Wait extends AbstractTestAction {
                 try {
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
-                    log.warn("Interrupted during wait!", e);
+                    logger.warn("Interrupted during wait!", e);
                 }
             }
         }

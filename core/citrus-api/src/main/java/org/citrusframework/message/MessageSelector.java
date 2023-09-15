@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public interface MessageSelector {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(MessageSelector.class);
+    Logger logger = LoggerFactory.getLogger(MessageSelector.class);
 
     /** Message selector resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/message/selector";
@@ -35,8 +35,8 @@ public interface MessageSelector {
         if (factories.isEmpty()) {
             factories.putAll(TYPE_RESOLVER.resolveAll());
 
-            if (LOG.isDebugEnabled()) {
-                factories.forEach((k, v) -> LOG.debug(String.format("Found value matcher '%s' as %s", k, v.getClass())));
+            if (logger.isDebugEnabled()) {
+                factories.forEach((k, v) -> logger.debug(String.format("Found value matcher '%s' as %s", k, v.getClass())));
             }
         }
         return factories;

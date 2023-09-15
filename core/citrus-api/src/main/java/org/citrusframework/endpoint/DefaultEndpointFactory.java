@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultEndpointFactory implements EndpointFactory {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DefaultEndpointFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultEndpointFactory.class);
 
     /** Endpoint cache for endpoint reuse */
     private final Map<String, Endpoint> endpointCache = new ConcurrentHashMap<>();
@@ -133,8 +133,8 @@ public class DefaultEndpointFactory implements EndpointFactory {
 
         synchronized (endpointCache) {
             if (endpointCache.containsKey(cachedEndpointName)) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Found cached endpoint for uri '%s'", cachedEndpointName));
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Found cached endpoint for uri '%s'", cachedEndpointName));
                 }
                 return endpointCache.get(cachedEndpointName);
             } else {

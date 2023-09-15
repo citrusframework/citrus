@@ -49,7 +49,7 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
     private final Map<String, Object> xPathExpressions;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XpathMessageProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(XpathMessageProcessor.class);
 
     /**
      * Default constructor.
@@ -111,8 +111,8 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
                 node.setNodeValue(valueExpression);
             }
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Element " +  pathExpression + " was set to value: " + valueExpression);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Element " +  pathExpression + " was set to value: " + valueExpression);
             }
         }
 

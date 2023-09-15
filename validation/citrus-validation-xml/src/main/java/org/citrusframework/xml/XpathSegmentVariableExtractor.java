@@ -28,7 +28,7 @@ public class XpathSegmentVariableExtractor extends SegmentVariableExtractorRegis
     /**
      * Logger
      */
-    private static final Logger LOG = LoggerFactory.getLogger(XpathSegmentVariableExtractor.class);
+    private static final Logger logger = LoggerFactory.getLogger(XpathSegmentVariableExtractor.class);
 
     @Override
     public boolean canExtract(TestContext testContext, Object object, VariableExpressionSegmentMatcher matcher) {

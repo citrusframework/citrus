@@ -41,8 +41,6 @@ import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.IHookable;
 import org.testng.ITestContext;
@@ -62,9 +60,6 @@ import org.testng.annotations.Listeners;
  */
 @Listeners( { TestNGCitrusMethodInterceptor.class } )
 public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
-
-    /** Logger */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Citrus instance */
     protected Citrus citrus;

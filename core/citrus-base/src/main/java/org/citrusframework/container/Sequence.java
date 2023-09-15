@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class Sequence extends AbstractActionContainer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Sequence.class);
+    private static final Logger logger = LoggerFactory.getLogger(Sequence.class);
 
     /**
      * Default constructor.
@@ -46,7 +46,7 @@ public class Sequence extends AbstractActionContainer {
             executeAction(actionBuilder.build(), context);
         }
 
-        log.debug("Action sequence finished successfully");
+        logger.debug("Action sequence finished successfully");
     }
 
     /**

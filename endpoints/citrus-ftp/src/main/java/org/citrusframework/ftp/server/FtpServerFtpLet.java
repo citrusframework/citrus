@@ -52,7 +52,7 @@ import org.springframework.util.StringUtils;
 public class FtpServerFtpLet implements Ftplet {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(FtpServerFtpLet.class);
+    private static final Logger logger = LoggerFactory.getLogger(FtpServerFtpLet.class);
 
     /** Endpoint configuration */
     private final FtpEndpointConfiguration endpointConfiguration;
@@ -77,8 +77,8 @@ public class FtpServerFtpLet implements Ftplet {
             request.setPayload(result.toString());
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Received request on ftp server: '%s':%n%s",
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Received request on ftp server: '%s':%n%s",
                     request.getSignal(),
                     request.getPayload(String.class)));
         }
@@ -96,22 +96,22 @@ public class FtpServerFtpLet implements Ftplet {
 
     @Override
     public void init(FtpletContext ftpletContext) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Total FTP logins: %s", ftpletContext.getFtpStatistics().getTotalLoginNumber()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Total FTP logins: %s", ftpletContext.getFtpStatistics().getTotalLoginNumber()));
         }
     }
 
     @Override
     public void destroy() {
-        log.info("FTP server shutting down ...");
+        logger.info("FTP server shutting down ...");
     }
 
     @Override
     public FtpletResult beforeCommand(FtpSession session, FtpRequest request) {
         String command = request.getCommand().toUpperCase();
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Received FTP command: '%s'", command));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Received FTP command: '%s'", command));
         }
 
         if (endpointConfiguration.isAutoLogin() && (command.equals(FTPCmd.USER.getCommand()) || command.equals(FTPCmd.PASS.getCommand()))) {
@@ -138,8 +138,8 @@ public class FtpServerFtpLet implements Ftplet {
 
     @Override
     public FtpletResult onConnect(FtpSession session) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Received new FTP connection: '%s'", session.getSessionId()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Received new FTP connection: '%s'", session.getSessionId()));
         }
 
         if (!endpointConfiguration.isAutoConnect()) {
@@ -164,8 +164,8 @@ public class FtpServerFtpLet implements Ftplet {
             }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Closing FTP connection: '%s'", session.getSessionId()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Closing FTP connection: '%s'", session.getSessionId()));
         }
 
         return FtpletResult.DISCONNECT;

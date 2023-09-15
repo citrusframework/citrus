@@ -58,10 +58,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     private static final Logger enabledOutboundMessageLogger = outboundMessageLogger;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
+    private static Logger logger = LoggerFactory.getLogger(LoggingReporter.class);
 
     /** The standard logger used when the reporter is enabled */
-    private static final Logger enabledLog = log;
+    private static final Logger enabledLog = logger;
 
     /** A {@link org.slf4j.helpers.NOPLogger} used in case the reporter is not enabled. */
     private static final Logger noOpLogger = new NOPLoggerFactory().getLogger(LoggingReporter.class.getName());
@@ -276,7 +276,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
      * @param line
      */
     protected void info(String line) {
-        log.info(line);
+        logger.info(line);
     }
 
     /**
@@ -285,7 +285,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
      * @param cause
      */
     protected void error(String line, Throwable cause) {
-        log.error(line, cause);
+        logger.error(line, cause);
     }
 
     /**
@@ -294,7 +294,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
      */
     protected void debug(String line) {
         if (isDebugEnabled()) {
-            log.debug(line);
+            logger.debug(line);
         }
     }
 
@@ -303,7 +303,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
      * @return
      */
     protected boolean isDebugEnabled() {
-        return log.isDebugEnabled();
+        return logger.isDebugEnabled();
     }
 
     /**
@@ -311,17 +311,17 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
      */
     public void setEnabled(boolean enabled) {
         if (enabled) {
-            log = enabledLog;
+            logger = enabledLog;
             inboundMessageLogger = enabledInboundMessageLogger;
             outboundMessageLogger = enabledOutboundMessageLogger;
         } else {
-            log = noOpLogger;
+            logger = noOpLogger;
             inboundMessageLogger = noOpLogger;
             outboundMessageLogger = noOpLogger;
         }
     }
 
     protected boolean isEnabled() {
-        return log != noOpLogger;
+        return logger != noOpLogger;
     }
 }

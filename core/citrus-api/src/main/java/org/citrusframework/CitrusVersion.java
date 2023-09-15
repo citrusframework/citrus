@@ -14,7 +14,7 @@ import org.springframework.core.io.ClassPathResource;
 public final class CitrusVersion {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusVersion.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusVersion.class);
 
     /** Citrus version */
     private static String version;
@@ -27,11 +27,11 @@ public final class CitrusVersion {
             version = versionProperties.get("citrus.version").toString();
 
             if (version.equals("${project.version}")) {
-                log.warn("Citrus version has not been filtered with Maven project properties yet");
+                logger.warn("Citrus version has not been filtered with Maven project properties yet");
                 version = "";
             }
         } catch (IOException e) {
-            log.warn("Unable to read Citrus version information", e);
+            logger.warn("Unable to read Citrus version information", e);
             version = "";
         }
     }

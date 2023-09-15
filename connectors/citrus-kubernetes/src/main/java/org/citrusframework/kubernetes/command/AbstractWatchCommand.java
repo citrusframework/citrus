@@ -28,12 +28,17 @@ import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
 public abstract class AbstractWatchCommand<R extends KubernetesResource, T extends KubernetesCommand<R>> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
+
+    /** Logger */
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /** Watch handle */
     private Watch watch;
@@ -61,7 +66,7 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
                 if (results.isEmpty() && cachedResult == null) {
                     results.add(new WatchEventResult<>(resource, action));
                 } else {
-                    log.debug("Ignoring watch result: " + action.name());
+                    logger.debug("Ignoring watch result: " + action.name());
                 }
             }
 
@@ -89,7 +94,7 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
             try {
                 watch.close();
             } catch (KubernetesClientException e) {
-                log.warn("Failed to gracefully close watch", e);
+                logger.warn("Failed to gracefully close watch", e);
             }
 
             watchEventResult.setWatch(watch);

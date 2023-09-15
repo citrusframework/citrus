@@ -33,12 +33,12 @@ import org.slf4j.LoggerFactory;
 public class CitrusSpringAppConfiguration extends CitrusAppConfiguration {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CitrusSpringAppConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusSpringAppConfiguration.class);
 
     @Override
     public void setDefaultProperties() {
         for (Map.Entry<String, String> entry : getDefaultProperties().entrySet()) {
-            LOG.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
+            logger.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
             System.setProperty(entry.getKey(), Optional.ofNullable(entry.getValue()).orElse(""));
         }
 

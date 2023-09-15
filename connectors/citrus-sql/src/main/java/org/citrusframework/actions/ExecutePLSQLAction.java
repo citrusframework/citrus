@@ -81,8 +81,8 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
         }
 
         if (getTransactionManager() != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Using transaction manager: " + getTransactionManager().getClass().getName());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Using transaction manager: " + getTransactionManager().getClass().getName());
             }
 
             TransactionTemplate transactionTemplate = new TransactionTemplate(getTransactionManager());
@@ -107,16 +107,16 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             try {
                 final String toExecute = context.replaceDynamicContentInString(stmt.trim());
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Executing PLSQL statement: " + toExecute);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Executing PLSQL statement: " + toExecute);
                 }
 
                 getJdbcTemplate().execute(toExecute);
 
-                log.info("PLSQL statement execution successful");
+                logger.info("PLSQL statement execution successful");
             } catch (DataAccessException e) {
                 if (ignoreErrors) {
-                    log.warn("Ignoring error while executing PLSQL statement: " + e.getMessage());
+                    logger.warn("Ignoring error while executing PLSQL statement: " + e.getMessage());
                 } else {
                     throw new CitrusRuntimeException("Failed to execute PLSQL statement", e);
                 }
@@ -133,8 +133,8 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
         List<String> stmts = new ArrayList<>();
 
         String resolvedScript = context.replaceDynamicContentInString(script);
-        if (log.isDebugEnabled()) {
-            log.debug("Found inline PLSQL script " + resolvedScript);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Found inline PLSQL script " + resolvedScript);
         }
 
         StringTokenizer tok = new StringTokenizer(resolvedScript, PLSQL_STMT_ENDING);

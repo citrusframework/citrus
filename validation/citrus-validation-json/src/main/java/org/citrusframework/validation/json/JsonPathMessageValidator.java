@@ -45,7 +45,7 @@ import org.springframework.util.StringUtils;
  */
 public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathMessageValidationContext> {
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(JsonPathMessageValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(JsonPathMessageValidator.class);
 
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, JsonPathMessageValidationContext validationContext) throws ValidationException {
@@ -55,7 +55,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
             throw new ValidationException("Unable to validate message elements - receive message payload was empty");
         }
 
-        log.debug("Start JSONPath element validation ...");
+        logger.debug("Start JSONPath element validation ...");
 
         String jsonPathExpression;
         try {
@@ -75,12 +75,12 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                 //do the validation of actual and expected value for element
                 ValidationUtils.validateValues(jsonPathResult, expectedValue, jsonPathExpression, context);
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Validating element: " + jsonPathExpression + "='" + expectedValue + "': OK.");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Validating element: " + jsonPathExpression + "='" + expectedValue + "': OK.");
                 }
             }
 
-            log.info("JSONPath element validation successful: All values OK");
+            logger.info("JSONPath element validation successful: All values OK");
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }

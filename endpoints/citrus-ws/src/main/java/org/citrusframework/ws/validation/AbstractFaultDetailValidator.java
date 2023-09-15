@@ -35,15 +35,15 @@ import org.springframework.util.CollectionUtils;
 public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultValidator {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AbstractFaultDetailValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractFaultDetailValidator.class);
 
     @Override
     protected void validateFaultDetail(SoapFault receivedDetail, SoapFault controlDetail,
             TestContext context, final SoapFaultValidationContext validationContext) {
         if (controlDetail == null) { return; }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Validating SOAP fault detail content ...");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating SOAP fault detail content ...");
         }
 
         if (receivedDetail == null) {

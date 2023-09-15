@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class Info extends AbstractDockerCommand<com.github.dockerjava.api.model.Info> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Info.class);
+    private static final Logger logger = LoggerFactory.getLogger(Info.class);
 
     /**
      * Default constructor initializing the command name.
@@ -41,7 +41,7 @@ public class Info extends AbstractDockerCommand<com.github.dockerjava.api.model.
     @Override
     public void execute(DockerClient dockerClient, TestContext context) {
         setCommandResult(dockerClient.getEndpointConfiguration().getDockerClient().infoCmd().exec());
-        log.debug(getCommandResult().toString());
+        logger.debug(getCommandResult().toString());
     }
 
     /**

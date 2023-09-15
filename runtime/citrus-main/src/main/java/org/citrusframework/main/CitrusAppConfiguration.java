@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class CitrusAppConfiguration extends TestRunConfiguration {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CitrusAppConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusAppConfiguration.class);
 
     /** Server time to live in milliseconds */
     private long timeToLive = 0;
@@ -121,7 +121,7 @@ public class CitrusAppConfiguration extends TestRunConfiguration {
      */
     public void setDefaultProperties() {
         for (Map.Entry<String, String> entry : getDefaultProperties().entrySet()) {
-            LOG.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
+            logger.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
             System.setProperty(entry.getKey(), Optional.ofNullable(entry.getValue()).orElse(""));
         }
 

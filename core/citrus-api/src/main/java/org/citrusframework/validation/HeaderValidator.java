@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public interface HeaderValidator {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(HeaderValidator.class);
+    Logger logger = LoggerFactory.getLogger(HeaderValidator.class);
 
     /** Header validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/header/validator";
@@ -54,8 +54,8 @@ public interface HeaderValidator {
         if (validators.isEmpty()) {
             validators.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
-            if (LOG.isDebugEnabled()) {
-                validators.forEach((k, v) -> LOG.debug(String.format("Found header validator '%s' as %s", k, v.getClass())));
+            if (logger.isDebugEnabled()) {
+                validators.forEach((k, v) -> logger.debug(String.format("Found header validator '%s' as %s", k, v.getClass())));
             }
         }
         return validators;
@@ -73,7 +73,7 @@ public interface HeaderValidator {
             HeaderValidator instance = TYPE_RESOLVER.resolve(validator);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve header validator from resource '%s/%s'", RESOURCE_PATH, validator));
+            logger.warn(String.format("Failed to resolve header validator from resource '%s/%s'", RESOURCE_PATH, validator));
         }
 
         return Optional.empty();

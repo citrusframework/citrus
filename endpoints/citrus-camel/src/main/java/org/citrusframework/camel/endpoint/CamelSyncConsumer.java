@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
 public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CamelSyncConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(CamelSyncConsumer.class);
 
     /** Storage for in flight exchanges */
     private CorrelationManager<Exchange> correlationManager;
@@ -70,8 +70,8 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
             throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel consumer");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Receiving message from camel endpoint: '" + endpointUri + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Receiving message from camel endpoint: '" + endpointUri + "'");
         }
 
         Exchange exchange;
@@ -85,7 +85,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
             throw new MessageTimeoutException(timeout, endpointUri);
         }
 
-        log.info("Received message from camel endpoint: '" + endpointUri + "'");
+        logger.info("Received message from camel endpoint: '" + endpointUri + "'");
 
         Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration, context);
         context.onInboundMessage(message);
@@ -109,15 +109,15 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
         buildOutMessage(exchange, message);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending reply message to camel endpoint: '" + exchange.getFromEndpoint() + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending reply message to camel endpoint: '" + exchange.getFromEndpoint() + "'");
         }
 
         getConsumerTemplate().doneUoW(exchange);
 
         context.onOutboundMessage(message);
 
-        log.info("Message was sent to camel endpoint: '" + exchange.getFromEndpoint() + "'");
+        logger.info("Message was sent to camel endpoint: '" + exchange.getFromEndpoint() + "'");
     }
 
     /**
@@ -150,7 +150,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
                     exchange.setException((Throwable) exception.getDeclaredConstructor().newInstance());
                 }
             } catch (Exception e) {
-                log.warn("Unable to create proper exception instance for exchange!", e);
+                logger.warn("Unable to create proper exception instance for exchange!", e);
             }
         }
 

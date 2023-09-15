@@ -58,9 +58,6 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
         implements GherkinTestActionRunner, CitrusFrameworkMethod.Runner {
 
-    /** Logger */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
-
     /** Citrus instance */
     protected Citrus citrus;
 

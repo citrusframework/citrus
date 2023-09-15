@@ -118,7 +118,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     private final String messageType;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(ReceiveMessageAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReceiveMessageAction.class);
 
     /**
      * Default constructor.
@@ -186,8 +186,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @return
      */
     private Message receiveSelected(TestContext context, String selectorString) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Setting message selector: '" + selectorString + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Setting message selector: '" + selectorString + "'");
         }
 
         Endpoint messageEndpoint = getOrCreateEndpoint(context);
@@ -203,7 +203,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                         context, messageEndpoint.getEndpointConfiguration().getTimeout());
             }
         } else {
-            LOG.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));
+            logger.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));
             return receive(context);
         }
     }
@@ -215,8 +215,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
     protected void validateMessage(Message message, TestContext context) {
         messageProcessors.forEach(processor -> processor.process(message, context));
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Received message:\n" + message.print(context));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Received message:\n" + message.print(context));
         }
 
         // extract variables from received message content
@@ -235,8 +235,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
         } else {
             Message controlMessage = createControlMessage(context, messageType);
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Control message:\n" + controlMessage.print(context));
+            if (logger.isDebugEnabled()) {
+                logger.debug("Control message:\n" + controlMessage.print(context));
             }
 
             if (StringUtils.hasText(controlMessage.getName())) {
@@ -271,7 +271,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                             || ScriptValidationContext.class.isAssignableFrom(item.getClass()))) {
                         throw new CitrusRuntimeException(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
                     } else {
-                        LOG.warn(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
+                        logger.warn(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
                     }
                 }
 

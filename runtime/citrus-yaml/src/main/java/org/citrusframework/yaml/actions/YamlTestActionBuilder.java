@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public interface YamlTestActionBuilder {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(YamlTestActionBuilder.class);
+    Logger logger = LoggerFactory.getLogger(YamlTestActionBuilder.class);
 
     /** Endpoint builder resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/yaml/builder";
@@ -50,8 +50,8 @@ public interface YamlTestActionBuilder {
     static Map<String, TestActionBuilder<?>> lookup() {
         Map<String, TestActionBuilder<?>> loader = TYPE_RESOLVER.resolveAll();
 
-        if (LOG.isDebugEnabled()) {
-            loader.forEach((k, v) -> LOG.debug(String.format("Found YAML test action builder '%s' as %s", k, v.getClass())));
+        if (logger.isDebugEnabled()) {
+            loader.forEach((k, v) -> logger.debug(String.format("Found YAML test action builder '%s' as %s", k, v.getClass())));
         }
         return loader;
     }
@@ -69,10 +69,10 @@ public interface YamlTestActionBuilder {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(name));
         } catch (CitrusRuntimeException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name), e);
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name), e);
             } else {
-                LOG.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name));
+                logger.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name));
             }
         }
 

@@ -39,7 +39,7 @@ public class StopTimeAction extends AbstractTestAction {
     private final String suffix;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(StopTimeAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(StopTimeAction.class);
 
     /**
      * Default constructor.
@@ -62,12 +62,12 @@ public class StopTimeAction extends AbstractTestAction {
                 context.setVariable(timeLineId + timeLineSuffix, time);
 
                 if (description != null) {
-                    log.info("TimeWatcher " + timeLineId + " after " + time + " ms (" + description + ")");
+                    logger.info("TimeWatcher " + timeLineId + " after " + time + " ms (" + description + ")");
                 } else {
-                    log.info("TimeWatcher " + timeLineId + " after " + time + " ms");
+                    logger.info("TimeWatcher " + timeLineId + " after " + time + " ms");
                 }
             } else {
-                log.info("Starting TimeWatcher: " + timeLineId);
+                logger.info("Starting TimeWatcher: " + timeLineId);
                 context.setVariable(timeLineId, System.currentTimeMillis());
                 context.setVariable(timeLineId + timeLineSuffix, 0L);
             }

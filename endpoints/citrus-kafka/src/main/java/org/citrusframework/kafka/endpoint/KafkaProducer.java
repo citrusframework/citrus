@@ -43,7 +43,7 @@ import org.springframework.util.StringUtils;
 public class KafkaProducer implements Producer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(KafkaProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(KafkaProducer.class);
 
     /** The producer name. */
     private final String name;
@@ -78,14 +78,14 @@ public class KafkaProducer implements Producer {
             throw new CitrusRuntimeException(String.format("Invalid Kafka stream topic header %s - must not be empty or null", KafkaMessageHeaders.TOPIC));
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending Kafka stream message to topic: '" + topic + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending Kafka stream message to topic: '" + topic + "'");
         }
 
         try {
             ProducerRecord<Object, Object> producerRecord = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context);
             producer.send(producerRecord).get(endpointConfiguration.getTimeout(), TimeUnit.MILLISECONDS);
-            log.info("Message was sent to Kafka stream topic: '" + topic + "'");
+            logger.info("Message was sent to Kafka stream topic: '" + topic + "'");
         } catch (InterruptedException | ExecutionException e) {
             throw new CitrusRuntimeException(String.format("Failed to send message to Kafka topic '%s'", topic), e);
         } catch (TimeoutException e) {

@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public interface XmlTestActionBuilder {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(XmlTestActionBuilder.class);
+    Logger logger = LoggerFactory.getLogger(XmlTestActionBuilder.class);
 
     /** Endpoint builder resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/xml/builder";
@@ -72,10 +72,10 @@ public interface XmlTestActionBuilder {
             }
             return Optional.of(builder);
         } catch (CitrusRuntimeException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name), e);
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name), e);
             } else {
-                LOG.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name));
+                logger.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, name));
             }
         }
 

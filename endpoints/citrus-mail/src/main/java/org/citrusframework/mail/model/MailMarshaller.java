@@ -43,7 +43,7 @@ import org.springframework.core.io.ClassPathResource;
 public class MailMarshaller implements Marshaller, Unmarshaller {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(MailMarshaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(MailMarshaller.class);
 
     /** System property defining message format to marshal to */
     private static final String MAIL_MARSHALLER_TYPE_PROPERTY = "citrus.mail.marshaller.type";
@@ -78,7 +78,7 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
                         } catch (JsonParseException | JsonMappingException e2) {
                             continue;
                         } catch (IOException io) {
-                            log.warn("Unable to read mail JSON object from source", io);
+                            logger.warn("Unable to read mail JSON object from source", io);
                             throw new CitrusRuntimeException("Failed to unmarshal source", io);
                         }
                     }

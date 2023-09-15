@@ -36,7 +36,7 @@ import org.testng.annotations.BeforeSuite;
 public class AbstractKubernetesIT extends TestNGCitrusSpringSupport {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(AbstractKubernetesIT.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractKubernetesIT.class);
 
     /** Kubernetes' connection state, checks connectivity only once per test run */
     private static boolean connected = false;
@@ -54,7 +54,7 @@ public class AbstractKubernetesIT extends TestNGCitrusSpringSupport {
 
                 connected = future.get(5000, TimeUnit.MILLISECONDS);
             } catch (Exception e) {
-                log.warn("Skipping Kubernetes test execution as no proper Kubernetes environment is available on host system!", e);
+                logger.warn("Skipping Kubernetes test execution as no proper Kubernetes environment is available on host system!", e);
             }
         }
     }

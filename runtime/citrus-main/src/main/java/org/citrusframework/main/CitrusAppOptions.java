@@ -37,7 +37,7 @@ import org.springframework.util.StringUtils;
 public class CitrusAppOptions<T extends CitrusAppConfiguration> {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CitrusAppOptions.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusAppOptions.class);
 
     protected final List<CliOption<T>> options = new ArrayList<>();
 
@@ -51,7 +51,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
                     builder.append(option.getInformation()).append(System.lineSeparator());
                 }
 
-                LOG.info(builder.toString());
+                logger.info(builder.toString());
                 configuration.setTimeToLive(1000);
                 configuration.setSkipTests(true);
             }

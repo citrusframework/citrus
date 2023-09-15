@@ -39,7 +39,7 @@ import static org.testng.Assert.assertNotNull;
 public class TimerTest extends UnitTestSupport {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(TimerTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(TimerTest.class);
 
     private TestAction action = Mockito.mock(TestAction.class);
     private int defaultRepeatCount = 3;
@@ -134,7 +134,7 @@ public class TimerTest extends UnitTestSupport {
         try {
             Thread.currentThread().sleep(sleepTime + 1000L);
         } catch (InterruptedException e) {
-            LOG.error("Interrupted while waiting for forked timer", e);
+            logger.error("Interrupted while waiting for forked timer", e);
         }
     }
 

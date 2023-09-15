@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public class Conditional extends AbstractActionContainer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Conditional.class);
+    private static final Logger logger = LoggerFactory.getLogger(Conditional.class);
 
     /** Boolean condition expression string */
     private final String condition;
@@ -55,13 +55,13 @@ public class Conditional extends AbstractActionContainer {
     @Override
     public void doExecute(final TestContext context) {
         if (checkCondition(context)) {
-            log.debug("Condition [ {} ] evaluates to true, executing nested actions", condition);
+            logger.debug("Condition [ {} ] evaluates to true, executing nested actions", condition);
 
             for (TestActionBuilder<?> actionBuilder : actions) {
                 executeAction(actionBuilder.build(), context);
             }
         } else {
-            log.debug("Condition [ {} ] evaluates to false, not executing nested actions", condition);
+            logger.debug("Condition [ {} ] evaluates to false, not executing nested actions", condition);
         }
     }
 

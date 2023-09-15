@@ -46,7 +46,7 @@ import org.springframework.util.StringUtils;
 public class JUnitReporter extends AbstractTestReporter {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JUnitReporter.class);
+    private static final Logger logger = LoggerFactory.getLogger(JUnitReporter.class);
 
     /** Output directory */
     private String outputDirectory = JUnitReporterSettings.getReportDirectory();
@@ -74,7 +74,7 @@ public class JUnitReporter extends AbstractTestReporter {
         if (isEnabled()) {
             ReportTemplates reportTemplates = new ReportTemplates();
 
-            log.debug("Generating JUnit test report");
+            logger.debug("Generating JUnit test report");
 
             try {
                 List<TestResult> results = testResults.asList();
@@ -161,7 +161,7 @@ public class JUnitReporter extends AbstractTestReporter {
             fileWriter.append(content);
             fileWriter.flush();
         } catch (IOException e) {
-            log.error("Failed to create test report", e);
+            logger.error("Failed to create test report", e);
         }
     }
 

@@ -29,7 +29,7 @@ import java.util.concurrent.CountDownLatch;
 public class OutputStreamReporter extends LoggingReporter {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(OutputStreamReporter.class);
+    private static final Logger logger = LoggerFactory.getLogger(OutputStreamReporter.class);
 
     /** Buffered writer to write logging events to */
     private Writer logWriter;
@@ -77,7 +77,7 @@ public class OutputStreamReporter extends LoggingReporter {
 
     @Override
     protected boolean isDebugEnabled() {
-        return log.isDebugEnabled();
+        return logger.isDebugEnabled();
     }
 
     /**
@@ -90,7 +90,7 @@ public class OutputStreamReporter extends LoggingReporter {
                 logWriter.write(String.format(format, level ,line));
             } catch (IOException e) {
                 failedCounter.countDown();
-                log.warn("Failed to write logging event to output stream", e);
+                logger.warn("Failed to write logging event to output stream", e);
             }
         }
     }
@@ -114,7 +114,7 @@ public class OutputStreamReporter extends LoggingReporter {
     }
 
     /**
-     * Gets the log writer.
+     * Gets the logger writer.
      *
      * @return
      */
@@ -123,7 +123,7 @@ public class OutputStreamReporter extends LoggingReporter {
     }
 
     /**
-     * Sets the log writer.
+     * Sets the logger writer.
      * @param writer
      */
     protected void setLogWriter(Writer writer) {

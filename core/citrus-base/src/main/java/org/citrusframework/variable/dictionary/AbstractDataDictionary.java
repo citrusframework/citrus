@@ -36,7 +36,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor implements DataDictionary<T> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AbstractDataDictionary.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractDataDictionary.class);
 
     /** Data dictionary name */
     private String name = getClass().getSimpleName();
@@ -74,8 +74,8 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
     public void initialize() {
         if (mappingFile != null) {
 
-            if (log.isDebugEnabled()) {
-                log.debug("Reading data dictionary mapping " + mappingFile.getFilename());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Reading data dictionary mapping " + mappingFile.getFilename());
             }
 
             Properties props;
@@ -88,19 +88,19 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
             for (Map.Entry<Object, Object> entry : props.entrySet()) {
                 String key = entry.getKey().toString();
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Loading data dictionary mapping: " + key + "=" + props.getProperty(key));
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Loading data dictionary mapping: " + key + "=" + props.getProperty(key));
                 }
 
-                if (log.isDebugEnabled() && mappings.containsKey(key)) {
-                    log.debug("Overwriting data dictionary mapping " + key + " old value:" + mappings.get(key)
+                if (logger.isDebugEnabled() && mappings.containsKey(key)) {
+                    logger.debug("Overwriting data dictionary mapping " + key + " old value:" + mappings.get(key)
                             + " new value:" + props.getProperty(key));
                 }
 
                 mappings.put(key, props.getProperty(key));
             }
 
-            log.debug("Loaded data dictionary mapping " + mappingFile.getFilename());
+            logger.debug("Loaded data dictionary mapping " + mappingFile.getFilename());
         }
     }
 

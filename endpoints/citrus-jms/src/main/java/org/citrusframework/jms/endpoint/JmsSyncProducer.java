@@ -54,7 +54,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     private final JmsSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsSyncProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(JmsSyncProducer.class);
 
     /**
      * Default constructor using endpoint configuration.
@@ -91,8 +91,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
             Destination destination;
             if (endpointConfiguration.getDestination() != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(endpointConfiguration.getDestination()) + "'");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(endpointConfiguration.getDestination()) + "'");
                 }
 
                 destination = endpointConfiguration.getDestination();
@@ -103,8 +103,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
                     destination = resolveDestination(context.replaceDynamicContentInString(endpointConfiguration.getDestinationName()));
                 }
             } else if (endpointConfiguration.getJmsTemplate().getDefaultDestination() != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(endpointConfiguration.getJmsTemplate().getDefaultDestination()) + "'");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(endpointConfiguration.getJmsTemplate().getDefaultDestination()) + "'");
                 }
 
                 destination = endpointConfiguration.getJmsTemplate().getDefaultDestination();
@@ -129,8 +129,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
                 messageConsumer = createMessageConsumer(replyToDestination, jmsRequest.getJMSMessageID());
             }
 
-            log.info("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(destination));
-            log.debug("Receiving reply message on destination: '{}'", replyToDestination);
+            logger.info("Message was sent to JMS destination: '{}'", endpointConfiguration.getDestinationName(destination));
+            logger.debug("Receiving reply message on destination: '{}'", replyToDestination);
 
             jakarta.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
 
@@ -140,7 +140,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
             Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(jmsReplyMessage, endpointConfiguration, context);
 
-            log.info("Received reply message on JMS destination: '{}'", replyToDestination);
+            logger.info("Received reply message on JMS destination: '{}'", replyToDestination);
 
             context.onInboundMessage(responseMessage);
 
@@ -202,7 +202,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
                 connection = ((TopicConnectionFactory) endpointConfiguration.getConnectionFactory()).createTopicConnection();
                 connection.setClientID(getName());
             } else {
-                log.warn("Not able to create a connection with connection factory '" + endpointConfiguration.getConnectionFactory() + "'" +
+                logger.warn("Not able to create a connection with connection factory '" + endpointConfiguration.getConnectionFactory() + "'" +
                         " when using setting 'publish-subscribe-domain' (=" + endpointConfiguration.isPubSubDomain() + ")");
 
                 connection = endpointConfiguration.getConnectionFactory().createConnection();
@@ -225,7 +225,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             } else if (endpointConfiguration.isPubSubDomain() && endpointConfiguration.getConnectionFactory() instanceof TopicConnectionFactory) {
                 session = ((TopicConnection) connection).createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
             } else {
-                log.warn("Not able to create a session with connection factory '" + endpointConfiguration.getConnectionFactory() + "'" +
+                logger.warn("Not able to create a session with connection factory '" + endpointConfiguration.getConnectionFactory() + "'" +
                         " when using setting 'publish-subscribe-domain' (=" + endpointConfiguration.isPubSubDomain() + ")");
 
                 session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -261,7 +261,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @param destination
      */
     private void deleteTemporaryDestination(Destination destination) {
-        log.debug("Delete temporary destination: '{}'", destination);
+        logger.debug("Delete temporary destination: '{}'", destination);
 
         try {
             if (destination instanceof TemporaryQueue) {
@@ -270,7 +270,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
                 ((TemporaryTopic) destination).delete();
             }
         } catch (JMSException e) {
-            log.error("Error while deleting temporary destination '" + destination + "'", e);
+            logger.error("Error while deleting temporary destination '" + destination + "'", e);
         }
     }
 
@@ -310,8 +310,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @throws JMSException
      */
     private Destination resolveDestination(String destinationName) throws JMSException {
-        if (log.isDebugEnabled()) {
-            log.debug("Sending JMS message to destination: '" + destinationName + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending JMS message to destination: '" + destinationName + "'");
         }
 
         return resolveDestinationName(destinationName, session);

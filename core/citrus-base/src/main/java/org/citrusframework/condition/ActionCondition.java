@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class ActionCondition extends AbstractCondition {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ActionCondition.class);
+    private static final Logger logger = LoggerFactory.getLogger(ActionCondition.class);
 
     /** Action to execute */
     private TestAction action;
@@ -63,7 +63,7 @@ public class ActionCondition extends AbstractCondition {
             action.execute(context);
         } catch (Exception e) {
             this.caughtException = e;
-            log.warn(String.format("Nested action did not perform as expected - %s", Optional.ofNullable(e.getMessage())
+            logger.warn(String.format("Nested action did not perform as expected - %s", Optional.ofNullable(e.getMessage())
                                                                                             .map(msg -> e.getClass().getName() + ": " + msg)
                                                                                             .orElse(e.getClass().getName())));
             return false;

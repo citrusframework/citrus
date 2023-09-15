@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultValidationMatcherLibrary.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultValidationMatcherLibrary.class);
 
     /**
      * Default constructor adds default matcher implementations.
@@ -71,8 +71,8 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
     private void lookupValidationMatchers() {
         ValidationMatcher.lookup().forEach((k, m) -> {
             getMembers().put(k, m);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Register message matcher '%s' as %s", k, m.getClass()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Register message matcher '%s' as %s", k, m.getClass()));
             }
         });
     }

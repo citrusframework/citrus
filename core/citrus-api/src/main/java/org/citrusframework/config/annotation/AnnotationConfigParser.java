@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint> {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(AnnotationConfigParser.class);
+    Logger logger = LoggerFactory.getLogger(AnnotationConfigParser.class);
 
     /** Endpoint parser resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/endpoint/parser";
@@ -63,8 +63,8 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
         if (parsers.isEmpty()) {
             parsers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
-            if (LOG.isDebugEnabled()) {
-                parsers.forEach((k, v) -> LOG.debug(String.format("Found annotation config parser '%s' as %s", k, v.getClass())));
+            if (logger.isDebugEnabled()) {
+                parsers.forEach((k, v) -> logger.debug(String.format("Found annotation config parser '%s' as %s", k, v.getClass())));
             }
         }
         return parsers;
@@ -91,7 +91,7 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
 
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve annotation config parser from resource '%s/%s'", RESOURCE_PATH, parser));
+            logger.warn(String.format("Failed to resolve annotation config parser from resource '%s/%s'", RESOURCE_PATH, parser));
         }
 
         return Optional.empty();

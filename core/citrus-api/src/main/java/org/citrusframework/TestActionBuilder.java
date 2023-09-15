@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public interface TestActionBuilder<T extends TestAction> {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(TestActionBuilder.class);
+    Logger logger = LoggerFactory.getLogger(TestActionBuilder.class);
 
     /** Endpoint builder resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/action/builder";
@@ -64,8 +64,8 @@ public interface TestActionBuilder<T extends TestAction> {
     static Map<String, TestActionBuilder<?>> lookup() {
         Map<String, TestActionBuilder<?>> builders = TYPE_RESOLVER.resolveAll();
 
-        if (LOG.isDebugEnabled()) {
-            builders.forEach((k, v) -> LOG.debug(String.format("Found test action builder '%s' as %s", k, v.getClass())));
+        if (logger.isDebugEnabled()) {
+            builders.forEach((k, v) -> logger.debug(String.format("Found test action builder '%s' as %s", k, v.getClass())));
         }
         return builders;
     }
@@ -83,7 +83,7 @@ public interface TestActionBuilder<T extends TestAction> {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(builder));
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, builder));
+            logger.warn(String.format("Failed to resolve test action builder from resource '%s/%s'", RESOURCE_PATH, builder));
         }
 
         return Optional.empty();

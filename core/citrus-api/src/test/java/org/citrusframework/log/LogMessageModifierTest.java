@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.log;
+package org.citrusframework.logger;
 
 import java.util.Collections;
 

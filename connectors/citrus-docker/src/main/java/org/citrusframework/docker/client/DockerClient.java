@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public class DockerClient extends AbstractEndpoint implements Producer, ReplyConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DockerClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(DockerClient.class);
 
     /** Store of reply messages */
     private CorrelationManager<DockerCommand> correlationManager;
@@ -74,14 +74,14 @@ public class DockerClient extends AbstractEndpoint implements Producer, ReplyCon
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending Docker request to: '" + getEndpointConfiguration().getDockerClientConfig().getDockerHost() + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending Docker request to: '" + getEndpointConfiguration().getDockerClientConfig().getDockerHost() + "'");
         }
 
         DockerCommand command = message.getPayload(DockerCommand.class);
         command.execute(this, context);
 
-        log.info("Docker request was sent to endpoint: '" + getEndpointConfiguration().getDockerClientConfig().getDockerHost() + "'");
+        logger.info("Docker request was sent to endpoint: '" + getEndpointConfiguration().getDockerClientConfig().getDockerHost() + "'");
 
         correlationManager.store(correlationKey, command);
 

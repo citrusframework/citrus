@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
 public class HamcrestHeaderValidator implements HeaderValidator {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(HamcrestHeaderValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(HamcrestHeaderValidator.class);
 
     @Override
     public void validateHeader(String headerName, Object receivedValue, Object controlValue, TestContext context, HeaderValidationContext validationContext) {
@@ -51,8 +51,8 @@ public class HamcrestHeaderValidator implements HeaderValidator {
             throw new ValidationException("Validation failed:", e);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Validating header element: " + headerName + "='" + controlValue + "': OK.");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating header element: " + headerName + "='" + controlValue + "': OK.");
         }
     }
 

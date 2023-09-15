@@ -46,7 +46,7 @@ import static org.mockito.Mockito.verify;
 public class AsyncTest extends UnitTestSupport {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(AsyncTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncTest.class);
 
     private final TestAction action = Mockito.mock(TestAction.class);
     private final TestAction success = Mockito.mock(TestAction.class);
@@ -163,7 +163,7 @@ public class AsyncTest extends UnitTestSupport {
             if (container.isDone(context)) {
                 done.complete(true);
             } else {
-                LOG.debug("Async action execution not finished yet ...");
+                logger.debug("Async action execution not finished yet ...");
             }
         }, 100, timeout / 10, TimeUnit.MILLISECONDS);
 

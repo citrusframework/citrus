@@ -16,10 +16,6 @@
 
 package org.citrusframework.json;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.common.Named;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -28,6 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Schema repository holding a set of json schema resources known in the test scope.
@@ -45,7 +45,7 @@ public class JsonSchemaRepository  implements Named, InitializingPhase {
     private List<String> locations = new ArrayList<>();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JsonSchemaRepository.class);
+    private static Logger logger = LoggerFactory.getLogger(JsonSchemaRepository.class);
 
     @Override
     public void setName(String name) {
@@ -71,14 +71,14 @@ public class JsonSchemaRepository  implements Named, InitializingPhase {
 
     private void addSchemas(Resource resource) {
         if (resource.getFilename().endsWith(".json")) {
-            if (log.isDebugEnabled()) {
-                log.debug("Loading json schema resource " + resource.getFilename());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Loading json schema resource " + resource.getFilename());
             }
             SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(resource);
             simpleJsonSchema.initialize();
             schemas.add(simpleJsonSchema);
         } else {
-            log.warn("Skipped resource other than json schema for repository (" + resource.getFilename() + ")");
+            logger.warn("Skipped resource other than json schema for repository (" + resource.getFilename() + ")");
         }
     }
 
@@ -95,11 +95,11 @@ public class JsonSchemaRepository  implements Named, InitializingPhase {
     }
 
     public static Logger getLog() {
-        return log;
+        return logger;
     }
 
-    public static void setLog(Logger log) {
-        JsonSchemaRepository.log = log;
+    public static void setLog(Logger logger) {
+        JsonSchemaRepository.logger = logger;
     }
 
     public List<String> getLocations() {

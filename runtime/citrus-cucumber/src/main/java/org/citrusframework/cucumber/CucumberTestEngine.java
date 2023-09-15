@@ -52,7 +52,7 @@ import org.springframework.util.StringUtils;
 public class CucumberTestEngine extends AbstractTestEngine {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CucumberTestEngine.class);
+    private static final Logger logger = LoggerFactory.getLogger(CucumberTestEngine.class);
 
     public CucumberTestEngine(TestRunConfiguration configuration) {
         super(configuration);
@@ -86,9 +86,9 @@ public class CucumberTestEngine extends AbstractTestEngine {
 
         List<String> packagesToRun = getConfiguration().getPackages();
         if (CollectionUtils.isEmpty(packagesToRun)) {
-            LOG.info("Running all tests in project");
+            logger.info("Running all tests in project");
         } else if (StringUtils.hasText(packagesToRun.get(0))) {
-            LOG.info(String.format("Running tests in package %s", packagesToRun.get(0)));
+            logger.info(String.format("Running tests in package %s", packagesToRun.get(0)));
             args.add(ClasspathSupport.CLASSPATH_SCHEME_PREFIX + packagesToRun.get(0).replaceAll("\\.", "/"));
 
             args.add("--glue");

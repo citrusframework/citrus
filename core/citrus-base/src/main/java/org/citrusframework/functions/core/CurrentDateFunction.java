@@ -35,7 +35,7 @@ import java.util.List;
 public class CurrentDateFunction extends AbstractDateFunction {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CurrentDateFunction.class);
+    private static final Logger logger = LoggerFactory.getLogger(CurrentDateFunction.class);
 
     /**
      * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
@@ -60,7 +60,7 @@ public class CurrentDateFunction extends AbstractDateFunction {
         try {
             result = dateFormat.format(calendar.getTime());
         } catch (RuntimeException e) {
-            log.error("Error while formatting date value ", e);
+            logger.error("Error while formatting date value ", e);
             throw new CitrusRuntimeException(e);
         }
 

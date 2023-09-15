@@ -57,7 +57,7 @@ public final class TestNGHelper {
     public static final String BUILDER_ATTRIBUTE = "builder";
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(TestNGHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestNGHelper.class);
 
     /**
      * Prevent instantiation of utility class
@@ -184,7 +184,7 @@ public final class TestNGHelper {
                 ((TestSourceAware) testLoader).setSource(source);
                 methodTestLoaders.add(testLoader);
             } else {
-                LOG.warn(String.format("Test loader %s is not able to handle test source %s", testLoader.getClass(), source));
+                logger.warn(String.format("Test loader %s is not able to handle test source %s", testLoader.getClass(), source));
             }
         }
 

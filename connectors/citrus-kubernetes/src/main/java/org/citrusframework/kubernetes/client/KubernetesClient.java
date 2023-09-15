@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public class KubernetesClient extends AbstractEndpoint implements Producer, ReplyConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(KubernetesClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(KubernetesClient.class);
 
     /** Store of reply messages */
     private CorrelationManager<KubernetesCommand> correlationManager;
@@ -72,14 +72,14 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending Kubernetes request to: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending Kubernetes request to: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
         }
 
         KubernetesCommand<?> command = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
         command.execute(this, context);
 
-        log.info("Kubernetes request was sent to endpoint: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
+        logger.info("Kubernetes request was sent to endpoint: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
 
         correlationManager.store(correlationKey, command);
     }

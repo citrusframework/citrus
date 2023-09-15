@@ -17,6 +17,8 @@
 package org.citrusframework.docs;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.*;
@@ -33,6 +35,9 @@ import java.util.Properties;
  * @since 2007
  */
 public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(SvgTestDocsGenerator.class);
 
     /**
      * Default constructor.
@@ -56,7 +61,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
             List<File> testFiles = getTestFiles();
 
             for (File testFile : testFiles) {
-                log.info("Working on test " + testFile.getName());
+                logger.info("Working on test " + testFile.getName());
 
                 fos = getFileOutputStream(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                 buffered = new BufferedOutputStream(fos);
@@ -66,7 +71,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
                 
                 t.transform(xml, res);
                 
-                log.info("Finished test " + testFile.getName());
+                logger.info("Finished test " + testFile.getName());
                 
                 buffered.flush();
                 fos.close();
@@ -82,7 +87,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
                 try {
                     buffered.flush();
                 } catch (IOException e) {
-                    log.error("Failed to close output stream", e);
+                    logger.error("Failed to close output stream", e);
                 }
             }
             
@@ -90,7 +95,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
                 try {
                     fos.close();
                 } catch (IOException e) {
-                    log.error("Failed to close file", e);
+                    logger.error("Failed to close file", e);
                 }
             }
         }

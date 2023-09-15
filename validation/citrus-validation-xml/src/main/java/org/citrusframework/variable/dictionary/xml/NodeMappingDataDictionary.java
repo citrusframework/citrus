@@ -36,7 +36,7 @@ import org.w3c.dom.Node;
 public class NodeMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingPhase {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(NodeMappingDataDictionary.class);
+    private static final Logger logger = LoggerFactory.getLogger(NodeMappingDataDictionary.class);
 
     @Override
     public <T> T translate(Node node, T value, TestContext context) {
@@ -44,16 +44,16 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
 
         if (getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.EXACT)) {
             if (mappings.containsKey(nodePath)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));
                 }
                 return convertIfNecessary(mappings.get(nodePath), value, context);
             }
         } else if (getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.ENDS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (nodePath.endsWith(entry.getKey())) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }
@@ -61,8 +61,8 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
         } else if (getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.STARTS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (nodePath.startsWith(entry.getKey())) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }
