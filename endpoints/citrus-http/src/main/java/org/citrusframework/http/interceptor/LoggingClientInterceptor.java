@@ -45,11 +45,11 @@ import org.springframework.util.StringUtils;
  */
 public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
-    /** New line characters in log files */
+    /** New line characters in logger files */
     private static final String NEWLINE = System.getProperty("line.separator");
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(LoggingClientInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoggingClientInterceptor.class);
 
     private MessageListeners messageListener;
 
@@ -73,11 +73,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      */
     public void handleRequest(String request) {
         if (hasMessageListeners()) {
-            LOG.debug("Sending Http request message");
+            logger.debug("Sending Http request message");
             messageListener.onOutboundMessage(new RawMessage(request), contextFactory.getObject());
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Sending Http request message:" + NEWLINE + request);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Sending Http request message:" + NEWLINE + request);
             }
         }
     }
@@ -88,11 +88,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      */
     public void handleResponse(String response) {
         if (hasMessageListeners()) {
-            LOG.debug("Received Http response message");
+            logger.debug("Received Http response message");
             messageListener.onInboundMessage(new RawMessage(response), contextFactory.getObject());
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Received Http response message:" + NEWLINE + response);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Received Http response message:" + NEWLINE + response);
             }
         }
     }

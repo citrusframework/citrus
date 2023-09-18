@@ -32,7 +32,7 @@ public class Delete extends AbstractZooCommand<ZooResponse> {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(Delete.class);
+    private static final Logger logger = LoggerFactory.getLogger(Delete.class);
 
     /**
      * Default constructor initializing the command name.
@@ -55,7 +55,7 @@ public class Delete extends AbstractZooCommand<ZooResponse> {
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }
-        log.debug(getCommandResult().toString());
+        logger.debug(getCommandResult().toString());
     }
 
     /**

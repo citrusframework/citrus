@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public interface VariableExtractor extends MessageProcessor {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(VariableExtractor.class);
+    Logger logger = LoggerFactory.getLogger(VariableExtractor.class);
 
     /** Variable extractor resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/variable/extractor";
@@ -57,7 +57,7 @@ public interface VariableExtractor extends MessageProcessor {
             Builder<T, B> instance = TYPE_RESOLVER.resolve(extractor);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve variable extractor from resource '%s/%s'", RESOURCE_PATH, extractor));
+            logger.warn(String.format("Failed to resolve variable extractor from resource '%s/%s'", RESOURCE_PATH, extractor));
         }
 
         return Optional.empty();

@@ -38,7 +38,7 @@ import java.util.List;
 public class ChangeDateFunction extends AbstractDateFunction {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ChangeDateFunction.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChangeDateFunction.class);
 
     /**
      * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
@@ -73,7 +73,7 @@ public class ChangeDateFunction extends AbstractDateFunction {
         try {
             result = dateFormat.format(calendar.getTime());
         } catch (RuntimeException e) {
-            log.error("Error while formatting dateParameter value ", e);
+            logger.error("Error while formatting dateParameter value ", e);
             throw new CitrusRuntimeException(e);
         }
 

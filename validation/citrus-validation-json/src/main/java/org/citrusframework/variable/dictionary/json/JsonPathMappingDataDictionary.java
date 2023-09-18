@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
 public class JsonPathMappingDataDictionary extends AbstractJsonDataDictionary {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JsonPathMappingDataDictionary.class);
+    private static final Logger logger = LoggerFactory.getLogger(JsonPathMappingDataDictionary.class);
 
     @Override
     protected void processMessage(Message message, TestContext context) {
@@ -61,7 +61,7 @@ public class JsonPathMappingDataDictionary extends AbstractJsonDataDictionary {
     public void initialize() {
         if (getPathMappingStrategy() != null &&
                 !getPathMappingStrategy().equals(PathMappingStrategy.EXACT)) {
-            log.warn(String.format("%s ignores path mapping strategy other than %s",
+            logger.warn(String.format("%s ignores path mapping strategy other than %s",
                     getClass().getSimpleName(), PathMappingStrategy.EXACT));
         }
 

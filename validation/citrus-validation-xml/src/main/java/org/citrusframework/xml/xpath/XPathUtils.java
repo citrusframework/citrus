@@ -49,7 +49,7 @@ import org.w3c.dom.NodeList;
 public abstract class XPathUtils {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XPathUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(XPathUtils.class);
 
     /** Dynamic namespace prefix suffix */
     public static final String DYNAMIC_NS_START = "{";
@@ -329,11 +329,11 @@ public abstract class XPathUtils {
                     try {
                         factory = XPathFactory.newInstance(uri);
                     } catch (XPathFactoryConfigurationException e) {
-                        LOG.warn("Failed to instantiate xpath factory", e);
+                        logger.warn("Failed to instantiate xpath factory", e);
                         factory = XPathFactory.newInstance();
                     }
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Created xpath factory {} using system property {} with value {}", factory, key, uri);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Created xpath factory {} using system property {} with value {}", factory, key, uri);
                     }
                 }
             }
@@ -341,8 +341,8 @@ public abstract class XPathUtils {
 
         if (factory == null) {
             factory = XPathFactory.newInstance();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Created default xpath factory {}", factory);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Created default xpath factory {}", factory);
             }
         }
 

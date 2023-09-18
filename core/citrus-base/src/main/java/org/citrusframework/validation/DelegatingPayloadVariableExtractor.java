@@ -45,7 +45,7 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
     private Map<String, String> namespaces;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(DelegatingPayloadVariableExtractor.class);
+    private static final Logger logger = LoggerFactory.getLogger(DelegatingPayloadVariableExtractor.class);
 
     public DelegatingPayloadVariableExtractor() {
         this(new Builder());
@@ -61,8 +61,8 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
     public void extractVariables(Message message, TestContext context) {
         if (CollectionUtils.isEmpty(pathExpressions)) {return;}
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Reading path elements.");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Reading path elements.");
         }
 
         Map<String, Object> jsonPathExpressions = new LinkedHashMap<>();

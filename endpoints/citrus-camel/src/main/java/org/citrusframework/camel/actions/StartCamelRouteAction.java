@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class StartCamelRouteAction extends AbstractCamelRouteAction {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(StartCamelRouteAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(StartCamelRouteAction.class);
 
     /**
      * Default constructor.
@@ -45,7 +45,7 @@ public class StartCamelRouteAction extends AbstractCamelRouteAction {
 
             try {
                 ((AbstractCamelContext) camelContext).startRoute(route);
-                LOG.info(String.format("Started Camel route '%s' on context '%s'", route, camelContext.getName()));
+                logger.info(String.format("Started Camel route '%s' on context '%s'", route, camelContext.getName()));
             } catch (Exception e) {
                 throw new CitrusRuntimeException("Failed to start Camel route: " + route, e);
             }

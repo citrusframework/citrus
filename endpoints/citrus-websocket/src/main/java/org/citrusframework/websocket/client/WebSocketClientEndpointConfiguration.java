@@ -41,7 +41,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpointConfiguration {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(WebSocketClientEndpointConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketClientEndpointConfiguration.class);
 
     /** Web socket handler */
     private CitrusWebSocketHandler handler;
@@ -83,7 +83,7 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
             future.get();
         } catch (Exception e) {
             String errMsg = String.format("Failed to connect to Web Socket server - '%s'", url);
-            LOG.error(errMsg);
+            logger.error(errMsg);
             throw new CitrusRuntimeException(errMsg);
         }
         return handler;

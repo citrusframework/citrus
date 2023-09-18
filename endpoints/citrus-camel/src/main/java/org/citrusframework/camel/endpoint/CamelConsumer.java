@@ -41,7 +41,7 @@ public class CamelConsumer implements Consumer {
     private ConsumerTemplate consumerTemplate;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CamelConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(CamelConsumer.class);
 
     /**
      * Constructor using endpoint configuration and fields.
@@ -69,8 +69,8 @@ public class CamelConsumer implements Consumer {
             throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel consumer");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Receiving message from camel endpoint: '" + endpointUri + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Receiving message from camel endpoint: '" + endpointUri + "'");
         }
 
         Exchange exchange;
@@ -84,7 +84,7 @@ public class CamelConsumer implements Consumer {
             throw new MessageTimeoutException(timeout, endpointUri);
         }
 
-        log.info("Received message from camel endpoint: '" + endpointUri + "'");
+        logger.info("Received message from camel endpoint: '" + endpointUri + "'");
 
         Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration, context);
         context.onInboundMessage(message);

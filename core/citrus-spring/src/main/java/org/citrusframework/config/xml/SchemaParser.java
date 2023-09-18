@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
 public class SchemaParser implements BeanDefinitionParser {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SchemaParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(SchemaParser.class);
 
     /** Resource path where to find custom schema parsers via lookup */
     private static final String RESOURCE_PATH = "META-INF/citrus/schema/parser";
@@ -69,7 +69,7 @@ public class SchemaParser implements BeanDefinitionParser {
         }
 
         BeanDefinitionParser parser = TYPE_RESOLVER.resolve(fileExtension);
-        log.info(String.format("Found schema bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + fileExtension));
+        logger.info(String.format("Found schema bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + fileExtension));
         SCHEMA_PARSER.put(fileExtension, parser);
         return parser;
     }

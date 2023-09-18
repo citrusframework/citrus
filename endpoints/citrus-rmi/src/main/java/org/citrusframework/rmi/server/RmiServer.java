@@ -46,7 +46,7 @@ import org.springframework.util.StringUtils;
 public class RmiServer extends AbstractServer implements InvocationHandler {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(RmiServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(RmiServer.class);
 
     /** Endpoint configuration */
     private final RmiEndpointConfiguration endpointConfiguration;
@@ -79,8 +79,8 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (log.isDebugEnabled()) {
-            log.debug("Received message on RMI server: '" + endpointConfiguration.getBinding() + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Received message on RMI server: '" + endpointConfiguration.getBinding() + "'");
         }
 
         Message response = getEndpointAdapter().handleMessage(endpointConfiguration.getMessageConverter()
@@ -155,7 +155,7 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
             try {
                 registry.unbind(endpointConfiguration.getBinding());
             } catch (Exception e) {
-                log.warn("Failed to unbind from registry:" + e.getMessage());
+                logger.warn("Failed to unbind from registry:" + e.getMessage());
             }
         }
 
@@ -163,7 +163,7 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
             try {
                 UnicastRemoteObject.unexportObject(proxy, true);
             } catch (Exception e) {
-                log.warn("Failed to unexport from remote object:" + e.getMessage());
+                logger.warn("Failed to unexport from remote object:" + e.getMessage());
             }
         }
 

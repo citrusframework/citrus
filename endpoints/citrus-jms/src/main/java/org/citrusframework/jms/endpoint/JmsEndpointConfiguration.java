@@ -41,7 +41,7 @@ import org.springframework.util.Assert;
 public class JmsEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(JmsEndpointConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(JmsEndpointConfiguration.class);
 
     /** The connection factory */
     private ConnectionFactory connectionFactory;
@@ -98,7 +98,7 @@ public class JmsEndpointConfiguration extends AbstractPollableEndpointConfigurat
                 return destination.toString();
             }
         } catch (JMSException e) {
-            LOG.error("Unable to resolve destination name", e);
+            logger.error("Unable to resolve destination name", e);
             return "";
         }
     }

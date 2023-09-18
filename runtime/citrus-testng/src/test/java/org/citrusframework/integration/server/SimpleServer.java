@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SimpleServer extends AbstractServer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SimpleServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SimpleServer.class);
 
     /** Server publishes start stop events to this channel **/
     private DirectEndpoint statusEndpoint;
@@ -43,13 +43,13 @@ public class SimpleServer extends AbstractServer {
 
     @Override
     protected void startup() {
-        log.info("Simple server was started successfully!");
+        logger.info("Simple server was started successfully!");
         statusEndpoint.createProducer().send(new RawMessage("SERVER STARTED"), testContextFactory.getObject());
     }
 
     @Override
     protected void shutdown() {
-        log.info("Simple server was stopped successfully!");
+        logger.info("Simple server was stopped successfully!");
         statusEndpoint.createProducer().send(new RawMessage("SERVER STOPPED"), testContextFactory.getObject());
     }
 

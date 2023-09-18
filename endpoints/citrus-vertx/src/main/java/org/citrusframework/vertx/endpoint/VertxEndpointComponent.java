@@ -34,7 +34,7 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
     public static final String VERTX_INSTANCE_FACTORY = "vertxInstanceFactory";
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(VertxEndpointComponent.class);
+    private static final Logger logger = LoggerFactory.getLogger(VertxEndpointComponent.class);
 
     /**
      * Default constructor using the name for this component.
@@ -71,14 +71,14 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
             if (context.getReferenceResolver() != null) {
                 endpoint.setVertxInstanceFactory(context.getReferenceResolver().resolve(vertFactoryBean, VertxInstanceFactory.class));
             } else {
-                log.warn("Unable to set custom Vert.x instance factory as Spring application context is not accessible!");
+                logger.warn("Unable to set custom Vert.x instance factory as Spring application context is not accessible!");
             }
         } else {
             // set default jms connection factory
             if (context.getReferenceResolver() != null && context.getReferenceResolver().isResolvable(VERTX_INSTANCE_FACTORY)) {
                 endpoint.setVertxInstanceFactory(context.getReferenceResolver().resolve(VERTX_INSTANCE_FACTORY, VertxInstanceFactory.class));
             } else {
-                log.warn("Unable to set default Vert.x instance factory as Spring application context is not accessible or default factory bean is not available!");
+                logger.warn("Unable to set default Vert.x instance factory as Spring application context is not accessible or default factory bean is not available!");
             }
         }
 

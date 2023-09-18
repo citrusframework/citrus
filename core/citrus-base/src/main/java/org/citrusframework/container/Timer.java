@@ -34,7 +34,7 @@ import org.springframework.util.StringUtils;
  */
 public class Timer extends AbstractActionContainer implements StopTimer {
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(Timer.class);
+    private static final Logger logger = LoggerFactory.getLogger(Timer.class);
 
     private final static AtomicInteger nextSerialNumber = new AtomicInteger(0);
 
@@ -87,13 +87,13 @@ public class Timer extends AbstractActionContainer implements StopTimer {
                 try {
                     indexCount++;
                     updateIndexCountInTestContext(context);
-                    log.debug(String.format("Timer event fired #%s - executing nested actions", indexCount));
+                    logger.debug(String.format("Timer event fired #%s - executing nested actions", indexCount));
 
                     for (TestActionBuilder<?> actionBuilder : actions)  {
                         executeAction(actionBuilder.build(), context);
                     }
                     if (indexCount >= repeatCount) {
-                        log.debug(String.format("Timer complete: %s iterations reached", repeatCount));
+                        logger.debug(String.format("Timer complete: %s iterations reached", repeatCount));
                         stopTimer();
                     }
                 } catch (Exception e) {
@@ -111,7 +111,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
                 } else {
                     timerException = new CitrusRuntimeException(e);
                 }
-                log.error(String.format("Timer stopped as a result of nested action error (%s)", e.getMessage()));
+                logger.error(String.format("Timer stopped as a result of nested action error (%s)", e.getMessage()));
                 stopTimer();
 
                 if (fork) {
@@ -125,7 +125,7 @@ public class Timer extends AbstractActionContainer implements StopTimer {
             try {
                 Thread.sleep(interval);
             } catch (InterruptedException e) {
-                log.warn("Interrupted while waiting for timer to complete", e);
+                logger.warn("Interrupted while waiting for timer to complete", e);
             }
         }
 

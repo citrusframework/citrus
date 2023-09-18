@@ -40,7 +40,7 @@ public class CamelProducer implements Producer {
     private ProducerTemplate producerTemplate;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CamelProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(CamelProducer.class);
 
     /**
      * Constructor using endpoint configuration and fields.
@@ -63,8 +63,8 @@ public class CamelProducer implements Producer {
             throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel producer");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending message to camel endpoint: '" + endpointUri + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending message to camel endpoint: '" + endpointUri + "'");
         }
 
         Exchange camelExchange;
@@ -84,7 +84,7 @@ public class CamelProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        log.info("Message was sent to camel endpoint '" + endpointUri + "'");
+        logger.info("Message was sent to camel endpoint '" + endpointUri + "'");
     }
 
     /**

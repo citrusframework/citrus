@@ -37,7 +37,7 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
     private final PollableEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(PollingCorrelationManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(PollingCorrelationManager.class);
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("org.citrusframework.RetryLogger");
@@ -63,8 +63,8 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
 
     @Override
     public String getCorrelationKey(String correlationKeyName, TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Get correlation key for '%s'", correlationKeyName));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Get correlation key for '%s'", correlationKeyName));
         }
 
         String correlationKey = null;
@@ -126,7 +126,7 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
     }
 
     /**
-     * Gets the retry log message
+     * Gets the retry logger message
      * @return
      */
     public String getRetryLogMessage() {

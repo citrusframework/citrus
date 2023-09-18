@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
 
     /** Logger */
-    Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
     private static final String BODY_PLACEHOLDER = "+++++ BODY +++++";
@@ -102,7 +102,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    log.error("Failed to close reader", e);
+                    logger.error("Failed to close reader", e);
                 }
             }
 
@@ -110,7 +110,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
                 try {
                     buffered.flush();
                 } catch (final IOException e) {
-                    log.error("Failed to close output stream", e);
+                    logger.error("Failed to close output stream", e);
                 }
             }
 
@@ -118,7 +118,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
                 try {
                     fos.close();
                 } catch (final IOException e) {
-                    log.error("Failed to close file", e);
+                    logger.error("Failed to close file", e);
                 }
             }
         }

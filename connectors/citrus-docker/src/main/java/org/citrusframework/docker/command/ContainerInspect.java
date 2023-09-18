@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class ContainerInspect extends AbstractDockerCommand<InspectContainerResponse> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ContainerInspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(ContainerInspect.class);
 
     /**
      * Default constructor initializing the command name.
@@ -47,7 +47,7 @@ public class ContainerInspect extends AbstractDockerCommand<InspectContainerResp
 
         setCommandResult(response);
 
-        log.debug(response.toString());
+        logger.debug(response.toString());
     }
 
     /**

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public interface EndpointComponent {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(EndpointComponent.class);
+    Logger logger = LoggerFactory.getLogger(EndpointComponent.class);
 
     String ENDPOINT_NAME = "endpointName";
 
@@ -75,8 +75,8 @@ public interface EndpointComponent {
     static Map<String, EndpointComponent> lookup() {
         Map<String, EndpointComponent> components = TYPE_RESOLVER.resolveAll();
 
-        if (LOG.isDebugEnabled()) {
-            components.forEach((k, v) -> LOG.debug(String.format("Found endpoint component '%s' as %s", k, v.getClass())));
+        if (logger.isDebugEnabled()) {
+            components.forEach((k, v) -> logger.debug(String.format("Found endpoint component '%s' as %s", k, v.getClass())));
         }
         return components;
     }
@@ -93,7 +93,7 @@ public interface EndpointComponent {
             EndpointComponent instance = TYPE_RESOLVER.resolve(component);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve endpoint component from resource '%s/%s'", RESOURCE_PATH, component));
+            logger.warn(String.format("Failed to resolve endpoint component from resource '%s/%s'", RESOURCE_PATH, component));
         }
 
         return Optional.empty();

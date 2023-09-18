@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public interface CitrusXmlConfigParser {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(CitrusXmlConfigParser.class);
+    Logger logger = LoggerFactory.getLogger(CitrusXmlConfigParser.class);
 
     /** Bean definition parser resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/config/parser";
@@ -50,8 +50,8 @@ public interface CitrusXmlConfigParser {
     static <T>  Map<String, T> lookup(String category) {
         Map<String, T> parser = TYPE_RESOLVER.resolveAll(category, TypeResolver.DEFAULT_TYPE_PROPERTY, null);
 
-        if (LOG.isDebugEnabled()) {
-            parser.forEach((k, v) -> LOG.debug(String.format("Found XML config parser '%s/%s' as %s", category, k, v.getClass())));
+        if (logger.isDebugEnabled()) {
+            parser.forEach((k, v) -> logger.debug(String.format("Found XML config parser '%s/%s' as %s", category, k, v.getClass())));
         }
 
         return parser;
@@ -70,7 +70,7 @@ public interface CitrusXmlConfigParser {
             T instance = TYPE_RESOLVER.resolve(category + "/" + name);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve XML config parser from resource '%s/%s/%s'", RESOURCE_PATH, category, name));
+            logger.warn(String.format("Failed to resolve XML config parser from resource '%s/%s/%s'", RESOURCE_PATH, category, name));
         }
 
         return Optional.empty();

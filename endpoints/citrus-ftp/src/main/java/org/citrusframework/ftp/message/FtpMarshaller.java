@@ -55,7 +55,7 @@ import org.springframework.core.io.ClassPathResource;
 public class FtpMarshaller implements Marshaller, Unmarshaller {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(FtpMarshaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(FtpMarshaller.class);
 
     /** System property defining message format to marshal to */
     private static final String JDBC_MARSHALLER_TYPE_PROPERTY = "citrus.ftp.marshaller.type";
@@ -102,7 +102,7 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
                         } catch (JsonParseException | JsonMappingException e2) {
                             continue;
                         } catch (IOException io) {
-                            log.warn("Failed to read ftp JSON object from source: " + io.getMessage());
+                            logger.warn("Failed to read ftp JSON object from source: " + io.getMessage());
                             break;
                         }
                     }
@@ -124,7 +124,7 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
             try {
                 return marshaller.unmarshal(source);
             } catch (JAXBException me) {
-                log.warn("Failed to read ftp XML object from source: " + me.getMessage());
+                logger.warn("Failed to read ftp XML object from source: " + me.getMessage());
             }
 
             throw new CitrusRuntimeException("Failed to read ftp JSON object from source" + source);

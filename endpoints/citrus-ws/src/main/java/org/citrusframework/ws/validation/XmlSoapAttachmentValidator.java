@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator implements ReferenceResolverAware {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
 
     private TestContextFactory testContextFactory;
 
@@ -81,7 +81,7 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
             try {
                 defaultMessageValidator = Optional.of(getTestContextFactory().getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
             } catch (CitrusRuntimeException e) {
-                LOG.warn("Unable to find default XML message validator in message validator registry");
+                logger.warn("Unable to find default XML message validator in message validator registry");
             }
         }
 

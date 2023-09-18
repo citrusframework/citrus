@@ -98,7 +98,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     private CompletableFuture<Void> finished;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(SendMessageAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(SendMessageAction.class);
 
     /**
      * Default constructor.
@@ -142,7 +142,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         if (forkMode) {
-            LOG.debug("Forking message sending action ...");
+            logger.debug("Forking message sending action ...");
 
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
             taskExecutor.execute(() -> {

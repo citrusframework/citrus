@@ -70,7 +70,7 @@ import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
 public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingPhase, ShutdownPhase {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(FtpClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(FtpClient.class);
 
     /** Apache ftp client */
     private FTPClient ftpClient;
@@ -113,9 +113,9 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(ftpMessage);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
-            LOG.debug("Message to send:\n" + ftpMessage.getPayload(String.class));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+            logger.debug("Message to send:\n" + ftpMessage.getPayload(String.class));
         }
 
         try {
@@ -142,7 +142,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 }
             }
 
-            LOG.info(String.format("FTP message was sent to: '%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+            logger.info(String.format("FTP message was sent to: '%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
             correlationManager.store(correlationKey, response);
         } catch (IOException e) {
@@ -405,8 +405,8 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         if (!ftpClient.isConnected()) {
             ftpClient.connect(getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Connected to FTP server: " + ftpClient.getReplyString());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Connected to FTP server: " + ftpClient.getReplyString());
             }
 
             int reply = ftpClient.getReplyCode();
@@ -415,11 +415,11 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 throw new CitrusRuntimeException("FTP server refused connection.");
             }
 
-            LOG.info("Opened connection to FTP server");
+            logger.info("Opened connection to FTP server");
 
             if (getEndpointConfiguration().getUser() != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(String.format("Login as user: '%s'", getEndpointConfiguration().getUser()));
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Login as user: '%s'", getEndpointConfiguration().getUser()));
                 }
                 boolean login = ftpClient.login(getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword());
 
@@ -475,15 +475,15 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         ftpClient.addProtocolCommandListener(new ProtocolCommandListener() {
             @Override
             public void protocolCommandSent(ProtocolCommandEvent event) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Send FTP command: " + event.getCommand());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Send FTP command: " + event.getCommand());
                 }
             }
 
             @Override
             public void protocolReplyReceived(ProtocolCommandEvent event) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Received FTP command reply: " + event.getReplyCode());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Received FTP command reply: " + event.getReplyCode());
                 }
             }
         });
@@ -498,10 +498,10 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 try {
                     ftpClient.disconnect();
                 } catch (IOException e) {
-                    LOG.warn("Failed to disconnect from FTP server", e);
+                    logger.warn("Failed to disconnect from FTP server", e);
                 }
 
-                LOG.info("Closed connection to FTP server");
+                logger.info("Closed connection to FTP server");
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to logout from FTP server", e);

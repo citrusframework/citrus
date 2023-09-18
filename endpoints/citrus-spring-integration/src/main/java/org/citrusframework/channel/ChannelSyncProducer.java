@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ChannelSyncProducer extends ChannelProducer implements ReplyConsumer {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ChannelSyncProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChannelSyncProducer.class);
 
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
@@ -65,14 +65,14 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
         String destinationChannelName = getDestinationChannelName();
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending message to channel: '" + destinationChannelName + "'");
-            log.debug("Message to send is:\n" + message.toString());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending message to channel: '" + destinationChannelName + "'");
+            logger.debug("Message to send is:\n" + message.toString());
         }
 
         endpointConfiguration.getMessagingTemplate().setReceiveTimeout(endpointConfiguration.getTimeout());
 
-        log.info("Message was sent to channel: '" + destinationChannelName + "'");
+        logger.info("Message was sent to channel: '" + destinationChannelName + "'");
 
         org.springframework.messaging.Message<?> replyMessage = endpointConfiguration.getMessagingTemplate().sendAndReceive(getDestinationChannel(context),
                 endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context));
@@ -80,7 +80,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
         if (replyMessage == null) {
             throw new ReplyMessageTimeoutException(endpointConfiguration.getTimeout(), destinationChannelName);
         } else {
-            log.info("Received synchronous response from reply channel '" + destinationChannelName + "'");
+            logger.info("Received synchronous response from reply channel '" + destinationChannelName + "'");
         }
 
         correlationManager.store(correlationKey, endpointConfiguration.getMessageConverter().convertInbound(replyMessage, endpointConfiguration, context));

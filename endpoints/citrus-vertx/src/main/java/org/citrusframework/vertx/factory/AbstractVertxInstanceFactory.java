@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractVertxInstanceFactory implements VertxInstanceFactory {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(AbstractVertxInstanceFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractVertxInstanceFactory.class);
 
     /**
      * Creates new Vert.x instance with default factory. Subclasses may overwrite this
@@ -53,11 +53,11 @@ public abstract class AbstractVertxInstanceFactory implements VertxInstanceFacto
 
         Handler<AsyncResult<Vertx>> asyncLoadingHandler = event -> {
             loading.complete(event.result());
-            log.info("Vert.x instance started");
+            logger.info("Vert.x instance started");
         };
 
-        if (log.isDebugEnabled()) {
-            log.debug("Creating new Vert.x instance ...");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Creating new Vert.x instance ...");
         }
 
         VertxOptions vertxOptions = new VertxOptions();
@@ -73,9 +73,9 @@ public abstract class AbstractVertxInstanceFactory implements VertxInstanceFacto
                     return vertx;
                 }
             } catch (InterruptedException | ExecutionException e) {
-                log.warn("Interrupted while waiting for Vert.x instance startup", e);
+                logger.warn("Interrupted while waiting for Vert.x instance startup", e);
             } catch (TimeoutException e) {
-                log.debug("Waiting for Vert.x instance to startup ...");
+                logger.debug("Waiting for Vert.x instance to startup ...");
             }
         }
 

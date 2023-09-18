@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -32,6 +34,9 @@ import org.springframework.util.StringUtils;
  * @since 2.0
  */
 public abstract class AbstractSuiteActionContainer extends AbstractActionContainer {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSuiteActionContainer.class);
 
     /** List of suite names that match for this container */
     private List<String> suiteNames = new ArrayList<>();
@@ -56,19 +61,19 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
 
         if (StringUtils.hasText(suiteName) &&
                 !CollectionUtils.isEmpty(suiteNames) && ! suiteNames.contains(suiteName)) {
-            log.warn(String.format(baseErrorMessage, "suite name", getName()));
+            logger.warn(String.format(baseErrorMessage, "suite name", getName()));
             return false;
         }
 
         if (!checkTestGroups(includedGroups)) {
-            log.warn(String.format(baseErrorMessage, "test groups", getName()));
+            logger.warn(String.format(baseErrorMessage, "test groups", getName()));
             return false;
         }
 
         for (Map.Entry<String, String> envEntry : env.entrySet()) {
             if (!System.getenv().containsKey(envEntry.getKey()) ||
                     (StringUtils.hasText(envEntry.getValue()) && !System.getenv().get(envEntry.getKey()).equals(envEntry.getValue()))) {
-                log.warn(String.format(baseErrorMessage, "env properties", getName()));
+                logger.warn(String.format(baseErrorMessage, "env properties", getName()));
                 return false;
             }
         }
@@ -76,7 +81,7 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
         for (Map.Entry<String, String> systemProperty : systemProperties.entrySet()) {
             if (!System.getProperties().containsKey(systemProperty.getKey()) ||
                     (StringUtils.hasText(systemProperty.getValue()) && !System.getProperties().get(systemProperty.getKey()).equals(systemProperty.getValue()))) {
-                log.warn(String.format(baseErrorMessage, "system properties", getName()));
+                logger.warn(String.format(baseErrorMessage, "system properties", getName()));
                 return false;
             }
         }

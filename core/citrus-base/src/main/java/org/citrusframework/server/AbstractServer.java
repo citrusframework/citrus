@@ -75,7 +75,7 @@ public abstract class AbstractServer extends AbstractEndpoint
     private boolean debugLogging = false;
 
     /** Logger */
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Default constructor using endpoint configuration.
@@ -86,8 +86,8 @@ public abstract class AbstractServer extends AbstractEndpoint
 
     @Override
     public void start() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Starting server: " + getName() + " ...");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Starting server: " + getName() + " ...");
         }
 
         startup();
@@ -100,14 +100,14 @@ public abstract class AbstractServer extends AbstractEndpoint
         thread.setDaemon(false);
         thread.start();
 
-        LOG.info("Started server: " + getName());
+        logger.info("Started server: " + getName());
     }
 
     @Override
     public void stop() {
         if (isRunning()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Stopping server: " + getName() + " ...");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Stopping server: " + getName() + " ...");
             }
 
             shutdown();
@@ -118,7 +118,7 @@ public abstract class AbstractServer extends AbstractEndpoint
 
             thread = null;
 
-            LOG.info("Stopped server: " + getName());
+            logger.info("Stopped server: " + getName());
         }
     }
 
@@ -171,7 +171,7 @@ public abstract class AbstractServer extends AbstractEndpoint
             return referenceResolver.resolve(TestContextFactory.class);
         }
 
-        LOG.debug("Unable to create test context factory from Spring application context - " +
+        logger.debug("Unable to create test context factory from Spring application context - " +
                 "using minimal test context factory");
         return TestContextFactory.newInstance();
     }
@@ -190,7 +190,7 @@ public abstract class AbstractServer extends AbstractEndpoint
         try {
             thread.join();
         } catch (InterruptedException e) {
-            LOG.error("Error occured", e);
+            logger.error("Error occured", e);
         }
     }
 

@@ -30,7 +30,7 @@ import io.vertx.core.Vertx;
 public class SingleVertxInstanceFactory extends AbstractVertxInstanceFactory {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SingleVertxInstanceFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(SingleVertxInstanceFactory.class);
 
     /** Vert.x instance */
     private Vertx vertx;
@@ -44,7 +44,7 @@ public class SingleVertxInstanceFactory extends AbstractVertxInstanceFactory {
         try {
             Thread.sleep(5000L);
         } catch (InterruptedException e) {
-            log.warn("Interrupted while waiting for vert.x instance to start up", e);
+            logger.warn("Interrupted while waiting for vert.x instance to start up", e);
         }
 
         return vertx;

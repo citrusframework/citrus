@@ -33,7 +33,7 @@ public class Catch extends AbstractActionContainer {
     private final String exception;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Catch.class);
+    private static final Logger logger = LoggerFactory.getLogger(Catch.class);
 
     /**
      * Default constructor.
@@ -46,8 +46,8 @@ public class Catch extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Catch container catching exceptions of type " + exception);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Catch container catching exceptions of type " + exception);
         }
 
         for (TestActionBuilder<?> actionBuilder: actions) {
@@ -55,7 +55,7 @@ public class Catch extends AbstractActionContainer {
                 executeAction(actionBuilder.build(), context);
             } catch (Exception e) {
                 if (exception != null && exception.equals(e.getClass().getName())) {
-                    log.info("Caught exception " + e.getClass() + ": " + e.getLocalizedMessage());
+                    logger.info("Caught exception " + e.getClass() + ": " + e.getLocalizedMessage());
                     continue;
                 }
                 throw new CitrusRuntimeException(e);

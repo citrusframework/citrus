@@ -31,7 +31,7 @@ import io.vertx.core.Vertx;
 public class VertxProducer implements Producer {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(VertxProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(VertxProducer.class);
 
     /** The producer name. */
     private final String name;
@@ -59,12 +59,12 @@ public class VertxProducer implements Producer {
             sendOrPublishMessage(message);
         } catch (IllegalStateException e) {
             if (e.getMessage().equals("Event Bus is not started")) {
-                log.warn("Event bus not started yet - retrying in 2000 ms");
+                logger.warn("Event bus not started yet - retrying in 2000 ms");
 
                 try {
                     Thread.sleep(2000L);
                 } catch (InterruptedException ex) {
-                    log.warn("Interrupted while waiting fot event bus to start", ex);
+                    logger.warn("Interrupted while waiting fot event bus to start", ex);
                 }
 
                 sendOrPublishMessage(message);
@@ -75,7 +75,7 @@ public class VertxProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        log.info("Message was sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        logger.info("Message was sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
     }
 
     /**
@@ -87,13 +87,13 @@ public class VertxProducer implements Producer {
         deliveryOptions.setSendTimeout(endpointConfiguration.getTimeout());
 
         if (endpointConfiguration.isPubSubDomain()) {
-            if (log.isDebugEnabled()) {
-                log.debug("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
             }
             vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions);
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
             }
             vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions);
         }

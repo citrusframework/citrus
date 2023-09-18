@@ -43,7 +43,7 @@ public abstract class TestUtils {
     public static final String WAIT_THREAD_PREFIX = "citrus-waiting-";
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TestUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
     /**
      * Prevent instantiation.
@@ -88,13 +88,13 @@ public abstract class TestUtils {
                     if (container.isDone(context)) {
                         finished.complete(true);
                     } else {
-                        log.debug("Wait for test container to finish properly ...");
+                        logger.debug("Wait for test container to finish properly ...");
                     }
                 } catch (Exception e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Failed to wait for completion of nested test actions", e);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Failed to wait for completion of nested test actions", e);
                     } else {
-                        log.warn(String.format("Failed to wait for completion of nested test actions because of %s",  e.getMessage()));
+                        logger.warn(String.format("Failed to wait for completion of nested test actions because of %s",  e.getMessage()));
                     }
                 }
             }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
@@ -111,7 +111,7 @@ public abstract class TestUtils {
                 scheduledExecutor.shutdown();
                 scheduledExecutor.awaitTermination((timeout / 10) / 2, TimeUnit.MICROSECONDS);
             } catch (InterruptedException e) {
-                log.warn(String.format("Failed to await orderly termination of waiting tasks to complete, caused by %s", e.getMessage()));
+                logger.warn(String.format("Failed to await orderly termination of waiting tasks to complete, caused by %s", e.getMessage()));
             }
 
             if (!scheduledExecutor.isTerminated()) {

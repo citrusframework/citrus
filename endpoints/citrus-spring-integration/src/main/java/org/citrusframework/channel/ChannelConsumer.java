@@ -39,7 +39,7 @@ import org.springframework.util.StringUtils;
 public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ChannelConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChannelConsumer.class);
 
     /** Endpoint configuration */
     private ChannelEndpointConfiguration endpointConfiguration;
@@ -65,8 +65,8 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
             destinationChannelName = getDestinationChannelName();
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Receiving message from: " + destinationChannelName);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Receiving message from: " + destinationChannelName);
         }
 
         Message message;
@@ -99,7 +99,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
             throw new MessageTimeoutException(timeout, destinationChannelName);
         }
 
-        log.debug("Received message from: " + destinationChannelName);
+        logger.debug("Received message from: " + destinationChannelName);
         return message;
     }
 

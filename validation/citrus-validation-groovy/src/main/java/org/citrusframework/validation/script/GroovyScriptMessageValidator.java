@@ -49,7 +49,7 @@ import org.springframework.util.StringUtils;
 public class GroovyScriptMessageValidator extends AbstractMessageValidator<ScriptValidationContext> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(GroovyScriptMessageValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(GroovyScriptMessageValidator.class);
 
     /** Static code snippet for groovy script validation */
     private final Resource scriptTemplateResource;
@@ -76,7 +76,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
             String validationScript = validationContext.getValidationScript(context);
 
             if (StringUtils.hasText(validationScript)) {
-                log.debug("Start groovy message validation ...");
+                logger.debug("Start groovy message validation ...");
 
                 GroovyClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
                     public GroovyClassLoader run() {
@@ -94,7 +94,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
                 GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
                 ((GroovyScriptExecutor) groovyObject).validate(receivedMessage, context);
 
-                log.info("Groovy message validation successful: All values OK");
+                logger.info("Groovy message validation successful: All values OK");
             }
         } catch (CompilationFailedException | InstantiationException | IllegalAccessException e) {
             throw new CitrusRuntimeException(e);

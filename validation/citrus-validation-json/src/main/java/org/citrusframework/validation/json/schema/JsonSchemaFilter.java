@@ -16,27 +16,27 @@
 
 package org.citrusframework.validation.json.schema;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.json.schema.SimpleJsonSchema;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * This class is responsible for filtering {@link SimpleJsonSchema}s based on a {@link JsonMessageValidationContext}.
  */
 public class JsonSchemaFilter {
 
-    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(JsonSchemaFilter.class);
 
     /**
      * Filters the all schema repositories based on the configuration in the {@code jsonMessageValidationContext} and
@@ -65,8 +65,8 @@ public class JsonSchemaFilter {
             SimpleJsonSchema simpleJsonSchema =
                     referenceResolver.resolve(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
 
-            if (log.isDebugEnabled()) {
-                log.debug("Found specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Found specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".");
             }
 
             return Collections.singletonList(simpleJsonSchema);
@@ -81,8 +81,8 @@ public class JsonSchemaFilter {
                                                           JsonMessageValidationContext jsonMessageValidationContext) {
         for (JsonSchemaRepository jsonSchemaRepository : schemaRepositories) {
             if (Objects.equals(jsonSchemaRepository.getName(), jsonMessageValidationContext.getSchemaRepository())) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Found specified schema-repository: \"" +
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Found specified schema-repository: \"" +
                             jsonMessageValidationContext.getSchemaRepository() + "\".");
                 }
                 return jsonSchemaRepository.getSchemas();

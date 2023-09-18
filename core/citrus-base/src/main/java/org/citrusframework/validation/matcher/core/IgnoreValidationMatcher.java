@@ -31,12 +31,12 @@ import java.util.List;
 public class IgnoreValidationMatcher implements ValidationMatcher {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(IgnoreValidationMatcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(IgnoreValidationMatcher.class);
 
     @Override
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Ignoring value for field '%s'", fieldName));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Ignoring value for field '%s'", fieldName));
         }
     }
 }

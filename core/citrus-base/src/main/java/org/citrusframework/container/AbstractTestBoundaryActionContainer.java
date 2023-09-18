@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 
@@ -32,6 +34,9 @@ import org.springframework.util.StringUtils;
  * @since 2.0
  */
 public abstract class AbstractTestBoundaryActionContainer extends AbstractActionContainer {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(AbstractTestBoundaryActionContainer.class);
 
     /** Test case name pattern that this sequence container matches with */
     private String namePattern;
@@ -60,27 +65,27 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
 
         if (StringUtils.hasText(packageNamePattern)) {
             if (!PatternMatchUtils.simpleMatch(packageNamePattern, packageName)) {
-                log.warn(String.format(baseErrorMessage, "test package", getName()));
+                logger.warn(String.format(baseErrorMessage, "test package", getName()));
                 return false;
             }
         }
 
         if (StringUtils.hasText(namePattern)) {
             if (!PatternMatchUtils.simpleMatch(namePattern, testName)) {
-                log.warn(String.format(baseErrorMessage, "test name", getName()));
+                logger.warn(String.format(baseErrorMessage, "test name", getName()));
                 return false;
             }
         }
 
         if (!checkTestGroups(includedGroups)) {
-            log.warn(String.format(baseErrorMessage, "test groups", getName()));
+            logger.warn(String.format(baseErrorMessage, "test groups", getName()));
             return false;
         }
 
         for (Map.Entry<String, String> envEntry : env.entrySet()) {
             if (!System.getenv().containsKey(envEntry.getKey()) ||
                     (StringUtils.hasText(envEntry.getValue()) && !System.getenv().get(envEntry.getKey()).equals(envEntry.getValue()))) {
-                log.warn(String.format(baseErrorMessage, "env properties", getName()));
+                logger.warn(String.format(baseErrorMessage, "env properties", getName()));
                 return false;
             }
         }
@@ -88,7 +93,7 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
         for (Map.Entry<String, String> systemProperty : systemProperties.entrySet()) {
             if (!System.getProperties().containsKey(systemProperty.getKey()) ||
                     (StringUtils.hasText(systemProperty.getValue()) && !System.getProperties().get(systemProperty.getKey()).equals(systemProperty.getValue()))) {
-                log.warn(String.format(baseErrorMessage, "system properties", getName()));
+                logger.warn(String.format(baseErrorMessage, "system properties", getName()));
                 return false;
             }
         }

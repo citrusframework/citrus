@@ -33,17 +33,17 @@ import org.slf4j.LoggerFactory;
 public class SequenceAfterSuite extends AbstractSuiteActionContainer implements AfterSuite {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SequenceAfterSuite.class);
+    private static final Logger logger = LoggerFactory.getLogger(SequenceAfterSuite.class);
 
     @Override
     public void doExecute(TestContext context) {
         boolean success = true;
 
-        log.info("Entering after suite block");
+        logger.info("Entering after suite block");
 
-        if (log.isDebugEnabled()) {
-            log.debug("Executing " + actions.size() + " actions after suite");
-            log.debug("");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing " + actions.size() + " actions after suite");
+            logger.debug("");
         }
 
         for (TestActionBuilder<?> actionBuilder : actions)  {
@@ -52,8 +52,8 @@ public class SequenceAfterSuite extends AbstractSuiteActionContainer implements 
                 /* Executing test action and validate its success */
                 action.execute(context);
             } catch (Exception e) {
-                log.error("After suite action failed " + action.getName() + "Nested exception is: ", e);
-                log.error("Continue after suite actions");
+                logger.error("After suite action failed " + action.getName() + "Nested exception is: ", e);
+                logger.error("Continue after suite actions");
                 success = false;
             }
         }

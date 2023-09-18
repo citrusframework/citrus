@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DirectSyncProducer extends DirectProducer implements ReplyConsumer {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DirectSyncProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(DirectSyncProducer.class);
 
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
@@ -48,12 +48,12 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
 
         String destinationQueueName = getDestinationQueueName();
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending message to queue: '" + destinationQueueName + "'");
-            log.debug("Message to send is:\n" + message.toString());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending message to queue: '" + destinationQueueName + "'");
+            logger.debug("Message to send is:\n" + message.toString());
         }
 
-        log.info("Message was sent to queue: '" + destinationQueueName + "'");
+        logger.info("Message was sent to queue: '" + destinationQueueName + "'");
 
         MessageQueue replyQueue = getReplyQueue(message, context);
         getDestinationQueue(context).send(message);
@@ -62,7 +62,7 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
         if (replyMessage == null) {
             throw new ReplyMessageTimeoutException(endpointConfiguration.getTimeout(), destinationQueueName);
         } else {
-            log.info("Received synchronous response from reply queue");
+            logger.info("Received synchronous response from reply queue");
         }
 
         correlationManager.store(correlationKey, replyMessage);

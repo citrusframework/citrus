@@ -69,7 +69,7 @@ public class GlobalVariablesJavaIT extends TestNGCitrusSpringSupport {
         String val1 = testContext.resolveDynamicValue(testContext.getVariable(name));
         String val2 = testContext.resolveDynamicValue(testContext.getVariable(name));
         if (val1.equals(val2)) {
-            log.debug(String.format("Values match for variable %s. Value: %s", name, val1));
+            logger.debug(String.format("Values match for variable %s. Value: %s", name, val1));
         } else {
             throw new RuntimeException(String.format("Values don't match for variable %s. Value1: %s, Value2: %s", name, val1, val2));
         }
@@ -79,7 +79,7 @@ public class GlobalVariablesJavaIT extends TestNGCitrusSpringSupport {
         String val1 = testContext.resolveDynamicValue(testContext.getVariable(name1));
         String val2 = testContext.resolveDynamicValue(testContext.getVariable(name2));
         if (val1.equals(val2)) {
-            log.debug(String.format("Values match for variables %s and %s. Value: %s", name1, name2, val1));
+            logger.debug(String.format("Values match for variables %s and %s. Value: %s", name1, name2, val1));
         } else {
             throw new RuntimeException(String.format("Values don't match for variables. %s: %s, %s: %s", name1, val1, name2, val2));
         }

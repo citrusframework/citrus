@@ -19,12 +19,17 @@ package org.citrusframework.selenium.actions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
 public class StopBrowserAction extends AbstractSeleniumAction {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(StopBrowserAction.class);
 
     /**
      * Default constructor.
@@ -35,7 +40,7 @@ public class StopBrowserAction extends AbstractSeleniumAction {
 
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
-        log.info("Stopping browser of type {}", browser.getEndpointConfiguration().getBrowserType());
+        logger.info("Stopping browser of type {}", browser.getEndpointConfiguration().getBrowserType());
         browser.stop();
 
         context.getVariables().remove(SeleniumHeaders.SELENIUM_BROWSER);

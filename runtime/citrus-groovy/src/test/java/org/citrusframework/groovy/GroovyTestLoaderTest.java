@@ -53,7 +53,7 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
         Assert.assertEquals(test.getName(), "sample.test");
         Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
-        Assert.assertEquals(test.getTestClass(), this.getClass());
+        Assert.assertEquals(test.getTestClass(), getClass());
         Assert.assertEquals(test.getActionCount(), 6L);
         Assert.assertEquals(((DefaultTestCase)test).getFinalActions().size(), 2L);
     }
@@ -66,7 +66,7 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
         Assert.assertEquals(test.getName(), "json.test");
         Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
-        Assert.assertEquals(test.getTestClass(), this.getClass());
+        Assert.assertEquals(test.getTestClass(), getClass());
         Assert.assertEquals(test.getActionCount(), 3L);
     }
 
@@ -78,7 +78,7 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
         Assert.assertEquals(test.getName(), "xml.test");
         Assert.assertEquals(test.getPackageName(), this.getClass().getPackageName() + ".dsl");
-        Assert.assertEquals(test.getTestClass(), this.getClass());
+        Assert.assertEquals(test.getTestClass(), getClass());
         Assert.assertEquals(test.getActionCount(), 3L);
     }
 
@@ -91,7 +91,7 @@ public class GroovyTestLoaderTest extends UnitTestSupport {
 
     private TestLoader getTestLoader(String testName) {
         TestCaseRunner runner = new DefaultTestCaseRunner(context);
-        runner.testClass(this.getClass());
+        runner.testClass(getClass());
         runner.name(testName);
         runner.packageName(this.getClass().getPackageName() + ".dsl");
 

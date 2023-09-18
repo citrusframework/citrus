@@ -39,7 +39,7 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter {
     private TestContextFactory testContextFactory;
 
     /** Logger */
-    protected Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public final Message handleMessage(Message request) {
@@ -47,12 +47,12 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter {
 
         if ((replyMessage == null || replyMessage.getPayload() == null)) {
             if (fallbackEndpointAdapter != null) {
-                log.debug("Did not receive reply message - "
+                logger.debug("Did not receive reply message - "
                         + "delegating to fallback endpoint adapter");
 
                 replyMessage = fallbackEndpointAdapter.handleMessage(request);
             } else {
-                log.debug("Did not receive reply message - no response is simulated");
+                logger.debug("Did not receive reply message - no response is simulated");
             }
         }
 
@@ -113,7 +113,7 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter {
      */
     public TestContextFactory getTestContextFactory() {
         if (testContextFactory == null) {
-            log.warn("Could not identify proper test context factory from Spring bean application context - constructing own test context factory. " +
+            logger.warn("Could not identify proper test context factory from Spring bean application context - constructing own test context factory. " +
                     "This restricts test context capabilities to an absolute minimum! You could do better when enabling the root application context for this server instance.");
 
             testContextFactory = TestContextFactory.newInstance();

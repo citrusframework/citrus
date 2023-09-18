@@ -63,7 +63,7 @@ import org.springframework.util.StringUtils;
 public class SftpClient extends FtpClient {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SftpClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(SftpClient.class);
 
     /** Session for the SSH communication */
     private Session session;
@@ -278,7 +278,7 @@ public class SftpClient extends FtpClient {
 
                 getEndpointConfiguration().getSessionConfigs().entrySet()
                         .stream()
-                        .peek(entry -> log.info(String.format("Setting session configuration: %s='%s'", entry.getKey(), entry.getValue())))
+                        .peek(entry -> logger.info(String.format("Setting session configuration: %s='%s'", entry.getKey(), entry.getValue())))
                         .forEach(entry -> session.setConfig(entry.getKey(), entry.getValue()));
 
                 session.connect((int) getEndpointConfiguration().getTimeout());
@@ -287,7 +287,7 @@ public class SftpClient extends FtpClient {
                 channel.connect((int) getEndpointConfiguration().getTimeout());
                 sftp = (ChannelSftp) channel;
 
-                log.info("Opened secure connection to FTP server");
+                logger.info("Opened secure connection to FTP server");
             } catch (JSchException e) {
                 throw new CitrusRuntimeException(String.format("Failed to login to FTP server using credentials: %s:%s", getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword()), e);
             }
@@ -366,7 +366,7 @@ public class SftpClient extends FtpClient {
     public void destroy() {
         if (session != null && session.isConnected()) {
             session.disconnect();
-            log.info("Closed connection to FTP server");
+            logger.info("Closed connection to FTP server");
         }
 
         sftp.disconnect();

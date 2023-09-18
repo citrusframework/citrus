@@ -69,7 +69,7 @@ public class AntRunAction extends AbstractTestAction {
     private final BuildListener buildListener;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AntRunAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(AntRunAction.class);
 
     /**
      * Default constructor.
@@ -97,7 +97,7 @@ public class AntRunAction extends AbstractTestAction {
 
             for (Entry<Object, Object> entry : properties.entrySet()) {
                 String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
-                log.debug("Set build property: " + entry.getKey() + "=" + propertyValue);
+                logger.debug("Set build property: " + entry.getKey() + "=" + propertyValue);
                 project.setProperty(entry.getKey().toString(), propertyValue);
             }
 
@@ -107,30 +107,17 @@ public class AntRunAction extends AbstractTestAction {
                 project.addBuildListener(buildListener);
             }
 
-            DefaultLogger consoleLogger = new DefaultLogger() {
-                @Override
-                protected void printMessage(String message, PrintStream stream, int priority) {
-                    if (stream.equals(System.err)) {
-                        log.error(message);
-                    } else {
-                        log.info(message);
-                    }
-                }
-            };
-
-            consoleLogger.setErrorPrintStream(System.err);
-            consoleLogger.setOutputPrintStream(System.out);
-            consoleLogger.setMessageOutputLevel(Project.MSG_DEBUG);
+            DefaultLogger consoleLogger = getDefaultConsoleLogger();
 
             project.addBuildListener(consoleLogger);
 
-            log.info("Executing ANT build: " + buildFileResource);
+            logger.info("Executing ANT build: " + buildFileResource);
 
             if (StringUtils.hasText(targets)) {
-                log.info("Executing ANT targets: " + targets);
+                logger.info("Executing ANT targets: " + targets);
                 project.executeTargets(parseTargets());
             } else {
-                log.info("Executing ANT target: " + target);
+                logger.info("Executing ANT target: " + target);
                 project.executeTarget(target);
             }
         } catch (BuildException e) {
@@ -139,7 +126,25 @@ public class AntRunAction extends AbstractTestAction {
             throw new CitrusRuntimeException("Failed to read ANT build file", e);
         }
 
-        log.info("Executed ANT build: " + buildFileResource);
+        logger.info("Executed ANT build: " + buildFileResource);
+    }
+
+    private static DefaultLogger getDefaultConsoleLogger() {
+        DefaultLogger consoleLogger = new DefaultLogger() {
+            @Override
+            protected void printMessage(String message, PrintStream stream, int priority) {
+                if (stream.equals(System.err)) {
+                    logger.error(message);
+                } else {
+                    logger.info(message);
+                }
+            }
+        };
+
+        consoleLogger.setErrorPrintStream(System.err);
+        consoleLogger.setOutputPrintStream(System.out);
+        consoleLogger.setMessageOutputLevel(Project.MSG_DEBUG);
+        return consoleLogger;
     }
 
     /**
@@ -165,7 +170,7 @@ public class AntRunAction extends AbstractTestAction {
     private void loadBuildPropertyFile(Project project, TestContext context) {
         if (StringUtils.hasText(propertyFilePath)) {
             String propertyFileResource = context.replaceDynamicContentInString(propertyFilePath);
-            log.info("Reading build property file: " + propertyFileResource);
+            logger.info("Reading build property file: " + propertyFileResource);
             Properties fileProperties;
             try {
                 fileProperties = PropertiesLoaderUtils.loadProperties(new PathMatchingResourcePatternResolver().getResource(propertyFileResource));
@@ -173,8 +178,8 @@ public class AntRunAction extends AbstractTestAction {
                 for (Entry<Object, Object> entry : fileProperties.entrySet()) {
                     String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
 
-                    if (log.isDebugEnabled()) {
-                        log.debug("Set build property from file resource: " + entry.getKey() + "=" + propertyValue);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Set build property from file resource: " + entry.getKey() + "=" + propertyValue);
                     }
                     project.setProperty(entry.getKey().toString(), propertyValue);
                 }

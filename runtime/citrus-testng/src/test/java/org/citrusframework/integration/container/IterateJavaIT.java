@@ -53,7 +53,7 @@ public class IterateJavaIT extends TestNGCitrusSpringSupport {
                 .step(5)
                 .actions(echo("index is: ${i}")));
 
-        AbstractTestAction anonymous = action(context -> log.info(context.getVariable("index"))).build();
+        AbstractTestAction anonymous = action(context -> logger.info(context.getVariable("index"))).build();
 
         run(iterate().condition("i lt 5").index("i")
                 .actions(createVariable("index", "${i}"), () -> anonymous));

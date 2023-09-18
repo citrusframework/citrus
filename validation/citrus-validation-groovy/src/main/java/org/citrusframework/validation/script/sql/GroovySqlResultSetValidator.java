@@ -46,7 +46,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(GroovySqlResultSetValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(GroovySqlResultSetValidator.class);
 
     /** Static code snippet for groovy script validation */
     private Resource scriptTemplateResource;
@@ -75,7 +75,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                 String validationScript = validationContext.getValidationScript(context);
 
                 if (StringUtils.hasText(validationScript)) {
-                    log.debug("Start groovy SQL result set validation");
+                    logger.debug("Start groovy SQL result set validation");
 
                     GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
                     Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
@@ -89,7 +89,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                     GroovyObject groovyObject = (GroovyObject) groovyClass.getDeclaredConstructor().newInstance();
                     ((SqlResultSetScriptExecutor) groovyObject).validate(resultSet, context);
 
-                    log.info("Groovy SQL result set validation successful: All values OK");
+                    logger.info("Groovy SQL result set validation successful: All values OK");
                 }
             } catch (CompilationFailedException | InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
                 throw new CitrusRuntimeException(e);

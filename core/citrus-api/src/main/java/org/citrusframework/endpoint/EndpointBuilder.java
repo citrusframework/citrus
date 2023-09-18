@@ -43,7 +43,7 @@ import org.springframework.util.ReflectionUtils;
 public interface EndpointBuilder<T extends Endpoint> {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(EndpointBuilder.class);
+    Logger logger = LoggerFactory.getLogger(EndpointBuilder.class);
 
     /** Endpoint builder resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/endpoint/builder";
@@ -116,8 +116,8 @@ public interface EndpointBuilder<T extends Endpoint> {
     static Map<String, EndpointBuilder<?>> lookup() {
         Map<String, EndpointBuilder<?>> builders = new HashMap<>(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
-        if (LOG.isDebugEnabled()) {
-            builders.forEach((k, v) -> LOG.debug(String.format("Found endpoint builder '%s' as %s", k, v.getClass())));
+        if (logger.isDebugEnabled()) {
+            builders.forEach((k, v) -> logger.debug(String.format("Found endpoint builder '%s' as %s", k, v.getClass())));
         }
         return builders;
     }
@@ -143,7 +143,7 @@ public interface EndpointBuilder<T extends Endpoint> {
 
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve endpoint builder from resource '%s/%s'", RESOURCE_PATH, builder));
+            logger.warn(String.format("Failed to resolve endpoint builder from resource '%s/%s'", RESOURCE_PATH, builder));
         }
 
         return Optional.empty();

@@ -75,7 +75,7 @@ import org.w3c.dom.Node;
 public class SoapMessageConverter implements WebServiceMessageConverter {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SoapMessageConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(SoapMessageConverter.class);
 
     /** Default payload source encoding */
     private String charset = CitrusSettings.CITRUS_FILE_ENCODING;
@@ -104,7 +104,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         copySoapHeaderData(soapRequest, soapMessage, transformerFactory);
 
         if (soapMessage.isMtomEnabled() && soapMessage.getAttachments().size() > 0) {
-            log.debug("Converting SOAP request to XOP package");
+            logger.debug("Converting SOAP request to XOP package");
             soapRequest.convertToXopPackage();
         }
 
@@ -220,7 +220,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                                             final WebServiceEndpointConfiguration endpointConfiguration) {
         final TransportContext transportContext = TransportContextHolder.getTransportContext();
         if (transportContext == null) {
-            log.warn("Unable to get complete set of http request headers - no transport context available");
+            logger.warn("Unable to get complete set of http request headers - no transport context available");
             return;
         }
 
@@ -246,12 +246,12 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                 }
             }
         } else {
-            log.warn("Unable to get complete set of http request headers");
+            logger.warn("Unable to get complete set of http request headers");
 
             try {
                 message.setHeader(SoapMessageHeaders.HTTP_REQUEST_URI, connection.getUri());
             } catch (final URISyntaxException e) {
-                log.warn("Unable to get http request uri from http connection", e);
+                logger.warn("Unable to get http request uri from http connection", e);
             }
         }
     }
@@ -323,7 +323,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             final MimeHeaders headers = soapMsg.getSaajMessage().getMimeHeaders();
             headers.setHeader(name, value.toString());
         } else {
-            log.warn("Unsupported SOAP message implementation - unable to set mime message header '" + name + "'");
+            logger.warn("Unsupported SOAP message implementation - unable to set mime message header '" + name + "'");
         }
     }
 
@@ -344,7 +344,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         if (soapMessage instanceof SaajSoapMessage) {
             messageMimeHeaders = ((SaajSoapMessage)soapMessage).getSaajMessage().getMimeHeaders();
         } else {
-            log.warn("Unsupported SOAP message implementation - skipping mime headers");
+            logger.warn("Unsupported SOAP message implementation - skipping mime headers");
         }
 
         if (messageMimeHeaders != null) {
@@ -401,8 +401,8 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             final Attachment attachment = attachments.next();
             final SoapAttachment soapAttachment = SoapAttachment.from(attachment);
 
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("SOAP message contains attachment with contentId '%s'", soapAttachment.getContentId()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("SOAP message contains attachment with contentId '%s'", soapAttachment.getContentId()));
             }
 
             message.addAttachment(soapAttachment);
@@ -482,8 +482,8 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                 contentId = "<" + contentId + ">";
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Adding attachment to SOAP message: '%s' ('%s')", contentId, attachment.getContentType()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Adding attachment to SOAP message: '%s' ('%s')", contentId, attachment.getContentType()));
             }
 
             soapRequest.addAttachment(contentId, attachment::getInputStream, attachment.getContentType());

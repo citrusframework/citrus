@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public interface SqlResultSetScriptValidator {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(SqlResultSetScriptValidator.class);
+    Logger logger = LoggerFactory.getLogger(SqlResultSetScriptValidator.class);
 
     /** Message validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/sql/result-set/validator";
@@ -52,8 +52,8 @@ public interface SqlResultSetScriptValidator {
     static Map<String, SqlResultSetScriptValidator> lookup() {
         Map<String, SqlResultSetScriptValidator> validators = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
-        if (LOG.isDebugEnabled()) {
-            validators.forEach((k, v) -> LOG.debug(String.format("Found SQL result set validator '%s' as %s", k, v.getClass())));
+        if (logger.isDebugEnabled()) {
+            validators.forEach((k, v) -> logger.debug(String.format("Found SQL result set validator '%s' as %s", k, v.getClass())));
         }
         return validators;
     }

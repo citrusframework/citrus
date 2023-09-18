@@ -54,7 +54,7 @@ import org.springframework.util.StringUtils;
 public class FormUrlEncodedMessageValidator implements MessageValidator<ValidationContext> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(FormUrlEncodedMessageValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(FormUrlEncodedMessageValidator.class);
 
     /** Message type this validator is bound to */
     public static final String MESSAGE_TYPE = "x-www-form-urlencoded";
@@ -73,7 +73,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
-        log.info("Start " + MESSAGE_TYPE + " message validation");
+        logger.info("Start " + MESSAGE_TYPE + " message validation");
 
         try {
             Message formMessage = new DefaultMessage(receivedMessage);
@@ -86,7 +86,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
             throw new ValidationException("Failed to validate " + MESSAGE_TYPE + " message", e);
         }
 
-        log.info("Validation of " + MESSAGE_TYPE + " message finished successfully: All values OK");
+        logger.info("Validation of " + MESSAGE_TYPE + " message finished successfully: All values OK");
     }
 
     /**

@@ -21,7 +21,7 @@ import org.springframework.util.StringUtils;
 public abstract class CitrusEndpointAnnotations {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CitrusEndpointAnnotations.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusEndpointAnnotations.class);
 
     /**
      * Prevent instantiation.
@@ -39,7 +39,7 @@ public abstract class CitrusEndpointAnnotations {
      */
     public static void injectEndpoints(final Object target, final TestContext context) {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
-            LOG.debug(String.format("Injecting Citrus endpoint on test class field '%s'", field.getName()));
+            logger.debug(String.format("Injecting Citrus endpoint on test class field '%s'", field.getName()));
             CitrusEndpoint endpointAnnotation = field.getAnnotation(CitrusEndpoint.class);
 
             for (Annotation annotation : field.getAnnotations()) {

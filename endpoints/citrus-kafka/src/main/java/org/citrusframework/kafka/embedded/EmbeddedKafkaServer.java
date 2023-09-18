@@ -62,7 +62,7 @@ import org.springframework.util.StringUtils;
 public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(EmbeddedKafkaServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmbeddedKafkaServer.class);
 
     /** Zookeeper embedded server and factory */
     private ZooKeeperServer zookeeper;
@@ -83,10 +83,10 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     /** Topics to create on embedded server */
     private String topics = "citrus";
 
-    /** Path to log directory for Zookeeper server */
+    /** Path to logger directory for Zookeeper server */
     private String logDirPath;
 
-    /** Auto delete log dir on exit */
+    /** Auto delete logger dir on exit */
     private boolean autoDeleteLogs = true;
 
     /** Kafka broker server properties */
@@ -97,7 +97,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
      */
     public void start() {
         if (kafkaServer != null) {
-            LOG.debug("Found instance of Kafka server - avoid duplicate Kafka server startup");
+            logger.debug("Found instance of Kafka server - avoid duplicate Kafka server startup");
             return;
         }
 
@@ -142,13 +142,13 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
                     kafkaServer.awaitShutdown();
                 }
             } catch (Exception e) {
-                LOG.warn("Failed to shutdown Kafka embedded server", e);
+                logger.warn("Failed to shutdown Kafka embedded server", e);
             }
 
             try {
                 CoreUtils.delete(kafkaServer.config().logDirs());
             } catch (Exception e) {
-                LOG.warn("Failed to remove logs on Kafka embedded server", e);
+                logger.warn("Failed to remove logs on Kafka embedded server", e);
             }
         }
 
@@ -156,7 +156,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
             try {
                 serverFactory.shutdown();
             } catch (Exception e) {
-                LOG.warn("Failed to shutdown Zookeeper instance", e);
+                logger.warn("Failed to shutdown Zookeeper instance", e);
             }
         }
     }
@@ -184,7 +184,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     }
 
     /**
-     * Creates Zookeeper log directory. By default logs are created in Java temp directory.
+     * Creates Zookeeper logger directory. By default logs are created in Java temp directory.
      * By default directory is automatically deleted on exit.
      *
      * @return
@@ -197,9 +197,9 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
         if (!logDir.exists()) {
             if (!logDir.mkdirs()) {
-                LOG.warn("Unable to create log directory: " + logDir.getAbsolutePath());
+                logger.warn("Unable to create logger directory: " + logDir.getAbsolutePath());
                 logDir = new File(System.getProperty("java.io.tmpdir"));
-                LOG.info("Using default log directory: " + logDir.getAbsolutePath());
+                logger.info("Using default logger directory: " + logDir.getAbsolutePath());
             }
         }
 
@@ -241,7 +241,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
             try {
                 createTopics.all().get();
             } catch (Exception e) {
-                LOG.warn("Failed to create Kafka topics", e);
+                logger.warn("Failed to create Kafka topics", e);
             }
         }
     }
@@ -274,8 +274,8 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
 
         props.put(KafkaConfig.ListenersProp(), SecurityProtocol.PLAINTEXT.name + "://localhost:" + kafkaServerPort);
 
-        if (LOG.isDebugEnabled()) {
-            props.forEach((key, value) -> LOG.debug(String.format("Using default Kafka broker property %s='%s'", key, value)));
+        if (logger.isDebugEnabled()) {
+            props.forEach((key, value) -> logger.debug(String.format("Using default Kafka broker property %s='%s'", key, value)));
         }
 
         return props;

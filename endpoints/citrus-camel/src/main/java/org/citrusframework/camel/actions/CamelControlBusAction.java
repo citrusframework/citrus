@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
 public class CamelControlBusAction extends AbstractCamelRouteAction {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CamelControlBusAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(CamelControlBusAction.class);
 
     /** The control bus action */
     private final String action;
@@ -89,12 +89,12 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
         if (StringUtils.hasText(result)) {
             String expectedResult = context.replaceDynamicContentInString(result);
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Validating Camel controlbus response = '%s'", expectedResult));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Validating Camel controlbus response = '%s'", expectedResult));
             }
 
             ValidationUtils.validateValues(response.getPayload(String.class), expectedResult, "camelControlBusResult", context);
-            LOG.info("Validation of Camel controlbus response successful - All values OK");
+            logger.info("Validation of Camel controlbus response successful - All values OK");
         }
     }
 

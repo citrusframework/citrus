@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public class Async extends AbstractActionContainer {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(Async.class);
+    private static final Logger logger = LoggerFactory.getLogger(Async.class);
 
     private final List<TestActionBuilder<?>> errorActions;
     private final List<TestActionBuilder<?>> successActions;
@@ -51,7 +51,7 @@ public class Async extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        LOG.debug("Async container forking action execution ...");
+        logger.debug("Async container forking action execution ...");
 
         AbstractAsyncTestAction asyncTestAction = new AbstractAsyncTestAction() {
             @Override
@@ -63,7 +63,7 @@ public class Async extends AbstractActionContainer {
 
             @Override
             public void onError(TestContext context, Throwable error) {
-                LOG.info("Apply error actions after async container ...");
+                logger.info("Apply error actions after async container ...");
                 for (TestActionBuilder<?> actionBuilder : errorActions) {
                     TestAction action = actionBuilder.build();
                     action.execute(context);
@@ -72,7 +72,7 @@ public class Async extends AbstractActionContainer {
 
             @Override
             public void onSuccess(TestContext context) {
-                LOG.info("Apply success actions after async container ...");
+                logger.info("Apply success actions after async container ...");
                 for (TestActionBuilder<?> actionBuilder : successActions) {
                     TestAction action = actionBuilder.build();
                     action.execute(context);

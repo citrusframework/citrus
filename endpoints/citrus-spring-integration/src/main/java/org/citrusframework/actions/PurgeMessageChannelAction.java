@@ -58,7 +58,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(PurgeMessageChannelAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(PurgeMessageChannelAction.class);
 
     /**
      * Default constructor.
@@ -74,8 +74,8 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Purging message channels ...");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Purging message channels ...");
         }
 
         for (MessageChannel channel : channels) {
@@ -86,7 +86,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
             purgeChannel(resolveChannelName(channelName));
         }
 
-        log.info("Purged message channels");
+        logger.info("Purged message channels");
     }
 
     /**
@@ -99,8 +99,8 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
         if (channel instanceof QueueChannel) {
             List<Message<?>> messages = ((QueueChannel)channel).purge(messageSelector);
 
-            if (log.isDebugEnabled()) {
-                log.debug("Purged channel " + ((QueueChannel)channel).getComponentName() + " - removed " + messages.size() + " messages");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Purged channel " + ((QueueChannel)channel).getComponentName() + " - removed " + messages.size() + " messages");
             }
         }
     }

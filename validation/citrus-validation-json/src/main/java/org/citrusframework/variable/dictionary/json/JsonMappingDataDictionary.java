@@ -41,7 +41,7 @@ import org.springframework.util.StringUtils;
 public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JsonMappingDataDictionary.class);
+    private static final Logger logger = LoggerFactory.getLogger(JsonMappingDataDictionary.class);
 
     @Override
     protected void processMessage(Message message, TestContext context) {
@@ -66,7 +66,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
 
             message.setPayload(json.toString());
         } catch (ParseException e) {
-            log.warn("Data dictionary unable to parse JSON object", e);
+            logger.warn("Data dictionary unable to parse JSON object", e);
         }
     }
 
@@ -74,16 +74,16 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
     public <T> T translate(String jsonPath, T value, TestContext context) {
         if (getPathMappingStrategy().equals(PathMappingStrategy.EXACT)) {
             if (mappings.containsKey(jsonPath)) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, mappings.get(jsonPath)));
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, mappings.get(jsonPath)));
                 }
                 return convertIfNecessary(mappings.get(jsonPath), value, context);
             }
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.ENDS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (jsonPath.endsWith(entry.getKey())) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }
@@ -91,8 +91,8 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.STARTS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (jsonPath.startsWith(entry.getKey())) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }

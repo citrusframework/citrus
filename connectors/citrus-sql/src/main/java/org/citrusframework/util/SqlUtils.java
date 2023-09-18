@@ -34,7 +34,7 @@ import org.springframework.core.io.Resource;
 public abstract class SqlUtils {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SqlUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(SqlUtils.class);
 
     /** Constant representing SQL comment */
     public static final String SQL_COMMENT = "--";
@@ -75,8 +75,8 @@ public abstract class SqlUtils {
         List<String> stmts = new ArrayList<>();
 
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Create statements from SQL file: " + sqlResource.getFile().getAbsolutePath());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Create statements from SQL file: " + sqlResource.getFile().getAbsolutePath());
             }
 
             reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
@@ -96,8 +96,8 @@ public abstract class SqlUtils {
 
                         String stmt = buffer.toString().trim();
 
-                        if (log.isDebugEnabled()) {
-                            log.debug("Found statement: " + stmt);
+                        if (logger.isDebugEnabled()) {
+                            logger.debug("Found statement: " + stmt);
                         }
 
                         stmts.add(stmt);
@@ -118,7 +118,7 @@ public abstract class SqlUtils {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    log.warn("Warning: Error while closing reader instance", e);
+                    logger.warn("Warning: Error while closing reader instance", e);
                 }
             }
         }

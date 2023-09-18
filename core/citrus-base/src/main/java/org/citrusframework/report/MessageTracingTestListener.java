@@ -62,7 +62,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     private final Object lockObject = new Object();
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(MessageTracingTestListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(MessageTracingTestListener.class);
 
     /**
      * {@inheritDoc}
@@ -152,7 +152,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
 
         File traceFile = new File(targetDirectory, filename);
         if (traceFile.exists()) {
-            LOG.warn(String.format("Trace file '%s' already exists. Normally a new file is created on each test execution ", traceFile.getName()));
+            logger.warn(String.format("Trace file '%s' already exists. Normally a new file is created on each test execution ", traceFile.getName()));
         }
         return traceFile;
     }

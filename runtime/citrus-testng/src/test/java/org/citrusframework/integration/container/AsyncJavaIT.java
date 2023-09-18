@@ -49,7 +49,7 @@ public class AsyncJavaIT extends TestNGCitrusSpringSupport {
             echo("Hello Citrus"),
             action(context -> context.setVariable("anonymous", "anonymous")),
             sleep().milliseconds(500),
-            action(context -> log.info(context.getVariable("anonymous")))
+            action(context -> logger.info(context.getVariable("anonymous")))
         ));
 
         run(async().actions(
@@ -63,7 +63,7 @@ public class AsyncJavaIT extends TestNGCitrusSpringSupport {
             echo("Hello Citrus"),
             action(context -> context.setVariable("anonymous", "anonymous")),
             sleep().milliseconds(200),
-            action(context -> log.info(context.getVariable("anonymous")))
+            action(context -> logger.info(context.getVariable("anonymous")))
         ));
 
         run(sleep().milliseconds(500L));

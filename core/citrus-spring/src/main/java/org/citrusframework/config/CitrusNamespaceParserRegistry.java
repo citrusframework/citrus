@@ -35,7 +35,7 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 public final class CitrusNamespaceParserRegistry {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CitrusNamespaceParserRegistry.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusNamespaceParserRegistry.class);
 
     /** Resource path where to find custom parsers via lookup */
     private static final String RESOURCE_PATH = "META-INF/citrus/action/parser";
@@ -121,7 +121,7 @@ public final class CitrusNamespaceParserRegistry {
             try {
                 BEAN_PARSER.put(name, TYPE_RESOLVER.resolve(name));
             } catch (Exception e) {
-                LOG.warn(String.format("Unable to locate bean parser for '%s'", name), e);
+                logger.warn(String.format("Unable to locate bean parser for '%s'", name), e);
             }
         }
 

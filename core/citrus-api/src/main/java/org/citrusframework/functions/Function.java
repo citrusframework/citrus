@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public interface Function {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(Function.class);
+    Logger logger = LoggerFactory.getLogger(Function.class);
 
     /** Function resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/function";
@@ -49,8 +49,8 @@ public interface Function {
         if (functions.isEmpty()) {
             functions.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
-            if (LOG.isDebugEnabled()) {
-                functions.forEach((k, v) -> LOG.debug(String.format("Found function '%s' as %s", k, v.getClass())));
+            if (logger.isDebugEnabled()) {
+                functions.forEach((k, v) -> logger.debug(String.format("Found function '%s' as %s", k, v.getClass())));
             }
         }
 

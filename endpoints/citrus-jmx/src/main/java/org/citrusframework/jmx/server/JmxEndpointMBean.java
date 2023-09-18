@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 public class JmxEndpointMBean implements DynamicMBean {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmxEndpointMBean.class);
+    private static final Logger logger = LoggerFactory.getLogger(JmxEndpointMBean.class);
 
     /** Endpoint adapter delegate */
     private final EndpointAdapter endpointAdapter;
@@ -129,8 +129,8 @@ public class JmxEndpointMBean implements DynamicMBean {
 
     @Override
     public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException {
-        if (log.isDebugEnabled()) {
-            log.debug("Received message on JMX server: '" + endpointConfiguration.getServerUrl() + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Received message on JMX server: '" + endpointConfiguration.getServerUrl() + "'");
         }
 
         ManagedBeanInvocation mbeanInvocation = new ManagedBeanInvocation();

@@ -43,7 +43,7 @@ import org.w3c.dom.ls.LSSerializer;
 public class XmlConfigurer implements InitializingPhase {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XmlConfigurer.class);
+    private static final Logger logger = LoggerFactory.getLogger(XmlConfigurer.class);
 
     /** DOM implementation */
     private final DOMImplementationRegistry registry;
@@ -65,17 +65,17 @@ public class XmlConfigurer implements InitializingPhase {
         try {
             registry = DOMImplementationRegistry.newInstance();
 
-            if (LOG.isDebugEnabled()) {
+            if (logger.isDebugEnabled()) {
                 DOMImplementationList domImplList = registry.getDOMImplementationList("LS");
                 for (int i = 0; i < domImplList.getLength(); i++) {
-                    LOG.debug("Found DOMImplementationLS: " + domImplList.item(i));
+                    logger.debug("Found DOMImplementationLS: " + domImplList.item(i));
                 }
             }
 
             domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Using DOMImplementationLS: " + domImpl.getClass().getName());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Using DOMImplementationLS: " + domImpl.getClass().getName());
             }
         } catch (Exception e) {
             throw new CitrusRuntimeException(e);
@@ -233,7 +233,7 @@ public class XmlConfigurer implements InitializingPhase {
      * @param parameterName
      */
     private void logParameterNotSet(String parameterName, String componentName) {
-        LOG.warn("Unable to set '" + parameterName + "' parameter on " + componentName);
+        logger.warn("Unable to set '" + parameterName + "' parameter on " + componentName);
     }
 
     /**

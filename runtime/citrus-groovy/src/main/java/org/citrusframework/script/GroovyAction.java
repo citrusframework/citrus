@@ -63,7 +63,7 @@ public class GroovyAction extends AbstractTestAction {
     }
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(GroovyAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(GroovyAction.class);
 
     /**
      * Default constructor.
@@ -116,8 +116,8 @@ public class GroovyAction extends AbstractTestAction {
                 groovyObject = (GroovyObject) groovyClass.getDeclaredConstructor().newInstance();
             }
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Executing Groovy script:\n" + code);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Executing Groovy script:\n" + code);
             }
 
             // execute the Groovy script
@@ -127,7 +127,7 @@ public class GroovyAction extends AbstractTestAction {
                 groovyObject.invokeMethod("run", new Object[] {});
             }
 
-            LOG.info("Groovy script execution successful");
+            logger.info("Groovy script execution successful");
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {

@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractOutputFileReporter extends AbstractTestReporter {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AbstractOutputFileReporter.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractOutputFileReporter.class);
 
     @Override
     public final void generate(TestResults testResults) {
@@ -65,9 +65,9 @@ public abstract class AbstractOutputFileReporter extends AbstractTestReporter {
         try (Writer fileWriter = new FileWriter(new File(targetDirectory, reportFileName))) {
             fileWriter.append(content);
             fileWriter.flush();
-            log.info("Generated test report: " + targetDirectory + File.separator + reportFileName);
+            logger.info("Generated test report: " + targetDirectory + File.separator + reportFileName);
         } catch (IOException e) {
-            log.error("Failed to create test report", e);
+            logger.error("Failed to create test report", e);
         }
     }
 }

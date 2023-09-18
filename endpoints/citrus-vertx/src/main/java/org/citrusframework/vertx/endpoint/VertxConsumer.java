@@ -39,7 +39,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
     private final VertxEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(VertxConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(VertxConsumer.class);
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("org.citrusframework.RetryLogger");
@@ -58,8 +58,8 @@ public class VertxConsumer extends AbstractMessageConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        if (log.isDebugEnabled()) {
-            log.debug("Receiving message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Receiving message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
         }
 
         VertxSingleMessageHandler vertxMessageHandler = new VertxSingleMessageHandler();
@@ -91,7 +91,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
                 throw new MessageTimeoutException(timeout, endpointConfiguration.getAddress());
             }
 
-            log.info("Received message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+            logger.info("Received message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
             context.onInboundMessage(message);
 
@@ -113,8 +113,8 @@ public class VertxConsumer extends AbstractMessageConsumer {
             if (message == null) {
                 this.message = event;
             } else {
-                log.warn("Vert.x message handler ignored message on event bus address '" + endpointConfiguration.getAddress() + "'");
-                log.debug("Vert.x message ignored is " + event);
+                logger.warn("Vert.x message handler ignored message on event bus address '" + endpointConfiguration.getAddress() + "'");
+                logger.debug("Vert.x message ignored is " + event);
             }
         }
 

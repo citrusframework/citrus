@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
 public class DefaultTypeConverter implements TypeConverter {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultTypeConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultTypeConverter.class);
 
     public static DefaultTypeConverter INSTANCE = new DefaultTypeConverter();
 
@@ -56,7 +56,7 @@ public class DefaultTypeConverter implements TypeConverter {
                 try {
                     return (T) new StreamSource(((InputStreamSource)target).getInputStream());
                 } catch (IOException e) {
-                    LOG.warn("Failed to create stream source from object", e);
+                    logger.warn("Failed to create stream source from object", e);
                 }
             }
         }
@@ -160,7 +160,7 @@ public class DefaultTypeConverter implements TypeConverter {
             try {
                 return convertStringToType(String.valueOf(target), type);
             } catch (CitrusRuntimeException e) {
-                LOG.warn(String.format("Unable to convert String object to type '%s' - try fallback strategies", type), e);
+                logger.warn(String.format("Unable to convert String object to type '%s' - try fallback strategies", type), e);
             }
         }
 
@@ -184,7 +184,7 @@ public class DefaultTypeConverter implements TypeConverter {
             return convertAfter(target, type);
         } catch (Exception e) {
             if (String.class.equals(type)) {
-                LOG.warn(String.format("Using default toString representation because object type conversion failed with: %s", e.getMessage()));
+                logger.warn(String.format("Using default toString representation because object type conversion failed with: %s", e.getMessage()));
                 return (T) target.toString();
             }
 
@@ -229,7 +229,7 @@ public class DefaultTypeConverter implements TypeConverter {
      */
     protected <T> T convertAfter(Object target, Class<T> type) {
         if (String.class.equals(type)) {
-            LOG.warn(String.format("Using default toString representation for object type %s", target.getClass()));
+            logger.warn(String.format("Using default toString representation for object type %s", target.getClass()));
             return (T) target.toString();
         }
 

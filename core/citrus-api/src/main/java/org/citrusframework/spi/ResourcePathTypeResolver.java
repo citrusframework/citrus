@@ -42,7 +42,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 public class ResourcePathTypeResolver implements TypeResolver {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(ResourcePathTypeResolver.class);
+    private static final Logger logger = LoggerFactory.getLogger(ResourcePathTypeResolver.class);
 
     /** Supported static instance field in target - used as a fallback to the default constructor */
     private static final String INSTANCE = "INSTANCE";
@@ -99,7 +99,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
                 throw new CitrusRuntimeException(String.format("Failed to resolve classpath resource of type '%s'", type), e1);
             }
 
-            LOG.warn(String.format("Neither static instance nor accessible default constructor (%s) is given on type '%s'",
+            logger.warn(String.format("Neither static instance nor accessible default constructor (%s) is given on type '%s'",
                     Arrays.toString(getParameterTypes(initargs)), type));
             throw new CitrusRuntimeException(String.format("Failed to resolve classpath resource of type '%s'", type), e);
         }
@@ -117,7 +117,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
                 .forEach(file -> {
                         Optional<String> resourceName = Optional.ofNullable(file.getFilename());
                         if (resourceName.isEmpty()) {
-                            LOG.warn(String.format("Skip unsupported resource '%s' for resource lookup", file));
+                            logger.warn(String.format("Skip unsupported resource '%s' for resource lookup", file));
                             return;
                         }
 
@@ -138,7 +138,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
                         }
                     });
         } catch (IOException e) {
-            LOG.warn(String.format("Failed to resolve resources in '%s'", path), e);
+            logger.warn(String.format("Failed to resolve resources in '%s'", path), e);
         }
 
         return resources;
@@ -166,7 +166,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
                     zipEntriesAsString.add(entry.getName());
                 }
             } catch (IOException e) {
-                LOG.warn(String.format("Failed to open '%s'", root), e);
+                logger.warn(String.format("Failed to open '%s'", root), e);
             }
         }
         return zipEntriesAsString;

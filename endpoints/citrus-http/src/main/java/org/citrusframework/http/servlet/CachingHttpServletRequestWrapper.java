@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CachingHttpServletRequestWrapper.class);
+    private static final Logger logger = LoggerFactory.getLogger(CachingHttpServletRequestWrapper.class);
 
     /** Cached request data initialized when first read from input stream */
     private byte[] body;
@@ -68,7 +68,7 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
                     try {
                         return MediaType.valueOf(mediaType);
                     } catch (InvalidMediaTypeException e) {
-                        log.warn(String.format("Failed to parse content type '%s' - using default media type '%s'",
+                        logger.warn(String.format("Failed to parse content type '%s' - using default media type '%s'",
                                 getContentType(), MediaType.ALL_VALUE), e);
                         return MediaType.ALL;
                     }

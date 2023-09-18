@@ -33,7 +33,7 @@ public class WebSocketProducer implements Producer {
     /**
      * Logger
      */
-    private static final Logger LOG = LoggerFactory.getLogger(WebSocketProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketProducer.class);
 
     private final String name;
     private final WebSocketEndpointConfiguration endpointConfiguration;
@@ -53,13 +53,13 @@ public class WebSocketProducer implements Producer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        LOG.info("Sending WebSocket message ...");
+        logger.info("Sending WebSocket message ...");
 
         context.onOutboundMessage(message);
 
         WebSocketMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context);
         if (endpointConfiguration.getHandler().sendMessage(wsMessage)) {
-            LOG.info("WebSocket Message was successfully sent");
+            logger.info("WebSocket Message was successfully sent");
         }
     }
 

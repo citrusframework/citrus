@@ -33,7 +33,7 @@ import org.springframework.util.CollectionUtils;
 public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer implements BeforeTest {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(SequenceBeforeTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(SequenceBeforeTest.class);
 
     @Override
     public void doExecute(TestContext context) {
@@ -41,11 +41,11 @@ public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer impl
             return;
         }
 
-        LOG.info("Entering before test block");
+        logger.info("Entering before test block");
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Executing " + actions.size() + " actions before test");
-            LOG.debug("");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing " + actions.size() + " actions before test");
+            logger.debug("");
         }
 
         for (TestActionBuilder<?> actionBuilder : actions)  {

@@ -104,7 +104,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     public static final String DEFAULT_JSON_PATH_MESSAGE_VALIDATOR = "defaultJsonPathMessageValidator";
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(KubernetesExecuteAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(KubernetesExecuteAction.class);
 
     /**
      * Default constructor.
@@ -123,14 +123,14 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         try {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Executing Kubernetes command '%s'", command.getName()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Executing Kubernetes command '%s'", command.getName()));
             }
             command.execute(kubernetesClient, context);
 
             validateCommandResult(command, context);
 
-            log.info(String.format("Kubernetes command execution successful: '%s'", command.getName()));
+            logger.info(String.format("Kubernetes command execution successful: '%s'", command.getName()));
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -144,8 +144,8 @@ public class KubernetesExecuteAction extends AbstractTestAction {
      * @param context
      */
     private void validateCommandResult(KubernetesCommand command, TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Starting Kubernetes command result validation");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Starting Kubernetes command result validation");
         }
 
         CommandResult<?> result = command.getCommandResult();
@@ -159,7 +159,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
                         .getObjectMapper().writeValueAsString(result);
                 if (StringUtils.hasText(commandResult)) {
                     getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(new JsonMessageValidationContext()));
-                    log.info("Kubernetes command result validation successful - all values OK!");
+                    logger.info("Kubernetes command result validation successful - all values OK!");
                 }
 
                 if (!CollectionUtils.isEmpty(commandResultExpressions)) {
@@ -167,7 +167,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
                             .expressions(commandResultExpressions)
                             .build();
                     getPathValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(validationContext));
-                    log.info("Kubernetes command result path validation successful - all values OK!");
+                    logger.info("Kubernetes command result path validation successful - all values OK!");
                 }
             } catch (JsonProcessingException e) {
                 throw new CitrusRuntimeException(e);

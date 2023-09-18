@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsumer {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(HttpClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
 
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
@@ -99,9 +99,9 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         final String endpointUri = getEndpointUri(httpMessage);
         context.setVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + correlationKeyName, endpointUri);
 
-        log.info("Sending HTTP message to: '" + endpointUri + "'");
-        if (log.isDebugEnabled()) {
-            log.debug("Message to send:\n" + httpMessage.getPayload(String.class));
+        logger.info("Sending HTTP message to: '" + endpointUri + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Message to send:\n" + httpMessage.getPayload(String.class));
         }
 
         RequestMethod method = getEndpointConfiguration().getRequestMethod();
@@ -119,7 +119,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
                                     try {
                                         return MediaType.valueOf(mediaType[0]);
                                     } catch (InvalidMediaTypeException e) {
-                                        log.warn(String.format("Failed to parse accept media type '%s' - using default media type '%s'",
+                                        logger.warn(String.format("Failed to parse accept media type '%s' - using default media type '%s'",
                                                 mediaType[0], MediaType.ALL_VALUE), e);
                                         return MediaType.ALL;
                                     }
@@ -132,11 +132,11 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
                 response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), HttpMethod.valueOf(method.toString()), requestEntity, String.class);
             }
 
-            log.info("HTTP message was sent to endpoint: '" + endpointUri + "'");
+            logger.info("HTTP message was sent to endpoint: '" + endpointUri + "'");
             correlationManager.store(correlationKey, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration(), context));
         } catch (HttpErrorPropagatingException e) {
-            log.info("Caught HTTP rest client exception: " + e.getMessage());
-            log.info("Propagating HTTP rest client exception according to error handling strategy");
+            logger.info("Caught HTTP rest client exception: " + e.getMessage());
+            logger.info("Propagating HTTP rest client exception according to error handling strategy");
             Message responseMessage = getEndpointConfiguration().getMessageConverter().convertInbound(
                     new ResponseEntity<>(e.getResponseBodyAsString(), e.getResponseHeaders(), e.getStatusCode()), getEndpointConfiguration(), context);
             correlationManager.store(correlationKey, responseMessage);

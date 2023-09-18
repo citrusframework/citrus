@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class StopTimerAction extends AbstractTestAction {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(StopTimerAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(StopTimerAction.class);
 
     private final String timerId;
 
@@ -48,10 +48,10 @@ public class StopTimerAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         if (timerId != null) {
             boolean success = context.stopTimer(timerId);
-            log.info(String.format("Stopping timer %s - stop successful: %s", timerId, success));
+            logger.info(String.format("Stopping timer %s - stop successful: %s", timerId, success));
         } else {
             context.stopTimers();
-            log.info("Stopping all timers");
+            logger.info("Stopping all timers");
         }
     }
 

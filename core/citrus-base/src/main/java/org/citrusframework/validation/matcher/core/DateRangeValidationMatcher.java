@@ -42,13 +42,13 @@ public class DateRangeValidationMatcher implements ValidationMatcher {
     /**
      * Logger
      */
-    private static final Logger LOG = LoggerFactory.getLogger(DateRangeValidationMatcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(DateRangeValidationMatcher.class);
 
     private static final String FALLBACK_DATE_PATTERN = "yyyy-MM-dd";
 
     @Override
     public void validate(String fieldName, String value, List<String> params, TestContext context) throws ValidationException {
-        LOG.debug(String.format(
+        logger.debug(String.format(
                 "Validating date range for date '%s' using control data: %s",
                 value,
                 ValidationMatcherUtils.getParameterListAsString(params)));

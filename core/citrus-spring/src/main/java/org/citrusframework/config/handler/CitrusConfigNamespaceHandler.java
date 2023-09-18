@@ -52,7 +52,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CitrusConfigNamespaceHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusConfigNamespaceHandler.class);
 
     @Override
     public void init() {
@@ -89,8 +89,8 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
         actionParserMap.forEach((k, p) -> {
             registerBeanDefinitionParser(k, p);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Register bean definition parser %s from resource %s", p.getClass(), k));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Register bean definition parser %s from resource %s", p.getClass(), k));
             }
         });
     }

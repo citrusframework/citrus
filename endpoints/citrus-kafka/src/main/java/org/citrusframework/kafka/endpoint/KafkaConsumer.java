@@ -43,7 +43,7 @@ import org.springframework.util.StringUtils;
 public class KafkaConsumer extends AbstractMessageConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(KafkaConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
 
     /** Endpoint configuration */
     protected final KafkaEndpointConfiguration endpointConfiguration;
@@ -67,8 +67,8 @@ public class KafkaConsumer extends AbstractMessageConsumer {
         String topic = context.replaceDynamicContentInString(Optional.ofNullable(endpointConfiguration.getTopic())
                                                                      .orElseThrow(() -> new CitrusRuntimeException("Missing Kafka topic to receive messages from - add topic to endpoint configuration")));
 
-        if (log.isDebugEnabled()) {
-            log.debug("Receiving Kafka message on topic: '" + topic);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Receiving Kafka message on topic: '" + topic);
         }
 
         if (CollectionUtils.isEmpty(consumer.subscription())) {
@@ -81,8 +81,8 @@ public class KafkaConsumer extends AbstractMessageConsumer {
             throw new MessageTimeoutException(timeout, topic);
         }
 
-        if (log.isDebugEnabled()) {
-            records.forEach(record -> log.debug("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.offset()));
+        if (logger.isDebugEnabled()) {
+            records.forEach(record -> logger.debug("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.offset()));
         }
 
         Message received = endpointConfiguration.getMessageConverter()
@@ -91,7 +91,7 @@ public class KafkaConsumer extends AbstractMessageConsumer {
 
         consumer.commitSync(Duration.ofMillis(endpointConfiguration.getTimeout()));
 
-        log.info("Received Kafka message on topic: '" + topic);
+        logger.info("Received Kafka message on topic: '" + topic);
         return received;
     }
 

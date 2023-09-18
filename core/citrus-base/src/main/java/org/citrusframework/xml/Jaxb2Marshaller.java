@@ -51,7 +51,7 @@ import org.xml.sax.XMLReader;
 public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(Jaxb2Marshaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(Jaxb2Marshaller.class);
 
     private volatile JAXBContext jaxbContext;
     private final Schema schema;
@@ -121,7 +121,7 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
             try {
                 marshaller.setProperty(k, v);
             } catch (PropertyException e) {
-                log.warn(String.format("Unable to set marshaller property %s=%s", k, v));
+                logger.warn(String.format("Unable to set marshaller property %s=%s", k, v));
             }
         });
 
@@ -141,8 +141,8 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
     private JAXBContext getOrCreateContext() throws JAXBException {
         if (jaxbContext == null) {
             synchronized (this) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Creating JAXBContext with bound classes %s", Arrays.toString(classesToBeBound)));
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Creating JAXBContext with bound classes %s", Arrays.toString(classesToBeBound)));
                 }
 
                 if (classesToBeBound != null) {
@@ -163,8 +163,8 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
     }
 
     private Schema loadSchema(Resource... schemas) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Using marshaller validation schemas '%s'", StringUtils.arrayToCommaDelimitedString(schemas)));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Using marshaller validation schemas '%s'", StringUtils.arrayToCommaDelimitedString(schemas)));
         }
 
         try {

@@ -35,7 +35,7 @@ public class EchoAction extends AbstractTestAction {
     private final String message;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(EchoAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(EchoAction.class);
 
     /**
      * Default constructor using the builder.
@@ -50,9 +50,9 @@ public class EchoAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         if (message == null) {
-            log.info("Citrus test " + new Date(System.currentTimeMillis()));
+            logger.info("Citrus test " + new Date(System.currentTimeMillis()));
         } else {
-            log.info(context.getLogModifier().mask(context.replaceDynamicContentInString(message)));
+            logger.info(context.getLogModifier().mask(context.replaceDynamicContentInString(message)));
         }
     }
 

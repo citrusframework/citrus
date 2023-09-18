@@ -21,17 +21,12 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 import org.citrusframework.CitrusSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
 public abstract class AbstractTestGenerator<T extends TestGenerator> implements TestGenerator<T> {
-
-    /** Logger */
-    protected Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test name */
     private String name;

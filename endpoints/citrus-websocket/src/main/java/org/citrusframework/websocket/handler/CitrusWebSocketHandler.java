@@ -35,7 +35,7 @@ import java.util.Queue;
  */
 public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CitrusWebSocketHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusWebSocketHandler.class);
 
     /** Inbound message cache */
     private final Queue<WebSocketMessage<?>> inboundMessages = new LinkedList<>();
@@ -45,36 +45,36 @@ public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        LOG.debug(String.format("WebSocket connection established (%s)", session.getId()));
+        logger.debug(String.format("WebSocket connection established (%s)", session.getId()));
         sessions.put(session.getId(), session);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        LOG.debug(String.format("WebSocket endpoint (%s) received text message", session.getId()));
+        logger.debug(String.format("WebSocket endpoint (%s) received text message", session.getId()));
         inboundMessages.add(message);
     }
 
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
-        LOG.debug(String.format("WebSocket endpoint (%s) received binary message", session.getId()));
+        logger.debug(String.format("WebSocket endpoint (%s) received binary message", session.getId()));
         inboundMessages.add(message);
     }
 
     @Override
     protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
-        LOG.debug(String.format("WebSocket endpoint (%s) received pong message", session.getId()));
+        logger.debug(String.format("WebSocket endpoint (%s) received pong message", session.getId()));
         inboundMessages.add(message);
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        LOG.error(String.format("WebSocket transport error (%s)", session.getId()), exception);
+        logger.error(String.format("WebSocket transport error (%s)", session.getId()), exception);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        LOG.debug(String.format("WebSocket session (%s) closed - status : %s", session.getId(), status));
+        logger.debug(String.format("WebSocket session (%s) closed - status : %s", session.getId(), status));
         sessions.remove(session.getId());
     }
 
@@ -94,7 +94,7 @@ public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
     public boolean sendMessage(WebSocketMessage<?> message) {
         boolean sentSuccessfully = false;
         if (sessions.isEmpty()) {
-            LOG.warn("No Web Socket session exists - message cannot be sent");
+            logger.warn("No Web Socket session exists - message cannot be sent");
         }
 
         for (WebSocketSession session : sessions.values()) {
@@ -103,7 +103,7 @@ public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
                     session.sendMessage(message);
                     sentSuccessfully = true;
                 } catch (IOException e) {
-                    LOG.error(String.format("(%s) error sending message", session.getId()), e);
+                    logger.error(String.format("(%s) error sending message", session.getId()), e);
                 }
             }
         }
