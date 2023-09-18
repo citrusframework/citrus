@@ -25,10 +25,10 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     @Autowired
     protected TestContextFactoryBean testContextFactory;
 
-    @Autowired
+    @Autowired(required = false)
     private HtmlReporter htmlReporter;
 
-    @Autowired
+    @Autowired(required = false)
     private JUnitReporter jUnitReporter;
 
     /** Citrus instance */
@@ -57,8 +57,13 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     @BeforeMethod
     @Override
     public void prepareTest() {
-        htmlReporter.setEnabled(false);
-        jUnitReporter.setEnabled(false);
+        if (htmlReporter != null) {
+            htmlReporter.setEnabled(false);
+        }
+
+        if (jUnitReporter != null) {
+            jUnitReporter.setEnabled(false);
+        }
         super.prepareTest();
     }
 

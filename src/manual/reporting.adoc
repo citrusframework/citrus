@@ -3,6 +3,38 @@
 
 The framework generates different reports and results after a test run for you. These report and result pages will help you to get an overview of the test cases that were executed and which one were failing.
 
+In the following chapters, we'll provide an overview of the three standard loggers available in Citrus. It's important to note that in Spring, you have the flexibility to replace these standard loggers with your own implementations. This can be achieved by registering custom implementations, as demonstrated in the following code snippet:
+
+[source,java]
+----
+@Configuration
+public static class OverrideReporterConfiguration {
+
+    @Bean
+    public LoggingReporter citrusLoggingReporter() {
+        return new OverrideLoggingReporter();
+    }
+
+    @Bean
+    public JUnitReporter citrusJunitReporter() {
+        return new OverrideJUnitReporter();
+    }
+
+    @Bean
+    public HtmlReporter citrusHtmlReporter() {
+        return new OverrideHtmlReporter();
+    }
+}
+----
+
+In Spring, it is also possible to disable these standard reporters using the following properties:
+[source,properties]
+----
+citrus.default.logging.reporter.enabled=false
+citrus.default.junit.reporter.enabled=false
+citrus.default.html.reporter.enabled=false
+----
+
 [[console-logging]]
 == Console logging
 
