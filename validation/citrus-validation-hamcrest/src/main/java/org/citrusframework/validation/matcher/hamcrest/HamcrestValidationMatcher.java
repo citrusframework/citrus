@@ -54,7 +54,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @SuppressWarnings("unchecked")
 public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpressionParser {
 
-    private final List<String> matchers = Arrays.asList( "equalTo", "equalToIgnoringCase", "equalToIgnoringWhiteSpace", "is", "not", "containsString", "startsWith", "endsWith" );
+    private final List<String> matchers = Arrays.asList( "equalTo", "equalToIgnoringCase", "equalToIgnoringWhiteSpace", "is", "not", "containsString", "startsWith", "endsWith", "matchesPattern" );
 
     private final List<String> collectionMatchers = Arrays.asList("hasSize", "hasItem", "hasItems", "contains", "containsInAnyOrder");
 
@@ -500,7 +500,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
         /**
          * Regular expression with three alternative parts (ored) to match:
          * <ol>
-         *   <li> `(sometext)` - Quoted parameter block of a matcher.</li>
+         *   <li> ('sometext') - Quoted parameter block of a matcher.</li>
          *   <li> 'sometext' - Quoted text used as a parameter to a string matcher.</li>
          *   <li> (unquotedtext) - Unquoted text used as a parameter to a string matcher. This expression is non-greedy, meaning the first closing bracket will terminate the match.</li>
          * </ol>
@@ -513,7 +513,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
          * Therefore, the regex expressions explicitly match the escaped quote -> \\\\'
          */
         private static final Pattern TEXT_PARAMETER_PATTERN = Pattern.compile(
-            "(?<quoted1>\\('(?:[^']|\\\\')*[^\\\\]'\\))"
+                "(?<quoted1>\\('(?:[^']|\\\\')*[^\\\\]'\\))"
                 + "|(?<quoted2>('(?:[^']|\\\\')*[^\\\\]'))"
                 + "|(?<unquoted>\\(((?:[^']|\\\\')*?)[^\\\\]?\\))"
         );

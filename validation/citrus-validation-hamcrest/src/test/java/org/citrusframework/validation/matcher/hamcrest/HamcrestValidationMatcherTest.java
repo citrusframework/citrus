@@ -162,11 +162,10 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             new Object[]{"foo", "unquoted text may not include brackets or commas", Collections.singletonList("anyOf(equalTo(unquoted text may not include brackets or commas), anyOf(isEmptyOrNullString()))")},
             new Object[]{"foo", "quoted \\' text may not include brackets or commas", Collections.singletonList("anyOf(equalTo(quoted \\\\' text may not include brackets or commas), anyOf(isEmptyOrNullString()))")},
             new Object[]{"foo", "value1", Collections.singletonList("anyOf(isEmptyOrNullString(),equalTo(value1))")},
-
             new Object[]{"foo", "INSERT INTO todo_entries (id, title, description, done) values (1, 'Invite for meeting', 'Invite the group for a lunch meeting', 'false')",
                 Collections.singletonList("allOf(startsWith('INSERT INTO todo_entries (id, title, description, done)'))")},
-
-
+            new Object[]{"foo", "value1", Collections.singletonList("matchesPattern([^2345]*)")},
+            new Object[]{"foo", "value1 with quotes", Collections.singletonList("matchesPattern('[^2345]*')")},
         };
     }
 
@@ -237,7 +236,8 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             new Object[]{"foo", "notext containing a ' (quote) and a , (comma)  ", Collections.singletonList("anyOf(equalTo('text containing a \\' (quote) and a , (comma)  '), anyOf(isEmptyOrNullString()))")},
             new Object[]{"foo", "notext containing a \\' (quote) and a , (comma)  ", Collections.singletonList("anyOf(equalTo('text containing a \\\\' (quote) and a , (comma)  '), anyOf(isEmptyOrNullString()))")},
             new Object[]{"foo", "nounquoted text may not include brackets or commas", Collections.singletonList("anyOf(equalTo(unquoted text may not include brackets or commas), anyOf(isEmptyOrNullString()))")},
-
+            new Object[]{"foo", "value1", Collections.singletonList("matchesPattern([^12345]*)")},
+            new Object[]{"foo", "value1 with quotes", Collections.singletonList("matchesPattern('[^12345]*')")},
         };
     }
 }
