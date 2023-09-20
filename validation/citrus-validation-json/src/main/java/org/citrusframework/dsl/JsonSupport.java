@@ -19,6 +19,8 @@
 
 package org.citrusframework.dsl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.citrusframework.message.builder.ObjectMappingPayloadBuilder;
 import org.citrusframework.validation.json.JsonMappingValidationProcessor;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 
@@ -43,5 +45,25 @@ public class JsonSupport {
      */
     public static <T> JsonMappingValidationProcessor.Builder<T> validate(Class<T> type) {
         return JsonMappingValidationProcessor.Builder.validate(type);
+    }
+
+    /**
+     * Static builder method constructing a mapping payload builder.
+     * @param payload
+     * @return
+     */
+    public static ObjectMappingPayloadBuilder marshal(Object payload) {
+        return new ObjectMappingPayloadBuilder(payload);
+    }
+
+
+    /**
+     * Static builder method constructing a mapping payload builder.
+     * @param payload
+     * @param mapper
+     * @return
+     */
+    public static ObjectMappingPayloadBuilder marshal(Object payload, ObjectMapper mapper) {
+        return new ObjectMappingPayloadBuilder(payload, mapper);
     }
 }
