@@ -183,7 +183,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         if (isDebugEnabled()) {
             newLine();
             if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
+                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
             } else {
                 debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
             }
@@ -206,7 +206,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         if (isDebugEnabled()) {
             newLine();
             if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + " SUCCESS");
+                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + " SUCCESS");
             } else {
                 debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
             }
@@ -218,7 +218,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         if (isDebugEnabled()) {
             newLine();
             if (testCase.isIncremental()) {
-                debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1));
+                debug("SKIPPING TEST STEP " + (testCase.getExecutedActions().size() + 1));
             } else {
                 debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
             }
