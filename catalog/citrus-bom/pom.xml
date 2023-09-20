@@ -168,6 +168,11 @@
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
+        <artifactId>citrus-quarkus</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-main</artifactId>
         <version>${project.version}</version>
       </dependency>
