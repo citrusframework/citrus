@@ -20,14 +20,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.json.schema.SimpleJsonSchema;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -193,7 +192,7 @@ public class JsonSchemaFilterTest {
 
         //Setup application validationContext
         when(referenceResolverMock.resolve(validationContext.getSchema(), SimpleJsonSchema.class))
-                .thenThrow(NoSuchBeanDefinitionException.class);
+                .thenThrow(CitrusRuntimeException.class);
 
         //WHEN
         jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
