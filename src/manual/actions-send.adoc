@@ -129,7 +129,7 @@ variable by the expression *_${variable-name}_* .
 TIP: Use variables wherever you can! At least the important entities of a test should be defined as variables at the beginning.
 The test case improves maintainability and flexibility when using variables.
 
-Now lets have a closer look at the sending action. The *'endpoint'* attribute might catch your attention first. This attribute
+Now let's have a closer look at the sending action. The *'endpoint'* attribute might catch your attention first. This attribute
 references a message endpoint in Citrus configuration by name. As previously mentioned the message endpoint definition lives
 in a separate configuration file and contains the actual message transport settings. In this example the *"helloService"* is
 referenced which is a message endpoint for sending out messages via JMS or HTTP for instance.

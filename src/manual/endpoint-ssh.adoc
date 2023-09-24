@@ -5,7 +5,7 @@ In the spirit of other Citrus mock services, there is support for simulating an 
 
 This means that the Citrus test case does not deal with pure SSH protocol commands. Instead of this we use the powerful XML validation capabilities in Citrus when dealing with the simple XML documents that represent the SSH request/response data.
 
-Let us clarify this with a little example. Once the real SSH server daemon is fired up within Citrus we accept a SSH EXEC request for instance. The request is translated into a XML message of the following format:
+Let us clarify this with a little example. Once the real SSH server daemon is fired up within Citrus we accept an SSH EXEC request for instance. The request is translated into an XML message of the following format:
 
 [source,xml]
 ----
@@ -26,7 +26,7 @@ This message can be validated with the usual Citrus mechanism in a receive test 
 </ssh-response>
 ----
 
-Besides simulating a full featured SSH server, Citrus also provides SSH client functionality. This client uses the same request message pattern, which is translated into a real SSH call to an SSH server. The SSH response received is also translated into a XML message as shown above so we can validate it with known validation mechanisms in Citrus.
+Besides simulating a full-featured SSH server, Citrus also provides SSH client functionality. This client uses the same request message pattern, which is translated into a real SSH call to an SSH server. The SSH response received is also translated into an XML message as shown above so we can validate it with known validation mechanisms in Citrus.
 
 Similar to the other Citrus modules (http, soap), a Citrus SSH server and client is configured in Citrus Spring application context. There is a dedicated *ssh* namespace available for all ssh Citrus components. The namespace declaration goes into the context top-level element as usual:
 
@@ -70,7 +70,7 @@ The SSH client receives several attributes, these are:
 id:: Id identifying the bean and used as reference from with test descriptions. (e.g. id="sshClient")
 host:: Host to connect to for sending an SSH Exec request. Default is 'localhost' (e.g. host="localhost")
 port: Port to use. Default is 2222 (e.g. port="9072")
-private-key-path:: Path to a private key, which can be either a plain file path or an class resource if prefixed with 'classpath' (e.g. private-key-path="classpath:test_user.priv")
+private-key-path:: Path to a private key, which can be either a plain file path or a class resource if prefixed with 'classpath' (e.g. private-key-path="classpath:test_user.priv")
 private-key-password:: Optional password for the private key (e.g. password="s!cr!t")
 user:: User used for connecting to the SSH server (e.g. user="roland")
 password:: Password used for password based authentication. Might be combined with "private-key-path" in which case both authentication mechanism are tried (e.g. password=&quot;ps!st)
@@ -134,15 +134,15 @@ The `&lt;citrus-ssh:server&gt;` supports the following attributes:
 .SSH Server Attributes:
 [horizontal]
 id:: Name of the SSH server which identifies it unique within the Citrus Spring context (e.g. id="sshServer")
-host-key-path:: Path to PEM encoded key pair (public and private key) which is used as host key. By default, a standard, pre-generate, fixed keypair is used. The path can be specified either as an file path, or, if prefixed with *classpath:* is looked up from within the classpath. The path the is relative from to the top-level package, so no leading slash should be used (e.g. hist-key-path=&quot;/etc/citrus_ssh_server.pem)
+host-key-path:: Path to PEM encoded key pair (public and private key) which is used as host key. By default, a standard, pre-generate, fixed keypair is used. The path can be specified either as a file path, or, if prefixed with *classpath:* is looked up from within the classpath. The path the is relative from to the top-level package, so no leading slash should be used (e.g. hist-key-path=&quot;/etc/citrus_ssh_server.pem)
 user-home-path:: Path to user home directory. If not set ${user.dir}/target/{serverName}/home/{user} is used by default.
 user:: User which is allowed to connect (e.g. user="roland")
-allowed-key-path:: Path to a SSH public key stored in PEM format. These are the keys, which are allowed to connect to the SSH server when publickey authentication is used. It seves the same purpose as authorized_keys for standard SSH installations. The path can be specified either as an file path, or, if prefixed with *classpath:* is looked up from within the classpath. The path the is relative from to the top-level package, so no leading slash should be used (e.g. allowed-key-path=&quot;classpath:test_user_pub.pem)
+allowed-key-path:: Path to an SSH public key stored in PEM format. These are the keys, which are allowed to connect to the SSH server when publickey authentication is used. It seves the same purpose as authorized_keys for standard SSH installations. The path can be specified either as a file path, or, if prefixed with *classpath:* is looked up from within the classpath. The path the is relative from to the top-level package, so no leading slash should be used (e.g. allowed-key-path=&quot;classpath:test_user_pub.pem)
 password:: Password which should be used when password authentication is used. Both publickey authentication and password based authentication can be used together in which case both methods are tried in turn (e.g. password="s!cr!t")
 host:: Host address (e.g. localhost)
 port:: Port on which to listen. The SSH server will bind on localhost to this port (e.g. port="9072")
 auto-start:: Whether to start this SSH server automatically. Default is *true* . If set to *false*, a test action is responsible for starting/stopping the server (e.g. auto-start="true")
-endpoint-adapter:: Bean reference to a endpoint adapter which processes the incoming SSH request. The message format for the request and response are described above (e.g. endpoint-adapter="sshEndpointAdapter")
+endpoint-adapter:: Bean reference to an endpoint adapter which processes the incoming SSH request. The message format for the request and response are described above (e.g. endpoint-adapter="sshEndpointAdapter")
 
 Once the SSH server component is added to the Spring application context with a proper endpoint adapter like the MessageChannel forwarding adapter we can receive incoming requests in a test case and provide a respone message for the client.
 

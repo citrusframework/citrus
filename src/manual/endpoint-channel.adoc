@@ -459,7 +459,7 @@ when(receive("orderChannelEndpoint")
 == Xpath selector
 
 It is also possible to evaluate some XPath expression on the message payload in order to select a message from a message
-channel. The XPath expression outcome must match an expected value and only then the message is consumed form the channel.
+channel. The XPath expression outcome must match an expected value and only then the message is consumed from the channel.
 
 The syntax for the XPath expression is to be defined as the element name like this:
 
@@ -544,7 +544,7 @@ This will match all incoming messages regardless the XML namespace prefix that i
 == JsonPath selector
 
 It is also possible to evaluate some JsonPath expression on the message payload in order to select a message from a message
-channel. The JsonPath expression outcome must match an expected value and only then the message is consumed form the channel.
+channel. The JsonPath expression outcome must match an expected value and only then the message is consumed from the channel.
 
 The syntax for the JsonPath expression is to be defined as the element name like this:
 

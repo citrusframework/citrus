@@ -3,7 +3,7 @@
 
 http://www.seleniumhq.org/[Selenium] is a very popular tool for testing user interfaces with browser automation. Citrus is able to integrate with the Selenium Java API in order to execute Selenium commands.
 
-NOTE: The Selenium test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+NOTE: The Selenium test components in Citrus are kept in a separate Maven module. If not already done, you have to include the module as Maven dependency to your project
 
 [source,xml]
 ----
@@ -196,7 +196,7 @@ public void seleniumTest() {
 }
 ----
 
-Now lets have a closer look at the different Selenium test actions supported in Citrus.
+Now let's have a closer look at the different Selenium test actions supported in Citrus.
 
 [[start-stop-browser]]
 == Start/stop browser
@@ -362,8 +362,8 @@ ids, names or xpath expressions.
 == Page actions
 
 Page objects are a well known pattern when using Selenium. The page objects define elements that the page is working with. In addition to that the
-page objects define actions that can be executed from outside. This object oriented approach for accessing pages and their elements is a very good idea.
-Lets have a look at a sample page object.
+page objects define actions that can be executed from outside. This object-oriented approach for accessing pages and their elements is a very good idea.
+Let's have a look at a sample page object.
 
 [source,java]
 ----
@@ -429,7 +429,7 @@ should always be the last parameter.
 == Page validation
 
 We can also use page object for validation purpose. The page object is loaded and instantiated as described in previous section. Then the page validator
-is called. The validator performs assertions and validation operations with the page object. Lets see a sample page validator:
+is called. The validator performs assertions and validation operations with the page object. Let's see a sample page validator:
 
 [source,java]
 ----

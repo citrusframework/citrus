@@ -171,11 +171,11 @@ The figure above shows the basic setup with inbound channel and reply channel. Y
 </testcase>
 ----
 
-As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically send the response back to the calling client. In most cases this is what you need to simulate a SOAP server instance in Citrus. Of course we have some more customization possibilities that we will go over later on. This customizations are optional so you can also skip the next description on endpoint adapters if you are happy with just what you have learned about the SOAP server component in Citrus.
+As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically send the response back to the calling client. In most cases this is what you need to simulate a SOAP server instance in Citrus. Of course we have some more customization possibilities that we will go over later on. These customizations are optional so you can also skip the next description on endpoint adapters if you are happy with just what you have learned about the SOAP server component in Citrus.
 
 Just like the HTTP server component the SOAP server component by default uses the channel endpoint adapter in order to forward all incoming requests to an in memory message channel. This is done completely behind the scenes. The Citrus configuration has become a lot easier here so you do not have to configure this by default. When nothing else is set the test case does not worry about that settings on the server and just uses the server id reference as synchronous endpoint.
 
-TIP: The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}* is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.
+TIP: The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored too internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}* is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.
 
 However we do not want to loose the great extendability and customizing capabilities of the Citrus server component. This is why you can optionally define the endpoint adapter implementation used by the Citrus SOAP server. We provide several message endpoint adapter implementations for different simulation strategies. With these endpoint adapters you should be able to generate proper SOAP response messages for the client in various ways. Before we have a closer look at the different adapter implementations we want to show how you can set a custom endpoint adapter on the server component.
 
@@ -195,7 +195,7 @@ With this endpoint adapter configuration above we change the Citrus server behav
 [[soap-send-and-receive]]
 == SOAP send and receive
 
-Citrus provides test actions for sending and receiving messages of all kind. Different message content and different message transports are available to these send and receive actions. When using SOAP message transport we might need to set special information on that messages. These are special SOAP headers, SOAP faults and so on. So we have created a special SOAP namespace for all your SOAP related send and receive operations in a XML DSL test:
+Citrus provides test actions for sending and receiving messages of all kind. Different message content and different message transports are available to these send and receive actions. When using SOAP message transport we might need to set special information on that messages. These are special SOAP headers, SOAP faults and so on. So we have created a special SOAP namespace for all your SOAP related send and receive operations in an XML DSL test:
 
 [source,xml]
 ----
@@ -236,7 +236,7 @@ receive:: Special receive operation for validating SOAP message content.
 send-fault:: Special send operation for sending out SOAP fault message content.
 assert-fault:: Special assertion operation for expecting a SOAP fault message as response.
 
-The special SOAP related send and receive actions can coexist with normal Citrus actions. In fact you can mix those action types as you want inside of a test case. All test actions that work with SOAP message content on client and server side should use this special namespace.
+The special SOAP related send and receive actions can coexist with normal Citrus actions. In fact you can mix those action types as you want inside a test case. All test actions that work with SOAP message content on client and server side should use this special namespace.
 
 In Java DSL we have something similar to that. The Java DSL provides special SOAP related features when calling the *soap()* method. With a fluent API you are able to then send and receive SOAP message content as client and server.
 
@@ -262,7 +262,7 @@ In the following sections the SOAP related capabilities are discussed in more de
 [[soap-headers]]
 == SOAP headers
 
-SOAP defines several header variations that we discuss in the following sections. First of all we deal with the special *SOAP action* header. In case we need to set this SOAP action header we simply need to use the special *_soap-action_* attribute in our test. The special header key in combination with a underlying SOAP client endpoint component constructs the SOAP action in the SOAP message.
+SOAP defines several header variations that we discuss in the following sections. First of all we deal with the special *SOAP action* header. In case we need to set this SOAP action header we simply need to use the special *_soap-action_* attribute in our test. The special header key in combination with an underlying SOAP client endpoint component constructs the SOAP action in the SOAP message.
 
 .XML DSL
 [source,xml]
@@ -386,7 +386,7 @@ As you can see the SOAP XML header validation can combine header element and XML
 [[soap-http-mime-headers]]
 == SOAP HTTP mime headers
 
-Besides the SOAP specific header elements the HTTP mime headers (e.g. Content-Type, Content-Length, Authorization) might be candidates for validation, too. When using HTTP as transport layer the SOAP message may define those mime headers. The tester is able to send and validate these headers inside the test case, although these HTTP headers are located outside of the SOAP envelope. Let us first of all speak about validating the HTTP mime headers. This feature is not enabled by default. We have enable this in our SOAP server configuration.
+Besides the SOAP specific header elements the HTTP mime headers (e.g. Content-Type, Content-Length, Authorization) might be candidates for validation, too. When using HTTP as transport layer the SOAP message may define those mime headers. The tester is able to send and validate these headers inside the test case, although these HTTP headers are located outside the SOAP envelope. Let us first of all speak about validating the HTTP mime headers. This feature is not enabled by default. We have enabled this in our SOAP server configuration.
 
 [source,xml]
 ----
@@ -430,7 +430,7 @@ So much for receiving and validating HTTP mime message headers with SOAP communi
 </ws:send>
 ----
 
-The listing above defines a HTTP mime header *operation* . The header prefix *_citrus_http__* is cut off before the header goes into the HTTP header section. With this feature we can decide where exactly our header information is located in our resulting client message.
+The listing above defines an HTTP mime header *operation* . The header prefix *_citrus_http__* is cut off before the header goes into the HTTP header section. With this feature we can decide where exactly our header information is located in our resulting client message.
 
 [[soap-envelope-handling]]
 == SOAP Envelope handling
@@ -985,7 +985,7 @@ The mechanism on HTTP error code simulation is not different to the usual SOAP r
 </send>
 ----
 
-The SOAP response must be empty and the HTTP status code is set to a value other than 200, like 500. This results in a HTTP error sent to the calling client with error 500 "Internal server error".
+The SOAP response must be empty and the HTTP status code is set to a value other than 200, like 500. This results in an HTTP error sent to the calling client with error 500 "Internal server error".
 
 [[soap-attachment]]
 == SOAP attachment support

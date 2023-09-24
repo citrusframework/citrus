@@ -540,7 +540,7 @@ Also following _org.springframework.beans.factory.xml.BeanDefinitionParser_ add 
 |_**SchemaRepositoryParser**_ | `META-INF/citrus/schema-repository/parser`
 |===
 
-The bean definition parsers mentioned above are now able to dynamically lookup element parsers that live in other modules. For instance the `SchemaParser` loads and delegates the bean definition parsing to `.xsd` or `.json` related schema parser implementations that live in `citrus-validation-xml` or `citrus-validation-json` modules. The user needs to add these modules to the classpath when using a XML or Json schema in a schema repository.
+The bean definition parsers mentioned above are now able to dynamically lookup element parsers that live in other modules. For instance the `SchemaParser` loads and delegates the bean definition parsing to `.xsd` or `.json` related schema parser implementations that live in `citrus-validation-xml` or `citrus-validation-json` modules. The user needs to add these modules to the classpath when using an XML or Json schema in a schema repository.
 
 Also the test action registry is now able to load parser implementation from other modules using the resource lookup mechanism. This way we can delegate to data dictionary parser implementations for `XML` or `Json` when they are present on the classpath.
 

@@ -140,7 +140,7 @@ actions:
 </spring:beans>
 ----
 
-As you can see we just used a normal send action referencing the jmx client component that we have just added. The message payload is a XML representation of the managed bean access. This is a special Citrus XML representation. Citrus will convert this XML payload to the actuel managed bean access. In the example above we try to access a managed bean with object name *java.lang:type=Memory* . The object name is defined in JMX specification and consists of a key *java.lang:type* and a value *Memory* . So we identify the managed bean on the server by its type.
+As you can see we just used a normal send action referencing the jmx client component that we have just added. The message payload is an XML representation of the managed bean access. This is a special Citrus XML representation. Citrus will convert this XML payload to the actuel managed bean access. In the example above we try to access a managed bean with object name *java.lang:type=Memory* . The object name is defined in JMX specification and consists of a key *java.lang:type* and a value *Memory* . So we identify the managed bean on the server by its type.
 
 Now that we have access to the managed bean we can read its managed attributes such as *Verbose* . This is a boolean type attribute so the mbean invocation result will be a respective Boolean object. We can validate the managed bean attribute access in a receive action.
 
@@ -212,7 +212,7 @@ actions:
 
 In the sample above we receive the mbean result and expect a *java.lang.Boolean* object return value. The return value content is also validated within the mbean result payload.
 
-Some managed bean attributes might also be settable for us. So wen can define the attribute access as write operation by specifying a value in the send action payload.
+Some managed bean attributes might also be settable for us. So we can define the attribute access as write operation by specifying a value in the send action payload.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -378,7 +378,7 @@ This completes the basic JMX managed bean access as client. Now we also want to 
 [[jmx-server]]
 == JMX server
 
-The server side is always a little bit more tricky because we need to simulate custom managed bean access as a server. First of all Citrus provides a server component that specifies the connection properties for clients such as transport protocols, ports and mbean object names. Lets create a new server that accepts incoming requests via RMI on a remote registry *localhost:1099* .
+The server side is always a little bit more tricky because we need to simulate custom managed bean access as a server. First of all Citrus provides a server component that specifies the connection properties for clients such as transport protocols, ports and mbean object names. Let's create a new server that accepts incoming requests via RMI on a remote registry *localhost:1099* .
 
 [source,xml]
 ----
@@ -413,11 +413,11 @@ On last thing to mention is that we could have also used *platform* as server-ur
 
 Now that we clarified the connectivity we need to talk about how to define the managed beans that are available on our JMX mbean server. This is done as nested *mbean* configuration elements. Here the managed bean definitions describe the managed bean with its objectDomain, objectName, operations and attributes. The most convenient way of defining such managed bean definitions is to give a bean type which is the fully qualified class name of the managed bean. Citrus will use the package name and class name for proper objectDomain and objectName construction.
 
-Lets have a closer look at the first mbean definition in the example above. So the first managed bean is defined by its class name *org.citrusframework.jmx.mbean.HelloBean* and therefore is accessible using the objectName *org.citrusframework.jmx.mbean:type=HelloBean* . In addition to that Citrus will read the class information such as available methods, getters and setters for constructing a proper MBeanInfo. In the second managed bean definition in our example we have used additional custom objectDomain and objectName values. So the *NewsBean* will be accessible with *org.citrusframework.news:name=News* on the managed bean server.
+Let's have a closer look at the first mbean definition in the example above. So the first managed bean is defined by its class name *org.citrusframework.jmx.mbean.HelloBean* and therefore is accessible using the objectName *org.citrusframework.jmx.mbean:type=HelloBean* . In addition to that Citrus will read the class information such as available methods, getters and setters for constructing a proper MBeanInfo. In the second managed bean definition in our example we have used additional custom objectDomain and objectName values. So the *NewsBean* will be accessible with *org.citrusframework.news:name=News* on the managed bean server.
 
 This is how we can define the bindings of managed beans and what clients need to search for when finding and accessing the managed beans on the server. When clients try to find the managed beans they have to use proper objectNames accordingly. ObjectNames that are not defined on the server will be rejected with managed bean not found error.
 
-Right now we have to use the qualified class name of the managed bean in the definition. What happens if we do not have access to that mbean class or if there is not managed bean interface available at all? Citrus provides a generic managed bean that is able to handle any managed bean interaction. The generic bean implementation needs to know the managed operations and attributes though. So lets define a new generic managed bean on our server:
+Right now we have to use the qualified class name of the managed bean in the definition. What happens if we do not have access to that mbean class or if there is not managed bean interface available at all? Citrus provides a generic managed bean that is able to handle any managed bean interaction. The generic bean implementation needs to know the managed operations and attributes though. So let's define a new generic managed bean on our server:
 
 [source,xml]
 ----
@@ -702,6 +702,6 @@ actions:
 </spring:beans>
 ----
 
-The receive action expects read access to the *NewsBean* attribute *newsCount* and returns a result object of type *java.lang.Integer* . This way we can expect all attribute access to our managed beans. Write operations will have a attribute value specified.
+The receive action expects read access to the *NewsBean* attribute *newsCount* and returns a result object of type *java.lang.Integer* . This way we can expect all attribute access to our managed beans. Write operations will have an attribute value specified.
 
 This completes the JMX server capabilities with managed bean access on operations and attributes.

@@ -3,7 +3,7 @@
 
 Citrus provides configuration components and test actions for interaction with a Docker daemon. The Citrus docker client component will execute Docker commands for container management such as start, stop, build, inspect and so on. The Docker client by default uses the Docker remote REST API. As a user you can execute Docker commands as part of a Citrus test and validate possible command results.
 
-NOTE: The Docker test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+NOTE: The Docker test components in Citrus are kept in a separate Maven module. If not already done, you have to include the module as Maven dependency to your project
 
 [source,xml]
 ----
@@ -120,7 +120,7 @@ We added a special docker namespace with prefix *docker:* so now we can start to
 </testcase>
 ----
 
-In this very simple example we first ping the Docker daemon to make sure we have connectivity up and running. After that we get the Docker version information. The second action shows an important concept when executing Docker commands in Citrus. As a tester we might be interested in validating the command result. So wen can specify an optional *docker:result* which is usually in JSON data format. As usual we can use test variables here and ignore some values explicitly such as the *GitCommit* value.
+In this very simple example we first ping the Docker daemon to make sure we have connectivity up and running. After that we get the Docker version information. The second action shows an important concept when executing Docker commands in Citrus. As a tester we might be interested in validating the command result. So we can specify an optional *docker:result* which is usually in JSON data format. As usual we can use test variables here and ignore some values explicitly such as the *GitCommit* value.
 
 Based on that we can execute several Docker commands in a test case:
 

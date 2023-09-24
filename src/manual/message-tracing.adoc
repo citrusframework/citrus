@@ -32,7 +32,7 @@ Each Citrus test writes a *.msgs* file containing all messages that went over th
 
 NOTE: As the file names do not change with each test run message tracing files may be overwritten. So you eventually need to save the generated message debug files before running another group of test cases.
 
-Lets see some sample output for a test case with message communication over SOAP Http:
+Let's see some sample output for a test case with message communication over SOAP Http:
 
 [source,xml]
 ----

@@ -117,7 +117,7 @@ that the Java class is able to find and load the XML file when running the test.
 Each XML test in Citrus defines the `@CitrusTestSource` annotation in the Java class. This annotation makes Citrus search for the
 XML file that represents the Citrus test within your classpath.
 
-In the basic example above this means that Citrus searches for a XML test file in *org/citrusframework/MyFirstCitrus_IT.xml* .
+In the basic example above this means that Citrus searches for an XML test file in *org/citrusframework/MyFirstCitrus_IT.xml* .
 
 You can customize this path and tell Citrus to search for another XML file by using the `@CitrusTestSource` annotation properties.
 
@@ -434,7 +434,7 @@ idea how that works:
 Just use the script code right inside the variable value definition. The value of the variable is the result of the last
 operation performed within the script. For longer script code the use of `&lt;![CDATA[ ]]&gt;` sections is recommended.
 
-Citrus uses the Java script engine mechanism to evaluate the script code. By default, Groovy is supported as a script
+Citrus uses the JavaScript engine mechanism to evaluate the script code. By default, Groovy is supported as a script
 engine implementation. You can add additional engine implementations to your project and support other script types, too.
 
 [[xml-templates]]

@@ -123,7 +123,7 @@ As you can see you can use test variables as well as ignore element syntax here,
 different Json element orders when comparing received and expected Json object. We can also use Json arrays and nested objects.
 The default Json message validator implementation in Citrus is very powerful in comparing Json objects.
 
-Instead of defining an expected message body template we can also use Groovy validation scripts. Lets have a look at
+Instead of defining an expected message body template we can also use Groovy validation scripts. Let's have a look at
 the Groovy Json message validator example. As usual the default Groovy Json message validator is active by default. But
 the special Groovy message validator implementation will only jump in when we used a validation script in our receive
 message definition. Let's have an example for that.
@@ -205,7 +205,7 @@ The listing above shows some power of the validation script. We can access the m
 header. With test context access we can also save the whole message body as a new test variable for later usage in the test.
 
 In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain.
-Neither you do have code syntax assist or code completion when using inline Groovy scripts.
+Neither you do have code syntax assist nor code completion when using inline Groovy scripts.
 
 Also, in case the validation script gets more complex you might want to load the script from an external file resource.
 
@@ -416,7 +416,7 @@ format. By default, Citrus is working with XML message data and therefore the XM
 With the message type attribute set to *json* we make sure that Citrus enables Json specific features on the message validation
 such as JsonPath support.
 
-Now lets get a bit more complex with validation matchers and Json object functions. Citrus tries to give you the most comfortable
+Now let's get a bit more complex with validation matchers and Json object functions. Citrus tries to give you the most comfortable
 validation capabilities when comparing Json object values and Json arrays. One first thing you can use is object functions
 like *keySet()* or *size()* . This functionality is not covered by JsonPath out of the box but added by Citrus. See the following
 example on how to use it:
@@ -448,7 +448,7 @@ receive(someEndpoint)
 The object functions do return special Json object related properties such as the set of *keys* for an object or the size
 of a Json array.
 
-Now lets get even more comfortable validation capabilities with matchers. Citrus supports Hamcrest matchers which gives
+Now let's get even more comfortable validation capabilities with matchers. Citrus supports Hamcrest matchers which gives
 us a very powerful way of validating Json object elements and arrays. See the following examples that demonstrate how this works:
 
 .Java
@@ -585,7 +585,7 @@ The following table assumes that the Json schema validation is activated for the
 |The message of the test action must be valid regarding at least one of the available schemas within the context.
 
 |A schema overruling is configured in the test case.
-|The configured schema must exist and the message must be valid regarding to the specified schema.
+|The configured schema must exist and the message must be valid regarding the specified schema.
 
 |A schema repository overruling is configured in the test case.
 |The configured schema repository must exist and the message must be valid regarding at least one of the schemas within
