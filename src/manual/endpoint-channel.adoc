@@ -148,8 +148,7 @@ reply to that channel. The basic configuration for a synchronous channel endpoin
 public ChannelSyncEndpoint helloEndpoint() {
     return new ChannelSyncEndpointBuilder()
         .channel("helloChannel")
-        .replyTimeout(1000L)
-        .pollingInterval(1000L)
+        .pollingInterval(1000)
         .build();
 }
 ----
@@ -159,7 +158,6 @@ public ChannelSyncEndpoint helloEndpoint() {
 ----
 <citrus-si:channel-sync-endpoint id="helloSyncEndpoint"
                             channel="helloChannel"
-                            reply-timeout="1000"
                             polling-interval="1000"/>
 ----
 

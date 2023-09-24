@@ -48,8 +48,8 @@ As you can see the library defines one to many validation matcher members either
 [source,xml]
 ----
 @foo:isNumber()@
-      @foo:contains()@
-      @foo:customMatcher()@
+@foo:contains()@
+@foo:customMatcher()@
 ----
 
 TIP: You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix. See now the following sections describing the default validation matcher in Citrus.

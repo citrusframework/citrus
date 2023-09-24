@@ -144,7 +144,7 @@ bean names.
 public JmsEndpoint helloServiceEndpoint() {
     return new JmsEndpointBuilder()
         .destination("Citrus.HelloService.Request.Queue")
-        .connectionFactory("myConnectionFactory")
+        .connectionFactory(myConnectionFactory())
         .build();
 }
 ----
@@ -166,7 +166,7 @@ As an alternative to that you may want to use a special Spring JMS template impl
 public JmsEndpoint helloServiceEndpoint() {
     return new JmsEndpointBuilder()
         .destination("Citrus.HelloService.Request.Queue")
-        .jmsTemplate("myJmsTemplate")
+        .jmsTemplate(myJmsTemplate())
         .build();
 }
 ----
@@ -241,7 +241,7 @@ a JMS connection factory in the configuration as the component needs to connect 
 ----
 @Bean
 public JmsSyncEndpoint helloServiceSyncEndpoint() {
-    return new JmsEndpointBuilder()
+    return new JmsSyncEndpointBuilder()
         .destination("Citrus.HelloService.InOut.Queue")
         .build();
 }
@@ -313,7 +313,7 @@ component as follows.
 ----
 @Bean
 public JmsSyncEndpoint helloServiceSyncEndpoint() {
-    return new JmsEndpointBuilder()
+    return new JmsSyncEndpointBuilder()
         .destination("Citrus.HelloService.InOut.Queue")
         .replyDestination("Citrus.HelloService.Reply.Queue")
         .build();
@@ -527,6 +527,7 @@ public JmsSyncEndpoint helloServiceSyncEndpoint() {
     return new JmsEndpointBuilder()
         .destination("Citrus.HelloService.Topic")
         .pubSubDomain(true)
+        .durableSubscription(true)
         .autoStart(true)
         .build();
 }

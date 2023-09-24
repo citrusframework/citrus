@@ -445,7 +445,7 @@ Http response. In the next section you will see how to simulate server side Http
 ----
 @Bean
 public HttpServer httpServer() {
-    return new HttpClientBuilder()
+    return new HttpServerBuilder()
         .port(8080)
         .autoStart(true)
         .build();
@@ -752,7 +752,7 @@ http().server("httpServer")
 </http:send-response>
 ----
 
-Once more we set the custom header entry (*X-CustomHeaderId*) and a Http reserved header (*Content-Type*) for the response
+Once more we set the custom header entry (*X-CustomHeaderId*) and an Http reserved header (*Content-Type*) for the response
 message. On top of this we are able to set the response status for the Http response. We use the reserved header names *status*
 in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour
 such as Http error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated
@@ -1248,10 +1248,10 @@ public BasicAuthClientHttpRequestFactory basicAuthFactory() {
     BasicAuthClientHttpRequestFactory factory = new BasicAuthClientHttpRequestFactory();
 
     AuthScope scope = new AuthScope("localhost", "8080", "", "basic");
-    factory.setAuthScope();
+    factory.setAuthScope(scope);
 
     UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("someUsername", "somePassword");
-    factory.setCredentials();
+    factory.setCredentials(credentials);
 
     return factory;
 }

@@ -303,9 +303,9 @@ can set or verify those headers in send and receive actions as follows:
 ----
 send(helloKafkaEndpoint)
     .message()
-    .header("KafkaMessageHeaders.TOPIC", "my.very.special.topic")
-    .header("KafkaMessageHeaders.MESSAGE_KEY", "myKey")
-    .header("KafkaMessageHeaders.PARTITION", 1);
+    .header(KafkaMessageHeaders.TOPIC, "my.very.special.topic")
+    .header(KafkaMessageHeaders.MESSAGE_KEY, "myKey")
+    .header(KafkaMessageHeaders.PARTITION, 1);
 ----
 
 .XML
@@ -332,7 +332,7 @@ the Kafka endpoint configuration.
 ----
 send(helloKafkaEndpoint)
     .message()
-    .header("KafkaMessageHeaders.MESSAGE_KEY", 1L);
+    .header(KafkaMessageHeaders.MESSAGE_KEY, 1L);
 ----
 
 .XML
@@ -351,11 +351,11 @@ an expected behavior.
 ----
 receive(helloKafkaEndpoint)
     .message()
-    .header("KafkaMessageHeaders.TIMESTAMP", Matchers.greaterThan(0))
-    .header("KafkaMessageHeaders.TOPIC", "my.expected.topic")
-    .header("KafkaMessageHeaders.MESSAGE_KEY", "myKey")
-    .header("KafkaMessageHeaders.PARTITION", 1)
-    .header("KafkaMessageHeaders.OFFSET", Matchers.greaterThanOrEqualTo(0));
+    .header(KafkaMessageHeaders.TIMESTAMP, Matchers.greaterThan(0))
+    .header(KafkaMessageHeaders.TOPIC, "my.expected.topic")
+    .header(KafkaMessageHeaders.MESSAGE_KEY, "myKey")
+    .header(KafkaMessageHeaders.PARTITION, 1)
+    .header(KafkaMessageHeaders.OFFSET, Matchers.greaterThanOrEqualTo(0));
 ----
 
 .XML
@@ -436,7 +436,7 @@ test as follows:
 send("kafka:hello")
     .message()
     .body("foo")
-    .header("KafkaMessageHeaders.MESSAGE_KEY", 1);
+    .header(KafkaMessageHeaders.MESSAGE_KEY, 1);
 ----
 
 .XML
