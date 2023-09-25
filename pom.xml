@@ -230,7 +230,7 @@
     <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
     <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
     <slf4j.version>2.0.7</slf4j.version>
-    <snappy.version>1.1.10.3</snappy.version>
+    <snappy.version>1.1.10.4</snappy.version>
     <snakeyaml.version>2.0</snakeyaml.version>
     <spring.version>6.0.11</spring.version>
     <spring.ws.version>4.0.5</spring.ws.version>
