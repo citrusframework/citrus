@@ -41,6 +41,7 @@ import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.schema.XmlSchemaValidation;
 import org.citrusframework.xml.XsdSchemaRepository;
+import org.citrusframework.xml.schema.XsdSchemaCollection;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.xsd.SimpleXsdSchema;
@@ -411,6 +412,50 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                 + "</message>");
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
+    }
+
+    @Test
+    public void validateSchemaWithSchemaImport() throws SAXException, IOException, ParserConfigurationException {
+        Message message = new DefaultMessage("<sampleRequest  xmlns:ns='http://citrusframework.org/SampleService/Message'>"
+                + "<command>Cm123456789</command>"
+                + "<message>FOO</message>"
+                + "</sampleRequest>");
+
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+        schemaRepository.setName("schemaRepository");
+
+        XsdSchemaCollection schemaCollection = new XsdSchemaCollection();
+        schemaCollection.setSchemas(List.of("org/citrusframework/validation/SampleMessage.xsd", "org/citrusframework/validation/SampleTypes.xsd"));
+        schemaCollection.initialize();
+        schemaCollection.afterPropertiesSet();
+
+        schemaRepository.getSchemas().add(schemaCollection);
+
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
+
+        validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
+    }
+
+    @Test
+    public void validateSchemaWithSchemaImportAndWildcard() throws ParserConfigurationException, IOException, SAXException {
+        Message message = new DefaultMessage("<sampleRequest  xmlns:ns='http://citrusframework.org/SampleService/Message'>"
+                + "<command>Cm123456789</command>"
+                + "<message>FOO</message>"
+                + "</sampleRequest>");
+
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+        schemaRepository.setName("schemaRepository");
+
+        XsdSchemaCollection schemaCollection = new XsdSchemaCollection();
+        schemaCollection.setSchemas(List.of("org/citrusframework/validation/Sample*.xsd"));
+        schemaCollection.initialize();
+        schemaCollection.afterPropertiesSet();
+
+        schemaRepository.getSchemas().add(schemaCollection);
+
+        context.getReferenceResolver().bind("schemaRepository", schemaRepository);
+
         validator.validateXMLSchema(message, context, new XmlMessageValidationContext());
     }
 

@@ -42,7 +42,7 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     /**
-     * Validate message with a XML schema.
+     * Validate message with an XML schema.
      *
      * @param message
      * @param context
