@@ -31,7 +31,7 @@ TIP: You can use validation matcher with all validation mechanisms - not only wi
 
 A set of validation matcher implementations is usually combined to a validation matcher library. The library has a prefix that will identify the validation matcher inside the test case. The default test framework validation matcher library uses a default prefix (citrus). You can write your own validation matcher library using your own prefix in order to extend the test framework functionality whenever you want.
 
-The library is built in the Spring configuration and contains a set of validation matcher that are of public use.
+The library is built in the Spring configuration and contains a set of validation matchers that are of public use.
 
 [source,xml]
 ----
@@ -48,11 +48,11 @@ As you can see the library defines one to many validation matcher members either
 [source,xml]
 ----
 @foo:isNumber()@
-      @foo:contains()@
-      @foo:customMatcher()@
+@foo:contains()@
+@foo:customMatcher()@
 ----
 
-TIP: You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix.See now the following sections describing the default validation validation matcher in Citrus.
+TIP: You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix. See now the following sections describing the default validation matcher in Citrus.
 
 [[matcher-ignore]]
 == ignore()
@@ -81,7 +81,7 @@ NOTE: The ignore validation matcher is the only validation matcher that is able 
 [[matcher-matches-xml]]
 == matchesXml()
 
-The XML validation matcher implementation is the possibly most exciting one, as we can validate nested XML with full validation power (e.g. ignoring elements, variable support). The matcher checks a nested XML fragment to compare against expected XML. For instance we receive following XML message payload for validation:
+The XML validation matcher implementation is the possibly most exciting one, as we can validate nested XML with full validation power (e.g. ignoring elements, variable support). The matcher checks a nested XML fragment to compare against expected XML. For instance we receive the following XML message payload for validation:
 
 [source,xml]
 ----
@@ -145,7 +145,7 @@ This matcher searches for a character sequence inside the actual value. If the c
 <value>@contains('foo')@</value>
 ----
 
-The validation matcher also exist in a case insensitive variant.
+The validation matcher also exists in a case-insensitive variant.
 
 [source,xml]
 ----
@@ -192,7 +192,7 @@ Date values are always difficult to check for equality. Especially when you have
 <value>@matchesDatePattern('yyyy-MM-dd')@</value>
 ----
 
-The example listing uses a date format pattern that is expected. The actual date value is parsed according to this pattern and may cause errors in case the value is no valid date matching the desired format.
+The example listing uses a date format pattern that is expected. The actual date value is parsed according to this pattern and may cause errors in case the value is not a valid date matching the desired format.
 
 [[matcher-isnumber]]
 == isNumber()
@@ -276,7 +276,7 @@ The matcher works on date values and checks that a given date is within the expe
 
 Possible valid values would be 'some date' &gt;= '01-12-2015' and 'some date' &lt;= '31-12-2015'
 
-The date-format is optional and when omitted it is assumed that all dates match the default date format *yyyy-MM-dd* . When specifying a custom date format use java's date format as a reference for valid date formats. Only dates were used in the example above but we could just as easily used date and time as shown in the example below
+The date-format is optional and when omitted it is assumed that all dates match the default date format *yyyy-MM-dd* . When specifying a custom date format use Java's date format as a reference for valid date formats. Only dates were used in the example above but we could just as easily used date and time as shown in the example below
 
 [source,xml]
 ----
@@ -286,14 +286,14 @@ The date-format is optional and when omitted it is assumed that all dates match 
 [[matcher-assert-that]]
 == assertThat()
 
-Hamcrest is a very powerful matcher library with extraordinary matcher implementations. You can use Hamcrest matchers also as Citrus validation matcher.
+Hamcrest is a very powerful matcher library with extraordinary matcher implementations. You can use Hamcrest matchers also as Citrus validation matchers.
 
 [source,xml]
 ----
 <someValue>@assertThat(equalTo(foo))@</someValue>
 ----
 
-In the listing above we are using the *equalTo()* matcher. All Hamcrest matchers are surrounded by a *assertThat* expression. You are able to combine several Hamcrest matchers then in order to construct very powerful validation logic. See the following examples on what is possible then:
+In the listing above we are using the *equalTo()* matcher. All Hamcrest matchers are surrounded by an *assertThat* expression. You are able to combine several Hamcrest matchers then in order to construct very powerful validation logic. See the following examples on what is possible then:
 
 [source,xml]
 ----
@@ -337,7 +337,7 @@ Citrus will automatically perform validation matchers on the element value. Only
 This matcher implementation checks for equality with prior normalization of all new line characters. This includes new line types CR, LF and CRLF as well as multiple new lines in value and control value. So when using
 this validation matcher all new line characters are removed prior to checking for equality.
 
-Lets assume that we have a value with new lines that we want to validate using the matcher implementation:
+Let's assume that we have a value with new lines that we want to validate using the matcher implementation:
 
 [source,text]
 ----
@@ -348,7 +348,7 @@ value with lots of
 new lines</value>
 ----
 
-You can now skip all new line characters in your control value using the `ignoreNewLine matcher`.
+You can now skip all new line characters in your control value using the `ignoreNewLine` matcher.
 
 [source,xml]
 ----
@@ -362,7 +362,7 @@ As you can see the new line characters are not breaking the validation. The othe
 
 This trim matcher will remove leading and trailing whitespaces before checking for equality.
 
-Lets assume that we have a value with leading and trailing whitespaces:
+Let's assume that we have a value with leading and trailing whitespaces:
 
 [source,text]
 ----

@@ -248,7 +248,7 @@ When using the Java DSL before suite support you can set suite names and test gr
 </bean>
 ----
 
-Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
+Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exist on the system
 in order to enable the before suite sequence in that test run.
 
 .XML Config

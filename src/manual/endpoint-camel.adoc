@@ -436,7 +436,7 @@ public CamelContext camelContext() {
 ----
 
 The route has an exception handling block defined that is called as soon as the exchange processing ends up in some error or exception.
-With Citrus you can also simulate a exchange exception when sending back a synchronous response to a calling route.
+With Citrus you can also simulate an exchange exception when sending back a synchronous response to a calling route.
 
 .Java
 [source,java,indent=0,role="primary"]

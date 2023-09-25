@@ -144,7 +144,7 @@ bean names.
 public JmsEndpoint helloServiceEndpoint() {
     return new JmsEndpointBuilder()
         .destination("Citrus.HelloService.Request.Queue")
-        .connectionFactory("myConnectionFactory")
+        .connectionFactory(myConnectionFactory())
         .build();
 }
 ----
@@ -157,7 +157,7 @@ public JmsEndpoint helloServiceEndpoint() {
       connection-factory="myConnectionFactory"/>
 ----
 
-As an alternative to that you may want to use a special Spring jms template implementation as custom bean in your endpoint.
+As an alternative to that you may want to use a special Spring JMS template implementation as custom bean in your endpoint.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -166,7 +166,7 @@ As an alternative to that you may want to use a special Spring jms template impl
 public JmsEndpoint helloServiceEndpoint() {
     return new JmsEndpointBuilder()
         .destination("Citrus.HelloService.Request.Queue")
-        .jmsTemplate("myJmsTemplate")
+        .jmsTemplate(myJmsTemplate())
         .build();
 }
 ----
@@ -241,7 +241,7 @@ a JMS connection factory in the configuration as the component needs to connect 
 ----
 @Bean
 public JmsSyncEndpoint helloServiceSyncEndpoint() {
-    return new JmsEndpointBuilder()
+    return new JmsSyncEndpointBuilder()
         .destination("Citrus.HelloService.InOut.Queue")
         .build();
 }
@@ -313,7 +313,7 @@ component as follows.
 ----
 @Bean
 public JmsSyncEndpoint helloServiceSyncEndpoint() {
-    return new JmsEndpointBuilder()
+    return new JmsSyncEndpointBuilder()
         .destination("Citrus.HelloService.InOut.Queue")
         .replyDestination("Citrus.HelloService.Reply.Queue")
         .build();
@@ -459,10 +459,10 @@ were sent in advance to the subscription. By default Citrus will use a subscript
 in the test cases. This means that the topic subscription is started and stopped per receive action when the action is performed
 inside a test case.
 
-In order to solve racing conditions for messages that are sent prior to the subscription you can also use a `auto-start`
+In order to solve racing conditions for messages that are sent prior to the subscription you can also use an `auto-start`
 setting on the JMS endpoint component. This causes Citrus to start/stop the subscription based on the endpoint lifecycle
 instead of linking the subscription to the receive action. When the endpoint is ready the subscription is started and all
-incoming message events are cached and stored to a internal in memory message channel for later consumption in the tests.
+incoming message events are cached and stored to an internal in-memory message channel for later consumption in the tests.
 
 Here is the endpoint configuration with `auto-start` enabled.
 
@@ -496,7 +496,7 @@ is loaded in the project. The internal message channel name is derived from the 
 
 `{citrus-jms:endpoint@id}":subscriber.inbound"`
 
-The in memory channel id is the combined result of the JMS endpoint id and the prefix `:subscriber.inbound`. In our example
+The in-memory channel id is the combined result of the JMS endpoint id and the postfix `:subscriber.inbound`. In our example
 this would be `helloServiceTopicEndpoint:subscriber.inbound`. Now all messages sent to the topic in advance to the tests are
 cached and ready for consumption and verification in the test.
 
@@ -527,6 +527,7 @@ public JmsSyncEndpoint helloServiceSyncEndpoint() {
     return new JmsEndpointBuilder()
         .destination("Citrus.HelloService.Topic")
         .pubSubDomain(true)
+        .durableSubscription(true)
         .autoStart(true)
         .build();
 }

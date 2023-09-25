@@ -91,7 +91,7 @@ NOTE: Citrus provides special support for JMS related features when using the Sp
 
 Notice that we have referenced the *jms* namespace when using the *purge-jms-queues* test action.
 
-Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which should ease up this tasks a lot. The test suite offers a very simple way to purge the destinations between the tests. See link:#before-suite[testsuite-before-test]for more information about this.
+Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which should ease up these tasks a lot. The test suite offers a very simple way to purge the destinations between the tests. See link:#before-suite[testsuite-before-test] for more information about this.
 
 As you can see in the next example it is quite easy to specify a group of destinations in the Spring configuration that get purged before a test is executed.
 

@@ -1,14 +1,14 @@
 [[arquillian]]
 = Arquillian support
 
-Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside of a full qualified application server. With Arquiliian you can deploy your Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order to use the Citrus feature set inside the Arquillian boundaries.
+Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside a full qualified application server. With Arquillian you can deploy your Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order to use the Citrus feature set inside the Arquillian boundaries.
 
 Read the next section in order to find out more about the Citrus Arquillian extension.
 
 [[citrus-arquillian-extension]]
 == Citrus Arquillian extension
 
-Arquillian offers a fine mechanism for extensions adding features to the Arquillian test setup and test execution. The Citrus extension respectively adds Citrus framework instance creation and Citrus test execution to the Arquillian world. First of all lets have a look at the extension descriptor properties settable via *arquillian.xml* :
+Arquillian offers a fine mechanism for extensions adding features to the Arquillian test setup and test execution. The Citrus extension respectively adds Citrus framework instance creation and Citrus test execution to the Arquillian world. First of all let's have a look at the extension descriptor properties settable via *arquillian.xml* :
 
 [source,xml]
 ----
@@ -42,12 +42,12 @@ Now that we have added the extension descriptor with all properties we need to a
 </dependency>
 ----
 
-Now everything is set up to use Citrus within Arquillian. Lets use Citrus functionality in a Arquillian test case.
+Now everything is set up to use Citrus within Arquillian. Let's use Citrus functionality in an Arquillian test case.
 
 [[client-side-testing]]
 == Client side testing
 
-Arquillian separates client and container side testing. When using client side testing the test case is executed outside of the application container deployment. This means that your test case has no direct access to container managed resources such as JNDI resources. On the plus side it is not necessary to include your test in the container deployment. The test case interacts with the container deployment as a normal client would do. Lets have a look at a first example:
+Arquillian separates client and container side testing. When using client side testing the test case is executed outside the application container deployment. This means that your test case has no direct access to container managed resources such as JNDI resources. On the plus side it is not necessary to include your test in the container deployment. The test case interacts with the container deployment as a normal client would do. Let's have a look at a first example:
 
 [source,java]
 ----
@@ -116,12 +116,12 @@ The Citrus test designer provides Java DSL methods for building the test logic. 
 
 When the Citrus test case is executed the messages are sent over the wire. The respective response message is received with well known Citrus receive message logic. We can validate the response messages accordingly and make sure the client call was done right. In case something goes wrong within Citrus test execution the framework will raise exceptions accordingly. As a result the JUnit test method is successful or failed with errors coming from Citrus test execution.
 
-This is how Citrus and Arquillian can interact in a test scenario where the test deployment is managed by Arquillian and the client side actions take place within Citrus. This is a great way to combine both frameworks with Citrus being able to call different service API endpoints in addition with validating the outcome. This was a client side test case where the test logic was executed outside of the application container. Arquillian also supports container remote test cases where we have direct access to container managed resources. The following section describes how this works with Citrus.
+This is how Citrus and Arquillian can interact in a test scenario where the test deployment is managed by Arquillian and the client side actions take place within Citrus. This is a great way to combine both frameworks with Citrus being able to call different service API endpoints in addition with validating the outcome. This was a client side test case where the test logic was executed outside the application container. Arquillian also supports container remote test cases where we have direct access to container managed resources. The following section describes how this works with Citrus.
 
 [[container-side-testing]]
 == Container side testing
 
-In previous sections we have seen how to combine Citrus with Arquillian in a client side test case. This is the way to go for all test cases that do not need to have access on container managed resources. Lets have a look at a sample where we want to gain access to a JMS queue and connection managed by the application container.
+In previous sections we have seen how to combine Citrus with Arquillian in a client side test case. This is the way to go for all test cases that do not need to have access on container managed resources. Let's have a look at a sample where we want to gain access to a JMS queue and connection managed by the application container.
 
 [source,java]
 ----
@@ -190,7 +190,7 @@ This is how to combine Citrus and Arquillian in order to build integration tests
 [[test-runners]]
 == Test runners
 
-In the previous sections we have used the Citrus *TestDesigner* in order to construct a Citrus test case to execute within the Arquillian boundaries. The nature of the test designer is to aggregate all Java DSL method calls in order to build a complete Citrus test case before execution is done via the Citrus framework. This approach can cause some unexpected behavior when mixing the Citrus Java DSL method calls with Arquillian test logic. Lets describe this by having a look at an example where th mixture of test designer and pure Java test logic causes unseen problems.
+In the previous sections we have used the Citrus *TestDesigner* in order to construct a Citrus test case to execute within the Arquillian boundaries. The nature of the test designer is to aggregate all Java DSL method calls in order to build a complete Citrus test case before execution is done via the Citrus framework. This approach can cause some unexpected behavior when mixing the Citrus Java DSL method calls with Arquillian test logic. Let's describe this by having a look at an example where th mixture of test designer and pure Java test logic causes unseen problems.
 
 [source,java]
 ----
@@ -272,7 +272,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws E
 }
 ----
 
-The test logic has not changed significantly. We use the Citrus *TestRunner* as method injected parameter instead of the *TestDesigner* . And this is pretty much the trick. Now the Java DSL methods do execute the Citrus test logic immediately. This is why the syntax of the Citrus Java DSL methods have changed a little bit. We now use a anonymous interface implementation for constructing the send/receive test action logic. As a result we can use the Citrus Java DSL as normal code and we can mix the runtime Java logic as each statement is executed immediately.
+The test logic has not changed significantly. We use the Citrus *TestRunner* as method injected parameter instead of the *TestDesigner* . And this is pretty much the trick. Now the Java DSL methods do execute the Citrus test logic immediately. This is why the syntax of the Citrus Java DSL methods have changed a little bit. We now use an anonymous interface implementation for constructing the send/receive test action logic. As a result we can use the Citrus Java DSL as normal code and we can mix the runtime Java logic as each statement is executed immediately.
 
 With Java lambda expressions our code looks even more straight forward and less verbose as we can skip the anonymous interface implementations. With Java 8 you can write the same test like this:
 

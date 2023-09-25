@@ -148,8 +148,7 @@ reply to that channel. The basic configuration for a synchronous channel endpoin
 public ChannelSyncEndpoint helloEndpoint() {
     return new ChannelSyncEndpointBuilder()
         .channel("helloChannel")
-        .replyTimeout(1000L)
-        .pollingInterval(1000L)
+        .pollingInterval(1000)
         .build();
 }
 ----
@@ -159,7 +158,6 @@ public ChannelSyncEndpoint helloEndpoint() {
 ----
 <citrus-si:channel-sync-endpoint id="helloSyncEndpoint"
                             channel="helloChannel"
-                            reply-timeout="1000"
                             polling-interval="1000"/>
 ----
 
@@ -459,7 +457,7 @@ when(receive("orderChannelEndpoint")
 == Xpath selector
 
 It is also possible to evaluate some XPath expression on the message payload in order to select a message from a message
-channel. The XPath expression outcome must match an expected value and only then the message is consumed form the channel.
+channel. The XPath expression outcome must match an expected value and only then the message is consumed from the channel.
 
 The syntax for the XPath expression is to be defined as the element name like this:
 
@@ -544,7 +542,7 @@ This will match all incoming messages regardless the XML namespace prefix that i
 == JsonPath selector
 
 It is also possible to evaluate some JsonPath expression on the message payload in order to select a message from a message
-channel. The JsonPath expression outcome must match an expected value and only then the message is consumed form the channel.
+channel. The JsonPath expression outcome must match an expected value and only then the message is consumed from the channel.
 
 The syntax for the JsonPath expression is to be defined as the element name like this:
 

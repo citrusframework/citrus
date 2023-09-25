@@ -1,7 +1,7 @@
 [[ftp]]
 = FTP support
 
-With Citrus it is possible to start your own ftp server for accepting incoming client requests. You can also use Citrus as a FTP client to send FTP commands. The next sections deal with FTP connectivity.
+With Citrus it is possible to start your own ftp server for accepting incoming client requests. You can also use Citrus as an FTP client to send FTP commands. The next sections deal with FTP connectivity.
 
 NOTE: The FTP components in Citrus are maintained in their own Maven module. So you should add the module as Maven dependency to your project accordingly.
 
@@ -314,7 +314,7 @@ When the file is stored on server side we receive a success result message with 
 [[ftp-client-retrieve]]
 === Retrieve files
 
-We are able to retrieve files from a FTP server. We need to specify the target file path that we want to get on the server user home directory.
+We are able to retrieve files from an FTP server. We need to specify the target file path that we want to get on the server user home directory.
 
 .Java
 [source,java,indent=0,role="primary"]

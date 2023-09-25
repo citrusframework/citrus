@@ -180,7 +180,7 @@ repositories {
 }
 ----
 
-Citrus stable release versions are available on Maven central. Now lets move on with adding the Citrus libraries to the project.
+Citrus stable release versions are available on Maven central. Now let's move on with adding the Citrus libraries to the project.
 
 .Add Citrus test scoped dependencies
 [source,groovy]

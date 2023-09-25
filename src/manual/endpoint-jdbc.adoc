@@ -370,7 +370,7 @@ In addition, there are advanced configuration possibilities to customize the beh
 | endpoint adapter
 | No
 | JdbcEndpointAdapterController
-| A Endpoint adapter implementation creating the messages for validation.
+| An Endpoint adapter implementation creating the messages for validation.
 
 |===
 
@@ -443,7 +443,7 @@ via the endpoint configuration.
 
 | `JdbcMessage.exception(String exceptionText)`
 | send
-| Sends a exception to the system under test. Regarding to the driver documentation, the error will be an SQLException.
+| Sends an exception to the system under test. Regarding the driver documentation, the error will be an SQLException.
 
 | `JdbcMessage.rowsUpdated(int number)`
 | send
@@ -470,7 +470,7 @@ To use this, you have to specify the format of the dataSet String. Please refer 
 
 | `JdbcMessage.error()`
 | send
-| Sends a empty error result to the system under test.
+| Sends an empty error result to the system under test.
 
 |===
 

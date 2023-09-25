@@ -396,7 +396,7 @@ public HttpClient httpClient() {
 Of course, you can set the *Accept* header on each send operation in order to tell the server what kind of content types
 are supported in response messages.
 
-Now we can send and receive messages as Http client with specific test actions. Now lets move on to the Http server.
+Now we can send and receive messages as Http client with specific test actions. Now let's move on to the Http server.
 
 [[http-client-interceptors]]
 == Http client interceptors
@@ -436,7 +436,7 @@ component. You can add custom interceptor implementations here in order to parti
 [[http-rest-server]]
 == Http REST server
 
-Receiving Http requests requires a Http server listening on a port on your local machine. Citrus offers an embedded Http
+Receiving Http requests requires an Http server listening on a port on your local machine. Citrus offers an embedded Http
 server which is capable of handling incoming Http requests. The server accepts client connections and must provide a proper
 Http response. In the next section you will see how to simulate server side Http REST service with Citrus.
 
@@ -445,7 +445,7 @@ Http response. In the next section you will see how to simulate server side Http
 ----
 @Bean
 public HttpServer httpServer() {
-    return new HttpClientBuilder()
+    return new HttpServerBuilder()
         .port(8080)
         .autoStart(true)
         .build();
@@ -469,7 +469,7 @@ response message as reply which will be automatically sent back to the Http clie
 image:figure_008.jpg[figure_008.jpg]
 
 The figure above shows the basic setup with inbound channel and reply channel. You as a tester should not worry about this
-to much. By default, you as a tester just use the server as synchronous endpoint in your test case. This means that you
+too much. By default, you as a tester just use the server as synchronous endpoint in your test case. This means that you
 simply receive a message from the server and send a response back.
 
 .Java
@@ -508,18 +508,18 @@ send("httpServer")
 As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically
 send the response back to the calling Http client. In most cases this is exactly what we want to do - send back a response
 message that is specified inside the test. The Http server component by default uses a channel endpoint adapter in order to
-forward all incoming requests to an in memory message channel. This is done completely behind the scenes. The Http server
+forward all incoming requests to an in-memory message channel. This is done completely behind the scenes. The Http server
 component provides some more customization possibilities when it comes to endpoint adapter implementations. This topic is
 discussed in a separate section link:#endpoint-adapter[endpoint-adapter]. Up to now we keep it simple by synchronously receiving
 and sending messages in the test case.
 
 TIP: The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored
-to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by
+too internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by
 purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}*
 is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature
 you are sure that obsolete messages on a server instance get purged before each test is executed.
 
-So lets get back to our mission of providing response messages as server to connected clients. As you might know Http REST
+So let's get back to our mission of providing response messages as server to connected clients. As you might know Http REST
 works with some characteristic properties when it comes to send and receive messages. For instance a client can send different
 request methods GET, POST, PUT, DELETE, HEAD and so on. The Citrus server may verify this method when receiving client requests.
 Therefore we have introduced special Http test actions for server communication. Have a look at a simple example:
@@ -601,11 +601,11 @@ headers. As usual the optional message body is compared to an expected message t
 is saved to a test variable *message_id* for later usage in the response.
 
 The response message defines Http typical entities such as *status* and *reason-phrase*. Here the tester can simulate
-*404 NOT_FOUND* errors or similar other status codes that get send back to the client. In our example everything is *OK*
+*404 NOT_FOUND* errors or similar other status codes that get sent back to the client. In our example everything is *OK*
 and we send back a response body and some custom header entries.
 
 That is basically how Citrus simulates Http server operations. We receive the client request and validate the request properties.
-Then we send back a response with a Http status code.
+Then we send back a response with an Http status code.
 
 This completes the server actions on Http message transport. Now we continue with some more Http specific settings and features.
 
@@ -752,7 +752,7 @@ http().server("httpServer")
 </http:send-response>
 ----
 
-Once more we set the custom header entry (*X-CustomHeaderId*) and a Http reserved header (*Content-Type*) for the response
+Once more we set the custom header entry (*X-CustomHeaderId*) and an Http reserved header (*Content-Type*) for the response
 message. On top of this we are able to set the response status for the Http response. We use the reserved header names *status*
 in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour
 such as Http error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated
@@ -824,7 +824,7 @@ services some other header names are essential for validation. These are request
 path and request URI. The Citrus server side REST message controller will automatically add all this information to the message
 header for you. So all you need to do is validate the header entries in your test.
 
-The next example receives a Http GET method request on server side. Here the GET request does not have any message payload,
+The next example receives an Http GET method request on server side. Here the GET request does not have any message payload,
 so the validation just works on the information given in the message header. We assume the client to call `http://localhost:8080/app/users?id=123456789`.
 As a tester we need to validate the request method, request URI, context path and the query parameters.
 
@@ -894,7 +894,7 @@ http()
 </http:send-request>
 ----
 
-The parameter are automatically added to the request URL that is configured on the `httpClient` component.
+The parameters are automatically added to the request URL that is configured on the `httpClient` component.
 
 [[http-server-interceptors]]
 == Http server interceptors
@@ -946,7 +946,7 @@ Form urlencoded form data content could look like this:
 password=s%21cr%21t&username=foo
 ----
 
-A you can see the form data is automatically encoded. In the example above we transmit two form controls *password* and
+As you can see the form data is automatically encoded. In the example above we transmit two form controls *password* and
 *username* with respective values *s$cr$t* and *foo* . In case we would validate this form data in Citrus we are able to
 do this with plaintext message validation.
 
@@ -996,7 +996,7 @@ send("httpServer")
 
 Obviously validating these key-value pair character sequences can be hard especially when having HTML forms with lots of
 form controls. This is why Citrus provides a special message validator for *x-www-form-urlencoded* contents. First of all
-we have to add *citrus-http* module as dependency to our project if not done so yet. After that we can add the validator
+we have to add *citrus-http* module as dependency to our project if we have not done so yet. After that we can add the validator
 implementation to the list of message validators used in Citrus.
 
 .Java
@@ -1248,10 +1248,10 @@ public BasicAuthClientHttpRequestFactory basicAuthFactory() {
     BasicAuthClientHttpRequestFactory factory = new BasicAuthClientHttpRequestFactory();
 
     AuthScope scope = new AuthScope("localhost", "8080", "", "basic");
-    factory.setAuthScope();
+    factory.setAuthScope(scope);
 
     UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("someUsername", "somePassword");
-    factory.setCredentials();
+    factory.setCredentials(credentials);
 
     return factory;
 }
@@ -1285,7 +1285,7 @@ The advantages of this method is obvious. Now all sending test actions that refe
 add the basic authentication header.
 
 The above configuration results in Http client requests with authentication headers properly set for basic authentication.
-The client request factory takes care on adding the proper basic authentication header to each request that is sent with this
+The client request factory takes care of adding the proper basic authentication header to each request that is sent with this
 Citrus message sender. Citrus uses preemptive authentication. The message sender only sends a single request to the server
 with all authentication information set in the message header. The request which determines the authentication scheme on the
 server is skipped. This is why you have to add some auth scope in the client request factory so Citrus can setup an authentication
@@ -1455,9 +1455,9 @@ http().server("httpServer")
 </http:send-response>
 ----
 
-The sample above receives a Http request with method POST and some request data. The server response is specified with _Http 200 OK_
+The sample above receives an Http request with method POST and some request data. The server response is specified with _Http 200 OK_
 and some additional cookie information. The cookie is part of the message header specification and gets a name and value
-as well as several other attributes. This response will result in a Http response with the _"Set-Cookie"_ header set:
+as well as several other attributes. This response will result in an Http response with the _"Set-Cookie"_ header set:
 
 .Set cookie header
 [source,text]
@@ -1599,9 +1599,9 @@ client and server components support gzip compression out of the box. This means
 encoding headers in your http request/response message.
 
 Accept-Encoding=gzip:: Setting for clients when requesting gzip compressed response content. The Http server must support gzip compression then in order to provide the response as zipped byte stream. The Citrus http server component automatically recognizes this header in a request and applies gzip compression to the response.
-Content-Encoding=gzip:: When a http server sends compressed message content to the client this header is set to *gzip* in order to mark the compression. The Http client must support gzip compression then in order to unzip the message content. The Citrus http client component automatically recognizes this header in a response and applies gzip unzip logic before passing the message to the test case.
+Content-Encoding=gzip:: When an http server sends compressed message content to the client this header is set to *gzip* in order to mark the compression. The Http client must support gzip compression then in order to unzip the message content. The Citrus http client component automatically recognizes this header in a response and applies gzip unzip logic before passing the message to the test case.
 
-The Citrus client and server automatically take care on gzip compression when those headers are set. In the test case you
+The Citrus client and server automatically take care of gzip compression when those headers are set. In the test case you
 do not need to zip or unzip the content then as it is automatically done before.
 
 This means that you can request gzipped content from a server with just adding the message header *Accept-Encoding* in
@@ -1774,7 +1774,7 @@ Citrus provides several default servlet implementations that are automatically a
 implementations are:
 
 org.citrusframework.http.servlet.RequestCachingServletFilter:: caches incoming request data so input streams can be read multiple times during request processing (important when request logging is enabled)
-org.citrusframework.http.servlet.GzipServletFilter:: applies Gzip compressing when according headers are set and client explicitly asks for compressed request/response communication
+org.citrusframework.http.servlet.GzipServletFilter:: applies Gzip compression when according headers are set and client explicitly asks for compressed request/response communication
 
 By the time you define some custom servlet filters or mappings to the server component Citrus will not apply default servlet
 filters. This means you always need to construct the whole servlet filter chain including default servlet filters mentioned above.

@@ -492,7 +492,7 @@ actions:
 ----
 
 In addition to that you can ignore some elements that are skipped in comparison. We will describe this later on in this section.
-Now lets continue with message header validation.
+Now let's continue with message header validation.
 
 [[receive-message-headers]]
 === Validate message headers
@@ -903,10 +903,10 @@ In messaging applications the header information often holds message ids, correl
 With this information given you can explicitly listen for messages that belong to your test case.
 This is very helpful to avoid receiving messages that are still available on the message destination.
 
-Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in
+Let's say the tested software application keeps sending messages that belong to previous test cases. This could happen in
 retry situations where the application error handling automatically tries to solve a communication problem that occurred
 during previous test cases. As a result a message destination (e.g. a JMS message queue) contains messages that are not
-valid any more for the currently running test case. The test case might fail because the received message does not apply
+valid anymore for the currently running test case. The test case might fail because the received message does not apply
 to the actual use case. So we will definitely run into validation errors as the expected message control values do not match.
 
 Now we have to find a way to avoid these problems. The test could filter the messages on a destination to only receive messages

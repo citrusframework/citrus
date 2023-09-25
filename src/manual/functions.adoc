@@ -17,7 +17,7 @@ The library is built in the Spring configuration and contains a set of functions
 </citrus:function-library>
 ----
 
-As you can see the library defines one to many functions either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library and you are able to use the functions in your test case with the leading library prefix just like this:
+As you can see the library defines one-to-many functions either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library and you are able to use the functions in your test case with the leading library prefix just like this:
 
 [source,xml]
 ----
@@ -183,7 +183,7 @@ Function output:
 [[functions-round]]
 == round()
 
-This is a simple mathematic function that will round decimal numbers representations to their nearest non decimal number.
+This is a simple mathematical function that will round decimal numbers representations to their nearest non-decimal number.
 
 [source,xml]
 ----
@@ -774,7 +774,7 @@ becomes very easy then.
 [[functions-url-encode]]
 == urlEncode()/urlDecode()
 
-The *urlEncode* function takes a String and performs proper URL encoding. The result is an URL encoded String that is using proper character escaping for Http.
+The *urlEncode* function takes a String and performs proper URL encoding. The result is a URL encoded String that is using proper character escaping for Http.
 
 [source,xml]
 ----

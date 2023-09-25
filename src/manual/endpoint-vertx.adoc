@@ -72,7 +72,7 @@ one single consumer on the event bus address will receive the message. If there 
 wins and receives the message. In contrary to that the publish-subscribe scenario would deliver the message to all available consumers
 on the event bus address simultaneously. You can enable the *pubSubDomain* on the Vert.x endpoint component for this communication pattern.
 
-The Vert.x endpoint needs a instance factory implementation in order to create the embedded Vert.x instance. By default the bean name
+The Vert.x endpoint needs an instance factory implementation in order to create the embedded Vert.x instance. By default the bean name
 *vertxInstanceFactory* is recognized by all Vert.x endpoint components. We will talk about Vert.x instance factories in more detail
 later on in this chapter.
 
@@ -103,7 +103,7 @@ As the Vert.x Citrus endpoint is bidirectional you can also receive messages fro
 ----
 
 Citrus automatically adds some special message headers to the message, so you can validate the Vert.x event bus address. This completes
-the simple send and receive operations on a Vert.x event bus. Now lets move on to synchronous endpoints where Citrus waits for a reply on the event bus.
+the simple send and receive operations on a Vert.x event bus. Now let's move on to synchronous endpoints where Citrus waits for a reply on the event bus.
 
 [[synchronous-vert-x-endpoint]]
 == Synchronous Vert.x endpoint
@@ -180,7 +180,7 @@ Citrus starts an embedded Vert.x instance at runtime in order to participate in 
 instances are connected via the event bus. For starting the Vert.x event bus Citrus uses a cluster hostname and port definition. You can
 customize this cluster host in order to connect to a very special cluster in your network.
 
-Now Citrus needs to manage the Vert.x instances created during the test run. By default Citrus will look for a instance factory bean
+Now Citrus needs to manage the Vert.x instances created during the test run. By default Citrus will look for an instance factory bean
 named *vertxInstanceFactory* . You can choose the factory implementation to use in your project. By default you can use the caching factory
 implementation that caches the Vert.x instances so we do not connect more than one Vert.x instance to the same cluster host.
 Citrus offers following instance factory implementations:

@@ -4,7 +4,7 @@
 http://kubernetes.io/[Kubernetes] is one of the hottest management platforms for containerized applications these days. Kubernetes lets you deploy, scale and manage your containers on the platform so you get features like auto-scaling, self-healing, service discovery and load balancing.
 Citrus provides interaction with the Kubernetes REST API so you can access the Kubernetes platform and its resources within a Citrus test case.
 
-NOTE: The Kubernetes test components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+NOTE: The Kubernetes test components in Citrus are kept in a separate Maven module. If not already done, you have to include the module as Maven dependency to your project
 
 [source,xml]
 ----
@@ -94,7 +94,7 @@ Citrus supports the following Kubernetes API commands with respective test actio
 * *k8s:watch-nodes*
 * *k8s:watch-replication-controllers*
 
-We will discuss these commands in detail later on in this chapter. For now lets have a closer look on how to use the commands inside of a Citrus test.
+We will discuss these commands in detail later on in this chapter. For now let's have a closer look on how to use the commands inside a Citrus test.
 
 [[kubernetes-commands-in-xml]]
 == Kubernetes commands in XML
@@ -157,7 +157,7 @@ We added a special kubernetes namespace with prefix *k8s:* so now we can start t
 ----
 
 In this very simple example we first ping the Kubernetes REST API to make sure we have connectivity up and running. The info command connects the REST API and returns a list of status information of the Kubernetes client.
-After that we get the list of available Kubernetes pods. As a tester we might be interested in validating the command results. So wen can specify an optional *k8s:result* which is usually in Json format. With that we can apply the full
+After that we get the list of available Kubernetes pods. As a tester we might be interested in validating the command results. So we can specify an optional *k8s:result* which is usually in Json format. With that we can apply the full
 Citrus Json validation power to the Kubernetes results. As usual we can use test variables here and ignore some values explicitly such as the *metadata* value. Also JsonPath expression validation and Json test message validation features in
 Citrus come in here to validate the results.
 
@@ -436,7 +436,7 @@ public void getPodsTest() {
 }
 ----
 
-As you can see we are able get the complete pod information from Kubernetes. The result is validated with Json message validator in Citrus. This means we can use _@ignore@_ as well as test variables and
+As you can see we are able to get the complete pod information from Kubernetes. The result is validated with Json message validator in Citrus. This means we can use _@ignore@_ as well as test variables and
 JsonPath expressions.
 
 [[create-resources]]

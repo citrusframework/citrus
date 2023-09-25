@@ -122,8 +122,7 @@ reply to that queue. The basic configuration for a synchronous direct endpoint c
 public ChannelSyncEndpoint helloEndpoint() {
     return new ChannelSyncEndpointBuilder()
         .queue("helloChannel")
-        .replyTimeout(1000L)
-        .pollingInterval(1000L)
+        .pollingInterval(1000)
         .build();
 }
 ----
@@ -133,7 +132,6 @@ public ChannelSyncEndpoint helloEndpoint() {
 ----
 <citrus:direct-sync-endpoint id="helloSyncEndpoint"
                             queue="helloChannel"
-                            reply-timeout="1000"
                             polling-interval="1000"/>
 ----
 
@@ -246,7 +244,7 @@ then(send("helloSyncEndpoint")
 A queue can hold multiple messages at the same time. Usually you receive messages using first-in-first-out pattern. Message
 selectors enable you to select messages form that queue so you can pick messages form a queue based on a selector evaluation.
 
-Citrus introduces a special queue message queue implementation that support message selectors.
+Citrus introduces a special message queue implementation that supports message selectors.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -432,7 +430,7 @@ when(receive("orderChannelEndpoint")
 == Xpath selector
 
 It is also possible to evaluate some XPath expression on the message payload in order to select a message from a message
-queue. The XPath expression outcome must match an expected value and only then the message is consumed form the queue.
+queue. The XPath expression outcome must match an expected value and only then the message is consumed from the queue.
 
 The syntax for the XPath expression is to be defined as the element name like this:
 
@@ -517,7 +515,7 @@ This will match all incoming messages regardless the XML namespace prefix that i
 == JsonPath selector
 
 It is also possible to evaluate some JsonPath expression on the message payload in order to select a message from a message
-queue. The JsonPath expression outcome must match an expected value and only then the message is consumed form the queue.
+queue. The JsonPath expression outcome must match an expected value and only then the message is consumed from the queue.
 
 The syntax for the JsonPath expression is to be defined as the element name like this:
 

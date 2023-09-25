@@ -93,7 +93,7 @@ XML. Finally let us have a look at a first example how a sending action is defin
 </testcase>
 ----
 
-Now lets have a closer look at the sending action. The *'endpoint'* attribute might catch your attention first. This attribute
+Now let's have a closer look at the sending action. The *'endpoint'* attribute might catch your attention first. This attribute
 references the message endpoint in Citrus configuration by its identifier. As previously mentioned the message endpoint definition
 lives in a separate configuration file and contains the actual message transport settings. In this example the *"helloServiceEndpoint"*
 is referenced which is a JMS endpoint for sending out messages to a JMS queue for instance.
@@ -200,7 +200,7 @@ will only wait a given amount of time before raising a timeout error. Following 
 fails as the message did not arrive in time. Citrus defines default timeout settings for all message receiving tasks.
 
 At this point you know the two most important test actions in Citrus. Sending and receiving actions will become the main
-components of your integration tests when dealing with loosely coupled message based components in a enterprise application
+components of your integration tests when dealing with loosely coupled message based components in an enterprise application
 environment. It is very easy to create complex message flows, meaning a sequence of sending and receiving actions in your
 test case. You can replicate use cases and test your message exchange with extended message validation capabilities. See
 link:#actions-receive[actions-receive] for a more detailed description on how to validate incoming messages and how to expect

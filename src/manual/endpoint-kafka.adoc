@@ -156,7 +156,7 @@ The following table shows all available settings on a Kafka endpoint in Citrus:
 | No
 | `org.citrusframework.kafka.message.KafkaMessageConverter`
 | Converter maps internal Citrus message objects to ProducerRecord/ConsumerRecord objects. The converter implementation takes
-  care on message key, value, timestamp and special message headers.
+  care of message key, value, timestamp and special message headers.
 
 | header-mapper
 | No
@@ -179,7 +179,7 @@ The following table shows all available settings on a Kafka endpoint in Citrus:
 | No
 | earliest
 | When consuming records from a topic partition and the current offset does not exist on that partition Kafka will automatically
-  seek to a valid offset position on that partition. The `offset-reset` setting where to find the new position (latest, earliest,
+  seek to a valid offset position on that partition. The `offset-reset` setting sets where to find the new position (latest, earliest,
   none). If `none` is set the consumer will receive an exception instead of resetting the offset to a valid position.
 
 | partition
@@ -303,9 +303,9 @@ can set or verify those headers in send and receive actions as follows:
 ----
 send(helloKafkaEndpoint)
     .message()
-    .header("KafkaMessageHeaders.TOPIC", "my.very.special.topic")
-    .header("KafkaMessageHeaders.MESSAGE_KEY", "myKey")
-    .header("KafkaMessageHeaders.PARTITION", 1);
+    .header(KafkaMessageHeaders.TOPIC, "my.very.special.topic")
+    .header(KafkaMessageHeaders.MESSAGE_KEY, "myKey")
+    .header(KafkaMessageHeaders.PARTITION, 1);
 ----
 
 .XML
@@ -323,7 +323,7 @@ and to specify the target partition of the producer record. These settings do on
 Default values on the Kafka endpoint are overwritten respectively.
 
 TIP: Typing of message header entries may also be of interest in order to meet the Kafka standards. For instance the following
-message key is of type `java.lang.Integer` and is therefore transferred via Kafka's key-serializer as a integer value. You need
+message key is of type `java.lang.Integer` and is therefore transferred via Kafka's key-serializer as an integer value. You need
 to set the header type to `integer` and use a `org.apache.kafka.common.serialization.IntegerSerializer` as key-serializer on
 the Kafka endpoint configuration.
 
@@ -332,7 +332,7 @@ the Kafka endpoint configuration.
 ----
 send(helloKafkaEndpoint)
     .message()
-    .header("KafkaMessageHeaders.MESSAGE_KEY", 1L);
+    .header(KafkaMessageHeaders.MESSAGE_KEY, 1L);
 ----
 
 .XML
@@ -351,11 +351,11 @@ an expected behavior.
 ----
 receive(helloKafkaEndpoint)
     .message()
-    .header("KafkaMessageHeaders.TIMESTAMP", Matchers.greaterThan(0))
-    .header("KafkaMessageHeaders.TOPIC", "my.expected.topic")
-    .header("KafkaMessageHeaders.MESSAGE_KEY", "myKey")
-    .header("KafkaMessageHeaders.PARTITION", 1)
-    .header("KafkaMessageHeaders.OFFSET", Matchers.greaterThanOrEqualTo(0));
+    .header(KafkaMessageHeaders.TIMESTAMP, Matchers.greaterThan(0))
+    .header(KafkaMessageHeaders.TOPIC, "my.expected.topic")
+    .header(KafkaMessageHeaders.MESSAGE_KEY, "myKey")
+    .header(KafkaMessageHeaders.PARTITION, 1)
+    .header(KafkaMessageHeaders.OFFSET, Matchers.greaterThanOrEqualTo(0));
 ----
 
 .XML
@@ -436,7 +436,7 @@ test as follows:
 send("kafka:hello")
     .message()
     .body("foo")
-    .header("KafkaMessageHeaders.MESSAGE_KEY", 1);
+    .header(KafkaMessageHeaders.MESSAGE_KEY, 1);
 ----
 
 .XML
@@ -454,7 +454,7 @@ send("kafka:hello")
 
 This action above will create a dynamic Kafka endpoint and publish the message to the `hello` topic. The dynamic endpoint
 url uses the `kafka:` scheme and gives the topic name as resource path. In addition to that the dynamic endpoint url is able
-to set multiple parameters such as `server`. Lets have a look at this in a small example.
+to set multiple parameters such as `server`. Let's have a look at this in a small example.
 
 .Java
 [source,java,indent=0,role="primary"]

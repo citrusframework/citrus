@@ -62,7 +62,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
         final List<RouteDefinition> routesToUse;
 
         if (StringUtils.hasText(routeContext)) {
-            // now lets parse the routes with JAXB
+            // now let's parse the routes with JAXB
             try {
                 Object value = CamelUtils.getJaxbContext().createUnmarshaller().unmarshal(new StringSource(context.replaceDynamicContentInString(routeContext)));
                 if (value instanceof CamelRouteContextFactoryBean) {

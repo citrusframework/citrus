@@ -93,7 +93,7 @@ extends the default Cucumber reporter so the default Cucumber report summary is 
 
 That completes the JUnit class configuration. Now we are able to add feature stories and step definitions to the package
 of our test *MyFeatureIT* . Cucumber and Citrus will automatically pick up step definitions and glue code in that test
-package. So lets write a feature story *echo.feature* right next to the *MyFeatureIT* test class.
+package. So let's write a feature story *echo.feature* right next to the *MyFeatureIT* test class.
 
 .echo.feature
 [source,gherkin]
@@ -112,7 +112,7 @@ Feature: Echo service
 ----
 
 As you can see this story defines two scenarios with the Gherkin *Given-When-Then* syntax. Now we need to add step definitions
-that glue the story description to Citrus test actions. Lets do this in a new class *EchoSteps* .
+that glue the story description to Citrus test actions. Let's do this in a new class *EchoSteps* .
 
 .EchoSteps.java
 [source,java]
