@@ -72,7 +72,7 @@ public class KafkaProducer implements Producer {
         String topic = Optional.ofNullable(message.getHeader(KafkaMessageHeaders.TOPIC))
                 .map(Object::toString)
                 .map(context::replaceDynamicContentInString)
-                .orElse(context.replaceDynamicContentInString(endpointConfiguration.getTopic()));
+                .orElseGet(() -> context.replaceDynamicContentInString(endpointConfiguration.getTopic()));
 
         if (!StringUtils.hasText(topic)) {
             throw new CitrusRuntimeException(String.format("Invalid Kafka stream topic header %s - must not be empty or null", KafkaMessageHeaders.TOPIC));
@@ -105,7 +105,7 @@ public class KafkaProducer implements Producer {
         producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, endpointConfiguration.getKeySerializer());
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, endpointConfiguration.getValueSerializer());
 
-        producerProps.put(ProducerConfig.CLIENT_ID_CONFIG, Optional.ofNullable(endpointConfiguration.getClientId()).orElse(KafkaMessageHeaders.KAFKA_PREFIX + "producer_" + UUID.randomUUID().toString()));
+        producerProps.put(ProducerConfig.CLIENT_ID_CONFIG, Optional.ofNullable(endpointConfiguration.getClientId()).orElseGet(()  -> KafkaMessageHeaders.KAFKA_PREFIX + "producer_" + UUID.randomUUID().toString()));
 
         producerProps.putAll(endpointConfiguration.getProducerProperties());
 

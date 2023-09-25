@@ -84,7 +84,7 @@ public class DispatchingMessageSelector implements MessageSelector {
                               .allMatch(entry -> factories.stream()
                                                      .filter(factory -> factory.supports(entry.getKey()))
                                                      .findAny()
-                                                     .orElse(new HeaderMatchingMessageSelector.Factory())
+                                                     .orElseGet(HeaderMatchingMessageSelector.Factory::new)
                                                      .create(entry.getKey(), entry.getValue(), context)
                                                      .accept(message));
     }

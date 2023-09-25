@@ -69,7 +69,7 @@ public class InputAction extends AbstractTestAction {
         this.message = builder.message;
         this.variable = builder.variable;
         this.validAnswers = builder.validAnswers;
-        this.inputReader = Optional.ofNullable(builder.inputReader).orElse(new BufferedReader(new InputStreamReader(System.in)));
+        this.inputReader = Optional.ofNullable(builder.inputReader).orElseGet(() -> new BufferedReader(new InputStreamReader(System.in)));
     }
 
     @Override

@@ -62,8 +62,8 @@ public class KafkaMessageConverter implements MessageConverter<ConsumerRecord<Ob
             kafkaMessage = new KafkaMessage(internalMessage.getPayload(), internalMessage.getHeaders());
         }
 
-        return new ProducerRecord<>(Optional.ofNullable(kafkaMessage.getTopic()).map(context::replaceDynamicContentInString).orElse(context.replaceDynamicContentInString(endpointConfiguration.getTopic())),
-                                    Optional.ofNullable(kafkaMessage.getPartition()).orElse(endpointConfiguration.getPartition()),
+        return new ProducerRecord<>(Optional.ofNullable(kafkaMessage.getTopic()).map(context::replaceDynamicContentInString).orElseGet(() -> context.replaceDynamicContentInString(endpointConfiguration.getTopic())),
+                                    Optional.ofNullable(kafkaMessage.getPartition()).orElseGet(endpointConfiguration::getPartition),
                                     kafkaMessage.getMessageKey(),
                                     payload,
                                     endpointConfiguration.getHeaderMapper().toHeaders(kafkaMessage.getHeaders(), context));

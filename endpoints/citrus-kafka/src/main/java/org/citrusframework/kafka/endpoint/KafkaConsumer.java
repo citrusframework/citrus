@@ -114,7 +114,7 @@ public class KafkaConsumer extends AbstractMessageConsumer {
      */
     private org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> createConsumer() {
         Map<String, Object> consumerProps = new HashMap<>();
-        consumerProps.put(ConsumerConfig.CLIENT_ID_CONFIG, Optional.ofNullable(endpointConfiguration.getClientId()).orElse(KafkaMessageHeaders.KAFKA_PREFIX + "consumer_" + UUID.randomUUID().toString()));
+        consumerProps.put(ConsumerConfig.CLIENT_ID_CONFIG, Optional.ofNullable(endpointConfiguration.getClientId()).orElseGet(()  -> KafkaMessageHeaders.KAFKA_PREFIX + "consumer_" + UUID.randomUUID().toString()));
         consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, endpointConfiguration.getConsumerGroup());
         consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, Optional.ofNullable(endpointConfiguration.getServer()).orElse("localhost:9092"));
         consumerProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);

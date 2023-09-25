@@ -209,7 +209,7 @@ public class HttpMessage extends DefaultMessage {
         header(EndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
         Stream.of(queryParamString.split(","))
-                .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[]{keyValue, ""}))
+                .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElseGet(() -> new String[]{keyValue, ""}))
                 .filter(keyValue -> StringUtils.hasText(keyValue[0]))
                 .forEach(keyValue -> this.addQueryParam(keyValue[0], keyValue[1]));
 

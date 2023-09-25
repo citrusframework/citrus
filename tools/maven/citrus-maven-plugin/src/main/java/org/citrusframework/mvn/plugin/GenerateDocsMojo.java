@@ -100,7 +100,7 @@ public class GenerateDocsMojo extends AbstractCitrusMojo {
      * @return
      */
     public HtmlTestDocsGenerator getHtmlTestDocGenerator() {
-        return Optional.ofNullable(htmlTestDocGenerator).orElse(HtmlTestDocsGenerator.build());
+        return Optional.ofNullable(htmlTestDocGenerator).orElseGet(HtmlTestDocsGenerator::build);
     }
 
     /**
@@ -109,6 +109,6 @@ public class GenerateDocsMojo extends AbstractCitrusMojo {
      * @return
      */
     public ExcelTestDocsGenerator getExcelTestDocGenerator() {
-        return Optional.ofNullable(excelTestDocGenerator).orElse(ExcelTestDocsGenerator.build());
+        return Optional.ofNullable(excelTestDocGenerator).orElseGet(ExcelTestDocsGenerator::build);
     }
 }

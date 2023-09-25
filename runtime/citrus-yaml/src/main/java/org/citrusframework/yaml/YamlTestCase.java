@@ -70,7 +70,7 @@ public class YamlTestCase {
                     try {
                         delegate.getVariableDefinitions().put(variable.name, VariableUtils.getValueFromScript(variable.script.getType(),
                                 FileUtils.readToString(FileUtils.getFileResource(variable.script.getFile()),
-                                        Optional.ofNullable(variable.script.getCharset()).map(Charset::forName).orElse(FileUtils.getDefaultCharset()))));
+                                        Optional.ofNullable(variable.script.getCharset()).map(Charset::forName).orElseGet(FileUtils::getDefaultCharset))));
                     } catch (IOException e) {
                         throw new CitrusRuntimeException("Failed to read script file resource", e);
                     }

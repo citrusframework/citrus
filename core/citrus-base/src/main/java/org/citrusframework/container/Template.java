@@ -359,7 +359,7 @@ public class Template extends AbstractTestAction {
             if (referenceResolver != null && templateName != null) {
                 Template rootTemplate = referenceResolver.resolve(templateName, Template.class);
                 globalContext(rootTemplate.isGlobalContext() && globalContext);
-                actor(Optional.ofNullable(getActor()).orElse(rootTemplate.getActor()));
+                actor(Optional.ofNullable(getActor()).orElseGet(rootTemplate::getActor));
                 Map<String, String> mergedParameters = new LinkedHashMap<>();
                 mergedParameters.putAll(rootTemplate.getParameter());
                 mergedParameters.putAll(parameter);

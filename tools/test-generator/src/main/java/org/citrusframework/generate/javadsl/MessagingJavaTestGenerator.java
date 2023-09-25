@@ -62,16 +62,16 @@ public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator<T>>
         List<CodeBlock> codeBlocks = super.getActions();
 
         if (getMode().equals(GeneratorMode.CLIENT)) {
-            codeBlocks.add(getSendRequestCodeProvider(request).getCode(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateOutboundMessage(request)));
+            codeBlocks.add(getSendRequestCodeProvider(request).getCode(Optional.ofNullable(endpoint).orElseGet(() -> getMode().name().toLowerCase()), generateOutboundMessage(request)));
 
             if (response != null) {
-                codeBlocks.add(getReceiveResponseCodeProvider(response).getCode(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateInboundMessage(response)));
+                codeBlocks.add(getReceiveResponseCodeProvider(response).getCode(Optional.ofNullable(endpoint).orElseGet(() -> getMode().name().toLowerCase()), generateInboundMessage(response)));
             }
         } else if (getMode().equals(GeneratorMode.SERVER)) {
-            codeBlocks.add(getReceiveRequestCodeProvider(request).getCode(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateInboundMessage(request)));
+            codeBlocks.add(getReceiveRequestCodeProvider(request).getCode(Optional.ofNullable(endpoint).orElseGet(() -> getMode().name().toLowerCase()), generateInboundMessage(request)));
 
             if (response != null) {
-                codeBlocks.add(getSendResponseCodeProvider(response).getCode(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateOutboundMessage(response)));
+                codeBlocks.add(getSendResponseCodeProvider(response).getCode(Optional.ofNullable(endpoint).orElseGet(() -> getMode().name().toLowerCase()), generateOutboundMessage(response)));
             }
         }
 

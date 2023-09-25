@@ -237,7 +237,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
                 Integer hostPort = Integer.valueOf(binding[0]);
                 Integer port = Integer.valueOf(binding[1]);
 
-                portsBindings.bind(Stream.of(exposedPorts).filter(exposed -> port.equals(exposed.getPort())).findAny().orElse(ExposedPort.tcp(port)), Ports.Binding.bindPort(hostPort));
+                portsBindings.bind(Stream.of(exposedPorts).filter(exposed -> port.equals(exposed.getPort())).findAny().orElseGet(() -> ExposedPort.tcp(port)), Ports.Binding.bindPort(hostPort));
             }
         }
 

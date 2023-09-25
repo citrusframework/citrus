@@ -69,7 +69,7 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
                 .map(Object::toString)
                 .orElse("")
                 .split(","))
-                .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[] {keyValue, ""}))
+                .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElseGet(() -> new String[] {keyValue, ""}))
                 .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]));
     }
 

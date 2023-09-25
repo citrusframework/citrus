@@ -96,7 +96,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
      */
     private CodeBlock getJavaDoc() {
         return CodeBlock.builder()
-                .add("$L\n\n", Optional.ofNullable(getDescription()).orElse(getName()))
+                .add("$L\n\n", Optional.ofNullable(getDescription()).orElseGet(this::getName))
                 .add("@author $L\n", getAuthor())
                 .add("@since $L\n", getCreationDate())
                 .build();

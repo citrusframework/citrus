@@ -112,7 +112,7 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
                 if (StringUtils.hasText(value)) {
                     configuration.getDefaultProperties().putAll(StringUtils.commaDelimitedListToSet(value)
                                                                             .stream()
-                                                                            .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[] {keyValue, ""}))
+                                                                            .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElseGet(() -> new String[] {keyValue, ""}))
                                                                             .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])));
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -D/--properties option");
