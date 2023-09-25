@@ -34,7 +34,7 @@ import jakarta.jms.Destination;
 public class JmsProducer implements Producer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(JmsProducer.class);
 
     /** The producer name. */
     private final String name;
@@ -82,8 +82,8 @@ public class JmsProducer implements Producer {
      * @param context
      */
     private void send(Message message, String destinationName, TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Sending JMS message to destination: '" + destinationName + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending JMS message to destination: '" + destinationName + "'");
         }
 
         endpointConfiguration.getJmsTemplate().send(destinationName, session -> {
@@ -92,7 +92,7 @@ public class JmsProducer implements Producer {
             return jmsMessage;
         });
 
-        log.info("Message was sent to JMS destination: '" + destinationName + "'");
+        logger.info("Message was sent to JMS destination: '" + destinationName + "'");
     }
 
     /**
@@ -102,8 +102,8 @@ public class JmsProducer implements Producer {
      * @param context
      */
     private void send(Message message, Destination destination, TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending JMS message to destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
         }
 
         endpointConfiguration.getJmsTemplate().send(destination, session -> {
@@ -112,7 +112,7 @@ public class JmsProducer implements Producer {
             return jmsMessage;
         });
 
-        log.info("Message was sent to JMS destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
+        logger.info("Message was sent to JMS destination: '" + endpointConfiguration.getDestinationName(destination) + "'");
     }
 
     @Override

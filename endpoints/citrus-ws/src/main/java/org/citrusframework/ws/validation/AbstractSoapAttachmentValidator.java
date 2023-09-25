@@ -40,24 +40,24 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(AbstractSoapAttachmentValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSoapAttachmentValidator.class);
     
     @Override
     public void validateAttachment(SoapMessage soapMessage, List<SoapAttachment> controlAttachments) {
-        log.debug("Validating SOAP attachments ...");
+        logger.debug("Validating SOAP attachments ...");
 
         for (SoapAttachment controlAttachment : controlAttachments) {
             SoapAttachment attachment = findAttachment(soapMessage, controlAttachment);
 
-            if (log.isDebugEnabled()) {
-                log.debug("Found attachment with contentId '" + controlAttachment.getContentId() + "'");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Found attachment with contentId '" + controlAttachment.getContentId() + "'");
             }
 
             validateAttachmentContentId(attachment, controlAttachment);
             validateAttachmentContentType(attachment, controlAttachment);
             validateAttachmentContent(attachment, controlAttachment);
 
-            log.info("SOAP attachment validation successful: All values OK");
+            logger.info("SOAP attachment validation successful: All values OK");
         }
     }
 
@@ -120,8 +120,8 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
                             controlAttachment.getContentId(), null));
         }
         
-        if (log.isDebugEnabled()) {
-            log.debug("Validating attachment contentId: " + receivedAttachment.getContentId() + 
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating attachment contentId: " + receivedAttachment.getContentId() + 
                     "='" + controlAttachment.getContentId() + "': OK.");
         }
     }
@@ -149,8 +149,8 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
                             controlAttachment.getContentType(), null));
         }
         
-        if (log.isDebugEnabled()) {
-            log.debug("Validating attachment contentType: " + receivedAttachment.getContentType() + 
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating attachment contentType: " + receivedAttachment.getContentType() + 
                     "='" + controlAttachment.getContentType() + "': OK.");
         }
     }

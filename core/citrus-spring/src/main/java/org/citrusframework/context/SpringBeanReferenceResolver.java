@@ -43,7 +43,7 @@ import org.springframework.context.ApplicationContextAware;
 public class SpringBeanReferenceResolver implements ReferenceResolver, ApplicationContextAware {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(SpringBeanReferenceResolver.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpringBeanReferenceResolver.class);
 
     private ApplicationContext applicationContext;
 
@@ -210,7 +210,7 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
             try {
                 return Optional.of(resolver.adapt(supplier.apply(resolver.getAliasType())));
             } catch (Exception e) {
-                log.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
+                logger.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
                 return Optional.empty();
             }
         }
@@ -239,7 +239,7 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
                         .stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, v -> resolver.adapt(v.getValue()))));
             } catch (Exception e) {
-                log.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
+                logger.warn(String.format("Unable to resolve alias type %s for required source %s", resolver.getAliasType(), source));
                 return Optional.empty();
             }
         }

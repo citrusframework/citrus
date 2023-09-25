@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public interface TestEngine {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(TestEngine.class);
+    Logger logger = LoggerFactory.getLogger(TestEngine.class);
 
     /** Endpoint parser resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/engine";
@@ -50,7 +50,7 @@ public interface TestEngine {
     static TestEngine lookup(TestRunConfiguration configuration) {
         try {
             TestEngine testEngine = TYPE_RESOLVER.resolve(configuration.getEngine(), configuration);
-            LOG.debug(String.format("Using Citrus engine '%s' as %s", configuration.getEngine(), testEngine));
+            logger.debug(String.format("Using Citrus engine '%s' as %s", configuration.getEngine(), testEngine));
             return testEngine;
         } catch (CitrusRuntimeException e) {
             throw new CitrusRuntimeException(String.format("Failed to resolve Citrus engine from resource '%s/%s'", RESOURCE_PATH, configuration.getEngine()), e);

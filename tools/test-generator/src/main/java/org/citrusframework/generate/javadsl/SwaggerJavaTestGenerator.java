@@ -56,6 +56,8 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.models.properties.StringProperty;
 import io.swagger.parser.SwaggerParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
@@ -67,6 +69,9 @@ import org.springframework.util.StringUtils;
  * @since 2.7.4
  */
 public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<SwaggerJavaTestGenerator> implements SwaggerTestGenerator<SwaggerJavaTestGenerator> {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(SwaggerJavaTestGenerator.class);
 
     private String swaggerResource;
 
@@ -169,7 +174,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
                 super.create();
 
-                log.info("Successfully created new test case " + getTargetPackage() + "." + getName());
+                logger.info("Successfully created new test case " + getTargetPackage() + "." + getName());
             }
         }
     }

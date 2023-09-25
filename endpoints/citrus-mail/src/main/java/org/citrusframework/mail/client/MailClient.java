@@ -41,7 +41,7 @@ import java.io.IOException;
  */
 public class MailClient extends AbstractEndpoint implements Producer, InitializingPhase {
 
-    private static Logger log = LoggerFactory.getLogger(MailClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(MailClient.class);
 
     private MailSender mailSender = new MailSender();
 
@@ -66,8 +66,8 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
 
     @Override
     public void send(Message message, TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Sending mail message to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Sending mail message to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
         }
 
         MimeMailMessage mimeMessage = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
@@ -89,13 +89,13 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
             try {
                 bos.close();
             } catch (IOException e) {
-                log.warn("Failed to close output stream", e);
+                logger.warn("Failed to close output stream", e);
             }
         }
 
         context.onOutboundMessage(mailMessage);
 
-        log.info(String.format("Mail message was sent to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
+        logger.info(String.format("Mail message was sent to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
     }
 
     /**

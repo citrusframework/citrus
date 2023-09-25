@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WebSocketServerEndpointConfiguration extends AbstractWebSocketEndpointConfiguration {
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(WebSocketServerEndpointConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketServerEndpointConfiguration.class);
 
     /** Web socket handler */
     private CitrusWebSocketHandler handler;
@@ -41,7 +41,7 @@ public class WebSocketServerEndpointConfiguration extends AbstractWebSocketEndpo
     @Override
     public void setHandler(CitrusWebSocketHandler handler) {
         if (this.handler != null) {
-            LOG.warn(String.format("Handler already set for Web Socket endpoint (path='%s'). " +
+            logger.warn(String.format("Handler already set for Web Socket endpoint (path='%s'). " +
                     "Check configuration to ensure that the Web Socket endpoint is not being used by multiple http-servers", getEndpointUri()));
         }
         this.handler = handler;

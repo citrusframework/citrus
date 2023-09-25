@@ -37,7 +37,7 @@ public class Create extends AbstractZooCommand<ZooResponse> {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(Create.class);
+    private static final Logger logger = LoggerFactory.getLogger(Create.class);
 
     public static final String ACL_ALL = "CREATOR_ALL_ACL";
     public static final String ACL_OPEN = "OPEN_ACL_UNSAFE";
@@ -67,7 +67,7 @@ public class Create extends AbstractZooCommand<ZooResponse> {
             throw new CitrusRuntimeException(e);
         }
         commandResult.setResponseParam(PATH, newPath);
-        log.debug(getCommandResult().toString());
+        logger.debug(getCommandResult().toString());
     }
 
     /**

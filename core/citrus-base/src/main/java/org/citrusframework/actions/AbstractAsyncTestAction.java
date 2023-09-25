@@ -37,7 +37,7 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 public abstract class AbstractAsyncTestAction extends AbstractTestAction implements Completable {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AbstractAsyncTestAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractAsyncTestAction.class);
 
     /** Future finished indicator */
     private Future<?> finished;
@@ -51,7 +51,7 @@ public abstract class AbstractAsyncTestAction extends AbstractTestAction impleme
                 doExecuteAsync(context);
                 result.complete(null);
             } catch (Exception | Error e) {
-                log.warn("Async test action execution raised error", e);
+                logger.warn("Async test action execution raised error", e);
 
                 if (e instanceof CitrusRuntimeException) {
                     context.addException((CitrusRuntimeException) e);

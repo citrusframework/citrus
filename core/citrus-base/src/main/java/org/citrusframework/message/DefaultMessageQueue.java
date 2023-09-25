@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultMessageQueue implements MessageQueue {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DefaultMessageQueue.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultMessageQueue.class);
 
     /** Logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("org.citrusframework.RetryLogger");
@@ -100,11 +100,11 @@ public class DefaultMessageQueue implements MessageQueue {
             Message message = (Message) o;
             if (selector.accept(message)) {
                 if (this.queue.remove(message)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(String.format("Purged message '%s' from in memory queue", message.getId()));
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Purged message '%s' from in memory queue", message.getId()));
                     }
                 } else {
-                    log.warn(String.format("Failed to purge message '%s' from in memory queue", message.getId()));
+                    logger.warn(String.format("Failed to purge message '%s' from in memory queue", message.getId()));
                 }
             }
         }

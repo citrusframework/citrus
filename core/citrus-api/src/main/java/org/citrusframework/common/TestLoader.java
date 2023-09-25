@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public interface TestLoader {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(TestLoader.class);
+    Logger logger = LoggerFactory.getLogger(TestLoader.class);
 
     /** Test loader resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/test/loader";
@@ -85,8 +85,8 @@ public interface TestLoader {
     static Map<String, TestLoader> lookup() {
         Map<String, TestLoader> loader = TYPE_RESOLVER.resolveAll();
 
-        if (LOG.isDebugEnabled()) {
-            loader.forEach((k, v) -> LOG.debug(String.format("Found test loader '%s' as %s", k, v.getClass())));
+        if (logger.isDebugEnabled()) {
+            loader.forEach((k, v) -> logger.debug(String.format("Found test loader '%s' as %s", k, v.getClass())));
         }
         return loader;
     }
@@ -102,7 +102,7 @@ public interface TestLoader {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(loader));
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve test loader from resource '%s/%s'", RESOURCE_PATH, loader));
+            logger.warn(String.format("Failed to resolve test loader from resource '%s/%s'", RESOURCE_PATH, loader));
         }
 
         return Optional.empty();

@@ -49,7 +49,7 @@ public class XmlValidationMatcher implements ValidationMatcher {
     public static final String DEFAULT_XML_MESSAGE_VALIDATOR = "defaultXmlMessageValidator";
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(XmlValidationMatcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(XmlValidationMatcher.class);
 
     @Override
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
@@ -76,7 +76,7 @@ public class XmlValidationMatcher implements ValidationMatcher {
             try {
                 defaultMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
             } catch (CitrusRuntimeException e) {
-                LOG.warn("Unable to find default XML message validator in message validator registry");
+                logger.warn("Unable to find default XML message validator in message validator registry");
             }
         }
 

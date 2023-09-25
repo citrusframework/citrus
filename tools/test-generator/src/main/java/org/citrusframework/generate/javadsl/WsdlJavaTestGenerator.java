@@ -40,6 +40,8 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
@@ -49,6 +51,9 @@ import org.springframework.util.StringUtils;
  * @since 2.7.4
  */
 public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTestGenerator> implements WsdlTestGenerator<WsdlJavaTestGenerator> {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(WsdlJavaTestGenerator.class);
 
     private String wsdl;
 
@@ -68,21 +73,21 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
         XmlObject wsdlObject = compileWsdl(wsdl);
         SchemaTypeSystem schemaTypeSystem = compileXsd(wsdlObject);
 
-        log.info("WSDL compilation successful");
+        logger.info("WSDL compilation successful");
         String serviceName = evaluateAsString(wsdlObject, wsdlNsDelaration + ".//wsdl:portType/@name");
-        log.info("Found service: " + serviceName);
+        logger.info("Found service: " + serviceName);
 
         if (!StringUtils.hasText(namePrefix)) {
             withNamePrefix(serviceName + "_");
         }
 
-        log.info("Found service operations:");
+        logger.info("Found service operations:");
         XmlObject[] messages = wsdlObject.selectPath(wsdlNsDelaration + ".//wsdl:message");
         XmlObject[] operations = wsdlObject.selectPath(wsdlNsDelaration + ".//wsdl:portType/wsdl:operation");
         for (XmlObject operation : operations) {
-            log.info(evaluateAsString(operation, wsdlNsDelaration + "./@name"));
+            logger.info(evaluateAsString(operation, wsdlNsDelaration + "./@name"));
         }
-        log.info("Generating test cases for service operations ...");
+        logger.info("Generating test cases for service operations ...");
 
         for (XmlObject operation : operations) {
             SoapMessage request = new SoapMessage();
@@ -139,7 +144,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
 
             super.create();
 
-            log.info("Successfully created new test case " + getTargetPackage() + "." + getName());
+            logger.info("Successfully created new test case " + getTargetPackage() + "." + getName());
         }
     }
 
@@ -180,7 +185,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
             return XmlObject.Factory.parse(wsdlFile, (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
         } catch (XmlException e) {
             for (Object error : e.getErrors()) {
-                log.error(((XmlError)error).getLine() + "" + error.toString());
+                logger.error(((XmlError)error).getLine() + "" + error.toString());
             }
             throw new CitrusRuntimeException("WSDL could not be parsed", e);
         } catch (Exception e) {
@@ -217,7 +222,7 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
             schemaTypeSystem = XmlBeans.compileXsd(xsd, XmlBeans.getContextTypeLoader(), new XmlOptions());
         } catch (XmlException e) {
             for (Object error : e.getErrors()) {
-                log.error("Line " + ((XmlError)error).getLine() + ": " + error.toString());
+                logger.error("Line " + ((XmlError)error).getLine() + ": " + error.toString());
             }
             throw new CitrusRuntimeException("Failed to compile XSD schema", e);
         } catch (Exception e) {

@@ -35,7 +35,7 @@ import org.springframework.core.io.ClassPathResource;
 public class SshMarshaller implements Marshaller, Unmarshaller {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(SshMarshaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(SshMarshaller.class);
 
     private final Jaxb2Marshaller marshaller;
 

@@ -47,7 +47,7 @@ public class Assert extends AbstractActionContainer {
     private final String message;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Assert.class);
+    private static final Logger logger = LoggerFactory.getLogger(Assert.class);
 
     /**
      * Default constructor.
@@ -62,14 +62,14 @@ public class Assert extends AbstractActionContainer {
 
     @Override
     public void doExecute(TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Assert container asserting exceptions of type " + exception);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Assert container asserting exceptions of type " + exception);
         }
 
         try {
             executeAction(this.action.build(), context);
         } catch (Exception e) {
-            log.debug("Validating caught exception ...");
+            logger.debug("Validating caught exception ...");
 
             if (!exception.isAssignableFrom(e.getClass())) {
                 throw new ValidationException("Validation failed for asserted exception type - expected: '" +
@@ -85,10 +85,10 @@ public class Assert extends AbstractActionContainer {
                 }
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Asserted exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Asserted exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
             }
-            log.info("Assert exception validation successful: All values OK");
+            logger.info("Assert exception validation successful: All values OK");
             return;
         }
 

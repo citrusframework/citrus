@@ -66,7 +66,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
     private final long sleepTime;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(PurgeEndpointAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(PurgeEndpointAction.class);
 
     /**
      * Default constructor.
@@ -85,8 +85,8 @@ public class PurgeEndpointAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Purging message endpoints ...");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Purging message endpoints ...");
         }
 
         for (Endpoint endpoint : endpoints) {
@@ -97,7 +97,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
             purgeEndpoint(resolveEndpointName(endpointName), context);
         }
 
-        log.info("Purged message endpoints");
+        logger.info("Purged message endpoints");
     }
 
     /**
@@ -108,8 +108,8 @@ public class PurgeEndpointAction extends AbstractTestAction {
      * @param context
      */
     private void purgeEndpoint(Endpoint endpoint, TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Try to purge message endpoint " + endpoint.getName());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Try to purge message endpoint " + endpoint.getName());
         }
 
         int messagesPurged = 0;
@@ -124,26 +124,26 @@ public class PurgeEndpointAction extends AbstractTestAction {
                     message = (receiveTimeout >= 0) ? messageConsumer.receive(context, receiveTimeout) : messageConsumer.receive(context);
                 }
             } catch (ActionTimeoutException e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Stop purging due to timeout - " + e.getMessage());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Stop purging due to timeout - " + e.getMessage());
                 }
                 break;
             }
 
             if (message != null) {
-                log.debug("Removed message from endpoint " + endpoint.getName());
+                logger.debug("Removed message from endpoint " + endpoint.getName());
                 messagesPurged++;
 
                 try {
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
-                    log.warn("Interrupted during wait", e);
+                    logger.warn("Interrupted during wait", e);
                 }
             }
         } while (message != null);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Purged " + messagesPurged + " messages from endpoint");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Purged " + messagesPurged + " messages from endpoint");
         }
     }
 

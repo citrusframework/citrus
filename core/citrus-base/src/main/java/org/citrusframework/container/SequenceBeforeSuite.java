@@ -33,15 +33,15 @@ import org.slf4j.LoggerFactory;
 public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements BeforeSuite {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(SequenceBeforeSuite.class);
+    private static final Logger logger = LoggerFactory.getLogger(SequenceBeforeSuite.class);
 
     @Override
     public void doExecute(TestContext context) {
-        LOG.info("Entering before suite block");
+        logger.info("Entering before suite block");
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Executing " + actions.size() + " actions before suite");
-            LOG.debug("");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing " + actions.size() + " actions before suite");
+            logger.debug("");
         }
 
         for (TestActionBuilder<?> actionBuilder : actions)  {
@@ -50,7 +50,7 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements
                 /* Executing test action and validate its success */
                 action.execute(context);
             } catch (Exception e) {
-                LOG.error("Task failed " + action.getName() + "Nested exception is: ", e);
+                logger.error("Task failed " + action.getName() + "Nested exception is: ", e);
                 throw new CitrusRuntimeException(e);
             }
         }

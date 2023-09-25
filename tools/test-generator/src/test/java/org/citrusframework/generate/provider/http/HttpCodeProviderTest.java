@@ -21,6 +21,7 @@ import org.citrusframework.http.message.HttpMessage;
 import com.squareup.javapoet.CodeBlock;
 import org.apache.hc.core5.http.HttpStatus;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatusCode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -77,7 +78,7 @@ class HttpCodeProviderTest {
     void testResponseConfiguration() {
 
         //GIVEN
-        message.statusCode(HttpStatus.SC_NOT_FOUND);
+        message.status(HttpStatusCode.valueOf(HttpStatus.SC_NOT_FOUND));
         final String expectedCode = ".response(org.springframework.http.HttpStatus.NOT_FOUND)\n.message()\n";
 
         //WHEN

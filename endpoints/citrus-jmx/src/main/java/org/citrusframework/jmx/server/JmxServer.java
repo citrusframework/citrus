@@ -38,7 +38,7 @@ import java.util.List;
 public class JmxServer extends AbstractServer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmxServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(JmxServer.class);
 
     /** Endpoint configuration */
     private final JmxEndpointConfiguration endpointConfiguration;
@@ -108,7 +108,7 @@ public class JmxServer extends AbstractServer {
                     server.unregisterMBean(mbean.createObjectName());
                 }
             } catch (Exception e) {
-                log.warn("Failed to unregister mBean:" + e.getMessage());
+                logger.warn("Failed to unregister mBean:" + e.getMessage());
             }
         }
 
@@ -116,7 +116,7 @@ public class JmxServer extends AbstractServer {
             try {
                 jmxConnectorServer.stop();
             } catch (IOException e) {
-                log.warn("Error during jmx connector shutdown: " + e.getMessage());
+                logger.warn("Error during jmx connector shutdown: " + e.getMessage());
             }
         }
 

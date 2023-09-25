@@ -40,7 +40,7 @@ public class StopServerAction extends AbstractTestAction {
     private final List<Server> servers;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(StopServerAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(StopServerAction.class);
 
     /**
      * Default constructor.
@@ -55,7 +55,7 @@ public class StopServerAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         for (Server server : servers) {
             server.stop();
-            LOG.info("Stopped server: " + server.getName());
+            logger.info("Stopped server: " + server.getName());
         }
     }
 

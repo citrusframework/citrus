@@ -36,7 +36,7 @@ import org.w3c.dom.NodeList;
 public abstract class XmlValidationUtils {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XmlValidationUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(XmlValidationUtils.class);
 
     /**
      * Prevent instantiation.
@@ -56,15 +56,15 @@ public abstract class XmlValidationUtils {
      */
     public static boolean isElementIgnored(Node source, Node received, Set<String> ignoreExpressions, NamespaceContext namespaceContext) {
         if (isElementIgnored(received, ignoreExpressions, namespaceContext)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
             }
             return true;
         } else if (source.getFirstChild() != null &&
                 StringUtils.hasText(source.getFirstChild().getNodeValue()) &&
                 source.getFirstChild().getNodeValue().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Element: '" + received.getLocalName() + "' is ignored by placeholder '" +
+            if (logger.isDebugEnabled()) {
+                logger.debug("Element: '" + received.getLocalName() + "' is ignored by placeholder '" +
                         CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
             return true;
@@ -141,15 +141,15 @@ public abstract class XmlValidationUtils {
     public static boolean isAttributeIgnored(Node receivedElement, Node receivedAttribute, Node sourceAttribute,
                                              Set<String> ignoreMessageElements, NamespaceContext namespaceContext) {
         if (isAttributeIgnored(receivedElement, receivedAttribute, ignoreMessageElements, namespaceContext)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Attribute '" + receivedAttribute.getLocalName() + "' is on ignore list - skipped value validation");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Attribute '" + receivedAttribute.getLocalName() + "' is on ignore list - skipped value validation");
             }
 
             return true;
         } else if ((StringUtils.hasText(sourceAttribute.getNodeValue()) &&
                 sourceAttribute.getNodeValue().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER))) {
-            if (log.isDebugEnabled()) {
-                log.debug("Attribute: '" + receivedAttribute.getLocalName() + "' is ignored by placeholder '" +
+            if (logger.isDebugEnabled()) {
+                logger.debug("Attribute: '" + receivedAttribute.getLocalName() + "' is ignored by placeholder '" +
                         CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
 

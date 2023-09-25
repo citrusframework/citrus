@@ -46,7 +46,7 @@ import org.springframework.util.StringUtils;
 public class HtmlReporter extends AbstractOutputFileReporter implements TestListener {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(HtmlReporter.class);
+    private static final Logger logger = LoggerFactory.getLogger(HtmlReporter.class);
 
     /** Map holding additional information of test cases */
     private Map<String, ResultDetail> details = new HashMap<>();
@@ -76,7 +76,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     public String getReportContent(TestResults testResults) {
         final StringBuilder reportDetails = new StringBuilder();
 
-        log.debug("Generating HTML test report");
+        logger.debug("Generating HTML test report");
 
         try {
             final String testDetails = FileUtils.readToString(FileUtils.getFileResource(testDetailTemplate));
@@ -136,20 +136,20 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
                 os.write(contents);
             }
         } catch(IOException e) {
-            log.warn("Failed to add logo image data to HTML report", e);
+            logger.warn("Failed to add logo image data to HTML report", e);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch(IOException ex) {
-                    log.warn("Failed to close logo image resource for HTML report", ex);
+                    logger.warn("Failed to close logo image resource for HTML report", ex);
                 }
             }
 
             try {
                 os.flush();
             } catch(IOException ex) {
-                log.warn("Failed to flush logo image stream for HTML report", ex);
+                logger.warn("Failed to flush logo image stream for HTML report", ex);
             }
         }
 
@@ -209,13 +209,13 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
                 }
             }
         } catch (IOException e) {
-            log.error("Failed to construct HTML code snippet", e);
+            logger.error("Failed to construct HTML code snippet", e);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    log.warn("Failed to close test file", e);
+                    logger.warn("Failed to close test file", e);
                 }
             }
         }

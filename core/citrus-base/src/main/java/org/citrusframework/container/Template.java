@@ -73,7 +73,7 @@ public class Template extends AbstractTestAction {
     private final boolean globalContext;
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(Template.class);
+    private static final Logger logger = LoggerFactory.getLogger(Template.class);
 
     /**
      * Default constructor
@@ -92,8 +92,8 @@ public class Template extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Executing template '" + getName() + "' with " + actions.size() + " embedded actions");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Executing template '" + getName() + "' with " + actions.size() + " embedded actions");
         }
 
         TestContext innerContext;
@@ -132,8 +132,8 @@ public class Template extends AbstractTestAction {
                 paramValue = FunctionUtils.resolveFunction(paramValue, context);
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Setting parameter for template " + param + "=" + paramValue);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Setting parameter for template " + param + "=" + paramValue);
             }
 
             innerContext.setVariable(param, paramValue);
@@ -143,7 +143,7 @@ public class Template extends AbstractTestAction {
             action.build().execute(innerContext);
         }
 
-        log.info("Template was executed successfully");
+        logger.info("Template was executed successfully");
     }
 
     /**

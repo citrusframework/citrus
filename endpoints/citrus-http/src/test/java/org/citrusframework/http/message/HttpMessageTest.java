@@ -18,6 +18,7 @@ package org.citrusframework.http.message;
 
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -231,7 +232,7 @@ public class HttpMessageTest {
 
 
         //WHEN
-        final HttpStatus statusCode = httpMessage.getStatusCode();
+        final HttpStatusCode statusCode = httpMessage.getStatusCode();
 
         //THEN
         assertNull(statusCode);
@@ -244,7 +245,7 @@ public class HttpMessageTest {
         httpMessage.header(HttpMessageHeaders.HTTP_STATUS_CODE, "404");
 
         //WHEN
-        final HttpStatus statusCode = httpMessage.getStatusCode();
+        final HttpStatusCode statusCode = httpMessage.getStatusCode();
 
         //THEN
         assertEquals(statusCode, HttpStatus.NOT_FOUND);
@@ -257,7 +258,7 @@ public class HttpMessageTest {
         httpMessage.header(HttpMessageHeaders.HTTP_STATUS_CODE, 403);
 
         //WHEN
-        final HttpStatus statusCode = httpMessage.getStatusCode();
+        final HttpStatusCode statusCode = httpMessage.getStatusCode();
 
         //THEN
         assertEquals(statusCode, HttpStatus.FORBIDDEN);
@@ -270,10 +271,23 @@ public class HttpMessageTest {
         httpMessage.header(HttpMessageHeaders.HTTP_STATUS_CODE, HttpStatus.I_AM_A_TEAPOT);
 
         //WHEN
-        final HttpStatus statusCode = httpMessage.getStatusCode();
+        final HttpStatusCode statusCode = httpMessage.getStatusCode();
 
         //THEN
         assertEquals(statusCode, HttpStatus.I_AM_A_TEAPOT);
+    }
+
+    @Test
+    public void testCanHandleCustomStatusCode() {
+
+        //GIVEN
+        httpMessage.header(HttpMessageHeaders.HTTP_STATUS_CODE, 555);
+
+        //WHEN
+        final HttpStatusCode statusCode = httpMessage.getStatusCode();
+
+        //THEN
+        assertEquals(statusCode, HttpStatusCode.valueOf(555));
     }
 
     @Test

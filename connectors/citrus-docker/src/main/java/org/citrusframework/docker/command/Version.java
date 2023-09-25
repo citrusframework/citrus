@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class Version extends AbstractDockerCommand<com.github.dockerjava.api.model.Version> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Version.class);
+    private static final Logger logger = LoggerFactory.getLogger(Version.class);
 
     /**
      * Default constructor initializing the command name.
@@ -44,7 +44,7 @@ public class Version extends AbstractDockerCommand<com.github.dockerjava.api.mod
         VersionCmd command = dockerClient.getEndpointConfiguration().getDockerClient().versionCmd();
         setCommandResult(command.exec());
 
-        log.debug(getCommandResult().toString());
+        logger.debug(getCommandResult().toString());
     }
 
     /**

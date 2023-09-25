@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(VertxSyncProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(VertxSyncProducer.class);
 
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
@@ -64,8 +64,8 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
     @Override
     public void send(Message message, final TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
         }
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
@@ -73,13 +73,13 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
         context.onOutboundMessage(message);
 
-        log.info("Message was sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+        logger.info("Message was sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setSendTimeout(endpointConfiguration.getTimeout());
         vertx.eventBus().request(endpointConfiguration.getAddress(), message.getPayload(), deliveryOptions,
             event -> {
-                log.info("Received synchronous response on Vert.x event bus reply address");
+                logger.info("Received synchronous response on Vert.x event bus reply address");
 
                 Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(event.result(), endpointConfiguration, context);
 

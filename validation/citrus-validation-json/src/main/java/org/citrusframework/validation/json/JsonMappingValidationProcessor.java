@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
 public abstract class JsonMappingValidationProcessor<T> extends AbstractValidationProcessor<T> {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(JsonMappingValidationProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(JsonMappingValidationProcessor.class);
 
     /** JSON object mapper */
     private ObjectMapper mapper;
@@ -64,11 +64,11 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
 
     @Override
     public void validate(Message message, TestContext context) {
-        log.debug("Start JSON object validation ...");
+        logger.debug("Start JSON object validation ...");
 
         validate(readJson(message), message.getHeaders(), context);
 
-        log.info("JSON object validation successful: All values OK");
+        logger.info("JSON object validation successful: All values OK");
     }
 
     private T readJson(Message message) {

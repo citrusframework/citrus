@@ -53,7 +53,7 @@ import org.springframework.util.StringUtils;
 public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(RmiClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(RmiClient.class);
 
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
@@ -108,9 +108,9 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
                 throw new CitrusRuntimeException("Unable to find proper method declaration on remote target object");
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Sending message to RMI server: '" + binding + "'");
-                log.debug("Message to send:\n" + message.getPayload(String.class));
+            if (logger.isDebugEnabled()) {
+                logger.debug("Sending message to RMI server: '" + binding + "'");
+                logger.debug("Message to send:\n" + message.getPayload(String.class));
             }
             context.onOutboundMessage(message);
 
@@ -129,7 +129,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             Message response = new DefaultMessage(payload.toString());
             correlationManager.store(correlationKey, response);
 
-            log.info("Message was sent to RMI server: '" + binding + "'");
+            logger.info("Message was sent to RMI server: '" + binding + "'");
             if (result != null) {
                 context.onInboundMessage(response);
             }
@@ -143,7 +143,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             throw new CitrusRuntimeException("Failed to invoke method on remote target, because remote method not accessible", e);
         }
 
-        log.info("Message was sent to RMI server: '" + binding + "'");
+        logger.info("Message was sent to RMI server: '" + binding + "'");
     }
 
     @Override

@@ -24,7 +24,7 @@ import org.springframework.util.StringUtils;
 public final class CitrusSettings {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CitrusSettings.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusSettings.class);
 
     private CitrusSettings() {
         // prevent instantiation
@@ -53,19 +53,19 @@ public final class CitrusSettings {
                 Properties applicationProperties = new Properties();
                 applicationProperties.load(in);
 
-                LOG.debug("Loading Citrus application properties");
+                logger.debug("Loading Citrus application properties");
 
                 for (Map.Entry<Object, Object> property : applicationProperties.entrySet()) {
                     if (StringUtils.isEmpty(System.getProperty(property.getKey().toString()))) {
-                        LOG.debug(String.format("Setting application property %s=%s", property.getKey(), property.getValue()));
+                        logger.debug(String.format("Setting application property %s=%s", property.getKey(), property.getValue()));
                         System.setProperty(property.getKey().toString(), property.getValue().toString());
                     }
                 }
             } catch (Exception e) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Unable to locate Citrus application properties", e);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Unable to locate Citrus application properties", e);
                 } else {
-                    LOG.info("Unable to locate Citrus application properties");
+                    logger.info("Unable to locate Citrus application properties");
                 }
             }
         }
@@ -152,18 +152,18 @@ public final class CitrusSettings {
     public static final String PRETTY_PRINT_ENV = "CITRUS_MESSAGE_PRETTY_PRINT";
     public static final String PRETTY_PRINT_DEFAULT = Boolean.TRUE.toString();
 
-    /** Flag to enable/disable log modifier */
-    public static final String LOG_MODIFIER_PROPERTY = "citrus.log.modifier";
+    /** Flag to enable/disable logger modifier */
+    public static final String LOG_MODIFIER_PROPERTY = "citrus.logger.modifier";
     public static final String LOG_MODIFIER_ENV = "CITRUS_LOG_MODIFIER";
     public static final String LOG_MODIFIER_DEFAULT = Boolean.TRUE.toString();
 
-    /** Default log modifier mask value */
-    public static final String LOG_MASK_VALUE_PROPERTY = "citrus.log.mask.value";
+    /** Default logger modifier mask value */
+    public static final String LOG_MASK_VALUE_PROPERTY = "citrus.logger.mask.value";
     public static final String LOG_MASK_VALUE_ENV = "CITRUS_LOG_MASK_VALUE";
     public static final String LOG_MASK_VALUE_DEFAULT = "****";
 
-    /** Default log modifier keywords */
-    public static final String LOG_MASK_KEYWORDS_PROPERTY = "citrus.log.mask.keywords";
+    /** Default logger modifier keywords */
+    public static final String LOG_MASK_KEYWORDS_PROPERTY = "citrus.logger.mask.keywords";
     public static final String LOG_MASK_KEYWORDS_ENV = "CITRUS_LOG_MASK_KEYWORDS";
     public static final String LOG_MASK_KEYWORDS_DEFAULT = "password,secret,secretKey";
 
@@ -227,7 +227,7 @@ public final class CitrusSettings {
     }
 
     /**
-     * Gets the log modifier enabled/disabled setting.
+     * Gets the logger modifier enabled/disabled setting.
      * @return
      */
     public static boolean isLogModifierEnabled() {
@@ -236,7 +236,7 @@ public final class CitrusSettings {
     }
 
     /**
-     * Get log mask value.
+     * Get logger mask value.
      * @return
      */
     public static String getLogMaskValue() {
@@ -245,7 +245,7 @@ public final class CitrusSettings {
     }
 
     /**
-     * Get log mask keywords.
+     * Get logger mask keywords.
      * @return
      */
     public static Set<String> getLogMaskKeywords() {

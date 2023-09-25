@@ -73,7 +73,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     public static final String DEFAULT_RESULT_SET_VALIDATOR = "sqlResultSetScriptValidator";
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
 
     /**
      * Default constructor.
@@ -103,8 +103,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             final List<Map<String, Object>> allResultRows = new ArrayList<Map<String, Object>>();
 
             if (getTransactionManager() != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Using transaction manager: " + getTransactionManager().getClass().getName());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Using transaction manager: " + getTransactionManager().getClass().getName());
                 }
 
                 TransactionTemplate transactionTemplate = new TransactionTemplate(getTransactionManager());
@@ -130,7 +130,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 context.setVariable(column.getKey().toUpperCase(), columnValues.get(0) == null ? NULL_VALUE : columnValues.get(0));
             }
         } catch (DataAccessException e) {
-            log.error("Failed to execute SQL statement", e);
+            logger.error("Failed to execute SQL statement", e);
             throw new CitrusRuntimeException(e);
         }
     }
@@ -143,23 +143,27 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * @param context
      */
     protected void executeStatements(List<String> statements, List<Map<String, Object>> allResultRows, Map<String, List<String>> columnValuesMap, TestContext context) {
-        for (String stmt : statements) {
-            validateSqlStatement(stmt);
-            final String toExecute;
+        if (getJdbcTemplate() == null) {
+            throw new CitrusRuntimeException("No JdbcTemplate configured for query execution!");
+        }
 
-            if (stmt.trim().endsWith(";")) {
-                toExecute = context.replaceDynamicContentInString(stmt.trim().substring(0, stmt.trim().length()-1));
+        for (String statement : statements) {
+            validateSqlStatement(statement);
+
+            final String toExecute;
+            if (statement.trim().endsWith(";")) {
+                toExecute = context.replaceDynamicContentInString(statement.trim().substring(0, statement.trim().length() - 1));
             } else {
-                toExecute = context.replaceDynamicContentInString(stmt.trim());
+                toExecute = context.replaceDynamicContentInString(statement.trim());
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Executing SQL query: " + toExecute);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Executing SQL query: " + toExecute);
             }
 
             List<Map<String, Object>> results = getJdbcTemplate().queryForList(toExecute);
 
-            log.info("SQL query execution successful");
+            logger.info("SQL query execution successful");
 
             allResultRows.addAll(results);
             fillColumnValuesMap(results, columnValuesMap);
@@ -230,14 +234,14 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 if (validators.isEmpty()) {
                     Map<String, SqlResultSetScriptValidator> defaultValidators = SqlResultSetScriptValidator.lookup();
                     if (defaultValidators.size() > 1) {
-                        log.warn("Too many default SQL result set script validators in classpath, please explicitly add one to the test action for verification");
+                        logger.warn("Too many default SQL result set script validators in classpath, please explicitly add one to the test action for verification");
                     } else if (defaultValidators.size() == 1) {
                         return defaultValidators.getOrDefault(DEFAULT_RESULT_SET_VALIDATOR, defaultValidators.values().iterator().next());
                     }
                 } else if (validators.size() == 1) {
                     return validators.values().iterator().next();
                 } else {
-                    log.warn("Too many SQL result set script validators defined in project, please explicitly add one to the test action for verification");
+                    logger.warn("Too many SQL result set script validators defined in project, please explicitly add one to the test action for verification");
                 }
             }
         }
@@ -295,7 +299,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             return;
         }
         performControlResultSetValidation(columnValuesMap, context);
-        log.info("SQL query validation successful: All values OK");
+        logger.info("SQL query validation successful: All values OK");
     }
 
     private void performControlResultSetValidation(final Map<String, List<String>> columnValuesMap, TestContext context)
@@ -333,19 +337,20 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
     /**
      * Does some simple validation on the SQL statement.
-     * @param stmt The statement which is to be validated.
+     * @param statement The statement which is to be validated.
      */
-    protected void validateSqlStatement(String stmt) {
-        if (!stmt.toLowerCase().startsWith("select")) {
-            throw new CitrusRuntimeException("Missing keyword SELECT in statement: " + stmt);
+    protected void validateSqlStatement(String statement) {
+        String trimmedStatement = statement.toLowerCase().trim();
+        if (!(trimmedStatement.startsWith("select") || trimmedStatement.startsWith("with"))) {
+            throw new CitrusRuntimeException("Missing SELECT or WITH keyword in statement: " + trimmedStatement);
         }
     }
 
     protected void validateSingleValue(String columnName, String controlValue, String resultValue, TestContext context) {
         // check if value is ignored
         if (controlValue.equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Ignoring column value '" + columnName + "(resultValue)'");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Ignoring column value '" + columnName + "(resultValue)'");
             }
             return;
         }
@@ -357,8 +362,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
         if (resultValue == null) {
             if (isCitrusNullValue(controlValue)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Validating database value for column: ''" +
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Validating database value for column: ''" +
                             columnName + "'' value as expected: NULL - value OK");
                 }
                 return;
@@ -369,8 +374,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         }
 
         if (resultValue.equals(controlValue)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Validation successful for column: '" + columnName +
+            if (logger.isDebugEnabled()) {
+                logger.debug("Validation successful for column: '" + columnName +
                         "' expected value: " + controlValue + " - value OK");
             }
         } else {

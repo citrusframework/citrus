@@ -61,7 +61,7 @@ import org.springframework.util.StringUtils;
 public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsumer, NotificationListener {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmxClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(JmxClient.class);
 
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
@@ -113,9 +113,9 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
             serverConnection = getNetworkConnection();
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending message to JMX MBeanServer server: '" + getEndpointConfiguration().getServerUrl() + "'");
-            log.debug("Message to send:\n" + message.getPayload(String.class));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending message to JMX MBeanServer server: '" + getEndpointConfiguration().getServerUrl() + "'");
+            logger.debug("Message to send:\n" + message.getPayload(String.class));
         }
         context.onOutboundMessage(message);
 
@@ -226,7 +226,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
     public void handleNotification(Notification notification, Object handback) {
         JMXConnectionNotification connectionNotification = (JMXConnectionNotification) notification;
         if (connectionNotification.getConnectionId().equals(getConnectionId()) && connectionLost(connectionNotification)) {
-            log.warn("JmxClient lost JMX connection for : {}", getEndpointConfiguration().getServerUrl());
+            logger.warn("JmxClient lost JMX connection for : {}", getEndpointConfiguration().getServerUrl());
             if (getEndpointConfiguration().isAutoReconnect()) {
                 scheduleReconnect();
             }
@@ -257,12 +257,12 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
                         serverConnection.addNotificationListener(objectName, notificationListener, getEndpointConfiguration().getNotificationFilter(), getEndpointConfiguration().getNotificationHandback());
                     }
                 } catch (Exception e) {
-                    log.warn("Failed to reconnect to JMX MBean server. {}", e.getMessage());
+                    logger.warn("Failed to reconnect to JMX MBean server. {}", e.getMessage());
                     scheduleReconnect();
                 }
             }
         };
-        log.info("Reconnecting to MBean server {} in {} milliseconds.", getEndpointConfiguration().getServerUrl(), getEndpointConfiguration().getDelayOnReconnect());
+        logger.info("Reconnecting to MBean server {} in {} milliseconds.", getEndpointConfiguration().getServerUrl(), getEndpointConfiguration().getDelayOnReconnect());
         scheduledExecutor.schedule(startRunnable, getEndpointConfiguration().getDelayOnReconnect(), TimeUnit.MILLISECONDS);
     }
 

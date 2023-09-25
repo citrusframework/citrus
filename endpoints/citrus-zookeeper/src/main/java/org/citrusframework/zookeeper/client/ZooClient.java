@@ -34,7 +34,7 @@ import java.io.IOException;
 public class ZooClient {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(ZooClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZooClient.class);
 
     /** ZooKeeper client */
     private ZooKeeper zookeeper;
@@ -77,7 +77,7 @@ public class ZooClient {
                 zookeeper = createZooKeeperClient();
                 int retryAttempts = 5;
                 while(!zookeeper.getState().isConnected() && retryAttempts > 0) {
-                    LOG.debug("connecting...");
+                    logger.debug("connecting...");
                     retryAttempts--;
                     Thread.sleep(1000);
                 }
@@ -114,7 +114,7 @@ public class ZooClient {
         return new Watcher() {
             @Override
             public void process(WatchedEvent event) {
-                LOG.debug(String.format("Connection Event: %s", event.toString()));
+                logger.debug(String.format("Connection Event: %s", event.toString()));
             }
         };
     }

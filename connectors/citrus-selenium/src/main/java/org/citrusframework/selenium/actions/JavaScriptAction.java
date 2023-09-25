@@ -27,6 +27,8 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Executes javascript code on current page and validates errors.
@@ -35,6 +37,9 @@ import org.openqa.selenium.WebDriverException;
  * @since 2.7
  */
 public class JavaScriptAction extends AbstractSeleniumAction {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(JavaScriptAction.class);
 
     /** JavaScript code */
     private final String script;
@@ -79,7 +84,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
                     }
                 }
             } else {
-                log.warn("Skip javascript action because web driver is missing javascript features");
+                logger.warn("Skip javascript action because web driver is missing javascript features");
             }
         } catch (WebDriverException e) {
             throw new CitrusRuntimeException("Failed to execute JavaScript code", e);

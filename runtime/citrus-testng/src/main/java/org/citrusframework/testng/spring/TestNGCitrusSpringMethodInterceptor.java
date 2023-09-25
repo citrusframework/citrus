@@ -45,7 +45,7 @@ import org.testng.internal.MethodInstance;
 public class TestNGCitrusSpringMethodInterceptor implements IMethodInterceptor {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(TestNGCitrusSpringMethodInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestNGCitrusSpringMethodInterceptor.class);
 
     @Override
     public List<IMethodInstance> intercept(List<IMethodInstance> methods, ITestContext context) {
@@ -82,7 +82,7 @@ public class TestNGCitrusSpringMethodInterceptor implements IMethodInterceptor {
                                 }
                             }
                         } catch (IOException e) {
-                            log.error("Unable to locate file resources for test package '" + packageName + "'", e);
+                            logger.error("Unable to locate file resources for test package '" + packageName + "'", e);
                         }
                     }
                 } else if (method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class) != null) {
@@ -113,7 +113,7 @@ public class TestNGCitrusSpringMethodInterceptor implements IMethodInterceptor {
                                 }
                             }
                         } catch (IOException e) {
-                            log.error("Unable to locate file resources for test package '" + packageName + "'", e);
+                            logger.error("Unable to locate file resources for test package '" + packageName + "'", e);
                         }
                     }
                 }

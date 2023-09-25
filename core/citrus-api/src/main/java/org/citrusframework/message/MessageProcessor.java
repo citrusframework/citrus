@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public interface MessageProcessor extends MessageTransformer {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(MessageProcessor.class);
+    Logger logger = LoggerFactory.getLogger(MessageProcessor.class);
 
     /** Message processor resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/message/processor";
@@ -37,7 +37,7 @@ public interface MessageProcessor extends MessageTransformer {
             Builder<T, B> instance = TYPE_RESOLVER.resolve(processor);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve message processor from resource '%s/%s'", RESOURCE_PATH, processor));
+            logger.warn(String.format("Failed to resolve message processor from resource '%s/%s'", RESOURCE_PATH, processor));
         }
 
         return Optional.empty();

@@ -13,6 +13,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.util.TestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default test case implementation holding a list of test actions to execute. Test case also holds variable definitions and
@@ -20,6 +22,9 @@ import org.citrusframework.util.TestUtils;
  * @author Christoph Deppisch
  */
 public class DefaultTestCase extends AbstractActionContainer implements TestCase, TestGroupAware, TestParameterAware {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(DefaultTestCase.class);
 
     /** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */
@@ -57,8 +62,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         context.getTestListeners().onTestStart(this);
 
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Initializing test case");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Initializing test case");
             }
 
             debugVariables("Global", context);
@@ -115,7 +120,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                     sequenceAfterTest.execute(context);
                 }
             } catch (final Exception | AssertionError e) {
-                log.warn("After test failed with errors", e);
+                logger.warn("After test failed with errors", e);
             }
         }
     }
@@ -198,7 +203,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      */
     private void executeFinalActions(TestContext context) {
         if (!finalActions.isEmpty()) {
-            log.debug("Entering finally block in test case");
+            logger.debug("Entering finally block in test case");
 
             /* walk through the finally chain and execute the actions in there */
             for (final TestActionBuilder<?> actionBuilder : finalActions) {
@@ -227,10 +232,10 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      */
     private void debugVariables(String scope, TestContext context) {
         /* Debug print global variables */
-        if (context.hasVariables() && log.isDebugEnabled()) {
-            log.debug(String.format("%s variables:", scope));
+        if (context.hasVariables() && logger.isDebugEnabled()) {
+            logger.debug(String.format("%s variables:", scope));
             for (final Map.Entry<String, Object> entry : context.getVariables().entrySet()) {
-                log.debug(String.format("%s = %s", entry.getKey(), entry.getValue()));
+                logger.debug(String.format("%s = %s", entry.getKey(), entry.getValue()));
             }
         }
     }
@@ -246,8 +251,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         context.setVariable(CitrusSettings.TEST_PACKAGE_VARIABLE, packageName);
 
         for (final Map.Entry<String, Object> paramEntry : parameters.entrySet()) {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
             }
             context.setVariable(paramEntry.getKey(), paramEntry.getValue());
         }

@@ -49,7 +49,7 @@ import org.springframework.core.io.Resource;
 public class ScpClient extends SftpClient {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(ScpClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScpClient.class);
 
     private org.apache.sshd.scp.client.ScpClient scpClient;
 
@@ -93,7 +93,7 @@ public class ScpClient extends SftpClient {
         try {
             scpClient.upload(FileUtils.getFileResource(command.getFile().getPath(), context).getFile().getAbsolutePath(), command.getTarget().getPath());
         } catch (IOException e) {
-            LOG.error("Failed to store file via SCP", e);
+            logger.error("Failed to store file via SCP", e);
             return FtpMessage.error();
 
         }
@@ -105,12 +105,12 @@ public class ScpClient extends SftpClient {
         try {
             Resource target = FileUtils.getFileResource(command.getTarget().getPath(), context);
             if (!Optional.ofNullable(target.getFile().getParentFile()).map(File::mkdirs).orElse(true)) {
-                LOG.warn("Failed to create target directories in path: " + target.getFile().getAbsolutePath());
+                logger.warn("Failed to create target directories in path: " + target.getFile().getAbsolutePath());
             }
 
             scpClient.download(command.getFile().getPath(), target.getFile().getAbsolutePath());
         } catch (IOException e) {
-            LOG.error("Failed to retrieve file via SCP", e);
+            logger.error("Failed to retrieve file via SCP", e);
             return FtpMessage.error();
         }
 

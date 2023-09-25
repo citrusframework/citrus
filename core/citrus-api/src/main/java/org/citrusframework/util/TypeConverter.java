@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public interface TypeConverter {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(TypeConverter.class);
+    Logger logger = LoggerFactory.getLogger(TypeConverter.class);
 
     /** Type converter resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/type/converter";
@@ -39,8 +39,8 @@ public interface TypeConverter {
                 converters.put(DEFAULT, DefaultTypeConverter.INSTANCE);
             }
 
-            if (LOG.isDebugEnabled()) {
-                converters.forEach((k, v) -> LOG.debug(String.format("Found type converter '%s' as %s", k, v.getClass())));
+            if (logger.isDebugEnabled()) {
+                converters.forEach((k, v) -> logger.debug(String.format("Found type converter '%s' as %s", k, v.getClass())));
             }
         }
 
@@ -75,21 +75,21 @@ public interface TypeConverter {
         Map<String, TypeConverter> converters = lookup();
         if (converters.size() == 1) {
             Map.Entry<String, TypeConverter> converterEntry = converters.entrySet().iterator().next();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Using type converter '%s'", converterEntry.getKey()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Using type converter '%s'", converterEntry.getKey()));
             }
 
             return converterEntry.getValue();
         } else if (converters.containsKey(name)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(String.format("Using type converter '%s'", name));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Using type converter '%s'", name));
             }
 
             return converters.get(name);
         }
 
         if (!CitrusSettings.TYPE_CONVERTER_DEFAULT.equals(name)) {
-            LOG.warn(String.format("Missing type converter for name '%s' - using default type converter", name));
+            logger.warn(String.format("Missing type converter for name '%s' - using default type converter", name));
         }
 
         return defaultTypeConverter;

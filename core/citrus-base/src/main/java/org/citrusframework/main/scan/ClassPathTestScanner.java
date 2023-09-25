@@ -44,7 +44,7 @@ import org.springframework.util.ReflectionUtils;
 public class ClassPathTestScanner extends AbstractTestScanner {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(ClassPathTestScanner.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClassPathTestScanner.class);
 
     /** Test annotation marking test classes and methods */
     private final Class<? extends Annotation> annotationType;
@@ -104,7 +104,7 @@ public class ClassPathTestScanner extends AbstractTestScanner {
             ReflectionUtils.doWithMethods(clazz, method -> hasTestMethod.set(true), method -> AnnotationUtils.findAnnotation(method, annotationType) != null);
             return hasTestMethod.get();
         } catch (NoClassDefFoundError | ClassNotFoundException e) {
-            LOG.warn("Unable to access class: " + metadata.getClassName());
+            logger.warn("Unable to access class: " + metadata.getClassName());
             return false;
         }
     }

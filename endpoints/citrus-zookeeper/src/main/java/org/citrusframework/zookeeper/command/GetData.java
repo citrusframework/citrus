@@ -32,7 +32,7 @@ public class GetData extends AbstractZooCommand<ZooResponse> {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(GetData.class);
+    private static final Logger logger = LoggerFactory.getLogger(GetData.class);
 
     /**
      * Default constructor initializing the command name.
@@ -54,7 +54,7 @@ public class GetData extends AbstractZooCommand<ZooResponse> {
         } catch (InterruptedException | KeeperException e) {
             throw new CitrusRuntimeException(e);
         }
-        log.debug(getCommandResult().toString());
+        logger.debug(getCommandResult().toString());
     }
 
     /**

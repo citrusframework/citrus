@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
  */
 public class DirectProducer implements Producer {
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(DirectProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(DirectProducer.class);
 
     /** The producer name */
     private final String name;
@@ -36,12 +36,12 @@ public class DirectProducer implements Producer {
     public void send(Message message, TestContext context) {
         String destinationQueueName = getDestinationQueueName();
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Sending message to queue: '%s'", destinationQueueName));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Sending message to queue: '%s'", destinationQueueName));
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Message to send is:" + System.getProperty("line.separator") + message.toString());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Message to send is:" + System.getProperty("line.separator") + message.toString());
         }
 
         try {
@@ -50,7 +50,7 @@ public class DirectProducer implements Producer {
             throw new CitrusRuntimeException(String.format("Failed to send message to queue: '%s'", destinationQueueName), e);
         }
 
-        log.info(String.format("Message was sent to queue: '%s'", destinationQueueName));
+        logger.info(String.format("Message was sent to queue: '%s'", destinationQueueName));
     }
 
     /**

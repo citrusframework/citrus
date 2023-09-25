@@ -20,7 +20,7 @@ import java.util.Optional;
 public interface SchemaValidator<T extends SchemaValidationContext> {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(MessageValidator.class);
+    Logger logger = LoggerFactory.getLogger(MessageValidator.class);
 
     /** Schema validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/message/schemaValidator";
@@ -36,8 +36,8 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
     static Map<String, SchemaValidator<? extends SchemaValidationContext>> lookup() {
         Map<String, SchemaValidator<?>> validators = TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
 
-        if (LOG.isDebugEnabled()) {
-            validators.forEach((k, v) -> LOG.debug(String.format("Found message validator '%s' as %s", k, v.getClass())));
+        if (logger.isDebugEnabled()) {
+            validators.forEach((k, v) -> logger.debug(String.format("Found message validator '%s' as %s", k, v.getClass())));
         }
 
         return validators;
@@ -55,7 +55,7 @@ public interface SchemaValidator<T extends SchemaValidationContext> {
             SchemaValidator<? extends ValidationMatcher> instance = TYPE_RESOLVER.resolve(validator);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve validator from resource '%s/%s'", RESOURCE_PATH, validator));
+            logger.warn(String.format("Failed to resolve validator from resource '%s/%s'", RESOURCE_PATH, validator));
         }
 
         return Optional.empty();

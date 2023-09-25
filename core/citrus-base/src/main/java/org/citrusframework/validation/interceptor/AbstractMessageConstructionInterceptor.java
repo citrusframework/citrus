@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractMessageConstructionInterceptor implements MessageConstructionInterceptor {
 
     /** Logger */
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /** Inbound/Outbound direction */
     private MessageDirection direction = MessageDirection.UNBOUND;
@@ -44,7 +44,7 @@ public abstract class AbstractMessageConstructionInterceptor implements MessageC
         if (supportsMessageType(messageType)) {
             return interceptMessage(message, messageType, context);
         } else {
-            log.debug(String.format("Message interceptor type '%s' skipped for message type: %s", getName(), messageType));
+            logger.debug(String.format("Message interceptor type '%s' skipped for message type: %s", getName(), messageType));
             return message;
         }
     }

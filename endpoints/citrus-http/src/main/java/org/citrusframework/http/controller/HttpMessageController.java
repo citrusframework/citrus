@@ -31,10 +31,7 @@ import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.server.HttpServerSettings;
 import org.citrusframework.message.Message;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -179,7 +176,7 @@ public class HttpMessageController {
             }
 
             if (httpResponse.getStatusCode() == null) {
-                httpResponse.status(HttpStatus.valueOf(endpointConfiguration.getDefaultStatusCode()));
+                httpResponse.status(HttpStatusCode.valueOf(endpointConfiguration.getDefaultStatusCode()));
             }
 
             responseEntity = (ResponseEntity<?>) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration, null);

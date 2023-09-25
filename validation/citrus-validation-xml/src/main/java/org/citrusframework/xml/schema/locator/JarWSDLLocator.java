@@ -32,7 +32,7 @@ import org.xml.sax.InputSource;
 public class JarWSDLLocator implements WSDLLocator {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JarWSDLLocator.class);
+    private static final Logger logger = LoggerFactory.getLogger(JarWSDLLocator.class);
 
     private Resource wsdl;
     private Resource importResource = null;
@@ -64,7 +64,7 @@ public class JarWSDLLocator implements WSDLLocator {
             importResource = new PathMatchingResourcePatternResolver().getResource(resolvedImportLocation);
             return new InputSource(importResource.getInputStream());
         } catch (IOException e) {
-            log.warn(String.format("Failed to resolve imported WSDL schema path location '%s'", importLocation), e);
+            logger.warn(String.format("Failed to resolve imported WSDL schema path location '%s'", importLocation), e);
             return null;
         }
     }
@@ -87,7 +87,7 @@ public class JarWSDLLocator implements WSDLLocator {
         try {
             return importResource.getURI().toString();
         } catch (IOException e) {
-            log.warn("Failed to resolve last imported WSDL schema resource", e);
+            logger.warn("Failed to resolve last imported WSDL schema resource", e);
             return null;
         }
     }

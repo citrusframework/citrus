@@ -29,8 +29,6 @@ import org.citrusframework.common.Described;
 import org.citrusframework.common.Named;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.util.SqlUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,8 +43,6 @@ import org.springframework.transaction.TransactionDefinition;
  * @author Christoph Deppisch
  */
 public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSupport implements TestAction, Named, Described, TestActorAware {
-    /** Logger */
-    protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     /** Text describing the test action */
     private String description;

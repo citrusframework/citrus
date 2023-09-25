@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
  */
 public class DirectSyncConsumer extends DirectConsumer implements ReplyProducer {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DirectSyncConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(DirectSyncConsumer.class);
 
     /** Reply channel store */
     private CorrelationManager<MessageQueue> correlationManager;
@@ -53,13 +53,13 @@ public class DirectSyncConsumer extends DirectConsumer implements ReplyProducer 
         MessageQueue replyQueue = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(replyQueue, "Failed to find reply channel for message correlation key: " + correlationKey);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending message to reply channel: '" + replyQueue + "'");
-            log.debug("Message to send is:\n" + message.toString());
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending message to reply channel: '" + replyQueue + "'");
+            logger.debug("Message to send is:\n" + message.toString());
         }
 
         replyQueue.send(message);
-        log.info("Message was sent to reply channel: '" + replyQueue + "'");
+        logger.info("Message was sent to reply channel: '" + replyQueue + "'");
     }
 
     /**
@@ -81,7 +81,7 @@ public class DirectSyncConsumer extends DirectConsumer implements ReplyProducer 
             correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, replyQueue);
         } else {
-            log.warn("Unable to retrieve reply message channel for message \n" +
+            logger.warn("Unable to retrieve reply message channel for message \n" +
                     receivedMessage + "\n - no reply channel found in message headers!");
         }
     }

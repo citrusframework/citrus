@@ -33,13 +33,13 @@ public class SoapAttachmentHandlingEndpoint implements MessageEndpoint {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(SoapAttachmentHandlingEndpoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(SoapAttachmentHandlingEndpoint.class);
     
     public void invoke(MessageContext messageContext) throws Exception {
 	    Iterator<Attachment> it = ((SoapMessage)messageContext.getRequest()).getAttachments();
 	    while(it.hasNext()) {
 	        Attachment attachment = it.next();
-	        log.info("Endpoint handling SOAP attachment: " + attachment.getContentId() + "('" + attachment.getContentType() + "')");
+	        logger.info("Endpoint handling SOAP attachment: " + attachment.getContentId() + "('" + attachment.getContentType() + "')");
 	    }
 	}
 }

@@ -38,7 +38,7 @@ import org.springframework.util.StringUtils;
 public class JarFileTestScanner extends AbstractTestScanner {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(JarFileTestScanner.class);
+    private static final Logger logger = LoggerFactory.getLogger(JarFileTestScanner.class);
 
     /** Jar file resource to search in */
     private final File artifact;
@@ -57,7 +57,7 @@ public class JarFileTestScanner extends AbstractTestScanner {
                     JarEntry entry = entries.nextElement();
                     String className = StringUtils.stripFilenameExtension(entry.getName()).replace( "/", "." );
                     if (new AntPathMatcher().matchStart(packageToScan.replace( ".", "/" ), entry.getName()) && isIncluded(className)) {
-                        LOG.info("Found test class candidate in test jar file: " +  entry.getName());
+                        logger.info("Found test class candidate in test jar file: " +  entry.getName());
                         testClasses.add(new TestClass(className));
                     }
                 }

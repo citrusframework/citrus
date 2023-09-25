@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class HelloBeanImpl implements HelloBean {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(HelloBeanImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(HelloBeanImpl.class);
 
     private String helloMessage;
 
@@ -42,7 +42,7 @@ public class HelloBeanImpl implements HelloBean {
 
     @Override
     public String hello(String username) {
-        log.info(String.format(helloMessage, username));
+        logger.info(String.format(helloMessage, username));
         return String.format(helloMessage, username);
     }
 }

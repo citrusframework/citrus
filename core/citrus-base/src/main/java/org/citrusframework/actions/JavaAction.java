@@ -54,7 +54,7 @@ public class JavaAction extends AbstractTestAction {
     private final List<Object> constructorArgs;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JavaAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(JavaAction.class);
 
     /**
      * Default constructor.
@@ -125,7 +125,7 @@ public class JavaAction extends AbstractTestAction {
                     StringUtils.arrayToCommaDelimitedString(methodTypes) + ")' for class '" + instance.getClass() + "'");
         }
 
-        log.info("Invoking method '" + methodToRun.toString() + "' on instance '" + instance.getClass() + "'");
+        logger.info("Invoking method '" + methodToRun.toString() + "' on instance '" + instance.getClass() + "'");
 
         methodToRun.invoke(instance, methodObjects);
     }
@@ -152,7 +152,7 @@ public class JavaAction extends AbstractTestAction {
                 "is set for Java reflection call");
         }
 
-        log.info("Instantiating class for name '" + className + "'");
+        logger.info("Instantiating class for name '" + className + "'");
 
         Class<?> classToRun = Class.forName(className);
 

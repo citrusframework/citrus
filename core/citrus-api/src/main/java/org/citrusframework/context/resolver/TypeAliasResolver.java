@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public interface TypeAliasResolver<S, A> {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(TypeAliasResolver.class);
+    Logger logger = LoggerFactory.getLogger(TypeAliasResolver.class);
 
     /** Type alias resolver resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/context/resolver";
@@ -57,8 +57,8 @@ public interface TypeAliasResolver<S, A> {
         if (resolvers.isEmpty()) {
             resolvers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
-            if (LOG.isDebugEnabled()) {
-                resolvers.forEach((k, v) -> LOG.debug(String.format("Found type alias resolver '%s' as %s", k, v.getClass())));
+            if (logger.isDebugEnabled()) {
+                resolvers.forEach((k, v) -> logger.debug(String.format("Found type alias resolver '%s' as %s", k, v.getClass())));
             }
         }
         return resolvers;
@@ -75,7 +75,7 @@ public interface TypeAliasResolver<S, A> {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(resolver));
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve type alias resolver from resource '%s/%s'", RESOURCE_PATH, resolver));
+            logger.warn(String.format("Failed to resolve type alias resolver from resource '%s/%s'", RESOURCE_PATH, resolver));
         }
 
         return Optional.empty();

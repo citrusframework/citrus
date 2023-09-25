@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.log;
+package org.citrusframework.logger;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -30,7 +30,7 @@ import org.citrusframework.message.Message;
 import org.springframework.util.CollectionUtils;
 
 /**
- * Special modifier adds message related modifications on log output on headers and body.
+ * Special modifier adds message related modifications on logger output on headers and body.
  *
  * @author Christoph Deppisch
  */

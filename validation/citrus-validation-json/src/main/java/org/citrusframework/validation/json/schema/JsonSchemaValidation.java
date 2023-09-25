@@ -46,7 +46,7 @@ import java.util.Set;
  */
 public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidationContext> {
 
-    private Logger log = LoggerFactory.getLogger(JsonSchemaValidation.class);
+    private static final Logger logger = LoggerFactory.getLogger(JsonSchemaValidation.class);
 
     private final JsonSchemaFilter jsonSchemaFilter;
 
@@ -69,7 +69,7 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
 
     @Override
     public void validate(Message message, TestContext context, JsonMessageValidationContext validationContext) {
-        log.debug("Starting Json schema validation ...");
+        logger.debug("Starting Json schema validation ...");
 
         GraciousProcessingReport report = validate(message,
                 findSchemaRepositories(context),
@@ -77,11 +77,11 @@ public class JsonSchemaValidation implements SchemaValidator<JsonMessageValidati
                 context.getReferenceResolver());
 
         if (!report.isSuccess()) {
-            log.error("Failed to validate Json schema for message:\n" + message.getPayload(String.class));
+            logger.error("Failed to validate Json schema for message:\n" + message.getPayload(String.class));
             throw new ValidationException(constructErrorMessage(report));
         }
 
-        log.info("Json schema validation successful: All values OK");
+        logger.info("Json schema validation successful: All values OK");
     }
 
     /**

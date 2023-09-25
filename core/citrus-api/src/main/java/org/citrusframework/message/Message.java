@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.log.LogMessageModifier;
+import org.citrusframework.logger.LogMessageModifier;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -55,7 +55,7 @@ public interface Message extends Serializable {
     }
 
     /**
-     * Prints message content and applies log modifier provided in given test context.
+     * Prints message content and applies logger modifier provided in given test context.
      * @return
      */
     default String print(TestContext context) {

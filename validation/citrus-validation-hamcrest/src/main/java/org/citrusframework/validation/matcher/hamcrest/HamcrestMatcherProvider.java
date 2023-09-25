@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public interface HamcrestMatcherProvider {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(HamcrestMatcherProvider.class);
+    Logger logger = LoggerFactory.getLogger(HamcrestMatcherProvider.class);
 
     /** Resource path where to lookup custom matcher providers in classpath */
     String RESOURCE_PATH = "META-INF/citrus/hamcrest/matcher/provider";
@@ -49,7 +49,7 @@ public interface HamcrestMatcherProvider {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(matcherName));
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve Hamcrest matcher provider from resource '%s/%s'", RESOURCE_PATH, matcherName));
+            logger.warn(String.format("Failed to resolve Hamcrest matcher provider from resource '%s/%s'", RESOURCE_PATH, matcherName));
         }
 
         return Optional.empty();

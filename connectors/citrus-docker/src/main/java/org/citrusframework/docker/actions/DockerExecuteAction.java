@@ -76,7 +76,7 @@ public class DockerExecuteAction extends AbstractTestAction {
     public static final String DEFAULT_JSON_MESSAGE_VALIDATOR = "defaultJsonMessageValidator";
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DockerExecuteAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(DockerExecuteAction.class);
 
     /**
      * Default constructor.
@@ -94,14 +94,14 @@ public class DockerExecuteAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         try {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Executing Docker command '%s'", command.getName()));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Executing Docker command '%s'", command.getName()));
             }
             command.execute(dockerClient, context);
 
             validateCommandResult(command, context);
 
-            log.info(String.format("Docker command execution successful: '%s'", command.getName()));
+            logger.info(String.format("Docker command execution successful: '%s'", command.getName()));
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -115,8 +115,8 @@ public class DockerExecuteAction extends AbstractTestAction {
      * @param context
      */
     private void validateCommandResult(DockerCommand command, TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Starting Docker command result validation");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Starting Docker command result validation");
         }
 
         if (StringUtils.hasText(expectedCommandResult)) {
@@ -128,7 +128,7 @@ public class DockerExecuteAction extends AbstractTestAction {
                 String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
                 JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
                 getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, Collections.singletonList(validationContext));
-                log.info("Docker command result validation successful - all values OK!");
+                logger.info("Docker command result validation successful - all values OK!");
             } catch (JsonProcessingException e) {
                 throw new CitrusRuntimeException(e);
             }

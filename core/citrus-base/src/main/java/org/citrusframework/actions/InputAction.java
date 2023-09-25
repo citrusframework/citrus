@@ -43,7 +43,7 @@ import org.springframework.util.StringUtils;
 public class InputAction extends AbstractTestAction {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(InputAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(InputAction.class);
 
     /** Prompted message displayed to the user before input */
     private final String message;
@@ -78,7 +78,7 @@ public class InputAction extends AbstractTestAction {
 
         if (context.getVariables().containsKey(variable)) {
             input = context.getVariable(variable);
-            log.info("Variable " + variable + " is already set (='" + input + "'). Skip waiting for user input");
+            logger.info("Variable " + variable + " is already set (='" + input + "'). Skip waiting for user input");
 
             return;
         }
@@ -93,7 +93,7 @@ public class InputAction extends AbstractTestAction {
 
         try {
             do {
-                log.info(display);
+                logger.info(display);
 
                 BufferedReader stdin = getInputReader();
                 input = stdin.readLine();
@@ -127,7 +127,7 @@ public class InputAction extends AbstractTestAction {
             }
         }
 
-        log.info("User input is not valid - must be one of " + validAnswers);
+        logger.info("User input is not valid - must be one of " + validAnswers);
 
         return false;
     }

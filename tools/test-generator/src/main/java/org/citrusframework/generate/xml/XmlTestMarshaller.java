@@ -49,7 +49,7 @@ import org.xml.sax.XMLReader;
 public class XmlTestMarshaller {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(XmlTestMarshaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(XmlTestMarshaller.class);
 
     private volatile JAXBContext jaxbContext;
     private final Schema schema;
@@ -108,8 +108,8 @@ public class XmlTestMarshaller {
     private JAXBContext getOrCreateContext() throws JAXBException {
         if (jaxbContext == null) {
             synchronized (this) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Creating JAXBContext with context path %s", contextPath));
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Creating JAXBContext with context path %s", contextPath));
                 }
 
                 jaxbContext = JAXBContext.newInstance(contextPath);
@@ -119,8 +119,8 @@ public class XmlTestMarshaller {
     }
 
     private Schema loadSchema(Resource resource) {
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Using marshaller validation schema '%s'", resource.getFilename()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Using marshaller validation schema '%s'", resource.getFilename()));
         }
 
         try {

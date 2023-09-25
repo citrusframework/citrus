@@ -74,7 +74,7 @@ public final class BooleanExpressionParser {
     /**
      * Logger
      */
-    private static final Logger log = LoggerFactory.getLogger(BooleanExpressionParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(BooleanExpressionParser.class);
 
     /**
      * Prevent instantiation.
@@ -126,8 +126,8 @@ public final class BooleanExpressionParser {
 
             result = Boolean.valueOf(evaluateExpressionStack(operators, values));
 
-            if (log.isDebugEnabled()) {
-                log.debug("Boolean expression {} evaluates to {}", expression, result);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Boolean expression {} evaluates to {}", expression, result);
             }
         } catch (final NoSuchElementException e) {
             throw new CitrusRuntimeException("Unable to parse boolean expression '" + expression + "'. Maybe expression is incomplete!", e);

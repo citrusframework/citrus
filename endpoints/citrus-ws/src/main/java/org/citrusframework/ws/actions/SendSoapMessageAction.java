@@ -49,7 +49,7 @@ import org.springframework.core.io.Resource;
 public class SendSoapMessageAction extends SendMessageAction implements TestAction {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(SendSoapMessageAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(SendSoapMessageAction.class);
 
     /** SOAP attachments */
     private final List<SoapAttachment> attachments;
@@ -83,13 +83,13 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
                     if (attachment.isMtomInline() && messagePayload.contains(cid)) {
                         byte[] attachmentBinaryData = FileUtils.readToString(attachment.getInputStream(), Charset.forName(attachment.getCharsetName())).getBytes(Charset.forName(attachment.getCharsetName()));
                         if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_BASE64_BINARY)) {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug(String.format("Adding inline base64Binary data for attachment: %s", cid));
+                            if (logger.isDebugEnabled()) {
+                                logger.debug(String.format("Adding inline base64Binary data for attachment: %s", cid));
                             }
                             messagePayload = messagePayload.replaceAll(cid, Base64.encodeBase64String(attachmentBinaryData));
                         } else if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_HEX_BINARY)) {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug(String.format("Adding inline hexBinary data for attachment: %s", cid));
+                            if (logger.isDebugEnabled()) {
+                                logger.debug(String.format("Adding inline hexBinary data for attachment: %s", cid));
                             }
                             messagePayload = messagePayload.replaceAll(cid, Hex.encodeHexString(attachmentBinaryData).toUpperCase());
                         } else {

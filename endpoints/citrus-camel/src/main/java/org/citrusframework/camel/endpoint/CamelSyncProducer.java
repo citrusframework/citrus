@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CamelSyncProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(CamelSyncProducer.class);
 
     /** Store of reply messages */
     private CorrelationManager<Message> correlationManager;
@@ -71,8 +71,8 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
             throw new CitrusRuntimeException("Missing endpoint or endpointUri on Camel producer");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Sending message to camel endpoint: '" + endpointUri + "'");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Sending message to camel endpoint: '" + endpointUri + "'");
         }
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
@@ -86,12 +86,12 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
                     @Override
                     public void process(Exchange exchange) throws Exception {
                         endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context);
-                        log.info("Message was sent to camel endpoint: '" + endpointUri + "'");
+                        logger.info("Message was sent to camel endpoint: '" + endpointUri + "'");
                     }
                 });
 
 
-        log.info("Received synchronous reply message on camel endpoint: '" + endpointUri + "'");
+        logger.info("Received synchronous reply message on camel endpoint: '" + endpointUri + "'");
         Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration, context);
         context.onInboundMessage(replyMessage);
         correlationManager.store(correlationKey, replyMessage);

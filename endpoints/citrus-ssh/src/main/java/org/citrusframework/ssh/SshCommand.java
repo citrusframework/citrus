@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 public class SshCommand implements Command, Runnable {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SshCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(SshCommand.class);
 
     /** Endpoint adapter for creating requests/responses **/
     private final EndpointAdapter endpointAdapter;
@@ -106,7 +106,7 @@ public class SshCommand implements Command, Runnable {
 
     @Override
     public void destroy(ChannelSession session) {
-        log.warn("Destroy has been called");
+        logger.warn("Destroy has been called");
     }
 
     @Override

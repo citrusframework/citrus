@@ -23,7 +23,7 @@ import java.util.*;
 public class SegmentVariableExtractorRegistry {
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(SegmentVariableExtractor.class);
+    private static final Logger logger = LoggerFactory.getLogger(SegmentVariableExtractor.class);
 
     /** Segment variable extractor resource lookup path */
     private static final String RESOURCE_PATH = "META-INF/citrus/variable/extractor/segment";
@@ -42,7 +42,7 @@ public class SegmentVariableExtractorRegistry {
             Map<String, SegmentVariableExtractor> extractors = TYPE_RESOLVER.resolveAll();
             return extractors.values();
         } catch (CitrusRuntimeException e) {
-            log.warn(String.format("Failed to resolve segment variable extractor from resource '%s'", RESOURCE_PATH));
+            logger.warn(String.format("Failed to resolve segment variable extractor from resource '%s'", RESOURCE_PATH));
         }
 
         return Collections.emptyList();

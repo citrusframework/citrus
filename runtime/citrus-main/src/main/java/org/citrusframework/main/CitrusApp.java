@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public class CitrusApp {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(CitrusApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(CitrusApp.class);
 
     /** Endpoint configuration */
     private final CitrusAppConfiguration configuration;
@@ -81,7 +81,7 @@ public class CitrusApp {
                 try {
                     new CompletableFuture<Void>().get(citrusApp.configuration.getTimeToLive(), TimeUnit.MILLISECONDS);
                 } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    LOG.info(String.format("Shutdown Citrus application after %s ms", citrusApp.configuration.getTimeToLive()));
+                    logger.info(String.format("Shutdown Citrus application after %s ms", citrusApp.configuration.getTimeToLive()));
                     citrusApp.stop();
                 }
             });
@@ -116,11 +116,11 @@ public class CitrusApp {
      */
     public void run() {
         if (isCompleted()) {
-            LOG.info("Not executing tests as application state is completed!");
+            logger.info("Not executing tests as application state is completed!");
             return;
         }
 
-        LOG.info(String.format("Running Citrus %s", Citrus.getVersion()));
+        logger.info(String.format("Running Citrus %s", Citrus.getVersion()));
         configuration.setDefaultProperties();
         TestEngine.lookup(configuration).run();
     }
@@ -140,7 +140,7 @@ public class CitrusApp {
         try {
             return completed.get();
         } catch (InterruptedException | ExecutionException e) {
-            LOG.warn("Failed to wait for application completion", e);
+            logger.warn("Failed to wait for application completion", e);
         }
 
         return false;
@@ -154,7 +154,7 @@ public class CitrusApp {
 
         Optional<Citrus> citrus = CitrusInstanceManager.get();
         if (citrus.isPresent()) {
-            LOG.info("Closing Citrus and its context");
+            logger.info("Closing Citrus and its context");
             citrus.get().close();
         }
     }

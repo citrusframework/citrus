@@ -51,11 +51,11 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, ValidationContext validationContext) throws ValidationException {
         if (controlMessage == null || controlMessage.getPayload() == null) {
-            log.debug("Skip message payload validation as no control message was defined");
+            logger.debug("Skip message payload validation as no control message was defined");
             return;
         }
 
-        log.debug("Start text message validation");
+        logger.debug("Start text message validation");
 
         try {
             String resultValue = normalizeWhitespace(receivedMessage.getPayload(String.class).trim());
@@ -74,7 +74,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
             throw new ValidationException("Failed to validate text content", e);
         }
 
-        log.info("Text validation successful: All values OK");
+        logger.info("Text validation successful: All values OK");
     }
 
     /**
@@ -162,7 +162,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
      */
     private void validateText(String receivedMessagePayload, String controlMessagePayload) {
         if (!StringUtils.hasText(controlMessagePayload)) {
-            log.debug("Skip message payload validation as no control message was defined");
+            logger.debug("Skip message payload validation as no control message was defined");
             return;
         } else {
             Assert.isTrue(StringUtils.hasText(receivedMessagePayload), "Validation failed - " +

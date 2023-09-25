@@ -21,22 +21,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.json.schema.SimpleJsonSchema;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.util.StringUtils;
 
 /**
  * This class is responsible for filtering {@link SimpleJsonSchema}s based on a {@link JsonMessageValidationContext}.
  */
 public class JsonSchemaFilter {
 
-    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(JsonSchemaFilter.class);
 
     /**
      * Filters the all schema repositories based on the configuration in the {@code jsonMessageValidationContext} and
@@ -61,28 +59,22 @@ public class JsonSchemaFilter {
 
     private List<SimpleJsonSchema> getSchemaFromContext(JsonMessageValidationContext jsonMessageValidationContext,
                                                         ReferenceResolver referenceResolver) {
-        try {
-            SimpleJsonSchema simpleJsonSchema =
-                    referenceResolver.resolve(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
+        SimpleJsonSchema simpleJsonSchema =
+                referenceResolver.resolve(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
 
-            if (log.isDebugEnabled()) {
-                log.debug("Found specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".");
-            }
-
-            return Collections.singletonList(simpleJsonSchema);
-        } catch (NoSuchBeanDefinitionException e) {
-            throw new CitrusRuntimeException(
-                    "Could not find the specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".",
-                    e);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Found specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".");
         }
+
+        return Collections.singletonList(simpleJsonSchema);
     }
 
     private List<SimpleJsonSchema> filterByRepositoryName(List<JsonSchemaRepository> schemaRepositories,
                                                           JsonMessageValidationContext jsonMessageValidationContext) {
         for (JsonSchemaRepository jsonSchemaRepository : schemaRepositories) {
             if (Objects.equals(jsonSchemaRepository.getName(), jsonMessageValidationContext.getSchemaRepository())) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Found specified schema-repository: \"" +
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Found specified schema-repository: \"" +
                             jsonMessageValidationContext.getSchemaRepository() + "\".");
                 }
                 return jsonSchemaRepository.getSchemas();
@@ -101,10 +93,10 @@ public class JsonSchemaFilter {
     }
 
     private boolean isSchemaSpecified(JsonMessageValidationContext context) {
-        return StringUtils.hasText(context.getSchema());
+        return context.getSchema() != null && !context.getSchema().isEmpty() && !context.getSchema().isBlank();
     }
 
     private boolean isSchemaRepositorySpecified(JsonMessageValidationContext context) {
-        return StringUtils.hasText(context.getSchemaRepository());
+        return context.getSchemaRepository() != null && !context.getSchemaRepository().isEmpty() && !context.getSchemaRepository().isBlank();
     }
 }

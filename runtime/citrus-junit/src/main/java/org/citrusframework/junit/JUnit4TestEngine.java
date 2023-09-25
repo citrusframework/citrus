@@ -44,7 +44,7 @@ import org.springframework.util.StringUtils;
 public class JUnit4TestEngine extends AbstractTestEngine {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(JUnit4TestEngine.class);
+    private static final Logger logger = LoggerFactory.getLogger(JUnit4TestEngine.class);
 
     private final List<RunListener> listeners = new ArrayList<>();
 
@@ -64,13 +64,13 @@ public class JUnit4TestEngine extends AbstractTestEngine {
             List<String> packagesToRun = getConfiguration().getPackages();
             if (CollectionUtils.isEmpty(packagesToRun) && CollectionUtils.isEmpty(getConfiguration().getTestClasses())) {
                 packagesToRun = Collections.singletonList("");
-                LOG.info("Running all tests in project");
+                logger.info("Running all tests in project");
             }
 
             List<TestClass> classesToRun = new ArrayList<>();
             for (String packageName : packagesToRun) {
                 if (StringUtils.hasText(packageName)) {
-                    LOG.info(String.format("Running tests in package %s", packageName));
+                    logger.info(String.format("Running tests in package %s", packageName));
                 }
 
                 if (getConfiguration().getTestJar() != null) {
@@ -82,7 +82,7 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                 }
             }
 
-            LOG.info(String.format("Found %s test classes to execute", classesToRun.size()));
+            logger.info(String.format("Found %s test classes to execute", classesToRun.size()));
             run(classesToRun);
         }
     }
@@ -100,7 +100,7 @@ public class JUnit4TestEngine extends AbstractTestEngine {
 
         junit.run(classesToRun
                 .stream()
-                .peek(testClass -> LOG.info(String.format("Running test %s",
+                .peek(testClass -> logger.info(String.format("Running test %s",
                         Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
                                 .orElse(testClass.getName()))))
                 .map(testClass -> {
@@ -112,10 +112,10 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                         } else {
                             clazz = Class.forName(testClass.getName());
                         }
-                        LOG.debug("Found test candidate: " + testClass.getName());
+                        logger.debug("Found test candidate: " + testClass.getName());
                         return clazz;
                     } catch (ClassNotFoundException | MalformedURLException e) {
-                        LOG.warn("Unable to read test class: " + testClass.getName());
+                        logger.warn("Unable to read test class: " + testClass.getName());
                         return Void.class;
                     }
                 })

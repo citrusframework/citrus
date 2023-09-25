@@ -38,7 +38,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     private final Long autoSleep;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
+    private static final Logger logger = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
 
     /**
      * Default constructor.
@@ -61,7 +61,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
             } catch (CitrusRuntimeException e) {
                 exception = e;
 
-                LOG.info("Caught exception of type " + e.getClass().getName() + " '" +
+                logger.info("Caught exception of type " + e.getClass().getName() + " '" +
                         e.getMessage() + "' - performing retry #" + index);
 
                 doAutoSleep();
@@ -70,7 +70,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
         }
 
         if (exception != null) {
-            LOG.info("All retries failed - raising exception " + exception.getClass().getName());
+            logger.info("All retries failed - raising exception " + exception.getClass().getName());
             throw exception;
         }
     }
@@ -80,15 +80,15 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
      */
     private void doAutoSleep() {
         if (autoSleep > 0) {
-            LOG.info("Sleeping " + autoSleep + " milliseconds");
+            logger.info("Sleeping " + autoSleep + " milliseconds");
 
             try {
                 Thread.sleep(autoSleep);
             } catch (InterruptedException e) {
-                LOG.error("Error during doc generation", e);
+                logger.error("Error during doc generation", e);
             }
 
-            LOG.info("Returning after " + autoSleep + " milliseconds");
+            logger.info("Returning after " + autoSleep + " milliseconds");
         }
     }
 

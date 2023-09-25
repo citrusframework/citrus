@@ -43,7 +43,7 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
     private final JmsSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(JmsEndpointAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(JmsEndpointAdapter.class);
 
     /**
      * Default constructor using endpoint configuration.
@@ -63,7 +63,7 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
 
     @Override
     protected Message handleMessageInternal(Message request) {
-        LOG.debug("Forwarding request to jms destination ...");
+        logger.debug("Forwarding request to jms destination ...");
 
         TestContext context = getTestContext();
         Message replyMessage = null;
@@ -75,7 +75,7 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
                 replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
             }
         } catch (ActionTimeoutException e) {
-            LOG.warn(e.getMessage());
+            logger.warn(e.getMessage());
         }
 
         return replyMessage;

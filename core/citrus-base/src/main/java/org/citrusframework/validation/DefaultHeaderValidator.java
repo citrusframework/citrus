@@ -36,7 +36,7 @@ import org.springframework.util.StringUtils;
 public class DefaultHeaderValidator implements HeaderValidator {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DefaultHeaderValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultHeaderValidator.class);
 
     /** Set of default header validators located via resource path lookup */
     private static final Map<String, HeaderValidator> DEFAULT_VALIDATORS = HeaderValidator.lookup();
@@ -79,8 +79,8 @@ public class DefaultHeaderValidator implements HeaderValidator {
             throw new ValidationException("Validation failed:", e);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Validating header element: " + headerName + "='" + expectedValue + "': OK.");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Validating header element: " + headerName + "='" + expectedValue + "': OK.");
         }
     }
 

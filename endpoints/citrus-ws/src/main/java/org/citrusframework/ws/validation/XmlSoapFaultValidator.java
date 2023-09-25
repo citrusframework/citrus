@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XmlSoapFaultValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(XmlSoapFaultValidator.class);
 
     /** Xml message validator */
     private MessageValidator<? extends ValidationContext> messageValidator;
@@ -72,7 +72,7 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
             try {
                 defaultMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
             } catch (CitrusRuntimeException e) {
-                log.warn("Unable to find default XML message validator in message validator registry");
+                logger.warn("Unable to find default XML message validator in message validator registry");
             }
         }
 

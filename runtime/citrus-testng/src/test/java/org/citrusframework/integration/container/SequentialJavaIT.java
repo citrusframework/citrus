@@ -45,7 +45,7 @@ public class SequentialJavaIT extends TestNGCitrusSpringSupport {
             echo("Hello Citrus"),
             action(context -> context.setVariable("anonymous", "anonymous")),
             sleep().milliseconds(500),
-            action(context -> log.info(context.getVariable("anonymous")))
+            action(context -> logger.info(context.getVariable("anonymous")))
         ));
 
         run(sequential().actions(
@@ -59,7 +59,7 @@ public class SequentialJavaIT extends TestNGCitrusSpringSupport {
             echo("Hello Citrus"),
             action(context -> context.setVariable("anonymous", "anonymous")),
             sleep().milliseconds(200),
-            action(context -> log.info(context.getVariable("anonymous")))
+            action(context -> logger.info(context.getVariable("anonymous")))
         ));
     }
 }

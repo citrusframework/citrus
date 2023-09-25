@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 public interface CitrusContextProvider {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(CitrusContextProvider.class);
+    Logger logger = LoggerFactory.getLogger(CitrusContextProvider.class);
 
     /** Endpoint parser resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/context/provider";
@@ -42,20 +42,20 @@ public interface CitrusContextProvider {
                 TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD);
 
         if (provider.isEmpty()) {
-            LOG.debug("Using default Citrus context provider");
+            logger.debug("Using default Citrus context provider");
             return new DefaultCitrusContextProvider();
         }
 
         if (provider.size() > 1) {
-            LOG.warn(String.format("Found %d Citrus context provider implementations. Please choose one of them.", provider.size()));
+            logger.warn(String.format("Found %d Citrus context provider implementations. Please choose one of them.", provider.size()));
         }
 
-        if (LOG.isDebugEnabled()) {
-            provider.forEach((k, v) -> LOG.debug(String.format("Found Citrus context provider '%s' as %s", k, v.getClass())));
+        if (logger.isDebugEnabled()) {
+            provider.forEach((k, v) -> logger.debug(String.format("Found Citrus context provider '%s' as %s", k, v.getClass())));
         }
 
         CitrusContextProvider contextProvider = provider.values().iterator().next();
-        LOG.debug(String.format("Using Citrus context provider '%s' as %s", provider.keySet().iterator().next(), contextProvider));
+        logger.debug(String.format("Using Citrus context provider '%s' as %s", provider.keySet().iterator().next(), contextProvider));
         return contextProvider;
     }
 
@@ -72,7 +72,7 @@ public interface CitrusContextProvider {
             CitrusContextProvider instance = TYPE_RESOLVER.resolve(name);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve Citrus context provider from resource '%s/%s'", RESOURCE_PATH, name));
+            logger.warn(String.format("Failed to resolve Citrus context provider from resource '%s/%s'", RESOURCE_PATH, name));
         }
 
         return Optional.empty();

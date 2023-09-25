@@ -22,6 +22,8 @@ import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.Alert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -33,6 +35,9 @@ import org.springframework.util.StringUtils;
  * @since 2.7
  */
 public class AlertAction extends AbstractSeleniumAction {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(AlertAction.class);
 
     /** Accept or dismiss dialog */
     private final boolean accept;
@@ -58,7 +63,7 @@ public class AlertAction extends AbstractSeleniumAction {
         }
 
         if (StringUtils.hasText(text)) {
-            log.info("Validating alert text");
+            logger.info("Validating alert text");
 
             String alertText = context.replaceDynamicContentInString(text);
 
@@ -70,7 +75,7 @@ public class AlertAction extends AbstractSeleniumAction {
                                 "expected '%s', but was '%s'", alertText, alert.getText()));
 
             }
-            log.info("Alert text validation successful - All values Ok");
+            logger.info("Alert text validation successful - All values Ok");
         }
 
         context.setVariable(SeleniumHeaders.SELENIUM_ALERT_TEXT, alert.getText());

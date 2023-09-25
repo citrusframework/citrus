@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class Info extends AbstractZooCommand<ZooResponse> {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(Info.class);
+    private static final Logger logger = LoggerFactory.getLogger(Info.class);
 
     /**
      * Default constructor initializing the command name.
@@ -50,7 +50,7 @@ public class Info extends AbstractZooCommand<ZooResponse> {
         commandResult.setResponseParam("sessionId", sessionId);
         commandResult.setResponseParam("sessionPwd", sessionPwd);
         commandResult.setResponseParam("sessionTimeout", sessionTimeout);
-        log.debug(getCommandResult().toString());
+        logger.debug(getCommandResult().toString());
     }
 
 

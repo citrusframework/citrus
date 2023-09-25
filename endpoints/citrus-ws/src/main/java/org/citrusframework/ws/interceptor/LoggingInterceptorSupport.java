@@ -37,14 +37,14 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Abstract logging support class offers basic log methods for SOAP messages.
+ * Abstract logging support class offers basic logger methods for SOAP messages.
  *
  * @author Christoph Deppisch
  */
 public abstract class LoggingInterceptorSupport extends TransformerObjectSupport {
 
     /** Logger */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private MessageListeners messageListener;
 
@@ -95,7 +95,7 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
     /**
      * Log SOAP message with transformer instance.
      *
-     * @param logMessage the customized log message.
+     * @param logMessage the customized logger message.
      * @param soapMessage the message content as SOAP envelope source.
      * @param incoming
      * @throws TransformerException
@@ -112,8 +112,8 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
      * Log WebService message (other than SOAP) with in memory
      * {@link ByteArrayOutputStream}
      *
-     * @param logMessage the customized log message.
-     * @param message the message to log.
+     * @param logMessage the customized logger message.
+     * @param message the message to logger.
      * @param incoming
      */
     protected void logWebServiceMessage(String logMessage, WebServiceMessage message, boolean incoming) {
@@ -123,20 +123,20 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
             message.writeTo(os);
             logMessage(logMessage, os.toString(), incoming);
         } catch (IOException e) {
-            log.warn("Unable to log WebService message", e);
+            logger.warn("Unable to logger WebService message", e);
         }
     }
 
     /**
      * Performs the final logger call with dynamic message.
      *
-     * @param logMessage a custom log message entry.
+     * @param logMessage a custom logger message entry.
      * @param message the message content.
      * @param incoming
      */
     protected void logMessage(String logMessage, String message, boolean incoming) {
         if (hasMessageListeners()) {
-            log.debug(logMessage);
+            logger.debug(logMessage);
 
             if (incoming) {
                 messageListener.onInboundMessage(new RawMessage(message), testContextFactory.getObject());
@@ -144,8 +144,8 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
                 messageListener.onOutboundMessage(new RawMessage(message), testContextFactory.getObject());
             }
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug(logMessage + ":" + System.getProperty("line.separator") + message);
+            if (logger.isDebugEnabled()) {
+                logger.debug(logMessage + ":" + System.getProperty("line.separator") + message);
             }
         }
     }

@@ -46,7 +46,7 @@ public class HttpCondition extends AbstractCondition {
     private String method = "HEAD";
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(HttpCondition.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpCondition.class);
 
     /**
      * Default constructor.
@@ -77,8 +77,8 @@ public class HttpCondition extends AbstractCondition {
      */
     private int invokeUrl(TestContext context) {
         URL contextUrl = getUrl(context);
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Probing Http request url '%s'", contextUrl.toExternalForm()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Probing Http request url '%s'", contextUrl.toExternalForm()));
         }
 
         int responseCode = -1;
@@ -91,7 +91,7 @@ public class HttpCondition extends AbstractCondition {
 
             responseCode = httpURLConnection.getResponseCode();
         } catch (IOException e) {
-            log.warn(String.format("Could not access Http url '%s' - %s", contextUrl.toExternalForm(), e.getMessage()));
+            logger.warn(String.format("Could not access Http url '%s' - %s", contextUrl.toExternalForm(), e.getMessage()));
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();

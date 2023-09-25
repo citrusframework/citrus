@@ -41,7 +41,7 @@ import java.util.*;
 public class MessageValidatorRegistry {
 
     /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(MessageValidatorRegistry.class);
+    private static final Logger logger = LoggerFactory.getLogger(MessageValidatorRegistry.class);
 
     /** The default bean id in Spring application context*/
     public static final String BEAN_NAME = "citrusMessageValidatorRegistry";
@@ -95,12 +95,12 @@ public class MessageValidatorRegistry {
         }
 
         if (isEmptyOrDefault(matchingValidators)) {
-            LOG.warn(String.format("Unable to find proper message validator. Message type is '%s' and message payload is '%s'", messageType, message.getPayload(String.class)));
+            logger.warn(String.format("Unable to find proper message validator. Message type is '%s' and message payload is '%s'", messageType, message.getPayload(String.class)));
             throw new CitrusRuntimeException("Failed to find proper message validator for message");
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Found %s message validators for message", matchingValidators.size()));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Found %s message validators for message", matchingValidators.size()));
         }
 
         return matchingValidators;
@@ -185,8 +185,8 @@ public class MessageValidatorRegistry {
      * @param messageValidator
      */
     public void addMessageValidator(String name, MessageValidator<? extends ValidationContext> messageValidator) {
-        if (this.messageValidators.containsKey(name) && LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Overwriting message validator '%s' in registry", name));
+        if (this.messageValidators.containsKey(name) && logger.isDebugEnabled()) {
+            logger.debug(String.format("Overwriting message validator '%s' in registry", name));
         }
 
         this.messageValidators.put(name, messageValidator);
@@ -198,8 +198,8 @@ public class MessageValidatorRegistry {
      * @param schemaValidator
      */
     public void addSchemaValidator(String name, SchemaValidator<? extends SchemaValidationContext> schemaValidator) {
-        if (this.schemaValidators.containsKey(name) && LOG.isDebugEnabled()) {
-            LOG.debug(String.format("Overwriting message validator '%s' in registry", name));
+        if (this.schemaValidators.containsKey(name) && logger.isDebugEnabled()) {
+            logger.debug(String.format("Overwriting message validator '%s' in registry", name));
         }
 
         this.schemaValidators.put(name, schemaValidator);

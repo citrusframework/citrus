@@ -1,0 +1,8 @@
+name: Citrus
+description: Add Citrus support to Quarkus tests
+metadata:
+  keywords:
+    - citrus
+    - test
+    - testing
+  status: "experimental"

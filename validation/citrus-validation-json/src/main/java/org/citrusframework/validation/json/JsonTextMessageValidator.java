@@ -71,11 +71,11 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, JsonMessageValidationContext validationContext) {
         if (controlMessage == null || controlMessage.getPayload() == null) {
-            log.debug("Skip message payload validation as no control message was defined");
+            logger.debug("Skip message payload validation as no control message was defined");
             return;
         }
 
-        log.debug("Start JSON message validation ...");
+        logger.debug("Start JSON message validation ...");
 
         if (validationContext.isSchemaValidationEnabled()) {
             jsonSchemaValidation.validate(receivedMessage, context, validationContext);
@@ -86,7 +86,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
 
         try {
             if (!StringUtils.hasText(controlJsonText)) {
-                log.debug("Skip message payload validation as no control message was defined");
+                logger.debug("Skip message payload validation as no control message was defined");
                 return;
             } else {
                 Assert.isTrue(StringUtils.hasText(receivedJsonText), "Validation failed - " +
@@ -116,7 +116,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }
 
-        log.info("JSON message validation successful: All values OK");
+        logger.info("JSON message validation successful: All values OK");
     }
 
     /**
@@ -184,8 +184,8 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                     JSONArray jsonArrayControl = (JSONArray) controlValue;
                     JSONArray jsonArrayReceived = (JSONArray) receivedValue;
 
-                    if (log.isDebugEnabled()) {
-                        log.debug("Validating JSONArray containing " + jsonArrayControl.size() + " entries");
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Validating JSONArray containing " + jsonArrayControl.size() + " entries");
                     }
 
                     if (strict) {
@@ -222,8 +222,8 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                                 "Values not equal for entry '" + controlKey + "'", controlValue.toString(), null));
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Validation successful for JSON entry '" + controlKey + "' (" + controlValue + ")");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Validation successful for JSON entry '" + controlKey + "' (" + controlValue + ")");
             }
         }
     }
@@ -240,8 +240,8 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      */
     public boolean isIgnored(String controlKey, Object controlValue, Object receivedJson, Set<String> ignoreExpressions, ReadContext readContext) {
         if (controlValue != null && controlValue.toString().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
-            if (log.isDebugEnabled()) {
-                log.debug("JSON entry: '" + controlKey + "' is ignored by placeholder '" +
+            if (logger.isDebugEnabled()) {
+                logger.debug("JSON entry: '" + controlKey + "' is ignored by placeholder '" +
                         CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
             return true;
@@ -251,15 +251,15 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             Object foundEntry = readContext.read(jsonPathExpression);
 
             if (foundEntry instanceof JSONArray && ((JSONArray) foundEntry).contains(receivedJson)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("JSON entry: '" + controlKey + "' is ignored - skip value validation");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("JSON entry: '" + controlKey + "' is ignored - skip value validation");
                 }
                 return true;
             }
 
             if (foundEntry != null && foundEntry.equals(receivedJson)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("JSON entry: '" + controlKey + "' is ignored - skip value validation");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("JSON entry: '" + controlKey + "' is ignored - skip value validation");
                 }
                 return true;
             }

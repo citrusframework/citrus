@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractActionContainer extends AbstractTestAction implements TestActionContainer, Completable {
 
     /** Logger */
-    protected Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /** List of nested actions */
     protected List<TestActionBuilder<?>> actions = new ArrayList<>();
@@ -107,8 +107,8 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
 
         for (TestAction action : new ArrayList<>(executedActions)) {
             if (action instanceof Completable && !((Completable) action).isDone(context)) {
-                if (log.isDebugEnabled()) {
-                    log.debug(Optional.ofNullable(action.getName()).filter(name -> name.trim().length() > 0)
+                if (logger.isDebugEnabled()) {
+                    logger.debug(Optional.ofNullable(action.getName()).filter(name -> name.trim().length() > 0)
                             .orElse(action.getClass().getName()) + " not completed yet");
                 }
                 return false;

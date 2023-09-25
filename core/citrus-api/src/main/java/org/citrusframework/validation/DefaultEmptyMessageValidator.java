@@ -20,6 +20,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.context.ValidationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -30,11 +32,13 @@ import org.springframework.util.StringUtils;
  */
 public class DefaultEmptyMessageValidator extends DefaultMessageValidator {
 
+    private static final Logger logger = LoggerFactory.getLogger(DefaultEmptyMessageValidator.class);
+
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, ValidationContext validationContext) {
         if (controlMessage == null || controlMessage.getPayload() == null) {
-            log.debug("Skip message payload validation as no control message was defined");
+            logger.debug("Skip message payload validation as no control message was defined");
             return;
         }
 
@@ -42,12 +46,12 @@ public class DefaultEmptyMessageValidator extends DefaultMessageValidator {
             throw new ValidationException("Empty message validation failed - control message is not empty!");
         }
 
-        log.debug("Start to verify empty message payload ...");
+        logger.debug("Start to verify empty message payload ...");
 
         if (StringUtils.hasText(receivedMessage.getPayload(String.class))) {
             throw new ValidationException("Validation failed - received message content is not empty!") ;
         }
 
-        log.info("Message payload is empty as expected: All values OK");
+        logger.info("Message payload is empty as expected: All values OK");
     }
 }

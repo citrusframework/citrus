@@ -107,7 +107,7 @@ public class EmbeddedKafkaServerBuilder {
     }
 
     /**
-     * Sets the Zookeeper log directory path.
+     * Sets the Zookeeper logger directory path.
      * @param logDirPath
      * @return
      */

@@ -25,7 +25,7 @@ public class DirectEndpointAdapter extends AbstractEndpointAdapter {
     private final DirectSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static final Logger log = LoggerFactory.getLogger(DirectEndpointAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(DirectEndpointAdapter.class);
 
     /**
      * Default constructor using endpoint.
@@ -53,7 +53,7 @@ public class DirectEndpointAdapter extends AbstractEndpointAdapter {
 
     @Override
     public Message handleMessageInternal(Message request) {
-        log.debug("Forwarding request to message queue ...");
+        logger.debug("Forwarding request to message queue ...");
 
         TestContext context = getTestContext();
         Message replyMessage = null;
@@ -65,7 +65,7 @@ public class DirectEndpointAdapter extends AbstractEndpointAdapter {
                 replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
             }
         } catch (ActionTimeoutException e) {
-            log.warn(e.getMessage());
+            logger.warn(e.getMessage());
         }
 
         return replyMessage;
