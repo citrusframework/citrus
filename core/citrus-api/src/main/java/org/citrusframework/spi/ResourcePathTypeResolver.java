@@ -9,6 +9,7 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
     private final String resourceBasePath;
 
     /** Zip entries as String, so the archive is read only once */
-    private final List<String> zipEntriesAsString = new ArrayList<>();
+    private final List<String> zipEntriesAsString = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Default constructor using META-INF resource base path.
