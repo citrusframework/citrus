@@ -16,13 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-import javax.sql.DataSource;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
@@ -31,6 +24,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StringUtils;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Class executes PLSQL statements either declared inline as PLSQL statements or given by an
@@ -103,9 +103,13 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
      * @param context
      */
     protected void executeStatements(List<String> statements, TestContext context) {
-        for (String stmt : statements) {
+        if (getJdbcTemplate() == null) {
+            throw new CitrusRuntimeException("No JdbcTemplate configured for sql execution!");
+        }
+
+        for (String statement : statements) {
             try {
-                final String toExecute = context.replaceDynamicContentInString(stmt.trim());
+                final String toExecute = context.replaceDynamicContentInString(statement.trim());
 
                 if (logger.isDebugEnabled()) {
                     logger.debug("Executing PLSQL statement: " + toExecute);
