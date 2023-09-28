@@ -239,12 +239,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 logger.debug("Control message:\n" + controlMessage.print(context));
             }
 
-            if (StringUtils.hasText(controlMessage.getName())) {
-                context.getMessageStore().storeMessage(controlMessage.getName(), message);
-            } else {
-                context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), message);
-            }
-
             if (!CollectionUtils.isEmpty(validators)) {
                 for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
                     messageValidator.validateMessage(message, controlMessage, context, validationContexts);
