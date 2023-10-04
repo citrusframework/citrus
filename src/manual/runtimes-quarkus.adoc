@@ -1,0 +1,101 @@
+[[runtime-quarkus]]
+== QuarkusTest runtime
+
+Quarkus has emerged into a popular enterprise Java framework. For unit and integration testing the Quarkus framework provides a special integrations with JUnit Jupiter. Citrus adds a Quarkus test resource that developers can use to include Citrus capabilities into arbitrary Quarkus tests.
+
+NOTE: The Citrus QuarkusTest extension is shipped in a separate Maven module. You need to include the module as a dependency in your project accordingly.
+
+.Citrus Quarkus module dependency
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-quarkus</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+Usually a Quarkus test is annotated with the `@QuarkusTest` or `QuarkusIntegrationTest` annotation. Users may add an annotation named `@CitrusSupport` in order to also enable Citrus capabilities on the test.
+
+The Citrus support will automatically hook into the QuarkusTest lifecycle management making sure to call the Citrus before/after suite and before/after test handlers.
+
+This way you are able to combine Citrus with `@QuarkusTest` annotated classes very easily.
+
+.Enable Citrus support on QuarkusTest
+[source,java]
+----
+@QuarkusTest
+@CitrusSupport
+public class DemoApplicationTest {
+
+    @CitrusFramework
+    private Citrus citrus;
+
+    @CitrusResource
+    private TestCaseRunner t;
+
+    @CitrusResource
+    private TestContext context;
+
+    @Test
+    void shouldVerifyDemoApp() {
+        t.when(
+            send()
+                .endpoint("messageEndpoint")
+                .message()
+                .body("How about Citrus!?")
+        );
+
+        t.when(
+            receive()
+                .endpoint("messageEndpoint")
+                .message()
+                .body("Citrus rocks!")
+        );
+    }
+}
+----
+
+The `@CitrusSupport` annotation enables the Citrus features on the test. First of all users may inject Citrus related resources such as `TestCaseRunner` or `TestContext`.
+
+The `TestCaseRunner` reference runs arbitrary Citrus actions as part of the test.
+
+The test is also able to configure Message endpoints.
+
+.Configure message endpoints
+[source,java]
+----
+@QuarkusTest
+@CitrusSupport
+public class DemoApplicationTest {
+
+    @BindToRegistry
+    private final KafkaEndpoint bookings = new KafkaEndpointBuilder()
+            .topic("bookings")
+            .build();
+
+    @CitrusResource
+    private TestCaseRunner t;
+
+    @Test
+    void shouldVerifyDemoApp() {
+        t.when(
+            send()
+                .endpoint(bookings)
+                .message()
+                .body("How about Citrus!?")
+        );
+
+        t.when(
+            receive()
+                .endpoint(bookings)
+                .message()
+                .body("Citrus rocks!")
+        );
+    }
+}
+----
+
+Creating new message endpoints is very easy. Just use the proper endpoint builder and optionally bind the new endpoint to the Citrus bean registry via `BindToRegistry` annotation.
+
+You may then use the message endpoint in all `send` and `receive` test actions in order to exchange messages.
