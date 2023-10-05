@@ -43,7 +43,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.VariableNullValueException;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.functions.FunctionUtils;
-import org.citrusframework.logger.LogModifier;
+import org.citrusframework.log.LogModifier;
 import org.citrusframework.message.DefaultMessageStore;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageDirection;
