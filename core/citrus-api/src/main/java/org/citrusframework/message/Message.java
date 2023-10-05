@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.logger.LogMessageModifier;
+import org.citrusframework.log.LogMessageModifier;
 import org.springframework.util.CollectionUtils;
 
 /**

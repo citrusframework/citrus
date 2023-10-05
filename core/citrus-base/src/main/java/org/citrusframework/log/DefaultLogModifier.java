@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.logger;
+package org.citrusframework.log;
 
 import java.util.Set;
 import java.util.regex.Pattern;
