@@ -16,17 +16,19 @@
 
 package org.citrusframework.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
@@ -52,40 +54,40 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
                 .jdbcTemplate(jdbcTemplate);
     }
 
-	@Test
-	public void testSQLExecutionWithInlineStatements() {
-	    List<String> stmts = new ArrayList<>();
-	    stmts.add(DB_STMT_1);
-	    stmts.add(DB_STMT_2);
+    @Test
+    public void testSQLExecutionWithInlineStatements() {
+        List<String> stmts = new ArrayList<>();
+        stmts.add(DB_STMT_1);
+        stmts.add(DB_STMT_2);
 
-	    executeSQLActionBuilder.statements(stmts);
+        executeSQLActionBuilder.statements(stmts);
 
-	    reset(jdbcTemplate);
-
-	    executeSQLActionBuilder.build().execute(context);
-
-	    verify(jdbcTemplate).execute(DB_STMT_1);
-	    verify(jdbcTemplate).execute(DB_STMT_2);
-	}
-
-	@Test
-	public void testSQLExecutionWithTransactions() {
-	    List<String> stmts = new ArrayList<>();
-	    stmts.add(DB_STMT_1);
-	    stmts.add(DB_STMT_2);
-
-	    executeSQLActionBuilder.statements(stmts);
-	    executeSQLActionBuilder.transactionManager(transactionManager);
-
-	    reset(jdbcTemplate, transactionManager);
+        reset(jdbcTemplate);
 
         executeSQLActionBuilder.build().execute(context);
 
-	    verify(jdbcTemplate).execute(DB_STMT_1);
-	    verify(jdbcTemplate).execute(DB_STMT_2);
-	}
+        verify(jdbcTemplate).execute(DB_STMT_1);
+        verify(jdbcTemplate).execute(DB_STMT_2);
+    }
 
-	@Test
+    @Test
+    public void testSQLExecutionWithTransactions() {
+        List<String> stmts = new ArrayList<>();
+        stmts.add(DB_STMT_1);
+        stmts.add(DB_STMT_2);
+
+        executeSQLActionBuilder.statements(stmts);
+        executeSQLActionBuilder.transactionManager(transactionManager);
+
+        reset(jdbcTemplate, transactionManager);
+
+        executeSQLActionBuilder.build().execute(context);
+
+        verify(jdbcTemplate).execute(DB_STMT_1);
+        verify(jdbcTemplate).execute(DB_STMT_2);
+    }
+
+    @Test
     public void testSQLExecutionWithFileResource() {
         executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-sql-statements.sql");
 
@@ -97,12 +99,12 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         verify(jdbcTemplate).execute(DB_STMT_2);
     }
 
-	@Test
+    @Test
     public void testSQLExecutionWithInlineScriptVariableSupport() {
-	    context.setVariable("resolvedStatus", "resolved");
-	    context.setVariable("version", "1");
+        context.setVariable("resolvedStatus", "resolved");
+        context.setVariable("version", "1");
 
-	    List<String> stmts = new ArrayList<>();
+        List<String> stmts = new ArrayList<>();
         stmts.add("DELETE * FROM ERRORS WHERE STATUS='${resolvedStatus}'");
         stmts.add("DELETE * FROM CONFIGURATION WHERE VERSION=${version}");
 
@@ -116,9 +118,9 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
         verify(jdbcTemplate).execute(DB_STMT_2);
     }
 
-	@Test
+    @Test
     public void testSQLExecutionWithFileResourceVariableSupport() {
-	    context.setVariable("resolvedStatus", "resolved");
+        context.setVariable("resolvedStatus", "resolved");
         context.setVariable("version", "1");
 
         executeSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-sql-with-variables.sql");
@@ -132,7 +134,6 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    @SuppressWarnings("serial")
     public void testSQLExecutionIgnoreErrors() {
         List<String> stmts = new ArrayList<>();
         stmts.add(DB_STMT_1);
@@ -143,14 +144,14 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 
         reset(jdbcTemplate);
 
-        doThrow(new DataAccessException("Something went wrong!") {}).when(jdbcTemplate).execute(DB_STMT_2);
+        doThrow(new DataAccessException("Something went wrong!") {
+        }).when(jdbcTemplate).execute(DB_STMT_2);
 
         executeSQLActionBuilder.build().execute(context);
         verify(jdbcTemplate).execute(DB_STMT_1);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
-    @SuppressWarnings("serial")
     public void testSQLExecutionErrorForwarding() {
         List<String> stmts = new ArrayList<>();
         stmts.add(DB_STMT_1);
@@ -161,9 +162,21 @@ public class ExecuteSQLActionTest extends AbstractTestNGUnitTest {
 
         reset(jdbcTemplate);
 
-        doThrow(new DataAccessException("Something went wrong!") {}).when(jdbcTemplate).execute(DB_STMT_2);
+        doThrow(new DataAccessException("Something went wrong!") {
+        }).when(jdbcTemplate).execute(DB_STMT_2);
 
         executeSQLActionBuilder.build().execute(context);
         verify(jdbcTemplate).execute(DB_STMT_1);
+    }
+
+    @Test
+    public void testNoJdbcTemplateConfigured() {
+        // Special ExecuteSQLQueryAction without a JdbcTemplate
+        executeSQLActionBuilder = new ExecuteSQLAction.Builder().jdbcTemplate(null);
+        executeSQLActionBuilder.statements(Collections.singletonList("statement"));
+
+        CitrusRuntimeException exception = Assert.expectThrows(CitrusRuntimeException.class, () -> executeSQLActionBuilder.build().execute(context));
+
+        Assert.assertEquals(exception.getMessage(), "No JdbcTemplate configured for sql execution!");
     }
 }

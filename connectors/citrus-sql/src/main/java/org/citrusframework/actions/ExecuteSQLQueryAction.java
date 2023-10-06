@@ -16,17 +16,6 @@
 
 package org.citrusframework.actions;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.sql.DataSource;
-
 import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
@@ -44,6 +33,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Action executes SQL queries and offers result set validation.
@@ -123,12 +123,6 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
             // fill the request test context variables (extract tag)
             fillContextVariables(columnValuesMap, context);
-
-            // legacy: save all columns as variables TODO: remove in major version upgrade
-            for (Entry<String, List<String>> column : columnValuesMap.entrySet()) {
-                List<String> columnValues = column.getValue();
-                context.setVariable(column.getKey().toUpperCase(), columnValues.get(0) == null ? NULL_VALUE : columnValues.get(0));
-            }
         } catch (DataAccessException e) {
             logger.error("Failed to execute SQL statement", e);
             throw new CitrusRuntimeException(e);
