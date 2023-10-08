@@ -11,7 +11,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>17</java.version>
 
-    <maven.version>3.8.4</maven.version>
+    <maven.version>3.9.5</maven.version>
     <maven.compiler.version>3.11.0</maven.compiler.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
     <maven.compiler.source>${java.version}</maven.compiler.source>
