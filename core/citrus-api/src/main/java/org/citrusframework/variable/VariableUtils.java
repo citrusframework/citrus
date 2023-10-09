@@ -24,7 +24,6 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.NoSuchVariableException;
-import org.springframework.util.StringUtils;
 
 /**
  * Utility class manipulating test variables.
@@ -66,7 +65,8 @@ public final class VariableUtils {
      * @return
      */
     public static String cutOffSingleQuotes(String variable) {
-        if (StringUtils.hasText(variable) && variable.length() > 1 && variable.charAt(0) == '\'' && variable.charAt(variable.length() - 1) == '\'') {
+        if (variable != null && !variable.isBlank() &&
+                variable.length() > 1 && variable.charAt(0) == '\'' && variable.charAt(variable.length() - 1) == '\'') {
             return variable.substring(1, variable.length() - 1);
         }
 
@@ -79,7 +79,8 @@ public final class VariableUtils {
      * @return
      */
     public static String cutOffDoubleQuotes(String variable) {
-        if (StringUtils.hasText(variable) && variable.length() > 1 && variable.charAt(0) == '"' && variable.charAt(variable.length() - 1) == '"') {
+        if (variable != null && !variable.isBlank() &&
+                variable.length() > 1 && variable.charAt(0) == '"' && variable.charAt(variable.length() - 1) == '"') {
             return variable.substring(1, variable.length() - 1);
         }
 

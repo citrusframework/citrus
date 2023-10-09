@@ -139,9 +139,9 @@ public final class MessageSupport {
 
                 if (message.body.builder.getFile() != null) {
                     if (message.body.builder.getCharset() != null) {
-                        scriptPayloadBuilder.get().setFile(FileUtils.getFileResource(message.body.builder.getFile() + FileUtils.FILE_PATH_CHARSET_PARAMETER + message.body.builder.getCharset()));
+                        scriptPayloadBuilder.get().setFile(message.body.builder.getFile(), message.body.builder.getCharset());
                     } else {
-                        scriptPayloadBuilder.get().setFile(FileUtils.getFileResource(message.body.builder.getFile()));
+                        scriptPayloadBuilder.get().setFile(message.body.builder.getFile());
                     }
                 }
 

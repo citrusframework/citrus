@@ -1,9 +1,6 @@
 package org.citrusframework.variable;
 
-import org.springframework.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -145,9 +142,9 @@ public class VariableExpressionSegmentMatcher {
         currentSegmentIndex = -1;
 
         if (matches) {
-            if (StringUtils.hasLength(matcher.group(JSON_PATH_GROUP))) {
+            if (!Optional.ofNullable(matcher.group(JSON_PATH_GROUP)).orElse("").isEmpty()) {
                 currentSegmentExpression = matcher.group(JSON_PATH_GROUP);
-            } else if (StringUtils.hasLength(matcher.group(XPATH_GROUP))) {
+            } else if (!Optional.ofNullable(matcher.group(XPATH_GROUP)).orElse("").isEmpty()) {
                 currentSegmentExpression = matcher.group(XPATH_GROUP);
             } else {
                 currentSegmentExpression = matcher.group(VAR_PROP_NAME_GROUP);

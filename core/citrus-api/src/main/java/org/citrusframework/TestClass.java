@@ -16,8 +16,6 @@
 
 package org.citrusframework;
 
-import org.springframework.util.StringUtils;
-
 /**
  * @author Christoph Deppisch
  * @since 2.7
@@ -95,7 +93,7 @@ public class TestClass {
         }
 
         TestClass test = new TestClass(className);
-        if (StringUtils.hasText(methodName)) {
+        if (methodName != null && !methodName.isBlank()) {
             test.setMethod(methodName);
         }
 

@@ -19,7 +19,6 @@ package org.citrusframework.functions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.variable.VariableUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Utility class for functions.
@@ -50,13 +49,13 @@ public final class FunctionUtils {
      */
     public static String replaceFunctionsInString(final String stringValue, TestContext context, boolean enableQuoting) {
         // make sure given string expression meets requirements for having a function
-        if (!StringUtils.hasText(stringValue) ||
+        if (stringValue == null || stringValue.isBlank() ||
                 (stringValue.indexOf(':') < 0) || (stringValue.indexOf('(') < 0) || (stringValue.indexOf(')') < 0) ) {
 
             // it is not a function, as it is defined as 'prefix:methodName(arguments)'
             return stringValue;
         }
-        
+
         String newString = stringValue;
         StringBuffer strBuffer = new StringBuffer();
 
@@ -130,7 +129,7 @@ public final class FunctionUtils {
         if (!functionExpression.contains("(") || !functionExpression.endsWith(")") || !functionExpression.contains(":")) {
             throw new InvalidFunctionUsageException("Unable to resolve function: " + functionExpression);
         }
-        
+
         String functionPrefix = functionExpression.substring(0, functionExpression.indexOf(':') + 1);
         String parameterString = functionExpression.substring(functionExpression.indexOf('(') + 1, functionExpression.length() - 1);
         String function = functionExpression.substring(functionPrefix.length(), functionExpression.indexOf('('));

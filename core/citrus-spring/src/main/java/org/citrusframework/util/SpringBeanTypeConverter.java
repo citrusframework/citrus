@@ -3,10 +3,16 @@ package org.citrusframework.util;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.SimpleTypeConverter;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -15,6 +21,9 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  */
 public final class SpringBeanTypeConverter extends DefaultTypeConverter {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(DefaultTypeConverter.class);
 
     public static SpringBeanTypeConverter INSTANCE = new SpringBeanTypeConverter();
 
@@ -25,7 +34,16 @@ public final class SpringBeanTypeConverter extends DefaultTypeConverter {
     }
 
     @Override
-    protected <T> T convertBefore(Object target, Class<T> type) {
+    protected <T> Optional<T> convertBefore(Object target, Class<T> type) {
+        if (Source.class.isAssignableFrom(type) &&
+                target.getClass().isAssignableFrom(InputStreamSource.class)) {
+            try {
+                return (Optional<T>) Optional.of(new StreamSource(((InputStreamSource)target).getInputStream()));
+            } catch (IOException e) {
+                logger.warn("Failed to create stream source from object", e);
+            }
+        }
+
         if (MultiValueMap.class.isAssignableFrom(type)) {
             String mapString = String.valueOf(target);
 
@@ -41,10 +59,10 @@ public final class SpringBeanTypeConverter extends DefaultTypeConverter {
                 map.add(entry.getKey().toString(), StringUtils.commaDelimitedListToStringArray(String.valueOf(arrayString)));
             }
 
-            return (T) map;
+            return (Optional<T>) Optional.of(map);
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override

@@ -26,7 +26,6 @@ import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch
@@ -62,5 +61,7 @@ public interface ScriptPayloadBuilder extends MessagePayloadBuilder {
 
     void setScript(String script);
 
-    void setFile(Resource file);
+    void setFile(String file);
+
+    void setFile(String file, String charset);
 }

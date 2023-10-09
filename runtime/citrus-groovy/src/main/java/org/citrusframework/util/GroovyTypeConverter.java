@@ -1,5 +1,7 @@
 package org.citrusframework.util;
 
+import java.util.Optional;
+
 import groovy.lang.GString;
 import org.codehaus.groovy.runtime.GStringImpl;
 
@@ -17,14 +19,14 @@ public final class GroovyTypeConverter extends DefaultTypeConverter {
     }
 
     @Override
-    protected <T> T convertBefore(Object target, Class<T> type) {
+    protected <T> Optional<T> convertBefore(Object target, Class<T> type) {
         if (GString.class.isAssignableFrom(type)) {
-            return (T) new GStringImpl(new Object[]{ target }, new String[] {"", ""});
+            return (Optional<T>) Optional.of(new GStringImpl(new Object[]{ target }, new String[] {"", ""}));
         } else if (GString.class.isAssignableFrom(target.getClass())) {
-            return super.convertIfNecessary(((GString) target).toString(), type);
+            return Optional.ofNullable(super.convertIfNecessary(((GString) target).toString(), type));
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override

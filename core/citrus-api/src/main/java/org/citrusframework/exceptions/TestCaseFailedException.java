@@ -16,22 +16,23 @@
 
 package org.citrusframework.exceptions;
 
-import org.springframework.util.StringUtils;
+import java.io.Serial;
 
 /**
- * Base exception marking failure of test case. Used to force failure of TestNG and JUnit 
+ * Base exception marking failure of test case. Used to force failure of TestNG and JUnit
  * test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class TestCaseFailedException extends CitrusRuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
      * Default constructor.
      */
     public TestCaseFailedException(Throwable cause) {
-        super(StringUtils.hasText(cause.getMessage()) ? cause.getMessage() : "Test case failed", cause);
+        super(cause.getMessage() != null &&  !cause.getMessage().isBlank() ? cause.getMessage() : "Test case failed", cause);
     }
 }

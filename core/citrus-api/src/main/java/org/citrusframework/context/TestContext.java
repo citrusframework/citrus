@@ -68,8 +68,6 @@ import org.citrusframework.variable.VariableUtils;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Class holding and managing test variables. The test context also provides utility methods
@@ -244,7 +242,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @throws CitrusRuntimeException
      */
     public void setVariable(final String variableName, Object value) {
-        if (!StringUtils.hasText(variableName) || VariableUtils.cutOffVariablesPrefix(variableName).length() == 0) {
+        if (variableName == null || variableName.isBlank() || VariableUtils.cutOffVariablesPrefix(variableName).isEmpty()) {
             throw new CitrusRuntimeException("Can not create variable '" + variableName + "', please define proper variable name");
         }
 
@@ -375,7 +373,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @return boolean flag to mark existence
      */
     public boolean hasVariables() {
-        return !CollectionUtils.isEmpty(variables);
+        return variables != null && !variables.isEmpty();
     }
 
     /**
@@ -886,7 +884,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @return
      */
     public boolean hasExceptions() {
-        return !CollectionUtils.isEmpty(getExceptions());
+        return !getExceptions().isEmpty();
     }
 
     /**

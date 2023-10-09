@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of control expression parser.
@@ -34,7 +33,7 @@ public class DefaultControlExpressionParser implements ControlExpressionParser {
         Character useDelimiter = delimiter != null ? delimiter : DEFAULT_DELIMITER;
         List<String> extractedParameters = new ArrayList<>();
 
-        if (StringUtils.hasText(controlExpression)) {
+        if (controlExpression != null && !controlExpression.isBlank()) {
             extractParameters(controlExpression, useDelimiter, extractedParameters, 0);
             if (extractedParameters.size() == 0) {
                 // if the controlExpression has text but no parameters were extracted, then assume that

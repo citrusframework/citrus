@@ -113,4 +113,8 @@ public interface TypeConverter {
      * @return
      */
     <T> T convertStringToType(String value, Class<T> type);
+
+    default String asNormalizedArrayString(Object target) {
+        return convertIfNecessary(target, String.class).replaceAll("^\\[", "").replaceAll("]$", "").replaceAll(",\\s", ",");
+    }
 }
