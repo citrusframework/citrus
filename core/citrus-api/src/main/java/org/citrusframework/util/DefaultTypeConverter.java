@@ -14,16 +14,12 @@ import java.util.Optional;
 import java.util.Properties;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.util.StreamUtils;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
 
 /**
@@ -42,9 +38,9 @@ public class DefaultTypeConverter implements TypeConverter {
             return type.cast(target);
         }
 
-        T result = convertBefore(target, type);
-        if (result != null) {
-            return result;
+        Optional<T> result = convertBefore(target, type);
+        if (result.isPresent()) {
+            return result.get();
         }
 
         if (Source.class.isAssignableFrom(type)) {
@@ -52,12 +48,6 @@ public class DefaultTypeConverter implements TypeConverter {
                 return (T) new StringSource(String.valueOf(target));
             } else if (target.getClass().isAssignableFrom(Node.class)) {
                 return (T) new DOMSource((Node) target);
-            } else if (target.getClass().isAssignableFrom(InputStreamSource.class)) {
-                try {
-                    return (T) new StreamSource(((InputStreamSource)target).getInputStream());
-                } catch (IOException e) {
-                    logger.warn("Failed to create stream source from object", e);
-                }
             }
         }
 
@@ -79,13 +69,13 @@ public class DefaultTypeConverter implements TypeConverter {
         }
 
         if (String[].class.isAssignableFrom(type)) {
-            String arrayString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("]$", "").replaceAll(",\\s", ",");
-            return (T) StringUtils.commaDelimitedListToStringArray(arrayString);
+            String arrayString = asNormalizedArrayString(target);
+            return (T) arrayString.split(",");
         }
 
         if (List.class.isAssignableFrom(type)) {
-            String listString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("]$", "").replaceAll(",\\s", ",");
-            return (T) Arrays.asList(StringUtils.commaDelimitedListToStringArray(listString));
+            String arrayString = asNormalizedArrayString(target);
+            return (T) Arrays.asList(arrayString.split(","));
         }
 
         if (byte[].class.isAssignableFrom(type)) {
@@ -99,7 +89,12 @@ public class DefaultTypeConverter implements TypeConverter {
                 return (T) ((ByteBuffer) target).array();
             } else if (target instanceof ByteArrayInputStream) {
                 try {
-                    return (T) StreamUtils.copyToByteArray((ByteArrayInputStream) target);
+                    InputStream is = ((ByteArrayInputStream) target);
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(is.available());
+                    while (is.available() > 0) {
+                        byteBuffer.put((byte) is.read());
+                    }
+                    return (T) byteBuffer.array();
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to convert input stream to byte[]");
                 }
@@ -215,8 +210,8 @@ public class DefaultTypeConverter implements TypeConverter {
         throw new CitrusRuntimeException(String.format("Unable to convert '%s' to required type '%s'", value, type.getName()));
     }
 
-    protected <T> T convertBefore(Object target, Class<T> type) {
-        return null;
+    protected <T> Optional<T> convertBefore(Object target, Class<T> type) {
+        return Optional.empty();
     }
 
     /**

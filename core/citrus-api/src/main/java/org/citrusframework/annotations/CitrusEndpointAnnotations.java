@@ -11,7 +11,6 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Dependency injection support for {@link CitrusEndpoint} endpoint annotations.
@@ -57,7 +56,8 @@ public abstract class CitrusEndpointAnnotations {
             ReferenceResolver referenceResolver = context.getReferenceResolver();
             if (endpointAnnotation.properties().length > 0) {
                 ReflectionUtils.setField(field, target, context.getEndpointFactory().create(getEndpointName(field), endpointAnnotation, field.getType(), context));
-            } else if (StringUtils.hasText(endpointAnnotation.name()) && referenceResolver.isResolvable(endpointAnnotation.name())) {
+            } else if (endpointAnnotation.name() != null && !endpointAnnotation.name().isBlank() &&
+                    referenceResolver.isResolvable(endpointAnnotation.name())) {
                 ReflectionUtils.setField(field, target, referenceResolver.resolve(endpointAnnotation.name(), field.getType()));
             } else if (referenceResolver.isResolvable(field.getName())) {
                 ReflectionUtils.setField(field, target, referenceResolver.resolve(field.getName(), field.getType()));
@@ -84,7 +84,9 @@ public abstract class CitrusEndpointAnnotations {
      * @return
      */
     private static String getEndpointName(Field field) {
-        if (field.getAnnotation(CitrusEndpoint.class) != null && StringUtils.hasText(field.getAnnotation(CitrusEndpoint.class).name())) {
+        if (field.getAnnotation(CitrusEndpoint.class) != null &&
+                field.getAnnotation(CitrusEndpoint.class).name() != null &&
+                !field.getAnnotation(CitrusEndpoint.class).name().isBlank()) {
             return field.getAnnotation(CitrusEndpoint.class).name();
         }
 

@@ -44,9 +44,9 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  */
 public class NamespaceTest extends UnitTestSupport {
-    private Endpoint endpoint = Mockito.mock(Endpoint.class);
-    private Consumer consumer = Mockito.mock(Consumer.class);
-    private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
+    private final Endpoint endpoint = Mockito.mock(Endpoint.class);
+    private final Consumer consumer = Mockito.mock(Consumer.class);
+    private final EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -396,7 +396,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
@@ -436,7 +436,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</ns1:element>"
                     + "</ns1:root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("ns1", "http://citrus/ns1");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
@@ -476,7 +476,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
 
@@ -517,7 +517,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
@@ -559,7 +559,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus/wrong");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
@@ -599,7 +599,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</ns1:element>"
                     + "</ns1:root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
@@ -639,7 +639,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus/default/wrong");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
 
@@ -680,7 +680,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
@@ -722,7 +722,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("nswrong", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
@@ -764,7 +764,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</ns0:element>"
                     + "</ns0:root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
@@ -806,7 +806,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("ns0", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
@@ -848,7 +848,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
@@ -891,7 +891,7 @@ public class NamespaceTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>"));
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
@@ -934,7 +934,7 @@ public class NamespaceTest extends UnitTestSupport {
 
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
         namespaces.put("ns1", "http://citrus/default");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
@@ -976,7 +976,7 @@ public class NamespaceTest extends UnitTestSupport {
 
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
         namespaces.put("pfx", "http://citrus/default");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
@@ -1018,7 +1018,7 @@ public class NamespaceTest extends UnitTestSupport {
 
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
 
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
         namespaces.put("pfx", "http://citrus/wrong");
 
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()

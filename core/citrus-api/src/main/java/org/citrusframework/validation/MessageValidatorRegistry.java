@@ -16,6 +16,12 @@
 
 package org.citrusframework.validation;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.NoSuchMessageValidatorException;
 import org.citrusframework.message.Message;
@@ -26,9 +32,6 @@ import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-
-import java.util.*;
 
 /**
  * Simple registry holding all available message validator implementations. Test context can ask this registry for
@@ -77,7 +80,7 @@ public class MessageValidatorRegistry {
         if (isEmptyOrDefault(matchingValidators)) {
             // try to find fallback message validator for given message payload
             if (message.getPayload() instanceof String &&
-                    StringUtils.hasText(message.getPayload(String.class))) {
+                    !message.getPayload(String.class).isBlank()) {
                 String payload = message.getPayload(String.class).trim();
 
                 if (payload.startsWith("<") && !messageType.equals(MessageType.XML.name())) {
@@ -90,7 +93,8 @@ public class MessageValidatorRegistry {
             }
         }
 
-        if (isEmptyOrDefault(matchingValidators) && !StringUtils.hasText(message.getPayload(String.class))) {
+        if (isEmptyOrDefault(matchingValidators) &&
+                (message.getPayload(String.class) == null || message.getPayload(String.class).isBlank())) {
             matchingValidators.add(defaultEmptyMessageValidator);
         }
 
@@ -253,7 +257,7 @@ public class MessageValidatorRegistry {
         if (matchingSchemaValidators.isEmpty()) {
             // try to find fallback message validator for given message payload
             if (message.getPayload() instanceof String &&
-                    StringUtils.hasText(message.getPayload(String.class))) {
+                    !message.getPayload(String.class).isBlank()) {
                 String payload = message.getPayload(String.class).trim();
 
                 if (IsXmlPredicate.getInstance().test(payload) && !messageType.equals(MessageType.XML.name())) {

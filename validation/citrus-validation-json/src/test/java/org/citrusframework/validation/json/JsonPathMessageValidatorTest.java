@@ -50,8 +50,8 @@ import static org.hamcrest.Matchers.startsWith;
  */
 public class JsonPathMessageValidatorTest extends UnitTestSupport {
 
-    private JsonPathMessageValidator validator = new JsonPathMessageValidator();
-    private String payload = "{ \"root\": {"
+    private final JsonPathMessageValidator validator = new JsonPathMessageValidator();
+    private final String payload = "{ \"root\": {"
                     + "\"element\": { \"attributeA\":\"attribute-value\",\"attributeB\":\"attribute-value\",\"sub-element\":\"text-value\" },"
                     + "\"text\": \"text-value\","
                     + "\"nullValue\": null,"
@@ -61,7 +61,7 @@ public class JsonPathMessageValidatorTest extends UnitTestSupport {
                     + "\"nerds\": [ {\"name\": \"Leonard\"}, {\"name\": \"Sheldon\"} ]"
             + "}}";
 
-    private Message message = new DefaultMessage(payload);
+    private final Message message = new DefaultMessage(payload);
 
     @Override
     protected TestContextFactory createTestContextFactory() {

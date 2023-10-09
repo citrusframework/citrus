@@ -6,7 +6,10 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,15 +26,11 @@ import java.util.zip.ZipInputStream;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 
 /**
  * Type resolver resolves references via resource path lookup. Provided resource paths should point to a resource in classpath
  * (e.g. META-INF/my/resource/path/file-name). The resolver will try to locate the resource as classpath resource and read the file as property
- * file. By default the resolver reads the default type resolver property {@link TypeResolver#DEFAULT_TYPE_PROPERTY} and instantiates a new instance
+ * file. By default, the resolver reads the default type resolver property {@link TypeResolver#DEFAULT_TYPE_PROPERTY} and instantiates a new instance
  * for the given type information.
  *
  * A possible property file content that represents the resource in classpath could look like this:
@@ -50,6 +49,9 @@ public class ResourcePathTypeResolver implements TypeResolver {
 
     /** Base path for resources */
     private final String resourceBasePath;
+
+    /** Resolver resolves all resources for a given path from classpath */
+    private final ClasspathResourceResolver classpathResourceResolver = new ClasspathResourceResolver();
 
     /** Zip entries as String, so the archive is read only once */
     private final List<String> zipEntriesAsString = Collections.synchronizedList(new ArrayList<>());
@@ -89,7 +91,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
                 return (T) getConstructor(Class.forName(type), initargs).newInstance(initargs);
             }
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
-                NoSuchMethodException | InvocationTargetException e) {
+                 NoSuchMethodException | InvocationTargetException e) {
 
             try {
                 if (Arrays.stream(Class.forName(type).getFields()).anyMatch(f -> f.getName().equals(INSTANCE) &&
@@ -107,45 +109,45 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     @Override
-    public <T> Map<String, T> resolveAll(String resourcePath, String property, String keyProperty) {
+    public <T> Map<String, T> resolveAll(String path, String property, String keyProperty) {
         Map<String, T> resources = new HashMap<>();
-        final String path = getFullResourcePath(resourcePath);
+        final String fullPath = getFullResourcePath(path);
 
         try {
             Stream.concat(
-                    Stream.of(new PathMatchingResourcePatternResolver().getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + path + "/*")),
+                    classpathResourceResolver.getResources(fullPath).stream().filter(Objects::nonNull),
                     resolveAllFromJar(path))
-                .forEach(file -> {
-                        Optional<String> resourceName = Optional.ofNullable(file.getFilename());
-                        if (resourceName.isEmpty()) {
-                            logger.warn(String.format("Skip unsupported resource '%s' for resource lookup", file));
+                    .forEach(resourcePath -> {
+                        Path fileName = resourcePath.getFileName();
+                        if (fileName == null) {
+                            logger.warn(String.format("Skip unsupported resource '%s' for resource lookup", resourcePath));
                             return;
                         }
 
                         if (property.equals(TYPE_PROPERTY_WILDCARD)) {
-                            Properties properties = readAsProperties(path + "/" + resourceName.get());
+                            Properties properties = readAsProperties(fullPath + "/" + fileName);
                             for (Map.Entry<Object, Object> prop : properties.entrySet()) {
-                                T resource = resolve(path + "/" + resourceName.get(), prop.getKey().toString());
-                                resources.put(resourceName.get() + "." + prop.getKey().toString(), resource);
+                                T resource = resolve(fullPath + "/" + fileName, prop.getKey().toString());
+                                resources.put(fileName + "." + prop.getKey().toString(), resource);
                             }
                         } else {
-                            T resource = resolve(path + "/" + resourceName.get(), property);
+                            T resource = resolve(fullPath + "/" + fileName, property);
 
                             if (keyProperty != null) {
-                                resources.put(resolveProperty(path + "/" + resourceName.get(), keyProperty), resource);
+                                resources.put(resolveProperty(fullPath + "/" + fileName, keyProperty), resource);
                             } else {
-                                resources.put(resourceName.get(), resource);
+                                resources.put(fileName.toString(), resource);
                             }
                         }
                     });
         } catch (IOException e) {
-            logger.warn(String.format("Failed to resolve resources in '%s'", path), e);
+            logger.warn(String.format("Failed to resolve resources in '%s'", fullPath), e);
         }
 
         return resources;
     }
 
-    private Stream<Resource> resolveAllFromJar(String path) {
+    private Stream<Path> resolveAllFromJar(String path) {
         String rootAsString = ResourcePathTypeResolver.class.getProtectionDomain().getCodeSource().getLocation().toString();
         ClassLoader classLoader = Objects.requireNonNull(ResourcePathTypeResolver.class.getClassLoader());
         if (rootAsString.endsWith(".jar") && !rootAsString.matches(".*" + File.separator + "citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar")) {
@@ -153,7 +155,15 @@ public class ResourcePathTypeResolver implements TypeResolver {
                 .filter(entry -> entry.startsWith(path))
                 .map(classLoader::getResource)
                 .filter(Objects::nonNull)
-                .map(UrlResource::new);
+                .map(entry -> {
+                    try {
+                        return Paths.get(entry.toURI());
+                    } catch (URISyntaxException e) {
+                        logger.warn(String.format("Failed resolve resource from jar '%s'", entry), e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull);
         }
         return Stream.of();
     }

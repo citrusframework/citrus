@@ -14,9 +14,6 @@ import org.citrusframework.common.TestLoader;
 import org.citrusframework.message.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -34,7 +31,7 @@ public final class CitrusSettings {
     private static final String APPLICATION_PROPERTY_FILE_PROPERTY = "citrus.application.properties";
     private static final String APPLICATION_PROPERTY_FILE_ENV = "CITRUS_APPLICATION_PROPERTIES";
     private static final String APPLICATION_PROPERTY_FILE = System.getProperty(APPLICATION_PROPERTY_FILE_PROPERTY, System.getenv(APPLICATION_PROPERTY_FILE_ENV) != null ?
-            System.getenv(APPLICATION_PROPERTY_FILE_ENV) : "classpath:citrus-application.properties");
+            System.getenv(APPLICATION_PROPERTY_FILE_ENV) : "citrus-application.properties");
 
     public  static final String OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY = "citrus.validation.outbound.schema.enabled";
     public static final String OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV = "CITRUS_VALIDATION_OUTBOUND_SCHEMA_ENABLED";
@@ -47,26 +44,28 @@ public final class CitrusSettings {
 
     /* Load application properties */
     static {
-        Resource appPropertiesResource = new PathMatchingResourcePatternResolver().getResource(APPLICATION_PROPERTY_FILE);
-        if (appPropertiesResource.exists()) {
-            try (final InputStream in = appPropertiesResource.getInputStream()) {
-                Properties applicationProperties = new Properties();
-                applicationProperties.load(in);
+        String applicationPropertiesFile = APPLICATION_PROPERTY_FILE;
+        if (applicationPropertiesFile.startsWith("classpath:")) {
+            applicationPropertiesFile = applicationPropertiesFile.substring("classpath:".length());
+        }
 
-                logger.debug("Loading Citrus application properties");
+        try (final InputStream in = CitrusSettings.class.getClassLoader().getResourceAsStream(applicationPropertiesFile)) {
+            Properties applicationProperties = new Properties();
+            applicationProperties.load(in);
 
-                for (Map.Entry<Object, Object> property : applicationProperties.entrySet()) {
-                    if (StringUtils.isEmpty(System.getProperty(property.getKey().toString()))) {
-                        logger.debug(String.format("Setting application property %s=%s", property.getKey(), property.getValue()));
-                        System.setProperty(property.getKey().toString(), property.getValue().toString());
-                    }
+            logger.debug("Loading Citrus application properties");
+
+            for (Map.Entry<Object, Object> property : applicationProperties.entrySet()) {
+                if (System.getProperty(property.getKey().toString(), "").isEmpty()) {
+                    logger.debug(String.format("Setting application property %s=%s", property.getKey(), property.getValue()));
+                    System.setProperty(property.getKey().toString(), property.getValue().toString());
                 }
-            } catch (Exception e) {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("Unable to locate Citrus application properties", e);
-                } else {
-                    logger.info("Unable to locate Citrus application properties");
-                }
+            }
+        } catch (Exception e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Unable to locate Citrus application properties", e);
+            } else {
+                logger.info("Unable to locate Citrus application properties");
             }
         }
     }
@@ -172,7 +171,7 @@ public final class CitrusSettings {
      * @return
      */
     public static Set<String> getGroovyTestFileNamePattern() {
-        return StringUtils.commaDelimitedListToSet(GROOVY_TEST_FILE_NAME_PATTERN);
+        return Stream.of(GROOVY_TEST_FILE_NAME_PATTERN.split(",")).collect(Collectors.toSet());
     }
 
     /**
@@ -180,7 +179,7 @@ public final class CitrusSettings {
      * @return
      */
     public static Set<String> getYamlTestFileNamePattern() {
-        return StringUtils.commaDelimitedListToSet(YAML_TEST_FILE_NAME_PATTERN);
+        return Stream.of(YAML_TEST_FILE_NAME_PATTERN.split(",")).collect(Collectors.toSet());
     }
 
     /**
@@ -188,7 +187,7 @@ public final class CitrusSettings {
      * @return
      */
     public static Set<String> getXmlTestFileNamePattern() {
-        return StringUtils.commaDelimitedListToSet(XML_TEST_FILE_NAME_PATTERN);
+        return Stream.of(XML_TEST_FILE_NAME_PATTERN.split(",")).collect(Collectors.toSet());
     }
 
     /**
@@ -196,7 +195,7 @@ public final class CitrusSettings {
      * @return
      */
     public static Set<String> getJavaTestFileNamePattern() {
-        return StringUtils.commaDelimitedListToSet(JAVA_TEST_FILE_NAME_PATTERN);
+        return Stream.of(JAVA_TEST_FILE_NAME_PATTERN.split(",")).collect(Collectors.toSet());
     }
 
     /**

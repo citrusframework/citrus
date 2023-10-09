@@ -16,14 +16,12 @@
 
 package org.citrusframework.message;
 
-import org.springframework.util.StringUtils;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 
 /**
  * Enumeration for supported message header types. Header values are able to define a type. In this case they
  * are typed header values. Message sender/receiver will try to set typed header values according to this.
- * 
+ *
  * @author Christoph Deppisch
  */
 public enum MessageHeaderType {
@@ -39,11 +37,11 @@ public enum MessageHeaderType {
     /** Identifying prefix and suffix for typed header values */
     public static final String TYPE_PREFIX = "{";
     public static final String TYPE_SUFFIX = "}:";
-    
+
     /** Properties */
     private String name;
     private Class<?> clazz;
-    
+
     /**
      * Default constructor using fields.
      * @param name
@@ -53,30 +51,30 @@ public enum MessageHeaderType {
         this.name = name;
         this.clazz = clazz;
     }
-    
+
     /**
      * Checks if this header value is typed with matching type prefix.
-     * 
+     *
      * @param headerValue
      * @return
      */
     public static boolean isTyped(String headerValue) {
-        if (!StringUtils.hasText(headerValue)) {
+        if (headerValue == null || headerValue.isBlank()) {
             return false;
         }
-        
+
         for (MessageHeaderType messageType: MessageHeaderType.values()) {
             if (headerValue.startsWith(TYPE_PREFIX + messageType.getName() + TYPE_SUFFIX)) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Creates a typed header value with type and value.
-     * 
+     *
      * @param type
      * @param value
      * @return
@@ -84,30 +82,30 @@ public enum MessageHeaderType {
     public static String createTypedValue(String type, String value) {
         return TYPE_PREFIX + type + TYPE_SUFFIX + value;
     }
-    
+
     /**
      * Try to find MessageHeaderType from a typed header value. The type definition
      * is located at the beginning of the header value with respective type definition
      * prefix and suffix.
-     * 
+     *
      * @param headerValue
      * @return
      */
     public static MessageHeaderType fromTypedValue(String headerValue) {
         String typeName = headerValue.substring(1, headerValue.indexOf(TYPE_SUFFIX));
-        
+
         for (MessageHeaderType messageType: MessageHeaderType.values()) {
             if (messageType.getName().equals(typeName)) {
                 return messageType;
             }
         }
-        
+
         throw new CitrusRuntimeException("Unknown message header type in header value " + headerValue);
     }
-    
+
     /**
      * Removes the type definition form a typed header value.
-     * 
+     *
      * @param headerValue
      * @return
      */

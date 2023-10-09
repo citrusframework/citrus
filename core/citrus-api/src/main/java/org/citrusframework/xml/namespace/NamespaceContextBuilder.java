@@ -16,16 +16,13 @@
 
 package org.citrusframework.xml.namespace;
 
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 
 import org.citrusframework.message.Message;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.util.xml.SimpleNamespaceContext;
 
 /**
  * Builds a namespace context for XPath expression evaluations. Builder supports default mappings
@@ -51,29 +48,29 @@ public class NamespaceContextBuilder {
      * @return the constructed namespace context.
      */
     public NamespaceContext buildContext(Message receivedMessage, Map<String, String> namespaces) {
-        SimpleNamespaceContext simpleNamespaceContext = new SimpleNamespaceContext();
+        DefaultNamespaceContext defaultNamespaceContext = new DefaultNamespaceContext();
 
         //first add default namespace definitions
         if (namespaceMappings.size() > 0) {
-            simpleNamespaceContext.setBindings(namespaceMappings);
+            defaultNamespaceContext.addNamespaces(namespaceMappings);
         }
 
         Map<String, String> dynamicBindings = lookupNamespaces(receivedMessage.getPayload(String.class));
-        if (!CollectionUtils.isEmpty(namespaces)) {
+        if (namespaces != null && !namespaces.isEmpty()) {
             //dynamic binding of namespaces declarations in root element of received message
             for (Entry<String, String> binding : dynamicBindings.entrySet()) {
                 //only bind namespace that is not present in explicit namespace bindings
                 if (!namespaces.containsValue(binding.getValue())) {
-                    simpleNamespaceContext.bindNamespaceUri(binding.getKey(), binding.getValue());
+                    defaultNamespaceContext.addNamespace(binding.getKey(), binding.getValue());
                 }
             }
             //add explicit namespace bindings
-            simpleNamespaceContext.setBindings(namespaces);
+            defaultNamespaceContext.addNamespaces(namespaces);
         } else {
-            simpleNamespaceContext.setBindings(dynamicBindings);
+            defaultNamespaceContext.addNamespaces(dynamicBindings);
         }
 
-        return simpleNamespaceContext;
+        return defaultNamespaceContext;
     }
 
     /**
@@ -101,11 +98,11 @@ public class NamespaceContextBuilder {
      * @return map containing namespace prefix - namespace uri pairs.
      */
     public static Map<String, String> lookupNamespaces(String xml) {
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
 
         //TODO: handle inner CDATA sections because namespaces they might interfere with real namespaces in xml fragment
-        if (xml.indexOf(XMLConstants.XMLNS_ATTRIBUTE) != -1) {
-            String[] tokens = StringUtils.split(xml, XMLConstants.XMLNS_ATTRIBUTE);
+        if (xml.contains(XMLConstants.XMLNS_ATTRIBUTE)) {
+            String[] tokens = xml.split(XMLConstants.XMLNS_ATTRIBUTE, 2);
 
             do {
                 String token = tokens[1];
@@ -117,7 +114,7 @@ public class NamespaceContextBuilder {
                     nsPrefix = XMLConstants.DEFAULT_NS_PREFIX;
                 } else {
                     //we have found a "xmlns" phrase that is no namespace attribute - ignore and continue
-                    tokens = StringUtils.split(token, XMLConstants.XMLNS_ATTRIBUTE);
+                    tokens = token.split(XMLConstants.XMLNS_ATTRIBUTE, 2);
                     continue;
                 }
 
@@ -131,8 +128,8 @@ public class NamespaceContextBuilder {
 
                 namespaces.put(nsPrefix, nsUri);
 
-                tokens = StringUtils.split(token, XMLConstants.XMLNS_ATTRIBUTE);
-            } while(tokens != null);
+                tokens = token.split(XMLConstants.XMLNS_ATTRIBUTE, 2);
+            } while(tokens.length > 1);
         }
 
         return namespaces;
