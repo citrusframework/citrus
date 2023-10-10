@@ -17,6 +17,7 @@
 package org.citrusframework.docker.command;
 
 import java.util.stream.Stream;
+import java.util.Arrays;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
