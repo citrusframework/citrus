@@ -19,6 +19,7 @@ package org.citrusframework.docker.actions;
 import java.io.File;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.List;
 
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.command.ContainerCreate;
@@ -56,6 +57,7 @@ import com.github.dockerjava.api.command.VersionCmd;
 import com.github.dockerjava.api.command.WaitContainerCmd;
 import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.model.BuildResponseItem;
+import com.github.dockerjava.api.model.ContainerConfig;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import com.github.dockerjava.api.model.WaitResponse;
@@ -66,10 +68,13 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import org.mockito.ArgumentCaptor;
 
 public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
@@ -192,6 +197,42 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_NAME), "my_container");
 
+    }
+    
+    @Test
+    public void testCreateWithEnvArgs() throws Exception {
+    	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
+    	when(client.getEndpointConfiguration().getDockerClient().createContainerCmd(anyString())).thenReturn(command);
+    	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
+    	response.setId(UUID.randomUUID().toString());
+    	when(command.exec()).thenReturn(response);
+    	when(response.getId()).thenReturn("1234");
+    	
+    	String[] containerEnvVars = {"VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"};
+    	
+    	reset(dockerClient, command);
+    	
+    	when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
+    	//when(command.exec()).thenReturn(response);
+    	
+    	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
+    		.client(client)
+    		.command(new ContainerCreate().image("image_create").env("VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"))
+    		.build();
+    	containerCreateAction.execute(context);
+    	
+    	ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+    	verify(command).withEnv(argumentCaptor.capture());
+    	List<String> capturedArguments = argumentCaptor.getAllValues();
+    	    	
+    	capturedArguments.forEach(e -> {
+    		System.out.println(e);
+    	});
+    	
+    	//Assert.assertEquals(containerInspectAction.getCommand().getCommandResult(), inspectResponse);
+    	Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
+    	Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_NAME), "my_container");
+    	
     }
 
     @Test
