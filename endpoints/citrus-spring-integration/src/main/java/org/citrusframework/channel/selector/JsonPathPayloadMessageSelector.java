@@ -19,8 +19,8 @@ package org.citrusframework.channel.selector;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.JsonPathUtils;
+import org.citrusframework.util.StringUtils;
 import org.springframework.messaging.Message;
-import org.springframework.util.StringUtils;
 
 /**
  * Message selector accepts JSON messages in case JsonPath expression evaluation result matches

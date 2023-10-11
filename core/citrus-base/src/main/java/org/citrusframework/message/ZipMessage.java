@@ -16,17 +16,22 @@
 
 package org.citrusframework.message;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
-
-import java.io.*;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
@@ -69,7 +74,23 @@ public class ZipMessage extends DefaultMessage {
         try {
             addEntry(new Entry(resource.getFile()));
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read zip entry content from given resource", e);
+            throw new CitrusRuntimeException(String.format("Failed to read zip entry content from given resource: %s", resource.getLocation()), e);
+        }
+        return this;
+    }
+
+    /**
+     * Adds new zip archive entry. Resource can be a file or directory. In case of directory all files will be automatically added
+     * to the zip archive. Directory structures are retained throughout this process.
+     *
+     * @param resource
+     * @return
+     */
+    public ZipMessage addEntry(Path resource) {
+        try {
+            addEntry(new Entry(resource.toFile()));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(String.format("Failed to read zip entry content from given resource: %s", resource), e);
         }
         return this;
     }
@@ -172,7 +193,7 @@ public class ZipMessage extends DefaultMessage {
                     entries.add(new Entry(child));
                 }
             } else {
-                this.content = FileCopyUtils.copyToByteArray(file);
+                this.content = FileUtils.copyToByteArray(file);
             }
         }
 

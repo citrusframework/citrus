@@ -24,7 +24,6 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlType;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Body part representation holds content as String and optional attachment parts.
@@ -129,7 +128,7 @@ public class BodyPart {
      * @return
      */
     public boolean hasAttachments() {
-        return attachments != null && !CollectionUtils.isEmpty(attachments.getAttachments());
+        return attachments != null && attachments.getAttachments() != null && !attachments.getAttachments().isEmpty();
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

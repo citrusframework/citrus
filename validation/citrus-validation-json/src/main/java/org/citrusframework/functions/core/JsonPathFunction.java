@@ -22,7 +22,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 import org.citrusframework.json.JsonPathUtils;
-import org.springframework.util.CollectionUtils;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +31,7 @@ public class JsonPathFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList)) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 

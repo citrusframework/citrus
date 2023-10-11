@@ -16,16 +16,17 @@
 
 package org.citrusframework.docs;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.generate.xml.XmlTestGenerator;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -34,7 +35,7 @@ public class HtmlTestDocsGeneratorTest {
 
     @BeforeClass
     public void createSampleIT() {
-        XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
+        TestGenerator<?> generator = new XmlTestGenerator<>()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .withName("SampleIT")
@@ -43,15 +44,15 @@ public class HtmlTestDocsGeneratorTest {
 
         generator.create();
     }
-    
+
     @Test
     public void testHtmlDocGeneration() throws IOException {
         HtmlTestDocsGenerator generator = HtmlTestDocsGenerator.build();
 
         generator.generateDoc();
-        
-        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
-        
+
+        String docContent = FileUtils.readToString(Resources.newFileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
+
         Assert.assertTrue(docContent.contains("<title>Citrus Test Documentation</title>"));
         Assert.assertTrue(docContent.contains("<img src=\"logo.png\" lowsrc=\"logo.png\" alt=\"Logo\"/>"));
         Assert.assertTrue(docContent.contains("<h1>Citrus Test Documentation</h1>"));
@@ -67,7 +68,7 @@ public class HtmlTestDocsGeneratorTest {
                                                         File.separator + "sample" +
                                                         File.separator + "SampleIT.xml\">SampleIT.xml</a>"));
     }
-    
+
     @Test
     public void testCustomizedHtmlDocGeneration() throws IOException {
         HtmlTestDocsGenerator generator = HtmlTestDocsGenerator.build()
@@ -77,9 +78,9 @@ public class HtmlTestDocsGeneratorTest {
                         .useSrcDirectory("src" + File.separator + "test" + File.separator);
 
         generator.generateDoc();
-        
-        String docContent = FileUtils.readToString(new FileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
-        
+
+        String docContent = FileUtils.readToString(Resources.newFileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
+
         Assert.assertTrue(docContent.contains("<title>CustomPageTitle</title>"));
         Assert.assertTrue(docContent.contains("<img src=\"test-logo.png\" lowsrc=\"test-logo.png\" alt=\"Logo\"/>"));
         Assert.assertTrue(docContent.contains("<h1>CustomPageTitle</h1>"));
@@ -94,6 +95,6 @@ public class HtmlTestDocsGeneratorTest {
                                                         File.separator + "citrusframework" +
                                                         File.separator + "sample" +
                                                         File.separator + "SampleIT.xml\">SampleIT.xml</a>"));
-        
+
     }
 }

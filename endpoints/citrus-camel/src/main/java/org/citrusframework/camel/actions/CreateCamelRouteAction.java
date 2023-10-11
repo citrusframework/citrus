@@ -26,11 +26,10 @@ import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -73,7 +72,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
                             CamelRouteContextFactoryBean.class, value.getClass()));
                 }
             } catch (JAXBException e) {
-                throw new BeanDefinitionStoreException("Failed to create the JAXB unmarshaller", e);
+                throw new CitrusRuntimeException("Failed to create the JAXB unmarshaller", e);
             }
         } else {
             routesToUse = routes;

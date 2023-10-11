@@ -8,14 +8,13 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.utils.CleanupUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 public class JavaDslTestGeneratorTest {
 
-    private final JavaDslTestGenerator generatorUnderTest = new JavaDslTestGenerator();
+    private final JavaDslTestGenerator<?> generatorUnderTest = new JavaDslTestGenerator<>();
     private final File testFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "/java/org/citrusframework/FooTest.java");
 
     private final CleanupUtils cleanupUtils = new CleanupUtils();
@@ -98,7 +97,7 @@ public class JavaDslTestGeneratorTest {
 
     private String loadTestFile() throws IOException {
         Assert.assertTrue(testFile.exists());
-        return FileUtils.readToString(new FileSystemResource(testFile));
+        return FileUtils.readToString(testFile);
     }
 
     private void assertContains(String haystack, String needle){

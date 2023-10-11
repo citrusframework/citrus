@@ -22,6 +22,11 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.ftp.model.Command;
 import org.citrusframework.ftp.model.CommandResult;
@@ -35,18 +40,13 @@ import org.citrusframework.ftp.model.ListCommandResult;
 import org.citrusframework.ftp.model.PutCommand;
 import org.citrusframework.ftp.model.PutCommandResult;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.StringResult;
 import org.citrusframework.xml.Unmarshaller;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * @author Christoph Deppisch
@@ -83,7 +83,7 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
      */
     public FtpMarshaller() {
         this.mapper = new ObjectMapper();
-        this.marshaller = new Jaxb2Marshaller(new ClassPathResource("org/citrusframework/schema/citrus-ftp-message.xsd"), classesToBeBound);
+        this.marshaller = new Jaxb2Marshaller(Resources.newClasspathResource("org/citrusframework/schema/citrus-ftp-message.xsd"), classesToBeBound);
 
         type = System.getProperty(JDBC_MARSHALLER_TYPE_PROPERTY, MessageType.XML.name());
 

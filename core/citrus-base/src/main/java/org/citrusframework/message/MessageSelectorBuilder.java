@@ -22,8 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.citrusframework.context.TestContext;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Constructs message selectors either from string value or from key value maps. Currently only AND logical combination
@@ -54,7 +53,7 @@ public class MessageSelectorBuilder {
     public static String build(String messageSelector, Map<String, Object> messageSelectorMap, TestContext context) {
         if (StringUtils.hasText(messageSelector)) {
             return context.replaceDynamicContentInString(messageSelector);
-        } else if (!CollectionUtils.isEmpty(messageSelectorMap)) {
+        } else if (messageSelectorMap != null && !messageSelectorMap.isEmpty()) {
             return MessageSelectorBuilder.fromKeyValueMap(
                     context.resolveDynamicValuesInMap(messageSelectorMap)).build();
         }

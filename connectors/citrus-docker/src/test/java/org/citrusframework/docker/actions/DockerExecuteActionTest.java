@@ -35,6 +35,7 @@ import org.citrusframework.docker.command.Info;
 import org.citrusframework.docker.command.Ping;
 import org.citrusframework.docker.command.Version;
 import org.citrusframework.docker.message.DockerMessageHeaders;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.BuildImageResultCallback;
@@ -61,7 +62,6 @@ import com.github.dockerjava.api.model.ResponseItem;
 import com.github.dockerjava.api.model.WaitResponse;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -387,7 +387,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction.Builder()
                 .client(client)
                 .command(new ImageBuild()
-                        .dockerFile(new ClassPathResource("org/citrusframework/docker/Dockerfile"))
+                        .dockerFile(Resources.newClasspathResource("org/citrusframework/docker/Dockerfile"))
                         .tag("new_image:latest"))
                 .build();
         action.execute(context);

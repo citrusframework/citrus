@@ -19,12 +19,11 @@ package org.citrusframework.generate.provider.http;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import com.squareup.javapoet.CodeBlock;
 import org.citrusframework.generate.provider.MessageCodeProvider;
 import org.citrusframework.http.message.HttpMessage;
-import com.squareup.javapoet.CodeBlock;
+import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 class HttpCodeProvider {
@@ -67,7 +66,7 @@ class HttpCodeProvider {
     }
 
     private void provideQueryParameter(final CodeBlock.Builder code, final HttpMessage message) {
-        if (!CollectionUtils.isEmpty(message.getQueryParams())) {
+        if (message.getQueryParams() != null && !message.getQueryParams().isEmpty()) {
             message.getQueryParams()
                     .forEach((key, values) ->
                             values.forEach(value ->

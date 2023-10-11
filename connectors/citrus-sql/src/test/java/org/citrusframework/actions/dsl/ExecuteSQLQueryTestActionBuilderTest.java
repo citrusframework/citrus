@@ -16,22 +16,22 @@
 
 package org.citrusframework.actions.dsl;
 
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestCase;
-import org.citrusframework.UnitTestSupport;
-import org.citrusframework.actions.ExecuteSQLQueryAction;
-import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.citrusframework.DefaultTestCaseRunner;
+import org.citrusframework.TestCase;
+import org.citrusframework.UnitTestSupport;
+import org.citrusframework.actions.ExecuteSQLQueryAction;
+import org.citrusframework.spi.Resources;
+import org.mockito.Mockito;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.ExecuteSQLQueryAction.Builder.query;
 import static org.mockito.Mockito.anyString;
@@ -60,7 +60,7 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport {
         builder.variable("episodeId", "citrus:randomNumber(5)");
 
         builder.$(query().jdbcTemplate(jdbcTemplate)
-                .sqlResource(new ClassPathResource("org/citrusframework/actions/dsl/query-script.sql"))
+                .sqlResource(Resources.newClasspathResource("org/citrusframework/actions/dsl/query-script.sql"))
                 .validate("NAME", "Leonard")
                 .validate("CNT_EPISODES", "100000")
                 .extract("NAME", "actorName")

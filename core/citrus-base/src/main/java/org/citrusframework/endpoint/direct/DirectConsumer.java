@@ -10,7 +10,7 @@ import org.citrusframework.message.selector.DelegatingMessageSelector;
 import org.citrusframework.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

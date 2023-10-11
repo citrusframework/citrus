@@ -7,7 +7,7 @@ import io.cucumber.core.backend.Backend;
 import io.cucumber.core.backend.BackendProviderService;
 import io.cucumber.core.backend.Container;
 import io.cucumber.core.backend.Lookup;
-import org.springframework.util.ClassUtils;
+import org.citrusframework.spi.Resources;
 
 /**
  * @author Christoph Deppisch
@@ -15,7 +15,7 @@ import org.springframework.util.ClassUtils;
 public class CitrusBackendProviderService implements BackendProviderService {
     @Override
     public Backend create(Lookup lookup, Container container, Supplier<ClassLoader> classLoader) {
-        if (ClassUtils.isPresent("org.citrusframework.CitrusSpringContext", getClass().getClassLoader())) {
+        if (Resources.newClasspathResource("org/citrusframework/CitrusSpringContext.class").exists()) {
             return new CitrusSpringBackend(lookup, container);
         } else {
             return new CitrusBackend(lookup, container);

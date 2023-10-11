@@ -23,7 +23,6 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.FileUtils;
-import org.springframework.util.FileCopyUtils;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
@@ -40,7 +39,7 @@ public class JmsGzipMessageJavaIT extends TestNGCitrusSpringSupport {
     public void jmsByteMessage() throws IOException {
         when(send("jms:queue:jms.gzip.queue")
                 .message(new DefaultMessage(
-                        FileCopyUtils.copyToByteArray(
+                        FileUtils.copyToByteArray(
                                 FileUtils.getFileResource("org/citrusframework/jms/integration/button.png")
                                  .getInputStream())))
                 .process(toGzip()));

@@ -1,8 +1,14 @@
 package org.citrusframework.config.xml;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.citrusframework.TestCase;
 import org.citrusframework.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.config.TestCaseFactory;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.variable.VariableUtils;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -10,14 +16,8 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Base test case for parsing the test case

@@ -28,9 +28,9 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.groovy.dsl.configuration.ConfigurationScript;
 import org.citrusframework.message.MessageQueue;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -43,7 +43,7 @@ public class ConfigurationScriptIT extends TestNGCitrusSpringSupport {
     @CitrusTest
     public void shouldRunConfigurationScript(@Optional @CitrusResource TestActionRunner runner,
                                        @Optional @CitrusResource TestContext context) throws IOException {
-        ConfigurationScript script = new ConfigurationScript(FileUtils.readToString(new ClassPathResource("org/citrusframework/groovy/dsl/configuration.groovy")), citrus);
+        ConfigurationScript script = new ConfigurationScript(FileUtils.readToString(Resources.newClasspathResource("org/citrusframework/groovy/dsl/configuration.groovy")), citrus);
         script.execute(context);
 
         Assert.assertTrue(context.getReferenceResolver().isResolvable("say-hello", MessageQueue.class));

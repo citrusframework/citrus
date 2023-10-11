@@ -44,13 +44,13 @@ import org.citrusframework.message.WithHeaderBuilder;
 import org.citrusframework.message.WithPayloadBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.VariableExtractorAdapter;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch

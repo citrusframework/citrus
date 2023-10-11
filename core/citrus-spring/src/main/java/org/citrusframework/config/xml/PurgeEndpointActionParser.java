@@ -24,6 +24,7 @@ import org.citrusframework.actions.PurgeEndpointAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -33,7 +34,6 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 

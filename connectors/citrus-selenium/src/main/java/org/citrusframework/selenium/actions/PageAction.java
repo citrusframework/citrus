@@ -25,9 +25,9 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.model.PageValidator;
 import org.citrusframework.selenium.model.WebPage;
+import org.citrusframework.util.ReflectionHelper;
+import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.support.PageFactory;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Initialize new page object and run optional validation. Page action is a method on page object that is called via reflection.
@@ -91,18 +91,18 @@ public class PageAction extends AbstractSeleniumAction {
                     ((PageValidator) pageToUse).validate(pageToUse, browser, context);
                 }
             } else {
-                ReflectionUtils.doWithMethods(pageToUse.getClass(), method -> {
+                ReflectionHelper.doWithMethods(pageToUse.getClass(), method -> {
                     if (method.getName().equals(action)) {
                         if (method.getParameterCount() == 0 && arguments.size() == 0) {
-                            ReflectionUtils.invokeMethod(method, pageToUse);
+                            ReflectionHelper.invokeMethod(method, pageToUse);
                         } else if (method.getParameterCount() == 1 && method.getParameters()[0].getParameterizedType().getTypeName().equals(TestContext.class.getName())) {
-                            ReflectionUtils.invokeMethod(method, pageToUse, context);
+                            ReflectionHelper.invokeMethod(method, pageToUse, context);
                         } else if (method.getParameterCount() == arguments.size()) {
-                            ReflectionUtils.invokeMethod(method, pageToUse, context.resolveDynamicValuesInList(arguments).toArray());
+                            ReflectionHelper.invokeMethod(method, pageToUse, context.resolveDynamicValuesInList(arguments).toArray());
                         } else if (method.getParameterCount() == arguments.size() + 1) {
                             Object[] args = Arrays.copyOf(arguments.toArray(), arguments.size() + 1);
                             args[arguments.size()] = context;
-                            ReflectionUtils.invokeMethod(method, pageToUse, context.resolveDynamicValuesInArray(args));
+                            ReflectionHelper.invokeMethod(method, pageToUse, context.resolveDynamicValuesInArray(args));
                         } else {
                             throw new CitrusRuntimeException("Unsupported method signature for page action - not matching given arguments");
                         }

@@ -17,7 +17,6 @@
 package org.citrusframework.rmi.server;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.rmi.Remote;
 import java.rmi.registry.Registry;
 import java.util.List;
@@ -28,13 +27,12 @@ import org.citrusframework.message.Message;
 import org.citrusframework.rmi.message.RmiMessage;
 import org.citrusframework.rmi.message.RmiMessageHeaders;
 import org.citrusframework.rmi.remote.HelloService;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.util.FileUtils;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -85,9 +83,10 @@ public class RmiServerTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(message.getHeader(RmiMessageHeaders.RMI_METHOD), "sayHello");
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("service-invocation.xml",
-                                RmiServer.class).getInputStream()))));
+                Assert.assertEquals(
+                    message.getPayload(String.class).replaceAll("\\s", ""),
+                    FileUtils.readToString(Resources.create("service-invocation.xml", RmiServer.class)).replaceAll("\\s", "")
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
@@ -129,15 +128,15 @@ public class RmiServerTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(message.getHeader(RmiMessageHeaders.RMI_METHOD), "getHelloCount");
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("service-invocation-2.xml",
-                                RmiServer.class).getInputStream()))));
+                Assert.assertEquals(
+                    message.getPayload(String.class).replaceAll("\\s", ""),
+                    FileUtils.readToString(Resources.create("service-invocation-2.xml", RmiServer.class)).replaceAll("\\s", "")
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
 
-            return new DefaultMessage(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("service-result.xml",
-                    RmiServer.class).getInputStream())));
+            return new DefaultMessage(FileUtils.readToString(Resources.create("service-result.xml", RmiServer.class)));
         }).when(endpointAdapter).handleMessage(any(Message.class));
 
         rmiServer.startup();

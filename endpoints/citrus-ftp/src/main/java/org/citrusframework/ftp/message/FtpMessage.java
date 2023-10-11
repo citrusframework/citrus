@@ -19,6 +19,9 @@ package org.citrusframework.ftp.message;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.net.ftp.FTPCmd;
+import org.apache.commons.net.ftp.FTPReply;
+import org.apache.ftpserver.ftplet.DataType;
 import org.citrusframework.ftp.model.Command;
 import org.citrusframework.ftp.model.CommandResult;
 import org.citrusframework.ftp.model.CommandResultType;
@@ -35,12 +38,9 @@ import org.citrusframework.ftp.model.PutCommandResult;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringResult;
 import org.citrusframework.xml.StringSource;
-import org.apache.commons.net.ftp.FTPCmd;
-import org.apache.commons.net.ftp.FTPReply;
-import org.apache.ftpserver.ftplet.DataType;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -53,7 +53,7 @@ public class FtpMessage extends DefaultMessage {
     private CommandType command;
     private CommandResultType commandResult;
 
-    private FtpMarshaller marshaller = new FtpMarshaller();
+    private final FtpMarshaller marshaller = new FtpMarshaller();
 
     /**
      * Constructs copy of given message.
@@ -122,7 +122,7 @@ public class FtpMessage extends DefaultMessage {
      * @return
      */
     public static FtpMessage put(String localPath, DataType type) {
-        return put(localPath, FileUtils.getFileResource(localPath).getFilename(), type);
+        return put(localPath, FileUtils.getFileName(FileUtils.getFileResource(localPath).getLocation()), type);
     }
 
     /**
@@ -163,7 +163,7 @@ public class FtpMessage extends DefaultMessage {
      * @return
      */
     public static FtpMessage get(String remotePath, DataType type) {
-        return get(remotePath, FileUtils.getFileResource(remotePath).getFilename(), type);
+        return get(remotePath, FileUtils.getFileName(FileUtils.getFileResource(remotePath).getLocation()), type);
     }
 
     /**

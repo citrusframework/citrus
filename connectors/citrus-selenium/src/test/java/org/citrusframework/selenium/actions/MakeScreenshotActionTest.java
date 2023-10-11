@@ -21,11 +21,11 @@ import java.io.File;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -51,7 +51,7 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecute() throws Exception {
-        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(new ClassPathResource("screenshot.png").getFile());
+        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(Resources.newClasspathResource("screenshot.png").getFile());
 
         MakeScreenshotAction action =  new MakeScreenshotAction.Builder()
                 .browser(seleniumBrowser)
@@ -65,7 +65,7 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteOutputDir() throws Exception {
-        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(new ClassPathResource("screenshot.png").getFile());
+        when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(Resources.newClasspathResource("screenshot.png").getFile());
 
         context.setVariable(CitrusSettings.TEST_NAME_VARIABLE, "MyTest");
 

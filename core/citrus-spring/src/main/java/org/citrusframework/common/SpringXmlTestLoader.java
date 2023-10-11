@@ -25,11 +25,11 @@ import org.citrusframework.TestCase;
 import org.citrusframework.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.util.StringUtils;
 
 /**
  * Loads test case as Spring bean from XML application context file. Loader holds application context file

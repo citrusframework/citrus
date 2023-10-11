@@ -30,13 +30,13 @@ public interface SchemaValidationContext {
 
     /**
      * Gets the schemaRepository.
-     * @return the schemaRepository the schemaRepository to get.
+     * @return the schemaRepository to get.
      */
     String getSchemaRepository();
 
     /**
      * Gets the schema.
-     * @return the schema the schema to get.
+     * @return the schema to get.
      */
     String getSchema();
 

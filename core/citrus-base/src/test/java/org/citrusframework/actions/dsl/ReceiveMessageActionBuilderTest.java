@@ -41,6 +41,7 @@ import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.AbstractValidationProcessor;
 import org.citrusframework.validation.TextEqualsMessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
@@ -54,7 +55,6 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -63,13 +63,7 @@ import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
 import static org.citrusframework.dsl.MessageSupport.message;
 import static org.citrusframework.validation.xml.XmlMessageValidationContext.Builder.xml;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch

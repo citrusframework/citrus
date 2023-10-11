@@ -16,17 +16,16 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 /**
- * Returns the smallest (closest to negative infinity) double value 
+ * Returns the smallest (closest to negative infinity) double value
  * according to the numeric argument.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class CeilingFunction implements Function {
@@ -36,7 +35,7 @@ public class CeilingFunction implements Function {
      * @throws InvalidFunctionUsageException
      */
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList)) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 

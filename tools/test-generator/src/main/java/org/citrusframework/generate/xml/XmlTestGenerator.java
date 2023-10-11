@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import javax.xml.namespace.QName;
 
 import jakarta.xml.bind.JAXBElement;
@@ -31,10 +30,10 @@ import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.javadsl.JavaTestGenerator;
 import org.citrusframework.model.testcase.core.EchoActionType;
 import org.citrusframework.model.testcase.core.ObjectFactory;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.StringResult;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch
@@ -78,7 +77,7 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
      */
     protected List<Resource> getMarshallerSchemas() {
         List<Resource> schemas = new ArrayList<>();
-        schemas.add(new ClassPathResource("org/citrusframework/schema/citrus-testcase.xsd"));
+        schemas.add(Resources.create("org/citrusframework/schema/citrus-testcase.xsd"));
         return schemas;
     }
 

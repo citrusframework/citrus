@@ -18,11 +18,10 @@ package org.citrusframework.generate.provider;
 
 import java.util.Optional;
 
+import com.squareup.javapoet.CodeBlock;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
-import com.squareup.javapoet.CodeBlock;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 public class MessageCodeProvider {
 
@@ -33,14 +32,13 @@ public class MessageCodeProvider {
     }
 
     private void provideMessage(final CodeBlock.Builder code, final Message message) {
-        if (StringUtils.hasText(message.getPayload(String.class))
-                || !CollectionUtils.isEmpty(message.getHeaders())) {
+        if (StringUtils.hasText(message.getPayload(String.class)) || !message.getHeaders().isEmpty()) {
             code.add(".message()\n", message.getPayload(String.class));
         }
     }
 
     private void provideHeader(final CodeBlock.Builder code, final Message message) {
-        if (!CollectionUtils.isEmpty(message.getHeaders())) {
+        if (!message.getHeaders().isEmpty()) {
             message.getHeaders().entrySet().stream()
                     .filter(entry -> !entry.getKey().startsWith(MessageHeaders.PREFIX))
                     .forEach(entry -> code.add(

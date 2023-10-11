@@ -26,7 +26,7 @@ import org.citrusframework.message.MessageProcessorAdapter;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.VariableExtractorAdapter;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Specialised Xml validation context adds XPath expression evaluation.

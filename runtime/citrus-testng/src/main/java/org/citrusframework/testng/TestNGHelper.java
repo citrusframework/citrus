@@ -22,6 +22,7 @@ package org.citrusframework.testng;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,14 +39,14 @@ import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.ReflectionHelper;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 
@@ -79,7 +80,7 @@ public final class TestNGHelper {
                                         TestLoader testLoader, TestContext context, int invocationCount) {
         Object[] params = TestNGParameterHelper.resolveParameter(target, testResult, method, context, invocationCount);
         testLoader.configureTestCase(t -> TestNGParameterHelper.injectTestParameters(method, t, params));
-        testLoader.doWithTestCase(t -> ReflectionUtils.invokeMethod(method, target, params));
+        testLoader.doWithTestCase(t -> ReflectionHelper.invokeMethod(method, target, params));
         testLoader.load();
     }
 
@@ -169,15 +170,15 @@ public final class TestNGHelper {
             Resource file = FileUtils.getFileResource(source);
 
             String sourceFilePackageName  = "";
-            if (source.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX)) {
-                sourceFilePackageName = source.substring(ResourceLoader.CLASSPATH_URL_PREFIX.length());
+            if (source.startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {
+                sourceFilePackageName = source.substring(Resources.CLASSPATH_RESOURCE_PREFIX.length());
             }
 
-            if (StringUtils.hasLength(sourceFilePackageName) && sourceFilePackageName.contains("/")) {
+            if (StringUtils.hasText(sourceFilePackageName) && sourceFilePackageName.contains("/")) {
                 sourceFilePackageName = sourceFilePackageName.substring(0, sourceFilePackageName.lastIndexOf("/"));
             }
 
-            TestLoader testLoader = provider.createTestLoader(FileUtils.getBaseName(file.getFilename()),
+            TestLoader testLoader = provider.createTestLoader(FileUtils.getBaseName(FileUtils.getFileName(file.getLocation())),
                     sourceFilePackageName.replace("/","."), type);
 
             if (testLoader instanceof TestSourceAware) {
@@ -191,9 +192,9 @@ public final class TestNGHelper {
         for (String packageScan : packagesToScan) {
             try {
                 for (String fileNamePattern : testFileNamePattern) {
-                    Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageScan.replace('.', File.separatorChar) + fileNamePattern);
-                    for (Resource fileResource : fileResources) {
-                        String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+                    Set<Path> fileResources = new ClasspathResourceResolver().getResources(packageScan.replace('.', File.separatorChar), fileNamePattern);
+                    for (Path fileResource : fileResources) {
+                        String filePath = fileResource.getParent().toFile().getCanonicalPath();
 
                         if (packageScan.startsWith("file:")) {
                             filePath = "file:" + filePath;
@@ -201,7 +202,8 @@ public final class TestNGHelper {
 
                         filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
-                        methodTestLoaders.add(provider.createTestLoader(FileUtils.getBaseName(fileResource.getFilename()), filePath, type));
+                        methodTestLoaders.add(provider.createTestLoader(
+                                FileUtils.getBaseName(String.valueOf(fileResource.getFileName())), filePath, type));
                     }
                 }
             } catch (RuntimeException | IOException e) {

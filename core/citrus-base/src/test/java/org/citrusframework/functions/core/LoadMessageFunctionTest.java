@@ -31,9 +31,9 @@ import org.testng.annotations.Test;
  */
 public class LoadMessageFunctionTest extends UnitTestSupport {
 
-    private LoadMessageFunction function = new LoadMessageFunction();
+    private final LoadMessageFunction function = new LoadMessageFunction();
 
-    private Message message = new DefaultMessage("This is a sample message")
+    private final Message message = new DefaultMessage("This is a sample message")
             .setHeader("operation", "sampleOperation");
 
     @Test

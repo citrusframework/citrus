@@ -27,18 +27,17 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystemNotFoundException;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,22 +50,51 @@ public class ClasspathResourceResolver {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(ClasspathResourceResolver.class);
 
-    public Set<Path> getResources(String path) throws IOException {
+    public Set<Path> getClasses(String path) throws IOException {
         Set<Path> resources = new LinkedHashSet<>(16);
         for (ClassLoader classLoader : getClassLoaders()) {
-            findResources(path, classLoader, resources);
+            findResources(path, classLoader, resources, name -> name.endsWith(".class"));
         }
         return resources;
     }
 
-    private void findResources(String path, ClassLoader classLoader, Set<Path> result) throws IOException {
+    public Set<Path> getResources(String path) throws IOException {
+        Set<Path> resources = new LinkedHashSet<>(16);
+
+        if (path.endsWith("/*")) {
+            path = path.substring(0, path.length() - 1);
+        } else if (path.endsWith(".*")) {
+            path = path.substring(0, path.length() - 2);
+        }
+
+        if (path.startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {
+            path = path.substring(Resources.CLASSPATH_RESOURCE_PREFIX.length());
+        }
+
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+
+        for (ClassLoader classLoader : getClassLoaders()) {
+            findResources(path, classLoader, resources, name -> !name.endsWith(".class"));
+        }
+        return resources;
+    }
+
+    public Set<Path> getResources(String path, String fileNamePattern) throws IOException {
+        return getResources(path).stream()
+                .filter(resource -> resource.getFileName().toString().matches(fileNamePattern))
+                .collect(Collectors.toSet());
+    }
+
+    private void findResources(String path, ClassLoader classLoader, Set<Path> result, Predicate<String> filter) throws IOException {
         String resourcePath;
         // If the URL is a jar, the URLClassloader.getResources() seems to require a trailing slash.  The
         // trailing slash is harmless for other URLs
         if (!path.isEmpty() && !path.endsWith("/")) {
-            resourcePath = path + "/";
+            resourcePath = path.replace(".", "/") + "/";
         } else {
-            resourcePath = path;
+            resourcePath = path.replace(".", "/");
         }
 
         Enumeration<URL> urls = classLoader.getResources(resourcePath);
@@ -83,24 +111,24 @@ public class ClasspathResourceResolver {
 
                 File file = new File(urlPath);
                 if (file.isDirectory()) {
-                    loadResourcesInDirectory(resourcePath, file, result);
+                    loadResourcesInDirectory(resourcePath, file, result, filter);
                 } else {
-                    loadResourcesInJar(classLoader, resourcePath, new FileInputStream(file), urlPath, result);
+                    loadResourcesInJar(classLoader, resourcePath, new FileInputStream(file), urlPath, result, filter);
                 }
             } catch (IOException e) {
-                logger.debug("Cannot read entries in url: {}", url, e);
+                logger.debug("Failed to read entries in url: {}", url, e);
             }
         }
     }
 
     private void loadResourcesInJar(ClassLoader classLoader, String path, FileInputStream jarInputStream,
-                                    String urlPath, Set<Path> resources) {
+                                    String urlPath, Set<Path> resources, Predicate<String> filter) {
         List<String> entries = new ArrayList<>();
         try (JarInputStream jarStream = new JarInputStream(jarInputStream);) {
             JarEntry entry;
             while ((entry = jarStream.getNextJarEntry()) != null) {
                 final String name = entry.getName().trim();
-                if (!entry.isDirectory() && !name.endsWith(".class")) {
+                if (!entry.isDirectory() && filter.test(name)) {
                     // name is FQN so it must start with package name
                     if (name.startsWith(path)) {
                         entries.add(name);
@@ -110,24 +138,18 @@ public class ClasspathResourceResolver {
 
             for (String name : entries) {
                 String shortName = name.substring(path.length());
-                logger.debug("Found resource: {}", shortName);
+                logger.trace("Found resource: {} in {}", shortName, urlPath);
                 URL url = classLoader.getResource(name);
-                if (url !=  null) {
-                    try {
-                        resources.add(Paths.get(url.toURI()));
-                    } catch (FileSystemNotFoundException ex) {
-                        // If the file system was not found, assume it's a custom file system that needs to be installed.
-                        FileSystems.newFileSystem(url.toURI(), Map.of(), classLoader);
-                        resources.add(Paths.get(url.toURI()));
-                    }
+                if (url != null) {
+                    resources.add(Paths.get(name));
                 }
             }
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             logger.warn("Cannot search jar file '{} due to an IOException: {}", urlPath, e.getMessage(), e);
         }
     }
 
-    private void loadResourcesInDirectory(String path, File location, Set<Path> result) {
+    private void loadResourcesInDirectory(String path, File location, Set<Path> result, Predicate<String> filter) {
         File[] files = location.listFiles();
         if (files == null || files.length == 0) {
             return;
@@ -136,16 +158,13 @@ public class ClasspathResourceResolver {
         StringBuilder builder;
         for (File file : files) {
             builder = new StringBuilder(100);
-            String name = file.getName();
-            name = name.trim();
-            builder.append(path).append(name);
-            String packageOrClass = path == null ? name : builder.toString();
+            String name = file.getName().trim();
 
             if (file.isDirectory()) {
-                loadResourcesInDirectory(packageOrClass, file, result);
-            } else if (file.isFile() && file.exists() && !name.endsWith(".class")) {
-                logger.debug("Found resource: {}", name);
-                result.add(Paths.get(file.toURI()));
+                loadResourcesInDirectory(builder.append(path).append(name).append("/").toString(), file, result, filter);
+            } else if (file.isFile() && file.exists() && filter.test(name)) {
+                logger.trace("Found resource: {} as {}", name, file.toURI());
+                result.add(Paths.get(builder.append(path).append(name).toString()));
             }
         }
     }

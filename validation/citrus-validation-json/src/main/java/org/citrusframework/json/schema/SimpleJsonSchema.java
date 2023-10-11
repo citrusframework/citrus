@@ -16,16 +16,16 @@
 
 package org.citrusframework.json.schema;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Objects;
+
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.core.io.Resource;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Objects;
+import org.citrusframework.spi.Resource;
 
 /**
  * Adapter between the resource reference from the bean configuration and the usable {@link SimpleJsonSchema} for
@@ -34,7 +34,7 @@ import java.util.Objects;
 public class SimpleJsonSchema implements InitializingPhase {
 
     /** Default json schema factory */
-    private JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
+    private final JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V4);
 
     /** The Resource of the json schema passed from the bean config */
     private Resource json;

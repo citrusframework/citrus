@@ -25,13 +25,13 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.FunctionRegistry;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.StringUtils;
 
 /**
  * Loads properties from an external property file and creates global test variables.
@@ -65,9 +65,12 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
         try {
             if (propertyFilesSet()) {
                 for (String propertyFilePath : propertyFiles) {
-                    Resource propertyFile = new PathMatchingResourcePatternResolver().getResource(propertyFilePath.trim());
-
-                    logger.debug("Reading property file " + propertyFile.getFilename());
+                    Resource propertyFile = Resources.create(propertyFilePath.trim());
+                    if (!propertyFile.exists()) {
+                        throw new CitrusRuntimeException(String.format("Error while loading property file %s - does not exist",
+                                propertyFile.getLocation()));
+                    }
+                    logger.debug("Reading property file " + propertyFile.getLocation());
 
                     // Use input stream as this also allows to read from resources in a JAR file
                     reader = new BufferedReader(new InputStreamReader(propertyFile.getInputStream()));
@@ -110,7 +113,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
                         context.setVariable(key, globalVariables.getVariables().get(key));
                     }
 
-                    logger.info("Loaded property file " + propertyFile.getFilename());
+                    logger.info("Loaded property file " + propertyFile.getLocation());
                 }
             }
         } catch (IOException e) {
@@ -131,8 +134,7 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
     }
 
     private boolean isPropertyLine(String line) {
-        return StringUtils.hasText(line) && !line.startsWith("#")
-                                && line.indexOf('=') > -1;
+        return StringUtils.hasText(line) && !line.startsWith("#") && line.indexOf('=') > -1;
     }
 
     /**

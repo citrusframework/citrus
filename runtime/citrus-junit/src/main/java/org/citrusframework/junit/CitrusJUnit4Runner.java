@@ -24,13 +24,13 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.annotations.CitrusXmlTest;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
 import org.junit.Test;
 import org.junit.internal.runners.statements.InvokeMethod;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
-import org.springframework.util.StringUtils;
 
 /**
  * JUnit runner reads Citrus test annotation for XML test cases and prepares test execution within proper Citrus

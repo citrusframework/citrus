@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
@@ -36,6 +37,7 @@ import org.citrusframework.http.model.FormMarshaller;
 import org.citrusframework.http.model.ObjectFactory;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
@@ -43,7 +45,6 @@ import org.citrusframework.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 /**
  * Validates x-www-form-urlencoded HTML form data content by marshalling form fields to Xml representation.
@@ -159,7 +160,7 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
             for (Map.Entry<String, List<Object>> entry : formValueMap.entrySet()) {
                 Control control = new ObjectFactory().createControl();
                 control.setName(entry.getKey());
-                control.setValue(StringUtils.arrayToCommaDelimitedString(entry.getValue().toArray()));
+                control.setValue(entry.getValue().stream().map(String::valueOf).collect(Collectors.joining(",")));
                 formData.addControl(control);
             }
         } else {

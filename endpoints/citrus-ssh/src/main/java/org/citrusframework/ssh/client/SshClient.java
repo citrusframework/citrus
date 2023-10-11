@@ -23,6 +23,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
+import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -33,18 +39,11 @@ import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.ReplyConsumer;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.ssh.model.SshRequest;
 import org.citrusframework.ssh.model.SshResponse;
 import org.citrusframework.util.FileUtils;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.UserInfo;
-import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.ResourceUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Ssh client connects to ssh server and sends commands to that server.
@@ -284,21 +283,22 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
             jsch.setKnownHosts(khIs);
         } catch (JSchException e) {
             throw new CitrusRuntimeException("Cannot add known hosts from " + getEndpointConfiguration().getKnownHosts() + ": " + e,e);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Cannot find known hosts file " + getEndpointConfiguration().getKnownHosts() + ": " + e,e);
         }
     }
 
     private String getPrivateKeyPath() throws IOException {
         if (!StringUtils.hasText(getEndpointConfiguration().getPrivateKeyPath())) {
             return null;
-        } else if (getEndpointConfiguration().getPrivateKeyPath().startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {
+        } else if (getEndpointConfiguration().getPrivateKeyPath().startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {
             File priv = File.createTempFile("citrus-ssh","priv");
-            InputStream is = getClass().getClassLoader().getResourceAsStream(getEndpointConfiguration().getPrivateKeyPath().substring(ResourceUtils.CLASSPATH_URL_PREFIX.length()));
-            if (is == null) {
-                throw new CitrusRuntimeException("No private key found at " + getEndpointConfiguration().getPrivateKeyPath());
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream(getEndpointConfiguration().getPrivateKeyPath().substring(Resources.CLASSPATH_RESOURCE_PREFIX.length()));
+                    FileOutputStream fos = new FileOutputStream(priv)) {
+                if (is == null) {
+                    throw new CitrusRuntimeException("No private key found at " + getEndpointConfiguration().getPrivateKeyPath());
+                }
+                fos.write(is.readAllBytes());
+                fos.flush();
             }
-            FileCopyUtils.copy(is, new FileOutputStream(priv));
             return priv.getAbsolutePath();
         } else {
             return getEndpointConfiguration().getPrivateKeyPath();

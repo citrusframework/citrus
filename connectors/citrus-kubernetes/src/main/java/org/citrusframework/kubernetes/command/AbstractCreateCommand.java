@@ -16,16 +16,20 @@
 
 package org.citrusframework.kubernetes.command;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.FileUtils;
-import io.fabric8.kubernetes.api.model.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import io.fabric8.kubernetes.api.model.Doneable;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 import io.fabric8.kubernetes.client.dsl.ClientResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
-
-import java.io.*;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

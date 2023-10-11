@@ -16,6 +16,13 @@
 
 package org.citrusframework.xml.schema;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
 import javax.wsdl.Definition;
 import javax.wsdl.Import;
 import javax.wsdl.Types;
@@ -29,27 +36,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Vector;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.xml.schema.locator.JarWSDLLocator;
 import com.ibm.wsdl.extensions.schema.SchemaImpl;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.xml.schema.locator.JarWSDLLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.xml.sax.InputSource;
 
 /**
@@ -86,13 +82,15 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
 
     @Override
     public Resource loadSchemaResources() {
-        Assert.notNull(wsdl, "wsdl file resource is required");
-        Assert.isTrue(wsdl.exists(), "wsdl file resource '" + wsdl + " does not exist");
+        ObjectHelper.assertNotNull(wsdl, "wsdl file resource is required");
+        if (!wsdl.exists()) {
+            throw new CitrusRuntimeException("wsdl file resource '" + wsdl + " does not exist");
+        }
 
         try {
             return loadSchemas(getWsdlDefinition(wsdl));
         } catch (Exception e) {
-            throw new BeanCreationException("Failed to load schema types from WSDL file", e);
+            throw new CitrusRuntimeException("Failed to load schema types from WSDL file", e);
         }
     }
 
@@ -124,7 +122,7 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
                         Result result = new StreamResult(bos);
 
                         TransformerFactory.newInstance().newTransformer().transform(source, result);
-                        Resource schemaResource = new ByteArrayResource(bos.toByteArray());
+                        Resource schemaResource = Resources.create(bos.toByteArray());
 
                         importedSchemas.add(getTargetNamespace(schema));
                         schemaResources.add(schemaResource);
@@ -151,11 +149,7 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
                     schemaLocation = definition.getDocumentBaseURI().substring(0, definition.getDocumentBaseURI().lastIndexOf('/') + 1) + wsdlImport.getLocationURI();
                 }
 
-                if (schemaLocation.startsWith("jar:")) {
-                    loadSchemas(getWsdlDefinition(new UrlResource(schemaLocation)));
-                } else {
-                    loadSchemas(getWsdlDefinition(new FileSystemResource(schemaLocation)));
-                }
+                loadSchemas(getWsdlDefinition(Resources.create(schemaLocation)));
             }
         }
 
@@ -163,7 +157,7 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
             // Obviously no schema resource in WSDL did match the targetNamespace, just use the first schema resource found as main schema
             if (firstSchemaInWSDL != null) {
                 targetXsd = firstSchemaInWSDL;
-            } else if (!CollectionUtils.isEmpty(schemaResources)) {
+            } else if (!schemaResources.isEmpty()) {
                 targetXsd = schemaResources.get(0);
             }
         }
@@ -211,8 +205,6 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
             }
 
             return definition;
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read wsdl file resource", e);
         } catch (WSDLException e) {
             throw new CitrusRuntimeException("Failed to wsdl schema instance", e);
         }

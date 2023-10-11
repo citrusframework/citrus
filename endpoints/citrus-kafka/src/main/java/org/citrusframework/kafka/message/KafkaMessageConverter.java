@@ -19,15 +19,15 @@ package org.citrusframework.kafka.message;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kafka.endpoint.KafkaEndpointConfiguration;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.core.io.Resource;
 
 /**
  * Basic message converter for converting Spring Integration message implementations to Kafka

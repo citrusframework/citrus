@@ -18,6 +18,7 @@ package org.citrusframework.jms.endpoint;
 
 import java.util.Objects;
 
+import jakarta.jms.*;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ReplyMessageTimeoutException;
@@ -26,14 +27,13 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.correlation.CorrelationManager;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyConsumer;
-import jakarta.jms.*;
+import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -70,7 +70,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     @Override
     public void send(Message message, TestContext context) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
+        ObjectHelper.assertNotNull(message, "Message is empty - unable to send empty message");
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);

@@ -16,6 +16,8 @@
 
 package org.citrusframework.config;
 
+import java.util.Set;
+
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.DefaultEndpointFactory;
@@ -30,6 +32,7 @@ import org.citrusframework.report.TestListenersFactory;
 import org.citrusframework.report.TestSuiteListenersFactory;
 import org.citrusframework.reporter.ReporterConfig;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ResourceConverter;
 import org.citrusframework.util.SpringBeanTypeConverter;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.MessageValidatorConfig;
@@ -40,6 +43,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.support.ConversionServiceFactoryBean;
 
 /**
  * @author Christoph Deppisch
@@ -117,5 +121,13 @@ public class CitrusSpringConfig {
     @Bean(name = "citrusVariableExtractorRegistry")
     public SegmentVariableExtractorRegistry variableExtractorRegistry() {
         return new SegmentVariableExtractorRegistry();
+    }
+
+    @Bean(name = "conversionService")
+    public ConversionServiceFactoryBean conversionService() {
+        ConversionServiceFactoryBean conversionServiceFactoryBean = new ConversionServiceFactoryBean();
+        conversionServiceFactoryBean.setConverters(Set.of(new ResourceConverter()));
+
+        return conversionServiceFactoryBean;
     }
 }

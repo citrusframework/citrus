@@ -18,13 +18,13 @@ package org.citrusframework.http.actions;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
-import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * Action executes http server operations such as receiving requests and sending response messages.
@@ -285,7 +285,7 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
 
     @Override
     public TestAction build() {
-        Assert.notNull(delegate, "Missing delegate action to build");
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         return delegate.build();
     }
 

@@ -27,23 +27,22 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 
+import jakarta.xml.soap.MimeHeaders;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.message.MessageHeaders;
+import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.message.SoapMessageHeaders;
 import org.citrusframework.xml.StringSource;
-import jakarta.xml.soap.MimeHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.MimeMessage;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
@@ -94,7 +93,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @throws CitrusRuntimeException
      */
     public void invoke(final MessageContext messageContext) throws Exception {
-        Assert.notNull(messageContext.getRequest(), "Request must not be null - unable to send message");
+        ObjectHelper.assertNotNull(messageContext.getRequest(), "Request must not be null - unable to send message");
 
         Message requestMessage = endpointConfiguration.getMessageConverter().convertInbound(messageContext.getRequest(), messageContext, endpointConfiguration);
 
@@ -158,7 +157,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @throws IOException
      */
     private boolean simulateHttpStatusCode(Message replyMessage) throws IOException {
-        if (replyMessage == null || CollectionUtils.isEmpty(replyMessage.getHeaders())) {
+        if (replyMessage == null || replyMessage.getHeaders() == null || replyMessage.getHeaders().isEmpty()) {
             return false;
         }
 

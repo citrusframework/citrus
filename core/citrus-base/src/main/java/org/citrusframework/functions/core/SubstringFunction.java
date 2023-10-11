@@ -16,20 +16,20 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Function implements simple substring functionality.
- * 
+ *
  * Function requires at least a target string and a beginIndex as function parameters. A
- * optional endIndex may be given as function parameter, too. The parameter usage looks 
+ * optional endIndex may be given as function parameter, too. The parameter usage looks
  * like this: substring(targetString, beginIndex, [endIndex]).
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SubstringFunction implements Function {
@@ -51,7 +51,7 @@ public class SubstringFunction implements Function {
         if (!StringUtils.hasText(beginIndex)) {
             throw new InvalidFunctionUsageException("Invalid beginIndex - please check function parameters");
         }
-        
+
         if (parameterList.size() > 2) {
             endIndex = parameterList.get(2);
         }

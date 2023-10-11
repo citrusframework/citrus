@@ -19,9 +19,9 @@ package org.citrusframework.websocket.endpoint;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
+import org.citrusframework.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 import org.springframework.web.socket.WebSocketMessage;
 
 /**
@@ -51,7 +51,7 @@ public class WebSocketProducer implements Producer {
 
     @Override
     public void send(Message message, TestContext context) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
+        ObjectHelper.assertNotNull(message, "Message is empty - unable to send empty message");
 
         logger.info("Sending WebSocket message ...");
 

@@ -24,7 +24,6 @@ import org.citrusframework.util.XMLUtils;
 import org.citrusframework.ws.message.SoapFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Abstract implementation of {@link SoapFaultValidator} converting soap fault detail objects to simple String content for
@@ -62,7 +61,7 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
             String controlDetailString = controlDetailElements.get(i);
 
             SoapFaultDetailValidationContext detailValidationContext;
-            if (CollectionUtils.isEmpty(validationContext.getValidationContexts())) {
+            if (validationContext.getValidationContexts() == null || validationContext.getValidationContexts().isEmpty()) {
                 detailValidationContext = new SoapFaultDetailValidationContext.Builder().build();
             } else {
                 detailValidationContext = validationContext.getValidationContexts().get(i++);

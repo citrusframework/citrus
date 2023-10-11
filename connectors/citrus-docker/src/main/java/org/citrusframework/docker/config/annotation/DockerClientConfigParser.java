@@ -20,7 +20,7 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.client.DockerClientBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

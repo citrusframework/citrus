@@ -25,10 +25,10 @@ import java.util.concurrent.Executors;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.integration.common.FileHelper;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SocketUtils;
 import com.sun.net.httpserver.HttpServer;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -96,7 +96,7 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport {
     public void waitFile() throws IOException {
         run(waitFor()
                 .file()
-                .resource(new ClassPathResource("citrus.properties").getFile()));
+                .resource(Resources.newClasspathResource("citrus.properties").getFile()));
     }
 
     @CitrusTest

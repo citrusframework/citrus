@@ -19,15 +19,15 @@ package org.citrusframework.ws.config.xml;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.AbstractServerParser;
 import org.citrusframework.server.AbstractServer;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**
  * Parser for jetty-server component in Citrus ws namespace.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class WebServiceServerParser extends AbstractServerParser {
@@ -45,7 +45,7 @@ public class WebServiceServerParser extends AbstractServerParser {
         if (StringUtils.hasText(useRootContext)) {
             builder.addPropertyValue("useRootContextAsParent", Boolean.valueOf(useRootContext));
         }
-        
+
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-name"), "servletName");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-mapping-path"), "servletMappingPath");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("context-path"), "contextPath");

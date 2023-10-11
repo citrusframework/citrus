@@ -23,7 +23,6 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -34,7 +33,7 @@ public class MessagingJavaTestGeneratorTest {
 
     @Test
     public void testCreateTest() throws IOException {
-        MessagingJavaTestGenerator generator = new MessagingJavaTestGenerator();
+        MessagingJavaTestGenerator<?> generator = new MessagingJavaTestGenerator<>();
 
         generator.withAuthor("Christoph")
                  .withDescription("This is a sample test")
@@ -50,7 +49,7 @@ public class MessagingJavaTestGeneratorTest {
         File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/SampleReqResIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
+        String javaContent = FileUtils.readToString(javaFile);
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class SampleReqResIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));

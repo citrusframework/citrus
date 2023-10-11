@@ -21,10 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Abstract suit container actions executed before and after test suite run. Container decides
@@ -60,7 +59,7 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
         String baseErrorMessage = "Skip before/after suite container because of %s restriction - do not execute container '%s'";
 
         if (StringUtils.hasText(suiteName) &&
-                !CollectionUtils.isEmpty(suiteNames) && ! suiteNames.contains(suiteName)) {
+                suiteNames != null && !suiteNames.isEmpty() && !suiteNames.contains(suiteName)) {
             logger.warn(String.format(baseErrorMessage, "suite name", getName()));
             return false;
         }

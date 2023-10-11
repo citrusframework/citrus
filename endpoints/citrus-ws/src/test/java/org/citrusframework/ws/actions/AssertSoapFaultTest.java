@@ -16,10 +16,10 @@
 
 package org.citrusframework.ws.actions;
 
+import java.util.Locale;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import java.util.Locale;
 
 import org.citrusframework.TestAction;
 import org.citrusframework.context.SpringBeanReferenceResolver;
@@ -155,7 +155,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
         assertAction.execute(context);
     }
 
-    @Test
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "SOAP fault validation failed! Fault code does not match - expected: '\\{http://citrusframework.org}TEC-1001' but was: '\\{http://citrusframework.org}TEC-2002'")
     public void testWrongFaultCode() throws Exception {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
@@ -175,17 +175,10 @@ public class AssertSoapFaultTest extends UnitTestSupport {
                 .faultCode("{http://citrusframework.org}ws:TEC-1001")
                 .faultString("Internal server error")
                 .build();
-        try {
-            assertAction.execute(context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "SOAP fault validation failed! Fault code does not match - expected: '{http://citrusframework.org}TEC-1001' but was: '{http://citrusframework.org}TEC-2002'");
-            return;
-        }
-
-        Assert.fail("Missing validation exception");
+        assertAction.execute(context);
     }
 
-    @Test
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "SOAP fault validation failed! Fault actor does not match - expected: 'SERVER' but was: 'CLIENT'")
     public void testWrongFaultActor() throws Exception {
         TestAction action = action(context -> {
             SoapMessage faultMessage;
@@ -208,14 +201,7 @@ public class AssertSoapFaultTest extends UnitTestSupport {
                 .faultCode("{http://citrusframework.org}ws:TEC-1001")
                 .faultString("Internal server error")
                 .build();
-        try {
-            assertAction.execute(context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "SOAP fault validation failed! Fault actor does not match - expected: 'SERVER' but was: 'CLIENT'");
-            return;
-        }
-
-        Assert.fail("Missing validation exception");
+        assertAction.execute(context);
     }
 
     @Test

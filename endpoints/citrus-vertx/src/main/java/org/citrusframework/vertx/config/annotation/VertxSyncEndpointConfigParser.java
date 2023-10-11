@@ -20,11 +20,11 @@ import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.vertx.endpoint.VertxSyncEndpoint;
 import org.citrusframework.vertx.endpoint.VertxSyncEndpointBuilder;
 import org.citrusframework.vertx.factory.VertxInstanceFactory;
 import org.citrusframework.vertx.message.VertxMessageConverter;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

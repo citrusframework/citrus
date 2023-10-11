@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.servlet.Filter;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.context.ParentDelegatingWebApplicationContext;
@@ -31,7 +32,7 @@ import org.citrusframework.http.servlet.GzipServletFilter;
 import org.citrusframework.http.servlet.RequestCachingServletFilter;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.server.AbstractServer;
-import jakarta.servlet.Filter;
+import org.citrusframework.util.StringUtils;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -47,8 +48,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.ServletMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -186,7 +185,7 @@ public class HttpServer extends AbstractServer {
                 servletHandler.addFilter(filterHolder, filterMapping);
             }
 
-            if (CollectionUtils.isEmpty(filters)) {
+            if (filters == null || filters.isEmpty()) {
                 addRequestCachingFilter();
                 addGzipFilter();
             }

@@ -21,7 +21,6 @@ import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 import io.fabric8.kubernetes.client.dsl.ClientResource;
-import org.springframework.util.CollectionUtils;
 
 /**
  * @author Christoph Deppisch
@@ -53,7 +52,7 @@ public abstract class AbstractDeleteCommand<D extends DeleteResult, R extends Ku
             success = operation.delete();
         } else {
             KubernetesResourceList items = operation.list();
-            if (!CollectionUtils.isEmpty(items.getItems())) {
+            if (items.getItems()!= null && !items.getItems().isEmpty()) {
                 success = operation.delete(items.getItems());
             } else {
                 success = false;

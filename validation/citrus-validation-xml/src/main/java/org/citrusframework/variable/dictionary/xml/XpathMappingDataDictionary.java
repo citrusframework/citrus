@@ -16,20 +16,20 @@
 
 package org.citrusframework.variable.dictionary.xml;
 
+import java.util.Map;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPathConstants;
-import java.util.Map;
 
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.variable.dictionary.DataDictionary;
+import org.citrusframework.xml.namespace.DefaultNamespaceContext;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.xml.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -92,13 +92,13 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
      * @return
      */
     private NamespaceContext buildNamespaceContext(Node node, TestContext context) {
-        SimpleNamespaceContext simpleNamespaceContext = new SimpleNamespaceContext();
+        DefaultNamespaceContext simpleNamespaceContext = new DefaultNamespaceContext();
         Map<String, String> namespaces = XMLUtils.lookupNamespaces(node.getOwnerDocument());
 
         // add default namespace mappings
         namespaces.putAll(getNamespaceContextBuilder(context).getNamespaceMappings());
 
-        simpleNamespaceContext.setBindings(namespaces);
+        simpleNamespaceContext.addNamespaces(namespaces);
 
         return simpleNamespaceContext;
     }

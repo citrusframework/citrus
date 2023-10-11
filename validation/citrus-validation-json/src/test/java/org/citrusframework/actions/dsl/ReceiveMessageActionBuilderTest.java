@@ -16,6 +16,12 @@
 
 package org.citrusframework.actions.dsl;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
 import org.citrusframework.DefaultTestCaseRunner;
@@ -37,6 +43,7 @@ import org.citrusframework.message.builder.ObjectMappingPayloadBuilder;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
@@ -47,15 +54,8 @@ import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
-import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.dsl.JsonPathSupport.jsonPath;
@@ -65,11 +65,7 @@ import static org.citrusframework.dsl.PathExpressionSupport.path;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch

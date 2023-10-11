@@ -18,14 +18,14 @@ package org.citrusframework.xml.schema;
 
 import java.util.List;
 
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 import org.springframework.xml.xsd.XsdSchema;
 
 
 /**
  * Mapping strategy checks on target namespaces in schemas to find matching schema
  * instance.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class TargetNamespaceSchemaMappingStrategy extends AbstractSchemaMappingStrategy {
@@ -33,12 +33,12 @@ public class TargetNamespaceSchemaMappingStrategy extends AbstractSchemaMappingS
     @Override
     public XsdSchema getSchema(List<XsdSchema> schemas, String namespace, String elementName) {
         for (XsdSchema schema : schemas) {
-            if (StringUtils.hasText(schema.getTargetNamespace()) && 
+            if (StringUtils.hasText(schema.getTargetNamespace()) &&
                     schema.getTargetNamespace().equals(namespace)) {
                 return schema;
             }
         }
-        
+
         return null;
     }
 }

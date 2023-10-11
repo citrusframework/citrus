@@ -17,8 +17,8 @@
 package org.citrusframework.integration.actions;
 
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
@@ -51,8 +51,8 @@ public class TransformActionJavaIT extends TestNGCitrusSpringSupport {
         run(echo("${result}"));
 
         run(transform()
-            .source(new ClassPathResource("org/citrusframework/integration/actions/transform-source.xml"))
-            .xslt(new ClassPathResource("org/citrusframework/integration/actions/transform.xslt"))
+            .source(Resources.newClasspathResource("org/citrusframework/integration/actions/transform-source.xml"))
+            .xslt(Resources.newClasspathResource("org/citrusframework/integration/actions/transform.xslt"))
             .result("result"));
 
 

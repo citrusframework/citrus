@@ -16,6 +16,12 @@
 
 package org.citrusframework.jmx.client;
 
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.util.Collections;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import javax.management.Attribute;
 import javax.management.InstanceNotFoundException;
 import javax.management.JMException;
@@ -29,12 +35,6 @@ import javax.management.remote.JMXConnectionNotification;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.util.Collections;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
@@ -50,9 +50,9 @@ import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.ReplyConsumer;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -64,7 +64,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
     private static final Logger logger = LoggerFactory.getLogger(JmxClient.class);
 
     /** Store of reply messages */
-    private CorrelationManager<Message> correlationManager;
+    private final CorrelationManager<Message> correlationManager;
 
     /** Saves the network connection id */
     private String connectionId;
@@ -76,7 +76,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
     private NotificationListener notificationListener;
 
     /** Scheduler */
-    private ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(1);
 
     /**
      * Default constructor initializing endpoint configuration.

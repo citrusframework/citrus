@@ -16,6 +16,12 @@
 
 package org.citrusframework.xml.schema;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.extensions.schema.SchemaImport;
@@ -28,19 +34,15 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.SimpleXsdSchema;
@@ -65,10 +67,24 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
     @Override
     public XmlValidator createValidator() {
         try {
-            return XmlValidatorFactory.createValidator(schemaResources.toArray(new Resource[schemaResources.size()]), W3C_XML_SCHEMA_NS_URI);
+            return XmlValidatorFactory.createValidator(schemaResources
+                    .stream()
+                    .map(AbstractSchemaCollection::toSpringResource)
+                    .toList()
+                    .toArray(new org.springframework.core.io.Resource[]{}), W3C_XML_SCHEMA_NS_URI);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create validator from multi resource schema files", e);
         }
+    }
+
+    public static org.springframework.core.io.Resource toSpringResource(Resource resource) {
+        if (resource instanceof Resources.ClasspathResource) {
+            return new ClassPathResource(resource.getLocation());
+        } else if (resource instanceof Resources.FileSystemResource) {
+            return new FileSystemResource(resource.getLocation());
+        }
+
+        return new ByteArrayResource(FileUtils.copyToByteArray(resource));
     }
 
     /**
@@ -91,7 +107,7 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
                         Result result = new StreamResult(bos);
 
                         TransformerFactory.newInstance().newTransformer().transform(source, result);
-                        Resource schemaResource = new ByteArrayResource(bos.toByteArray());
+                        Resource schemaResource = Resources.create(bos.toByteArray());
 
                         addImportedSchemas(referencedSchema);
                         schemaResources.add(schemaResource);
@@ -115,20 +131,22 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
                 schemaLocation = schema.getDocumentBaseURI().substring(0, schema.getDocumentBaseURI().lastIndexOf('/') + 1) + schemaReference.getSchemaLocationURI();
             }
 
-            schemaResources.add(new FileSystemResource(schemaLocation));
+            schemaResources.add(Resources.create(schemaLocation));
         }
     }
 
     @Override
     public void initialize() {
         Resource targetXsd = loadSchemaResources();
-
         if (targetXsd == null) {
             throw new CitrusRuntimeException("Failed to find target schema xsd file resource");
         }
 
-        Assert.isTrue(!schemaResources.isEmpty(), "At least one schema xsd file resource is required");
-        setXsd(targetXsd);
+        if (schemaResources.isEmpty()) {
+            throw new CitrusRuntimeException("At least one schema xsd file resource is required");
+        }
+
+        setXsd(new ByteArrayResource(FileUtils.copyToByteArray(targetXsd)));
 
         try {
             super.afterPropertiesSet();

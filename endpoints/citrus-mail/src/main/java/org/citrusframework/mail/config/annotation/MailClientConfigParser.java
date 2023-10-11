@@ -25,7 +25,7 @@ import org.citrusframework.mail.client.MailClientBuilder;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

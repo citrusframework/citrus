@@ -108,6 +108,29 @@ public class TestContextFactory implements ReferenceResolverAware {
         return factory;
     }
 
+    public static TestContext copyOf(TestContext context) {
+        TestContext result = new TestContext();
+        result.setFunctionRegistry(context.getFunctionRegistry());
+
+        result.setGlobalVariables(new GlobalVariables.Builder()
+                .variables(context.getGlobalVariables())
+                .build());
+        result.getVariables().putAll(context.getVariables());
+
+        result.setMessageStore(context.getMessageStore());
+        result.setMessageValidatorRegistry(context.getMessageValidatorRegistry());
+        result.setValidationMatcherRegistry(context.getValidationMatcherRegistry());
+        result.setTestListeners(context.getTestListeners());
+        result.setMessageListeners(context.getMessageListeners());
+        result.setMessageProcessors(context.getMessageProcessors());
+        result.setEndpointFactory(context.getEndpointFactory());
+        result.setNamespaceContextBuilder(context.getNamespaceContextBuilder());
+        result.setReferenceResolver(context.getReferenceResolver());
+        result.setTypeConverter(context.getTypeConverter());
+        result.setLogModifier(context.getLogModifier());
+        return result;
+    }
+
     /**
      * Factory method creates new test context instance and adds all default components in this factory.
      * @return

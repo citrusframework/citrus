@@ -16,12 +16,11 @@
 
 package org.citrusframework.generate.provider;
 
+import java.util.Optional;
+
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.model.testcase.core.SendModel;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -39,7 +38,7 @@ public class SendActionProvider implements MessageActionProvider<SendModel, Mess
         sendMessage.setData(message.getPayload(String.class));
         send.setMessage(sendMessage);
 
-        if (!CollectionUtils.isEmpty(message.getHeaders())) {
+        if (message.getHeaders() != null && !message.getHeaders().isEmpty()) {
             SendModel.Header header = new SendModel.Header();
 
             message.getHeaders().entrySet().stream()

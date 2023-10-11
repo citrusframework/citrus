@@ -16,16 +16,15 @@
 
 package org.citrusframework.validation.xml;
 
-import javax.xml.namespace.NamespaceContext;
 import java.util.Set;
+import javax.xml.namespace.NamespaceContext;
 
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -80,7 +79,7 @@ public abstract class XmlValidationUtils {
      * @return
      */
     public static boolean isElementIgnored(final Node received, Set<String> ignoreExpressions, NamespaceContext namespaceContext) {
-        if (CollectionUtils.isEmpty(ignoreExpressions)) {
+        if (ignoreExpressions == null || ignoreExpressions.isEmpty()) {
             return false;
         }
 
@@ -168,7 +167,7 @@ public abstract class XmlValidationUtils {
      */
     private static boolean isAttributeIgnored(Node receivedElement, Node receivedAttribute,
                                              Set<String> ignoreMessageElements, NamespaceContext namespaceContext) {
-        if (CollectionUtils.isEmpty(ignoreMessageElements)) {
+        if (ignoreMessageElements == null || ignoreMessageElements.isEmpty()) {
             return false;
         }
 

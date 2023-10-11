@@ -7,17 +7,16 @@ import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.MessageType;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
 public class BinaryMessageProcessorTest extends UnitTestSupport {
 
-    private BinaryMessageProcessor processor = new BinaryMessageProcessor();
+    private final BinaryMessageProcessor processor = new BinaryMessageProcessor();
 
     @Test
     public void testBinaryMessageStaysUntouched(){
@@ -59,7 +58,7 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
         processor.process(message, context);
 
         //THEN
-        assertEquals(message.getPayload(), FileCopyUtils.copyToByteArray(getTestFile().getInputStream()));
+        assertEquals(message.getPayload(), FileUtils.copyToByteArray(getTestFile().getInputStream()));
         assertEquals(message.getType(), MessageType.BINARY.name());
     }
 
@@ -67,7 +66,7 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
     public void testMessageResourceNotFound() {
 
         //GIVEN
-        final DefaultMessage message = new DefaultMessage(new FileSystemResource("unknown.txt"));
+        final DefaultMessage message = new DefaultMessage(Resources.newFileSystemResource("unknown.txt"));
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN
@@ -77,6 +76,6 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
     }
 
     private Resource getTestFile() {
-        return new ClassPathResource("foo.txt", BinaryMessageProcessor.class);
+        return Resources.create("foo.txt", BinaryMessageProcessor.class);
     }
 }

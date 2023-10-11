@@ -16,15 +16,15 @@
 
 package org.citrusframework.http.message;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.util.StringUtils;
-
-import jakarta.servlet.http.Cookie;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+
+import jakarta.servlet.http.Cookie;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 
 /**
  * Class to convert Objects from or to Cookies

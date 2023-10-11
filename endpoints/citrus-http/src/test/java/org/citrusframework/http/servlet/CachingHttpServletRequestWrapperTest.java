@@ -27,8 +27,8 @@ import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.hc.core5.http.ContentType;
+import org.citrusframework.util.ObjectHelper;
 import org.springframework.http.MediaType;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -216,7 +216,7 @@ public class CachingHttpServletRequestWrapperTest {
          * @param sourceStream the source stream (never <code>null</code>)
          */
         DelegatingServletInputStream(final InputStream sourceStream) {
-            Assert.notNull(sourceStream, "Source InputStream must not be null");
+            ObjectHelper.assertNotNull(sourceStream, "Source InputStream must not be null");
             this.sourceStream = sourceStream;
         }
 

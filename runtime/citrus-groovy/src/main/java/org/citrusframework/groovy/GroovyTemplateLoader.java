@@ -10,9 +10,9 @@ import org.citrusframework.groovy.dsl.actions.ActionsScript;
 import org.citrusframework.groovy.dsl.actions.TemplateConfiguration;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
-import org.springframework.core.io.Resource;
 
 public class GroovyTemplateLoader implements TemplateLoader, ReferenceResolverAware {
 

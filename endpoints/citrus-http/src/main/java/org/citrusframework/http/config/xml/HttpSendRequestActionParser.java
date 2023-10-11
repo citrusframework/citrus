@@ -16,25 +16,24 @@
 
 package org.citrusframework.http.config.xml;
 
-import jakarta.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.Cookie;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.DescriptionElementParser;
 import org.citrusframework.config.xml.SendMessageActionParser;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.http.HttpMethod;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 

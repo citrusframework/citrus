@@ -16,18 +16,23 @@
 
 package org.citrusframework.json;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.common.Named;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.json.schema.SimpleJsonSchema;
+import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Schema repository holding a set of json schema resources known in the test scope.
@@ -55,13 +60,19 @@ public class JsonSchemaRepository  implements Named, InitializingPhase {
     @Override
     public void initialize() {
         try {
-            PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-
+            ClasspathResourceResolver resourceResolver = new ClasspathResourceResolver();
             for (String location : locations) {
-                Resource[] findings = resourcePatternResolver.getResources(location);
+                Set<Path> findings;
+                if (StringUtils.hasText(FileUtils.getFileExtension(location))) {
+                    String fileNamePattern = FileUtils.getFileName(location).replace(".", "\\.").replace("*", ".*");
+                    String basePath = FileUtils.getBasePath(location);
+                    findings = resourceResolver.getResources(basePath, fileNamePattern);
+                } else {
+                    findings = resourceResolver.getResources(location);
+                }
 
-                for (Resource resource : findings) {
-                    addSchemas(resource);
+                for (Path resource : findings) {
+                    addSchemas(Resources.newClasspathResource(resource.toString()));
                 }
             }
         } catch (IOException e) {
@@ -70,15 +81,15 @@ public class JsonSchemaRepository  implements Named, InitializingPhase {
     }
 
     private void addSchemas(Resource resource) {
-        if (resource.getFilename().endsWith(".json")) {
+        if (resource.getLocation().endsWith(".json")) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Loading json schema resource " + resource.getFilename());
+                logger.debug("Loading json schema resource " + resource.getLocation());
             }
             SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(resource);
             simpleJsonSchema.initialize();
             schemas.add(simpleJsonSchema);
         } else {
-            logger.warn("Skipped resource other than json schema for repository (" + resource.getFilename() + ")");
+            logger.warn("Skipped resource other than json schema for repository (" + resource.getLocation() + ")");
         }
     }
 

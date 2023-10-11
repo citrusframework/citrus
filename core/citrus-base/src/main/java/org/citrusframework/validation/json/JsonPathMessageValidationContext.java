@@ -28,7 +28,7 @@ import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.VariableExtractorAdapter;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Specialised validation context adds JSON path expressions for message validation.

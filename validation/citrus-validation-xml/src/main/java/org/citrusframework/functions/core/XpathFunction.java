@@ -22,9 +22,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 import org.citrusframework.util.XMLUtils;
+import org.citrusframework.xml.namespace.DefaultNamespaceContext;
 import org.citrusframework.xml.xpath.XPathUtils;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.xml.SimpleNamespaceContext;
 
 /**
  * @author Christoph Deppisch
@@ -34,7 +33,7 @@ public class XpathFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList)) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
@@ -45,8 +44,8 @@ public class XpathFunction implements Function {
         String xmlSource = parameterList.get(0);
         String xpathExpression = parameterList.get(1);
 
-        SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
-        namespaceContext.setBindings(context.getNamespaceContextBuilder().getNamespaceMappings());
+        DefaultNamespaceContext namespaceContext = new DefaultNamespaceContext();
+        namespaceContext.addNamespaces(context.getNamespaceContextBuilder().getNamespaceMappings());
         return XPathUtils.evaluateAsString(XMLUtils.parseMessagePayload(context.replaceDynamicContentInString(xmlSource)),
                 context.replaceDynamicContentInString(xpathExpression), namespaceContext);
     }

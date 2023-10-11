@@ -22,7 +22,7 @@ import org.citrusframework.ftp.client.ScpClient;
 import org.citrusframework.ftp.client.ScpClientBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

@@ -46,12 +46,12 @@ import static org.mockito.Mockito.when;
  */
 public class DirectEndpointSyncConsumerTest {
 
-    private MessageQueue queue = Mockito.mock(MessageQueue.class);
-    private MessageQueue replyQueue = Mockito.mock(MessageQueue.class);
+    private final MessageQueue queue = Mockito.mock(MessageQueue.class);
+    private final MessageQueue replyQueue = Mockito.mock(MessageQueue.class);
 
-    private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
+    private final MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
 
-    private ReferenceResolver resolver = Mockito.mock(ReferenceResolver.class);
+    private final ReferenceResolver resolver = Mockito.mock(ReferenceResolver.class);
 
     private TestContext context;
 
@@ -345,7 +345,7 @@ public class DirectEndpointSyncConsumerTest {
         Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
     }
 
-    @Test
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find reply channel for message correlation key: 123456789")
     public void testNoReplyDestinationFound() {
         DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
 
@@ -361,30 +361,15 @@ public class DirectEndpointSyncConsumerTest {
         Map<String, Object> headers = new HashMap<>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
-        try {
-            DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
-            channelSyncConsumer.send(message, context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Failed to find reply channel"));
-            return;
-        }
-
-        Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
+        DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
+        channelSyncConsumer.send(message, context);
     }
 
-    @Test
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Can not send empty message")
     public void testSendEmptyMessage() {
         DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
-
-        try {
-            DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
-            channelSyncConsumer.send(null, context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "Can not send empty message");
-            return;
-        }
-
-        Assert.fail("Missing " + IllegalArgumentException.class + " because of sending empty message");
+        DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
+        channelSyncConsumer.send(null, context);
     }
 
     @Test

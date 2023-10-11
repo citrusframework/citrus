@@ -113,22 +113,22 @@ public final class CitrusSettings {
     public static final String GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.groovy.file.name.pattern";
     public static final String GROOVY_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_GROOVY_FILE_NAME_PATTERN";
     public static final String GROOVY_TEST_FILE_NAME_PATTERN = System.getProperty(GROOVY_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(GROOVY_TEST_FILE_NAME_PATTERN_ENV) != null ?
-            System.getenv(GROOVY_TEST_FILE_NAME_PATTERN_ENV) : "/**/*test.groovy,/**/*it.groovy");
+            System.getenv(GROOVY_TEST_FILE_NAME_PATTERN_ENV) : ".*test\\.groovy,.*it\\.groovy");
 
     public static final String YAML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.yaml.file.name.pattern";
     public static final String YAML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_YAML_FILE_NAME_PATTERN";
     public static final String YAML_TEST_FILE_NAME_PATTERN = System.getProperty(YAML_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(YAML_TEST_FILE_NAME_PATTERN_ENV) != null ?
-            System.getenv(YAML_TEST_FILE_NAME_PATTERN_ENV) : "/**/*test.yaml,/**/*it.yaml");
+            System.getenv(YAML_TEST_FILE_NAME_PATTERN_ENV) : ".*test\\.yaml,.*it\\.yaml");
 
     public static final String XML_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.xml.file.name.pattern";
     public static final String XML_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_XML_FILE_NAME_PATTERN";
     public static final String XML_TEST_FILE_NAME_PATTERN = System.getProperty(XML_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) != null ?
-            System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) : "/**/*Test.xml,/**/*IT.xml,/**/*test.xml,/**/*it.xml");
+            System.getenv(XML_TEST_FILE_NAME_PATTERN_ENV) : ".*Test\\.xml,.*IT\\.xml,.*test\\.xml,.*it\\.xml");
 
     public static final String JAVA_TEST_FILE_NAME_PATTERN_PROPERTY = "citrus.java.file.name.pattern";
     public static final String JAVA_TEST_FILE_NAME_PATTERN_ENV = "CITRUS_JAVA_FILE_NAME_PATTERN";
     public static final String JAVA_TEST_FILE_NAME_PATTERN = System.getProperty(JAVA_TEST_FILE_NAME_PATTERN_PROPERTY, System.getenv(JAVA_TEST_FILE_NAME_PATTERN_ENV) != null ?
-            System.getenv(JAVA_TEST_FILE_NAME_PATTERN_ENV) : "/**/*Test.java,/**/*IT.java");
+            System.getenv(JAVA_TEST_FILE_NAME_PATTERN_ENV) : ".*Test\\.java,.*IT\\.java");
 
     /** Default message type used in message validation mechanism */
     public static final String DEFAULT_MESSAGE_TYPE_PROPERTY = "citrus.default.message.type";

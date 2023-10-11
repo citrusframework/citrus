@@ -16,10 +16,10 @@
 
 package org.citrusframework.jmx.endpoint;
 
-import javax.management.NotificationFilter;
 import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
+import javax.management.NotificationFilter;
 
 import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
 import org.citrusframework.jmx.message.JmxMessageConverter;
@@ -28,7 +28,7 @@ import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

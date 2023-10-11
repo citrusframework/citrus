@@ -22,12 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.generate.SwaggerTestGenerator;
-import org.citrusframework.http.actions.HttpActionBuilder;
-import org.citrusframework.http.message.HttpMessage;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.variable.dictionary.json.JsonPathMappingDataDictionary;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import io.swagger.models.ArrayModel;
@@ -56,12 +50,17 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.models.properties.StringProperty;
 import io.swagger.parser.SwaggerParser;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.generate.SwaggerTestGenerator;
+import org.citrusframework.http.actions.HttpActionBuilder;
+import org.citrusframework.http.message.HttpMessage;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.variable.dictionary.json.JsonPathMappingDataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
@@ -81,8 +80,8 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
     private String namePrefix;
     private String nameSuffix = "_IT";
 
-    private JsonPathMappingDataDictionary inboundDataDictionary = new JsonPathMappingDataDictionary();
-    private JsonPathMappingDataDictionary outboundDataDictionary = new JsonPathMappingDataDictionary();
+    private final JsonPathMappingDataDictionary inboundDataDictionary = new JsonPathMappingDataDictionary();
+    private final JsonPathMappingDataDictionary outboundDataDictionary = new JsonPathMappingDataDictionary();
 
     @Override
     protected JavaFile.Builder createJavaFileBuilder(TypeSpec.Builder testTypeBuilder) {
@@ -94,13 +93,13 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
     public void create() {
         Swagger swagger;
         try {
-            swagger = new SwaggerParser().parse(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(swaggerResource)));
+            swagger = new SwaggerParser().parse(FileUtils.readToString(Resources.create(swaggerResource)));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to parse Swagger Open API specification: " + swaggerResource, e);
         }
 
         if (!StringUtils.hasText(namePrefix)) {
-            withNamePrefix(StringUtils.trimAllWhitespace(Optional.ofNullable(swagger.getInfo().getTitle()).orElse("Swagger")) + "_");
+            withNamePrefix(Optional.ofNullable(swagger.getInfo().getTitle()).orElse("Swagger").replaceAll("\\s", "") + "_");
         }
 
         for (Map.Entry<String, Path> path : swagger.getPaths().entrySet()) {
@@ -271,7 +270,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
                 payload.append("citrus:currentDate()");
             } else if (property instanceof DateTimeProperty) {
                 payload.append("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')");
-            } else if (!CollectionUtils.isEmpty(((StringProperty) property).getEnum())) {
+            } else if (((StringProperty)property).getEnum() != null && !((StringProperty) property).getEnum().isEmpty()) {
                 payload.append("citrus:randomEnumValue(").append(((StringProperty) property).getEnum().stream().map(value -> "'" + value + "'").collect(Collectors.joining(","))).append(")");
             } else if (Optional.ofNullable(property.getFormat()).orElse("").equalsIgnoreCase("uuid")) {
                 payload.append("citrus:randomUUID()");
@@ -411,7 +410,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
 
             if (StringUtils.hasText(((StringProperty) property).getPattern())) {
                 payload.append("@matches(").append(((StringProperty) property).getPattern()).append(")@");
-            } else if (!CollectionUtils.isEmpty(((StringProperty) property).getEnum())) {
+            } else if (((StringProperty)property).getEnum() != null && !((StringProperty) property).getEnum().isEmpty()) {
                 payload.append("@matches(").append(((StringProperty) property).getEnum().stream().collect(Collectors.joining("|"))).append(")@");
             } else {
                 payload.append("@notEmpty()@");
@@ -501,7 +500,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
                     return "\"@matchesDatePattern('yyyy-MM-dd'T'hh:mm:ss')@\"";
                 } else if (StringUtils.hasText(parameter.getPattern())) {
                     return "\"@matches(" + parameter.getPattern() + ")@\"";
-                } else if (!CollectionUtils.isEmpty(parameter.getEnum())) {
+                } else if (parameter.getEnum() != null && !parameter.getEnum().isEmpty()) {
                     return "\"@matches(" + (parameter.getEnum().stream().collect(Collectors.joining("|"))) + ")@\"";
                 } else {
                     return "@notEmpty()@";
@@ -529,7 +528,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
                     return "\"citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')\"";
                 } else if (StringUtils.hasText(parameter.getPattern())) {
                     return "\"citrus:randomValue(" + parameter.getPattern() + ")\"";
-                } else if (!CollectionUtils.isEmpty(parameter.getEnum())) {
+                } else if (parameter.getEnum() != null && !parameter.getEnum().isEmpty()) {
                     return "\"citrus:randomEnumValue(" + (parameter.getEnum().stream().collect(Collectors.joining(","))) + ")\"";
                 } else if (Optional.ofNullable(parameter.getFormat()).orElse("").equalsIgnoreCase("uuid")){
                     return "citrus:randomUUID()";
@@ -619,7 +618,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
      * @return
      */
     public SwaggerJavaTestGenerator withInboundMappingFile(String mappingFile) {
-        this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        this.inboundDataDictionary.setMappingFile(Resources.create(mappingFile));
         this.inboundDataDictionary.initialize();
         return this;
     }
@@ -630,7 +629,7 @@ public class SwaggerJavaTestGenerator extends MessagingJavaTestGenerator<Swagger
      * @return
      */
     public SwaggerJavaTestGenerator withOutboundMappingFile(String mappingFile) {
-        this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        this.outboundDataDictionary.setMappingFile(Resources.create(mappingFile));
         this.outboundDataDictionary.initialize();
         return this;
     }

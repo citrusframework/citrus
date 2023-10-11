@@ -23,7 +23,7 @@ import org.citrusframework.rmi.client.RmiClient;
 import org.citrusframework.rmi.client.RmiClientBuilder;
 import org.citrusframework.rmi.message.RmiMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

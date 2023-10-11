@@ -26,6 +26,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
+import jakarta.jms.Message;
+import jakarta.jms.Session;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
@@ -35,13 +37,11 @@ import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.xml.StringResult;
 import org.citrusframework.xml.StringSource;
-import jakarta.jms.Message;
-import jakarta.jms.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
@@ -61,14 +61,14 @@ public class SoapJmsMessageConverter extends JmsMessageConverter implements Init
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(SoapJmsMessageConverter.class);
 
-    /** Soap message factory - either set explicitly or auto configured through application context */
+    /** Soap message factory - either set explicitly or autoconfigured through application context */
     private SoapMessageFactory soapMessageFactory;
 
-    /** Reference resolver used for auto configuration of soap message factory */
+    /** Reference resolver used for autoconfiguration of soap message factory */
     private ReferenceResolver referenceResolver;
 
     /** Message transformer */
-    private TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     /** Special SOAP action header */
     private static final String SOAP_ACTION_HEADER = MessageHeaders.PREFIX + "soap_action";
@@ -180,7 +180,7 @@ public class SoapJmsMessageConverter extends JmsMessageConverter implements Init
     @Override
     public void initialize() {
         if (soapMessageFactory == null) {
-            Assert.notNull(referenceResolver, "Missing reference resolver for auto configuration of soap message factory");
+            ObjectHelper.assertNotNull(referenceResolver, "Missing reference resolver for auto configuration of soap message factory");
             soapMessageFactory = referenceResolver.resolve(SoapMessageFactory.class);
         }
     }

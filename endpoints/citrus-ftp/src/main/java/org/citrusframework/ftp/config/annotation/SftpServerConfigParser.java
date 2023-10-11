@@ -22,7 +22,7 @@ import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.ftp.server.SftpServer;
 import org.citrusframework.ftp.server.SftpServerBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

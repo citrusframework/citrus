@@ -16,18 +16,18 @@
 
 package org.citrusframework.ws.servlet;
 
-import org.citrusframework.endpoint.EndpointAdapter;
-import org.citrusframework.ws.server.WebServiceEndpoint;
-import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
-import org.citrusframework.ws.interceptor.DelegatingEndpointInterceptor;
-import org.citrusframework.ws.server.WebServiceServer;
-import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.server.EndpointInterceptor;
-import org.springframework.ws.transport.http.MessageDispatcherServlet;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.citrusframework.endpoint.EndpointAdapter;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.ws.client.WebServiceEndpointConfiguration;
+import org.citrusframework.ws.interceptor.DelegatingEndpointInterceptor;
+import org.citrusframework.ws.server.WebServiceEndpoint;
+import org.citrusframework.ws.server.WebServiceServer;
+import org.springframework.context.ApplicationContext;
+import org.springframework.ws.server.EndpointInterceptor;
+import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
 /**
  * Citrus message dispatcher servlet extends Spring's message dispatcher servlet and just

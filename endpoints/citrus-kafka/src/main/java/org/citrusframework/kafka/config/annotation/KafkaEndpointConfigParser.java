@@ -26,7 +26,7 @@ import org.citrusframework.kafka.endpoint.KafkaEndpointBuilder;
 import org.citrusframework.kafka.message.KafkaMessageConverter;
 import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

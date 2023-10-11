@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -31,15 +32,14 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlValue;
-
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractDatabaseConnectingTestAction;
 import org.citrusframework.actions.ExecuteSQLAction;
 import org.citrusframework.actions.ExecuteSQLQueryAction;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.StringUtils;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.util.StringUtils;
 
 @XmlRootElement(name = "sql")
 public class Sql implements TestActionBuilder<AbstractDatabaseConnectingTestAction>, ReferenceResolverAware {

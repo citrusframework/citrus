@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.json.JsonPathMessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * Json data dictionary implementation maps elements via JsonPath expressions. When element is identified by some expression

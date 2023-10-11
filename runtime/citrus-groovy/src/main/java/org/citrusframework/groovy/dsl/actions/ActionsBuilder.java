@@ -29,7 +29,7 @@ import groovy.lang.MissingMethodException;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.groovy.dsl.test.TestCaseScript;
-import org.springframework.util.ReflectionUtils;
+import org.citrusframework.util.ReflectionHelper;
 
 import static org.citrusframework.actions.EchoAction.Builder.echo;
 
@@ -138,7 +138,7 @@ public interface ActionsBuilder {
     private TestActionBuilder<?> initializeActionBuilder(TestActionBuilder<?> builder, String id, Object... args) {
         try {
             Class<?>[] paramTypes = Arrays.stream(args).map(Object::getClass).toArray(Class[]::new);
-            Method initializer = ReflectionUtils.findMethod(builder.getClass(), id, paramTypes);
+            Method initializer = ReflectionHelper.findMethod(builder.getClass(), id, paramTypes);
             if (initializer == null) {
                 throw new GroovyRuntimeException(String.format("Failed to find initializing method %s(%s) for " +
                         "action builder type %s", Arrays.toString(paramTypes), id, builder.getClass().getName()));

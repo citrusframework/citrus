@@ -16,21 +16,21 @@
 
 package org.citrusframework.actions;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.SqlUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.dao.DataAccessException;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.StringUtils;
-
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import javax.sql.DataSource;
+
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.SqlUtils;
+import org.citrusframework.util.StringUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * Class executes PLSQL statements either declared inline as PLSQL statements or given by an

@@ -16,18 +16,17 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.List;
+import java.util.Random;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
-import java.util.Random;
 
 /**
  * Function generating a random string containing alphabetic characters. Arguments specify
  * upper and lower case mode.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class RandomStringFunction implements Function {
@@ -46,7 +45,7 @@ public class RandomStringFunction implements Function {
         'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
         'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
         'u', 'v', 'w', 'x', 'y', 'z' };
-    
+
     private static final char[] NUMBERS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', };
 
     /** Mode upper case */
@@ -67,7 +66,7 @@ public class RandomStringFunction implements Function {
         String notationMethod = MIXED;
         boolean includeNumbers = false;
 
-        if (CollectionUtils.isEmpty(parameterList)) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
@@ -87,7 +86,7 @@ public class RandomStringFunction implements Function {
         if (parameterList.size() > 2) {
             includeNumbers = Boolean.valueOf(parameterList.get(2));
         }
-        
+
         if (notationMethod.equals(UPPERCASE)) {
             return getRandomString(numberOfLetters, ALPHABET_UPPER, includeNumbers);
         } else if (notationMethod.equals(LOWERCASE)) {
@@ -106,26 +105,26 @@ public class RandomStringFunction implements Function {
      */
     public static String getRandomString(int numberOfLetters, char[] alphabet, boolean includeNumbers) {
         StringBuilder builder = new StringBuilder();
-        
+
         int upperRange = alphabet.length - 1;
-        
+
         // make sure first character is not a number
         builder.append(alphabet[generator.nextInt(upperRange)]);
-        
+
         if (includeNumbers) {
             upperRange += NUMBERS.length;
         }
-        
+
         for (int i = 1; i < numberOfLetters; i++) {
             int letterIndex = generator.nextInt(upperRange);
-            
+
             if (letterIndex > alphabet.length - 1) {
                 builder.append(NUMBERS[letterIndex - alphabet.length]);
             } else {
                 builder.append(alphabet[letterIndex]);
             }
         }
-        
+
         return builder.toString();
     }
 }

@@ -16,25 +16,24 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Function returns given string argument in lower case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SystemPropertyFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList)) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Invalid function parameters - must set system property name");
         }
 

@@ -17,12 +17,14 @@
 package org.citrusframework.config.annotation;
 
 import org.citrusframework.TestActor;
-import org.citrusframework.channel.*;
+import org.citrusframework.channel.ChannelEndpoint;
+import org.citrusframework.channel.ChannelEndpointBuilder;
+import org.citrusframework.channel.ChannelMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.StringUtils;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

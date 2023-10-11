@@ -16,11 +16,15 @@
 
 package org.citrusframework.generate.xml;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.SchemaTypeSystem;
+import org.apache.xmlbeans.XmlBeans;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.generate.XsdTestGenerator;
@@ -28,16 +32,11 @@ import org.citrusframework.generate.dictionary.InboundXmlDataDictionary;
 import org.citrusframework.generate.dictionary.OutboundXmlDataDictionary;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.xml.XmlConfigurer;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.SchemaTypeSystem;
-import org.apache.xmlbeans.XmlBeans;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.StringUtils;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
@@ -53,8 +52,8 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
 
     private String nameSuffix = "IT";
 
-    private InboundXmlDataDictionary inboundDataDictionary = new InboundXmlDataDictionary();
-    private OutboundXmlDataDictionary outboundDataDictionary = new OutboundXmlDataDictionary();
+    private final InboundXmlDataDictionary inboundDataDictionary = new InboundXmlDataDictionary();
+    private final OutboundXmlDataDictionary outboundDataDictionary = new OutboundXmlDataDictionary();
 
     @Override
     public void create() {
@@ -162,23 +161,14 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @return
      */
     private SchemaTypeSystem compileXsd(String xsd) {
-        File xsdFile;
-        try {
-            xsdFile = new PathMatchingResourcePatternResolver().getResource(xsd).getFile();
-        } catch (IOException e) {
-            xsdFile = new File(xsd);
-        }
-
+        Resource xsdFile = Resources.create(xsd);
         if (!xsdFile.exists()) {
-            throw new CitrusRuntimeException("Unable to read XSD - does not exist in " + xsdFile.getAbsolutePath());
-        }
-        if (!xsdFile.canRead()) {
-            throw new CitrusRuntimeException("Unable to read XSD - could not open in read mode");
+            throw new CitrusRuntimeException("Unable to read XSD - does not exist in " + xsdFile.getLocation());
         }
 
         XmlObject xsdObject;
         try {
-            xsdObject = XmlObject.Factory.parse(xsdFile, (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
+            xsdObject = XmlObject.Factory.parse(xsdFile.getFile(), (new XmlOptions()).setLoadLineNumbers().setLoadMessageDigest().setCompileDownloadUrls());
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to parse XSD schema", e);
         }
@@ -256,7 +246,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @return
      */
     public XsdXmlTestGenerator withInboundMappingFile(String mappingFile) {
-        this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        this.inboundDataDictionary.setMappingFile(Resources.create(mappingFile));
         this.inboundDataDictionary.initialize();
         return this;
     }
@@ -267,7 +257,7 @@ public class XsdXmlTestGenerator extends MessagingXmlTestGenerator<XsdXmlTestGen
      * @return
      */
     public XsdXmlTestGenerator withOutboundMappingFile(String mappingFile) {
-        this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        this.outboundDataDictionary.setMappingFile(Resources.create(mappingFile));
         this.outboundDataDictionary.initialize();
         return this;
     }

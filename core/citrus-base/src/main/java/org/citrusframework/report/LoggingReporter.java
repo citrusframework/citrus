@@ -25,10 +25,10 @@ import org.citrusframework.common.Described;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * Simple logging reporter printing test start and ending to the console/logger.

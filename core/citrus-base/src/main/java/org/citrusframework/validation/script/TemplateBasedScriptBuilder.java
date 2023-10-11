@@ -16,44 +16,46 @@
 
 package org.citrusframework.validation.script;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.Resource;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 
-import java.io.*;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
 
 /**
  * Script builder builds a script with custom code body. Script header and tail come from static
  * script template.
- * 
+ *
  * @author Christoph Deppisch
  */
 public final class TemplateBasedScriptBuilder {
 
     /** Placeholder identifier for script body in template */
     private static final String BODY_PLACEHOLDER = "@SCRIPTBODY@";
-    
+
     /** Head and tail for script */
-    private String scriptHead;
-    private String scriptTail;
-    
+    private final String scriptHead;
+    private final String scriptTail;
+
     /** Code snippet which is dynamically added to the script */
     private String scriptCode = "";
-    
+
     /**
      * Constructor using script template string.
      * @param scriptTemplate
      */
     private TemplateBasedScriptBuilder(String scriptTemplate) {
         if (!scriptTemplate.contains(BODY_PLACEHOLDER)) {
-            throw new CitrusRuntimeException("Invalid script template - please define '" + 
+            throw new CitrusRuntimeException("Invalid script template - please define '" +
                     BODY_PLACEHOLDER + "' placeholder where your code comes in");
         }
-        
+
         scriptHead = scriptTemplate.substring(0, scriptTemplate.indexOf(BODY_PLACEHOLDER));
         scriptTail = scriptTemplate.substring((scriptTemplate.indexOf(BODY_PLACEHOLDER) + BODY_PLACEHOLDER.length()));
     }
-    
+
     /**
      * Builds the final script.
      */
@@ -61,7 +63,7 @@ public final class TemplateBasedScriptBuilder {
         StringBuilder scriptBuilder = new StringBuilder();
         StringBuilder scriptBody = new StringBuilder();
         String importStmt = "import ";
-        
+
         try {
             if (scriptCode.contains(importStmt)) {
                 BufferedReader reader = new BufferedReader(new StringReader(scriptCode));
@@ -81,17 +83,17 @@ public final class TemplateBasedScriptBuilder {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to construct script from template", e);
         }
-        
+
         scriptBuilder.append(scriptHead);
         scriptBuilder.append(scriptBody.toString());
         scriptBuilder.append(scriptTail);
-        
+
         return scriptBuilder.toString();
     }
-    
+
     /**
      * Adds custom code snippet to this builder.
-     * 
+     *
      * @param code the custom code body
      * @return
      */
@@ -99,7 +101,7 @@ public final class TemplateBasedScriptBuilder {
         this.scriptCode = code;
         return this;
     }
-    
+
     /**
      * Static construction method returning a fully qualified instance of this builder.
      * @param scriptTemplate the script template code.
@@ -108,7 +110,7 @@ public final class TemplateBasedScriptBuilder {
     public static TemplateBasedScriptBuilder fromTemplateScript(String scriptTemplate) {
         return new TemplateBasedScriptBuilder(scriptTemplate);
     }
-    
+
     /**
      * Static construction method returning a fully qualified instance of this builder.
      * @param scriptTemplateResource external file resource holding script template code.

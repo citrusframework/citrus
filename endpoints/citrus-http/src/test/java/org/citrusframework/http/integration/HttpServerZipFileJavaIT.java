@@ -19,8 +19,8 @@ package org.citrusframework.http.integration;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.ZipMessage;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
@@ -36,7 +36,7 @@ public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void httpServerZipFile() {
-        ZipMessage zipMessage = new ZipMessage().addEntry(new ClassPathResource("schemas"));
+        ZipMessage zipMessage = new ZipMessage().addEntry(Resources.newClasspathResource("schemas"));
 
         given(http().client("echoHttpClient")
                 .send()

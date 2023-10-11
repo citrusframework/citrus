@@ -22,7 +22,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Escapes XML fragment with escaped characters for '<', '>'.
@@ -33,7 +32,7 @@ public class EscapeXmlFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList) || parameterList.size() != 1) {
+        if (parameterList == null || parameterList.size() != 1) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage! Expected single parameter but found: " + parameterList.size());
         }
 

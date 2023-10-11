@@ -16,34 +16,33 @@
 
 package org.citrusframework.functions.core;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.util.CollectionUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 /**
  * Encodes a character sequence to base64 binary using given charset.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class EncodeBase64Function implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList) || parameterList.size() < 1) {
+        if (parameterList == null || parameterList.size() < 1) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage! Missing parameters!");
         }
-        
+
         String charset = "UTF-8";
         if (parameterList.size() > 1) {
             charset = parameterList.get(1);
         }
-        
+
         try {
             return Base64.encodeBase64String(parameterList.get(0).getBytes(charset));
         } catch (UnsupportedEncodingException e) {

@@ -18,12 +18,12 @@ package org.citrusframework.restdocs.config.xml;
 
 import org.citrusframework.restdocs.http.CitrusRestDocConfigurer;
 import org.citrusframework.restdocs.soap.CitrusRestDocSoapConfigurer;
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.restdocs.ManualRestDocumentation;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**

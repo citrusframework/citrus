@@ -18,6 +18,7 @@ package org.citrusframework.selenium.actions;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.model.PageValidator;
 import org.citrusframework.selenium.model.WebPage;
@@ -43,10 +44,10 @@ import static org.mockito.Mockito.when;
  */
 public class PageActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
-    private WebDriver webDriver = Mockito.mock(WebDriver.class);
-    private WebElement formElement = Mockito.mock(WebElement.class);
-    private WebElement inputElement = Mockito.mock(WebElement.class);
+    private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
+    private final WebDriver webDriver = Mockito.mock(WebDriver.class);
+    private final WebElement formElement = Mockito.mock(WebElement.class);
+    private final WebElement inputElement = Mockito.mock(WebElement.class);
 
     @BeforeMethod
     public void setup() {
@@ -177,7 +178,7 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         verify(formElement).submit();
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Page validation failed!")
     public void testExecuteValidationFailed() throws Exception {
         PageAction action = new PageAction.Builder()
                 .browser(seleniumBrowser)

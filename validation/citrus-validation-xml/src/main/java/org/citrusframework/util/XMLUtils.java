@@ -16,7 +16,6 @@
 
 package org.citrusframework.util;
 
-import javax.xml.XMLConstants;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -25,11 +24,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import javax.xml.XMLConstants;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.xml.XmlConfigurer;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

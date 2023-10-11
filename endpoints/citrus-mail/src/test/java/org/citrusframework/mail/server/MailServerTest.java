@@ -16,6 +16,11 @@
 
 package org.citrusframework.mail.server;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+
 import com.icegreen.greenmail.mail.MailAddress;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -24,22 +29,15 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.mail.message.CitrusMailMessageHeaders;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.TestUtils;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -48,7 +46,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-class MailServerTest {
+public class MailServerTest {
 
     private AutoCloseable mockitoContext;
 
@@ -83,14 +81,8 @@ class MailServerTest {
 
             try {
                 Assert.assertEquals(
-                        StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(
-                                FileCopyUtils.copyToString(
-                                        new InputStreamReader(
-                                                new ClassPathResource("text_mail.xml", MailServer.class).getInputStream()
-                                        )
-                                )
-                        )
+                    message.getPayload(String.class).replaceAll("\\s", ""),
+                    FileUtils.readToString(Resources.create("text_mail.xml", MailServer.class)).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
@@ -100,7 +92,7 @@ class MailServerTest {
         })
                 .when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
+        MimeMessage message = new MimeMessage(fixture.getSession(), Resources.create("text_mail.txt", MailServer.class).getInputStream());
         fixture.deliver(message);
 
         // Because of autoAccept = true
@@ -133,16 +125,10 @@ class MailServerTest {
             try {
                 Assert.assertEquals(
                         TestUtils.normalizeLineEndings(
-                                StringUtils.trimAllWhitespace(message.getPayload(String.class))
+                            message.getPayload(String.class).replaceAll("\\s", "")
                         ),
                         TestUtils.normalizeLineEndings(
-                                StringUtils.trimAllWhitespace(
-                                        FileCopyUtils.copyToString(
-                                                new InputStreamReader(
-                                                        new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream()
-                                                )
-                                        )
-                                )
+                            FileUtils.readToString(Resources.create("multipart_mail.xml", MailServer.class)).replaceAll("\\s", "")
                         )
                 );
             } catch (IOException e) {
@@ -152,7 +138,7 @@ class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
+        MimeMessage message = new MimeMessage(fixture.getSession(), Resources.create("multipart_mail.txt", MailServer.class).getInputStream());
         fixture.deliver(message);
 
         // Because of autoAccept = true
@@ -183,9 +169,10 @@ class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail.xml",
-                                MailServer.class).getInputStream()))));
+                Assert.assertEquals(
+                        message.getPayload(String.class).replaceAll("\\s", ""),
+                        FileUtils.readToString(Resources.create("binary_mail.xml", MailServer.class)).replaceAll("\\s", "")
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
@@ -193,7 +180,7 @@ class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
+        MimeMessage message = new MimeMessage(fixture.getSession(), Resources.create("binary_mail.txt", MailServer.class).getInputStream());
         fixture.deliver(message);
 
         // Because of autoAccept = true
@@ -209,24 +196,15 @@ class MailServerTest {
 
             try {
                 Assert.assertEquals(
-                        StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(
-                                FileCopyUtils.copyToString(
-                                        new InputStreamReader(
-                                                new ClassPathResource("accept-request.xml", MailServer.class).getInputStream())
-                                )
-                        )
+                    message.getPayload(String.class).replaceAll("\\s", ""),
+                    FileUtils.readToString(Resources.create("accept-request.xml", MailServer.class)).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
 
             return new DefaultMessage(
-                    FileCopyUtils.copyToString(
-                            new InputStreamReader(
-                                    new ClassPathResource("accept-response.xml",MailServer.class).getInputStream()
-                            )
-                    )
+                FileUtils.readToString(Resources.create("accept-response.xml",MailServer.class))
             );
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
@@ -280,13 +258,8 @@ class MailServerTest {
 
             try {
                 Assert.assertEquals(
-                        StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(
-                                FileCopyUtils.copyToString(
-                                        new InputStreamReader(
-                                                new ClassPathResource("text_mail.xml", MailServer.class).getInputStream())
-                                )
-                        )
+                    message.getPayload(String.class).replaceAll("\\s", ""),
+                    FileUtils.readToString(Resources.create("text_mail.xml", MailServer.class)).replaceAll("\\s", "")
                 );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
@@ -295,7 +268,7 @@ class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
+        MimeMessage message = new MimeMessage(fixture.getSession(), Resources.create("text_mail.txt", MailServer.class).getInputStream());
         fixture.deliver(message);
 
         // Because of autoAccept = true
@@ -328,9 +301,10 @@ class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=utf-8");
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_1.xml",
-                                MailServer.class).getInputStream()))));
+                Assert.assertEquals(
+                    message.getPayload(String.class).replaceAll("\\s", ""),
+                    FileUtils.readToString(Resources.create("multipart_mail_1.xml", MailServer.class)).replaceAll("\\s", "")
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
@@ -359,12 +333,10 @@ class MailServerTest {
             try {
                 Assert.assertEquals(
                         TestUtils.normalizeLineEndings(
-                                StringUtils.trimAllWhitespace(message.getPayload(String.class))
+                            message.getPayload(String.class).replaceAll("\\s", "")
                         ),
                         TestUtils.normalizeLineEndings(
-                                StringUtils.trimAllWhitespace(
-                                        FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_2.xml", MailServer.class).getInputStream()))
-                                )
+                            FileUtils.readToString(Resources.create("multipart_mail_2.xml", MailServer.class)).replaceAll("\\s", "")
                         )
                 );
             } catch (IOException e) {
@@ -374,7 +346,7 @@ class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("multipart_mail.txt", MailServer.class).getInputStream());
+        MimeMessage message = new MimeMessage(fixture.getSession(), Resources.create("multipart_mail.txt", MailServer.class).getInputStream());
         fixture.deliver(message);
 
         // Because of autoAccept = true
@@ -407,9 +379,10 @@ class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=ISO-8859-15; format=flowed");
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_1.xml",
-                                MailServer.class).getInputStream()))));
+                Assert.assertEquals(
+                    message.getPayload(String.class).replaceAll("\\s", ""),
+                    FileUtils.readToString(Resources.create("binary_mail_1.xml", MailServer.class)).replaceAll("\\s", "")
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
@@ -436,9 +409,10 @@ class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_2.xml",
-                                MailServer.class).getInputStream()))));
+                Assert.assertEquals(
+                    message.getPayload(String.class).replaceAll("\\s", ""),
+                    FileUtils.readToString(Resources.create("binary_mail_2.xml", MailServer.class)).replaceAll("\\s", "")
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
@@ -446,7 +420,7 @@ class MailServerTest {
             return null;
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
+        MimeMessage message = new MimeMessage(fixture.getSession(), Resources.create("binary_mail.txt", MailServer.class).getInputStream());
         fixture.deliver(message);
 
         // Because of autoAccept = true
@@ -470,18 +444,19 @@ class MailServerTest {
             Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
             try {
-                Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
-                        StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
-                                MailServer.class).getInputStream()))));
+                Assert.assertEquals(
+                    message.getPayload(String.class).replaceAll("\\s", ""),
+                    FileUtils.readToString(Resources.create("text_mail.xml", MailServer.class)).replaceAll("\\s", "")
+                );
             } catch (IOException e) {
                 Assert.fail(e.getMessage());
             }
 
-            return new DefaultMessage(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("error-response.xml",
-                    MailServer.class).getInputStream())));
+            return new DefaultMessage(
+                    FileUtils.readToString(Resources.create("error-response.xml", MailServer.class)));
         }).when(endpointAdapterMock).handleMessage(any(Message.class));
 
-        MimeMessage message = new MimeMessage(fixture.getSession(), new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
+        MimeMessage message = new MimeMessage(fixture.getSession(), Resources.create("text_mail.txt", MailServer.class).getInputStream());
         Assert.assertTrue(fixture.accept("foo@mail.com", Collections.singletonList(new MailAddress("bar@mail.com"))));
 
         try {

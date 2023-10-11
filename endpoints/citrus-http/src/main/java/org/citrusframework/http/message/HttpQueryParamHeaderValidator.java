@@ -16,17 +16,17 @@
 
 package org.citrusframework.http.message;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.DefaultHeaderValidator;
-import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.matcher.ValidationMatcherUtils;
-import org.springframework.util.StringUtils;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.validation.DefaultHeaderValidator;
+import org.citrusframework.validation.context.HeaderValidationContext;
+import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 
 /**
  * @author Christoph Deppisch
@@ -69,7 +69,14 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
                 .map(Object::toString)
                 .orElse("")
                 .split(","))
-                .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[] {keyValue, ""}))
+                .map(keyValue -> keyValue.split("="))
+                .filter(keyValue -> StringUtils.hasText(keyValue[0]))
+                .map(keyValue -> {
+                    if (keyValue.length < 2) {
+                        return new String[]{keyValue[0], ""};
+                    }
+                    return keyValue;
+                })
                 .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]));
     }
 

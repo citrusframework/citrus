@@ -16,14 +16,14 @@
 
 package org.citrusframework.generate.xml;
 
-import jakarta.xml.bind.JAXBException;
 import javax.xml.transform.Result;
 
+import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.namespace.CitrusNamespacePrefixMapper;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch

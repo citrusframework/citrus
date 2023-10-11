@@ -21,6 +21,8 @@ package org.citrusframework.groovy.dsl.configuration;
 
 import java.io.IOException;
 
+import groovy.lang.Closure;
+import groovy.lang.DelegatesTo;
 import org.citrusframework.Citrus;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
@@ -29,11 +31,9 @@ import org.citrusframework.groovy.dsl.GroovyShellUtils;
 import org.citrusframework.groovy.dsl.configuration.beans.BeansConfiguration;
 import org.citrusframework.groovy.dsl.configuration.beans.QueueConfiguration;
 import org.citrusframework.groovy.dsl.configuration.endpoints.EndpointsConfiguration;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch

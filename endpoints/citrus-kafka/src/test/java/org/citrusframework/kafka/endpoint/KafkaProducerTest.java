@@ -131,20 +131,13 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
         Assert.fail("Missing " + CitrusRuntimeException.class + " because of message timeout");
     }
 
-    @Test
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
     public void testSendEmptyMessage() {
         KafkaEndpoint endpoint = new KafkaEndpoint();
         endpoint.getEndpointConfiguration().setServer("localhost:9092");
         endpoint.getEndpointConfiguration().setTopic("test");
 
-        try {
-            endpoint.createProducer().send(null, context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
-            return;
-        }
-
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of sending empty message");
+        endpoint.createProducer().send(null, context);
     }
 
 }

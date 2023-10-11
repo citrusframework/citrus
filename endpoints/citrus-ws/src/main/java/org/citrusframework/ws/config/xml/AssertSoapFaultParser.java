@@ -25,17 +25,16 @@ import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
 import org.citrusframework.config.xml.DescriptionElementParser;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.actions.AssertSoapFault;
 import org.citrusframework.ws.validation.SoapFaultDetailValidationContext;
 import org.citrusframework.ws.validation.SoapFaultValidationContext;
 import org.citrusframework.ws.validation.SoapFaultValidator;
-import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -105,17 +104,20 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("validationContext", validationContext);
         }
 
-        Element action = DOMUtil.getFirstChildElement(DomUtils.getChildElementByTagName(element, "when"));
-        if (action != null) {
-            BeanDefinitionParser parser = null;
-            if (action.getNamespaceURI().equals("http://www.citrusframework.org/schema/testcase")) {
-                parser = CitrusNamespaceParserRegistry.getBeanParser(action.getLocalName());
-            }
+        Element when = DomUtils.getChildElementByTagName(element, "when");
+        if (when != null) {
+            Element action = DomUtils.getChildElements(when).stream().findFirst().orElse(null);
+            if (action != null) {
+                BeanDefinitionParser parser = null;
+                if (action.getNamespaceURI().equals("http://www.citrusframework.org/schema/testcase")) {
+                    parser = CitrusNamespaceParserRegistry.getBeanParser(action.getLocalName());
+                }
 
-            if (parser == null) {
-            	beanDefinition.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
-            } else {
-            	beanDefinition.addPropertyValue("action", parser.parse(action, parserContext));
+                if (parser == null) {
+                    beanDefinition.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
+                } else {
+                    beanDefinition.addPropertyValue("action", parser.parse(action, parserContext));
+                }
             }
         }
 

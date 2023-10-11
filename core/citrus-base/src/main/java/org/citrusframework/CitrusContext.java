@@ -29,7 +29,7 @@ import org.citrusframework.validation.matcher.DefaultValidationMatcherRegistry;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Default Citrus context implementation holds basic components used in Citrus.

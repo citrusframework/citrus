@@ -29,8 +29,7 @@ import org.citrusframework.jmx.model.OperationParam;
 import org.citrusframework.jmx.server.JmxServer;
 import org.citrusframework.jmx.server.JmxServerBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -89,15 +88,15 @@ public class JmxServerConfigParser implements AnnotationConfigParser<JmxServerCo
                 ManagedBeanInvocation.Operation op = new ManagedBeanInvocation.Operation();
                 op.setName(mbeanOperationConfig.name());
 
-                Class[] parameter = mbeanOperationConfig.parameter();
+                Class<?>[] parameter = mbeanOperationConfig.parameter();
                 ManagedBeanInvocation.Parameter params = new ManagedBeanInvocation.Parameter();
-                for (Class paramType : parameter) {
+                for (Class<?> paramType : parameter) {
                     OperationParam p = new OperationParam();
                     p.setType(paramType.getName());
                     params.getParameter().add(p);
                 }
 
-                if (!CollectionUtils.isEmpty(params.getParameter())) {
+                if (params.getParameter() != null && !params.getParameter().isEmpty()) {
                     op.setParameter(params);
                 }
 

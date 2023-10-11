@@ -16,20 +16,21 @@
 
 package org.citrusframework.ssh.server;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.FileUtils;
-import org.apache.sshd.common.util.io.IoUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.security.PublicKey;
+
 import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.security.PublicKey;
 
 /**
  * Public key authenticator which verifies a single provided public key. The public key
@@ -43,10 +44,8 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(SinglePublicKeyAuthenticator.class);
 
-    private PublicKey allowedKey;
-    private String user;
-
-    private BouncyCastleProvider provider = new BouncyCastleProvider();
+    private final PublicKey allowedKey;
+    private final String user;
 
     /**
      * Constructor
@@ -57,9 +56,10 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
      */
     public SinglePublicKeyAuthenticator(String username, String publicKeyPath) {
         this.user = username;
-        InputStream is = null;
-        try {
-            is = FileUtils.getFileResource(publicKeyPath).getInputStream();
+        try (InputStream is = FileUtils.getFileResource(publicKeyPath).getInputStream()){
+            if (is == null) {
+                throw new CitrusRuntimeException(String.format("Failed to read public key - no public key found at %s", publicKeyPath));
+            }
             allowedKey = readKey(is);
             if (allowedKey == null) {
                 throw new CitrusRuntimeException("No public key found at " + publicKeyPath + ", although the file/resource exists. " +
@@ -67,8 +67,6 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(String.format("Failed to read public key file at %s", publicKeyPath),e);
-        } finally {
-            IoUtils.closeQuietly(is);
         }
     }
 
@@ -80,29 +78,26 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
     }
 
     /**
-     * Read the key with bouncycastle's PEM tools 
+     * Read the key with bouncycastle's PEM tools
      * @param is
      * @return
      */
     private PublicKey readKey(InputStream is) {
-        InputStreamReader isr = new InputStreamReader(is);
-        PEMParser r = new PEMParser(isr);
-        try {
+        try (InputStreamReader isr = new InputStreamReader(is);
+             PEMParser r = new PEMParser(isr)) {
             Object o = r.readObject();
             if (o instanceof PEMKeyPair) {
                 PEMKeyPair keyPair = (PEMKeyPair) o;
                 if (keyPair.getPublicKeyInfo() != null &&
                         keyPair.getPublicKeyInfo().getEncoded().length > 0) {
-                    return provider.getPublicKey(keyPair.getPublicKeyInfo());
+                    return BouncyCastleProvider.getPublicKey(keyPair.getPublicKeyInfo());
                 }
             } else if (o instanceof SubjectPublicKeyInfo) {
-                return provider.getPublicKey((SubjectPublicKeyInfo) o);
+                return BouncyCastleProvider.getPublicKey((SubjectPublicKeyInfo) o);
             }
         } catch (IOException e) {
             // Ignoring, returning null
             logger.warn("Failed to get key from PEM file", e);
-        } finally {
-            IoUtils.closeQuietly(isr,r);
         }
 
         return null;

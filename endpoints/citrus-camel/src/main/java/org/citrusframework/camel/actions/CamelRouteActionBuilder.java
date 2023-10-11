@@ -1,13 +1,13 @@
 package org.citrusframework.camel.actions;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.ModelCamelContext;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.camel.message.CamelRouteProcessor;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.ModelCamelContext;
-import org.springframework.util.Assert;
+import org.citrusframework.util.ObjectHelper;
 
 /**
  * Action builder.
@@ -44,7 +44,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      * @return
      */
     public CamelRouteActionBuilder context(String camelContext) {
-        Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
+        ObjectHelper.assertNotNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
         this.camelContext = referenceResolver.resolve(camelContext, ModelCamelContext.class);
         return this;
     }
@@ -150,7 +150,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
 
     @Override
     public AbstractCamelRouteAction build() {
-        Assert.notNull(delegate, "Missing delegate action to build");
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         return delegate.build();
     }
 

@@ -16,8 +16,8 @@
 
 package org.citrusframework.validation.script;
 
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.TestUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,8 +31,7 @@ public class TemplateBasedScriptBuilderTest {
         Assert.assertEquals(
             TestUtils.normalizeLineEndings(
                 TemplateBasedScriptBuilder.fromTemplateResource(
-                        new ClassPathResource(
-                            "org/citrusframework/validation/script/script-template.groovy")
+                        Resources.newClasspathResource("org/citrusframework/validation/script/script-template.groovy")
                     ).withCode("BODY")
                     .build()
             ),

@@ -17,8 +17,8 @@
 package org.citrusframework.jms.integration;
 
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
@@ -64,13 +64,13 @@ public class JmsCommunicationJavaIT extends TestNGCitrusSpringSupport {
 
         when(send("helloServiceJmsEndpoint")
             .message()
-            .body(new ClassPathResource("org/citrusframework/jms/integration/helloRequest.xml"))
+            .body(Resources.newClasspathResource("org/citrusframework/jms/integration/helloRequest.xml"))
             .header("Operation", operation)
             .header("CorrelationId", "${correlationId}"));
 
         then(receive("helloServiceResponseJmsEndpoint")
             .message()
-            .body(new ClassPathResource("org/citrusframework/jms/integration/helloResponse.xml"))
+            .body(Resources.newClasspathResource("org/citrusframework/jms/integration/helloResponse.xml"))
             .header("Operation", operation)
             .header("CorrelationId", "${correlationId}"));
     }
@@ -100,7 +100,7 @@ public class JmsCommunicationJavaIT extends TestNGCitrusSpringSupport {
 
         when(send("helloServiceJmsEndpoint")
                 .message()
-                .body(new ClassPathResource("org/citrusframework/jms/integration/helloRequest.xml"))
+                .body(Resources.newClasspathResource("org/citrusframework/jms/integration/helloRequest.xml"))
                 .header("Operation", operation)
                 .header("CorrelationId", "${correlationId}"));
 
