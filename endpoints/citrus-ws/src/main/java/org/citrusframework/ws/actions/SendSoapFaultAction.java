@@ -25,14 +25,14 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageHeaders;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.message.SoapMessage;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

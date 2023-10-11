@@ -27,8 +27,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Endpoint adapter always returns a static response message.
@@ -58,7 +57,7 @@ public class StaticResponseEndpointAdapter extends StaticEndpointAdapter {
         context.getMessageStore().storeMessage("request", request);
         if (StringUtils.hasText(messagePayloadResource)) {
             try {
-                payload = context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(messagePayloadResource),
+                payload = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(messagePayloadResource),
                         Charset.forName(context.replaceDynamicContentInString(messagePayloadResourceCharset))));
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read message payload file resource", e);

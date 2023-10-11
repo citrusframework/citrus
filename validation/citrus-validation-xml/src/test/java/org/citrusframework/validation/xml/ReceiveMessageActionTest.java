@@ -16,6 +16,9 @@
 
 package org.citrusframework.validation.xml;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
@@ -43,9 +46,6 @@ import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -1158,7 +1158,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Validation failed: Unable to validate message payload - received message payload was empty, control message payload is not");
+            Assert.assertEquals(e.getMessage(), "Unable to validate message payload - received message payload was empty, control message payload is not");
             return;
         }
 

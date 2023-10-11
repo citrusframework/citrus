@@ -16,13 +16,13 @@
 
 package org.citrusframework.kubernetes.command;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.kubernetes.client.KubernetesClient;
-import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
-import org.springframework.util.StringUtils;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.kubernetes.client.KubernetesClient;
+import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

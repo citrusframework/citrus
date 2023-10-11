@@ -39,7 +39,6 @@ import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Extractor implementation reads message elements via JSONPath expressions and saves the
@@ -70,7 +69,9 @@ public class JsonPathVariableExtractor implements VariableExtractor {
 
     @Override
     public void extractVariables(Message message, TestContext context) {
-        if (CollectionUtils.isEmpty(jsonPathExpressions)) {return;}
+        if (jsonPathExpressions == null || jsonPathExpressions.isEmpty()) {
+            return;
+        }
 
         if (logger.isDebugEnabled()) {
             logger.debug("Reading JSON elements with JSONPath");

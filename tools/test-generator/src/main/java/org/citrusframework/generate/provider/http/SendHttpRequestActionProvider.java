@@ -16,6 +16,9 @@
 
 package org.citrusframework.generate.provider.http;
 
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import org.citrusframework.generate.provider.MessageActionProvider;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.MessageHeaders;
@@ -23,12 +26,8 @@ import org.citrusframework.model.testcase.http.ClientRequestType;
 import org.citrusframework.model.testcase.http.ParamType;
 import org.citrusframework.model.testcase.http.RequestHeadersType;
 import org.citrusframework.model.testcase.http.SendRequestModel;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -64,7 +63,7 @@ public class SendHttpRequestActionProvider implements MessageActionProvider<Send
 
         requestType.setHeaders(requestHeaders);
 
-        if (!CollectionUtils.isEmpty(message.getQueryParams())) {
+        if (message.getQueryParams() != null && !message.getQueryParams().isEmpty()) {
             message.getQueryParams()
                     .forEach((key, values) ->
                             values.forEach(value -> {

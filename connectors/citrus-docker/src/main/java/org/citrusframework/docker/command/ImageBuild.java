@@ -16,19 +16,17 @@
 
 package org.citrusframework.docker.command;
 
-import java.io.IOException;
 import java.util.Collections;
 
+import com.github.dockerjava.api.command.BuildImageCmd;
+import com.github.dockerjava.api.command.BuildImageResultCallback;
+import com.github.dockerjava.api.model.BuildResponseItem;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.message.DockerMessageHeaders;
-import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-import com.github.dockerjava.api.command.BuildImageCmd;
-import com.github.dockerjava.api.command.BuildImageResultCallback;
-import com.github.dockerjava.api.model.BuildResponseItem;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch
@@ -52,22 +50,14 @@ public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
         }
 
         if (hasParameter("basedir")) {
-            try {
-                command.withBaseDirectory(FileUtils.getFileResource(getParameter("basedir", context), context).getFile());
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to access Dockerfile base directory", e);
-            }
+            command.withBaseDirectory(FileUtils.getFileResource(getParameter("basedir", context), context).getFile());
         }
 
         if (hasParameter("dockerfile")) {
-            try {
-                if (getParameters().get("dockerfile") instanceof Resource) {
-                    command.withDockerfile(((Resource)getParameters().get("dockerfile")).getFile());
-                } else {
-                    command.withDockerfile(FileUtils.getFileResource(getParameter("dockerfile", context), context).getFile());
-                }
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to read Dockerfile", e);
+            if (getParameters().get("dockerfile") instanceof Resource) {
+                command.withDockerfile(((Resource)getParameters().get("dockerfile")).getFile());
+            } else {
+                command.withDockerfile(FileUtils.getFileResource(getParameter("dockerfile", context), context).getFile());
             }
         }
 

@@ -16,19 +16,19 @@
 
 package org.citrusframework.ws.validation;
 
+import java.io.IOException;
+import java.util.Collections;
+
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessage;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.util.Collections;
-
 /**
  * @author Christoph Deppisch
  */
 public class SimpleSoapAttachmentValidatorTest {
-    
+
     @Test
     public void testSimpleValidation() throws IOException {
         SoapAttachment controlAttachment = new SoapAttachment();
@@ -42,7 +42,7 @@ public class SimpleSoapAttachmentValidatorTest {
         SimpleSoapAttachmentValidator validator = new SimpleSoapAttachmentValidator();
         validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment));
     }
-    
+
     @Test
     public void testSimpleValidationNoControlContentId() throws IOException {
         SoapAttachment receivedAttachment = new SoapAttachment();
@@ -56,11 +56,11 @@ public class SimpleSoapAttachmentValidatorTest {
         SoapAttachment controlAttachment = new SoapAttachment();
         controlAttachment.setContentType("text/plain");
         controlAttachment.setContent("This is a test!");
-        
+
         SimpleSoapAttachmentValidator validator = new SimpleSoapAttachmentValidator();
         validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment));
     }
-    
+
     @Test(expectedExceptions = ValidationException.class)
     public void testSimpleValidationWrongContentId() throws IOException {
         SoapAttachment receivedAttachment = new SoapAttachment();
@@ -75,12 +75,12 @@ public class SimpleSoapAttachmentValidatorTest {
         controlAttachment.setContentId("wrongAttachmentId");
         controlAttachment.setContentType("text/plain");
         controlAttachment.setContent("This is a test!");
-        
+
         SimpleSoapAttachmentValidator validator = new SimpleSoapAttachmentValidator();
         validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment));
     }
-    
-    @Test(expectedExceptions = IllegalArgumentException.class)
+
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Values not equal for attachment content 'soapAttachmentId', expected 'ThisisnotOK!' but was 'Thisisatest!'")
     public void testSimpleValidationWrongContent() throws IOException {
         SoapAttachment receivedAttachment = new SoapAttachment();
         receivedAttachment.setContentId("soapAttachmentId");
@@ -94,12 +94,12 @@ public class SimpleSoapAttachmentValidatorTest {
         controlAttachment.setContentId("soapAttachmentId");
         controlAttachment.setContentType("text/plain");
         controlAttachment.setContent("This is not OK!");
-        
+
         SimpleSoapAttachmentValidator validator = new SimpleSoapAttachmentValidator();
         validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment));
     }
-    
-    @Test(expectedExceptions = IllegalArgumentException.class)
+
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Values not equal for attachment contentType, expected 'text/xml' but was 'text/plain'")
     public void testSimpleValidationWrongContentType() throws IOException {
         SoapAttachment receivedAttachment = new SoapAttachment();
         receivedAttachment.setContentId("soapAttachmentId");
@@ -113,7 +113,7 @@ public class SimpleSoapAttachmentValidatorTest {
         controlAttachment.setContentId("soapAttachmentId");
         controlAttachment.setContentType("text/xml");
         controlAttachment.setContent("This is a test!");
-        
+
         SimpleSoapAttachmentValidator validator = new SimpleSoapAttachmentValidator();
         validator.validateAttachment(testMessage, Collections.singletonList(controlAttachment));
     }

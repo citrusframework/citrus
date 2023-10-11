@@ -64,7 +64,6 @@ public class SoapFaultDetailValidationContext extends XmlMessageValidationContex
                     .schemaValidation(schemaValidation)
                     .schemaRepository(schemaRepository)
                     .schema(schema)
-                    .dtd(dtdResource)
                     .ignore(ignoreExpressions);
         }
 

@@ -1,11 +1,11 @@
 package org.citrusframework.cucumber.integration;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
-import org.springframework.util.Assert;
 
 /**
  * Basic message validator performs String equals on received message payloads. We add this validator in order to have a
@@ -16,8 +16,9 @@ public class TextEqualsMessageValidator extends DefaultMessageValidator {
 
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, ValidationContext validationContext) {
-        Assert.isTrue(receivedMessage.getPayload(String.class).equals(controlMessage.getPayload(String.class)), "Validation failed - " +
-                "expected message contents not equal!");
+        if (!receivedMessage.getPayload(String.class).equals(controlMessage.getPayload(String.class))) {
+            throw new ValidationException("Validation failed - expected message contents not equal!");
+        }
     }
 
     @Override

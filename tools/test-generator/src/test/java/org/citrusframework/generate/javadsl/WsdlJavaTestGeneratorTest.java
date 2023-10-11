@@ -24,7 +24,6 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.utils.CleanupUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
@@ -35,7 +34,7 @@ import org.testng.annotations.Test;
  */
 public class WsdlJavaTestGeneratorTest {
 
-    private String testDir = CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/";
+    private final String testDir = CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/";
 
     private final CleanupUtils cleanupUtils = new CleanupUtils();
 
@@ -66,7 +65,7 @@ public class WsdlJavaTestGeneratorTest {
         File javaFile = new File(testDir + name + FileUtils.FILE_EXTENSION_JAVA);
         Assert.assertTrue(javaFile.exists());
 
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
+        String javaContent = FileUtils.readToString(javaFile);
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class " + name));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));

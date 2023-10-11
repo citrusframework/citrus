@@ -16,10 +16,10 @@
 
 package org.citrusframework.mail.model;
 
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.StringResult;
 import org.citrusframework.xml.StringSource;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -29,12 +29,12 @@ import org.testng.annotations.Test;
  */
 public class MailMarshallerTest {
 
-    private MailMarshaller mailMarshaller = new MailMarshaller();
+    private final MailMarshaller mailMarshaller = new MailMarshaller();
 
     @Test(dataProvider = "mailSourceProvider")
     public void testUnmarshalMail(String requestSource, String responseSource) throws Exception {
-        MailRequest request = (MailRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(new ClassPathResource(requestSource))));
-        MailResponse response = (MailResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(new ClassPathResource(responseSource))));
+        MailRequest request = (MailRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.newClasspathResource(requestSource))));
+        MailResponse response = (MailResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.newClasspathResource(responseSource))));
 
         Assert.assertEquals(request.getFrom(), "foo@mail.com");
         Assert.assertEquals(request.getTo(), "bar@mail.com,copy@mail.com");
@@ -45,8 +45,8 @@ public class MailMarshallerTest {
 
     @Test(dataProvider = "acceptSourceProvider")
     public void testUnmarshalAccept(String requestSource, String responseSource) throws Exception {
-        AcceptRequest request = (AcceptRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(new ClassPathResource(requestSource))));
-        AcceptResponse response = (AcceptResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(new ClassPathResource(responseSource))));
+        AcceptRequest request = (AcceptRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.newClasspathResource(requestSource))));
+        AcceptResponse response = (AcceptResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.newClasspathResource(responseSource))));
 
         Assert.assertEquals(request.getFrom(), "foo@mail.com");
 

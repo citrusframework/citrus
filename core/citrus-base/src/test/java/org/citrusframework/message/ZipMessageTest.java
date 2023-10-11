@@ -16,18 +16,18 @@
 
 package org.citrusframework.message;
 
-import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.FileCopyUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -38,9 +38,9 @@ public class ZipMessageTest {
     @Test
     public void testAddSingleFile() throws Exception {
         ZipMessage message = new ZipMessage();
-        message.addEntry(new ClassPathResource("org/citrusframework/archive/foo.txt"));
+        message.addEntry(Resources.newClasspathResource("org/citrusframework/archive/foo.txt"));
         File archive = new File (createTempDir().toFile(), "archive.zip");
-        FileCopyUtils.copy(message.getPayload(), archive);
+        FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);
 
         Assert.assertTrue(archive.exists());
 
@@ -54,9 +54,9 @@ public class ZipMessageTest {
     @Test
     public void testAddDirectory() throws Exception {
         ZipMessage message = new ZipMessage();
-        message.addEntry(new ClassPathResource("org/citrusframework/archive"));
+        message.addEntry(Resources.newClasspathResource("org/citrusframework/archive"));
         File archive = new File (createTempDir().toFile(), "archive.zip");
-        FileCopyUtils.copy(message.getPayload(), archive);
+        FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);
 
         Assert.assertTrue(archive.exists());
 
@@ -80,10 +80,10 @@ public class ZipMessageTest {
         ZipMessage message = new ZipMessage();
         message.addEntry(new ZipMessage.Entry("foos/")
                                         .addEntry(new ZipMessage.Entry("foo.txt",
-                                                new ClassPathResource("org/citrusframework/archive/foo.txt").getFile())));
+                                                Resources.newClasspathResource("org/citrusframework/archive/foo.txt").getFile())));
 
         File archive = new File (createTempDir().toFile(), "archive.zip");
-        FileCopyUtils.copy(message.getPayload(), archive);
+        FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);
 
         Assert.assertTrue(archive.exists());
 
@@ -102,10 +102,10 @@ public class ZipMessageTest {
         message.addEntry(new ZipMessage.Entry("foos/"));
         message.addEntry(new ZipMessage.Entry("bars/")
                                        .addEntry(new ZipMessage.Entry("bar.txt",
-                                               new ClassPathResource("org/citrusframework/archive/bar.txt").getFile())));
+                                               Resources.newClasspathResource("org/citrusframework/archive/bar.txt").getFile())));
 
         File archive = new File (createTempDir().toFile(), "archive.zip");
-        FileCopyUtils.copy(message.getPayload(), archive);
+        FileUtils.writeToFile(new ByteArrayInputStream(message.getPayload()), archive);
 
         Assert.assertTrue(archive.exists());
 

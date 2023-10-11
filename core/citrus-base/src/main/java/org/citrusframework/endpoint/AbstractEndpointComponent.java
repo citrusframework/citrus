@@ -29,9 +29,9 @@ import java.util.StringTokenizer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.util.TypeConversionUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Default endpoint component reads component name from endpoint uri and parses parameters from uri using
@@ -124,13 +124,13 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
      */
     protected void enrichEndpointConfiguration(EndpointConfiguration endpointConfiguration, Map<String, String> parameters, TestContext context) {
         for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
-            Field field = ReflectionUtils.findField(endpointConfiguration.getClass(), parameterEntry.getKey());
+            Field field = ReflectionHelper.findField(endpointConfiguration.getClass(), parameterEntry.getKey());
 
             if (field == null) {
                 throw new CitrusRuntimeException(String.format("Unable to find parameter field on endpoint configuration '%s'", parameterEntry.getKey()));
             }
 
-            Method setter = ReflectionUtils.findMethod(endpointConfiguration.getClass(), "set" + parameterEntry.getKey().substring(0, 1).toUpperCase() + parameterEntry.getKey().substring(1), field.getType());
+            Method setter = ReflectionHelper.findMethod(endpointConfiguration.getClass(), "set" + parameterEntry.getKey().substring(0, 1).toUpperCase() + parameterEntry.getKey().substring(1), field.getType());
 
             if (setter == null) {
                 throw new CitrusRuntimeException(String.format("Unable to find parameter setter on endpoint configuration '%s'",
@@ -138,9 +138,9 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
             }
 
             if (parameterEntry.getValue() != null) {
-                ReflectionUtils.invokeMethod(setter, endpointConfiguration, TypeConversionUtils.convertStringToType(parameterEntry.getValue(), field.getType(), context));
+                ReflectionHelper.invokeMethod(setter, endpointConfiguration, TypeConversionUtils.convertStringToType(parameterEntry.getValue(), field.getType(), context));
             } else {
-                ReflectionUtils.invokeMethod(setter, endpointConfiguration, field.getType().cast(null));
+                ReflectionHelper.invokeMethod(setter, endpointConfiguration, field.getType().cast(null));
             }
         }
     }
@@ -159,7 +159,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
         Map<String, String> params = new HashMap<>();
 
         for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
-            Field field = ReflectionUtils.findField(endpointConfigurationType, parameterEntry.getKey());
+            Field field = ReflectionHelper.findField(endpointConfigurationType, parameterEntry.getKey());
 
             if (field != null) {
                 params.put(parameterEntry.getKey(), parameterEntry.getValue());
@@ -183,7 +183,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
         StringBuilder paramString = new StringBuilder();
 
         for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
-            Field field = ReflectionUtils.findField(endpointConfigurationType, parameterEntry.getKey());
+            Field field = ReflectionHelper.findField(endpointConfigurationType, parameterEntry.getKey());
 
             if (field == null) {
                 if (paramString.length() == 0) {

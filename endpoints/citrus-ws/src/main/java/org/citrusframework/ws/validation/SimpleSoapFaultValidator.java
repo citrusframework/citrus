@@ -21,7 +21,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * Simple soap fault validator implementation just performing String equals on soap fault detail
@@ -40,12 +39,12 @@ public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
 
         logger.debug("Validating SOAP fault detail ...");
 
-        String receivedDetail = StringUtils.trimAllWhitespace(received);
-        String controlDetail = StringUtils.trimAllWhitespace(control);
+        String receivedDetail = received.replaceAll("\\s", "");
+        String controlDetail = control.replaceAll("\\s", "");
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Received fault detail:\n" + StringUtils.trimWhitespace(received));
-            logger.debug("Control fault detail:\n" + StringUtils.trimWhitespace(control));
+            logger.debug("Received fault detail:\n" + received.strip());
+            logger.debug("Control fault detail:\n" + control.strip());
         }
 
         if (!receivedDetail.equals(controlDetail)) {

@@ -6,7 +6,7 @@ import io.cucumber.core.backend.CucumberBackendException;
 import io.cucumber.core.backend.HookDefinition;
 import io.cucumber.core.backend.Lookup;
 import io.cucumber.core.backend.TestCaseState;
-import org.springframework.util.ReflectionUtils;
+import org.citrusframework.util.ReflectionHelper;
 
 /**
  * @author Christoph Deppisch
@@ -35,7 +35,7 @@ public class CitrusHookDefinition implements HookDefinition {
         }
 
         try {
-            ReflectionUtils.invokeMethod(method, lookup.getInstance(method.getDeclaringClass()), args);
+            ReflectionHelper.invokeMethod(method, lookup.getInstance(method.getDeclaringClass()), args);
         } catch (IllegalArgumentException | IllegalStateException e) {
             throw new CucumberBackendException("Failed to invoke " + method, e);
         }

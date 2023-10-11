@@ -18,8 +18,8 @@ package org.citrusframework.validation.script;
 
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.MessageUtils;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * Extended groovy message validator providing specific Json slurper support.
@@ -34,7 +34,7 @@ public class GroovyJsonMessageValidator extends GroovyScriptMessageValidator {
      * Default constructor using default script template.
      */
     public GroovyJsonMessageValidator() {
-        super(new ClassPathResource("org/citrusframework/validation/json-validation-template.groovy"));
+        super(Resources.newClasspathResource("org/citrusframework/validation/json-validation-template.groovy"));
     }
 
     @Override

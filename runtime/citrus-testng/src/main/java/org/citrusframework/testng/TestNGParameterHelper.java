@@ -33,8 +33,8 @@ import org.citrusframework.TestParameterAware;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.ReflectionHelper;
+import org.citrusframework.util.StringUtils;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.DataProvider;
@@ -68,7 +68,11 @@ public final class TestNGParameterHelper {
         if (method.getAnnotation(Test.class) != null &&
                 StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
             final Method[] dataProvider = new Method[1];
-            ReflectionUtils.doWithMethods(method.getDeclaringClass(), current -> {
+            ReflectionHelper.doWithMethods(method.getDeclaringClass(), current -> {
+                if (current.getAnnotation(DataProvider.class) == null) {
+                    return;
+                }
+
                 if (StringUtils.hasText(current.getAnnotation(DataProvider.class).name()) &&
                         current.getAnnotation(DataProvider.class).name().equals(method.getAnnotation(Test.class).dataProvider())) {
                     dataProvider[0] = current;
@@ -76,13 +80,13 @@ public final class TestNGParameterHelper {
                     dataProvider[0] = current;
                 }
 
-            }, toFilter -> toFilter.getAnnotation(DataProvider.class) != null);
+            });
 
             if (dataProvider[0] == null) {
                 throw new CitrusRuntimeException("Unable to find data provider: " + method.getAnnotation(Test.class).dataProvider());
             }
 
-            Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(dataProvider[0], target,
+            Object[][] parameters = (Object[][]) ReflectionHelper.invokeMethod(dataProvider[0], target,
                     resolveParameter(target, testResult, dataProvider[0], context, -1));
             if (parameters != null) {
                 dataProviderParams = parameters[invocationCount % parameters.length];

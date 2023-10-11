@@ -16,17 +16,20 @@
 
 package org.citrusframework.generate;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Properties;
+
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.PropertyUtils;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-import java.io.*;
-import java.util.Properties;
 
 /**
  * Generator creating a new test case from a template.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.7.4
  */
@@ -64,13 +67,13 @@ public abstract class AbstractTemplateBasedTestGenerator<T extends TestGenerator
 
     /**
      * Read the given template file and replace all test case properties.
-     * 
+     *
      * @param properties the dynamic test case properties.
      * @return the final rest file content.
      */
     private String createContent(Properties properties) {
         StringBuilder contentBuilder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new PathMatchingResourcePatternResolver().getResource(getTemplateFilePath()).getInputStream()))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.newClasspathResource(getTemplateFilePath()).getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 contentBuilder.append(PropertyUtils.replacePropertiesInString(line, properties));
@@ -81,7 +84,7 @@ public abstract class AbstractTemplateBasedTestGenerator<T extends TestGenerator
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to create test case, error while accessing test case template file", e);
         }
-        
+
         return contentBuilder.toString();
     }
 

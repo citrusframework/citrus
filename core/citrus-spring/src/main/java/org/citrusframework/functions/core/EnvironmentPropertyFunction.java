@@ -42,7 +42,7 @@ public class EnvironmentPropertyFunction implements Function, EnvironmentAware {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList)) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Invalid function parameters - must set environment property name");
         }
 

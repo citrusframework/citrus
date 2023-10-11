@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.model.ModelCamelContext;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
-import org.apache.camel.CamelContext;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.springframework.util.Assert;
+import org.citrusframework.util.ObjectHelper;
 
 /**
  * @author Christoph Deppisch
@@ -104,7 +104,7 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
         @Override
         public final T build() {
             if (camelContext == null) {
-                Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
+                ObjectHelper.assertNotNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
 
                 if (referenceResolver.isResolvable("citrusCamelContext")) {
                     camelContext = referenceResolver.resolve("citrusCamelContext", ModelCamelContext.class);

@@ -20,15 +20,15 @@
 package org.citrusframework.groovy.dsl.configuration.beans;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Locale;
 
-import org.citrusframework.Citrus;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.message.DefaultMessageQueue;
 import groovy.lang.Closure;
 import groovy.lang.GroovyObjectSupport;
 import groovy.lang.GroovyRuntimeException;
 import groovy.lang.MissingMethodException;
-import org.springframework.util.StringUtils;
+import org.citrusframework.Citrus;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.message.DefaultMessageQueue;
 
 /**
  * @author Christoph Deppisch
@@ -42,7 +42,7 @@ public class BeansConfiguration extends GroovyObjectSupport {
     }
 
     public void bean(Class<?> type) {
-        bean(StringUtils.uncapitalize(type.getSimpleName()), type);
+        bean(sanitizeBeanName(type.getSimpleName()), type);
     }
 
     public void bean(String name, Class<?> type) {
@@ -95,5 +95,14 @@ public class BeansConfiguration extends GroovyObjectSupport {
         }
 
         throw new MissingMethodException(name, BeansConfiguration.class, args);
+    }
+
+    /**
+     * Uncapitalize given bean name.
+     * @param name
+     * @return
+     */
+    private static String sanitizeBeanName(String name) {
+        return name.substring(0, 1).toLowerCase(Locale.US) + name.substring(1);
     }
 }

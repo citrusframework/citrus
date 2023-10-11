@@ -29,9 +29,9 @@ import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.groovy.dsl.configuration.endpoints.EndpointConfigurationScript;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -47,7 +47,7 @@ public class EndpointConfigurationScriptIT extends TestNGCitrusSpringSupport {
         context.getReferenceResolver().bind("say-hello", new DefaultMessageQueue("say-hello"));
         context.getReferenceResolver().bind("say-goodbye", new DefaultMessageQueue("say-goodbye"));
 
-        EndpointConfigurationScript script = new EndpointConfigurationScript(FileUtils.readToString(new ClassPathResource("org/citrusframework/groovy/dsl/endpoints.groovy")), citrus);
+        EndpointConfigurationScript script = new EndpointConfigurationScript(FileUtils.readToString(Resources.newClasspathResource("org/citrusframework/groovy/dsl/endpoints.groovy")), citrus);
         script.execute(context);
 
         Assert.assertTrue(context.getReferenceResolver().isResolvable("say-hello", MessageQueue.class));
@@ -71,7 +71,7 @@ public class EndpointConfigurationScriptIT extends TestNGCitrusSpringSupport {
                                               @Optional @CitrusResource TestContext context) throws IOException {
         context.getReferenceResolver().bind("say-hello", new DefaultMessageQueue("say-hello"));
 
-        EndpointConfigurationScript script = new EndpointConfigurationScript(FileUtils.readToString(new ClassPathResource("org/citrusframework/groovy/dsl/endpoint.groovy")), citrus);
+        EndpointConfigurationScript script = new EndpointConfigurationScript(FileUtils.readToString(Resources.newClasspathResource("org/citrusframework/groovy/dsl/endpoint.groovy")), citrus);
         script.execute(context);
 
         Assert.assertTrue(context.getReferenceResolver().isResolvable("say-hello", MessageQueue.class));

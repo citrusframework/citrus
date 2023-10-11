@@ -16,6 +16,10 @@
 
 package org.citrusframework.kubernetes.message;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.command.*;
@@ -24,11 +28,7 @@ import org.citrusframework.kubernetes.model.KubernetesRequest;
 import org.citrusframework.kubernetes.model.KubernetesResponse;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
-import org.springframework.util.StringUtils;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

@@ -31,12 +31,11 @@ import org.apache.commons.codec.binary.Hex;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.citrusframework.util.StringUtils;
 import org.springframework.http.MediaType;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.Attachment;
 
 /**
@@ -222,14 +221,14 @@ public class SoapAttachment implements Attachment, Serializable {
         } else if (StringUtils.hasText(getContentResourcePath()) &&
                 (getContentType().startsWith("text/") || getContentType().equals(MediaType.APPLICATION_XML_VALUE))) {
             try {
-                String fileContent = FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(getContentResourcePath()).getInputStream(), Charset.forName(charsetName));
+                String fileContent = FileUtils.readToString(Resources.create(getContentResourcePath()).getInputStream(), Charset.forName(charsetName));
                 return context != null ? context.replaceDynamicContentInString(fileContent) : fileContent;
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read SOAP attachment file resource", e);
             }
         } else {
             try {
-                byte[] binaryData = FileCopyUtils.copyToByteArray(getDataHandler().getInputStream());
+                byte[] binaryData = FileUtils.copyToByteArray(getDataHandler().getInputStream());
                 if (encodingType.equals(SoapAttachment.ENCODING_BASE64_BINARY)) {
                     return Base64.encodeBase64String(binaryData);
                 } else if (encodingType.equals(SoapAttachment.ENCODING_HEX_BINARY)) {
@@ -257,11 +256,15 @@ public class SoapAttachment implements Attachment, Serializable {
      * @return the content resource path
      */
     public String getContentResourcePath() {
-        if (contentResourcePath != null && context != null) {
-            return context.replaceDynamicContentInString(contentResourcePath);
-        } else {
-            return contentResourcePath;
+        if (contentResourcePath != null) {
+            if (context != null) {
+                return context.replaceDynamicContentInString(contentResourcePath);
+            } else {
+                return contentResourcePath;
+            }
         }
+
+        return null;
     }
 
     /**
@@ -398,7 +401,7 @@ public class SoapAttachment implements Attachment, Serializable {
 
         @Override
         public String getName() {
-            return getFileResource().getFilename();
+            return FileUtils.getFileName(getFileResource().getLocation());
         }
 
         @Override
@@ -407,7 +410,7 @@ public class SoapAttachment implements Attachment, Serializable {
         }
 
         private Resource getFileResource() {
-            return new PathMatchingResourcePatternResolver().getResource(SoapAttachment.this.getContentResourcePath());
+            return Resources.create(SoapAttachment.this.getContentResourcePath());
         }
     }
 }

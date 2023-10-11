@@ -23,9 +23,9 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.script.GroovyAction;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -74,7 +74,7 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport {
     public void testGroovyBuilderWithTemplate() throws IOException {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(groovy().script("context.setVariable('message', 'Groovy!')")
-                        .template(new ClassPathResource("org/citrusframework/script/script-template.groovy")));
+                        .template(Resources.newClasspathResource("org/citrusframework/script/script-template.groovy")));
 
         Assert.assertNotNull(context.getVariable("message"));
         Assert.assertEquals(context.getVariable("message"), "Groovy!");

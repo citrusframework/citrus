@@ -21,8 +21,8 @@ package org.citrusframework.config.xml.parser;
 
 import org.citrusframework.message.builder.script.GroovyFileResourcePayloadBuilder;
 import org.citrusframework.message.builder.script.GroovyScriptPayloadBuilder;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 

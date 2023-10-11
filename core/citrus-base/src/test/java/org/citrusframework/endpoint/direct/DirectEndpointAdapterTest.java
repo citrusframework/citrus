@@ -16,6 +16,8 @@
 
 package org.citrusframework.endpoint.direct;
 
+import java.util.concurrent.Executors;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.DefaultMessage;
@@ -23,7 +25,6 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageSelector;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -61,7 +62,7 @@ public class DirectEndpointAdapterTest {
     public void testEndpointAdapter() {
         final Message request = new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>");
 
-        new SimpleAsyncTaskExecutor().execute(() -> {
+        Executors.newSingleThreadExecutor().execute(() -> {
             Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(context, endpointConfiguration.getTimeout());
             Assert.assertNotNull(receivedMessage);
             Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());

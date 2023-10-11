@@ -17,20 +17,26 @@
 package org.citrusframework.xml;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.common.Named;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.schema.TargetNamespaceSchemaMappingStrategy;
 import org.citrusframework.xml.schema.WsdlXsdSchema;
 import org.citrusframework.xml.schema.XsdSchemaMappingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.Document;
@@ -43,7 +49,7 @@ import org.xml.sax.SAXException;
  */
 @SuppressWarnings("unused")
 public class XsdSchemaRepository implements Named, InitializingPhase {
-    /** This repositories name in the Spring application context */
+    /** The name of the repository */
     private String name = "schemaRepository";
 
     /** List of schema resources */
@@ -71,13 +77,19 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
     @Override
     public void initialize() {
         try {
-            PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-
+            ClasspathResourceResolver resourceResolver = new ClasspathResourceResolver();
             for (String location : locations) {
-                Resource[] findings = resourcePatternResolver.getResources(location);
+                Set<Path> findings;
+                if (StringUtils.hasText(FileUtils.getFileExtension(location))) {
+                    String fileNamePattern = FileUtils.getFileName(location).replace(".", "\\.").replace("*", ".*");
+                    String basePath = FileUtils.getBasePath(location);
+                    findings = resourceResolver.getResources(basePath, fileNamePattern);
+                } else {
+                    findings = resourceResolver.getResources(location);
+                }
 
-                for (Resource resource : findings) {
-                    addSchemas(resource);
+                for (Path resource : findings) {
+                    addSchemas(Resources.newClasspathResource(resource.toString()));
                 }
             }
 
@@ -98,25 +110,25 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
      * @param schemaName The name of the schema within the citrus schema package
      */
     protected void addCitrusSchema(String schemaName) throws IOException, SAXException, ParserConfigurationException {
-        Resource resource = new PathMatchingResourcePatternResolver().getResource("classpath:org/citrusframework/schema/" + schemaName + ".xsd");
+        Resource resource = Resources.newClasspathResource("classpath:org/citrusframework/schema/" + schemaName + ".xsd");
         if (resource.exists()) {
             addXsdSchema(resource);
         }
     }
 
     private void addSchemas(Resource resource) {
-        if (resource.getFilename().endsWith(".xsd")) {
+        if (resource.getLocation().endsWith(".xsd")) {
             addXsdSchema(resource);
-        } else if (resource.getFilename().endsWith(".wsdl")) {
+        } else if (resource.getLocation().endsWith(".wsdl")) {
             addWsdlSchema(resource);
         } else {
-            logger.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
+            logger.warn("Skipped resource other than XSD schema for repository (" + resource.getLocation() + ")");
         }
     }
 
     private void addWsdlSchema(Resource resource) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Loading WSDL schema resource " + resource.getFilename());
+            logger.debug("Loading WSDL schema resource " + resource.getLocation());
         }
 
         WsdlXsdSchema wsdl = new WsdlXsdSchema(resource);
@@ -126,10 +138,10 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
 
     private void addXsdSchema(Resource resource) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Loading XSD schema resource " + resource.getFilename());
+            logger.debug("Loading XSD schema resource " + resource.getLocation());
         }
 
-        SimpleXsdSchema schema = new SimpleXsdSchema(resource);
+        SimpleXsdSchema schema = new SimpleXsdSchema(new ByteArrayResource(FileUtils.copyToByteArray(resource)));
         try {
             schema.afterPropertiesSet();
         } catch (ParserConfigurationException | IOException | SAXException e) {
@@ -177,7 +189,7 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
 
     /**
      * Gets the name.
-     * @return the name the name to get.
+     * @return the name to get.
      */
     public String getName() {
         return name;
@@ -185,7 +197,7 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
 
     /**
      * Gets the locations.
-     * @return the locations the locations to get.
+     * @return the locations to get.
      */
     public List<String> getLocations() {
         return locations;

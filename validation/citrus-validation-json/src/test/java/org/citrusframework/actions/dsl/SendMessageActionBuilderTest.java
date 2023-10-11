@@ -42,7 +42,6 @@ import org.citrusframework.validation.json.JsonPathVariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.variable.dictionary.json.JsonMappingDataDictionary;
 import org.mockito.Mockito;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -217,7 +216,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)), "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
+            Assert.assertEquals(message.getPayload(String.class).replaceAll("\\s", ""), "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -253,7 +252,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)), "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
+            Assert.assertEquals(message.getPayload(String.class).replaceAll("\\s", ""), "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -285,7 +284,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)), "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
+            Assert.assertEquals(message.getPayload(String.class).replaceAll("\\s", ""), "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 

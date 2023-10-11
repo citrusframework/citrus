@@ -29,7 +29,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Test action prompts user data from standard input stream. The input data is then stored as new

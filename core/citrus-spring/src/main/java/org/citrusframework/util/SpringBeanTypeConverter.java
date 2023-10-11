@@ -1,6 +1,8 @@
 package org.citrusframework.util;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Map;
 import java.util.Optional;
@@ -13,9 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.SimpleTypeConverter;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -44,6 +46,33 @@ public final class SpringBeanTypeConverter extends DefaultTypeConverter {
             }
         }
 
+        if (target.getClass().isAssignableFrom(Resource.class)) {
+            Resource resource = (Resource) target;
+            if (File.class.isAssignableFrom(type)) {
+                try {
+                    return (Optional<T>) Optional.of(resource.getFile());
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to access file from resource", e);
+                }
+            }
+
+            if (InputStream.class.isAssignableFrom(type)) {
+                try {
+                    return (Optional<T>) Optional.of(resource.getInputStream());
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to access input stream of resource", e);
+                }
+            }
+
+            if (byte[].class.isAssignableFrom(type)) {
+                try {
+                    return (Optional<T>) Optional.of(FileUtils.copyToByteArray(resource.getInputStream()));
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to access content of resource", e);
+                }
+            }
+        }
+
         if (MultiValueMap.class.isAssignableFrom(type)) {
             String mapString = String.valueOf(target);
 
@@ -56,7 +85,7 @@ public final class SpringBeanTypeConverter extends DefaultTypeConverter {
             MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
             for (Map.Entry<Object, Object> entry : props.entrySet()) {
                 String arrayString = String.valueOf(entry.getValue()).replaceAll("^\\[", "").replaceAll("\\]$", "").replaceAll(",\\s", ",");
-                map.add(entry.getKey().toString(), StringUtils.commaDelimitedListToStringArray(String.valueOf(arrayString)));
+                map.add(entry.getKey().toString(), arrayString.split(","));
             }
 
             return (Optional<T>) Optional.of(map);

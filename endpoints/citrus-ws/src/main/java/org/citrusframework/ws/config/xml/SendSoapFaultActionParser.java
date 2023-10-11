@@ -21,12 +21,12 @@ import java.util.List;
 
 import org.citrusframework.config.xml.AbstractSendMessageActionFactoryBean;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.actions.SendSoapFaultAction;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 

@@ -16,25 +16,6 @@
 
 package org.citrusframework.actions;
 
-import org.apache.commons.codec.binary.Base64;
-import org.citrusframework.CitrusSettings;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.exceptions.UnknownElementException;
-import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.script.ScriptTypes;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.validation.matcher.ValidationMatcherUtils;
-import org.citrusframework.validation.script.ScriptValidationContext;
-import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.dao.DataAccessException;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.CollectionUtils;
-
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -44,6 +25,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.sql.DataSource;
+
+import org.apache.commons.codec.binary.Base64;
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.UnknownElementException;
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.script.ScriptTypes;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.validation.matcher.ValidationMatcherUtils;
+import org.citrusframework.validation.script.ScriptValidationContext;
+import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Action executes SQL queries and offers result set validation.

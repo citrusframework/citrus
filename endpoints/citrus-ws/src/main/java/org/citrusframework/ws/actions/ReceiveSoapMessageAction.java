@@ -27,6 +27,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.ws.message.SoapAttachment;
@@ -35,7 +36,6 @@ import org.citrusframework.ws.message.SoapMessageHeaders;
 import org.citrusframework.ws.message.SoapMessageUtils;
 import org.citrusframework.ws.validation.SimpleSoapAttachmentValidator;
 import org.citrusframework.ws.validation.SoapAttachmentValidator;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 
 /**

@@ -31,6 +31,7 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.util.ValidateMessageParserUtil;
 import org.citrusframework.config.util.VariableExtractorParserUtil;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
@@ -48,7 +49,6 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -301,7 +301,6 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         context.schema(parentContext.getSchema());
         context.schemaRepository(parentContext.getSchemaRepository());
         context.schemaValidation(parentContext.isSchemaValidationEnabled());
-        context.dtd(parentContext.getDTDResource());
 
         return context.build();
     }

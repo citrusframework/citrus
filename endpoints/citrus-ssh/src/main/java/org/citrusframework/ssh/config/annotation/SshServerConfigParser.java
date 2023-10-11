@@ -23,7 +23,7 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.ssh.message.SshMessageConverter;
 import org.citrusframework.ssh.server.SshServer;
 import org.citrusframework.ssh.server.SshServerBuilder;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

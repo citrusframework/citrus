@@ -1,17 +1,15 @@
 package org.citrusframework.validation.interceptor;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
 
 /**
  * Message construction processor automatically converts message payloads to binary content. Supports String typed message payloads and
@@ -36,11 +34,7 @@ public class BinaryMessageProcessor extends AbstractMessageProcessor {
         if (message.getPayload() instanceof String) {
             message.setPayload(message.getPayload(String.class).getBytes(encoding));
         } else if (message.getPayload() instanceof Resource) {
-            try {
-                message.setPayload(FileCopyUtils.copyToByteArray(message.getPayload(Resource.class).getInputStream()));
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to build binary message payload from payload resource", e);
-            }
+            message.setPayload(FileUtils.copyToByteArray(message.getPayload(Resource.class)));
         } else {
             message.setPayload(message.getPayload(byte[].class));
         }

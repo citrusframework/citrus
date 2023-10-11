@@ -29,13 +29,12 @@ import org.citrusframework.main.AbstractTestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.main.scan.ClassPathTestScanner;
 import org.citrusframework.main.scan.JarFileTestScanner;
+import org.citrusframework.util.StringUtils;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.RunListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -58,11 +57,11 @@ public class JUnit4TestEngine extends AbstractTestEngine {
 
     @Override
     public void run() {
-        if (!CollectionUtils.isEmpty(getConfiguration().getTestClasses())) {
+        if (getConfiguration().getTestClasses() != null && !getConfiguration().getTestClasses().isEmpty()) {
             run(getConfiguration().getTestClasses());
         } else {
             List<String> packagesToRun = getConfiguration().getPackages();
-            if (CollectionUtils.isEmpty(packagesToRun) && CollectionUtils.isEmpty(getConfiguration().getTestClasses())) {
+            if (packagesToRun.isEmpty() && getConfiguration().getTestClasses().isEmpty()) {
                 packagesToRun = Collections.singletonList("");
                 logger.info("Running all tests in project");
             }

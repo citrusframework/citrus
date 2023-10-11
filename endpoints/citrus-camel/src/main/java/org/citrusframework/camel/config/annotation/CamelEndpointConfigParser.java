@@ -19,14 +19,14 @@
 
 package org.citrusframework.camel.config.annotation;
 
+import org.apache.camel.CamelContext;
 import org.citrusframework.TestActor;
 import org.citrusframework.camel.endpoint.CamelEndpoint;
 import org.citrusframework.camel.endpoint.CamelEndpointBuilder;
 import org.citrusframework.camel.message.CamelMessageConverter;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.spi.ReferenceResolver;
-import org.apache.camel.CamelContext;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

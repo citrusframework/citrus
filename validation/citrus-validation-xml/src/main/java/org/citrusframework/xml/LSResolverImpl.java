@@ -16,22 +16,21 @@
 
 package org.citrusframework.xml;
 
-import java.io.IOException;
-
-import org.springframework.core.io.ClassPathResource;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
 /**
  * Very basic LSResolver implementation for resolving dtd resources by their systemId.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class LSResolverImpl implements LSResourceResolver {
     /** DOM implementation */
     private DOMImplementationLS domImpl;
-    
+
     /**
      * Constructor
      * @param domImpl
@@ -39,19 +38,19 @@ public class LSResolverImpl implements LSResourceResolver {
     public LSResolverImpl(DOMImplementationLS domImpl) {
         this.domImpl = domImpl;
     }
-    
+
     /**
      * @see org.w3c.dom.ls.LSResourceResolver#resolveResource(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     public LSInput resolveResource(String type, String namespaceURI,
             String publicId, String systemId, String baseURI) {
         LSInput input = domImpl.createLSInput();
-        try {
-            input.setByteStream(new ClassPathResource(systemId).getInputStream());
-        } catch (IOException e) {
+        Resource resource = Resources.newClasspathResource(systemId);
+        if (resource.getInputStream() == null || !resource.exists()) {
             return null;
         }
-        
+
+        input.setByteStream(resource.getInputStream());
         return input;
     }
 }

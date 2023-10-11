@@ -21,7 +21,6 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Adds XML CDATA section tags to parameter value. This is extremely useful when having
@@ -39,7 +38,7 @@ public class CreateCDataSectionFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList) || parameterList.size() != 1) {
+        if (parameterList == null || parameterList.size() != 1) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage - missing parameter value!");
         }
 

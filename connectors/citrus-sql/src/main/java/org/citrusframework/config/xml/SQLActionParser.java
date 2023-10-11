@@ -26,14 +26,13 @@ import java.util.Map;
 import org.citrusframework.actions.ExecuteSQLAction;
 import org.citrusframework.actions.ExecuteSQLQueryAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -58,7 +57,7 @@ public class SQLActionParser implements BeanDefinitionParser {
         List<Element> extractElements = DomUtils.getChildElementsByTagName(element, "extract");
         Element scriptValidationElement = DomUtils.getChildElementByTagName(element, "validate-script");
 
-        if (CollectionUtils.isEmpty(validateElements) && CollectionUtils.isEmpty(extractElements) && scriptValidationElement == null) {
+        if (validateElements.isEmpty() && extractElements.isEmpty() && scriptValidationElement == null) {
             beanDefinition = parseSqlAction(element);
             beanDefinition.addPropertyValue("name", "sqlUpdate:" + dataSource);
         } else {

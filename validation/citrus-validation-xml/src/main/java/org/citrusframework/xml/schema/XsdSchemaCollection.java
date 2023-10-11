@@ -16,12 +16,17 @@
 package org.citrusframework.xml.schema;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Schema combines multiple file resources usually with exactly the same target namespace to
@@ -38,14 +43,21 @@ public class XsdSchemaCollection extends AbstractSchemaCollection {
      * Loads all schema resource files from schema locations.
      */
     protected Resource loadSchemaResources() {
-        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+        ClasspathResourceResolver resourceResolver = new ClasspathResourceResolver();
         for (String location : schemas) {
             try {
-                Resource[] findings = resourcePatternResolver.getResources(location);
+                Set<Path> findings;
+                if (StringUtils.hasText(FileUtils.getFileExtension(location))) {
+                    String fileNamePattern = FileUtils.getFileName(location).replace(".", "\\.").replace("*", ".*");
+                    String basePath = FileUtils.getBasePath(location);
+                    findings = resourceResolver.getResources(basePath, fileNamePattern);
+                } else {
+                    findings = resourceResolver.getResources(location);
+                }
 
-                for (Resource finding : findings) {
-                    if (finding.getFilename().endsWith(".xsd") || finding.getFilename().endsWith(".wsdl")) {
-                        schemaResources.add(finding);
+                for (Path finding : findings) {
+                    if (finding.toString().endsWith(".xsd") || finding.toString().endsWith(".wsdl")) {
+                        schemaResources.add(Resources.newClasspathResource(finding.toString()));
                     }
                 }
             } catch (IOException e) {

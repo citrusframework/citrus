@@ -22,8 +22,8 @@ package org.citrusframework.yaml.actions;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.TransformAction;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.YamlTestLoader;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

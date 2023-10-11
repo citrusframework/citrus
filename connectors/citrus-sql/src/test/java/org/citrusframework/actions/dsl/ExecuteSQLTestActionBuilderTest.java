@@ -23,9 +23,9 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ExecuteSQLAction;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
@@ -111,7 +111,7 @@ public class ExecuteSQLTestActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(sql().jdbcTemplate(jdbcTemplate)
-            .sqlResource(new ClassPathResource("org/citrusframework/actions/dsl/script.sql"))
+            .sqlResource(Resources.newClasspathResource("org/citrusframework/actions/dsl/script.sql"))
             .ignoreErrors(true));
 
         TestCase test = builder.getTestCase();

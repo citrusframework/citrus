@@ -21,7 +21,7 @@ import java.util.Map;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpointComponent;
 import org.citrusframework.endpoint.Endpoint;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

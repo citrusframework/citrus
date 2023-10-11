@@ -16,16 +16,16 @@
 
 package org.citrusframework.vertx.endpoint;
 
+import io.vertx.core.Vertx;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.correlation.CorrelationManager;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyProducer;
+import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.vertx.message.CitrusVertxMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import io.vertx.core.Vertx;
 
 /**
  * @author Christoph Deppisch
@@ -69,12 +69,12 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
 
     @Override
     public void send(Message message, TestContext context) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
+        ObjectHelper.assertNotNull(message, "Message is empty - unable to send empty message");
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = correlationManager.getCorrelationKey(correlationKeyName, context);
         String replyAddress = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
-        Assert.notNull(replyAddress, "Failed to find reply address for message correlation key: '" + correlationKey + "'");
+        ObjectHelper.assertNotNull(replyAddress, "Failed to find reply address for message correlation key: '" + correlationKey + "'");
 
         if (logger.isDebugEnabled()) {
             logger.debug("Sending Vert.x message to event bus address: '" + replyAddress + "'");

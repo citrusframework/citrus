@@ -16,28 +16,26 @@
 
 package org.citrusframework.generate.xml;
 
+import java.util.List;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.IOException;
-import java.util.List;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.xml.namespace.CitrusNamespacePrefixMapper;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.xml.namespace.CitrusNamespacePrefixMapper;
 import org.glassfish.jaxb.runtime.marshaller.NamespacePrefixMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -59,7 +57,7 @@ public class XmlTestMarshaller {
     private NamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
 
     public XmlTestMarshaller() {
-        this.schema = loadSchema(new ClassPathResource("org/citrusframework/schema/citrus-testcase.xsd"));
+        this.schema = loadSchema(Resources.newClasspathResource("org/citrusframework/schema/citrus-testcase.xsd"));
     }
 
     public void marshal(Object graph, Result result) {
@@ -120,27 +118,29 @@ public class XmlTestMarshaller {
 
     private Schema loadSchema(Resource resource) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Using marshaller validation schema '%s'", resource.getFilename()));
+            logger.debug(String.format("Using marshaller validation schema '%s'", resource.getLocation()));
         }
 
         try {
             XMLReader xmlReader = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
             xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 
-            Assert.isTrue(resource != null && resource.exists(), () -> "Resource does not exist: " + resource);
+            if (resource == null || !resource.exists()) {
+                throw new ValidationException("Resource does not exist: " + resource);
+            }
             InputSource inputSource = new InputSource(resource.getInputStream());
             inputSource.setSystemId(resource.getURI().toString());
             Source schemaSource = new SAXSource(xmlReader, inputSource);
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             return schemaFactory.newSchema(schemaSource);
-        } catch (IOException | SAXException e) {
+        } catch (SAXException e) {
             throw new CitrusRuntimeException("Failed to load schema for marshaller", e);
         }
     }
 
     public void setContextPaths(List<String> contextPaths) {
-        this.contextPath = StringUtils.arrayToDelimitedString(contextPaths.toArray(new String[0]), ":");
+        this.contextPath = String.join(":", contextPaths.toArray(new String[0]));
     }
 
     public NamespacePrefixMapper getNamespacePrefixMapper() {

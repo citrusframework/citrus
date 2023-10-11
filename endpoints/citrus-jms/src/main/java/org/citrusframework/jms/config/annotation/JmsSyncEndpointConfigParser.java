@@ -18,7 +18,6 @@ package org.citrusframework.jms.config.annotation;
 
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
@@ -28,9 +27,9 @@ import org.citrusframework.jms.endpoint.JmsSyncEndpointBuilder;
 import org.citrusframework.jms.message.JmsMessageConverter;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.StringUtils;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

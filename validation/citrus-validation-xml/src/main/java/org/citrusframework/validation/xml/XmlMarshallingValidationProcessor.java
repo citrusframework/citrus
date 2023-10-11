@@ -16,11 +16,11 @@
 
 package org.citrusframework.validation.xml;
 
+import java.io.File;
+import java.util.Map;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.util.Map;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -28,11 +28,11 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.validation.AbstractValidationProcessor;
 import org.citrusframework.validation.GenericValidationProcessor;
 import org.citrusframework.xml.StringSource;
 import org.citrusframework.xml.Unmarshaller;
-import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 
 /**
@@ -68,8 +68,8 @@ public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValid
     @SuppressWarnings("unchecked")
     private T unmarshalMessage(Message message) {
         if (unmarshaller == null) {
-            Assert.notNull(referenceResolver, "Marshalling validation callback requires marshaller instance " +
-            		"or proper reference resolver with nested bean definition of type marshaller");
+            ObjectHelper.assertNotNull(referenceResolver, "Marshalling validation callback requires marshaller instance " +
+                    "or proper reference resolver with nested bean definition of type marshaller");
 
             unmarshaller = referenceResolver.resolve(Unmarshaller.class);
         }

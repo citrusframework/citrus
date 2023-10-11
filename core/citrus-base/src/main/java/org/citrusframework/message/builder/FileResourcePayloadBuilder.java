@@ -28,8 +28,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessagePayloadBuilder;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.message.MessageTypeAware;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch

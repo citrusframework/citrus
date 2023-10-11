@@ -23,8 +23,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 import org.citrusframework.message.Message;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Function loads message from test context message store. Incoming and sent messages get automatically
@@ -37,7 +36,7 @@ public class LoadMessageFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList)) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 

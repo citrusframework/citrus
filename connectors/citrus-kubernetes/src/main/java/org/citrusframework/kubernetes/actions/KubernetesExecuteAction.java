@@ -21,41 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.citrusframework.AbstractTestActionBuilder;
-import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.kubernetes.client.KubernetesClient;
-import org.citrusframework.kubernetes.command.CommandResult;
-import org.citrusframework.kubernetes.command.CommandResultCallback;
-import org.citrusframework.kubernetes.command.CreatePod;
-import org.citrusframework.kubernetes.command.CreateService;
-import org.citrusframework.kubernetes.command.DeletePod;
-import org.citrusframework.kubernetes.command.DeleteResult;
-import org.citrusframework.kubernetes.command.DeleteService;
-import org.citrusframework.kubernetes.command.GetPod;
-import org.citrusframework.kubernetes.command.GetService;
-import org.citrusframework.kubernetes.command.Info;
-import org.citrusframework.kubernetes.command.InfoResult;
-import org.citrusframework.kubernetes.command.KubernetesCommand;
-import org.citrusframework.kubernetes.command.ListEndpoints;
-import org.citrusframework.kubernetes.command.ListEvents;
-import org.citrusframework.kubernetes.command.ListNamespaces;
-import org.citrusframework.kubernetes.command.ListNodes;
-import org.citrusframework.kubernetes.command.ListPods;
-import org.citrusframework.kubernetes.command.ListReplicationControllers;
-import org.citrusframework.kubernetes.command.ListServices;
-import org.citrusframework.kubernetes.command.WatchNamespaces;
-import org.citrusframework.kubernetes.command.WatchNodes;
-import org.citrusframework.kubernetes.command.WatchPods;
-import org.citrusframework.kubernetes.command.WatchReplicationControllers;
-import org.citrusframework.kubernetes.command.WatchServices;
-import org.citrusframework.message.DefaultMessage;
-import org.citrusframework.validation.MessageValidator;
-import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.fabric8.kubernetes.api.model.EndpointsList;
 import io.fabric8.kubernetes.api.model.EventList;
@@ -70,11 +35,22 @@ import io.fabric8.kubernetes.api.model.ReplicationController;
 import io.fabric8.kubernetes.api.model.ReplicationControllerList;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceList;
+import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.actions.AbstractTestAction;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.kubernetes.client.KubernetesClient;
+import org.citrusframework.kubernetes.command.*;
+import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.validation.MessageValidator;
+import org.citrusframework.validation.context.ValidationContext;
+import org.citrusframework.validation.json.JsonMessageValidationContext;
+import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Executes kubernetes command with given kubernetes client implementation. Possible command result is stored within command object.
@@ -149,7 +125,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         }
 
         CommandResult<?> result = command.getCommandResult();
-        if (StringUtils.hasText(commandResult) || !CollectionUtils.isEmpty(commandResultExpressions)) {
+        if (StringUtils.hasText(commandResult) || !commandResultExpressions.isEmpty()) {
             if (result == null) {
                 throw new ValidationException("Missing Kubernetes command result");
             }
@@ -162,7 +138,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
                     logger.info("Kubernetes command result validation successful - all values OK!");
                 }
 
-                if (!CollectionUtils.isEmpty(commandResultExpressions)) {
+                if (!commandResultExpressions.isEmpty()) {
                     JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
                             .expressions(commandResultExpressions)
                             .build();

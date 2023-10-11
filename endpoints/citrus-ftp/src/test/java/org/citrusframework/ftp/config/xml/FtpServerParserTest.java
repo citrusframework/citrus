@@ -31,7 +31,6 @@ import org.citrusframework.jms.endpoint.JmsEndpointConfiguration;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
 import jakarta.jms.ConnectionFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -126,7 +125,7 @@ public class FtpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getEndpointConfiguration().getPort(), 22222);
         Assert.assertNotNull(server.getEndpointAdapter());
         Assert.assertEquals(server.getEndpointAdapter().getClass(), StaticResponseEndpointAdapter.class);
-        Assert.assertEquals(StringUtils.trimAllWhitespace(((StaticResponseEndpointAdapter) server.getEndpointAdapter()).getMessagePayload()), "<TestMessage><Text>Hello!</Text></TestMessage>");
+        Assert.assertEquals((((StaticResponseEndpointAdapter) server.getEndpointAdapter()).getMessagePayload()).replaceAll("\\s", ""), "<TestMessage><Text>Hello!</Text></TestMessage>");
         Assert.assertEquals(((StaticResponseEndpointAdapter) server.getEndpointAdapter()).getMessageHeader().get("Operation"), "sayHello");
 
         // 5th message sender

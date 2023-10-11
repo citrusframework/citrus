@@ -16,8 +16,6 @@
 
 package org.citrusframework.kafka.embedded;
 
-import org.springframework.util.StringUtils;
-
 import java.util.Map;
 
 /**
@@ -83,7 +81,7 @@ public class EmbeddedKafkaServerBuilder {
      * @return
      */
     public EmbeddedKafkaServerBuilder topics(String ... topics) {
-        return topics(StringUtils.arrayToCommaDelimitedString(topics));
+        return topics(String.join(",", topics));
     }
 
     /**

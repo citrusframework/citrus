@@ -22,10 +22,12 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.report.MessageListeners;
+import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -34,8 +36,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Simple logging interceptor writes Http request and response messages to the console.
@@ -163,7 +163,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         for (Entry<String, List<String>> headerEntry : headers.entrySet()) {
             builder.append(headerEntry.getKey());
             builder.append(":");
-            builder.append(StringUtils.arrayToCommaDelimitedString(headerEntry.getValue().toArray()));
+            builder.append(headerEntry.getValue().stream().collect(Collectors.joining(",")));
             builder.append(NEWLINE);
         }
     }
@@ -205,11 +205,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         @Override
         public InputStream getBody() throws IOException {
             if (this.body == null) {
-                if (response.getBody() != null) {
-                    this.body = FileCopyUtils.copyToByteArray(response.getBody());
-                } else {
-                    body = new byte[] {};
-                }
+                this.body = FileUtils.copyToByteArray(response.getBody());
             }
             return new ByteArrayInputStream(this.body);
         }

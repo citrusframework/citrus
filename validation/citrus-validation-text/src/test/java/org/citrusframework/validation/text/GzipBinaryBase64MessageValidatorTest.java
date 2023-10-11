@@ -31,7 +31,6 @@ import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.util.StreamUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -40,8 +39,8 @@ import org.testng.annotations.Test;
  */
 public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
 
-    private GzipBinaryBase64MessageValidator validator = new GzipBinaryBase64MessageValidator();
-    private ValidationContext validationContext = new DefaultValidationContext();
+    private final GzipBinaryBase64MessageValidator validator = new GzipBinaryBase64MessageValidator();
+    private final ValidationContext validationContext = new DefaultValidationContext();
 
     @Test
     public void testGzipBinaryBase64Validation() throws IOException {
@@ -85,8 +84,8 @@ public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest
     private byte[] getZippedContent(String payload) throws IOException {
         try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
              GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
-            StreamUtils.copy(payload.getBytes(), gzipOutputStream);
-
+            gzipOutputStream.write(payload.getBytes());
+            gzipOutputStream.flush();
             gzipOutputStream.close();
             return zipped.toByteArray();
         }

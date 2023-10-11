@@ -16,10 +16,6 @@
 
 package org.citrusframework.http.servlet;
 
-import jakarta.servlet.ReadListener;
-import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,14 +26,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
@@ -81,7 +81,7 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
         if (RequestMethod.POST.name().equals(getMethod()) || RequestMethod.PUT.name().equals(getMethod())) {
             if (new MediaType(contentType.getType(), contentType.getSubtype()).equals(MediaType.APPLICATION_FORM_URLENCODED)) {
                 try {
-                    fillParams(params, new String(FileCopyUtils.copyToByteArray(getInputStream()), charset), charset);
+                    fillParams(params, new String(FileUtils.copyToByteArray(getInputStream()), charset), charset);
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to read request body", e);
                 }
@@ -97,7 +97,7 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
     public ServletInputStream getInputStream() throws IOException {
         if (body == null) {
             if (super.getInputStream() != null) {
-                body = FileCopyUtils.copyToByteArray(super.getInputStream());
+                body = FileUtils.copyToByteArray(super.getInputStream());
             } else {
                 body = new byte[] {};
             }

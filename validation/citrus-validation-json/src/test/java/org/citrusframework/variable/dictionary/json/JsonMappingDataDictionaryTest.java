@@ -23,8 +23,8 @@ import org.citrusframework.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -132,7 +132,7 @@ public class JsonMappingDataDictionaryTest extends UnitTestSupport {
         Message message = new DefaultMessage("{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
 
         JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
-        dictionary.setMappingFile(new ClassPathResource("jsonmapping.properties", DataDictionary.class));
+        dictionary.setMappingFile(Resources.create("jsonmapping.properties", DataDictionary.class));
         dictionary.initialize();
 
         dictionary.processMessage(message, context);

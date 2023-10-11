@@ -19,12 +19,12 @@ package org.citrusframework.rmi.model;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.Unmarshaller;
-import jakarta.xml.bind.JAXBException;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * @author Christoph Deppisch
@@ -36,7 +36,7 @@ public class RmiMarshaller implements Marshaller, Unmarshaller {
 
     public RmiMarshaller() {
         this.marshaller = new Jaxb2Marshaller(
-                new ClassPathResource("org/citrusframework/schema/citrus-rmi-message.xsd"), RmiServiceInvocation.class, RmiServiceResult.class);
+                Resources.newClasspathResource("org/citrusframework/schema/citrus-rmi-message.xsd"), RmiServiceInvocation.class, RmiServiceResult.class);
     }
 
     public void marshal(Object graph, Result result) {

@@ -24,7 +24,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -33,9 +32,9 @@ import org.testng.annotations.Test;
  */
 public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
 
-    private Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text></TestMessage>");
+    private final Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text></TestMessage>");
 
-    private Message messageNamespace = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:TestMessage xmlns:ns0=\"http://citrusframework.org/test\">" +
+    private final Message messageNamespace = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:TestMessage xmlns:ns0=\"http://citrusframework.org/test\">" +
                 "<ns0:Text>Hello World!</ns0:Text>" +
             "</ns0:TestMessage>");
 
@@ -49,7 +48,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(message, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
+        Assert.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
                 .endsWith("<TestMessage><Text>Hello!</Text></TestMessage>"));
     }
 
@@ -67,7 +66,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(message, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
+        Assert.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<Text>Hello!</Text>"));
     }
 
@@ -81,7 +80,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(messageNamespace, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(messageNamespace.getPayload(String.class))
+        Assert.assertTrue(messageNamespace.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -97,7 +96,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(messageNamespace, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(messageNamespace.getPayload(String.class))
+        Assert.assertTrue(messageNamespace.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -115,7 +114,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(message, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
+        Assert.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<ns1:Textxmlns:ns1=\"http://citrusframework.org/test/text\">Hello!</ns1:Text>"));
     }
 
@@ -154,7 +153,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 .build();
         processor.processMessage(messageNamespace, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(messageNamespace.getPayload(String.class))
+        Assert.assertTrue(messageNamespace.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -176,8 +175,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         processor.processMessage(message, context);
 
         //THEN
-        Assert.assertTrue(StringUtils
-                .trimAllWhitespace(message.getPayload(String.class))
+        Assert.assertTrue(message.getPayload(String.class).replaceAll("\\s", "")
                 .contains("<Text>foobar</Text>"));
     }
 }

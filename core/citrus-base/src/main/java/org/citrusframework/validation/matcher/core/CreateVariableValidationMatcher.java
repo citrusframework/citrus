@@ -16,14 +16,13 @@
 
 package org.citrusframework.validation.matcher.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 /**
  * Creates new variables from given field. Either uses field name or control value as variable name.

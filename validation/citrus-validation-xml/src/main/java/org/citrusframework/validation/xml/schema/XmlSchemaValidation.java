@@ -1,37 +1,37 @@
 package org.citrusframework.validation.xml.schema;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
-import org.citrusframework.util.IsJsonPredicate;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.IsXmlPredicate;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.xml.XsdSchemaRepository;
+import org.citrusframework.xml.schema.AbstractSchemaCollection;
 import org.citrusframework.xml.schema.WsdlXsdSchema;
 import org.citrusframework.xml.schema.XsdSchemaCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXParseException;
-
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidationContext> {
 
@@ -51,7 +51,6 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     @Override
     public void validate(Message message, TestContext context, XmlMessageValidationContext validationContext) {
         validateSchema(message, context, validationContext);
-        validateDTD(validationContext.getDTDResource(), message);
     }
 
     private void validateSchema(Message message, TestContext context, XmlMessageValidationContext validationContext) {
@@ -103,12 +102,16 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
                             } catch (TransformerException e) {
                                 throw new CitrusRuntimeException("Failed to read schema " + xsdSchema.getTargetNamespace(), e);
                             }
-                            schemas.add(new ByteArrayResource(bos.toByteArray()));
+                            schemas.add(Resources.create(bos.toByteArray()));
                         }
                     }
                 }
 
-                validator = XmlValidatorFactory.createValidator(schemas.toArray(new Resource[schemas.size()]), WsdlXsdSchema.W3C_XML_SCHEMA_NS_URI);
+                validator = XmlValidatorFactory.createValidator(schemas
+                        .stream()
+                        .map(AbstractSchemaCollection::toSpringResource)
+                        .toList()
+                        .toArray(new org.springframework.core.io.Resource[]{}), WsdlXsdSchema.W3C_XML_SCHEMA_NS_URI);
             }
 
             SAXParseException[] results = validator.validate(new DOMSource(doc));
@@ -131,16 +134,6 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         }
-    }
-
-    /**
-     * Validate message with a DTD.
-     *
-     * @param dtdResource
-     * @param receivedMessage
-     */
-    protected void validateDTD(Resource dtdResource, Message receivedMessage) {
-        //TODO implement this
     }
 
     /**

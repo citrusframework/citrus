@@ -16,21 +16,21 @@
 
 package org.citrusframework.ws.message;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import javax.xml.namespace.QName;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringResult;
 import org.springframework.beans.propertyeditors.LocaleEditor;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.xml.namespace.QNameEditor;
 import org.springframework.xml.namespace.QNameUtils;
@@ -260,9 +260,9 @@ public class SoapFault extends SoapMessage {
         StringBuilder builder = new StringBuilder();
 
         QName faultCodeQName = getFaultCodeQName();
-        if (StringUtils.hasLength(faultCodeQName.getNamespaceURI()) && StringUtils.hasLength(faultCodeQName.getPrefix())) {
+        if (StringUtils.hasText(faultCodeQName.getNamespaceURI()) && StringUtils.hasText(faultCodeQName.getPrefix())) {
             builder.append(decorate(decorate(faultCodeQName.getNamespaceURI()) + faultCodeQName.getPrefix() + ":" + faultCodeQName.getLocalPart()));
-        } else if (StringUtils.hasLength(faultCodeQName.getNamespaceURI())) {
+        } else if (StringUtils.hasText(faultCodeQName.getNamespaceURI())) {
             builder.append(decorate(decorate(faultCodeQName.getNamespaceURI()) + faultCodeQName.getLocalPart()));
         } else {
             builder.append(decorate(faultCodeQName.getLocalPart()));

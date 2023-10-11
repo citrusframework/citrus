@@ -20,13 +20,13 @@ import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.citrusframework.ws.server.WebServiceServerBuilder;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.server.EndpointInterceptor;
 
 /**

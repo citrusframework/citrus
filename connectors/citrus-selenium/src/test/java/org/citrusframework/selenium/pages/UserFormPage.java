@@ -17,13 +17,13 @@
 package org.citrusframework.selenium.pages;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.model.PageValidator;
 import org.citrusframework.selenium.model.WebPage;
+import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -55,8 +55,8 @@ public class UserFormPage implements WebPage, PageValidator<UserFormPage> {
 
     @Override
     public void validate(UserFormPage webPage, SeleniumBrowser browser, TestContext context) {
-        Assert.isTrue(userName != null);
-        Assert.isTrue(StringUtils.hasText(userName.getAttribute("value")));
-        Assert.isTrue(form != null);
+        if (userName == null || !StringUtils.hasText(userName.getAttribute("value")) || form == null) {
+            throw new ValidationException("Page validation failed!");
+        }
     }
 }

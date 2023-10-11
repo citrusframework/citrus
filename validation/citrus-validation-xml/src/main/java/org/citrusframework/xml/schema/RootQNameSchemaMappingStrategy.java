@@ -16,12 +16,12 @@
 
 package org.citrusframework.xml.schema;
 
-import javax.xml.namespace.QName;
 import java.util.List;
 import java.util.Map;
+import javax.xml.namespace.QName;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 import org.springframework.xml.xsd.XsdSchema;
 
 /**

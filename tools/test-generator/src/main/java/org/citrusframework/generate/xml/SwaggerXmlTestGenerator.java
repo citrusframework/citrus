@@ -22,12 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.generate.SwaggerTestGenerator;
-import org.citrusframework.http.message.HttpMessage;
-import org.citrusframework.model.testcase.http.ObjectFactory;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.variable.dictionary.json.JsonPathMappingDataDictionary;
 import io.swagger.models.ArrayModel;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Model;
@@ -54,14 +48,18 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.models.properties.StringProperty;
 import io.swagger.parser.SwaggerParser;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.generate.SwaggerTestGenerator;
+import org.citrusframework.http.message.HttpMessage;
+import org.citrusframework.model.testcase.http.ObjectFactory;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.variable.dictionary.json.JsonPathMappingDataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
@@ -88,13 +86,13 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
     public void create() {
         Swagger swagger;
         try {
-            swagger = new SwaggerParser().parse(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(swaggerResource)));
+            swagger = new SwaggerParser().parse(FileUtils.readToString(Resources.create(swaggerResource)));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to parse Swagger Open API specification: " + swaggerResource, e);
         }
 
         if (!StringUtils.hasText(namePrefix)) {
-            withNamePrefix(StringUtils.trimAllWhitespace(Optional.ofNullable(swagger.getInfo().getTitle()).orElse("Swagger")) + "_");
+            withNamePrefix(Optional.ofNullable(swagger.getInfo().getTitle()).orElse("Swagger").replaceAll("\\s", "") + "_");
         }
 
         for (Map.Entry<String, Path> path : swagger.getPaths().entrySet()) {
@@ -183,7 +181,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
     @Override
     protected List<Resource> getMarshallerSchemas() {
         List<Resource> schemas = super.getMarshallerSchemas();
-        schemas.add(new ClassPathResource("org/citrusframework/schema/citrus-http-testcase.xsd"));
+        schemas.add(Resources.newClasspathResource("org/citrusframework/schema/citrus-http-testcase.xsd"));
         return schemas;
     }
 
@@ -279,7 +277,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
                 payload.append("citrus:currentDate()");
             } else if (property instanceof DateTimeProperty) {
                 payload.append("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')");
-            } else if (!CollectionUtils.isEmpty(((StringProperty) property).getEnum())) {
+            } else if (((StringProperty)((StringProperty) property).getEnum()) != null && !((StringProperty) property).getEnum().isEmpty()) {
                 payload.append("citrus:randomEnumValue(").append(((StringProperty) property).getEnum().stream().map(value -> "'" + value + "'").collect(Collectors.joining(","))).append(")");
             } else if (Optional.ofNullable(property.getFormat()).orElse("").equalsIgnoreCase("uuid")) {
                 payload.append("citrus:randomUUID()");
@@ -419,7 +417,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
 
             if (StringUtils.hasText(((StringProperty) property).getPattern())) {
                 payload.append("@matches(").append(((StringProperty) property).getPattern()).append(")@");
-            } else if (!CollectionUtils.isEmpty(((StringProperty) property).getEnum())) {
+            } else if (((StringProperty) property).getEnum() != null && !((StringProperty) property).getEnum().isEmpty()) {
                 payload.append("@matches(").append(((StringProperty) property).getEnum().stream().collect(Collectors.joining("|"))).append(")@");
             } else {
                 payload.append("@notEmpty()@");
@@ -509,7 +507,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
                     return "\"@matchesDatePattern('yyyy-MM-dd'T'hh:mm:ss')@\"";
                 } else if (StringUtils.hasText(parameter.getPattern())) {
                     return "\"@matches(" + parameter.getPattern() + ")@\"";
-                } else if (!CollectionUtils.isEmpty(parameter.getEnum())) {
+                } else if (parameter.getEnum() != null && !parameter.getEnum().isEmpty()) {
                     return "\"@matches(" + (parameter.getEnum().stream().collect(Collectors.joining("|"))) + ")@\"";
                 } else {
                     return "@notEmpty()@";
@@ -537,7 +535,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
                     return "\"citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')\"";
                 } else if (StringUtils.hasText(parameter.getPattern())) {
                     return "\"citrus:randomValue(" + parameter.getPattern() + ")\"";
-                } else if (!CollectionUtils.isEmpty(parameter.getEnum())) {
+                } else if (parameter.getEnum() != null && !parameter.getEnum().isEmpty()) {
                     return "\"citrus:randomEnumValue(" + (parameter.getEnum().stream().collect(Collectors.joining(","))) + ")\"";
                 } else if (Optional.ofNullable(parameter.getFormat()).orElse("").equalsIgnoreCase("uuid")){
                     return "citrus:randomUUID()";
@@ -627,7 +625,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @return
      */
     public SwaggerXmlTestGenerator withInboundMappingFile(String mappingFile) {
-        this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        this.inboundDataDictionary.setMappingFile(Resources.create(mappingFile));
         this.inboundDataDictionary.initialize();
         return this;
     }
@@ -638,7 +636,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      * @return
      */
     public SwaggerXmlTestGenerator withOutboundMappingFile(String mappingFile) {
-        this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
+        this.outboundDataDictionary.setMappingFile(Resources.create(mappingFile));
         this.outboundDataDictionary.initialize();
         return this;
     }

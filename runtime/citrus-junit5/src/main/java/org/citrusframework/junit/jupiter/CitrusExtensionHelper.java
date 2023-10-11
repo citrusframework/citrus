@@ -37,14 +37,14 @@ import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.util.StringUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -97,7 +97,7 @@ public final class CitrusExtensionHelper {
      * @return the {@code TestCaseRunner} (never {@code null})
      */
     public static TestCaseRunner getTestRunner(ExtensionContext extensionContext) {
-        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+        ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
 
         return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCaseRunner.class.getSimpleName(), key -> {
             String testName = extensionContext.getRequiredTestClass().getSimpleName() + "." + extensionContext.getRequiredTestMethod().getName();
@@ -119,7 +119,7 @@ public final class CitrusExtensionHelper {
      * @return the {@code TestLoader} (never {@code null})
      */
     public static TestLoader getTestLoader(ExtensionContext extensionContext) {
-        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+        ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
 
         return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestLoader.class.getSimpleName(),
                 key -> createTestLoader(extensionContext), TestLoader.class);
@@ -131,7 +131,7 @@ public final class CitrusExtensionHelper {
      * @return the {@code TestCase} (never {@code null})
      */
     public static TestCase getTestCase(ExtensionContext extensionContext) {
-        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+        ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
         return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCase.class.getSimpleName(), key -> {
             if (CitrusExtensionHelper.isTestSourceMethod(extensionContext.getRequiredTestMethod())) {
                 return getTestLoader(extensionContext).getTestCase();
@@ -192,7 +192,7 @@ public final class CitrusExtensionHelper {
      * @return the {@code TestContext} (never {@code null})
      */
     public static TestContext getTestContext(ExtensionContext extensionContext) {
-        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+        ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
         return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestContext.class.getSimpleName(),
                 key -> getCitrus(extensionContext).getCitrusContext().createTestContext(), TestContext.class);
     }
@@ -212,7 +212,7 @@ public final class CitrusExtensionHelper {
      * @return the {@code Citrus} (never {@code null})
      */
     public static Citrus getCitrus(ExtensionContext extensionContext) {
-        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+        ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
         Citrus citrus = extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).get(Citrus.class.getName(), Citrus.class);
 
         if (citrus == null) {
@@ -229,7 +229,7 @@ public final class CitrusExtensionHelper {
      * @return the {@code Citrus} (never {@code null})
      */
     public static void setCitrus(Citrus citrus, ExtensionContext extensionContext) {
-        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+        ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
         extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).put(Citrus.class.getName(), citrus);
     }
 
@@ -254,7 +254,7 @@ public final class CitrusExtensionHelper {
      * @return
      */
     public static boolean requiresCitrus(ExtensionContext extensionContext) {
-        Assert.notNull(extensionContext, "ExtensionContext must not be null");
+        ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
         Citrus citrus = extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).get(Citrus.class.getName(), Citrus.class);
         return citrus == null;
     }
@@ -290,14 +290,14 @@ public final class CitrusExtensionHelper {
             source = sources[0];
 
             Resource file = FileUtils.getFileResource(source);
-            testName = FileUtils.getBaseName(file.getFilename());
+            testName = FileUtils.getBaseName(FileUtils.getFileName(file.getLocation()));
 
             packageName = source;
-            if (packageName.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX)) {
-                packageName = source.substring(ResourceLoader.CLASSPATH_URL_PREFIX.length());
+            if (packageName.startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {
+                packageName = source.substring(Resources.CLASSPATH_RESOURCE_PREFIX.length());
             }
 
-            if (StringUtils.hasLength(packageName) && packageName.contains("/")) {
+            if (StringUtils.hasText(packageName) && packageName.contains("/")) {
                 packageName = packageName.substring(0, packageName.lastIndexOf("/"));
             }
 

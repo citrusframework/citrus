@@ -16,19 +16,30 @@
 
 package org.citrusframework.jms.endpoint;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Queue;
+import jakarta.jms.Session;
+import jakarta.jms.TemporaryQueue;
+import jakarta.jms.TextMessage;
 import org.citrusframework.exceptions.ActionTimeoutException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.message.*;
+import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.correlation.ObjectStore;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import jakarta.jms.*;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -37,18 +48,18 @@ import static org.mockito.Mockito.*;
  */
 public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
-    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
-    private Connection connection = Mockito.mock(Connection.class);
-    private Session session = Mockito.mock(Session.class);
-    private Destination destination = Mockito.mock(Destination.class);
-    private Queue destinationQueue = Mockito.mock(Queue.class);
-    private MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
-    private MessageProducer messageProducer = Mockito.mock(MessageProducer.class);
-    private Queue replyDestinationQueue = Mockito.mock(Queue.class);
-    private TemporaryQueue tempReplyQueue = Mockito.mock(TemporaryQueue.class);
+    private final ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private final Connection connection = Mockito.mock(Connection.class);
+    private final Session session = Mockito.mock(Session.class);
+    private final Destination destination = Mockito.mock(Destination.class);
+    private final Queue destinationQueue = Mockito.mock(Queue.class);
+    private final MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
+    private final MessageProducer messageProducer = Mockito.mock(MessageProducer.class);
+    private final Queue replyDestinationQueue = Mockito.mock(Queue.class);
+    private final TemporaryQueue tempReplyQueue = Mockito.mock(TemporaryQueue.class);
 
     private int retryCount = 0;
-    
+
     @Test
     public void testSendMessageWithReplyDestination() throws JMSException {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
@@ -56,12 +67,12 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
         endpoint.getEndpointConfiguration().setReplyDestination(replyDestinationQueue);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
-        
+
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
@@ -80,7 +91,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         verify(messageProducer).send((TextMessage)any());
         verify(connection).start();
     }
-    
+
     @Test
     public void testSendMessageWithReplyDestinationName() throws JMSException {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
@@ -88,12 +99,12 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setDestinationName("myDestination");
         endpoint.getEndpointConfiguration().setReplyDestinationName("replyDestination");
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
-        
+
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
@@ -116,19 +127,19 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         verify(messageProducer).send((TextMessage)any());
         verify(connection).start();
     }
-    
+
     @Test
     public void testSendMessageWithTemporaryReplyDestination() throws JMSException {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
-        
+
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
@@ -159,12 +170,12 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
         endpoint.getEndpointConfiguration().setReplyDestination(replyDestinationQueue);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
-        
+
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
@@ -183,7 +194,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         verify(messageProducer).send((TextMessage)any());
         verify(connection).start();
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithReplyMessageCorrelator() throws JMSException {
@@ -200,7 +211,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
-        
+
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
@@ -219,22 +230,14 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         verify(connection).start();
         verify(messageProducer).send((TextMessage)any());
     }
-    
-    @Test
+
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
     public void testSendEmptyMessage() throws JMSException {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        
-        try {
-            endpoint.createProducer().send(null, context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
-            return;
-        }
-        
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of sending empty message");
+        endpoint.createProducer().send(null, context);
     }
 
     @Test

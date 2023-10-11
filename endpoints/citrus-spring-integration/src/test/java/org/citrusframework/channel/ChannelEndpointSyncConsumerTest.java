@@ -54,14 +54,14 @@ import static org.mockito.Mockito.when;
  */
 public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
-    private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
+    private final MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
 
-    private PollableChannel channel = Mockito.mock(PollableChannel.class);
-    private MessageChannel replyChannel = Mockito.mock(MessageChannel.class);
+    private final PollableChannel channel = Mockito.mock(PollableChannel.class);
+    private final MessageChannel replyChannel = Mockito.mock(MessageChannel.class);
 
-    private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
+    private final MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
 
-    private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
+    private final DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -394,7 +394,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
     }
 
-    @Test
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to find reply channel for message correlation key: 123456789")
     public void testNoReplyDestinationFound() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
@@ -411,31 +411,17 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
-        try {
-            ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-            channelSyncConsumer.send(message, context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Failed to find reply channel"));
-            return;
-        }
-
-        Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
+        ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
+        channelSyncConsumer.send(message, context);
     }
 
-    @Test
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Can not send empty message")
     public void testSendEmptyMessage() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
-        try {
-            ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-            channelSyncConsumer.send(null, context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "Can not send empty message");
-            return;
-        }
-
-        Assert.fail("Missing " + IllegalArgumentException.class + " because of sending empty message");
+        ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
+        channelSyncConsumer.send(null, context);
     }
 
     @Test

@@ -16,17 +16,19 @@
 
 package org.citrusframework.config.xml;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.container.AbstractTestBoundaryActionContainer;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -44,7 +46,7 @@ public abstract class AbstractTestBoundaryActionContainerParser implements BeanD
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("package"), "packageNamePattern");
 
         if (element.hasAttribute("groups")) {
-            List<String> groups = Arrays.asList(StringUtils.commaDelimitedListToStringArray(element.getAttribute("groups")));
+            List<String> groups = Arrays.asList(element.getAttribute("groups").split(","));
             builder.addPropertyValue("testGroups", groups);
         }
 

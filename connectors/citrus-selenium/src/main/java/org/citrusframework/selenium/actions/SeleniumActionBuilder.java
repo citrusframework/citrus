@@ -23,9 +23,9 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.model.WebPage;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
+import org.citrusframework.util.ObjectHelper;
 
 /**
  * Action builds selenium related actions.
@@ -415,7 +415,7 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
 
     @Override
     public SeleniumAction build() {
-        Assert.notNull(delegate, "Missing delegate action to build");
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         if (seleniumBrowser != null) {
             delegate.browser(seleniumBrowser);
         }

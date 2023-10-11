@@ -16,16 +16,15 @@
 
 package org.citrusframework.jms.endpoint;
 
+import jakarta.jms.Destination;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
+import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-
-import jakarta.jms.Destination;
 
 /**
  * @author Christoph Deppisch
@@ -54,7 +53,7 @@ public class JmsProducer implements Producer {
 
     @Override
     public void send(final Message message, final TestContext context) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
+        ObjectHelper.assertNotNull(message, "Message is empty - unable to send empty message");
 
         if (endpointConfiguration.getDestination() != null) {
             send(message, endpointConfiguration.getDestination(), context);

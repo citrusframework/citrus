@@ -16,13 +16,13 @@
 
 package org.citrusframework.ftp.server;
 
+import org.apache.ftpserver.ftplet.UserManager;
+import org.apache.ftpserver.listener.ListenerFactory;
 import org.citrusframework.ftp.message.FtpMarshaller;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.server.AbstractServerBuilder;
-import org.apache.ftpserver.ftplet.UserManager;
-import org.apache.ftpserver.listener.ListenerFactory;
-import org.springframework.core.io.Resource;
+import org.citrusframework.spi.Resource;
 
 /**
  * @author Christoph Deppisch

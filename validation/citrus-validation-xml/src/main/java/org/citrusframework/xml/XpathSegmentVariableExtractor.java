@@ -1,5 +1,9 @@
 package org.citrusframework.xml;
 
+import java.util.Collections;
+import java.util.UUID;
+import javax.xml.namespace.NamespaceContext;
+
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -8,17 +12,11 @@ import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
 import org.citrusframework.variable.VariableExpressionSegmentMatcher;
-import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.citrusframework.xml.xpath.XPathExpressionResult;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.xml.SimpleNamespaceContext;
 import org.w3c.dom.Document;
-
-import javax.xml.namespace.NamespaceContext;
-import java.util.Collections;
-import java.util.UUID;
 
 /**
  * @author Thorsten Schlathoelter

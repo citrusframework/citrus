@@ -16,14 +16,13 @@
 
 package org.citrusframework.xml.schema.locator;
 
-import javax.wsdl.xml.WSDLLocator;
-import java.io.IOException;
 import java.net.URI;
+import javax.wsdl.xml.WSDLLocator;
 
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.xml.sax.InputSource;
 
 /**
@@ -34,7 +33,7 @@ public class JarWSDLLocator implements WSDLLocator {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(JarWSDLLocator.class);
 
-    private Resource wsdl;
+    private final Resource wsdl;
     private Resource importResource = null;
 
     public JarWSDLLocator(Resource wsdl) {
@@ -43,11 +42,7 @@ public class JarWSDLLocator implements WSDLLocator {
 
     @Override
     public InputSource getBaseInputSource() {
-        try {
-            return new InputSource(wsdl.getInputStream());
-        } catch (IOException e) {
-            return null;
-        }
+        return new InputSource(wsdl.getInputStream());
     }
 
     @Override
@@ -60,22 +55,13 @@ public class JarWSDLLocator implements WSDLLocator {
             resolvedImportLocation = parentLocation.substring(0, parentLocation.lastIndexOf('/') + 1) + importLocation;
         }
 
-        try {
-            importResource = new PathMatchingResourcePatternResolver().getResource(resolvedImportLocation);
-            return new InputSource(importResource.getInputStream());
-        } catch (IOException e) {
-            logger.warn(String.format("Failed to resolve imported WSDL schema path location '%s'", importLocation), e);
-            return null;
-        }
+        importResource = Resources.create(resolvedImportLocation);
+        return new InputSource(importResource.getInputStream());
     }
 
     @Override
     public String getBaseURI() {
-        try {
-            return wsdl.getURI().toString();
-        } catch (IOException e) {
-            return null;
-        }
+        return wsdl.getURI().toString();
     }
 
     @Override
@@ -84,12 +70,7 @@ public class JarWSDLLocator implements WSDLLocator {
             return null;
         }
 
-        try {
-            return importResource.getURI().toString();
-        } catch (IOException e) {
-            logger.warn("Failed to resolve last imported WSDL schema resource", e);
-            return null;
-        }
+        return importResource.getURI().toString();
     }
 
     @Override

@@ -24,15 +24,14 @@ import java.util.Properties;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 
 /**
  * Action reads property files and creates test variables for every property entry. File
- * resource path can define a {@link org.springframework.core.io.ClassPathResource} or
- * a {@link org.springframework.core.io.FileSystemResource}.
+ * resource path can define a resource located on classpath or file system.
  *
  * @author Christoph Deppisch
  */
@@ -58,7 +57,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
         Resource resource = FileUtils.getFileResource(filePath, context);
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Reading property file " + resource.getFilename());
+            logger.debug("Reading property file " + FileUtils.getFileName(resource.getLocation()));
         }
 
         Properties props = FileUtils.loadAsProperties(resource);
@@ -85,7 +84,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
 
         context.resolveDynamicValuesInMap(unresolved).forEach(context::setVariable);
 
-        logger.info("Loaded property file " + resource.getFilename());
+        logger.info("Loaded property file " + FileUtils.getFileName(resource.getLocation()));
     }
 
     /**

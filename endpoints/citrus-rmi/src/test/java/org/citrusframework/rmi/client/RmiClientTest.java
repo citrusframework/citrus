@@ -16,7 +16,6 @@
 
 package org.citrusframework.rmi.client;
 
-import java.io.InputStreamReader;
 import java.rmi.registry.Registry;
 
 import org.citrusframework.message.Message;
@@ -24,13 +23,12 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.rmi.endpoint.RmiEndpointConfiguration;
 import org.citrusframework.rmi.message.RmiMessage;
 import org.citrusframework.rmi.remote.HelloService;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.util.FileUtils;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -59,8 +57,7 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
         RmiClient rmiClient = new RmiClient(endpointConfiguration);
         String binding = "helloService";
 
-        final String responseBody = FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("service-result.xml",
-                RmiClient.class).getInputStream()));
+        final String responseBody = FileUtils.readToString(Resources.create("service-result.xml", RmiClient.class));
 
         endpointConfiguration.setBinding(binding);
 
@@ -76,8 +73,10 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
         rmiClient.send(requestMessage, context);
 
         Message responseMessage = rmiClient.receive(context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(StringUtils.trimAllWhitespace(responseMessage.getPayload(String.class)),
-                StringUtils.trimAllWhitespace(responseBody));
+        Assert.assertEquals(
+                responseMessage.getPayload(String.class).replaceAll("\\s", ""),
+                responseBody.replaceAll("\\s", "")
+        );
     }
 
     @Test
@@ -86,8 +85,7 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
         RmiClient rmiClient = new RmiClient(endpointConfiguration);
         String binding = "helloService";
 
-        final String responseBody = FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("service-result-2.xml",
-                RmiClient.class).getInputStream()));
+        final String responseBody = FileUtils.readToString(Resources.create("service-result-2.xml", RmiClient.class));
 
         endpointConfiguration.setBinding(binding);
 
@@ -102,8 +100,10 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
         rmiClient.send(requestMessage, context);
 
         Message responseMessage = rmiClient.receive(context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(StringUtils.trimAllWhitespace(responseMessage.getPayload(String.class)),
-                StringUtils.trimAllWhitespace(responseBody));
+        Assert.assertEquals(
+                responseMessage.getPayload(String.class).replaceAll("\\s", ""),
+                responseBody.replaceAll("\\s", "")
+        );
 
         verify(remoteInterface).sayHello(eq("Christoph"));
     }
@@ -114,8 +114,7 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
         RmiClient rmiClient = new RmiClient(endpointConfiguration);
         String binding = "helloService";
 
-        String responseBody = FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("service-result-3.xml",
-                RmiClient.class).getInputStream()));
+        String responseBody = FileUtils.readToString(Resources.create("service-result-3.xml", RmiClient.class));
 
         endpointConfiguration.setBinding(binding);
 
@@ -139,8 +138,10 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
         rmiClient.send(requestMessage, context);
 
         Message responseMessage = rmiClient.receive("correlationKey", context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(StringUtils.trimAllWhitespace(responseMessage.getPayload(String.class)),
-                StringUtils.trimAllWhitespace(responseBody));
+        Assert.assertEquals(
+                responseMessage.getPayload(String.class).replaceAll("\\s", ""),
+                responseBody.replaceAll("\\s", "")
+        );
     }
 
 }

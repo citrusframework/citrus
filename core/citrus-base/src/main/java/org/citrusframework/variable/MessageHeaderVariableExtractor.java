@@ -25,7 +25,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.message.Message;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Variable extractor reading message headers and saves them to new test variables.
@@ -53,7 +52,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
      * Reads header information and saves new test variables.
      */
     public void extractVariables(Message message, TestContext context) {
-        if (CollectionUtils.isEmpty(headerMappings)) { return; }
+        if (headerMappings.isEmpty()) { return; }
 
         for (Entry<String, Object> entry : headerMappings.entrySet()) {
             String headerElementName = entry.getKey();

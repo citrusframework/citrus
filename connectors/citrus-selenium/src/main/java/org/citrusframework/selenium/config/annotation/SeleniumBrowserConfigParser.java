@@ -20,10 +20,10 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumBrowserBuilder;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.events.WebDriverListener;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

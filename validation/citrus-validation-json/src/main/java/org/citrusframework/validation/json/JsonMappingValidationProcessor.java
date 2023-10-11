@@ -19,18 +19,18 @@ package org.citrusframework.validation.json;
 import java.io.IOException;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.validation.AbstractValidationProcessor;
 import org.citrusframework.validation.GenericValidationProcessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 /**
  * @author Christoph Deppisch
@@ -73,7 +73,7 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
 
     private T readJson(Message message) {
         if (mapper == null) {
-            Assert.notNull(referenceResolver, "Json mapping validation callback requires object mapper instance " +
+            ObjectHelper.assertNotNull(referenceResolver, "Json mapping validation callback requires object mapper instance " +
                     "or proper reference resolver with nested bean definition of type marshaller");
 
             mapper = referenceResolver.resolve(ObjectMapper.class);

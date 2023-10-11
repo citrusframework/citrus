@@ -20,9 +20,9 @@ import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.ws.client.WebServiceClient;
 import org.citrusframework.ws.server.WebServiceServer;
-import org.springframework.util.Assert;
 
 /**
  * Action executes soap client and server operations.
@@ -96,7 +96,7 @@ public class SoapActionBuilder implements TestActionBuilder.DelegatingTestAction
 
 	@Override
 	public TestAction build() {
-		Assert.notNull(delegate, "Missing delegate action to build");
+		ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
 		return delegate.build();
 	}
 

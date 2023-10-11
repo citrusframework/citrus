@@ -24,7 +24,6 @@ import java.util.Set;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
-import org.springframework.core.io.Resource;
 
 /**
  * XML validation context holding validation specific information needed for XML
@@ -39,9 +38,6 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
 
     /** Namespace definitions resolving namespaces in XML message validation */
     private final Map<String, String> namespaces;
-
-    /** dtdResource for DTD validation */
-    private final Resource dtdResource;
 
     /** Map holding control namespaces for validation */
     private final Map<String, String> controlNamespaces;
@@ -70,7 +66,6 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
         this.ignoreExpressions = builder.ignoreExpressions;
         this.namespaces = builder.namespaces;
         this.controlNamespaces = builder.controlNamespaces;
-        this.dtdResource = builder.dtdResource;
         this.schemaValidation = builder.schemaValidation;
         this.schemaRepository = builder.schemaRepository;
         this.schema = builder.schema;
@@ -108,7 +103,6 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
                         .schemaValidation(schemaValidation)
                         .schemaRepository(schemaRepository)
                         .schema(schema)
-                        .dtd(dtdResource)
                         .ignore(ignoreExpressions);
         }
 
@@ -128,7 +122,6 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
 
         protected final Set<String> ignoreExpressions = new HashSet<>();
         protected Map<String, String> namespaces = new HashMap<>();
-        protected Resource dtdResource;
         protected final Map<String, String> controlNamespaces = new HashMap<>();
         protected boolean schemaValidation = true;
         protected String schemaRepository;
@@ -218,17 +211,6 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
         }
 
         /**
-         * Sets explicit DTD resource to use for validation.
-         *
-         * @param dtdResource
-         * @return
-         */
-        public S dtd(final Resource dtdResource) {
-            this.dtdResource = dtdResource;
-            return self;
-        }
-
-        /**
          * Adds ignore path expression for message element.
          *
          * @param path
@@ -270,14 +252,6 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
      */
     public Map<String, String> getNamespaces() {
         return namespaces;
-    }
-
-    /**
-     * Get the dtd resource.
-     * @return the dtdResource
-     */
-    public Resource getDTDResource() {
-        return dtdResource;
     }
 
     /**

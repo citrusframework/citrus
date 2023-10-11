@@ -15,11 +15,11 @@
  */
 package org.citrusframework.ws.validation;
 
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * Simple implementation of a {@link AbstractSoapAttachmentValidator}.
@@ -37,8 +37,8 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
 
     @Override
     protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
-        String receivedContent = StringUtils.trimWhitespace(receivedAttachment.getContent());
-        String controlContent = StringUtils.trimWhitespace(controlAttachment.getContent());
+        String receivedContent = receivedAttachment.getContent().replaceAll("\\s", "");
+        String controlContent = controlAttachment.getContent().replaceAll("\\s", "");
 
         if (logger.isDebugEnabled()) {
             logger.debug("Validating SOAP attachment content ...");
@@ -46,20 +46,20 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
             logger.debug("Control attachment content: " + controlContent);
         }
 
-        if (receivedContent != null) {
-            Assert.isTrue(controlContent != null,
-                    "Values not equal for attachment content '"
-                        + controlAttachment.getContentId() + "', expected '"
-                        + null + "' but was '"
-                        + receivedContent + "'");
-
-            validateAttachmentContentData(receivedContent, controlContent, controlAttachment.getContentId());
-        } else {
-            Assert.isTrue(!StringUtils.hasLength(controlContent),
-                    "Values not equal for attachment content '"
+        if (StringUtils.hasText(receivedContent)) {
+            if (!StringUtils.hasText(controlContent)) {
+                throw new ValidationException("Values not equal for attachment content '"
                         + controlAttachment.getContentId() + "', expected '"
                         + controlContent + "' but was '"
-                        + null + "'");
+                        + receivedContent + "'");
+            }
+
+            validateAttachmentContentData(receivedContent, controlContent, controlAttachment.getContentId());
+        } else if (StringUtils.hasText(controlContent)) {
+            throw new ValidationException("Values not equal for attachment content '"
+                    + controlAttachment.getContentId() + "', expected '"
+                    + controlContent + "' but was '"
+                    + receivedContent + "'");
         }
 
         if (logger.isDebugEnabled()) {
@@ -75,15 +75,16 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
      */
     protected void validateAttachmentContentData(String receivedContent, String controlContent, String controlContentId) {
         if (ignoreAllWhitespaces) {
-            controlContent = StringUtils.trimAllWhitespace(controlContent);
-            receivedContent = StringUtils.trimAllWhitespace(receivedContent);
+            controlContent = controlContent.replaceAll("\\s", "");
+            receivedContent = receivedContent.replaceAll("\\s", "");
         }
 
-        Assert.isTrue(receivedContent.equals(controlContent),
-                "Values not equal for attachment content '"
+        if (!receivedContent.equals(controlContent)) {
+            throw new ValidationException("Values not equal for attachment content '"
                         + controlContentId + "', expected '"
                         + controlContent.trim() + "' but was '"
                         + receivedContent.trim() + "'");
+        }
     }
 
     /**

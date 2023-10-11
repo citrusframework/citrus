@@ -39,6 +39,7 @@ import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.AbstractValidationProcessor;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
@@ -47,7 +48,6 @@ import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mockito;
-import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -20,15 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.ftp.message.FtpMessage;
-import org.citrusframework.ftp.model.CommandType;
-import org.citrusframework.ftp.model.DeleteCommand;
-import org.citrusframework.ftp.model.GetCommand;
-import org.citrusframework.ftp.model.ListCommand;
-import org.citrusframework.ftp.model.PutCommand;
-import org.citrusframework.util.FileUtils;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier;
 import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
@@ -37,10 +28,19 @@ import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.scp.client.DefaultScpClientCreator;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.ftp.message.FtpMessage;
+import org.citrusframework.ftp.model.CommandType;
+import org.citrusframework.ftp.model.DeleteCommand;
+import org.citrusframework.ftp.model.GetCommand;
+import org.citrusframework.ftp.model.ListCommand;
+import org.citrusframework.ftp.model.PutCommand;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch
@@ -135,8 +135,8 @@ public class ScpClient extends SftpClient {
             if (getPrivateKeyPath() != null) {
                 Resource privateKey = FileUtils.getFileResource(getPrivateKeyPath());
 
-                if (privateKey instanceof ClassPathResource) {
-                    new ClassLoadableResourceKeyPairProvider(privateKey.getFile().getPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
+                if (privateKey instanceof Resources.ClasspathResource) {
+                    new ClassLoadableResourceKeyPairProvider(privateKey.getLocation()).loadKeys(session).forEach(session::addPublicKeyIdentity);
                 } else {
                     new FileKeyPairProvider(privateKey.getFile().toPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
                 }

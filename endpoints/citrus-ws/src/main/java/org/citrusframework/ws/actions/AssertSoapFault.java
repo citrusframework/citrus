@@ -33,7 +33,9 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.validation.SimpleSoapFaultValidator;
 import org.citrusframework.ws.validation.SoapFaultDetailValidationContext;
@@ -41,8 +43,6 @@ import org.citrusframework.ws.validation.SoapFaultValidationContext;
 import org.citrusframework.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 
 /**

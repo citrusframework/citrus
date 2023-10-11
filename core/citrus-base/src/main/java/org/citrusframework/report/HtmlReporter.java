@@ -19,7 +19,6 @@ package org.citrusframework.report;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.HashMap;
@@ -27,16 +26,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.PropertyUtils;
-import org.apache.commons.codec.binary.Base64;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.StringUtils;
 
 /**
  * Basic logging reporter generating a HTML report with detailed test results.
@@ -58,7 +57,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
     private String testDetailTemplate = HtmlReporterSettings.getReportDetailTemplate();
 
     /** Output directory */
-    private String outputDirectory = HtmlReporterSettings.getReportDirectory();
+    private final String outputDirectory = HtmlReporterSettings.getReportDirectory();
 
     /** Resulting HTML test report file name */
     private String reportFileName = HtmlReporterSettings.getReportFile();
@@ -172,8 +171,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
                 if (!ex.getFailureStack().isEmpty()) {
                     FailureStackElement stackElement = ex.getFailureStack().pop();
                     if (stackElement.getLineNumberStart() > 0) {
-                        reader = new BufferedReader(new FileReader(
-                                new ClassPathResource(stackElement.getTestFilePath() + FileUtils.FILE_EXTENSION_XML).getFile()));
+                        reader = new BufferedReader(Resources.newClasspathResource(stackElement.getTestFilePath() + FileUtils.FILE_EXTENSION_XML).getReader());
 
                         codeSnippet.append("<div class=\"code-snippet\">");
                         codeSnippet.append("<h2 class=\"code-title\">" + stackElement.getTestFilePath() + ".xml</h2>");

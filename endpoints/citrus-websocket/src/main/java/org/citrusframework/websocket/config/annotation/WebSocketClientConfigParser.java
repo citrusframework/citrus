@@ -20,10 +20,10 @@ import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.websocket.client.WebSocketClient;
 import org.citrusframework.websocket.client.WebSocketClientBuilder;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

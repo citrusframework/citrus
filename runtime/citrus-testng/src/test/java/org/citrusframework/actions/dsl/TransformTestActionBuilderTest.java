@@ -22,7 +22,7 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.TransformAction;
-import org.springframework.core.io.ClassPathResource;
+import org.citrusframework.spi.Resources;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -70,8 +70,8 @@ public class TransformTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testTransformBuilderWithResource() throws IOException {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
-        builder.$(transform().source(new ClassPathResource("org/citrusframework/actions/dsl/transform-source.xml"))
-                .xslt(new ClassPathResource("org/citrusframework/actions/dsl/transform.xslt"))
+        builder.$(transform().source(Resources.newClasspathResource("org/citrusframework/actions/dsl/transform-source.xml"))
+                .xslt(Resources.newClasspathResource("org/citrusframework/actions/dsl/transform.xslt"))
                 .result("result"));
 
 		Assert.assertNotNull(context.getVariable("result"));

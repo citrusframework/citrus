@@ -20,6 +20,11 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.citrusframework.generate.SwaggerTestGenerator;
 import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.UnitFramework;
@@ -33,14 +38,9 @@ import org.citrusframework.generate.xml.SwaggerXmlTestGenerator;
 import org.citrusframework.generate.xml.WsdlXmlTestGenerator;
 import org.citrusframework.generate.xml.XmlTestGenerator;
 import org.citrusframework.generate.xml.XsdXmlTestGenerator;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
+import org.citrusframework.util.StringUtils;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
-import org.springframework.util.StringUtils;
 
 /**
  * Creates new Citrus test cases with empty XML test file and executable Java class.

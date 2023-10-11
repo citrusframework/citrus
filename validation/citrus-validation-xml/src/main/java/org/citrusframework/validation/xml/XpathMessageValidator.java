@@ -27,6 +27,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
@@ -36,8 +37,6 @@ import org.citrusframework.xml.xpath.XPathExpressionResult;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -56,7 +55,9 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
                                 TestContext context, XpathMessageValidationContext validationContext) throws ValidationException {
-        if (CollectionUtils.isEmpty(validationContext.getXpathExpressions())) { return; }
+        if (validationContext.getXpathExpressions().isEmpty()) {
+            return;
+        }
 
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
             throw new ValidationException("Unable to validate message elements - receive message payload was empty");

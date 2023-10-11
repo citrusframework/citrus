@@ -60,12 +60,11 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link org.citrusframework.endpoint.Endpoint}
- * to receive the message, this means that action is independent from any message transport.
+ * to receive the message, this means that this action is independent of any message transport.
  *
  * The received message is validated using a {@link MessageValidator} supporting expected
  * control message payload and header templates.
@@ -239,7 +238,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 logger.debug("Control message:\n" + controlMessage.print(context));
             }
 
-            if (!CollectionUtils.isEmpty(validators)) {
+            if (!validators.isEmpty()) {
                 for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
                     messageValidator.validateMessage(message, controlMessage, context, validationContexts);
                 }

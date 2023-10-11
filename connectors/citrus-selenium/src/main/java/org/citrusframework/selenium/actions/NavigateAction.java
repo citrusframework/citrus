@@ -24,8 +24,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.util.BrowserUtils;
+import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.remote.Browser;
-import org.springframework.util.StringUtils;
 
 /**
  * Navigates to new page either by using new absolute page URL or relative page path.

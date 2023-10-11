@@ -19,21 +19,21 @@
 
 package org.citrusframework.xml;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.util.ResourceUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Loads test case as Spring bean from XML application context file. Loader holds application context file
@@ -119,7 +119,7 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
         if (StringUtils.hasText(source)) {
             return source;
         } else {
-            return ResourceUtils.CLASSPATH_URL_PREFIX + packageName.replace('.', File.separatorChar) +
+            return Resources.CLASSPATH_RESOURCE_PREFIX + packageName.replace('.', File.separatorChar) +
                     File.separator + testName + FileUtils.FILE_EXTENSION_XML;
         }
     }

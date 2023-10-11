@@ -38,12 +38,12 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.xml.actions.script.ScriptDefinitionType;
-import org.springframework.util.StringUtils;
 
 @XmlRootElement(name = "receive")
 public class Receive implements TestActionBuilder<ReceiveMessageAction>, ReferenceResolverAware {

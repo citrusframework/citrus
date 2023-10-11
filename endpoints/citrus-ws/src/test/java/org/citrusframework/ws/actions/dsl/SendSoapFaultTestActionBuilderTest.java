@@ -30,13 +30,13 @@ import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.ws.UnitTestSupport;
 import org.citrusframework.ws.actions.SendSoapFaultAction;
 import org.citrusframework.ws.message.SoapFault;
 import org.citrusframework.ws.server.WebServiceServer;
 import org.mockito.Mockito;
-import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

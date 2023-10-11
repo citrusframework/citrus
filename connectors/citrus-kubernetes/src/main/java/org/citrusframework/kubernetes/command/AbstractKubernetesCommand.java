@@ -16,13 +16,16 @@
 
 package org.citrusframework.kubernetes.command;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-import org.springframework.util.StringUtils;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -189,7 +192,7 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
     protected Map<String, String> getLabels(String labelExpression, TestContext context) {
         Map<String, String> labels = new HashMap<>();
 
-        Set<String> values = StringUtils.commaDelimitedListToSet(labelExpression);
+        Set<String> values = Arrays.stream(labelExpression.split(",")).collect(Collectors.toSet());
         for (String item : values) {
             if (item.contains("!=")) {
                 continue;
@@ -212,7 +215,7 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
     protected Map<String, String> getWithoutLabels(String labelExpression, TestContext context) {
         Map<String, String> labels = new HashMap<>();
 
-        Set<String> values = StringUtils.commaDelimitedListToSet(labelExpression);
+        Set<String> values = Arrays.stream(labelExpression.split(",")).collect(Collectors.toSet());
         for (String item : values) {
             if (item.contains("!=")) {
                 labels.put(context.replaceDynamicContentInString(item.substring(0, item.indexOf("!="))), context.replaceDynamicContentInString(item.substring(item.indexOf("!=") + 2)));

@@ -33,13 +33,13 @@ import org.citrusframework.messaging.Consumer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.script.ScriptTypes;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.script.GroovyJsonMessageValidator;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -185,7 +185,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         runner.run(receive(messageEndpoint)
                                 .message()
                                 .type(MessageType.JSON)
-                                .validate(groovy().script(new ClassPathResource("org/citrusframework/actions/dsl/validation.groovy")))
+                                .validate(groovy().script(Resources.newClasspathResource("org/citrusframework/actions/dsl/validation.groovy")))
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();

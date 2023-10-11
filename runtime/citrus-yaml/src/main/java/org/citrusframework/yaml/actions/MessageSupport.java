@@ -31,9 +31,9 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.message.ScriptPayloadBuilder;
 import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.interceptor.BinaryMessageProcessor;
 import org.citrusframework.validation.interceptor.GzipMessageProcessor;
-import org.springframework.util.StringUtils;
 
 import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;

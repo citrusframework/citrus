@@ -21,8 +21,10 @@ package org.citrusframework.junit;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
@@ -30,13 +32,13 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.ReflectionHelper;
+import org.citrusframework.util.StringUtils;
 import org.junit.runners.model.FrameworkMethod;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -60,7 +62,7 @@ public final class JUnit4Helper {
      */
     public static void invokeTestMethod(Object target, CitrusFrameworkMethod frameworkMethod, TestContext context) {
         Object[] params = JUnit4ParameterHelper.resolveParameter(frameworkMethod, context);
-        ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), target, params);
+        ReflectionHelper.invokeMethod(frameworkMethod.getMethod(), target, params);
     }
 
     /**
@@ -109,15 +111,15 @@ public final class JUnit4Helper {
             Resource file = FileUtils.getFileResource(source);
 
             String sourceFilePackageName  = "";
-            if (source.startsWith(ResourceLoader.CLASSPATH_URL_PREFIX)) {
-                sourceFilePackageName = source.substring(ResourceLoader.CLASSPATH_URL_PREFIX.length());
+            if (source.startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {
+                sourceFilePackageName = source.substring(Resources.CLASSPATH_RESOURCE_PREFIX.length());
             }
 
-            if (StringUtils.hasLength(sourceFilePackageName) && sourceFilePackageName.contains("/")) {
+            if (StringUtils.hasText(sourceFilePackageName) && sourceFilePackageName.contains("/")) {
                 sourceFilePackageName = sourceFilePackageName.substring(0, sourceFilePackageName.lastIndexOf("/"));
             }
 
-            CitrusFrameworkMethod frameworkMethod = new CitrusFrameworkMethod(method.getMethod(), type, FileUtils.getBaseName(file.getFilename()),
+            CitrusFrameworkMethod frameworkMethod = new CitrusFrameworkMethod(method.getMethod(), type, FileUtils.getBaseName(FileUtils.getFileName(file.getLocation())),
                     sourceFilePackageName.replace("/","."));
             frameworkMethod.setSource(source);
             interceptedMethods.add(frameworkMethod);
@@ -126,9 +128,9 @@ public final class JUnit4Helper {
         for (String packageScan : packagesToScan) {
             try {
                 for (String fileNamePattern : CitrusSettings.getTestFileNamePattern(type)) {
-                    Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageScan.replace('.', File.separatorChar) + fileNamePattern);
-                    for (Resource fileResource : fileResources) {
-                        String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+                    Set<Path> fileResources = new ClasspathResourceResolver().getResources(packageScan.replace('.', File.separatorChar), fileNamePattern);
+                    for (Path fileResource : fileResources) {
+                        String filePath = fileResource.getParent().toFile().getCanonicalPath();
 
                         if (packageScan.startsWith("file:")) {
                             filePath = "file:" + filePath;
@@ -137,7 +139,7 @@ public final class JUnit4Helper {
                         filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
                         interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), type,
-                                FileUtils.getBaseName(fileResource.getFilename()), filePath));
+                                FileUtils.getBaseName(String.valueOf(fileResource.getFileName())), filePath));
                     }
                 }
             } catch (RuntimeException | IOException e) {

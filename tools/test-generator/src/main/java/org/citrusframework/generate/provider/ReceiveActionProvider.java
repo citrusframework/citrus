@@ -16,12 +16,11 @@
 
 package org.citrusframework.generate.provider;
 
+import java.util.Optional;
+
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.model.testcase.core.ReceiveModel;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -39,7 +38,7 @@ public class ReceiveActionProvider implements MessageActionProvider<ReceiveModel
         receiveMessage.setData(message.getPayload(String.class));
         receive.setMessage(receiveMessage);
 
-        if (!CollectionUtils.isEmpty(message.getHeaders())) {
+        if (message.getHeaders() != null && !message.getHeaders().isEmpty()) {
             ReceiveModel.Header header = new ReceiveModel.Header();
 
             message.getHeaders().entrySet().stream()

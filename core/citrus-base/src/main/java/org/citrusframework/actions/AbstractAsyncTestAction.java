@@ -18,6 +18,8 @@ package org.citrusframework.actions;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.citrusframework.Completable;
@@ -25,7 +27,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 /**
  * Test action that performs in a separate thread. Action execution is not blocking the test execution chain. After
@@ -45,7 +46,7 @@ public abstract class AbstractAsyncTestAction extends AbstractTestAction impleme
     @Override
     public final void doExecute(TestContext context) {
         CompletableFuture<Void> result = new CompletableFuture<>();
-        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         finished = executor.submit(() -> {
             try {
                 doExecuteAsync(context);

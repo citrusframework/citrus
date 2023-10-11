@@ -25,7 +25,6 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.groovy.GroovyTestLoader;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -59,7 +58,7 @@ public class CreateRoutesTest extends AbstractGroovyActionDslTest {
         CreateCamelRouteAction action = (CreateCamelRouteAction) result.getTestAction(actionIndex++);
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("citrusCamelContext", CamelContext.class));
-        Assert.assertEquals(StringUtils.trimAllWhitespace(action.getRouteContext()), ("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
+        Assert.assertEquals(action.getRouteContext().replaceAll("\\s", ""), ("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
                     "<route id=\"route_1\">" +
                         "<from uri=\"direct:test1\"/>" +
                         "<to uri=\"mock:test1\"/>" +
@@ -74,7 +73,7 @@ public class CreateRoutesTest extends AbstractGroovyActionDslTest {
         action = (CreateCamelRouteAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertEquals(StringUtils.trimAllWhitespace(action.getRouteContext()), ("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
+        Assert.assertEquals(action.getRouteContext().replaceAll("\\s", ""), ("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
                     "<route>" +
                         "<from uri=\"direct:test3\"/>" +
                         "<to uri=\"mock:test3\"/>" +

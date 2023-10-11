@@ -16,17 +16,17 @@
 
 package org.citrusframework.config.util;
 
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 
 /**
  * Provides shared utility methods for bean definition parsing.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class BeanDefinitionParserUtils {
@@ -36,11 +36,11 @@ public abstract class BeanDefinitionParserUtils {
      */
     private BeanDefinitionParserUtils() {
     }
-    
+
     /**
-     * Sets the property value on bean definition in case value 
+     * Sets the property value on bean definition in case value
      * is set properly.
-     * 
+     *
      * @param builder the bean definition builder to be configured
      * @param propertyValue the property value
      * @param propertyName the name of the property
@@ -50,11 +50,11 @@ public abstract class BeanDefinitionParserUtils {
             builder.addPropertyValue(propertyName, propertyValue);
         }
     }
-    
+
     /**
-     * Sets the property value on bean definition as constructor argument in case value 
+     * Sets the property value on bean definition as constructor argument in case value
      * is not null.
-     * 
+     *
      * @param builder the bean definition to be configured
      * @param propertyValue the property value
      */
@@ -65,9 +65,9 @@ public abstract class BeanDefinitionParserUtils {
     }
 
     /**
-     * Sets the property reference on bean definition in case reference 
+     * Sets the property reference on bean definition in case reference
      * is set properly.
-     * 
+     *
      * @param builder the bean definition builder to be configured
      * @param beanReference bean reference to populate the property
      * @param propertyName the name of the property
@@ -77,11 +77,11 @@ public abstract class BeanDefinitionParserUtils {
             builder.addPropertyReference(propertyName, beanReference);
         }
     }
-    
+
     /**
-     * Sets the property reference on bean definition in case reference 
+     * Sets the property reference on bean definition in case reference
      * is set properly.
-     * 
+     *
      * @param builder the bean definition builder to be configured
      * @param beanReference bean reference to add as constructor arg
      */
@@ -93,7 +93,7 @@ public abstract class BeanDefinitionParserUtils {
 
     /**
      * Sets the property reference on bean definition. In case reference is not available a default value is set.
-     * 
+     *
      * @param builder
      * @param beanReference
      * @param propertyName

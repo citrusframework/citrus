@@ -16,6 +16,16 @@
 
 package org.citrusframework.jms.endpoint;
 
+import java.util.HashMap;
+
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Queue;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -23,11 +33,7 @@ import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import jakarta.jms.*;
-import java.util.HashMap;
 
 import static org.mockito.Mockito.*;
 
@@ -36,20 +42,20 @@ import static org.mockito.Mockito.*;
  */
 public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
 
-    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
-    private Connection connection = Mockito.mock(Connection.class);
-    private Session session = Mockito.mock(Session.class);
-    private Destination destination = Mockito.mock(Destination.class);
-    private Queue destinationQueue = Mockito.mock(Queue.class);
-    private MessageProducer messageProducer = Mockito.mock(MessageProducer.class);
-    
-    private JmsTemplate jmsTemplate = Mockito.mock(JmsTemplate.class);
-    
+    private final ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private final Connection connection = Mockito.mock(Connection.class);
+    private final Session session = Mockito.mock(Session.class);
+    private final Destination destination = Mockito.mock(Destination.class);
+    private final Queue destinationQueue = Mockito.mock(Queue.class);
+    private final MessageProducer messageProducer = Mockito.mock(MessageProducer.class);
+
+    private final JmsTemplate jmsTemplate = Mockito.mock(JmsTemplate.class);
+
     @Test
     public void testSendMessageWithJmsTemplate() {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(jmsTemplate, connectionFactory, destination, messageProducer);
@@ -67,7 +73,7 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
@@ -86,14 +92,14 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
 
         verify(messageProducer).send((TextMessage)any());
     }
-    
+
     @Test
     public void testSendMessageWithDestinationName() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestinationName("myDestination");
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
@@ -114,22 +120,14 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
 
         verify(messageProducer).send((TextMessage)any());
     }
-    
-    @Test
+
+    @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
     public void testSendEmptyMessage() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        
-        try {
-            endpoint.createProducer().send(null, context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
-            return;
-        }
-        
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of sending empty message");
+        endpoint.createProducer().send(null, context);
     }
-    
+
 }

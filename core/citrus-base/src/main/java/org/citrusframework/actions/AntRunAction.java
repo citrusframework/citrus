@@ -18,26 +18,25 @@ package org.citrusframework.actions;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Stack;
 
-import org.citrusframework.AbstractTestActionBuilder;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.citrusframework.AbstractTestActionBuilder;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Action calls Apache ANT with given build file and runs ANT targets
@@ -93,7 +92,7 @@ public class AntRunAction extends AbstractTestAction {
 
         String buildFileResource = context.replaceDynamicContentInString(buildFilePath);
         try {
-            ProjectHelper.configureProject(project, new PathMatchingResourcePatternResolver().getResource(buildFileResource).getFile());
+            ProjectHelper.configureProject(project, Resources.newClasspathResource(buildFileResource).getFile());
 
             for (Entry<Object, Object> entry : properties.entrySet()) {
                 String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
@@ -122,8 +121,6 @@ public class AntRunAction extends AbstractTestAction {
             }
         } catch (BuildException e) {
             throw new CitrusRuntimeException("Failed to run ANT build file", e);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read ANT build file", e);
         }
 
         logger.info("Executed ANT build: " + buildFileResource);
@@ -171,9 +168,10 @@ public class AntRunAction extends AbstractTestAction {
         if (StringUtils.hasText(propertyFilePath)) {
             String propertyFileResource = context.replaceDynamicContentInString(propertyFilePath);
             logger.info("Reading build property file: " + propertyFileResource);
-            Properties fileProperties;
+            Properties fileProperties = new Properties();
             try {
-                fileProperties = PropertiesLoaderUtils.loadProperties(new PathMatchingResourcePatternResolver().getResource(propertyFileResource));
+                Resource propertyResource = Resources.newClasspathResource(propertyFileResource);
+                fileProperties.load(propertyResource.getInputStream());
 
                 for (Entry<Object, Object> entry : fileProperties.entrySet()) {
                     String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
@@ -286,7 +284,7 @@ public class AntRunAction extends AbstractTestAction {
          * @param targets
          */
         public Builder targets(String ... targets) {
-            this.targets = StringUtils.collectionToCommaDelimitedString(Arrays.asList(targets));
+            this.targets = String.join(",", targets);
             return this;
         }
 

@@ -19,13 +19,11 @@ package org.citrusframework.ws.validation;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.citrusframework.ws.message.SoapFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Abstract soap fault validation implementation offering basic faultCode and faultString validation.
@@ -58,9 +56,10 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
 
         //fault code validation
         if (StringUtils.hasText(controlFault.getFaultCodeQName().getLocalPart())) {
-            Assert.isTrue(controlFault.getFaultCodeQName().equals(receivedFault.getFaultCodeQName()),
-                    "SOAP fault validation failed! Fault code does not match - expected: '" +
+            if (!controlFault.getFaultCodeQName().equals(receivedFault.getFaultCodeQName())) {
+                throw new ValidationException("SOAP fault validation failed! Fault code does not match - expected: '" +
                     controlFault.getFaultCodeQName() + "' but was: '" + receivedFault.getFaultCodeQName() + "'");
+            }
         }
 
         //fault actor validation
@@ -68,14 +67,13 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
             if (controlFault.getFaultActor().startsWith(CitrusSettings.VALIDATION_MATCHER_PREFIX) &&
                     controlFault.getFaultActor().endsWith(CitrusSettings.VALIDATION_MATCHER_SUFFIX)) {
                 ValidationMatcherUtils.resolveValidationMatcher("SOAP fault actor", receivedFault.getFaultActor(), controlFault.getFaultActor(), context);
-            } else {
-                Assert.isTrue(controlFault.getFaultActor().equals(receivedFault.getFaultActor()),
-                        "SOAP fault validation failed! Fault actor does not match - expected: '" +
-                        controlFault.getFaultActor() + "' but was: '" + receivedFault.getFaultActor() + "'");
+            } else if (!controlFault.getFaultActor().equals(receivedFault.getFaultActor())) {
+                throw new ValidationException("SOAP fault validation failed! Fault actor does not match - expected: '" +
+                    controlFault.getFaultActor() + "' but was: '" + receivedFault.getFaultActor() + "'");
             }
         }
 
-        if (!CollectionUtils.isEmpty(controlFault.getFaultDetails())) {
+        if (controlFault.getFaultDetails() != null && !controlFault.getFaultDetails().isEmpty()) {
             validateFaultDetail(receivedFault, controlFault, context, validationContext);
         }
     }

@@ -16,18 +16,15 @@
 
 package org.citrusframework.functions.core;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 import org.citrusframework.util.FileUtils;
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.FileCopyUtils;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
  * Function reads file from given file path and returns the complete file content as function result.
@@ -50,7 +47,7 @@ public class ReadFileResourceFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList)) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Missing file path function parameter");
         }
 
@@ -61,7 +58,7 @@ public class ReadFileResourceFunction implements Function {
                 if (parameterList.size() > 2 && Boolean.parseBoolean(parameterList.get(2))) {
                     return Base64.encodeBase64String(readFileContent(parameterList.get(0), context, true).getBytes(FileUtils.getCharset(parameterList.get(0))));
                 } else {
-                    return Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(parameterList.get(0), context).getInputStream()));
+                    return Base64.encodeBase64String(FileUtils.copyToByteArray(FileUtils.getFileResource(parameterList.get(0), context)));
                 }
             } else {
                 return readFileContent(parameterList.get(0), context, true);

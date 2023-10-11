@@ -16,14 +16,18 @@
 
 package org.citrusframework.restdocs.config.xml;
 
-import org.citrusframework.restdocs.http.*;
-import org.citrusframework.restdocs.soap.*;
+import org.citrusframework.restdocs.http.RestDocClientInterceptor;
+import org.citrusframework.restdocs.http.RestDocRequestConverter;
+import org.citrusframework.restdocs.http.RestDocResponseConverter;
+import org.citrusframework.restdocs.soap.RestDocSoapClientInterceptor;
+import org.citrusframework.restdocs.soap.RestDocSoapRequestConverter;
+import org.citrusframework.restdocs.soap.RestDocSoapResponseConverter;
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.restdocs.generate.RestDocumentationGenerator;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**

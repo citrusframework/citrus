@@ -1,22 +1,22 @@
 package org.citrusframework.docs;
 
-import org.citrusframework.generate.UnitFramework;
-import org.citrusframework.generate.xml.XmlTestGenerator;
-import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
-
-import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Properties;
+import javax.xml.transform.TransformerException;
+
+import org.citrusframework.generate.UnitFramework;
+import org.citrusframework.generate.xml.XmlTestGenerator;
+import org.testng.annotations.Test;
+import org.xml.sax.SAXException;
 
 import static org.testng.Assert.assertEquals;
 
 public class AbstractTestDocsGeneratorTest {
 
-    private AbstractTestDocsGenerator abstractTestDocsGenerator = new AbstractTestDocsGenerator("", "") {
+    private final AbstractTestDocsGenerator abstractTestDocsGenerator = new AbstractTestDocsGenerator("", "") {
         @Override
         public void doBody(final OutputStream buffered) throws TransformerException, IOException, SAXException {
 
@@ -38,7 +38,7 @@ public class AbstractTestDocsGeneratorTest {
     public void testGetTestFiles() throws IOException {
 
         //GIVEN
-        new XmlTestGenerator()
+        new XmlTestGenerator<>()
                 .withAuthor("Christoph")
                 .withDescription("This is a sample test")
                 .withName("SampleIT")

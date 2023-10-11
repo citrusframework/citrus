@@ -16,15 +16,15 @@
 
 package org.citrusframework.ftp.config.annotation;
 
+import org.apache.ftpserver.ftplet.UserManager;
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.ftp.server.FtpServer;
 import org.citrusframework.ftp.server.FtpServerBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.apache.ftpserver.ftplet.UserManager;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -59,7 +59,7 @@ public class FtpServerConfigParser implements AnnotationConfigParser<FtpServerCo
         }
 
         if (StringUtils.hasText(annotation.userManagerProperties())) {
-            builder.userManagerProperties(new PathMatchingResourcePatternResolver().getResource(annotation.userManagerProperties()));
+            builder.userManagerProperties(Resources.create(annotation.userManagerProperties()));
         }
 
         if (StringUtils.hasText(annotation.actor())) {

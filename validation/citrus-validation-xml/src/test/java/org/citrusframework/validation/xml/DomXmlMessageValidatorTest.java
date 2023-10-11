@@ -16,7 +16,6 @@
 
 package org.citrusframework.validation.xml;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.context.TestContextFactory;
@@ -32,7 +32,6 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
-import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
@@ -55,26 +54,26 @@ import org.xml.sax.SAXException;
  */
 public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
-    private DomXmlMessageValidator validator = new DomXmlMessageValidator();
+    private final DomXmlMessageValidator validator = new DomXmlMessageValidator();
 
-    private XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
-    private XsdSchemaRepository testSchemaRepository1 = new XsdSchemaRepository();
-    private XsdSchemaRepository testSchemaRepository2 = new XsdSchemaRepository();
+    private final XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+    private final XsdSchemaRepository testSchemaRepository1 = new XsdSchemaRepository();
+    private final XsdSchemaRepository testSchemaRepository2 = new XsdSchemaRepository();
 
-    private SimpleXsdSchema testSchema = new SimpleXsdSchema();
-    private SimpleXsdSchema testSchema1 = new SimpleXsdSchema();
-    private SimpleXsdSchema testSchema2 = new SimpleXsdSchema();
-    private SimpleXsdSchema testSchema3 = new SimpleXsdSchema();
+    private final SimpleXsdSchema testSchema = new SimpleXsdSchema();
+    private final SimpleXsdSchema testSchema1 = new SimpleXsdSchema();
+    private final SimpleXsdSchema testSchema2 = new SimpleXsdSchema();
+    private final SimpleXsdSchema testSchema3 = new SimpleXsdSchema();
 
     @BeforeClass
     public void setupMocks() throws Exception {
-        testSchema.setXsd(FileUtils.getFileResource("org/citrusframework/validation/test.xsd"));
+        testSchema.setXsd(new ClassPathResource("org/citrusframework/validation/test.xsd"));
         testSchema.afterPropertiesSet();
-        testSchema1.setXsd(FileUtils.getFileResource("org/citrusframework/validation/test.xsd"));
+        testSchema1.setXsd(new ClassPathResource("org/citrusframework/validation/test.xsd"));
         testSchema1.afterPropertiesSet();
-        testSchema2.setXsd(FileUtils.getFileResource("org/citrusframework/validation/test.xsd"));
+        testSchema2.setXsd(new ClassPathResource("org/citrusframework/validation/test.xsd"));
         testSchema2.afterPropertiesSet();
-        testSchema3.setXsd(FileUtils.getFileResource("org/citrusframework/validation/test.xsd"));
+        testSchema3.setXsd(new ClassPathResource("org/citrusframework/validation/test.xsd"));
         testSchema3.afterPropertiesSet();
 
         schemaRepository.getSchemas().add(testSchema);
