@@ -23,11 +23,11 @@ import java.lang.reflect.Method;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.DefaultTestCase;
-import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
@@ -83,7 +83,8 @@ public final class CitrusExtensionHelper {
      * @return
      */
     public static TestCaseRunner createTestRunner(String testName, ExtensionContext extensionContext) {
-        TestCaseRunner testCaseRunner = new DefaultTestCaseRunner(new DefaultTestCase(), getTestContext(extensionContext));
+        TestCaseRunner testCaseRunner = TestCaseRunnerFactory.createRunner(
+            new DefaultTestCase(), getTestContext(extensionContext));
         testCaseRunner.testClass(extensionContext.getRequiredTestClass());
         testCaseRunner.name(testName);
         testCaseRunner.packageName(extensionContext.getRequiredTestClass().getPackage().getName());

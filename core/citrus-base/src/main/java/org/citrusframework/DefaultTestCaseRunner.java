@@ -151,4 +151,18 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
         this.testCase = testCase;
         this.testCase.setIncremental(true);
     }
+
+    public static class DefaultTestCaseRunnerProvider implements TestCaseRunnerProvider {
+
+        @Override
+        public TestCaseRunner createTestCaseRunner(TestContext context) {
+            return new DefaultTestCaseRunner(context);
+        }
+
+        @Override
+        public TestCaseRunner createTestCaseRunner(TestCase testCase, TestContext context) {
+            return new DefaultTestCaseRunner(testCase, context);
+        }
+
+    }
 }

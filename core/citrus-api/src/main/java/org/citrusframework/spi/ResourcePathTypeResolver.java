@@ -31,7 +31,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 /**
  * Type resolver resolves references via resource path lookup. Provided resource paths should point to a resource in classpath
  * (e.g. META-INF/my/resource/path/file-name). The resolver will try to locate the resource as classpath resource and read the file as property
- * file. By default the resolver reads the default type resolver property {@link TypeResolver#DEFAULT_TYPE_PROPERTY} and instantiates a new instance
+ * file. By default, the resolver reads the default type resolver property {@link TypeResolver#DEFAULT_TYPE_PROPERTY} and instantiates a new instance
  * for the given type information.
  *
  * A possible property file content that represents the resource in classpath could look like this:

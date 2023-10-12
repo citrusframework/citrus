@@ -29,8 +29,8 @@ import java.util.Set;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
-import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.annotations.CitrusXmlTest;
@@ -90,7 +90,7 @@ public final class TestNGHelper {
      * @return
      */
     public static TestCaseRunner createTestCaseRunner(Object target, Method method, TestContext context) {
-        TestCaseRunner testCaseRunner = new DefaultTestCaseRunner(new DefaultTestCase(), context);
+        TestCaseRunner testCaseRunner = TestCaseRunnerFactory.createRunner(new DefaultTestCase(), context);
         testCaseRunner.testClass(target.getClass());
         testCaseRunner.name(target.getClass().getSimpleName());
         testCaseRunner.packageName(target.getClass().getPackage().getName());

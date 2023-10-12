@@ -48,7 +48,7 @@ public interface TestLoader {
     String GROOVY = "groovy";
 
     /**
-     * Loads and creates new test case object..
+     * Loads and creates new test case object.
      * @return
      */
     void load();
@@ -72,7 +72,7 @@ public interface TestLoader {
     void setPackageName(String packageName);
 
     /**
-     * Gets the loaded test case or null if has not been loaded yet.
+     * Gets the loaded test case or null if it has not been loaded yet.
      * @return
      */
     TestCase getTestCase();

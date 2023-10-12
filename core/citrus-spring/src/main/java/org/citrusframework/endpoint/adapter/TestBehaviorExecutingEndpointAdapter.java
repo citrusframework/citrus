@@ -16,9 +16,10 @@
 
 package org.citrusframework.endpoint.adapter;
 
-import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestBehavior;
 import org.citrusframework.TestCase;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
@@ -47,7 +48,7 @@ public class TestBehaviorExecutingEndpointAdapter extends XmlTestExecutingEndpoi
         getTaskExecutor().execute(() -> {
             prepareExecution(request, behavior);
             TestContext context = getTestContext();
-            DefaultTestCaseRunner testCaseRunner = new DefaultTestCaseRunner(context);
+            TestCaseRunner testCaseRunner = TestCaseRunnerFactory.createRunner(context);
             behavior.apply(testCaseRunner);
         });
 
