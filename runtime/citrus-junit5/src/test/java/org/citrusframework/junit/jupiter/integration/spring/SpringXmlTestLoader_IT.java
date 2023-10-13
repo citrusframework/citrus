@@ -7,13 +7,17 @@ import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusXmlTest;
 import org.citrusframework.common.BeanDefinitionParserConfiguration;
 import org.citrusframework.common.SpringXmlTestLoaderConfiguration;
+import org.citrusframework.common.SpringXmlTestLoaderConfigurer;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.config.xml.BaseTestCaseMetaInfoParser;
 import org.citrusframework.config.xml.BaseTestCaseParser;
+import org.citrusframework.junit.jupiter.integration.spring.SpringXmlTestLoader_IT.CustomConfiguration;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -22,34 +26,33 @@ import org.w3c.dom.Element;
  * @author Thorsten Schlathoelter
  */
 @CitrusSpringSupport
-@ContextConfiguration(classes = {CitrusSpringConfig.class})
+@ContextConfiguration(classes = {CitrusSpringConfig.class, CustomConfiguration.class})
 @SpringXmlTestLoaderConfiguration(
         parserConfigurations = {
                 @BeanDefinitionParserConfiguration(name = "testcase", parser = SpringXmlTestLoader_IT.CustomTestCaseParser.class),
-                @BeanDefinitionParserConfiguration(name = "meta-info", parser = SpringXmlTestLoader_IT.CustomTestCaseMetaInfoParser.class)
         })
-public class SpringXmlTestLoader_IT {
+class SpringXmlTestLoader_IT {
 
     @Test
     @CitrusXmlTest(name="SpringXmlTestLoader_IT")
-    public void SpringXmlTestLoaderIT_0_IT(@CitrusResource TestCaseRunner runner) {
+    void SpringXmlTestLoaderIT_0_IT(@CitrusResource TestCaseRunner runner) {
         Assertions.assertNotNull(runner.getTestCase());
 
         TestCaseMetaInfo metaInfo = runner.getTestCase().getMetaInfo();
         Assertions.assertTrue(metaInfo instanceof CustomTestCaseMetaInfo);
-        Assertions.assertEquals(((CustomTestCaseMetaInfo)metaInfo).getDescription(), "Foo bar: F#!$§ed up beyond all repair");
+        Assertions.assertEquals( "Foo bar: F#!$§ed up beyond all repair", ((CustomTestCaseMetaInfo)metaInfo).getDescription());
     }
 
     /**
      * A custom test case implementation that should be created by the loader
      */
-    public static class CustomTestCase extends DefaultTestCase {
+    static class CustomTestCase extends DefaultTestCase {
     }
 
     /**
      * A custom test case meta info that should be created by the loader
      */
-    public static class CustomTestCaseMetaInfo extends TestCaseMetaInfo {
+    static class CustomTestCaseMetaInfo extends TestCaseMetaInfo {
 
         private String description;
 
@@ -91,8 +94,29 @@ public class SpringXmlTestLoader_IT {
                 metaInfoBuilder.addPropertyValue("description", description);
             }
         }
-
     }
 
+    /**
+     * A loader configuration that can be added as a bean and that will be picked up for configuration
+     * of any XML test case.
+     */
+    @SpringXmlTestLoaderConfiguration(
+        parserConfigurations = {
+            @BeanDefinitionParserConfiguration(name = "meta-info", parser = SpringXmlTestLoader_IT.CustomTestCaseMetaInfoParser.class)
+        })
+    static class CustomTestLoaderConfigurer implements SpringXmlTestLoaderConfigurer {
+    }
 
+    /**
+     * A configuration that provides the CustomTestLoaderConfigurer bean for configuration of
+     * all SpringXmlTest cases.
+     */
+    @Configuration
+    static class CustomConfiguration {
+
+        @Bean
+        public CustomTestLoaderConfigurer customTestLoaderConfigurer() {
+            return new CustomTestLoaderConfigurer();
+        }
+    }
 }

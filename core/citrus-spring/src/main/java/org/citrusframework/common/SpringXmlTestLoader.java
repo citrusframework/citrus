@@ -19,6 +19,8 @@ package org.citrusframework.common;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.citrusframework.CitrusSpringContext;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
@@ -49,8 +51,8 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
 
         try {
             testCase = ctx.getBean(testName, TestCase.class);
-            if (runner instanceof DefaultTestCaseRunner) {
-                ((DefaultTestCaseRunner) runner).setTestCase(testCase);
+            if (runner instanceof DefaultTestCaseRunner defaultTestCaseRunner) {
+                defaultTestCaseRunner.setTestCase(testCase);
             }
 
             configurer.forEach(handler -> handler.accept(testCase));
@@ -68,13 +70,14 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
      */
     private ApplicationContext loadApplicationContext() {
         try {
-            configureCustomParsers();
+            ApplicationContext parentApplicationContext = getParentApplicationContext();
+            configureCustomParsers(parentApplicationContext);
 
             return new ClassPathXmlApplicationContext(
                     new String[]{
                             getSource(),
                             "org/citrusframework/spring/annotation-config-ctx.xml"},
-                    true, getParentApplicationContext());
+                    true, parentApplicationContext);
         } catch (Exception e) {
             throw citrusContext.getTestContextFactory().getObject()
                     .handleError(testName, packageName, "Failed to load test case", e);
@@ -84,9 +87,11 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
     /**
      * Configures the CitrusNamespaceParserRegistry with custom parsers
      */
-    private void configureCustomParsers() {
-        SpringXmlTestLoaderConfiguration loaderConfiguration = testClass.getAnnotation(SpringXmlTestLoaderConfiguration.class);
-        if (loaderConfiguration != null) {
+    private void configureCustomParsers(ApplicationContext parentApplicationContext) {
+        List<SpringXmlTestLoaderConfiguration> beanDefinitionParserConfigurationList = retrieveSpringXmlTestLoaderConfigurations(
+            parentApplicationContext);
+
+        for (SpringXmlTestLoaderConfiguration loaderConfiguration : beanDefinitionParserConfigurationList) {
             for (BeanDefinitionParserConfiguration beanDefinitionParserConfiguration : loaderConfiguration.parserConfigurations()) {
                 Class<? extends BeanDefinitionParser> parserClass = beanDefinitionParserConfiguration.parser();
                 try {
@@ -99,11 +104,57 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
                 }
             }
         }
+
+    }
+
+    /**
+     * Retrieves a collection of optional SpringXmlTestLoaderConfigurations. This collection is composed of:
+     * <ul>
+     *     <li>Annotations at the class level of the current test being executed.</li>
+     *     <li>Annotations provided by all {@link SpringXmlTestLoaderConfigurer} beans found in the application context.</li>
+     * </ul>
+     *
+     * @param applicationContext the application context that optionally provides {@link SpringXmlTestLoaderConfigurer} beans
+     * @return a collection of SpringXmlTestLoaderConfigurations
+     *
+     * @see SpringXmlTestLoaderConfigurer
+     */
+    private List<SpringXmlTestLoaderConfiguration> retrieveSpringXmlTestLoaderConfigurations(
+        ApplicationContext applicationContext) {
+        List<SpringXmlTestLoaderConfiguration> beanDefinitionParserConfigurationList = new ArrayList<>();
+
+        addOptionalTestClassLevelAnnotation(
+            testClass,
+            beanDefinitionParserConfigurationList);
+        addOptionalConfigurerClassLevelAnnotations(applicationContext,
+            beanDefinitionParserConfigurationList);
+
+        return beanDefinitionParserConfigurationList;
+    }
+
+    private void addOptionalConfigurerClassLevelAnnotations(ApplicationContext applicationContext,
+        List<SpringXmlTestLoaderConfiguration> beanDefinitionParserConfigurationList) {
+        if (applicationContext != null) {
+            applicationContext.getBeansOfType(
+                SpringXmlTestLoaderConfigurer.class).values().forEach(configurer ->
+                addOptionalTestClassLevelAnnotation(configurer.getClass(),
+                    beanDefinitionParserConfigurationList)
+            );
+        }
+    }
+
+    private void addOptionalTestClassLevelAnnotation(Class<?> testClass,
+        List<SpringXmlTestLoaderConfiguration> beanDefinitionParserConfigurationList) {
+
+        SpringXmlTestLoaderConfiguration loaderConfiguration = testClass.getAnnotation(SpringXmlTestLoaderConfiguration.class);
+        if (loaderConfiguration != null) {
+            beanDefinitionParserConfigurationList.add(loaderConfiguration);
+        }
     }
 
     private ApplicationContext getParentApplicationContext() {
-        if (citrusContext instanceof CitrusSpringContext) {
-            return ((CitrusSpringContext) citrusContext).getApplicationContext();
+        if (citrusContext instanceof CitrusSpringContext citrusSpringContext) {
+            return citrusSpringContext.getApplicationContext();
         }
 
         return null;

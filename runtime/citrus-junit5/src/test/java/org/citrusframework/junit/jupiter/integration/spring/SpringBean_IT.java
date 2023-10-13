@@ -47,7 +47,7 @@ import static org.citrusframework.actions.SendMessageAction.Builder.send;
  */
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, SpringBean_IT.EndpointConfig.class})
-public class SpringBean_IT {
+class SpringBean_IT {
 
     @Autowired
     private DirectEndpoint direct;
@@ -65,7 +65,7 @@ public class SpringBean_IT {
     }
 
     @Configuration
-    public static class EndpointConfig {
+    static class EndpointConfig {
 
         @Bean
         public BeforeTest beforeTest() {
