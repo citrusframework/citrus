@@ -38,26 +38,26 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class})
-public class SpringBeanXml_IT {
+class SpringBeanXml_IT {
 
     @Test
     @DisplayName("SpringBeanXml_IT")
     @CitrusXmlTest(name = "SpringBeanXml_IT")
-    public void SpringBeanXml_0_IT() {
+    void SpringBeanXml_0_IT() {
     }
 
     @Test
     @CitrusTestSource(type = TestLoader.GROOVY, name = "echo.test", packageName = "org.citrusframework.junit.jupiter.simple")
-    public void SpringGroovy_IT() {
+    void SpringGroovy_IT() {
     }
 
     @Test
     @CitrusXmlTest(name = "SampleIT")
-    public void SpringBeanXml_1_IT() {
+    void SpringBeanXml_1_IT() {
     }
 
     @CitrusSpringXmlTestFactory
-    public Stream<DynamicTest> SpringBeanXml_2_IT() {
+    Stream<DynamicTest> SpringBeanXml_2_IT() {
         return Stream.of(
                 CitrusTestFactorySupport.springXml().dynamicTest("org.citrusframework.junit.jupiter.integration.actions", "EchoActionIT"),
                 CitrusTestFactorySupport.springXml().dynamicTest("org.citrusframework.junit.jupiter.integration.actions", "FailActionIT"),
@@ -66,12 +66,12 @@ public class SpringBeanXml_IT {
     }
 
     @CitrusSpringXmlTestFactory
-    public Stream<DynamicTest> SpringBeanXml_3_IT() {
+    Stream<DynamicTest> SpringBeanXml_3_IT() {
         return CitrusTestFactorySupport.springXml().packageScan("org.citrusframework.junit.jupiter.simple");
     }
 
     @Test
     @CitrusXmlTest(sources = "classpath:org/citrusframework/junit/jupiter/integration/spring/SampleIT.xml")
-    public void SpringBeanXml_4_IT() {
+    void SpringBeanXml_4_IT() {
     }
 }
