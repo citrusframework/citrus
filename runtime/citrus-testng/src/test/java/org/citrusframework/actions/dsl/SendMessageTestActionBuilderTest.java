@@ -36,12 +36,11 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
-import org.citrusframework.xml.Marshaller;
 import org.mockito.Mockito;
-import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -62,8 +61,6 @@ public class SendMessageTestActionBuilderTest extends UnitTestSupport {
     private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private final Producer messageProducer = Mockito.mock(Producer.class);
     private final Resource resource = Mockito.mock(Resource.class);
-
-    private final Marshaller marshaller = Mockito.mock(Marshaller.class);
 
     @Test
     public void testSendBuilderWithMessageInstance() {

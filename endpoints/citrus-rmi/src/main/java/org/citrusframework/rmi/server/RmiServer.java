@@ -16,7 +16,6 @@
 
 package org.citrusframework.rmi.server;
 
-import javax.xml.transform.Source;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -27,6 +26,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import javax.xml.transform.Source;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
@@ -34,10 +34,9 @@ import org.citrusframework.rmi.endpoint.RmiEndpointConfiguration;
 import org.citrusframework.rmi.model.RmiServiceInvocation;
 import org.citrusframework.rmi.model.RmiServiceResult;
 import org.citrusframework.server.AbstractServer;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -116,7 +115,7 @@ public class RmiServer extends AbstractServer implements InvocationHandler {
      * @return
      */
     public ClassLoader getClassLoader() {
-        if (!CollectionUtils.isEmpty(remoteInterfaces)) {
+        if (remoteInterfaces != null && !remoteInterfaces.isEmpty()) {
             return remoteInterfaces.get(0).getClassLoader();
         } else {
             return this.getClassLoader();

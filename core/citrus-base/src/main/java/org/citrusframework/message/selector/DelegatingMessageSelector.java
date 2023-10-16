@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageSelector;
 import org.citrusframework.message.MessageSelectorBuilder;
-import org.springframework.util.Assert;
 
 /**
  * Message selector delegates incoming messages to several other selector implementations
@@ -51,7 +51,9 @@ public class DelegatingMessageSelector implements MessageSelector {
         this.context = context;
         this.matchingHeaders = MessageSelectorBuilder.withString(selector).toKeyValueMap();
 
-        Assert.isTrue(matchingHeaders.size() > 0, "Invalid empty message selector");
+        if (matchingHeaders.isEmpty()) {
+            throw new CitrusRuntimeException("Invalid empty message selector");
+        }
 
         factories = new ArrayList<>();
 

@@ -21,8 +21,10 @@ package org.citrusframework.junit.jupiter;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -31,10 +33,9 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ClasspathResourceResolver;
 import org.citrusframework.util.FileUtils;
 import org.junit.jupiter.api.DynamicTest;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * @author Christoph Deppisch
@@ -76,9 +77,9 @@ public final class CitrusTestFactorySupport {
         for (String packageScan : packagesToScan) {
             try {
                 for (String fileNamePattern : CitrusSettings.getTestFileNamePattern(type)) {
-                    Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageScan.replace('.', File.separatorChar) + fileNamePattern);
-                    for (Resource fileResource : fileResources) {
-                        String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+                    Set<Path> fileResources = new ClasspathResourceResolver().getResources(packageScan.replace('.', File.separatorChar), fileNamePattern);
+                    for (Path fileResource : fileResources) {
+                        String filePath = fileResource.getParent().toFile().getCanonicalPath();
 
                         if (packageScan.startsWith("file:")) {
                             filePath = "file:" + filePath;
@@ -86,7 +87,7 @@ public final class CitrusTestFactorySupport {
 
                         filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
-                        String testName = FileUtils.getBaseName(fileResource.getFilename());
+                        String testName = FileUtils.getBaseName(String.valueOf(fileResource.getFileName()));
 
                         TestLoader testLoader = createTestLoader(testName, filePath);
                         tests.add(DynamicTest.dynamicTest(testName, () -> handler.accept(testLoader)));

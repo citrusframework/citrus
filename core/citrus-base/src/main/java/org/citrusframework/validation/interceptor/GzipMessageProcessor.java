@@ -13,9 +13,8 @@ import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StreamUtils;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
 
 /**
  * Message processor automatically converts message payloads to gzipped content. Supports String typed message payloads and
@@ -45,9 +44,9 @@ public class GzipMessageProcessor extends AbstractMessageProcessor {
             if (message.getPayload() instanceof String) {
                 message.setPayload(getZipped(context.replaceDynamicContentInString(message.getPayload(String.class)).getBytes(encoding)));
             } else if (message.getPayload() instanceof Resource) {
-                message.setPayload(getZipped(FileCopyUtils.copyToByteArray(message.getPayload(Resource.class).getInputStream())));
+                message.setPayload(getZipped(FileUtils.copyToByteArray(message.getPayload(Resource.class))));
             } else if (message.getPayload() instanceof InputStream) {
-                message.setPayload(getZipped(FileCopyUtils.copyToByteArray(message.getPayload(InputStream.class))));
+                message.setPayload(getZipped(FileUtils.copyToByteArray(message.getPayload(InputStream.class))));
             } else {
                 message.setPayload(getZipped(message.getPayload(byte[].class)));
             }
@@ -97,7 +96,8 @@ public class GzipMessageProcessor extends AbstractMessageProcessor {
     private byte[] getZipped(byte[] in) throws IOException {
         try (ByteArrayOutputStream zipped = new ByteArrayOutputStream()) {
             try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
-                StreamUtils.copy(in, gzipOutputStream);
+                gzipOutputStream.write(in);
+                gzipOutputStream.flush();
             }
             return zipped.toByteArray();
         }

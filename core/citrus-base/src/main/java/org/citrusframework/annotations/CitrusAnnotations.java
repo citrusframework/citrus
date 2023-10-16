@@ -16,8 +16,8 @@
 
 package org.citrusframework.annotations;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
 import org.citrusframework.Citrus;
@@ -29,11 +29,11 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spi.ReferenceRegistry;
+import org.citrusframework.util.ReflectionHelper;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * Dependency injection support for {@link CitrusFramework}, {@link CitrusResource} and {@link CitrusEndpoint} annotations.
@@ -102,26 +102,13 @@ public abstract class CitrusAnnotations {
      * @param citrusFramework
      */
     public static void injectCitrusFramework(final Object testCase, final Citrus citrusFramework) {
-        ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                logger.trace(String.format("Injecting Citrus framework instance on test class field '%s'", field.getName()));
-                ReflectionUtils.setField(field, testCase, citrusFramework);
+        ReflectionHelper.doWithFields(testCase.getClass(), field -> {
+            if (!field.isAnnotationPresent(CitrusFramework.class) || !Citrus.class.isAssignableFrom(field.getType())) {
+                return;
             }
-        }, new ReflectionUtils.FieldFilter() {
-            @Override
-            public boolean matches(Field field) {
-                if (field.isAnnotationPresent(CitrusFramework.class) &&
-                        Citrus.class.isAssignableFrom(field.getType())) {
-                    if (!field.isAccessible()) {
-                        ReflectionUtils.makeAccessible(field);
-                    }
 
-                    return true;
-                }
-
-                return false;
-            }
+            logger.trace(String.format("Injecting Citrus framework instance on test class field '%s'", field.getName()));
+            ReflectionHelper.setField(field, testCase, citrusFramework);
         });
     }
 
@@ -131,19 +118,13 @@ public abstract class CitrusAnnotations {
      * @param context
      */
     public static void injectCitrusContext(final Object target, final CitrusContext context) {
-        ReflectionUtils.doWithFields(target.getClass(), field -> {
-            logger.trace(String.format("Injecting Citrus context instance on test class field '%s'", field.getName()));
-            ReflectionUtils.setField(field, target, context);
-        }, field -> {
-            if (field.isAnnotationPresent(CitrusResource.class) && CitrusContext.class.isAssignableFrom(field.getType())) {
-                if (!field.isAccessible()) {
-                    ReflectionUtils.makeAccessible(field);
-                }
-
-                return true;
+        ReflectionHelper.doWithFields(target.getClass(), field -> {
+            if (!field.isAnnotationPresent(CitrusResource.class) || !CitrusContext.class.isAssignableFrom(field.getType())) {
+                return;
             }
 
-            return false;
+            logger.trace(String.format("Injecting Citrus context instance on test class field '%s'", field.getName()));
+            ReflectionHelper.setField(field, target, context);
         });
     }
 
@@ -153,24 +134,18 @@ public abstract class CitrusAnnotations {
      * @param context
      */
     public static void injectTestContext(final Object target, final TestContext context) {
-        ReflectionUtils.doWithFields(target.getClass(), field -> {
+        ReflectionHelper.doWithFields(target.getClass(), field -> {
+            if (!field.isAnnotationPresent(CitrusResource.class) || !TestContext.class.isAssignableFrom(field.getType())) {
+                return;
+            }
+
             Class<?> type = field.getType();
             if (TestContext.class.isAssignableFrom(type)) {
                 logger.trace(String.format("Injecting test context instance on test class field '%s'", field.getName()));
-                ReflectionUtils.setField(field, target, context);
+                ReflectionHelper.setField(field, target, context);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
             }
-        }, field -> {
-            if (field.isAnnotationPresent(CitrusResource.class) && TestContext.class.isAssignableFrom(field.getType())) {
-                if (!field.isAccessible()) {
-                    ReflectionUtils.makeAccessible(field);
-                }
-
-                return true;
-            }
-
-            return false;
         });
     }
 
@@ -180,24 +155,18 @@ public abstract class CitrusAnnotations {
      * @param runner
      */
     public static void injectTestRunner(final Object target, final TestCaseRunner runner) {
-        ReflectionUtils.doWithFields(target.getClass(), field -> {
+        ReflectionHelper.doWithFields(target.getClass(), field -> {
+            if (!field.isAnnotationPresent(CitrusResource.class) || !TestCaseRunner.class.isAssignableFrom(field.getType())) {
+                return;
+            }
+
             Class<?> type = field.getType();
             if (TestCaseRunner.class.isAssignableFrom(type)) {
                 logger.trace(String.format("Injecting test runner instance on test class field '%s'", field.getName()));
-                ReflectionUtils.setField(field, target, runner);
+                ReflectionHelper.setField(field, target, runner);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
             }
-        }, field -> {
-            if (field.isAnnotationPresent(CitrusResource.class) && TestCaseRunner.class.isAssignableFrom(field.getType())) {
-                if (!field.isAccessible()) {
-                    ReflectionUtils.makeAccessible(field);
-                }
-
-                return true;
-            }
-
-            return false;
         });
 
         injectTestActionRunner(target, runner);
@@ -210,24 +179,18 @@ public abstract class CitrusAnnotations {
      * @param runner
      */
     private static void injectTestActionRunner(final Object target, final TestActionRunner runner) {
-        ReflectionUtils.doWithFields(target.getClass(), field -> {
+        ReflectionHelper.doWithFields(target.getClass(), field -> {
+            if (!field.isAnnotationPresent(CitrusResource.class) || !TestActionRunner.class.isAssignableFrom(field.getType())) {
+                return;
+            }
+
             Class<?> type = field.getType();
             if (TestActionRunner.class.isAssignableFrom(type)) {
                 logger.trace(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
-                ReflectionUtils.setField(field, target, runner);
+                ReflectionHelper.setField(field, target, runner);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
             }
-        }, field -> {
-            if (field.isAnnotationPresent(CitrusResource.class) && TestActionRunner.class.isAssignableFrom(field.getType())) {
-                if (!field.isAccessible()) {
-                    ReflectionUtils.makeAccessible(field);
-                }
-
-                return true;
-            }
-
-            return false;
         });
     }
 
@@ -237,24 +200,18 @@ public abstract class CitrusAnnotations {
      * @param runner
      */
     private static void injectGherkinTestActionRunner(final Object target, final GherkinTestActionRunner runner) {
-        ReflectionUtils.doWithFields(target.getClass(), field -> {
+        ReflectionHelper.doWithFields(target.getClass(), field -> {
+            if (!field.isAnnotationPresent(CitrusResource.class) || !GherkinTestActionRunner.class.isAssignableFrom(field.getType())) {
+                return;
+            }
+
             Class<?> type = field.getType();
             if (GherkinTestActionRunner.class.isAssignableFrom(type)) {
                 logger.trace(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
-                ReflectionUtils.setField(field, target, runner);
+                ReflectionHelper.setField(field, target, runner);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
             }
-        }, field -> {
-            if (field.isAnnotationPresent(CitrusResource.class) && GherkinTestActionRunner.class.isAssignableFrom(field.getType())) {
-                if (!field.isAccessible()) {
-                    ReflectionUtils.makeAccessible(field);
-                }
-
-                return true;
-            }
-
-            return false;
         });
     }
 
@@ -303,7 +260,13 @@ public abstract class CitrusAnnotations {
 
         Arrays.stream(configClass.getDeclaredFields())
                 .filter(f -> f.getAnnotation(BindToRegistry.class) != null)
-                .peek(ReflectionUtils::makeAccessible)
+                .peek(f -> {
+                    if ((!Modifier.isPublic(f.getModifiers()) ||
+                            !Modifier.isPublic(f.getDeclaringClass().getModifiers()) ||
+                            Modifier.isFinal(f.getModifiers())) && !f.isAccessible()) {
+                        f.setAccessible(true);
+                    }
+                })
                 .forEach(f -> {
                     try {
                         String name = ReferenceRegistry.getName(f.getAnnotation(BindToRegistry.class), f.getName());

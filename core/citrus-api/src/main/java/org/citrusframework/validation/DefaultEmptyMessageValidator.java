@@ -16,13 +16,14 @@
 
 package org.citrusframework.validation;
 
+import java.util.Optional;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * Basic message validator is able to verify empty message payloads. Both received and control message must have
@@ -42,13 +43,13 @@ public class DefaultEmptyMessageValidator extends DefaultMessageValidator {
             return;
         }
 
-        if (StringUtils.hasText(controlMessage.getPayload(String.class))) {
+        if (!Optional.ofNullable(controlMessage.getPayload(String.class)).orElse("").isEmpty()) {
             throw new ValidationException("Empty message validation failed - control message is not empty!");
         }
 
         logger.debug("Start to verify empty message payload ...");
 
-        if (StringUtils.hasText(receivedMessage.getPayload(String.class))) {
+        if (!Optional.ofNullable(receivedMessage.getPayload(String.class)).orElse("").isEmpty()) {
             throw new ValidationException("Validation failed - received message content is not empty!") ;
         }
 

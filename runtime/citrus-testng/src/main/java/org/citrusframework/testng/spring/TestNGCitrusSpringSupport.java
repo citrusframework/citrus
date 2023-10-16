@@ -47,9 +47,9 @@ import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.testng.TestNGHelper;
+import org.citrusframework.util.ObjectHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.util.Assert;
 import org.testng.IHookCallBack;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -222,7 +222,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to initialize Spring test context", e);
         }
-        Assert.notNull(applicationContext, "Missing proper application context in before suite initialization");
+        ObjectHelper.assertNotNull(applicationContext, "Missing proper application context in before suite initialization");
 
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         CitrusAnnotations.injectCitrusFramework(this, citrus);

@@ -25,8 +25,8 @@ import org.citrusframework.jmx.model.OperationParam;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringResult;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -54,7 +54,7 @@ public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocati
         }
 
         if (internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION_PARAMS) != null) {
-            String[] params = StringUtils.commaDelimitedListToStringArray(internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION_PARAMS).toString());
+            String[] params = String.valueOf(internalMessage.getHeader(JmxMessageHeaders.JMX_OPERATION_PARAMS)).split(",");
             for (String param : params) {
                 OperationParam operationParam = new OperationParam();
                 operationParam.setType(String.class.getName());
@@ -122,7 +122,7 @@ public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocati
         if (payload != null) {
             if (payload instanceof ManagedBeanInvocation) {
                 serviceInvocation = (ManagedBeanInvocation) payload;
-            } else if (payload != null && StringUtils.hasText(message.getPayload(String.class))) {
+            } else if (StringUtils.hasText(message.getPayload(String.class))) {
                 serviceInvocation = (ManagedBeanInvocation) endpointConfiguration.getMarshaller()
                         .unmarshal(message.getPayload(Source.class));
             } else {

@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.citrusframework.endpoint.adapter.StaticResponseEndpointAdapter;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,7 +37,7 @@ public class StaticResponseEndpointAdapterParserTest extends AbstractBeanDefinit
 
         // 1st endpoint adapter
         StaticResponseEndpointAdapter adapter = adapters.get("endpointAdapter1");
-        Assert.assertEquals(StringUtils.trimAllWhitespace(adapter.getMessagePayload()), "<TestMessage><Text>Hello!</Text></TestMessage>");
+        Assert.assertEquals(adapter.getMessagePayload().replaceAll("\\s", ""), "<TestMessage><Text>Hello!</Text></TestMessage>");
         Assert.assertEquals(adapter.getMessageHeader().get("Operation"), "sayHello");
 
         adapter = adapters.get("endpointAdapter2");

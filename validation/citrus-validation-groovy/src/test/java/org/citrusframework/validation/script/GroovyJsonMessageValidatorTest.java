@@ -37,7 +37,7 @@ import org.testng.annotations.Test;
  */
 public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
 
-    private GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
+    private final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
     @Test
     public void testGroovyScriptValidation() throws ValidationException {

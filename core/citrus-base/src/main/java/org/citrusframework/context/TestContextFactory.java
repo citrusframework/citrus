@@ -27,8 +27,8 @@ import org.citrusframework.container.BeforeTest;
 import org.citrusframework.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.functions.FunctionRegistry;
-import org.citrusframework.logger.DefaultLogModifier;
-import org.citrusframework.logger.LogModifier;
+import org.citrusframework.log.DefaultLogModifier;
+import org.citrusframework.log.LogModifier;
 import org.citrusframework.message.MessageProcessors;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.report.TestActionListeners;
@@ -106,6 +106,29 @@ public class TestContextFactory implements ReferenceResolverAware {
         factory.setSegmentVariableExtractorRegistry(new SegmentVariableExtractorRegistry());
 
         return factory;
+    }
+
+    public static TestContext copyOf(TestContext context) {
+        TestContext result = new TestContext();
+        result.setFunctionRegistry(context.getFunctionRegistry());
+
+        result.setGlobalVariables(new GlobalVariables.Builder()
+                .variables(context.getGlobalVariables())
+                .build());
+        result.getVariables().putAll(context.getVariables());
+
+        result.setMessageStore(context.getMessageStore());
+        result.setMessageValidatorRegistry(context.getMessageValidatorRegistry());
+        result.setValidationMatcherRegistry(context.getValidationMatcherRegistry());
+        result.setTestListeners(context.getTestListeners());
+        result.setMessageListeners(context.getMessageListeners());
+        result.setMessageProcessors(context.getMessageProcessors());
+        result.setEndpointFactory(context.getEndpointFactory());
+        result.setNamespaceContextBuilder(context.getNamespaceContextBuilder());
+        result.setReferenceResolver(context.getReferenceResolver());
+        result.setTypeConverter(context.getTypeConverter());
+        result.setLogModifier(context.getLogModifier());
+        return result;
     }
 
     /**

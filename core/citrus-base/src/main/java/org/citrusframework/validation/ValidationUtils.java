@@ -21,13 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.codec.binary.Base64;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * Utility class provides helper methods for validation work in Citrus.
@@ -59,15 +57,17 @@ public abstract class ValidationUtils {
             throws ValidationException {
         try {
             if (actualValue != null) {
-                Assert.isTrue(expectedValue != null,
-                        ValidationUtils.buildValueMismatchErrorMessage(
-                                "Values not equal for element '" + pathExpression + "'", null, actualValue));
+                if (expectedValue == null) {
+                    throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                            "Values not equal for element '" + pathExpression + "'", null, actualValue));
+                }
 
                 Optional<ValueMatcher> matcher = getValueMatcher(expectedValue, context);
                 if (matcher.isPresent()) {
-                    Assert.isTrue(matcher.get().validate(actualValue, expectedValue, context),
-                            ValidationUtils.buildValueMismatchErrorMessage(
+                    if (!matcher.get().validate(actualValue, expectedValue, context)) {
+                            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
                                     "Values not matching for element '" + pathExpression + "'", expectedValue, actualValue));
+                    }
                     return;
                 }
 
@@ -79,55 +79,57 @@ public abstract class ValidationUtils {
                     }
 
                     if (converted instanceof List) {
-                        Assert.isTrue(converted.toString().equals(expectedValue.toString()),
-                                ValidationUtils.buildValueMismatchErrorMessage(
-                                        "Values not equal for element '" + pathExpression + "'", expectedValue.toString(), converted.toString()));
+                        if (!converted.toString().equals(expectedValue.toString())) {
+                                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                                    "Values not equal for element '" + pathExpression + "'", expectedValue.toString(), converted.toString()));
+                        }
                     } else if (converted instanceof String[]) {
-                        String convertedDelimitedString = StringUtils.arrayToCommaDelimitedString((String[]) converted);
-                        String expectedDelimitedString = StringUtils.arrayToCommaDelimitedString((String[]) expectedValue);
+                        String convertedDelimitedString = String.join(",", (String[]) converted);
+                        String expectedDelimitedString = String.join(",", (String[]) expectedValue);
 
-                        Assert.isTrue(convertedDelimitedString.equals(expectedDelimitedString),
-                                ValidationUtils.buildValueMismatchErrorMessage(
-                                        "Values not equal for element '" + pathExpression + "'", expectedDelimitedString, convertedDelimitedString));
+                        if (!convertedDelimitedString.equals(expectedDelimitedString)) {
+                            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                                    "Values not equal for element '" + pathExpression + "'", expectedDelimitedString, convertedDelimitedString));
+                        }
                     } else if (converted instanceof byte[]) {
                         String convertedBase64 = Base64.encodeBase64String((byte[]) converted);
                         String expectedBase64 = Base64.encodeBase64String((byte[]) expectedValue);
 
-                        Assert.isTrue(convertedBase64.equals(expectedBase64),
-                                ValidationUtils.buildValueMismatchErrorMessage(
-                                        "Values not equal for element '" + pathExpression + "'", expectedBase64, convertedBase64));
-                    } else {
-                        Assert.isTrue(converted.equals(expectedValue),
-                                ValidationUtils.buildValueMismatchErrorMessage(
-                                        "Values not equal for element '" + pathExpression + "'", expectedValue, converted));
+                        if (!convertedBase64.equals(expectedBase64)) {
+                            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                                    "Values not equal for element '" + pathExpression + "'", expectedBase64, convertedBase64));
+                        }
+                    } else if (!converted.equals(expectedValue)) {
+                        throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                                "Values not equal for element '" + pathExpression + "'", expectedValue, converted));
                     }
                 } else {
                     String expectedValueString = expectedValue.toString();
                     String actualValueString;
                     if (List.class.isAssignableFrom(actualValue.getClass())) {
-                        actualValueString = StringUtils.arrayToCommaDelimitedString(((List)actualValue).toArray(new Object[((List)actualValue).size()]));
+                        actualValueString = String.join(",", ((List) actualValue).stream().map(Object::toString).toList());
                         expectedValueString = expectedValueString.replaceAll("^\\[", "").replaceAll("\\]$", "").replaceAll(",\\s", ",");
                     } else {
                         actualValueString = actualValue.toString();
                     }
 
-                    if (ValidationMatcherUtils.isValidationMatcherExpression(String.valueOf(expectedValueString))) {
+                    if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValueString)) {
                         ValidationMatcherUtils.resolveValidationMatcher(pathExpression,
                                 actualValueString,
-                                String.valueOf(expectedValueString),
+                                expectedValueString,
                                 context);
-                    } else {
-                        Assert.isTrue(actualValueString.equals(expectedValueString),
-                                ValidationUtils.buildValueMismatchErrorMessage(
-                                        "Values not equal for element '" + pathExpression + "'", expectedValueString, actualValueString));
+                    } else if (!actualValueString.equals(expectedValueString)) {
+                        throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                                "Values not equal for element '" + pathExpression + "'", expectedValueString, actualValueString));
                     }
                 }
             } else if (expectedValue != null) {
                 Optional<ValueMatcher> matcher = getValueMatcher(expectedValue, context);
                 if (matcher.isPresent()) {
-                    Assert.isTrue(matcher.get().validate(actualValue, expectedValue, context),
-                            ValidationUtils.buildValueMismatchErrorMessage(
-                                    "Values not matching for element '" + pathExpression + "'", expectedValue, null));
+                    if (!matcher.get().validate(actualValue, expectedValue, context)) {
+                        throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                                "Values not matching for element '" + pathExpression + "'", expectedValue, null));
+                    }
                 } else if (expectedValue instanceof String) {
                     String expectedValueString = expectedValue.toString();
 
@@ -136,10 +138,9 @@ public abstract class ValidationUtils {
                                 null,
                                 expectedValueString,
                                 context);
-                    } else {
-                        Assert.isTrue(!StringUtils.hasText(expectedValueString),
-                                ValidationUtils.buildValueMismatchErrorMessage(
-                                        "Values not equal for element '" + pathExpression + "'", expectedValueString, null));
+                    } else if (!expectedValueString.isBlank()) {
+                        throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage(
+                                "Values not equal for element '" + pathExpression + "'", expectedValueString, null));
                     }
                 } else {
                     throw new ValidationException("Validation failed: " + ValidationUtils.buildValueMismatchErrorMessage(

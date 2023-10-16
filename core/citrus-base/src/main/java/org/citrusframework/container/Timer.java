@@ -17,6 +17,8 @@
 package org.citrusframework.container;
 
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.citrusframework.AbstractTestContainerBuilder;
@@ -25,8 +27,7 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Martin Maher
@@ -63,12 +64,8 @@ public class Timer extends AbstractActionContainer implements StopTimer {
     @Override
     public void doExecute(final TestContext context) {
         if (fork) {
-            SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
-            taskExecutor.execute(new Runnable() {
-                public void run() {
-                    configureAndRunTimer(context);
-                }
-            });
+            ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
+            taskExecutor.execute(() -> configureAndRunTimer(context));
         } else {
             configureAndRunTimer(context);
         }

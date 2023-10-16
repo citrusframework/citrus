@@ -19,12 +19,14 @@
 
 package org.citrusframework.xml;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -32,15 +34,14 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.PropertyException;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -72,7 +73,7 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
 
     public Jaxb2Marshaller(String ... contextPaths) {
         this.classesToBeBound = null;
-        this.contextPath = StringUtils.arrayToDelimitedString(contextPaths, ":");
+        this.contextPath = String.join(":", contextPaths);
         this.schema = null;
     }
 
@@ -84,7 +85,7 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
 
     public Jaxb2Marshaller(Resource schemaResource, String ... contextPaths) {
         this.classesToBeBound = null;
-        this.contextPath = StringUtils.arrayToDelimitedString(contextPaths, ":");
+        this.contextPath = String.join(":", contextPaths);
         this.schema = loadSchema(schemaResource);
     }
 
@@ -96,7 +97,7 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
 
     public Jaxb2Marshaller(Resource[] schemaResources, String ... contextPaths) {
         this.classesToBeBound = null;
-        this.contextPath = StringUtils.arrayToDelimitedString(contextPaths, ":");
+        this.contextPath = String.join(":", contextPaths);
         this.schema = loadSchema(schemaResources);
     }
 
@@ -164,7 +165,8 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
 
     private Schema loadSchema(Resource... schemas) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Using marshaller validation schemas '%s'", StringUtils.arrayToCommaDelimitedString(schemas)));
+            logger.debug(String.format("Using marshaller validation schemas '%s'",
+                    Stream.of(schemas).map(Object::toString).collect(Collectors.joining(","))));
         }
 
         try {
@@ -172,14 +174,18 @@ public class Jaxb2Marshaller implements Marshaller, Unmarshaller {
             XMLReader xmlReader = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
             xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
             for (Resource resource : schemas) {
-                Assert.isTrue(resource != null && resource.exists(), () -> "Resource does not exist: " + resource);
+                if (resource == null || !resource.exists()) {
+                    throw new ValidationException(String.format("Resource does not exist: %s",
+                            Optional.ofNullable(resource).map(Resource::getLocation).orElse("null")));
+                }
+
                 InputSource inputSource = new InputSource(resource.getInputStream());
                 inputSource.setSystemId(resource.getURI().toString());
                 schemaSources.add(new SAXSource(xmlReader, inputSource));
             }
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             return schemaFactory.newSchema(schemaSources.toArray(new Source[0]));
-        } catch (IOException | SAXException e) {
+        } catch (SAXException e) {
             throw new CitrusRuntimeException("Failed to load schemas for marshaller", e);
         }
     }

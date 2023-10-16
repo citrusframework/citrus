@@ -16,12 +16,12 @@
 
 package org.citrusframework.actions;
 
-import java.util.List;
-import javax.sql.DataSource;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import javax.sql.DataSource;
+import java.util.List;
 
 /**
  * Test action execute SQL statements. Use this action when executing
@@ -80,14 +80,18 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
      * @param context
      */
     protected void executeStatements(List<String> statements, TestContext context) {
-        for (String stmt : statements)  {
+        if (getJdbcTemplate() == null) {
+            throw new CitrusRuntimeException("No JdbcTemplate configured for sql execution!");
+        }
+
+        for (String statement : statements) {
             try {
                 final String toExecute;
 
-                if (stmt.trim().endsWith(";")) {
-                    toExecute = context.replaceDynamicContentInString(stmt.trim().substring(0, stmt.trim().length()-1));
+                if (statement.trim().endsWith(";")) {
+                    toExecute = context.replaceDynamicContentInString(statement.trim().substring(0, statement.trim().length() - 1));
                 } else {
-                    toExecute = context.replaceDynamicContentInString(stmt.trim());
+                    toExecute = context.replaceDynamicContentInString(statement.trim());
                 }
 
                 if (logger.isDebugEnabled()) {

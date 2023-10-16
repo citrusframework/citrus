@@ -18,7 +18,6 @@ package org.citrusframework.http.client;
 
 import java.net.URI;
 
-import org.citrusframework.common.InitializingPhase;
 import org.apache.hc.client5.http.auth.AuthCache;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
@@ -30,10 +29,11 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.protocol.HttpContext;
+import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.util.ObjectHelper;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.util.Assert;
 
 /**
  * Factory bean constructing a client request factory with
@@ -57,7 +57,7 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
      * Construct the client factory bean with user credentials.
      */
     public HttpComponentsClientHttpRequestFactory getObject() throws Exception {
-        Assert.notNull(credentials, "User credentials not set properly!");
+        ObjectHelper.assertNotNull(credentials, "User credentials not set properly!");
 
         return new HttpComponentsClientHttpRequestFactory(httpClient) {
             @Override

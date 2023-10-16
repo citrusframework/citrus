@@ -16,16 +16,13 @@
 
 package org.citrusframework.container;
 
-import java.util.Properties;
-
 import org.citrusframework.AbstractIteratingContainerBuilder;
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.util.BooleanExpressionParser;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
-import org.springframework.util.PropertyPlaceholderHelper;
 
 /**
  * @author Christoph Deppisch
@@ -91,13 +88,9 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
 
         // replace dynamic content with each iteration
         String conditionString = condition;
-        if (conditionString.contains(CitrusSettings.VARIABLE_PREFIX + indexName + CitrusSettings.VARIABLE_SUFFIX)) {
-            Properties props = new Properties();
-            props.put(indexName, String.valueOf(index));
-            conditionString = new PropertyPlaceholderHelper(CitrusSettings.VARIABLE_PREFIX, CitrusSettings.VARIABLE_SUFFIX).replacePlaceholders(conditionString, props);
-        }
-
-        conditionString = context.replaceDynamicContentInString(conditionString);
+        TestContext temp = TestContextFactory.copyOf(context);
+        temp.setVariable(indexName, String.valueOf(index));
+        conditionString = temp.replaceDynamicContentInString(conditionString);
 
         if (ValidationMatcherUtils.isValidationMatcherExpression(conditionString)) {
             try {
@@ -108,7 +101,7 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
             }
         }
 
-        if (conditionString.indexOf(indexName) != -1) {
+        if (conditionString.contains(indexName)) {
             conditionString = conditionString.replaceAll(indexName, String.valueOf(index));
         }
 

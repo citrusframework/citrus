@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * @author Christoph Deppisch
@@ -21,7 +20,7 @@ public final class CitrusVersion {
 
     /* Load Citrus version */
     static {
-        try (final InputStream in = new ClassPathResource("META-INF/citrus.version").getInputStream()) {
+        try (final InputStream in = CitrusVersion.class.getClassLoader().getResourceAsStream("META-INF/citrus.version")) {
             Properties versionProperties = new Properties();
             versionProperties.load(in);
             version = versionProperties.get("citrus.version").toString();

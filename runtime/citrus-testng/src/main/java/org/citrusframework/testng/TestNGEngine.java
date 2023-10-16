@@ -29,10 +29,9 @@ import org.citrusframework.main.AbstractTestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.main.scan.ClassPathTestScanner;
 import org.citrusframework.main.scan.JarFileTestScanner;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.testng.ITestNGListener;
 import org.testng.TestNG;
 import org.testng.annotations.Test;
@@ -70,7 +69,7 @@ public class TestNGEngine extends AbstractTestEngine {
         XmlSuite suite = new XmlSuite();
         testng.setXmlSuites(Collections.singletonList(suite));
 
-        if (!CollectionUtils.isEmpty(getConfiguration().getTestClasses())) {
+        if (getConfiguration().getTestClasses() != null && !getConfiguration().getTestClasses().isEmpty()) {
             for (TestClass testClass : getConfiguration().getTestClasses()) {
                 logger.info(String.format("Running test %s",
                         Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
@@ -100,7 +99,7 @@ public class TestNGEngine extends AbstractTestEngine {
             }
         } else {
             List<String> packagesToRun = getConfiguration().getPackages();
-            if (CollectionUtils.isEmpty(packagesToRun)) {
+            if (packagesToRun == null || packagesToRun.isEmpty()) {
                 packagesToRun = Collections.singletonList("");
                 logger.info("Running all tests in project");
             }

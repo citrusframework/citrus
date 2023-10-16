@@ -19,6 +19,8 @@ package org.citrusframework.actions;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.Completable;
@@ -42,8 +44,7 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 
 /**
@@ -144,7 +145,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         if (forkMode) {
             logger.debug("Forking message sending action ...");
 
-            SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
+            ExecutorService taskExecutor = Executors.newSingleThreadExecutor();
             taskExecutor.execute(() -> {
                 try {
                     validateMessage(message, context);

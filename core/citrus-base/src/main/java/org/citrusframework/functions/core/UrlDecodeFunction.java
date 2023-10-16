@@ -16,34 +16,33 @@
 
 package org.citrusframework.functions.core;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.exceptions.InvalidFunctionUsageException;
-import org.citrusframework.functions.Function;
-import org.springframework.util.CollectionUtils;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
 
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.InvalidFunctionUsageException;
+import org.citrusframework.functions.Function;
+
 /**
  * Decodes URL encoded string to a character sequence.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class UrlDecodeFunction implements Function {
 
     @Override
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList) || parameterList.size() < 1) {
+        if (parameterList == null || parameterList.size() < 1) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage! Missing parameters!");
         }
-        
+
         String charset = "UTF-8";
         if (parameterList.size() > 1) {
             charset = parameterList.get(1);
         }
-        
+
         try {
             return URLDecoder.decode(parameterList.get(0), charset);
         } catch (UnsupportedEncodingException e) {

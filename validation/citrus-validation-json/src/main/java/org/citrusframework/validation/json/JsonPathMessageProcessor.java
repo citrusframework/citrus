@@ -19,6 +19,11 @@ package org.citrusframework.validation.json;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -27,15 +32,9 @@ import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageType;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.NumberUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -95,7 +94,7 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
                     value = false;
                 } else {
                     try {
-                        value = NumberUtils.parseNumber(valueExpression, Integer.class);
+                        value = Integer.valueOf(valueExpression);
                     } catch (IllegalArgumentException e) {
                         value = valueExpression;
                     }

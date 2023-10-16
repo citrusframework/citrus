@@ -289,8 +289,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         try {
             receiveAction.execute(context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to validate JSON text:" + System.lineSeparator() +
-                    " Validation failed - expected message contents, but received empty message!");
+            Assert.assertEquals(e.getMessage(), "Validation failed - expected message contents, but received empty message!");
             return;
         }
 

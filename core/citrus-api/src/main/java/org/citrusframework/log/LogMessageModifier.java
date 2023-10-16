@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.logger;
+package org.citrusframework.log;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.message.Message;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Special modifier adds message related modifications on logger output on headers and body.
@@ -77,7 +76,7 @@ public interface LogMessageModifier extends LogModifier {
      * @return
      */
     default List<String> maskHeaderData(Message message) {
-        if (CollectionUtils.isEmpty(message.getHeaderData())) {
+        if (message.getHeaderData() == null || message.getHeaderData().isEmpty()) {
             return Collections.emptyList();
         }
 

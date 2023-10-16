@@ -22,12 +22,12 @@ import java.util.Map;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * Finds element in DOM tree on current page and validates its properties and settings.
@@ -103,10 +103,15 @@ public class FindElementAction extends AbstractSeleniumAction {
         validateElementProperty("tag-name", tagName, element.getTagName(), context);
         validateElementProperty("text", text, element.getText(), context);
 
-        Assert.isTrue(displayed == element.isDisplayed(), String.format("Selenium web element validation failed, " +
+        if (!displayed == element.isDisplayed()) {
+            throw new ValidationException(String.format("Selenium web element validation failed, " +
                 "property 'displayed' expected '%s', but was '%s'", displayed, element.isDisplayed()));
-        Assert.isTrue(enabled == element.isEnabled(), String.format("Selenium web element validation failed, " +
+        }
+
+        if (!enabled == element.isEnabled()) {
+            throw new ValidationException(String.format("Selenium web element validation failed, " +
                 "property 'enabled' expected '%s', but was '%s'", enabled, element.isEnabled()));
+        }
 
         for (Map.Entry<String, String> attributeEntry : attributes.entrySet()) {
             validateElementProperty(String.format("attribute '%s'", attributeEntry.getKey()), attributeEntry.getValue(), element.getAttribute(attributeEntry.getKey()), context);
@@ -131,7 +136,9 @@ public class FindElementAction extends AbstractSeleniumAction {
             if (ValidationMatcherUtils.isValidationMatcherExpression(control)) {
                 ValidationMatcherUtils.resolveValidationMatcher("payload", resultValue, control, context);
             } else {
-                Assert.isTrue(control.equals(resultValue), String.format("Selenium web element validation failed, %s expected '%s', but was '%s'", propertyName, control, resultValue));
+                if (!control.equals(resultValue)) {
+                    throw new ValidationException(String.format("Selenium web element validation failed, %s expected '%s', but was '%s'", propertyName, control, resultValue));
+                }
             }
         }
     }

@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.ReferenceResolver;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -33,9 +31,10 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
-import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.beans.SimpleTypeConverter;
-import org.springframework.util.StringUtils;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.util.TypeConverter;
 
 /**
  * @author Christoph Deppisch
@@ -114,15 +113,7 @@ public class ManagedBeanInvocation {
 
                 return map;
             } else {
-                try {
-                    return new SimpleTypeConverter().convertIfNecessary(value, argType);
-                } catch (ConversionNotSupportedException e) {
-                    if (String.class.equals(argType)) {
-                        return value.toString();
-                    }
-
-                    throw e;
-                }
+                return TypeConverter.lookupDefault().convertIfNecessary(value, argType);
             }
         } catch (ClassNotFoundException e) {
             throw new CitrusRuntimeException("Failed to construct attribute object", e);
@@ -473,15 +464,7 @@ public class ManagedBeanInvocation {
 
                             argValues.add(map);
                         } else {
-                            try {
-                                argValues.add(new SimpleTypeConverter().convertIfNecessary(value, argType));
-                            } catch (ConversionNotSupportedException e) {
-                                if (String.class.equals(argType)) {
-                                    argValues.add(value.toString());
-                                }
-
-                                throw e;
-                            }
+                            argValues.add(TypeConverter.lookupDefault().convertIfNecessary(value, argType));
                         }
                     }
                 }

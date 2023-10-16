@@ -21,14 +21,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.citrusframework.TestClass;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -110,10 +109,16 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             @Override
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
-                    configuration.getDefaultProperties().putAll(StringUtils.commaDelimitedListToSet(value)
-                                                                            .stream()
-                                                                            .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElseGet(() -> new String[] {keyValue, ""}))
-                                                                            .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])));
+                    configuration.getDefaultProperties().putAll(Arrays.stream(value.split(","))
+                            .map(keyValue -> keyValue.split("="))
+                            .filter(keyValue -> StringUtils.hasText(keyValue[0]))
+                            .map(keyValue -> {
+                                if (keyValue.length < 2) {
+                                    return new String[]{keyValue[0], ""};
+                                }
+                                return keyValue;
+                            })
+                            .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])));
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -D/--properties option");
                 }

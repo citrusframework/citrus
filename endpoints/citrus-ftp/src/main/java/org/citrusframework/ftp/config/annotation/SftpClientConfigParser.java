@@ -24,7 +24,7 @@ import org.citrusframework.ftp.client.SftpClient;
 import org.citrusframework.ftp.client.SftpClientBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

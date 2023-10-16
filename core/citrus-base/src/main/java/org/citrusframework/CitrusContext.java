@@ -13,8 +13,8 @@ import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.FunctionRegistry;
-import org.citrusframework.logger.DefaultLogModifier;
-import org.citrusframework.logger.LogModifier;
+import org.citrusframework.log.DefaultLogModifier;
+import org.citrusframework.log.LogModifier;
 import org.citrusframework.message.MessageProcessors;
 import org.citrusframework.report.*;
 import org.citrusframework.spi.ReferenceRegistry;
@@ -29,7 +29,7 @@ import org.citrusframework.validation.matcher.DefaultValidationMatcherRegistry;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * Default Citrus context implementation holds basic components used in Citrus.

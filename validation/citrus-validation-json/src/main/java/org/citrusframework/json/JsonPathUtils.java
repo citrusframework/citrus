@@ -18,8 +18,6 @@ package org.citrusframework.json;
 
 import java.util.Optional;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.validation.json.JsonPathFunctions;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 import com.jayway.jsonpath.ReadContext;
@@ -27,7 +25,9 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.springframework.util.StringUtils;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.StringUtils;
+import org.citrusframework.validation.json.JsonPathFunctions;
 
 /**
  * @author Christoph Deppisch

@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
  */
 public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
-    private GroovyXmlMessageValidator validator = new GroovyXmlMessageValidator();
+    private final GroovyXmlMessageValidator validator = new GroovyXmlMessageValidator();
 
     private Message message;
 

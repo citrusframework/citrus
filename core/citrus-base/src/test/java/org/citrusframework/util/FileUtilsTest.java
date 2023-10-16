@@ -16,11 +16,11 @@
 
 package org.citrusframework.util;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.UnitTestSupport;
-import org.springframework.core.io.Resource;
+import org.citrusframework.spi.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -48,7 +48,7 @@ public class FileUtilsTest extends UnitTestSupport {
     @Test
     public void testGetCharset() throws Exception {
         Assert.assertEquals(FileUtils.getCharset("/path/to/some/file.txt").displayName(), CitrusSettings.CITRUS_FILE_ENCODING);
-        Assert.assertEquals(FileUtils.getCharset("/path/to/some/file.txt" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1"), Charset.forName("ISO-8859-1"));
+        Assert.assertEquals(FileUtils.getCharset("/path/to/some/file.txt" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1"), StandardCharsets.ISO_8859_1);
     }
 
     @Test
@@ -57,7 +57,19 @@ public class FileUtilsTest extends UnitTestSupport {
         Assert.assertEquals(FileUtils.getBaseName(""), "");
         Assert.assertEquals(FileUtils.getBaseName("foo"), "foo");
         Assert.assertEquals(FileUtils.getBaseName("foo.xml"), "foo");
+        Assert.assertEquals(FileUtils.getBaseName("/path/to/some/foo.xml"), "/path/to/some/foo");
         Assert.assertEquals(FileUtils.getBaseName("foo.bar.java"), "foo.bar");
+    }
+
+    @Test
+    public void testGetFileName() throws Exception {
+        Assert.assertEquals(FileUtils.getFileName(null), "");
+        Assert.assertEquals(FileUtils.getFileName(""), "");
+        Assert.assertEquals(FileUtils.getFileName("foo"), "foo");
+        Assert.assertEquals(FileUtils.getFileName("foo.xml"), "foo.xml");
+        Assert.assertEquals(FileUtils.getFileName("/path/to/some/foo.xml"), "foo.xml");
+        Assert.assertEquals(FileUtils.getFileName("foo.bar.java"), "foo.bar.java");
+        Assert.assertEquals(FileUtils.getFileName("/path/to/some/foo.bar.java"), "foo.bar.java");
     }
 
 }

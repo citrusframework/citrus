@@ -17,4 +17,15 @@
     <constructor-arg><value type="java.lang.Class">org.springframework.xml.xsd.XsdSchema</value></constructor-arg>
     <constructor-arg value="testSchema"/>
   </bean>
+
+  <bean id="resourceConverter" class="org.citrusframework.spi.ResourceConverter"/>
+
+  <bean id="conversionService"
+        class="org.springframework.context.support.ConversionServiceFactoryBean">
+    <property name="converters">
+      <list>
+        <ref bean="resourceConverter" />
+      </list>
+    </property>
+  </bean>
 </beans>

@@ -17,7 +17,6 @@
 package org.citrusframework.http.config.xml;
 
 import java.util.Map;
-import java.util.Objects;
 
 import org.citrusframework.TestActor;
 import org.citrusframework.http.client.HttpClient;
@@ -26,6 +25,7 @@ import org.citrusframework.http.interceptor.LoggingClientInterceptor;
 import org.citrusframework.message.DefaultMessageCorrelator;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
+import org.citrusframework.util.ObjectHelper;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.InterceptingClientHttpRequestFactory;
@@ -104,7 +104,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
             createApplicationContext("failed1");
             Assert.fail("Missing bean creation exception due to rest template and request factory property set");
         } catch (BeanDefinitionParsingException e) {
-            Assert.assertTrue(Objects.requireNonNull(e.getMessage()).contains("no 'request-factory' should be set"), e.getMessage());
+            Assert.assertTrue(ObjectHelper.assertNotNull(e.getMessage()).contains("no 'request-factory' should be set"), e.getMessage());
         }
     }
 
@@ -114,7 +114,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
             createApplicationContext("failed2");
             Assert.fail("Missing bean creation exception due to missing request url or endpoint resolver");
         } catch (BeanDefinitionParsingException e) {
-            Assert.assertTrue(Objects.requireNonNull(e.getMessage()).contains("One of the properties 'request-url' or 'endpoint-resolver' is required"));
+            Assert.assertTrue(ObjectHelper.assertNotNull(e.getMessage()).contains("One of the properties 'request-url' or 'endpoint-resolver' is required"));
         }
     }
 

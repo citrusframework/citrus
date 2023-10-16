@@ -16,20 +16,19 @@
 
 package org.citrusframework.functions.core;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Function returning the actual date as formatted string value. User specifies format string
- * as argument. Function also supports additional date offset in order to manipulate result date value. 
- * 
+ * as argument. Function also supports additional date offset in order to manipulate result date value.
+ *
  * @author Christoph Deppisch
  */
 public class CurrentDateFunction extends AbstractDateFunction {
@@ -43,11 +42,10 @@ public class CurrentDateFunction extends AbstractDateFunction {
      */
     public String execute(List<String> parameterList, TestContext context) {
         Calendar calendar = Calendar.getInstance();
-        
+
         SimpleDateFormat dateFormat;
-        String result = "";
-        
-        if (!CollectionUtils.isEmpty(parameterList)) {
+        String result;
+        if (parameterList != null && !parameterList.isEmpty()) {
             dateFormat = new SimpleDateFormat(parameterList.get(0));
         } else {
             dateFormat = getDefaultDateFormat();

@@ -18,6 +18,7 @@ package org.citrusframework.camel.endpoint;
 
 import java.util.Map;
 
+import org.apache.camel.Exchange;
 import org.citrusframework.camel.message.CamelMessageHeaders;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -27,10 +28,9 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.correlation.CorrelationManager;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyProducer;
-import org.apache.camel.Exchange;
+import org.citrusframework.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 /**
  * @author Christoph Deppisch
@@ -100,12 +100,12 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
     @Override
     public void send(Message message, TestContext context) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
+        ObjectHelper.assertNotNull(message, "Message is empty - unable to send empty message");
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = correlationManager.getCorrelationKey(correlationKeyName, context);
         Exchange exchange = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
-        Assert.notNull(exchange, "Failed to find camel exchange for message correlation key: '" + correlationKey + "'");
+        ObjectHelper.assertNotNull(exchange, "Failed to find camel exchange for message correlation key: '" + correlationKey + "'");
 
         buildOutMessage(exchange, message);
 

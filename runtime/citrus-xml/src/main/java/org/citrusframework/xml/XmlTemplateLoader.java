@@ -28,9 +28,9 @@ import org.citrusframework.container.TemplateLoader;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.container.Template;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch

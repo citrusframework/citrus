@@ -215,7 +215,7 @@ public class XmlConfigurer implements InitializingPhase {
     }
 
     /**
-     * Sets a config parameter on LSParser instance if settable. Otherwise logging unset parameter.
+     * Sets a config parameter on LSParser instance if settable. Otherwise, logging unset parameter.
      * @param parser
      * @param parameterName
      * @param value

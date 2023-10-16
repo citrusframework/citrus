@@ -42,7 +42,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -56,7 +55,7 @@ import org.w3c.dom.Node;
 public class ZooExecuteActionParser implements BeanDefinitionParser {
 
     /** ZooKeeper command to execute */
-    private Class<? extends ZooCommand<?>> zookeeperCommandClass;
+    private final Class<? extends ZooCommand<?>> zookeeperCommandClass;
 
     /**
      * Constructor using zookeeper command.
@@ -117,7 +116,7 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
         Map<String, Object> extractJsonPath = new LinkedHashMap<>();
         List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
         VariableExtractorParserUtil.parseMessageElement(messageValueElements, extractJsonPath);
-        if (!CollectionUtils.isEmpty(extractJsonPath)) {
+        if (!extractJsonPath.isEmpty()) {
             VariableExtractorParserUtil.addPayloadVariableExtractors(extractElement, variableExtractors, extractJsonPath);
         }
         return variableExtractors;

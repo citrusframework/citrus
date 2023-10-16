@@ -22,6 +22,7 @@ import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.server.AbstractServer;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.context.ParentDelegatingWebApplicationContext;
 import org.citrusframework.ws.interceptor.LoggingEndpointInterceptor;
 import org.citrusframework.ws.message.converter.SoapMessageConverter;
@@ -38,7 +39,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.ServletMapping;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 

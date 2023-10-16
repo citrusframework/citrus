@@ -19,14 +19,12 @@ package org.citrusframework.ssh.model;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.Unmarshaller;
-import jakarta.xml.bind.JAXBException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * @author Christoph Deppisch
@@ -34,14 +32,11 @@ import org.springframework.core.io.ClassPathResource;
  */
 public class SshMarshaller implements Marshaller, Unmarshaller {
 
-    /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(SshMarshaller.class);
-
     private final Jaxb2Marshaller marshaller;
 
     public SshMarshaller() {
         this.marshaller = new Jaxb2Marshaller(
-                new ClassPathResource("org/citrusframework/schema/citrus-ssh-message.xsd"), SshRequest.class, SshResponse.class);
+                Resources.newClasspathResource("org/citrusframework/schema/citrus-ssh-message.xsd"), SshRequest.class, SshResponse.class);
     }
 
     public void marshal(Object graph, Result result) {

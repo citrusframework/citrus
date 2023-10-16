@@ -26,9 +26,9 @@ import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.groovy.dsl.actions.ActionsScript;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -40,7 +40,7 @@ public class ActionsScriptIT extends TestNGCitrusSpringSupport {
     @CitrusTest
     public void shouldRunActionsScript(@Optional @CitrusResource TestActionRunner runner,
                                        @Optional @CitrusResource TestContext context) throws IOException {
-        ActionsScript script = new ActionsScript(FileUtils.readToString(new ClassPathResource("org/citrusframework/groovy/dsl/actions.groovy")), citrus);
+        ActionsScript script = new ActionsScript(FileUtils.readToString(Resources.newClasspathResource("org/citrusframework/groovy/dsl/actions.groovy")), citrus);
         script.execute(runner, context);
     }
 }

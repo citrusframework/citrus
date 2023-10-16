@@ -16,24 +16,23 @@
 
 package org.citrusframework.ws.validation;
 
+import java.util.List;
+
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.ws.message.SoapAttachment;
 import org.citrusframework.ws.message.SoapMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.Attachment;
-
-import java.util.List;
 
 /**
  * Abstract SOAP attachment validator tries to find attachment within received message and compares
- * its attachment contentId, contentType and content body to a control attachment definition. 
- * 
- * Validator will create a {@link SoapAttachment} and automatically handle contentId and 
+ * its attachment contentId, contentType and content body to a control attachment definition.
+ *
+ * Validator will create a {@link SoapAttachment} and automatically handle contentId and
  * contentType validation. Content body validation is delegated to subclasses.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentValidator {
@@ -41,7 +40,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
      * Logger
      */
     private static final Logger logger = LoggerFactory.getLogger(AbstractSoapAttachmentValidator.class);
-    
+
     @Override
     public void validateAttachment(SoapMessage soapMessage, List<SoapAttachment> controlAttachments) {
         logger.debug("Validating SOAP attachments ...");
@@ -103,29 +102,30 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
      * @param controlAttachment
      */
     protected void validateAttachmentContentId(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
-        //in case contentId was not set in test case, skip validation 
+        //in case contentId was not set in test case, skip validation
         if (!StringUtils.hasText(controlAttachment.getContentId())) { return; }
-        
-        if (receivedAttachment.getContentId() != null) {
-            Assert.isTrue(controlAttachment.getContentId() != null, 
-                    buildValidationErrorMessage("Values not equal for attachment contentId", 
-                            null, receivedAttachment.getContentId()));
 
-            Assert.isTrue(receivedAttachment.getContentId().equals(controlAttachment.getContentId()),
-                    buildValidationErrorMessage("Values not equal for attachment contentId", 
+        if (receivedAttachment.getContentId() != null) {
+            if (controlAttachment.getContentId() == null) {
+                throw new ValidationException(buildValidationErrorMessage("Values not equal for attachment contentId",
+                            null, receivedAttachment.getContentId()));
+            }
+
+            if (!receivedAttachment.getContentId().equals(controlAttachment.getContentId())) {
+                throw new ValidationException(buildValidationErrorMessage("Values not equal for attachment contentId",
                             controlAttachment.getContentId(), receivedAttachment.getContentId()));
-        } else {
-            Assert.isTrue(controlAttachment.getContentId() == null || controlAttachment.getContentId().length() == 0, 
-                    buildValidationErrorMessage("Values not equal for attachment contentId", 
-                            controlAttachment.getContentId(), null));
+            }
+        } else if (StringUtils.hasText(controlAttachment.getContentId())) {
+            throw new ValidationException(buildValidationErrorMessage("Values not equal for attachment contentId",
+                        controlAttachment.getContentId(), null));
         }
-        
+
         if (logger.isDebugEnabled()) {
-            logger.debug("Validating attachment contentId: " + receivedAttachment.getContentId() + 
+            logger.debug("Validating attachment contentId: " + receivedAttachment.getContentId() +
                     "='" + controlAttachment.getContentId() + "': OK.");
         }
     }
-    
+
     /**
      * Validating SOAP attachment content type.
      * @param receivedAttachment
@@ -134,27 +134,28 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
     protected void validateAttachmentContentType(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
         //in case contentType was not set in test case, skip validation
         if (!StringUtils.hasText(controlAttachment.getContentType())) { return; }
-        
-        if (receivedAttachment.getContentType() != null) {
-            Assert.isTrue(controlAttachment.getContentType() != null, 
-                    buildValidationErrorMessage("Values not equal for attachment contentType", 
-                            null, receivedAttachment.getContentType()));
 
-            Assert.isTrue(receivedAttachment.getContentType().equals(controlAttachment.getContentType()),
-                    buildValidationErrorMessage("Values not equal for attachment contentType", 
+        if (receivedAttachment.getContentType() != null) {
+            if (controlAttachment.getContentType() == null) {
+                throw new ValidationException(buildValidationErrorMessage("Values not equal for attachment contentType",
+                            null, receivedAttachment.getContentType()));
+            }
+
+            if (!receivedAttachment.getContentType().equals(controlAttachment.getContentType())) {
+                throw new ValidationException(buildValidationErrorMessage("Values not equal for attachment contentType",
                             controlAttachment.getContentType(), receivedAttachment.getContentType()));
-        } else {
-            Assert.isTrue(controlAttachment.getContentType() == null || controlAttachment.getContentType().length() == 0, 
-                    buildValidationErrorMessage("Values not equal for attachment contentType", 
-                            controlAttachment.getContentType(), null));
+            }
+        } else if (StringUtils.hasText(controlAttachment.getContentType())) {
+            throw new ValidationException(buildValidationErrorMessage("Values not equal for attachment contentType",
+                        controlAttachment.getContentType(), null));
         }
-        
+
         if (logger.isDebugEnabled()) {
-            logger.debug("Validating attachment contentType: " + receivedAttachment.getContentType() + 
+            logger.debug("Validating attachment contentType: " + receivedAttachment.getContentType() +
                     "='" + controlAttachment.getContentType() + "': OK.");
         }
     }
-    
+
     /**
      * Constructs proper error message with expected value and actual value.
      * @param message the base error message.

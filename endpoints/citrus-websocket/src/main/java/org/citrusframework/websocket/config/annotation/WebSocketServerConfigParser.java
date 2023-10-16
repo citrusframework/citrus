@@ -24,6 +24,7 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
 import org.citrusframework.websocket.message.WebSocketMessageConverter;
 import org.citrusframework.websocket.server.WebSocketServer;
@@ -32,7 +33,6 @@ import org.citrusframework.websocket.server.WebSocketServerEndpointConfiguration
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**

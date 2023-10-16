@@ -23,7 +23,7 @@ import org.citrusframework.container.AfterTest;
 import org.citrusframework.container.BeforeTest;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.functions.FunctionRegistry;
-import org.citrusframework.logger.LogModifier;
+import org.citrusframework.log.LogModifier;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.report.TestListeners;

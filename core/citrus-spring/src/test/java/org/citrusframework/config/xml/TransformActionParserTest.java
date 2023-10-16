@@ -16,12 +16,11 @@
 
 package org.citrusframework.config.xml;
 
-import org.springframework.util.StringUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import org.citrusframework.actions.TransformAction;
 import org.citrusframework.testng.AbstractActionParserTest;
+import org.citrusframework.util.StringUtils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -32,14 +31,14 @@ public class TransformActionParserTest extends AbstractActionParserTest<Transfor
     public void testTransformActionParser() {
         assertActionCount(2);
         assertActionClassAndName(TransformAction.class, "transform");
-        
+
         TransformAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTargetVariable(), "result");
         Assert.assertTrue(StringUtils.hasText(action.getXmlData()));
         Assert.assertNull(action.getXmlResourcePath());
         Assert.assertTrue(StringUtils.hasText(action.getXsltData()));
         Assert.assertNull(action.getXsltResourcePath());
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTargetVariable(), "result");
         Assert.assertFalse(StringUtils.hasText(action.getXmlData()));

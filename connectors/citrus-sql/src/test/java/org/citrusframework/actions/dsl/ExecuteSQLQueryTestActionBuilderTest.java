@@ -16,7 +16,6 @@
 
 package org.citrusframework.actions.dsl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,10 +26,8 @@ import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ExecuteSQLQueryAction;
-import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
+import org.citrusframework.spi.Resources;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
@@ -49,48 +46,45 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport {
 
     private final JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private final PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
-    private final Resource resource = Mockito.mock(Resource.class);
-
-    private final SqlResultSetScriptValidator validator = Mockito.mock(SqlResultSetScriptValidator.class);
 
     @Test
-    public void testExecuteSQLQueryWithResource() throws IOException {
+    public void testExecuteSQLQueryWithResource() {
         List<Map<String, Object>> results = new ArrayList<>();
-        results.add(Collections.<String, Object>singletonMap("NAME", "Leonard"));
+        results.add(Collections.singletonMap("NAME", "Leonard"));
 
         reset(jdbcTemplate);
 
         when(jdbcTemplate.queryForList(anyString())).thenReturn(results)
-                                                    .thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "100000")));
+                .thenReturn(Collections.singletonList(Collections.singletonMap("CNT_EPISODES", "100000")));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.variable("episodeId", "citrus:randomNumber(5)");
 
         builder.$(query().jdbcTemplate(jdbcTemplate)
-                .sqlResource(new ClassPathResource("org/citrusframework/actions/dsl/query-script.sql"))
+                .sqlResource(Resources.newClasspathResource("org/citrusframework/actions/dsl/query-script.sql"))
                 .validate("NAME", "Leonard")
                 .validate("CNT_EPISODES", "100000")
-                .extract("NAME", "actorName"));
+                .extract("NAME", "actorName")
+                .extract("CNT_EPISODES", "episodesCount"));
 
-        Assert.assertNotNull(context.getVariable("NAME"));
         Assert.assertNotNull(context.getVariable("actorName"));
-        Assert.assertNotNull(context.getVariable("CNT_EPISODES"));
-        Assert.assertEquals(context.getVariable("NAME"), "Leonard");
+        Assert.assertNotNull(context.getVariable("episodesCount"));
         Assert.assertEquals(context.getVariable("actorName"), "Leonard");
-        Assert.assertEquals(context.getVariable("CNT_EPISODES"), "100000");
+        Assert.assertEquals(context.getVariable("episodesCount"), "100000");
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
 
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction) test.getActions().get(0);
 
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
         Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
         Assert.assertEquals(getRow("NAME", rows).toString(), "NAME=[Leonard]");
         Assert.assertEquals(getRow("CNT_EPISODES", rows).toString(), "CNT_EPISODES=[100000]");
-        Assert.assertEquals(action.getExtractVariables().size(), 1);
-        Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "NAME=actorName");
+        Assert.assertEquals(action.getExtractVariables().size(), 2);
+        Assert.assertEquals(action.getExtractVariables().get("NAME"), "actorName");
+        Assert.assertEquals(action.getExtractVariables().get("CNT_EPISODES"), "episodesCount");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
         Assert.assertEquals(action.getStatements().size(), 2);
@@ -101,40 +95,40 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testExecuteSQLQueryWithStatements() {
         List<Map<String, Object>> results = new ArrayList<>();
-        results.add(Collections.<String, Object>singletonMap("NAME", "Penny"));
-        results.add(Collections.<String, Object>singletonMap("NAME", "Sheldon"));
+        results.add(Collections.singletonMap("NAME", "Penny"));
+        results.add(Collections.singletonMap("NAME", "Sheldon"));
 
         reset(jdbcTemplate);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        when(jdbcTemplate.queryForList("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")).thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "9999")));
+        when(jdbcTemplate.queryForList("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")).thenReturn(Collections.singletonList(Collections.singletonMap("CNT_EPISODES", "9999")));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(query().jdbcTemplate(jdbcTemplate)
-            .statement("SELECT NAME FROM ACTORS")
-            .statement("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")
-            .validate("NAME", "Penny", "Sheldon")
-            .validate("CNT_EPISODES", "9999")
-            .extract("CNT_EPISODES", "cntEpisodes"));
+                .statement("SELECT NAME FROM ACTORS")
+                .statement("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")
+                .validate("NAME", "Penny", "Sheldon")
+                .validate("CNT_EPISODES", "9999")
+                .extract("NAME", "actorName")
+                .extract("CNT_EPISODES", "episodesCount"));
 
-        Assert.assertNotNull(context.getVariable("NAME"));
-        Assert.assertNotNull(context.getVariable("CNT_EPISODES"));
-        Assert.assertNotNull(context.getVariable("cntEpisodes"));
-        Assert.assertEquals(context.getVariable("NAME"), "Penny");
-        Assert.assertEquals(context.getVariable("CNT_EPISODES"), "9999");
-        Assert.assertEquals(context.getVariable("cntEpisodes"), "9999");
+        Assert.assertNotNull(context.getVariable("actorName"));
+        Assert.assertNotNull(context.getVariable("episodesCount"));
+        Assert.assertEquals(context.getVariable("actorName"), "Penny;Sheldon");
+        Assert.assertEquals(context.getVariable("episodesCount"), "9999");
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
 
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction) test.getActions().get(0);
 
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
         Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
         Assert.assertEquals(getRow("NAME", rows).toString(), "NAME=[Penny, Sheldon]");
         Assert.assertEquals(getRow("CNT_EPISODES", rows).toString(), "CNT_EPISODES=[9999]");
-        Assert.assertEquals(action.getExtractVariables().size(), 1);
-        Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "CNT_EPISODES=cntEpisodes");
+        Assert.assertEquals(action.getExtractVariables().size(), 2);
+        Assert.assertEquals(action.getExtractVariables().get("NAME"), "actorName");
+        Assert.assertEquals(action.getExtractVariables().get("CNT_EPISODES"), "episodesCount");
         Assert.assertEquals(action.getStatements().size(), 2);
         Assert.assertEquals(action.getStatements().toString(), "[SELECT NAME FROM ACTORS, SELECT COUNT(*) as CNT_EPISODES FROM EPISODES]");
         Assert.assertNull(action.getScriptValidationContext());
@@ -146,43 +140,43 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testExecuteSQLQueryWithTransaction() {
         List<Map<String, Object>> results = new ArrayList<>();
-        results.add(Collections.<String, Object>singletonMap("NAME", "Penny"));
-        results.add(Collections.<String, Object>singletonMap("NAME", "Sheldon"));
+        results.add(Collections.singletonMap("NAME", "Penny"));
+        results.add(Collections.singletonMap("NAME", "Sheldon"));
 
         reset(jdbcTemplate, transactionManager);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        when(jdbcTemplate.queryForList("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")).thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "9999")));
+        when(jdbcTemplate.queryForList("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")).thenReturn(Collections.singletonList(Collections.singletonMap("CNT_EPISODES", "9999")));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(query().jdbcTemplate(jdbcTemplate)
-            .transactionManager(transactionManager)
-            .transactionTimeout(5000)
-            .transactionIsolationLevel("ISOLATION_READ_COMMITTED")
-            .statement("SELECT NAME FROM ACTORS")
-            .statement("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")
-            .validate("NAME", "Penny", "Sheldon")
-            .validate("CNT_EPISODES", "9999")
-            .extract("CNT_EPISODES", "cntEpisodes"));
+                .transactionManager(transactionManager)
+                .transactionTimeout(5000)
+                .transactionIsolationLevel("ISOLATION_READ_COMMITTED")
+                .statement("SELECT NAME FROM ACTORS")
+                .statement("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")
+                .validate("NAME", "Penny", "Sheldon")
+                .validate("CNT_EPISODES", "9999")
+                .extract("NAME", "actorName")
+                .extract("CNT_EPISODES", "episodesCount"));
 
-        Assert.assertNotNull(context.getVariable("NAME"));
-        Assert.assertNotNull(context.getVariable("CNT_EPISODES"));
-        Assert.assertNotNull(context.getVariable("cntEpisodes"));
-        Assert.assertEquals(context.getVariable("NAME"), "Penny");
-        Assert.assertEquals(context.getVariable("CNT_EPISODES"), "9999");
-        Assert.assertEquals(context.getVariable("cntEpisodes"), "9999");
+        Assert.assertNotNull(context.getVariable("actorName"));
+        Assert.assertNotNull(context.getVariable("episodesCount"));
+        Assert.assertEquals(context.getVariable("actorName"), "Penny;Sheldon");
+        Assert.assertEquals(context.getVariable("episodesCount"), "9999");
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
 
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction) test.getActions().get(0);
 
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
         Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
         Assert.assertEquals(getRow("NAME", rows).toString(), "NAME=[Penny, Sheldon]");
         Assert.assertEquals(getRow("CNT_EPISODES", rows).toString(), "CNT_EPISODES=[9999]");
-        Assert.assertEquals(action.getExtractVariables().size(), 1);
-        Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "CNT_EPISODES=cntEpisodes");
+        Assert.assertEquals(action.getExtractVariables().size(), 2);
+        Assert.assertEquals(action.getExtractVariables().get("NAME"), "actorName");
+        Assert.assertEquals(action.getExtractVariables().get("CNT_EPISODES"), "episodesCount");
         Assert.assertEquals(action.getStatements().size(), 2);
         Assert.assertEquals(action.getStatements().toString(), "[SELECT NAME FROM ACTORS, SELECT COUNT(*) as CNT_EPISODES FROM EPISODES]");
         Assert.assertNull(action.getScriptValidationContext());
@@ -195,6 +189,7 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport {
 
     /**
      * Gets row from result set with given column name.
+     *
      * @param columnName
      * @param rows
      * @return

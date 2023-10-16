@@ -27,6 +27,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.net.ProtocolCommandEvent;
+import org.apache.commons.net.ProtocolCommandListener;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
+import org.apache.ftpserver.ftplet.DataType;
 import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.context.TestContext;
@@ -47,19 +56,9 @@ import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.ReplyConsumer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.util.FileUtils;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.net.ProtocolCommandEvent;
-import org.apache.commons.net.ProtocolCommandListener;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPClientConfig;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
-import org.apache.ftpserver.ftplet.DataType;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 
 import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
 
@@ -343,7 +342,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             if (getEndpointConfiguration().isAutoReadFiles()) {
                 String fileContent;
                 if (command.getFile().getType().equals(DataType.BINARY.name())) {
-                    fileContent = Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(localFilePath).getInputStream()));
+                    fileContent = Base64.encodeBase64String(FileUtils.copyToByteArray(FileUtils.getFileResource(localFilePath)));
                 } else {
                     fileContent = FileUtils.readToString(FileUtils.getFileResource(localFilePath));
                 }

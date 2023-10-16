@@ -19,18 +19,18 @@ package org.citrusframework.selenium.actions;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.StringUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -79,12 +79,12 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
                         }
                     }
 
-                    FileCopyUtils.copy(screenshot, new File(targetDir, testName + "_" + screenshot.getName()));
+                    FileUtils.copyFile(screenshot, new File(targetDir, testName + "_" + screenshot.getName()));
                 } catch (IOException e) {
                     logger.error("Failed to save screenshot to target storage", e);
                 }
             } else {
-                browser.storeFile(new FileSystemResource(screenshot));
+                browser.storeFile(Resources.create(screenshot));
             }
         }
     }

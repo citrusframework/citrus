@@ -30,10 +30,10 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringSource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -48,7 +48,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
     private String pageTitle = "Citrus Test Documentation";
     private String company = "Unknown";
     private String author = "Citrus Testframework";
-    private Resource headers = new ClassPathResource("testdoc-header.xml", ExcelTestDocsGenerator.class);
+    private final Resource headers = Resources.create("testdoc-header.xml", ExcelTestDocsGenerator.class);
     private String customHeaders = "";
 
     /**

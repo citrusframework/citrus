@@ -21,10 +21,10 @@ import java.io.IOException;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.TestGeneratorMain;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,7 +35,7 @@ public class XmlTestGeneratorTest {
 
     @Test
     public void testCreateTestNGTest() throws IOException {
-        XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
+        TestGenerator<?> generator = new XmlTestGenerator<>()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("SampleIT")
@@ -50,14 +50,14 @@ public class XmlTestGeneratorTest {
         File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/org/citrusframework/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
+        String javaContent = FileUtils.readToString(javaFile);
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class SampleIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
 
-        String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
+        String xmlContent = FileUtils.readToString(xmlFile);
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
         Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleIT\">"));
@@ -65,7 +65,7 @@ public class XmlTestGeneratorTest {
 
     @Test
     public void testCreateJUnitTest() throws IOException {
-        XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
+        TestGenerator<?> generator = new XmlTestGenerator<>()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("SampleIT")
@@ -80,14 +80,14 @@ public class XmlTestGeneratorTest {
         File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/org/citrusframework/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
+        String javaContent = FileUtils.readToString(javaFile);
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class SampleIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assert.assertTrue(javaContent.contains("extends JUnit4CitrusSupport"));
 
-        String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
+        String xmlContent = FileUtils.readToString(xmlFile);
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
         Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleIT\">"));
@@ -95,7 +95,7 @@ public class XmlTestGeneratorTest {
 
     @Test
     public void testInvalidName() throws IOException {
-        XmlTestGenerator generator = (XmlTestGenerator) new XmlTestGenerator()
+        TestGenerator<?> generator = new XmlTestGenerator<>()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("sampletest")
@@ -120,14 +120,14 @@ public class XmlTestGeneratorTest {
         File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/org/citrusframework/SampleIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
+        String javaContent = FileUtils.readToString(javaFile);
         Assert.assertTrue(javaContent.contains("@author Unknown"));
         Assert.assertTrue(javaContent.contains("public class SampleIT"));
         Assert.assertTrue(javaContent.contains("* TODO: Description"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
 
-        String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
+        String xmlContent = FileUtils.readToString(xmlFile);
         Assert.assertTrue(xmlContent.contains("<author>Unknown</author>"));
         Assert.assertTrue(xmlContent.contains("<description>TODO: Description</description>"));
         Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleIT\">"));

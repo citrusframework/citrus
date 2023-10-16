@@ -16,15 +16,15 @@
 
 package org.citrusframework.jmx.model;
 
-import jakarta.xml.bind.JAXBException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.Unmarshaller;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * @author Christoph Deppisch
@@ -36,7 +36,7 @@ public class JmxMarshaller implements Marshaller, Unmarshaller {
 
     public JmxMarshaller() {
         this.marshaller = new Jaxb2Marshaller(
-                new ClassPathResource("org/citrusframework/schema/citrus-jmx-message.xsd"), ManagedBeanInvocation.class, ManagedBeanResult.class);
+                Resources.newClasspathResource("org/citrusframework/schema/citrus-jmx-message.xsd"), ManagedBeanInvocation.class, ManagedBeanResult.class);
     }
 
     public void marshal(Object graph, Result result) {

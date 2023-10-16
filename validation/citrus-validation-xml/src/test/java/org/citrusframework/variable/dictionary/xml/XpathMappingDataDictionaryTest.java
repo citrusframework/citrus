@@ -16,18 +16,18 @@
 
 package org.citrusframework.variable.dictionary.xml;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -159,7 +159,7 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         Message message = new DefaultMessage(payload);
 
         XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
-        dictionary.setMappingFile(new ClassPathResource("xpathmapping.properties", DataDictionary.class));
+        dictionary.setMappingFile(Resources.create("xpathmapping.properties", DataDictionary.class));
         dictionary.initialize();
 
         dictionary.processMessage(message, context);

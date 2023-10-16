@@ -31,6 +31,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.MessageUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
@@ -39,9 +40,6 @@ import org.citrusframework.validation.xml.schema.XmlSchemaValidation;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -66,7 +64,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     private NamespaceContextBuilder namespaceContextBuilder;
 
     /** Default schema validator */
-    private XmlSchemaValidation schemaValidator = new XmlSchemaValidation();
+    private final XmlSchemaValidation schemaValidator = new XmlSchemaValidation();
 
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
@@ -82,9 +80,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             validateMessageContent(receivedMessage, controlMessage, validationContext, context);
 
             if (controlMessage != null) {
-                Assert.isTrue(controlMessage.getHeaderData().size() <= receivedMessage.getHeaderData().size(),
-                        "Failed to validate header data XML fragments - found " +
+                if (controlMessage.getHeaderData().size() > receivedMessage.getHeaderData().size()) {
+                    throw new ValidationException("Failed to validate header data XML fragments - found " +
                                 receivedMessage.getHeaderData().size() + " header fragments, expected " + controlMessage.getHeaderData().size());
+                }
 
                 for (int i = 0; i < controlMessage.getHeaderData().size(); i++) {
                     validateXmlHeaderFragment(receivedMessage.getHeaderData().get(i),
@@ -96,9 +95,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             logger.info("XML message validation successful: All values OK");
         } catch (ClassCastException | DOMException | LSException e) {
             throw new CitrusRuntimeException(e);
-        } catch (IllegalArgumentException e) {
-            logger.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
-            throw new ValidationException("Validation failed:", e);
         } catch (ValidationException ex) {
             logger.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
             throw ex;
@@ -114,7 +110,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param receivedMessage
      */
     protected void validateNamespaces(Map<String, String> expectedNamespaces, Message receivedMessage) {
-        if (CollectionUtils.isEmpty(expectedNamespaces)) { return; }
+        if (expectedNamespaces == null || expectedNamespaces.isEmpty()) {
+            return;
+        }
 
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
             throw new ValidationException("Unable to validate message namespaces - receive message payload was empty");
@@ -162,8 +160,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             logger.debug("Validating element: " + received.getLocalName() + " (" + received.getNamespaceURI() + ")");
         }
 
-        Assert.isTrue(received.getLocalName().equals(source.getLocalName()),
-                ValidationUtils.buildValueMismatchErrorMessage("Element names not equal", source.getLocalName(), received.getLocalName()));
+        if (!received.getLocalName().equals(source.getLocalName())) {
+            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Element names not equal", source.getLocalName(), received.getLocalName()));
+        }
     }
 
     private void doElementNamespaceValidation(Node received, Node source) {
@@ -173,16 +172,17 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         }
 
         if (received.getNamespaceURI() != null) {
-            Assert.isTrue(source.getNamespaceURI() != null,
-                    ValidationUtils.buildValueMismatchErrorMessage("Element namespace not equal for element '" +
+            if (source.getNamespaceURI() == null) {
+                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Element namespace not equal for element '" +
                         received.getLocalName() + "'", null, received.getNamespaceURI()));
+            }
 
-            Assert.isTrue(received.getNamespaceURI().equals(source.getNamespaceURI()),
-                    ValidationUtils.buildValueMismatchErrorMessage("Element namespace not equal for element '" +
-                    received.getLocalName() + "'", source.getNamespaceURI(), received.getNamespaceURI()));
-        } else {
-            Assert.isTrue(source.getNamespaceURI() == null,
-                    ValidationUtils.buildValueMismatchErrorMessage("Element namespace not equal for element '" +
+            if (!received.getNamespaceURI().equals(source.getNamespaceURI())) {
+                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Element namespace not equal for element '" +
+                        received.getLocalName() + "'", source.getNamespaceURI(), received.getNamespaceURI()));
+            }
+        } else if (source.getNamespaceURI() != null) {
+            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Element namespace not equal for element '" +
                     received.getLocalName() + "'", source.getNamespaceURI(), null));
         }
     }
@@ -210,8 +210,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         String controlMessagePayload = controlMessage.getPayload(String.class);
 
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
-            Assert.isTrue(!StringUtils.hasText(controlMessagePayload),
-                    "Unable to validate message payload - received message payload was empty, control message payload is not");
+            if (StringUtils.hasText(controlMessagePayload)) {
+                throw new ValidationException("Unable to validate message payload - received message payload was empty, control message payload is not");
+            }
             return;
         } else if (!StringUtils.hasText(controlMessagePayload)) {
             logger.debug("Skip message payload validation as no control message payload was defined");
@@ -300,7 +301,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             XmlMessageValidationContext validationContext,
             NamespaceContext namespaceContext, TestContext context) {
 
-        Assert.isTrue(source instanceof DocumentType, "Missing document type definition in expected xml fragment");
+        if (!(source instanceof DocumentType)) {
+            throw new ValidationException("Missing document type definition in expected xml fragment");
+        }
 
         DocumentType receivedDTD = (DocumentType) received;
         DocumentType sourceDTD = (DocumentType) source;
@@ -311,35 +314,37 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         }
 
         if (!StringUtils.hasText(sourceDTD.getPublicId())) {
-            Assert.isNull(receivedDTD.getPublicId(),
-                    ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
-                    sourceDTD.getPublicId(), receivedDTD.getPublicId()));
+            if (receivedDTD.getPublicId() != null) {
+                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
+                        sourceDTD.getPublicId(), receivedDTD.getPublicId()));
+            }
         } else if (sourceDTD.getPublicId().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             if (logger.isDebugEnabled()) {
                 logger.debug("Document type public id: '" + receivedDTD.getPublicId() +
                         "' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
         } else {
-            Assert.isTrue(StringUtils.hasText(receivedDTD.getPublicId()) &&
-                    receivedDTD.getPublicId().equals(sourceDTD.getPublicId()),
-                    ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
-                    sourceDTD.getPublicId(), receivedDTD.getPublicId()));
+            if (!StringUtils.hasText(receivedDTD.getPublicId()) || !receivedDTD.getPublicId().equals(sourceDTD.getPublicId())) {
+                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
+                        sourceDTD.getPublicId(), receivedDTD.getPublicId()));
+            }
         }
 
         if (!StringUtils.hasText(sourceDTD.getSystemId())) {
-            Assert.isNull(receivedDTD.getSystemId(),
-                    ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
-                    sourceDTD.getSystemId(), receivedDTD.getSystemId()));
+            if (receivedDTD.getSystemId() != null) {
+                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
+                        sourceDTD.getSystemId(), receivedDTD.getSystemId()));
+            }
         } else if (sourceDTD.getSystemId().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             if (logger.isDebugEnabled()) {
                 logger.debug("Document type system id: '" + receivedDTD.getSystemId() +
                         "' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
         } else {
-            Assert.isTrue(StringUtils.hasText(receivedDTD.getSystemId()) &&
-                    receivedDTD.getSystemId().equals(sourceDTD.getSystemId()),
-                    ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
-                    sourceDTD.getSystemId(), receivedDTD.getSystemId()));
+            if (!StringUtils.hasText(receivedDTD.getSystemId()) || !receivedDTD.getSystemId().equals(sourceDTD.getSystemId())) {
+                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
+                        sourceDTD.getSystemId(), receivedDTD.getSystemId()));
+            }
         }
 
         validateXmlTree(received.getNextSibling(),
@@ -372,9 +377,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         NamedNodeMap receivedAttr = received.getAttributes();
         NamedNodeMap sourceAttr = source.getAttributes();
 
-        Assert.isTrue(countAttributes(receivedAttr) == countAttributes(sourceAttr),
-                ValidationUtils.buildValueMismatchErrorMessage("Number of attributes not equal for element '"
+        if (countAttributes(receivedAttr) != countAttributes(sourceAttr)) {
+            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Number of attributes not equal for element '"
                         + received.getLocalName() + "'", countAttributes(sourceAttr), countAttributes(receivedAttr)));
+        }
 
         for (int i = 0; i < receivedAttr.getLength(); i++) {
             doAttribute(received, receivedAttr.item(i), source, validationContext, namespaceContext, context);
@@ -395,9 +401,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         List<Element> receivedChildElements = DomUtils.getChildElements((Element) received);
         List<Element> sourceChildElements = DomUtils.getChildElements((Element) source);
 
-        Assert.isTrue(receivedChildElements.size() == sourceChildElements.size(),
-                ValidationUtils.buildValueMismatchErrorMessage("Number of child elements not equal for element '"
+        if (receivedChildElements.size() != sourceChildElements.size()) {
+            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Number of child elements not equal for element '"
                     + received.getLocalName() + "'", sourceChildElements.size(), receivedChildElements.size()));
+        }
 
         for (int i = 0; i < receivedChildElements.size(); i++) {
             this.validateXmlTree(receivedChildElements.get(i), sourceChildElements.get(i),
@@ -424,19 +431,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         String receivedText = DomUtils.getTextValue(received);
         String sourceText = DomUtils.getTextValue(source);
 
-        if (receivedText != null) {
-            Assert.isTrue(sourceText != null,
-                    ValidationUtils.buildValueMismatchErrorMessage("Node value not equal for element '"
-                            + received.getLocalName() + "'", null, receivedText.trim()));
-
-            Assert.isTrue(receivedText.trim().equals(sourceText.trim()),
-                    ValidationUtils.buildValueMismatchErrorMessage("Node value not equal for element '"
-                            + received.getLocalName() + "'", sourceText.trim(),
-                            receivedText.trim()));
-        } else {
-            Assert.isTrue(sourceText == null,
-                    ValidationUtils.buildValueMismatchErrorMessage("Node value not equal for element '"
-                            + received.getLocalName() + "'", sourceText.trim(), null));
+        if (!receivedText.trim().equals(sourceText.trim())) {
+            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Node value not equal for element '"
+                        + received.getLocalName() + "'", sourceText.trim(), receivedText.trim()));
         }
 
         if (logger.isDebugEnabled()) {
@@ -465,10 +462,11 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         NamedNodeMap sourceAttributes = sourceElement.getAttributes();
         Node sourceAttribute = sourceAttributes.getNamedItemNS(receivedAttribute.getNamespaceURI(), receivedAttributeName);
 
-        Assert.isTrue(sourceAttribute != null,
-                "Attribute validation failed for element '"
+        if (sourceAttribute == null) {
+            throw new ValidationException("Attribute validation failed for element '"
                         + receivedElement.getLocalName() + "', unknown attribute "
                         + receivedAttributeName + " (" + receivedAttribute.getNamespaceURI() + ")");
+        }
 
         if (XmlValidationUtils.isAttributeIgnored(receivedElement, receivedAttribute, sourceAttribute, validationContext.getIgnoreExpressions(), namespaceContext)) {
             return;
@@ -484,9 +482,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         } else if (receivedValue.contains(":") && sourceValue.contains(":")) {
             doNamespaceQualifiedAttributeValidation(receivedElement, receivedAttribute, sourceElement, sourceAttribute);
         } else {
-            Assert.isTrue(receivedValue.equals(sourceValue),
-                    ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
+            if (!receivedValue.equals(sourceValue)) {
+                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
                             + receivedAttributeName + "'", sourceValue, receivedValue));
+            }
         }
 
         if (logger.isDebugEnabled()) {
@@ -519,9 +518,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 sourceNamespaces.putAll(XMLUtils.lookupNamespaces(sourceElement));
 
                 if (sourceNamespaces.containsKey(sourcePrefix)) {
-                    Assert.isTrue(sourceNamespaces.get(sourcePrefix).equals(receivedNamespaces.get(receivedPrefix)),
-                            ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute value namespace '"
+                    if (!sourceNamespaces.get(sourcePrefix).equals(receivedNamespaces.get(receivedPrefix))) {
+                        throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute value namespace '"
                                     + receivedValue + "'", sourceNamespaces.get(sourcePrefix), receivedNamespaces.get(receivedPrefix)));
+                    }
 
                     // remove namespace prefixes as they must not form equality
                     receivedValue = receivedValue.substring((receivedPrefix + ":").length());
@@ -533,9 +533,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
         }
 
-        Assert.isTrue(receivedValue.equals(sourceValue),
-                ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
+        if (!receivedValue.equals(sourceValue)) {
+            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
                         + receivedAttribute.getLocalName() + "'", sourceValue, receivedValue));
+        }
     }
 
     /**

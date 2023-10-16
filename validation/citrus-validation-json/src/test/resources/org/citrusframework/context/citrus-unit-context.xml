@@ -16,4 +16,15 @@
     <constructor-arg><value type="java.lang.Class">org.citrusframework.json.schema.SimpleJsonSchema</value></constructor-arg>
     <constructor-arg value="jsonTestSchema"/>
   </bean>
+
+  <bean id="resourceConverter" class="org.citrusframework.spi.ResourceConverter"/>
+
+  <bean id="conversionService"
+        class="org.springframework.context.support.ConversionServiceFactoryBean">
+    <property name="converters">
+      <list>
+        <ref bean="resourceConverter" />
+      </list>
+    </property>
+  </bean>
 </beans>

@@ -22,9 +22,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,14 +35,10 @@ import java.util.Stack;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.ResourceUtils;
 
 /**
  * Class to provide general file utilities, such as listing all XML files in a directory,
@@ -116,17 +112,11 @@ public abstract class FileUtils {
      */
     public static String readToString(Resource resource, Charset charset) throws IOException {
         if (simulationMode) {
-            if (resource instanceof ClassPathResource) {
-                return ((ClassPathResource) resource).getPath();
-            } else if (resource instanceof FileSystemResource) {
-                return ((FileSystemResource) resource).getPath();
-            } else {
-                return resource.getFilename();
-            }
+            resource.getLocation();
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Reading file resource: '%s' (encoding is '%s')", resource.getFilename(), charset.displayName()));
+            logger.debug(String.format("Reading file resource: '%s' (encoding is '%s')", resource.getLocation(), charset.displayName()));
         }
         return readToString(resource.getInputStream(), charset);
     }
@@ -139,7 +129,7 @@ public abstract class FileUtils {
      * @throws IOException
      */
     public static String readToString(InputStream inputStream, Charset charset) throws IOException {
-        return new String(FileCopyUtils.copyToByteArray(inputStream), charset);
+        return new String(inputStream.readAllBytes(), charset);
     }
 
     /**
@@ -148,8 +138,18 @@ public abstract class FileUtils {
      * @param file
      */
     public static void writeToFile(InputStream inputStream, File file) {
-        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream)) {
-            writeToFile(FileCopyUtils.copyToString(inputStreamReader), file, getDefaultCharset());
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Writing file resource: '%s'", file.getName()));
+        }
+
+        if (!file.getParentFile().exists()) {
+            if (!file.getParentFile().mkdirs()) {
+                throw new CitrusRuntimeException("Unable to create folder structure for file: " + file.getPath());
+            }
+        }
+
+        try (inputStream) {
+            Files.copy(inputStream, file.toPath());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to write file", e);
         }
@@ -198,10 +198,10 @@ public abstract class FileUtils {
      */
     public static List<File> findFiles(final String startDir, final Set<String> fileNamePatterns) {
         /* file names to be returned */
-        final List<File> files = new ArrayList<File>();
+        final List<File> files = new ArrayList<>();
 
-        /* Stack to hold potential sub directories */
-        final Stack<File> dirs = new Stack<File>();
+        /* Stack to hold potential subdirectories */
+        final Stack<File> dirs = new Stack<>();
         /* start directory */
         final File startdir = new File(startDir);
 
@@ -222,14 +222,9 @@ public abstract class FileUtils {
                 boolean accepted = tmp.isDirectory();
 
                 for (String fileNamePattern : fileNamePatterns) {
-                    if (fileNamePattern.contains("/")) {
-                        fileNamePattern = fileNamePattern.substring(fileNamePattern.lastIndexOf('/') + 1);
-                    }
-
-                    fileNamePattern = fileNamePattern.replace(".", "\\.").replace("*", ".*");
-
                     if (name.matches(fileNamePattern)) {
                         accepted = true;
+                        break;
                     }
                 }
 
@@ -257,13 +252,7 @@ public abstract class FileUtils {
      * @return
      */
     public static Resource getFileResource(String filePath, TestContext context) {
-        if (filePath.contains(FILE_PATH_CHARSET_PARAMETER)) {
-            return new PathMatchingResourcePatternResolver().getResource(
-                    context.replaceDynamicContentInString(filePath.substring(0, filePath.indexOf(FileUtils.FILE_PATH_CHARSET_PARAMETER))));
-        } else {
-            return new PathMatchingResourcePatternResolver().getResource(
-                    context.replaceDynamicContentInString(filePath));
-        }
+        return getFileResource(context.replaceDynamicContentInString(filePath));
     }
 
     /**
@@ -273,25 +262,13 @@ public abstract class FileUtils {
      */
     public static Resource getFileResource(String filePath) {
         String path;
-
         if (filePath.contains(FILE_PATH_CHARSET_PARAMETER)) {
             path = filePath.substring(0, filePath.indexOf(FileUtils.FILE_PATH_CHARSET_PARAMETER));
         } else {
             path = filePath;
         }
 
-        if (path.startsWith(ResourceUtils.FILE_URL_PREFIX)) {
-            return new FileSystemResource(path.substring(ResourceUtils.FILE_URL_PREFIX.length()));
-        } else if (path.startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {
-            return new PathMatchingResourcePatternResolver().getResource(path);
-        }
-
-        Resource file = new FileSystemResource(path);
-        if (!file.exists()) {
-            return  new PathMatchingResourcePatternResolver().getResource(path);
-        }
-
-        return file;
+        return Resources.create(path);
     }
 
     /**
@@ -338,7 +315,7 @@ public abstract class FileUtils {
     public static Properties loadAsProperties(Resource resource) {
         Properties properties = new Properties();
         try (InputStream is = resource.getInputStream()) {
-            String filename = resource.getFilename();
+            String filename = getFileName(resource.getLocation());
             if (filename != null && filename.endsWith(FILE_EXTENSION_XML)) {
                 properties.loadFromXML(is);
             } else {
@@ -349,6 +326,20 @@ public abstract class FileUtils {
         }
 
         return properties;
+    }
+
+    /**
+     * Gets the file name from given file path.
+     * @param path
+     * @return
+     */
+    public static String getFileName(String path) {
+        if (path == null || path.isBlank()) {
+            return "";
+        }
+
+        int separatorIndex = path.lastIndexOf("/");
+        return (separatorIndex != -1 ? path.substring(separatorIndex + 1) : path);
     }
 
     /**
@@ -383,5 +374,36 @@ public abstract class FileUtils {
         }
 
         return filePath;
+    }
+
+    public static byte[] copyToByteArray(File file) {
+        if (file == null) {
+            return new byte[0];
+        }
+
+        try (InputStream in = Files.newInputStream(file.toPath())) {
+            return in.readAllBytes();
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read file content", e);
+        }
+    }
+
+    public static byte[] copyToByteArray(Resource resource) {
+        try (InputStream in = resource.getInputStream()) {
+            if (in == null) {
+                throw new CitrusRuntimeException(String.format("Unable to access input stream of resource %s", resource.getLocation()));
+            }
+            return in.readAllBytes();
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read resource", e);
+        }
+    }
+
+    public static byte[] copyToByteArray(InputStream inputStream) {
+        try (inputStream) {
+            return inputStream.readAllBytes();
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read input stream", e);
+        }
     }
 }

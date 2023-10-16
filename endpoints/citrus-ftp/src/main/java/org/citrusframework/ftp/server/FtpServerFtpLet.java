@@ -38,7 +38,6 @@ import org.apache.ftpserver.ftplet.FtpletResult;
 import org.apache.ftpserver.ftplet.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 /**
  * Ftp servlet implementation that logs incoming connections and commands forwarding those to
@@ -118,7 +117,7 @@ public class FtpServerFtpLet implements Ftplet {
             return FtpletResult.DEFAULT;
         }
 
-        if (Stream.of(StringUtils.commaDelimitedListToStringArray(endpointConfiguration.getAutoHandleCommands())).anyMatch(cmd -> cmd.trim().equals(command))) {
+        if (Stream.of(endpointConfiguration.getAutoHandleCommands().split(",")).anyMatch(cmd -> cmd.trim().equals(command))) {
             return FtpletResult.DEFAULT;
         }
 

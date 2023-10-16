@@ -17,7 +17,6 @@
 package org.citrusframework.condition;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.util.FileUtils;
@@ -57,7 +56,7 @@ public class FileCondition extends AbstractCondition {
         } else {
             try {
                 return FileUtils.getFileResource(context.replaceDynamicContentInString(filePath), context).getFile().isFile();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 logger.warn(String.format("Failed to access file resource '%s'", e.getMessage()));
                 return false;
             }

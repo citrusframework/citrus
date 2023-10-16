@@ -23,7 +23,6 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -78,7 +77,7 @@ public class SwaggerJavaTestGeneratorTest {
                 name + FileUtils.FILE_EXTENSION_JAVA);
         Assert.assertTrue(javaFile.exists());
 
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
+        String javaContent = FileUtils.readToString(javaFile);
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class " + name));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));

@@ -22,12 +22,11 @@ import java.util.Optional;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -54,29 +53,25 @@ public class DefaultHeaderValidator implements HeaderValidator {
                 .map(context::replaceDynamicContentInString)
                 .orElse("");
 
-        try {
-            if (receivedValue != null) {
-                String receivedValueString = context.getTypeConverter().convertIfNecessary(receivedValue, String.class);
-                if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
-                    ValidationMatcherUtils.resolveValidationMatcher(headerName, receivedValueString,
-                            expectedValue, context);
-                    return;
-                }
-
-                Assert.isTrue(receivedValueString.equals(expectedValue),
-                        "Values not equal for header element '"
-                                + headerName + "', expected '"
-                                + expectedValue + "' but was '"
-                                + receivedValue + "'");
-            } else {
-                Assert.isTrue(!StringUtils.hasText(expectedValue),
-                        "Values not equal for header element '"
-                                + headerName + "', expected '"
-                                + expectedValue + "' but was '"
-                                + null + "'");
+        if (receivedValue != null) {
+            String receivedValueString = context.getTypeConverter().convertIfNecessary(receivedValue, String.class);
+            if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
+                ValidationMatcherUtils.resolveValidationMatcher(headerName, receivedValueString,
+                        expectedValue, context);
+                return;
             }
-        } catch (IllegalArgumentException e) {
-            throw new ValidationException("Validation failed:", e);
+
+            if (!receivedValueString.equals(expectedValue)) {
+                throw new ValidationException("Values not equal for header element '"
+                        + headerName + "', expected '"
+                        + expectedValue + "' but was '"
+                        + receivedValue + "'");
+            }
+        } else if (StringUtils.hasText(expectedValue)) {
+                throw new ValidationException("Values not equal for header element '"
+                        + headerName + "', expected '"
+                        + expectedValue + "' but was '"
+                        + null + "'");
         }
 
         if (logger.isDebugEnabled()) {

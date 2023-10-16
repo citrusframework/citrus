@@ -22,7 +22,6 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Sequence of test actions executed before a test case. Container execution can be restricted according to test name ,
@@ -37,7 +36,7 @@ public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer impl
 
     @Override
     public void doExecute(TestContext context) {
-        if (CollectionUtils.isEmpty(actions)) {
+        if (actions == null || actions.isEmpty()) {
             return;
         }
 

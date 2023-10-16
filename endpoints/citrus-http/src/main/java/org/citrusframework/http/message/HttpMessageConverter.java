@@ -16,17 +16,24 @@
 
 package org.citrusframework.http.message;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import jakarta.servlet.http.Cookie;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.message.MessageHeaderUtils;
 import org.citrusframework.message.MessageHeaders;
-import jakarta.servlet.http.Cookie;
-import org.springframework.http.*;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
@@ -37,7 +44,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, HttpEntity<?>, HttpEndpointConfiguration> {
 
-    private CookieConverter cookieConverter;
+    private final CookieConverter cookieConverter;
 
     public HttpMessageConverter() {
         cookieConverter = new CookieConverter();
@@ -122,7 +129,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
 
         for (Map.Entry<String, List<String>> header : httpHeaders.entrySet()) {
             if (!mappedHeaders.containsKey(header.getKey())) {
-                customHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(header.getValue()));
+                customHeaders.put(header.getKey(), String.join(",", header.getValue()));
             }
         }
 
@@ -141,7 +148,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         for (Map.Entry<String, Object> header : headers.entrySet()) {
             if (header.getValue() instanceof Collection<?>) {
                 Collection<?> value = (Collection<?>)header.getValue();
-                convertedHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(value));
+                convertedHeaders.put(header.getKey(), value.stream().map(String::valueOf).collect(Collectors.joining(",")));
             } else if (header.getValue() instanceof MediaType) {
                 convertedHeaders.put(header.getKey(), header.getValue().toString());
             } else {

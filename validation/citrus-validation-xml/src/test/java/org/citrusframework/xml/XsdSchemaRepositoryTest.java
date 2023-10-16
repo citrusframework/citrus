@@ -39,13 +39,14 @@ public class XsdSchemaRepositoryTest {
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
     }
 
-    @Test(expectedExceptions = { IllegalArgumentException.class })
+    @Test
     public void testUnknownLocation() throws Exception {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
 
         schemaRepository.getLocations().add("classpath:org/citrusframework/unknown/unknown.xsd");
 
         schemaRepository.initialize();
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 0);
     }
 
     @Test
@@ -67,7 +68,7 @@ public class XsdSchemaRepositoryTest {
     public void testResourceLocationPatternNothingFound() throws Exception {
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
 
-        schemaRepository.getLocations().add("classpath:org/citrusframework/*.xsd");
+        schemaRepository.getLocations().add("classpath:org/citrusframework/tests/*.xsd");
 
         schemaRepository.initialize();
 

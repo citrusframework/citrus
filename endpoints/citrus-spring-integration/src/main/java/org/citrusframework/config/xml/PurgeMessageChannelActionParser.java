@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.citrusframework.actions.PurgeMessageChannelAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
@@ -33,7 +34,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
-import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 

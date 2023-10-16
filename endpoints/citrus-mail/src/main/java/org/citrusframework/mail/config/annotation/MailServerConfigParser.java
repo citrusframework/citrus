@@ -26,7 +26,7 @@ import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.mail.server.MailServer;
 import org.citrusframework.mail.server.MailServerBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

@@ -16,16 +16,16 @@
 
 package org.citrusframework.variable.dictionary.xml;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.variable.dictionary.DataDictionary;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -157,7 +157,7 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         context.setVariable("newText", "Hello!");
 
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
-        dictionary.setMappingFile(new ClassPathResource("mapping.properties", DataDictionary.class));
+        dictionary.setMappingFile(Resources.create("mapping.properties", DataDictionary.class));
         dictionary.initialize();
 
         dictionary.processMessage(message, context);

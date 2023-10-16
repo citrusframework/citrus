@@ -16,13 +16,13 @@
 
 package org.citrusframework.kubernetes.config.annotation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

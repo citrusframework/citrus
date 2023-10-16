@@ -40,11 +40,11 @@ import org.citrusframework.rmi.endpoint.RmiEndpointConfiguration;
 import org.citrusframework.rmi.message.RmiMessageHeaders;
 import org.citrusframework.rmi.model.RmiServiceInvocation;
 import org.citrusframework.rmi.model.RmiServiceResult;
+import org.citrusframework.util.ReflectionHelper;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -94,14 +94,18 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
 
             final Method[] method = new Method[1];
             if (StringUtils.hasText(invocation.getMethod())) {
-                method[0] = ReflectionUtils.findMethod(remoteTarget.getClass(), invocation.getMethod(), invocation.getArgTypes());
+                method[0] = ReflectionHelper.findMethod(remoteTarget.getClass(), invocation.getMethod(), invocation.getArgTypes());
             } else {
-                ReflectionUtils.doWithMethods(remoteTarget.getClass(), declaredMethod -> {
+                ReflectionHelper.doWithMethods(remoteTarget.getClass(), declaredMethod -> {
+                    if (!Arrays.asList(declaredMethod.getExceptionTypes()).contains(RemoteException.class) ||
+                            !declaredMethod.getDeclaringClass().equals(remoteTarget.getClass())) {
+                        return;
+                    }
+
                     if (method[0] == null) {
                         method[0] = declaredMethod;
                     }
-                }, declaredMethod -> Arrays.asList(declaredMethod.getExceptionTypes()).contains(RemoteException.class) &&
-                        declaredMethod.getDeclaringClass().equals(remoteTarget.getClass()));
+                });
             }
 
             if (method[0] == null) {

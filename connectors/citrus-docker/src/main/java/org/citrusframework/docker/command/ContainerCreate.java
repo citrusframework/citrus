@@ -31,7 +31,6 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Volume;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -92,7 +91,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             if (getParameters().get("cmd") instanceof Capability[]) {
                 command.withCmd((String[]) getParameters().get("cmd"));
             } else {
-                command.withCmd(StringUtils.delimitedListToStringArray(getParameter("cmd", context), DELIMITER));
+                command.withCmd(getParameter("cmd", context).split(DELIMITER));
             }
         }
 
@@ -100,7 +99,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             if (getParameters().get("env") instanceof Capability[]) {
                 command.withEnv((String[]) getParameters().get("env"));
             } else {
-                command.withEnv(StringUtils.delimitedListToStringArray(getParameter("env", context), DELIMITER));
+                command.withEnv(getParameter("env", context).split(DELIMITER));
             }
         }
 
@@ -116,7 +115,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             if (getParameters().get("port-specs") instanceof Capability[]) {
                 command.withPortSpecs((String[]) getParameters().get("port-specs"));
             } else {
-                command.withPortSpecs(StringUtils.delimitedListToStringArray(getParameter("port-specs", context), DELIMITER));
+                command.withPortSpecs(getParameter("port-specs", context).split(DELIMITER));
             }
         }
 
@@ -170,7 +169,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
      * @return
      */
     private Volume[] getVolumes(TestContext context) {
-        String[] volumes = StringUtils.commaDelimitedListToStringArray(getParameter("volumes", context));
+        String[] volumes = getParameter("volumes", context).split(",");
         Volume[] volumeSpecs = new Volume[volumes.length];
 
         for (int i = 0; i < volumes.length; i++) {
@@ -185,7 +184,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
      * @return
      */
     private Capability[] getCapabilities(String addDrop, TestContext context) {
-        String[] capabilities = StringUtils.commaDelimitedListToStringArray(getParameter(addDrop, context));
+        String[] capabilities = getParameter(addDrop, context).split(",");
         Capability[] capAdd = new Capability[capabilities.length];
 
         for (int i = 0; i < capabilities.length; i++) {
@@ -202,7 +201,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
      * @return
      */
     private ExposedPort[] getExposedPorts(String portSpecs, TestContext context) {
-        String[] ports = StringUtils.commaDelimitedListToStringArray(portSpecs);
+        String[] ports = portSpecs.split(",");
         ExposedPort[] exposedPorts = new ExposedPort[ports.length];
 
         for (int i = 0; i < ports.length; i++) {
@@ -228,7 +227,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
      * @return
      */
     private Ports getPortBindings(String portSpecs, ExposedPort[] exposedPorts, TestContext context) {
-        String[] ports = StringUtils.commaDelimitedListToStringArray(portSpecs);
+        String[] ports = portSpecs.split(",");
         Ports portsBindings = new Ports();
 
         for (String portSpec : ports) {

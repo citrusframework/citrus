@@ -18,8 +18,8 @@ package org.citrusframework.validation.script;
 
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.MessageUtils;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * Extended groovy message validator providing specific XML slurper support.
@@ -34,7 +34,7 @@ public class GroovyXmlMessageValidator extends GroovyScriptMessageValidator {
      * Default constructor using default script template.
      */
     public GroovyXmlMessageValidator() {
-        super(new ClassPathResource("org/citrusframework/validation/xml-validation-template.groovy"));
+        super(Resources.newClasspathResource("org/citrusframework/validation/xml-validation-template.groovy"));
     }
 
     @Override

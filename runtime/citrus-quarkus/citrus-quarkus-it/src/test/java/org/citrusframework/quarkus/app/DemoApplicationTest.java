@@ -27,6 +27,7 @@ import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
+import org.citrusframework.endpoint.direct.DirectEndpointBuilder;
 import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
@@ -49,13 +50,18 @@ public class DemoApplicationTest {
     private Citrus citrus;
 
     @BindToRegistry
-    private final MessageQueue messages = new DefaultMessageQueue("messages");
+    private final MessageQueue messageQueue = new DefaultMessageQueue("messages");
 
     @CitrusEndpoint
     @DirectEndpointConfig(
-        queue = "messages"
+        queue = "messageQueue"
     )
-    private DirectEndpoint messageEndpoint;
+    private DirectEndpoint messages;
+
+    @BindToRegistry
+    private final DirectEndpoint moreMessages = new DirectEndpointBuilder()
+            .queue(messageQueue)
+            .build();
 
     @CitrusResource
     private TestCaseRunner t;
@@ -71,8 +77,11 @@ public class DemoApplicationTest {
         Assertions.assertNotNull(citrus);
         Assertions.assertNotNull(context);
         Assertions.assertNotNull(t);
-        Assertions.assertNotNull(messageEndpoint);
+        Assertions.assertNotNull(messages);
+        Assertions.assertNotNull(moreMessages);
         Assertions.assertEquals(context.getReferenceResolver().resolve("textEqualsMessageValidator", MessageValidator.class), textEqualsMessageValidator);
+
+        t.variable("greeting", "Hello!");
 
         t.given(
             createVariables().variable("text", "Citrus rocks!")
@@ -80,16 +89,30 @@ public class DemoApplicationTest {
 
         t.when(
             send()
-                .endpoint(messageEndpoint)
+                .endpoint(messages)
                 .message()
                 .body("${text}")
         );
 
         t.when(
             receive()
-                .endpoint(messageEndpoint)
+                .endpoint(messages)
                 .message()
                 .body("${text}")
+        );
+
+        t.when(
+            send()
+                .endpoint(moreMessages)
+                .message()
+                .body("${greeting}")
+        );
+
+        t.when(
+            receive()
+                .endpoint(moreMessages)
+                .message()
+                .body("${greeting}")
         );
     }
 }

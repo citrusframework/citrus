@@ -23,11 +23,11 @@ import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.message.ErrorHandlingStrategy;
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.w3c.dom.Element;
 

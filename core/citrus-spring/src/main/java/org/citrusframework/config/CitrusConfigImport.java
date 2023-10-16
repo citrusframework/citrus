@@ -17,9 +17,9 @@
 package org.citrusframework.config;
 
 import org.citrusframework.CitrusSpringSettings;
+import org.citrusframework.util.StringUtils;
 import org.springframework.context.annotation.DeferredImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

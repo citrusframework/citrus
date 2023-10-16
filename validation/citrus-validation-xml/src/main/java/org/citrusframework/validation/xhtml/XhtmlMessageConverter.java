@@ -16,13 +16,11 @@
 
 package org.citrusframework.validation.xhtml;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.core.io.Resource;
+import org.citrusframework.spi.Resource;
 import org.w3c.tidy.Tidy;
 
 /**
@@ -67,21 +65,17 @@ public class XhtmlMessageConverter implements InitializingPhase {
 
     @Override
     public void initialize() {
-        try {
-            if (tidyInstance == null) {
-                tidyInstance = new Tidy();
-                tidyInstance.setXHTML(true);
-                tidyInstance.setShowWarnings(false);
-                tidyInstance.setQuiet(true);
-                tidyInstance.setEscapeCdata(true);
-                tidyInstance.setTidyMark(false);
+        if (tidyInstance == null) {
+            tidyInstance = new Tidy();
+            tidyInstance.setXHTML(true);
+            tidyInstance.setShowWarnings(false);
+            tidyInstance.setQuiet(true);
+            tidyInstance.setEscapeCdata(true);
+            tidyInstance.setTidyMark(false);
 
-                if (tidyConfiguration != null) {
-                    tidyInstance.setConfigurationFromFile(tidyConfiguration.getFile().getAbsolutePath());
-                }
+            if (tidyConfiguration != null) {
+                tidyInstance.setConfigurationFromFile(tidyConfiguration.getFile().getAbsolutePath());
             }
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to initialize XHTML tidy instance");
         }
     }
 

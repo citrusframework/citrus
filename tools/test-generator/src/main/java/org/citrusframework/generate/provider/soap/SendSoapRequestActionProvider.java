@@ -16,13 +16,12 @@
 
 package org.citrusframework.generate.provider.soap;
 
+import java.util.Optional;
+
 import org.citrusframework.generate.provider.MessageActionProvider;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.model.testcase.ws.SendModel;
 import org.citrusframework.ws.message.SoapMessage;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -44,7 +43,7 @@ public class SendSoapRequestActionProvider implements MessageActionProvider<Send
 
         request.setContentType("application/xml");
 
-        if (!CollectionUtils.isEmpty(message.getHeaders())) {
+        if (message.getHeaders() != null && !message.getHeaders().isEmpty()) {
             org.citrusframework.model.testcase.core.SendModel.Header header = new org.citrusframework.model.testcase.core.SendModel.Header();
 
             message.getHeaders().entrySet().stream()

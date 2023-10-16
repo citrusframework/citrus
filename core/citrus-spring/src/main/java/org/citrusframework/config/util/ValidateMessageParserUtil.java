@@ -16,13 +16,13 @@
 
 package org.citrusframework.config.util;
 
-import org.springframework.util.StringUtils;
-import org.springframework.util.xml.DomUtils;
-import org.w3c.dom.Element;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.citrusframework.util.StringUtils;
+import org.springframework.util.xml.DomUtils;
+import org.w3c.dom.Element;
 
 /**
  * Helper for parsing message validation elements.

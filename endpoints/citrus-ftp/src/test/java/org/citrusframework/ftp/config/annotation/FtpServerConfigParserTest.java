@@ -18,6 +18,7 @@ package org.citrusframework.ftp.config.annotation;
 
 import java.io.IOException;
 
+import org.apache.ftpserver.ftplet.UserManager;
 import org.citrusframework.TestActor;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusEndpoint;
@@ -25,11 +26,10 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.ftp.server.FtpServer;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.apache.ftpserver.ftplet.UserManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;

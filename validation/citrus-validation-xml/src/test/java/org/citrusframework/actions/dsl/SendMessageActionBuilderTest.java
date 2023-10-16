@@ -40,7 +40,6 @@ import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -228,7 +227,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+            Assert.assertEquals(message.getPayload(String.class).replaceAll("\\s", ""),
                     "<?xmlversion=\"1.0\"encoding=\"UTF-8\"?><TestRequest><Messagelang=\"ENG\">HelloWorld!</Message></TestRequest>");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));

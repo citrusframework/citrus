@@ -16,14 +16,14 @@
 
 package org.citrusframework.xml.xpath;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathFactory;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.citrusframework.util.XMLUtils;
-import org.springframework.util.xml.SimpleNamespaceContext;
+import org.citrusframework.xml.namespace.DefaultNamespaceContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -82,7 +82,7 @@ public class XPathUtilsTest {
                     "<age>23</age>" +
                 "</person>");
 
-        NamespaceContext namespaceContext = new SimpleNamespaceContext();
+        NamespaceContext namespaceContext = new DefaultNamespaceContext();
 
         Assert.assertEquals(XPathUtils.evaluate(personNode, "/person/name", namespaceContext, XPathExpressionResult.STRING), "foo");
         Assert.assertEquals(XPathUtils.evaluate(personNode, "/person/age", namespaceContext, XPathExpressionResult.NUMBER), 23.0D);
@@ -94,7 +94,7 @@ public class XPathUtilsTest {
         Assert.assertFalse(XPathUtils.evaluateAsBoolean(personNode, "/person/unknown", namespaceContext));
         Assert.assertEquals(XPathUtils.evaluateAsString(personNode, "/person/name", namespaceContext), "foo");
         Assert.assertEquals(XPathUtils.evaluateAsObject(personNode, "/person/name", namespaceContext, new QName("http://www.w3.org/1999/XSL/Transform", "STRING")), "foo");
-        Assert.assertEquals(XPathUtils.evaluateAsNumber(personNode, "/person/age", namespaceContext), new Double(23.0D));
+        Assert.assertEquals(XPathUtils.evaluateAsNumber(personNode, "/person/age", namespaceContext), Double.valueOf(23.0D));
         Assert.assertEquals(XPathUtils.evaluateAsString(personNode, "/person/@status", namespaceContext), "single");
     }
 

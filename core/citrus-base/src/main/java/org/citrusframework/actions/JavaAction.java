@@ -22,14 +22,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ReflectionHelper;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Action to enable class invocation through java reflection
@@ -86,7 +87,7 @@ public class JavaAction extends AbstractTestAction {
                 methodTypes[i] = methodArgs.get(i).getClass();
 
                 if (methodArgs.get(i).getClass().equals(List.class)) {
-                    String[] converted = StringUtils.toStringArray((List<String>)methodArgs.get(i));
+                    String[] converted = ((List<String>)methodArgs.get(i)).toArray(new String[]{});
 
                     for (int j = 0; j < converted.length; j++) {
                         converted[j] = context.replaceDynamicContentInString(converted[j]);
@@ -118,11 +119,11 @@ public class JavaAction extends AbstractTestAction {
     }
 
     private void invokeMethod(Object instance, Class<?>[] methodTypes, Object[] methodObjects) throws IllegalArgumentException, InvocationTargetException, IllegalAccessException, CitrusRuntimeException {
-        Method methodToRun = ReflectionUtils.findMethod(instance.getClass(), methodName, methodTypes);
+        Method methodToRun = ReflectionHelper.findMethod(instance.getClass(), methodName, methodTypes);
 
         if (methodToRun == null) {
             throw new CitrusRuntimeException("Unable to find method '" + methodName + "(" +
-                    StringUtils.arrayToCommaDelimitedString(methodTypes) + ")' for class '" + instance.getClass() + "'");
+                    Arrays.stream(methodTypes).map(Class::getSimpleName).collect(Collectors.joining(",")) + ")' for class '" + instance.getClass() + "'");
         }
 
         logger.info("Invoking method '" + methodToRun.toString() + "' on instance '" + instance.getClass() + "'");

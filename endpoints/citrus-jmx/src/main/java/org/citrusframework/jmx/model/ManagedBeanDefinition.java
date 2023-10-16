@@ -16,13 +16,22 @@
 
 package org.citrusframework.jmx.model;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanConstructorInfo;
+import javax.management.MBeanInfo;
+import javax.management.MBeanNotificationInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanParameterInfo;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 
-import javax.management.*;
-import java.lang.reflect.*;
-import java.util.*;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ReflectionHelper;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +41,7 @@ public class ManagedBeanDefinition {
 
     public static final String OPERATION_DESCRIPTION = "Operation exposed for management";
     public static final String ATTRIBUTE_DESCRIPTION = "Attribute exposed for management";
-    private Class type;
+    private Class<?> type;
     private String objectDomain;
     private String objectName;
 
@@ -96,20 +105,16 @@ public class ManagedBeanDefinition {
         final List<MBeanOperationInfo> infoList = new ArrayList<>();
 
         if (type != null) {
-            ReflectionUtils.doWithMethods(type, new ReflectionUtils.MethodCallback() {
-                @Override
-                public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                    infoList.add(new MBeanOperationInfo(OPERATION_DESCRIPTION, method));
+            ReflectionHelper.doWithMethods(type, method -> {
+                if (!method.getDeclaringClass().equals(type)
+                        || method.getName().startsWith("set")
+                        || method.getName().startsWith("get")
+                        || method.getName().startsWith("is")
+                        || method.getName().startsWith("$jacoco")) { // Fix for code coverage
+                    return;
                 }
-            }, new ReflectionUtils.MethodFilter() {
-                @Override
-                public boolean matches(Method method) {
-                    return method.getDeclaringClass().equals(type)
-                            && !method.getName().startsWith("set")
-                            && !method.getName().startsWith("get")
-                            && !method.getName().startsWith("is")
-                            && !method.getName().startsWith("$jacoco"); // Fix for code coverage
-                }
+
+                infoList.add(new MBeanOperationInfo(OPERATION_DESCRIPTION, method));
             });
         } else {
             for (ManagedBeanInvocation.Operation operation : operations) {
@@ -135,7 +140,7 @@ public class ManagedBeanDefinition {
         final List<MBeanConstructorInfo> infoList = new ArrayList<>();
 
         if (type != null) {
-            for (Constructor constructor : type.getConstructors()) {
+            for (Constructor<?> constructor : type.getConstructors()) {
                 infoList.add(new MBeanConstructorInfo(constructor.toGenericString(), constructor));
             }
         }
@@ -154,41 +159,34 @@ public class ManagedBeanDefinition {
             final List<String> attributes = new ArrayList<>();
 
             if (type.isInterface()) {
-                ReflectionUtils.doWithMethods(type, new ReflectionUtils.MethodCallback() {
-                    @Override
-                    public void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                        String attributeName;
-
-                        if (method.getName().startsWith("get")) {
-                            attributeName = method.getName().substring(3);
-                        } else if (method.getName().startsWith("is")) {
-                            attributeName = method.getName().substring(2);
-                        } else {
-                            attributeName = method.getName();
-                        }
-
-                        if (!attributes.contains(attributeName)) {
-                            infoList.add(new MBeanAttributeInfo(attributeName, method.getReturnType().getName(), ATTRIBUTE_DESCRIPTION, true, true, method.getName().startsWith("is")));
-                            attributes.add(attributeName);
-                        }
+                ReflectionHelper.doWithMethods(type, method -> {
+                    if (!method.getDeclaringClass().equals(type) ||
+                            !(method.getName().startsWith("get") || method.getName().startsWith("is"))) {
+                        return;
                     }
-                }, new ReflectionUtils.MethodFilter() {
-                    @Override
-                    public boolean matches(Method method) {
-                        return method.getDeclaringClass().equals(type) && (method.getName().startsWith("get") || method.getName().startsWith("is"));
+
+                    String attributeName;
+
+                    if (method.getName().startsWith("get")) {
+                        attributeName = method.getName().substring(3);
+                    } else if (method.getName().startsWith("is")) {
+                        attributeName = method.getName().substring(2);
+                    } else {
+                        attributeName = method.getName();
+                    }
+
+                    if (!attributes.contains(attributeName)) {
+                        infoList.add(new MBeanAttributeInfo(attributeName, method.getReturnType().getName(), ATTRIBUTE_DESCRIPTION, true, true, method.getName().startsWith("is")));
+                        attributes.add(attributeName);
                     }
                 });
             } else {
-                ReflectionUtils.doWithFields(type, new ReflectionUtils.FieldCallback() {
-                    @Override
-                    public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                        infoList.add(new MBeanAttributeInfo(field.getName(), field.getType().getName(), ATTRIBUTE_DESCRIPTION, true, true, field.getType().equals(Boolean.class)));
+                ReflectionHelper.doWithFields(type, field -> {
+                    if (Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers())) {
+                        return;
                     }
-                }, new ReflectionUtils.FieldFilter() {
-                    @Override
-                    public boolean matches(Field field) {
-                        return !Modifier.isStatic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers());
-                    }
+
+                    infoList.add(new MBeanAttributeInfo(field.getName(), field.getType().getName(), ATTRIBUTE_DESCRIPTION, true, true, field.getType().equals(Boolean.class)));
                 });
             }
         } else {

@@ -16,10 +16,10 @@
 
 package org.citrusframework.ws.client;
 
+import java.io.IOException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import java.io.IOException;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpoint;
@@ -33,6 +33,7 @@ import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.ReplyConsumer;
 import org.citrusframework.messaging.SelectiveConsumer;
+import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.ws.interceptor.LoggingClientInterceptor;
 import org.citrusframework.ws.message.SoapMessage;
 import org.citrusframework.ws.message.callback.SoapRequestMessageCallback;
@@ -40,7 +41,6 @@ import org.citrusframework.ws.message.callback.SoapResponseMessageCallback;
 import org.citrusframework.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
 import org.springframework.ws.client.core.SimpleFaultMessageResolver;
@@ -83,7 +83,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public void send(Message message, TestContext context) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
+        ObjectHelper.assertNotNull(message, "Message is empty - unable to send empty message");
 
         getEndpointConfiguration().getInterceptors()
                 .stream()

@@ -16,13 +16,9 @@
 
 package org.citrusframework.ftp.server;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.ftp.client.FtpEndpointConfiguration;
-import org.citrusframework.server.AbstractServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.filesystem.nativefs.NativeFileSystemFactory;
 import org.apache.ftpserver.ftplet.FtpException;
@@ -30,7 +26,10 @@ import org.apache.ftpserver.ftplet.Ftplet;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
-import org.springframework.core.io.Resource;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.ftp.client.FtpEndpointConfiguration;
+import org.citrusframework.server.AbstractServer;
+import org.citrusframework.spi.Resource;
 
 /**
  * @author Christoph Deppisch
@@ -49,8 +48,8 @@ public class FtpServer extends AbstractServer {
     /** Property file holding ftp user information */
     private Resource userManagerProperties;
 
-    /** Do only start one instance after another so we need a static lock object */
-    private static Object serverLock = new Object();
+    /** Do only start one instance after another, so we need a static lock object */
+    private static final Object serverLock = new Object();
 
     /**
      * Default constructor using default endpoint configuration.
@@ -78,11 +77,7 @@ public class FtpServer extends AbstractServer {
                     serverFactory.setUserManager(userManager);
                 } else if (userManagerProperties != null) {
                     PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
-                    try {
-                        userManagerFactory.setFile(userManagerProperties.getFile());
-                    } catch (IOException e) {
-                        throw new CitrusRuntimeException("Failed to load user manager properties", e);
-                    }
+                    userManagerFactory.setFile(userManagerProperties.getFile());
                     serverFactory.setUserManager(userManagerFactory.createUserManager());
                 }
 

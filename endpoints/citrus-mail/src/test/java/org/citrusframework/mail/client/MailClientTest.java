@@ -16,6 +16,8 @@
 
 package org.citrusframework.mail.client;
 
+import javax.xml.transform.stream.StreamSource;
+
 import jakarta.mail.Address;
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
@@ -25,22 +27,17 @@ import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.mail.model.MailRequest;
 import org.citrusframework.mail.server.MailServer;
 import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.xml.transform.stream.StreamSource;
-
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
 
 /**
  * @author Christoph Deppisch
@@ -67,7 +64,7 @@ class MailClientTest extends AbstractTestNGUnitTest {
     void testSendMailMessageObject() throws Exception {
         MailRequest mailRequest = (MailRequest) new MailMarshaller().unmarshal(
                 new StreamSource(
-                    new ClassPathResource("text_mail.xml", MailServer.class).getInputStream()
+                    Resources.create("text_mail.xml", MailServer.class).getInputStream()
                 )
         );
 
@@ -93,7 +90,7 @@ class MailClientTest extends AbstractTestNGUnitTest {
     void testSendMultipartMailMessageObject() throws Exception {
         MailRequest mailRequest = (MailRequest) new MailMarshaller().unmarshal(
                 new StreamSource(
-                    new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream()
+                    Resources.create("multipart_mail.xml", MailServer.class).getInputStream()
                 )
         );
 
@@ -116,7 +113,7 @@ class MailClientTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(((MimeMultipart) multipart.getBodyPart(0).getContent()).getCount(), 1L);
             Assert.assertEquals(((MimeMultipart) multipart.getBodyPart(0).getContent()).getBodyPart(0).getContent().toString(), "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.");
             Assert.assertEquals(((MimeMultipart) multipart.getBodyPart(0).getContent()).getBodyPart(0).getContentType(), "text/plain");
-            Assert.assertEquals(StringUtils.trimAllWhitespace(multipart.getBodyPart(1).getContent().toString()), "<html><head></head><body><h1>HTMLAttachment</h1></body></html>");
+            Assert.assertEquals(multipart.getBodyPart(1).getContent().toString().replaceAll("\\s", ""), "<html><head></head><body><h1>HTMLAttachment</h1></body></html>");
             Assert.assertEquals(multipart.getBodyPart(1).getFileName(), "index.html");
             Assert.assertEquals(multipart.getBodyPart(1).getDisposition(), "attachment");
             return null;

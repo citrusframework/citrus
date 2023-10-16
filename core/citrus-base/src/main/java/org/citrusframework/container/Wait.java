@@ -151,7 +151,7 @@ public class Wait extends AbstractTestAction {
      */
     public static class Builder<C extends Condition> extends AbstractTestActionBuilder<Wait, Builder<C>> implements TestActionBuilder.DelegatingTestActionBuilder<Wait> {
 
-        protected Condition condition;
+        protected C condition;
         protected String time = "5000";
         protected String interval = "1000";
 
@@ -172,7 +172,7 @@ public class Wait extends AbstractTestAction {
          */
         public Builder<C> condition(C condition) {
             this.condition = condition;
-            this.delegate = this::build;
+            this.delegate = this;
             return this;
         }
 
@@ -193,7 +193,7 @@ public class Wait extends AbstractTestAction {
          * @return A WaitMessageConditionBuilder for further configuration
          */
         public WaitMessageConditionBuilder message() {
-            this.condition = new MessageCondition();
+            this.condition = (C) new MessageCondition();
             WaitMessageConditionBuilder builder = new WaitMessageConditionBuilder((Builder<MessageCondition>) this);
             this.delegate = builder;
             return builder;
@@ -204,7 +204,7 @@ public class Wait extends AbstractTestAction {
          * @return A WaitActionConditionBuilder for further configuration
          */
         public WaitActionConditionBuilder execution() {
-            this.condition = new ActionCondition();
+            this.condition = (C) new ActionCondition();
             WaitActionConditionBuilder builder = new WaitActionConditionBuilder((Builder<ActionCondition>) this);
             this.delegate = builder;
             return builder;
@@ -215,7 +215,7 @@ public class Wait extends AbstractTestAction {
          * @return A WaitHttpConditionBuilder for further configuration
          */
         public WaitHttpConditionBuilder http() {
-            this.condition = new HttpCondition();
+            this.condition = (C) new HttpCondition();
             WaitHttpConditionBuilder builder = new WaitHttpConditionBuilder((Builder<HttpCondition>) this);
             this.delegate = builder;
             return builder;
@@ -226,7 +226,7 @@ public class Wait extends AbstractTestAction {
          * @return A WaitFileConditionBuilder for further configuration
          */
         public WaitFileConditionBuilder file() {
-            this.condition = new FileCondition();
+            this.condition = (C) new FileCondition();
             WaitFileConditionBuilder builder = new WaitFileConditionBuilder((Builder<FileCondition>) this);
             this.delegate = builder;
             return builder;

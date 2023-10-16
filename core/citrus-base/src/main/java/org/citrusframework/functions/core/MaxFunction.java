@@ -16,16 +16,15 @@
 
 package org.citrusframework.functions.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
-import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 /**
  * Function returns the maximum numeric value in a set of numeric arguments.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class MaxFunction implements Function {
@@ -35,7 +34,7 @@ public class MaxFunction implements Function {
      * @throws InvalidFunctionUsageException
      */
     public String execute(List<String> parameterList, TestContext context) {
-        if (CollectionUtils.isEmpty(parameterList)) {
+        if (parameterList == null || parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 

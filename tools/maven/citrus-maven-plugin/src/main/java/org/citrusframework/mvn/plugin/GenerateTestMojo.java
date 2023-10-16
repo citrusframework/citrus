@@ -16,16 +16,27 @@
 
 package org.citrusframework.mvn.plugin;
 
-import org.citrusframework.generate.*;
-import org.citrusframework.generate.javadsl.*;
-import org.citrusframework.generate.xml.*;
-import org.citrusframework.mvn.plugin.config.tests.TestConfiguration;
+import java.util.Optional;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.*;
-import org.springframework.util.StringUtils;
-
-import java.util.Optional;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.citrusframework.generate.SwaggerTestGenerator;
+import org.citrusframework.generate.TestGenerator;
+import org.citrusframework.generate.WsdlTestGenerator;
+import org.citrusframework.generate.XsdTestGenerator;
+import org.citrusframework.generate.javadsl.JavaDslTestGenerator;
+import org.citrusframework.generate.javadsl.SwaggerJavaTestGenerator;
+import org.citrusframework.generate.javadsl.WsdlJavaTestGenerator;
+import org.citrusframework.generate.javadsl.XsdJavaTestGenerator;
+import org.citrusframework.generate.xml.SwaggerXmlTestGenerator;
+import org.citrusframework.generate.xml.WsdlXmlTestGenerator;
+import org.citrusframework.generate.xml.XmlTestGenerator;
+import org.citrusframework.generate.xml.XsdXmlTestGenerator;
+import org.citrusframework.mvn.plugin.config.tests.TestConfiguration;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -122,7 +133,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
                     generator.withInboundMappingFile(test.getXsd().getMappings().getInboundFile());
                     generator.withOutboundMappingFile(test.getXsd().getMappings().getOutboundFile());
                 }
-                
+
                 generator.withEndpoint(test.getEndpoint());
 
                 generator.withNameSuffix(test.getSuffix());

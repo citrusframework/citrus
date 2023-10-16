@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.citrusframework.context.TestContext;
-import org.citrusframework.logger.LogMessageModifier;
-import org.springframework.util.CollectionUtils;
+import org.citrusframework.log.LogMessageModifier;
 
 /**
  * @author Christoph Deppisch
@@ -47,7 +46,7 @@ public interface Message extends Serializable {
      * @return
      */
     default String print(String body, Map<String, Object> headers, List<String> headerData) {
-        if (CollectionUtils.isEmpty(headerData)) {
+        if (headerData == null || headerData.isEmpty()) {
             return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + MessagePayloadUtils.prettyPrint(body) + "][headers: " + Collections.unmodifiableMap(headers) + "]";
         } else {
             return getClass().getSimpleName().toUpperCase() + " [id: " + getId() + ", payload: " + MessagePayloadUtils.prettyPrint(body) + "][headers: " + Collections.unmodifiableMap(headers) + "][header-data: " + Collections.unmodifiableList(headerData) + "]";

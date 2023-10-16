@@ -16,23 +16,22 @@
 
 package org.citrusframework.validation.matcher.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 /**
  * ValidationMatcher checks string length of given field.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class StringLengthValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
         try {
-            int control = Integer.valueOf(StringUtils.trimWhitespace(controlParameters.get(0)));
+            int control = Integer.parseInt(controlParameters.get(0).strip());
 
             if (!(value.length() == control)) {
                 throw new ValidationException(this.getClass().getSimpleName()

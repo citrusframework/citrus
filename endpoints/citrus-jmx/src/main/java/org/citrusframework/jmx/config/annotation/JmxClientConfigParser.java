@@ -25,7 +25,7 @@ import org.citrusframework.jmx.client.JmxClientBuilder;
 import org.citrusframework.jmx.message.JmxMessageConverter;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointBuilder;
 import groovy.lang.MissingPropertyException;
-import org.springframework.util.ReflectionUtils;
+import org.citrusframework.util.ReflectionHelper;
 
 /**
  * @author Christoph Deppisch
@@ -56,11 +56,11 @@ public class EndpointBuilderConfiguration<T extends Endpoint> implements Supplie
     }
 
     public void propertyMissing(String name, Object value) {
-        Method m = ReflectionUtils.findMethod(builder.getClass(), name, value.getClass());
+        Method m = ReflectionHelper.findMethod(builder.getClass(), name, value.getClass());
 
         if (m == null) {
             if (isWrapperForPrimitive(value.getClass())) {
-                m = ReflectionUtils.findMethod(builder.getClass(), name, WRAPPER_TO_PRIMITIVE.get(value.getClass()));
+                m = ReflectionHelper.findMethod(builder.getClass(), name, WRAPPER_TO_PRIMITIVE.get(value.getClass()));
             }
 
             if (m == null) {

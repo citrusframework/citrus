@@ -31,10 +31,10 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.message.ScriptPayloadBuilder;
 import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.interceptor.BinaryMessageProcessor;
 import org.citrusframework.validation.interceptor.GzipMessageProcessor;
 import org.citrusframework.xml.util.PayloadElementParser;
-import org.springframework.util.StringUtils;
 
 import static org.citrusframework.dsl.MessageSupport.MessageBodySupport.fromBody;
 import static org.citrusframework.dsl.MessageSupport.MessageHeaderSupport.fromHeaders;
@@ -155,9 +155,9 @@ public final class MessageSupport {
 
                 if (message.body.builder.getFile() != null) {
                     if (message.body.builder.getCharset() != null) {
-                        scriptPayloadBuilder.get().setFile(FileUtils.getFileResource(message.body.builder.getFile() + FileUtils.FILE_PATH_CHARSET_PARAMETER + message.body.builder.getCharset()));
+                        scriptPayloadBuilder.get().setFile(message.body.builder.getFile(), message.body.builder.getCharset());
                     } else {
-                        scriptPayloadBuilder.get().setFile(FileUtils.getFileResource(message.body.builder.getFile()));
+                        scriptPayloadBuilder.get().setFile(message.body.builder.getFile());
                     }
                 }
 

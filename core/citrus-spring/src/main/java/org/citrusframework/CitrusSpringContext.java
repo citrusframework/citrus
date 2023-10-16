@@ -8,7 +8,7 @@ import org.citrusframework.container.AfterSuite;
 import org.citrusframework.container.BeforeSuite;
 import org.citrusframework.context.TestContextFactoryBean;
 import org.citrusframework.functions.FunctionRegistry;
-import org.citrusframework.logger.LogModifier;
+import org.citrusframework.log.LogModifier;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.report.TestListeners;

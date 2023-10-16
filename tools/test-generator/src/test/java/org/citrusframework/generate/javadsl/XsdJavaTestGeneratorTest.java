@@ -23,7 +23,6 @@ import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -52,7 +51,7 @@ public class XsdJavaTestGeneratorTest {
         File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
+        String javaContent = FileUtils.readToString(javaFile);
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
@@ -91,7 +90,7 @@ public class XsdJavaTestGeneratorTest {
         File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/org/citrusframework/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
+        String javaContent = FileUtils.readToString(javaFile);
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));

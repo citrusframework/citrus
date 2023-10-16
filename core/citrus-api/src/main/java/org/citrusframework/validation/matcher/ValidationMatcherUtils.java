@@ -18,13 +18,13 @@ package org.citrusframework.validation.matcher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.FunctionUtils;
 import org.citrusframework.variable.VariableUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Utility class for validation matchers.
@@ -116,6 +116,6 @@ public final class ValidationMatcherUtils {
     }
 
     public static String getParameterListAsString(List<String> parameters) {
-        return StringUtils.collectionToDelimitedString(parameters, ",", "'", "'");
+        return parameters.stream().collect(Collectors.joining(",", "'", "'"));
     }
 }

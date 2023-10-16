@@ -7,7 +7,7 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

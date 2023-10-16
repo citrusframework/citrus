@@ -16,12 +16,10 @@
 
 package org.citrusframework;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import org.springframework.util.StringUtils;
+import java.util.stream.Collectors;
 
 
 /**
@@ -210,9 +208,13 @@ public final class TestResult {
         StringBuilder builder = new StringBuilder();
 
         if (parameters != null && parameters.size() > 0) {
-            builder.append(" " + testName + "(" + StringUtils.collectionToCommaDelimitedString(Arrays.asList(parameters.values())) + ") ");
+            builder.append(" ")
+                    .append(testName)
+                    .append("(")
+                    .append(parameters.values().stream().map(Object::toString).collect(Collectors.joining(",")))
+                    .append(") ");
         } else {
-            builder.append(" " + testName + " ");
+            builder.append(" ").append(testName).append(" ");
         }
 
         int spaces = 65 - builder.length();

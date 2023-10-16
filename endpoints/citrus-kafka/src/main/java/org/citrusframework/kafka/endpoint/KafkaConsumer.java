@@ -22,19 +22,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.kafka.message.KafkaMessageHeaders;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.AbstractMessageConsumer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -71,8 +70,8 @@ public class KafkaConsumer extends AbstractMessageConsumer {
             logger.debug("Receiving Kafka message on topic: '" + topic);
         }
 
-        if (CollectionUtils.isEmpty(consumer.subscription())) {
-            consumer.subscribe(Arrays.asList(StringUtils.commaDelimitedListToStringArray(topic)));
+        if (consumer.subscription() == null || consumer.subscription().isEmpty()) {
+            consumer.subscribe(Arrays.stream(topic.split(",")).collect(Collectors.toList()));
         }
 
         ConsumerRecords<Object, Object> records = consumer.poll(Duration.ofMillis(timeout));
@@ -100,7 +99,7 @@ public class KafkaConsumer extends AbstractMessageConsumer {
      */
     public void stop() {
         try {
-            if (!CollectionUtils.isEmpty(consumer.subscription())) {
+            if (consumer.subscription() != null && !consumer.subscription().isEmpty()) {
                 consumer.unsubscribe();
             }
         } finally {

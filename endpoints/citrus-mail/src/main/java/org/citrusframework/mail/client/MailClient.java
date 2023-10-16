@@ -16,6 +16,9 @@
 
 package org.citrusframework.mail.client;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import jakarta.mail.Authenticator;
 import jakarta.mail.MessagingException;
 import jakarta.mail.PasswordAuthentication;
@@ -27,13 +30,10 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.Producer;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMailMessage;
-import org.springframework.util.StringUtils;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 /**
  * @author Christoph Deppisch

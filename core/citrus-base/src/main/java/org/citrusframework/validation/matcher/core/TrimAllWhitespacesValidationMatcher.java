@@ -16,29 +16,28 @@
 
 package org.citrusframework.validation.matcher.core;
 
+import java.util.List;
+
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.validation.matcher.ValidationMatcher;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 /**
  * ValidationMatcher trims leading and trailing whitespaces in value and control value.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.7.6
  */
 public class TrimAllWhitespacesValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        String control = controlParameters.get(0);
-
-        if (!StringUtils.trimAllWhitespace(value).equalsIgnoreCase(StringUtils.trimAllWhitespace(control))) {
+        String controlNoWhitespace = controlParameters.get(0).replaceAll("\\s", "");
+        String valueNoWhitespace = value.replaceAll("\\s", "");
+        if (!valueNoWhitespace.equalsIgnoreCase(controlNoWhitespace)) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
-                    + "'. Received value is '" + StringUtils.trimAllWhitespace(value)
-                    + "', control value is '" + StringUtils.trimAllWhitespace(control) + "'.");
+                    + "'. Received value is '" + valueNoWhitespace
+                    + "', control value is '" + controlNoWhitespace + "'.");
         }
     }
 }

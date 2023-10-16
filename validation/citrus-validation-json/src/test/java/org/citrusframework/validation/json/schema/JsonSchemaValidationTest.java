@@ -16,29 +16,26 @@
 
 package org.citrusframework.validation.json.schema;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.citrusframework.json.JsonSchemaRepository;
 import org.citrusframework.json.schema.SimpleJsonSchema;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
 import org.citrusframework.validation.json.report.GraciousProcessingReport;
-import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -58,7 +55,7 @@ public class JsonSchemaValidationTest {
 
     @Mock
     private JsonSchemaFilter jsonSchemaFilterMock;
-    
+
     private JsonSchemaValidation fixture;
 
     @BeforeMethod
@@ -72,7 +69,7 @@ public class JsonSchemaValidationTest {
         // Setup json schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository1");
-        Resource schemaResource = new ClassPathResource("org/citrusframework/validation/ProductsSchema.json");
+        Resource schemaResource = Resources.newClasspathResource("org/citrusframework/validation/ProductsSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
         schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
@@ -115,7 +112,7 @@ public class JsonSchemaValidationTest {
         // Setup json schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository1");
-        Resource schemaResource = new ClassPathResource("org/citrusframework/validation/ProductsSchema.json");
+        Resource schemaResource = Resources.newClasspathResource("org/citrusframework/validation/ProductsSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
         schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
@@ -156,12 +153,12 @@ public class JsonSchemaValidationTest {
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository1");
 
-        Resource schemaResource = new ClassPathResource("org/citrusframework/validation/BookSchema.json");
+        Resource schemaResource = Resources.newClasspathResource("org/citrusframework/validation/BookSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
         schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
 
-        schemaResource = new ClassPathResource("org/citrusframework/validation/ProductsSchema.json");
+        schemaResource = Resources.newClasspathResource("org/citrusframework/validation/ProductsSchema.json");
         schema = new SimpleJsonSchema(schemaResource);
         schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
@@ -205,7 +202,7 @@ public class JsonSchemaValidationTest {
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository1");
 
-        Resource schemaResource = new ClassPathResource("org/citrusframework/validation/BookSchema.json");
+        Resource schemaResource = Resources.newClasspathResource("org/citrusframework/validation/BookSchema.json");
         SimpleJsonSchema invalidSchema = new SimpleJsonSchema(schemaResource);
         invalidSchema.initialize();
         jsonSchemaRepository.getSchemas().add(invalidSchema);
@@ -215,7 +212,7 @@ public class JsonSchemaValidationTest {
         jsonSchemaRepository = new JsonSchemaRepository();
         jsonSchemaRepository.setName("schemaRepository2");
 
-        schemaResource = new ClassPathResource("org/citrusframework/validation/ProductsSchema.json");
+        schemaResource = Resources.newClasspathResource("org/citrusframework/validation/ProductsSchema.json");
         SimpleJsonSchema validSchema = new SimpleJsonSchema(schemaResource);
         validSchema.initialize();
         jsonSchemaRepository.getSchemas().add(validSchema);

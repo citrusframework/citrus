@@ -29,15 +29,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jakarta.servlet.http.Cookie;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import jakarta.servlet.http.Cookie;
+import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
@@ -209,8 +209,14 @@ public class HttpMessage extends DefaultMessage {
         header(EndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
         Stream.of(queryParamString.split(","))
-                .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElseGet(() -> new String[]{keyValue, ""}))
+                .map(keyValue -> keyValue.split("="))
                 .filter(keyValue -> StringUtils.hasText(keyValue[0]))
+                .map(keyValue -> {
+                    if (keyValue.length < 2) {
+                        return new String[]{keyValue[0], ""};
+                    }
+                    return keyValue;
+                })
                 .forEach(keyValue -> this.addQueryParam(keyValue[0], keyValue[1]));
 
         return this;

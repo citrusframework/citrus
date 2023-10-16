@@ -22,12 +22,12 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.correlation.CorrelationManager;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyProducer;
+import org.citrusframework.util.ObjectHelper;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageDeliveryException;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -65,12 +65,12 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
 
     @Override
     public void send(Message message, TestContext context) {
-        Assert.notNull(message, "Can not send empty message");
+        ObjectHelper.assertNotNull(message, "Can not send empty message");
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = correlationManager.getCorrelationKey(correlationKeyName, context);
         MessageChannel replyChannel = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
-        Assert.notNull(replyChannel, "Failed to find reply channel for message correlation key: " + correlationKey);
+        ObjectHelper.assertNotNull(replyChannel, "Failed to find reply channel for message correlation key: " + correlationKey);
 
         if (logger.isDebugEnabled()) {
             logger.debug("Sending message to reply channel: '" + replyChannel + "'");

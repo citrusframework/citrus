@@ -40,7 +40,6 @@ import org.citrusframework.xml.xpath.XPathExpressionResult;
 import org.citrusframework.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -77,7 +76,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      * Extract variables using Xpath expressions.
      */
     public void extractVariables(Message message, TestContext context) {
-        if (CollectionUtils.isEmpty(xPathExpressions)) {
+        if (xPathExpressions == null || xPathExpressions.isEmpty()) {
             return;
         }
 

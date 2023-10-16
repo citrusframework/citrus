@@ -27,7 +27,6 @@ import org.citrusframework.builder.WithExpressions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.validation.json.JsonPathMessageValidationContext;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Generic processor implementation delegating to JSONPath or XPath message processor based on given expression
@@ -49,7 +48,7 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
 
     @Override
     public void process(Message message, TestContext context) {
-        if (CollectionUtils.isEmpty(pathExpressions)) {
+        if (pathExpressions.isEmpty()) {
             return;
         }
 

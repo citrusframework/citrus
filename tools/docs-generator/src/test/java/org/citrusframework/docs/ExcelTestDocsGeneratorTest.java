@@ -25,8 +25,8 @@ import java.util.Date;
 import org.citrusframework.generate.TestGenerator;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.generate.xml.XmlTestGenerator;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -56,7 +56,7 @@ public class ExcelTestDocsGeneratorTest {
 
         generator.generateDoc();
 
-        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
+        String docContent = FileUtils.readToString(Resources.newFileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
         Assert.assertTrue(docContent.contains("<Author>Citrus Testframework</Author>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Citrus Test Documentation</Data>"));
@@ -88,7 +88,7 @@ public class ExcelTestDocsGeneratorTest {
 
         generator.generateDoc();
 
-        String docContent = FileUtils.readToString(new FileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
+        String docContent = FileUtils.readToString(Resources.newFileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
         Assert.assertTrue(docContent.contains("<Author>TestFactory</Author>"));
         Assert.assertTrue(docContent.contains("<Company>TestCompany</Company>"));

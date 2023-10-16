@@ -19,12 +19,12 @@
 
 package org.citrusframework.camel.actions;
 
+import org.apache.camel.CamelContext;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.apache.camel.CamelContext;
-import org.springframework.util.Assert;
+import org.citrusframework.util.ObjectHelper;
 
 /**
  * @author Christoph Deppisch
@@ -85,7 +85,7 @@ public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActio
 
     @Override
     public TestAction build() {
-        Assert.notNull(delegate, "Missing delegate action to build");
+        ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         return delegate.build();
     }
 

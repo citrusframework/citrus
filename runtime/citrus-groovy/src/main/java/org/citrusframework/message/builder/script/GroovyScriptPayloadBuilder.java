@@ -19,15 +19,15 @@
 
 package org.citrusframework.message.builder.script;
 
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyObject;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.ScriptPayloadBuilder;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.validation.script.TemplateBasedScriptBuilder;
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyObject;
 import org.codehaus.groovy.control.CompilationFailedException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch
@@ -35,7 +35,7 @@ import org.springframework.core.io.Resource;
 public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
 
     /** Default path to script template */
-    private final Resource scriptTemplateResource = new ClassPathResource("org/citrusframework/script/markup-builder-template.groovy");
+    private final Resource scriptTemplateResource = Resources.newClasspathResource("org/citrusframework/script/markup-builder-template.groovy");
 
     private String script;
 
@@ -104,7 +104,12 @@ public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
     }
 
     @Override
-    public void setFile(Resource file) {
+    public void setFile(String file) {
         delegate = new GroovyFileResourcePayloadBuilder(file);
+    }
+
+    @Override
+    public void setFile(String file, String charset) {
+        delegate = new GroovyFileResourcePayloadBuilder(file, charset);
     }
 }

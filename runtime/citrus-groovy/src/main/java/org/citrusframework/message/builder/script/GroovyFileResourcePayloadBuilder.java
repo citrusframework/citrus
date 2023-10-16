@@ -21,7 +21,7 @@ package org.citrusframework.message.builder.script;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.builder.FileResourcePayloadBuilder;
-import org.springframework.core.io.Resource;
+import org.citrusframework.spi.Resource;
 
 /**
  * @author Christoph Deppisch

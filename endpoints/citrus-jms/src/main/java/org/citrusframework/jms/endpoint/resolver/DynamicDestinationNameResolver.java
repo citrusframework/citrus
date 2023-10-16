@@ -16,13 +16,13 @@
 
 package org.citrusframework.jms.endpoint.resolver;
 
+import java.util.Map;
+
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageHeaders;
-import org.springframework.util.StringUtils;
-
-import java.util.Map;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

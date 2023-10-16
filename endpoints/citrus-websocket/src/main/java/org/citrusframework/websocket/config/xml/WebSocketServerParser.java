@@ -16,6 +16,8 @@
 
 package org.citrusframework.websocket.config.xml;
 
+import java.util.List;
+
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.config.xml.HttpServerParser;
 import org.citrusframework.server.AbstractServer;
@@ -24,11 +26,8 @@ import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -45,7 +44,7 @@ public class WebSocketServerParser extends HttpServerParser {
         if (socketsElement != null) {
             List<Element> socketElements = DomUtils.getChildElements(socketsElement);
 
-            if (CollectionUtils.isEmpty(socketElements)) {
+            if (socketElements.isEmpty()) {
                 throw new CitrusRuntimeException("Invalid '<endpoints>..</endpoints>' configuration - at least one '<endpoint ref=\"..\" />' must be defined");
             }
 

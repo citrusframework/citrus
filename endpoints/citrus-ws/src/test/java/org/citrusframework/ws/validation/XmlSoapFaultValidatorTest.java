@@ -55,7 +55,7 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
         soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new SoapFaultValidationContext());
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Validation failed: Node value not equal for element 'code', expected '1001' but was '1002'")
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Node value not equal for element 'code', expected '1001' but was '1002'")
     public void testFaultDetailValidationError() {
         SoapFault receivedDetail = new SoapFault();
         receivedDetail.addFaultDetail(error.replaceFirst("1001", "1002"));
@@ -77,7 +77,7 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
         soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new SoapFaultValidationContext());
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Validation failed: Node value not equal for element 'code', expected '1002' but was '1001'")
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Node value not equal for element 'code', expected '1002' but was '1001'")
     public void testMultipleFaultDetailValidationError() {
         SoapFault receivedDetail = new SoapFault();
         receivedDetail.addFaultDetail(error);

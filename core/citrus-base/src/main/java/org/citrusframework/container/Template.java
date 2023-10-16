@@ -31,13 +31,13 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.actions.NoopTestAction;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.FunctionUtils;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,25 +102,7 @@ public class Template extends AbstractTestAction {
         if (globalContext) {
             innerContext = context;
         } else {
-            innerContext = new TestContext();
-            innerContext.setFunctionRegistry(context.getFunctionRegistry());
-
-            innerContext.setGlobalVariables(new GlobalVariables.Builder()
-                    .variables(context.getGlobalVariables())
-                    .build());
-            innerContext.getVariables().putAll(context.getVariables());
-
-            innerContext.setMessageStore(context.getMessageStore());
-            innerContext.setMessageValidatorRegistry(context.getMessageValidatorRegistry());
-            innerContext.setValidationMatcherRegistry(context.getValidationMatcherRegistry());
-            innerContext.setTestListeners(context.getTestListeners());
-            innerContext.setMessageListeners(context.getMessageListeners());
-            innerContext.setMessageProcessors(context.getMessageProcessors());
-            innerContext.setEndpointFactory(context.getEndpointFactory());
-            innerContext.setNamespaceContextBuilder(context.getNamespaceContextBuilder());
-            innerContext.setReferenceResolver(context.getReferenceResolver());
-            innerContext.setTypeConverter(context.getTypeConverter());
-            innerContext.setLogModifier(context.getLogModifier());
+            innerContext = TestContextFactory.copyOf(context);
         }
 
         for (Entry<String, String> entry : parameter.entrySet()) {

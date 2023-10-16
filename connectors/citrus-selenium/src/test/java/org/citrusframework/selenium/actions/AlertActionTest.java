@@ -18,6 +18,7 @@ package org.citrusframework.selenium.actions;
 
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.functions.DefaultFunctionLibrary;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
@@ -38,11 +39,11 @@ import static org.mockito.Mockito.when;
  */
 public class AlertActionTest extends AbstractTestNGUnitTest {
 
-    private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
-    private WebDriver webDriver = Mockito.mock(WebDriver.class);
-    private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
+    private final SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
+    private final WebDriver webDriver = Mockito.mock(WebDriver.class);
+    private final WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
-    private Alert alert = Mockito.mock(Alert.class);
+    private final Alert alert = Mockito.mock(Alert.class);
 
     @Override
     protected TestContextFactory createTestContextFactory() {
@@ -129,7 +130,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
         verify(alert).accept();
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Failed to validate alert dialog text.*")
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Failed to validate alert dialog text.*")
     public void testExecuteTextValidationError() throws Exception {
         when(locator.alert()).thenReturn(alert);
 

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.springframework.core.io.Resource;
+import org.citrusframework.spi.Resource;
 
 /**
  * Utility class supporting property replacement in template files.

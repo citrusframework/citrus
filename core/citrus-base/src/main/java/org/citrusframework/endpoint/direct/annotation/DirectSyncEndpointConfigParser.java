@@ -7,7 +7,7 @@ import org.citrusframework.endpoint.direct.DirectSyncEndpointBuilder;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.spi.ReferenceResolver;
-import org.springframework.util.StringUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

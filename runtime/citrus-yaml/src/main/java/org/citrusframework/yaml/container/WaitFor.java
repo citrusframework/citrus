@@ -21,21 +21,22 @@ package org.citrusframework.yaml.container;
 
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.condition.ActionCondition;
+import org.citrusframework.condition.Condition;
 import org.citrusframework.condition.FileCondition;
 import org.citrusframework.condition.HttpCondition;
 import org.citrusframework.condition.MessageCondition;
 import org.citrusframework.container.Wait;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.TestActions;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  */
 public class WaitFor implements TestActionBuilder<Wait>, ReferenceResolverAware {
 
-    private final Wait.Builder builder = new Wait.Builder();
+    private final Wait.Builder<Condition> builder = new Wait.Builder<>();
 
     private TestActionBuilder<?> action;
     private ReferenceResolver referenceResolver;

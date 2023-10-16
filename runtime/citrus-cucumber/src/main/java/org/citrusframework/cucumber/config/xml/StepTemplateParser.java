@@ -24,11 +24,11 @@ import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
 import org.citrusframework.config.xml.ActionContainerParser;
 import org.citrusframework.config.xml.DescriptionElementParser;
 import org.citrusframework.cucumber.container.StepTemplate;
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -56,7 +56,7 @@ public class StepTemplateParser implements BeanDefinitionParser {
         }
 
         if (element.hasAttribute("parameter-names")) {
-            builder.addPropertyValue("parameterNames", StringUtils.commaDelimitedListToStringArray(element.getAttribute("parameter-names")));
+            builder.addPropertyValue("parameterNames", element.getAttribute("parameter-names").split(","));
         }
 
         String globalContext = element.getAttribute("global-context");

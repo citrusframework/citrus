@@ -18,14 +18,14 @@ package org.citrusframework.selenium.actions;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.selenium.endpoint.SeleniumHeaders;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * Access current alert dialog. In case no alert is opened action fails.
@@ -70,9 +70,10 @@ public class AlertAction extends AbstractSeleniumAction {
             if (ValidationMatcherUtils.isValidationMatcherExpression(alertText)) {
                 ValidationMatcherUtils.resolveValidationMatcher("alertText", alert.getText(), alertText, context);
             } else {
-                Assert.isTrue(alertText.equals(alert.getText()),
-                        String.format("Failed to validate alert dialog text, " +
-                                "expected '%s', but was '%s'", alertText, alert.getText()));
+                if (!alertText.equals(alert.getText())) {
+                    throw new ValidationException(String.format("Failed to validate alert dialog text, " +
+                            "expected '%s', but was '%s'", alertText, alert.getText()));
+                }
 
             }
             logger.info("Alert text validation successful - All values Ok");

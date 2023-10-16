@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.PatternMatchUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Abstract test action container describes methods to enable/disable container execution based on given test name, package
@@ -64,14 +64,14 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
         String baseErrorMessage = "Skip before test container because of %s restrictions - do not execute container '%s'";
 
         if (StringUtils.hasText(packageNamePattern)) {
-            if (!PatternMatchUtils.simpleMatch(packageNamePattern, packageName)) {
+            if (!Pattern.compile(packageNamePattern).matcher(packageName).matches()) {
                 logger.warn(String.format(baseErrorMessage, "test package", getName()));
                 return false;
             }
         }
 
         if (StringUtils.hasText(namePattern)) {
-            if (!PatternMatchUtils.simpleMatch(namePattern, testName)) {
+            if (!Pattern.compile(sanitizePatten(namePattern)).matcher(testName).matches()) {
                 logger.warn(String.format(baseErrorMessage, "test name", getName()));
                 return false;
             }
@@ -101,6 +101,22 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
         return true;
     }
 
+    /**
+     * Translate leading and trailing asterisk wildcard to proper regex pattern.
+     * @param pattern
+     * @return
+     */
+    private String sanitizePatten(String pattern) {
+        if (pattern.startsWith("*")) {
+            return "." + pattern;
+        }
+
+        if (pattern.endsWith("*") && pattern.charAt(pattern.length()-2) != '.') {
+            return pattern.substring(0, pattern.length() -1) + ".*";
+        }
+
+        return pattern;
+    }
 
 
     /**

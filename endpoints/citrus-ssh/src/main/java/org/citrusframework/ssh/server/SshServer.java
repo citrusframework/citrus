@@ -25,14 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.server.AbstractServer;
-import org.citrusframework.ssh.SshCommand;
-import org.citrusframework.ssh.client.SshEndpointConfiguration;
-import org.citrusframework.ssh.message.SshMessageConverter;
-import org.citrusframework.ssh.model.SshMarshaller;
-import org.citrusframework.util.FileUtils;
 import org.apache.sshd.common.config.keys.KeyUtils;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
@@ -45,9 +37,17 @@ import org.apache.sshd.server.subsystem.SubsystemFactory;
 import org.apache.sshd.sftp.server.AbstractSftpEventListenerAdapter;
 import org.apache.sshd.sftp.server.SftpEventListener;
 import org.apache.sshd.sftp.server.SftpSubsystemFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.server.AbstractServer;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
+import org.citrusframework.ssh.SshCommand;
+import org.citrusframework.ssh.client.SshEndpointConfiguration;
+import org.citrusframework.ssh.message.SshMessageConverter;
+import org.citrusframework.ssh.model.SshMarshaller;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 
 /**
  * SSH Server implemented with Apache SSHD (http://mina.apache.org/sshd/).
@@ -145,16 +145,12 @@ public class SshServer extends AbstractServer {
         if (hostKeyPath != null) {
             Resource hostKey = FileUtils.getFileResource(hostKeyPath);
 
-            if (hostKey instanceof ClassPathResource) {
-                ClassLoadableResourceKeyPairProvider resourceKeyPairProvider = new ClassLoadableResourceKeyPairProvider(Collections.singletonList(((ClassPathResource) hostKey).getPath()));
+            if (hostKey instanceof Resources.ClasspathResource) {
+                ClassLoadableResourceKeyPairProvider resourceKeyPairProvider = new ClassLoadableResourceKeyPairProvider(Collections.singletonList(hostKey.getLocation()));
                 sshd.setKeyPairProvider(resourceKeyPairProvider);
             } else {
-                try {
-                    FileKeyPairProvider fileKeyPairProvider = new FileKeyPairProvider(Collections.singletonList(hostKey.getFile().toPath()));
-                    sshd.setKeyPairProvider(fileKeyPairProvider);
-                } catch (IOException e) {
-                    throw new CitrusRuntimeException("Failed to read host key path", e);
-                }
+                FileKeyPairProvider fileKeyPairProvider = new FileKeyPairProvider(Collections.singletonList(hostKey.getFile().toPath()));
+                sshd.setKeyPairProvider(fileKeyPairProvider);
             }
         } else {
             ClassLoadableResourceKeyPairProvider resourceKeyPairProvider = new ClassLoadableResourceKeyPairProvider(Collections.singletonList("org/citrusframework/ssh/citrus.pem"));

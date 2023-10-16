@@ -34,13 +34,13 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.script.ScriptTypes;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.citrusframework.validation.script.ScriptValidationContext;
 import org.citrusframework.validation.script.sql.SqlResultSetScriptValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
@@ -123,12 +123,6 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
             // fill the request test context variables (extract tag)
             fillContextVariables(columnValuesMap, context);
-
-            // legacy: save all columns as variables TODO: remove in major version upgrade
-            for (Entry<String, List<String>> column : columnValuesMap.entrySet()) {
-                List<String> columnValues = column.getValue();
-                context.setVariable(column.getKey().toUpperCase(), columnValues.get(0) == null ? NULL_VALUE : columnValues.get(0));
-            }
         } catch (DataAccessException e) {
             logger.error("Failed to execute SQL statement", e);
             throw new CitrusRuntimeException(e);

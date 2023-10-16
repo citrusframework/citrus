@@ -39,6 +39,7 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
@@ -48,8 +49,6 @@ import org.citrusframework.variable.dictionary.DataDictionary;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -65,10 +64,10 @@ import static org.mockito.Mockito.when;
  */
 public class SendMessageActionBuilderTest extends UnitTestSupport {
 
-    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
-    private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
-    private Producer messageProducer = Mockito.mock(Producer.class);
-    private Resource resource = Mockito.mock(Resource.class);
+    private final ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
+    private final Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
+    private final Producer messageProducer = Mockito.mock(Producer.class);
+    private final Resource resource = Mockito.mock(Resource.class);
 
     @Mock
     private MessageValidator<?> validator;
@@ -125,7 +124,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(Integer.class), new Integer(10));
+            Assert.assertEquals(message.getPayload(Integer.class), Integer.valueOf(10));
             Assert.assertNotNull(message.getHeader("operation"));
             Assert.assertEquals(message.getHeader("operation"), "foo");
             return null;
@@ -166,7 +165,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(message.getPayload(Integer.class), new Integer(10));
+            Assert.assertEquals(message.getPayload(Integer.class), Integer.valueOf(10));
             Assert.assertNotNull(message.getHeader("operation"));
             Assert.assertEquals(message.getHeader("operation"), "foo");
             Assert.assertNotNull(message.getHeader("additional"));
@@ -652,7 +651,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+            Assert.assertEquals(message.getPayload(String.class).replaceAll("\\s", ""),
                     "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
@@ -685,7 +684,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
-            Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload(String.class)),
+            Assert.assertEquals(message.getPayload(String.class).replaceAll("\\s", ""),
                     "{\"TestRequest\":{\"Message\":\"HelloWorld!\"}}");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));

@@ -16,25 +16,25 @@
 
 package org.citrusframework.mail.model;
 
-import jakarta.xml.bind.JAXBException;
+import java.io.IOException;
+import java.io.StringWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
-import java.io.StringWriter;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.MessageType;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.Jaxb2Marshaller;
 import org.citrusframework.xml.Marshaller;
 import org.citrusframework.xml.StringResult;
 import org.citrusframework.xml.Unmarshaller;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * @author Christoph Deppisch
@@ -61,7 +61,7 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
      */
     public MailMarshaller() {
         this.mapper = new ObjectMapper();
-        this.marshaller = new Jaxb2Marshaller(new ClassPathResource("org/citrusframework/schema/citrus-mail-message.xsd"), classesToBeBound);
+        this.marshaller = new Jaxb2Marshaller(Resources.newClasspathResource("org/citrusframework/schema/citrus-mail-message.xsd"), classesToBeBound);
 
         type = System.getProperty(MAIL_MARSHALLER_TYPE_PROPERTY, MessageType.XML.name());
     }

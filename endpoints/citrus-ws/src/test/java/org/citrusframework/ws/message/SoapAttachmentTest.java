@@ -16,18 +16,17 @@
 
 package org.citrusframework.ws.message;
 
-import jakarta.activation.DataHandler;
-import jakarta.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.mockito.Mockito;
@@ -106,14 +105,14 @@ public class SoapAttachmentTest {
 
     @Test
     public void testFileResourceBinaryContent() throws Exception {
-        String imageUrl = "/org/citrusframework/ws/actions/test-attachment.png";
+        String imageUrl = "org/citrusframework/ws/actions/test-attachment.png";
 
         SoapAttachment soapAttachment = new SoapAttachment();
         soapAttachment.setContentResourcePath("classpath:" + imageUrl);
         soapAttachment.setContentType("image/png");
 
         String attachmentContent = soapAttachment.getContent();
-        byte[] resourceContent = Files.readAllBytes(Paths.get(getClass().getResource(imageUrl).toURI()));
+        byte[] resourceContent = Files.readAllBytes(Paths.get(getClass().getClassLoader().getResource(imageUrl).toURI()));
 
         Assert.assertEquals(attachmentContent, Base64.encodeBase64String(resourceContent));
         Assert.assertEquals(soapAttachment.getSize(), resourceContent.length);

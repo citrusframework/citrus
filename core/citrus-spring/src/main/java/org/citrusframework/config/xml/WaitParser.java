@@ -16,6 +16,7 @@
 
 package org.citrusframework.config.xml;
 
+import org.apache.xerces.util.DOMUtil;
 import org.citrusframework.TestAction;
 import org.citrusframework.condition.ActionCondition;
 import org.citrusframework.condition.Condition;
@@ -26,13 +27,12 @@ import org.citrusframework.config.CitrusNamespaceParserRegistry;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.container.Wait;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.apache.xerces.util.DOMUtil;
+import org.citrusframework.util.StringUtils;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**

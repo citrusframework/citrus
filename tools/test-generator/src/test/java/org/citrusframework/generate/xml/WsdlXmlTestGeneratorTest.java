@@ -22,7 +22,6 @@ import java.io.IOException;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.generate.UnitFramework;
 import org.citrusframework.util.FileUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -59,14 +58,14 @@ public class WsdlXmlTestGeneratorTest {
                 name + FileUtils.FILE_EXTENSION_XML);
         Assert.assertTrue(xmlFile.exists());
 
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
+        String javaContent = FileUtils.readToString(javaFile);
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class " + name));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
 
-        String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
+        String xmlContent = FileUtils.readToString(xmlFile);
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
         Assert.assertTrue(xmlContent.contains("<testcase name=\"" + name + "\">"));

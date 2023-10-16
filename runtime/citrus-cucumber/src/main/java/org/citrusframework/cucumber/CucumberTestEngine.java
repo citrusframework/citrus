@@ -26,13 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.eventbus.RandomUuidGenerator;
 import io.cucumber.core.eventbus.UuidGenerator;
-import org.citrusframework.TestClass;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.main.AbstractTestEngine;
-import org.citrusframework.main.TestRunConfiguration;
-import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.options.CommandlineOptionsParser;
 import io.cucumber.core.options.CucumberOptionsAnnotationParser;
 import io.cucumber.core.options.CucumberProperties;
@@ -41,10 +37,13 @@ import io.cucumber.core.options.RuntimeOptions;
 import io.cucumber.core.resource.ClasspathSupport;
 import io.cucumber.core.runtime.Runtime;
 import io.cucumber.core.snippets.SnippetType;
+import org.citrusframework.TestClass;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.main.AbstractTestEngine;
+import org.citrusframework.main.TestRunConfiguration;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -63,7 +62,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
         RuntimeOptions propertiesFileOptions = new CucumberPropertiesParser().parse(CucumberProperties.fromPropertiesFile()).build();
 
         RuntimeOptions annotationOptions;
-        if (CollectionUtils.isEmpty(getConfiguration().getTestClasses())) {
+        if (getConfiguration().getTestClasses() == null || getConfiguration().getTestClasses().isEmpty()) {
             annotationOptions = propertiesFileOptions;
         } else {
             TestClass testClass = getConfiguration().getTestClasses().get(0);
@@ -85,7 +84,7 @@ public class CucumberTestEngine extends AbstractTestEngine {
         List<String> args = new ArrayList<>();
 
         List<String> packagesToRun = getConfiguration().getPackages();
-        if (CollectionUtils.isEmpty(packagesToRun)) {
+        if (packagesToRun == null || packagesToRun.isEmpty()) {
             logger.info("Running all tests in project");
         } else if (StringUtils.hasText(packagesToRun.get(0))) {
             logger.info(String.format("Running tests in package %s", packagesToRun.get(0)));

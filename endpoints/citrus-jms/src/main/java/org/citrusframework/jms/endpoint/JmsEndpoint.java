@@ -21,11 +21,11 @@ import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.AbstractEndpoint;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
-import org.springframework.util.Assert;
 
 /**
  * Jms message endpoint capable of sending/receiving messages from Jms message destination. Either uses a Jms connection factory or
@@ -114,9 +114,10 @@ public class JmsEndpoint extends AbstractEndpoint implements InitializingPhase, 
     @Override
     public void initialize() {
         if (getEndpointConfiguration().isAutoStart()) {
-            Assert.isTrue(getEndpointConfiguration().isPubSubDomain(),
-                    "Invalid endpoint configuration - " +
+            if (!getEndpointConfiguration().isPubSubDomain()) {
+                throw new CitrusRuntimeException( "Invalid endpoint configuration - " +
                             "caching subscriber enabled but pubSubDomain is set to false - please enable pubSubDomain");
+            }
 
             createConsumer();
         }

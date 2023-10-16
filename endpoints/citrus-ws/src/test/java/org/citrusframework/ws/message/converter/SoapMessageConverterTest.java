@@ -42,7 +42,6 @@ import jakarta.xml.soap.MimeHeader;
 import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.SOAPMessage;
 import org.springframework.core.io.InputStreamSource;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapBody;
@@ -75,7 +74,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
     private SoapHeader soapHeader;
     private SoapHeaderElement soapHeaderElement;
 
-    private String payload = "<testMessage>Hello</testMessage>";
+    private final String payload = "<testMessage>Hello</testMessage>";
 
     @BeforeMethod
     public void resetMocks() {
@@ -579,7 +578,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
         endpointConfiguration.setKeepSoapEnvelope(true);
         final Message responseMessage = soapMessageConverter.convertInbound(soapMessage, endpointConfiguration, context);
-        Assert.assertEquals(StringUtils.trimAllWhitespace(responseMessage.getPayload(String.class)), StringUtils.trimAllWhitespace(XML_PROCESSING_INSTRUCTION + getSoapRequestPayload()));
+        Assert.assertEquals(responseMessage.getPayload(String.class).replaceAll("\\s", ""), (XML_PROCESSING_INSTRUCTION + getSoapRequestPayload()).replaceAll("\\s", ""));
         Assert.assertEquals(responseMessage.getHeaderData().size(), 1L);
         Assert.assertEquals(responseMessage.getHeaderData().get(0), XML_PROCESSING_INSTRUCTION + "<SOAP-ENV:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"/>");
     }
@@ -606,7 +605,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
     }
 
     private String getSoapRequestPayload(final String payload, final String ... namespaces) {
-        return "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" " + StringUtils.arrayToDelimitedString(namespaces, " ") + ">\n" +
+        return "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" " + String.join(" ", namespaces) + ">\n" +
                 "<SOAP-ENV:Header/>\n" +
                 "<SOAP-ENV:Body>\n" +
                     payload +

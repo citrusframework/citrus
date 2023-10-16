@@ -18,11 +18,11 @@ package org.citrusframework.endpoint.adapter.mapping;
 
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ObjectHelper;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.util.Assert;
 
 /**
  * Endpoint adapter mapping strategy loads new Spring Application contexts defined by one or more locations
@@ -44,7 +44,7 @@ public class ContextLoadingMappingStrategy implements EndpointAdapterMappingStra
 
     @Override
     public EndpointAdapter getEndpointAdapter(String mappingKey) {
-        Assert.notNull(contextConfigLocation, "Spring bean application context location must be set properly");
+        ObjectHelper.assertNotNull(contextConfigLocation, "Spring bean application context location must be set properly");
 
         ApplicationContext ctx;
         if (loadOnce) {

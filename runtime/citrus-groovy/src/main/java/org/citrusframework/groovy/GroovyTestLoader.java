@@ -26,11 +26,11 @@ import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;
 import org.citrusframework.groovy.dsl.test.TestCaseScript;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -44,9 +44,11 @@ public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAwa
             Resource scriptSource = FileUtils.getFileResource(this.getSource(), context);
             ImportCustomizer ic = new ImportCustomizer();
 
-            String basePath = scriptSource.getFile().getParent();
-            if (scriptSource instanceof ClassPathResource) {
-                basePath = FileUtils.getBasePath(((ClassPathResource) scriptSource).getPath());
+            String basePath;
+            if (scriptSource instanceof Resources.ClasspathResource) {
+                basePath = FileUtils.getBasePath(scriptSource.getLocation());
+            } else {
+                basePath = scriptSource.getFile().getParent();
             }
 
             String source = FileUtils.readToString(scriptSource);

@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
-import org.springframework.util.CollectionUtils;
 
 /**
  * @author Christoph Deppisch
@@ -68,7 +67,7 @@ public class MessageListeners implements MessageListenerAware {
      * @return
      */
     public boolean isEmpty() {
-        return CollectionUtils.isEmpty(messageListener);
+        return messageListener.isEmpty();
     }
 
     @Override

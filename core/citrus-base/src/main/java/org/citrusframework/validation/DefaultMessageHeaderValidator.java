@@ -35,7 +35,6 @@ import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Basic header message validator provides message header validation. Subclasses only have to add
@@ -59,7 +58,9 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Head
         Map<String, Object> controlHeaders = controlMessage.getHeaders();
         Map<String, Object> receivedHeaders = receivedMessage.getHeaders();
 
-        if (CollectionUtils.isEmpty(controlHeaders)) { return; }
+        if (controlHeaders == null || controlHeaders.isEmpty()) {
+            return;
+        }
 
         logger.debug("Start message header validation ...");
 

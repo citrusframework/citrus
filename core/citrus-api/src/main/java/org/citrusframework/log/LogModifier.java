@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.logger;
+package org.citrusframework.log;
 
 /**
  * Modifier masks output that gets printed to an output stream. Usually used

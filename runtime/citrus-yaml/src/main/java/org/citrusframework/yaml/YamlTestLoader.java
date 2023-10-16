@@ -28,11 +28,11 @@ import org.citrusframework.TestActionBuilder;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.yaml.actions.YamlTestActionBuilder;
-import org.springframework.core.io.Resource;
-import org.springframework.util.ResourceUtils;
-import org.springframework.util.StringUtils;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
@@ -142,7 +142,7 @@ public class YamlTestLoader extends DefaultTestLoader implements TestSourceAware
         if (StringUtils.hasText(source)) {
             return source;
         } else {
-            return ResourceUtils.CLASSPATH_URL_PREFIX + packageName.replace('.', File.separatorChar) +
+            return Resources.CLASSPATH_RESOURCE_PREFIX + packageName.replace('.', File.separatorChar) +
                     File.separator + testName + ".yaml";
         }
     }

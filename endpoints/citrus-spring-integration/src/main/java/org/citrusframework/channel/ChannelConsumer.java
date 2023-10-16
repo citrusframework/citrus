@@ -24,13 +24,13 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.MessageTimeoutException;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.AbstractSelectiveMessageConsumer;
+import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.PollableChannel;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -42,7 +42,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
     private static final Logger logger = LoggerFactory.getLogger(ChannelConsumer.class);
 
     /** Endpoint configuration */
-    private ChannelEndpointConfiguration endpointConfiguration;
+    private final ChannelEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using endpoint configuration.

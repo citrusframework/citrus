@@ -17,8 +17,8 @@
 package org.citrusframework.integration.script;
 
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.script.GroovyAction.Builder.groovy;
@@ -77,6 +77,6 @@ public class GroovyActionJavaIT extends TestNGCitrusSpringSupport {
                     "}" + NEWLINE +
                   "}"));
 
-        run(groovy(new ClassPathResource("org/citrusframework/integration/script/example.groovy")));
+        run(groovy(Resources.newClasspathResource("org/citrusframework/integration/script/example.groovy")));
     }
 }

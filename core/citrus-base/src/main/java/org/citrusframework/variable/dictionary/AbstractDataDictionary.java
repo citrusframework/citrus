@@ -17,6 +17,7 @@
 package org.citrusframework.variable.dictionary;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -24,10 +25,9 @@ import java.util.Properties;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.AbstractMessageProcessor;
+import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 /**
  * Abstract data dictionary implementation provides global scope handling.
@@ -75,12 +75,12 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
         if (mappingFile != null) {
 
             if (logger.isDebugEnabled()) {
-                logger.debug("Reading data dictionary mapping " + mappingFile.getFilename());
+                logger.debug("Reading data dictionary mapping " + mappingFile.getLocation());
             }
 
-            Properties props;
-            try {
-                props = PropertiesLoaderUtils.loadProperties(mappingFile);
+            Properties props = new Properties();
+            try (InputStream inputStream = mappingFile.getInputStream()) {
+                props.load(inputStream);
             } catch (IOException e) {
                 throw new CitrusRuntimeException(e);
             }
@@ -100,7 +100,7 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
                 mappings.put(key, props.getProperty(key));
             }
 
-            logger.debug("Loaded data dictionary mapping " + mappingFile.getFilename());
+            logger.debug("Loaded data dictionary mapping " + mappingFile.getLocation());
         }
     }
 

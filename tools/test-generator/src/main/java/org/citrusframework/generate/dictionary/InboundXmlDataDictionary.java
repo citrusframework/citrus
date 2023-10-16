@@ -16,13 +16,13 @@
 
 package org.citrusframework.generate.dictionary;
 
-import javax.xml.xpath.XPathConstants;
 import java.util.Map;
+import javax.xml.xpath.XPathConstants;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.variable.dictionary.xml.XpathMappingDataDictionary;
+import org.citrusframework.xml.namespace.DefaultNamespaceContext;
 import org.citrusframework.xml.xpath.XPathUtils;
-import org.springframework.util.xml.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -69,8 +69,8 @@ public class InboundXmlDataDictionary extends XpathMappingDataDictionary {
         for (Map.Entry<String, String> expressionEntry : mappings.entrySet()) {
             String expression = expressionEntry.getKey();
 
-            SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
-            namespaceContext.setBindings(context.getNamespaceContextBuilder().getNamespaceMappings());
+            DefaultNamespaceContext namespaceContext = new DefaultNamespaceContext();
+            namespaceContext.addNamespaces(context.getNamespaceContextBuilder().getNamespaceMappings());
 
             NodeList findings = (NodeList) XPathUtils.evaluateExpression(node.getOwnerDocument(), expression, namespaceContext, XPathConstants.NODESET);
 
