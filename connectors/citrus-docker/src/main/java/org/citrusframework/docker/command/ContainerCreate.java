@@ -17,7 +17,9 @@
 package org.citrusframework.docker.command;
 
 import java.util.stream.Stream;
+import java.util.stream.Collectors;
 import java.util.Arrays;
+import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
@@ -94,7 +96,6 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
                 command.withCmd((String[]) getParameters().get("cmd"));
             } else {
                 command.withCmd(StringUtils.delimitedListToStringArray(getParameter("cmd", context), DELIMITER));
-            	//command.withCmd(Arrays.asList(getParameter("cmd", context)));
             }
         }
 
@@ -102,8 +103,8 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             if (getParameters().get("env") instanceof Capability[]) {
                 command.withEnv((String[]) getParameters().get("env"));
             } else {
-                //command.withEnv(StringUtils.delimitedListToStringArray(getParameter("env", context), DELIMITER));
-                command.withCmd(Arrays.asList(getParameter("env", context)));
+            	List<String> param = Arrays.stream(getVarargsParameter("env", context)).map(p -> (String) p).collect(Collectors.toList());
+                command.withEnv(param);
             }
         }
 
