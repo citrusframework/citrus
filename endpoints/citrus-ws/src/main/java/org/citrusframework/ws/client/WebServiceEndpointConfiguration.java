@@ -172,7 +172,7 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
      * @param webServiceTemplate
      */
     public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
-        interceptors.addAll(Optional.ofNullable(webServiceTemplate.getInterceptors()).map(Arrays::asList).orElse(Collections.emptyList()));
+        interceptors.addAll(Optional.ofNullable(webServiceTemplate.getInterceptors()).map(Arrays::asList).orElseGet(Collections::emptyList));
         this.webServiceTemplate = webServiceTemplate;
         webServiceTemplate.setInterceptors(interceptors.toArray(new ClientInterceptor[0]));
     }

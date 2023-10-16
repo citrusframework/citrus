@@ -82,7 +82,7 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
             final String emptyString = "";
 
             testResults.doWithResults(result -> {
-                ResultDetail detail = Optional.ofNullable(details.get(result.getTestName())).orElse(new ResultDetail());
+                ResultDetail detail = Optional.ofNullable(details.get(result.getTestName())).orElseGet(ResultDetail::new);
 
                 Properties detailProps = new Properties();
                 detailProps.put("test.style.class", result.getResult().toLowerCase());

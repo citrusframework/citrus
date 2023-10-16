@@ -243,7 +243,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     public boolean isDone(TestContext context) {
         return Optional.ofNullable(finished)
                 .map(future -> future.isDone() || isDisabled(context))
-                .orElse(isDisabled(context));
+                .orElseGet(() -> isDisabled(context));
     }
 
     /**

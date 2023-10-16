@@ -89,7 +89,7 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
      */
     public void run() {
         ConnectionFactory connectionFactory = Optional.ofNullable(endpointConfiguration.getConnectionFactory())
-                                                      .orElse(endpointConfiguration.getJmsTemplate().getConnectionFactory());
+                                                      .orElseGet(() -> endpointConfiguration.getJmsTemplate().getConnectionFactory());
 
         TopicConnection connection = null;
         try {
@@ -118,8 +118,8 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
 
             TopicSubscriber subscriber;
             if (endpointConfiguration.isDurableSubscription()) {
-                logger.debug(String.format("Create JMS topic durable subscription '%s'", Optional.ofNullable(endpointConfiguration.getDurableSubscriberName()).orElse(getName())));
-                subscriber = session.createDurableSubscriber(topic, Optional.ofNullable(endpointConfiguration.getDurableSubscriberName()).orElse(getName()));
+                logger.debug(String.format("Create JMS topic durable subscription '%s'", Optional.ofNullable(endpointConfiguration.getDurableSubscriberName()).orElseGet(this::getName)));
+                subscriber = session.createDurableSubscriber(topic, Optional.ofNullable(endpointConfiguration.getDurableSubscriberName()).orElseGet(this::getName));
             } else {
                 logger.debug("Create JMS topic subscription");
                 subscriber = session.createSubscriber(topic);

@@ -77,7 +77,7 @@ public abstract class AbstractAsyncTestAction extends AbstractTestAction impleme
     public boolean isDone(TestContext context) {
         return Optional.ofNullable(finished)
                 .map(future -> future.isDone() || isDisabled(context))
-                .orElse(isDisabled(context));
+                .orElseGet(() -> isDisabled(context));
     }
 
     public abstract void doExecuteAsync(TestContext context);

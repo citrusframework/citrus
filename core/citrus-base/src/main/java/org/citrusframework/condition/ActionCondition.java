@@ -65,7 +65,7 @@ public class ActionCondition extends AbstractCondition {
             this.caughtException = e;
             logger.warn(String.format("Nested action did not perform as expected - %s", Optional.ofNullable(e.getMessage())
                                                                                             .map(msg -> e.getClass().getName() + ": " + msg)
-                                                                                            .orElse(e.getClass().getName())));
+                                                                                            .orElseGet(() -> e.getClass().getName())));
             return false;
         }
 
@@ -82,7 +82,7 @@ public class ActionCondition extends AbstractCondition {
         if (caughtException != null) {
             return String.format("Failed to check test action condition - action '%s' did not perform as expected: %s", getActionName(), Optional.ofNullable(caughtException.getMessage())
                     .map(msg -> caughtException.getClass().getName() + ": " + msg)
-                    .orElse(caughtException.getClass().getName()));
+                    .orElseGet(() -> caughtException.getClass().getName()));
         } else {
             return String.format("Failed to check test action condition - action '%s' did not perform as expected", getActionName());
         }

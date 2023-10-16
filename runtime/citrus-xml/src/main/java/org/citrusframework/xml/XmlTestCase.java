@@ -79,7 +79,7 @@ public class XmlTestCase {
                         try {
                             delegate.getVariableDefinitions().put(variable.name, VariableUtils.getValueFromScript(variable.multilineValue.script.getType(),
                                     FileUtils.readToString(FileUtils.getFileResource(variable.multilineValue.script.getFile()),
-                                            Optional.ofNullable(variable.multilineValue.script.getCharset()).map(Charset::forName).orElse(FileUtils.getDefaultCharset()))));
+                                            Optional.ofNullable(variable.multilineValue.script.getCharset()).map(Charset::forName).orElseGet(FileUtils::getDefaultCharset))));
                         } catch (IOException e) {
                             throw new CitrusRuntimeException("Failed to read script file resource", e);
                         }

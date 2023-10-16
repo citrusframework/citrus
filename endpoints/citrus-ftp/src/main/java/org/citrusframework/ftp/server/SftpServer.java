@@ -88,7 +88,7 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
                         return new FtpMessage(response);
                     }
                 })
-                .orElse(FtpMessage.success());
+                .orElseGet(FtpMessage::success);
     }
 
     @Override

@@ -46,16 +46,16 @@ public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator> exte
         List<Object> actions = super.getActions();
 
         if (getMode().equals(GeneratorMode.CLIENT)) {
-            actions.add(getSendRequestActionProvider(request).getAction(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateOutboundMessage(request)));
+            actions.add(getSendRequestActionProvider(request).getAction(Optional.ofNullable(endpoint).orElseGet(() -> getMode().name().toLowerCase()), generateOutboundMessage(request)));
 
             if (response != null) {
-                actions.add(getReceiveResponseActionProvider(response).getAction(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateInboundMessage(response)));
+                actions.add(getReceiveResponseActionProvider(response).getAction(Optional.ofNullable(endpoint).orElseGet(() -> getMode().name().toLowerCase()), generateInboundMessage(response)));
             }
         } else if (getMode().equals(GeneratorMode.SERVER)) {
-            actions.add(getReceiveRequestActionProvider(request).getAction(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateInboundMessage(request)));
+            actions.add(getReceiveRequestActionProvider(request).getAction(Optional.ofNullable(endpoint).orElseGet(() -> getMode().name().toLowerCase()), generateInboundMessage(request)));
 
             if (response != null) {
-                actions.add(getSendResponseActionProvider(response).getAction(Optional.ofNullable(endpoint).orElse(getMode().name().toLowerCase()), generateOutboundMessage(response)));
+                actions.add(getSendResponseActionProvider(response).getAction(Optional.ofNullable(endpoint).orElseGet(() -> getMode().name().toLowerCase()), generateOutboundMessage(response)));
             }
         }
 

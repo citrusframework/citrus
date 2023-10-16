@@ -84,7 +84,7 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Head
                     .stream()
                     .filter(validator -> validator.supports(headerName, Optional.ofNullable(controlValue).map(Object::getClass).orElse(null)))
                     .findFirst()
-                    .orElse(
+                    .orElseGet(() ->
                         validationContext.getValidatorNames()
                                 .stream()
                                 .map(beanName -> {
@@ -98,11 +98,11 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Head
                                 .filter(Objects::nonNull)
                                 .filter(validator -> validator.supports(headerName, Optional.ofNullable(controlValue).map(Object::getClass).orElse(null)))
                                 .findFirst()
-                                .orElse(
+                                .orElseGet(() ->
                                     getHeaderValidators(context).stream()
                                             .filter(validator -> validator.supports(headerName, Optional.ofNullable(controlValue).map(Object::getClass).orElse(null)))
                                             .findFirst()
-                                            .orElse(new DefaultHeaderValidator())
+                                            .orElseGet(DefaultHeaderValidator::new)
                                 )
                     ).validateHeader(headerName, receivedHeaders.get(headerName), controlValue, context, validationContext);
         }

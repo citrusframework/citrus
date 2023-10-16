@@ -73,7 +73,7 @@ public class TestNGEngine extends AbstractTestEngine {
             for (TestClass testClass : getConfiguration().getTestClasses()) {
                 logger.info(String.format("Running test %s",
                         Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                                .orElse(testClass.getName())));
+                                .orElseGet(testClass::getName)));
 
                 XmlTest test = new XmlTest(suite);
                 test.setClasses(new ArrayList<>());
@@ -123,7 +123,7 @@ public class TestNGEngine extends AbstractTestEngine {
                 classesToRun.stream()
                         .peek(testClass -> logger.info(String.format("Running test %s",
                                 Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                                        .orElse(testClass.getName()))))
+                                        .orElseGet(testClass::getName))))
                         .map(testClass -> {
                             try {
                                 Class<?> clazz;

@@ -90,7 +90,7 @@ public class FtpServerFtpLet implements Ftplet {
                         return new FtpMessage(response);
                     }
                 })
-                .orElse(FtpMessage.success());
+                .orElseGet(FtpMessage::success);
     }
 
     @Override

@@ -129,7 +129,7 @@ public class SshServer extends AbstractServer {
         sshd.setPort(port);
 
         VirtualFileSystemFactory fileSystemFactory = new VirtualFileSystemFactory();
-        Path userHomeDir = Optional.ofNullable(userHomePath).map(Paths::get).map(Path::toAbsolutePath).orElse(Paths.get(String.format("target/%s/home/%s", getName(), user)).toAbsolutePath());
+        Path userHomeDir = Optional.ofNullable(userHomePath).map(Paths::get).map(Path::toAbsolutePath).orElseGet(() -> Paths.get(String.format("target/%s/home/%s", getName(), user)).toAbsolutePath());
 
         if (!Files.exists(userHomeDir)) {
             try {

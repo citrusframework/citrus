@@ -235,7 +235,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
      * @return test generator.
      */
     public XmlTestGenerator getXmlTestGenerator() {
-        return Optional.ofNullable(xmlTestGenerator).orElse(new XmlTestGenerator());
+        return Optional.ofNullable(xmlTestGenerator).orElseGet(XmlTestGenerator::new);
     }
 
     /**
@@ -245,7 +245,7 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
      * @return test generator.
      */
     public JavaDslTestGenerator getJavaTestGenerator() {
-        return Optional.ofNullable(javaTestGenerator).orElse(new JavaDslTestGenerator());
+        return Optional.ofNullable(javaTestGenerator).orElseGet(JavaDslTestGenerator::new);
     }
 
     /**
@@ -256,9 +256,9 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
      */
     public SwaggerTestGenerator getSwaggerTestGenerator() {
         if (getType().equals("java")) {
-            return Optional.ofNullable(swaggerJavaTestGenerator).orElse(new SwaggerJavaTestGenerator());
+            return Optional.ofNullable(swaggerJavaTestGenerator).orElseGet(SwaggerJavaTestGenerator::new);
         } else {
-            return Optional.ofNullable(swaggerXmlTestGenerator).orElse(new SwaggerXmlTestGenerator());
+            return Optional.ofNullable(swaggerXmlTestGenerator).orElseGet(SwaggerXmlTestGenerator::new);
         }
     }
 
@@ -270,9 +270,9 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
      */
     public WsdlTestGenerator getWsdlTestGenerator() {
         if (getType().equals("java")) {
-            return Optional.ofNullable(wsdlJavaTestGenerator).orElse(new WsdlJavaTestGenerator());
+            return Optional.ofNullable(wsdlJavaTestGenerator).orElseGet(WsdlJavaTestGenerator::new);
         } else {
-            return Optional.ofNullable(wsdlXmlTestGenerator).orElse(new WsdlXmlTestGenerator());
+            return Optional.ofNullable(wsdlXmlTestGenerator).orElseGet(WsdlXmlTestGenerator::new);
         }
     }
 
@@ -284,9 +284,9 @@ public class GenerateTestMojo extends AbstractCitrusMojo {
      */
     public XsdTestGenerator getXsdTestGenerator() {
         if (getType().equals("java")) {
-            return Optional.ofNullable(xsdJavaTestGenerator).orElse(new XsdJavaTestGenerator());
+            return Optional.ofNullable(xsdJavaTestGenerator).orElseGet(XsdJavaTestGenerator::new);
         } else {
-            return Optional.ofNullable(xsdXmlTestGenerator).orElse(new XsdXmlTestGenerator());
+            return Optional.ofNullable(xsdXmlTestGenerator).orElseGet(XsdXmlTestGenerator::new);
         }
     }
 }

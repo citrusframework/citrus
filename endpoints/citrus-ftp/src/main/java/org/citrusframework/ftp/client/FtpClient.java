@@ -281,7 +281,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             String localFilePath = context.replaceDynamicContentInString(command.getFile().getPath());
             String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(command.getTarget().getPath()));
 
-            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElse(DataType.BINARY.name()));
+            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElseGet(() -> DataType.BINARY.name()));
             try (InputStream localFileInputStream = getLocalFileInputStream(command.getFile().getPath(), dataType, context)) {
                 ftpClient.setFileType(getFileType(dataType));
 
@@ -329,7 +329,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 Files.createDirectories(Paths.get(localFilePath).getParent());
             }
 
-            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElse(DataType.BINARY.name()));
+            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElseGet(() -> DataType.BINARY.name()));
             try (FileOutputStream localFileOutputStream = new FileOutputStream(localFilePath)) {
                 ftpClient.setFileType(getFileType(dataType));
 

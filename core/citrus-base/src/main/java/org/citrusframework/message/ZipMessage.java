@@ -189,7 +189,7 @@ public class ZipMessage extends DefaultMessage {
             this(name);
 
             if (file.isDirectory()) {
-                for (File child : Optional.ofNullable(file.listFiles()).orElse(new File[] {})) {
+                for (File child : Optional.ofNullable(file.listFiles()).orElseGet(() -> new File[] {})) {
                     entries.add(new Entry(child));
                 }
             } else {

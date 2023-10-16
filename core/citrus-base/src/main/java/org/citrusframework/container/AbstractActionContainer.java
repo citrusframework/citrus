@@ -109,7 +109,7 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
             if (action instanceof Completable && !((Completable) action).isDone(context)) {
                 if (logger.isDebugEnabled()) {
                     logger.debug(Optional.ofNullable(action.getName()).filter(name -> name.trim().length() > 0)
-                            .orElse(action.getClass().getName()) + " not completed yet");
+                            .orElseGet(() -> action.getClass().getName()) + " not completed yet");
                 }
                 return false;
             }

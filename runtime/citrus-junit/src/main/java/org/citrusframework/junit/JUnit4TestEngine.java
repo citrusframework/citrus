@@ -101,7 +101,7 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                 .stream()
                 .peek(testClass -> logger.info(String.format("Running test %s",
                         Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                                .orElse(testClass.getName()))))
+                                .orElseGet(testClass::getName))))
                 .map(testClass -> {
                     try {
                         Class<?> clazz;

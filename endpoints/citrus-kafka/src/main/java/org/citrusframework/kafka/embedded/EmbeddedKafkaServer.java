@@ -193,7 +193,7 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
         File logDir = Optional.ofNullable(logDirPath)
                                     .map(Paths::get)
                                     .map(Path::toFile)
-                                    .orElse(new File(System.getProperty("java.io.tmpdir")));
+                                    .orElseGet(() -> new File(System.getProperty("java.io.tmpdir")));
 
         if (!logDir.exists()) {
             if (!logDir.mkdirs()) {

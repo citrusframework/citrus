@@ -232,7 +232,7 @@ public abstract class FileUtils {
                 return accepted && !name.startsWith("CVS") && !name.startsWith(".svn") && !name.startsWith(".git");
             });
 
-            for (File found : Optional.ofNullable(foundFiles).orElse(new File[] {})) {
+            for (File found : Optional.ofNullable(foundFiles).orElseGet(() -> new File[] {})) {
                 /* Subfolder support */
                 if (found.isDirectory()) {
                     dirs.push(found);
