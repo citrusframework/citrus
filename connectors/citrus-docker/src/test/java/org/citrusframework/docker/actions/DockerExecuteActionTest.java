@@ -202,36 +202,36 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testCreateWithEnvArgs() throws Exception {
     	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
+    	reset(dockerClient, command);
     	when(client.getEndpointConfiguration().getDockerClient().createContainerCmd(anyString())).thenReturn(command);
     	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
-    	response.setId(UUID.randomUUID().toString());
     	when(command.exec()).thenReturn(response);
-    	when(response.getId()).thenReturn("1234");
+    	when(response.getId()).thenReturn(UUID.randomUUID().toString());
     	
     	String[] containerEnvVars = {"VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"};
     	
-    	reset(dockerClient, command);
     	
     	when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
-    	//when(command.exec()).thenReturn(response);
     	
     	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
     		.client(client)
-    		.command(new ContainerCreate().image("image_create").env("VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"))
+    		.command(new ContainerCreate().image("image_create").name("myContainer").env("VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"))
     		.build();
     	containerCreateAction.execute(context);
     	
-    	ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+    	ArgumentCaptor<List<String>> argumentCaptor = ArgumentCaptor.forClass(List.class);
     	verify(command).withEnv(argumentCaptor.capture());
-    	List<String> capturedArguments = argumentCaptor.getAllValues();
-    	    	
+    	List<String> capturedArguments = (List<String>) argumentCaptor.getValue();
+    	System.out.println("type of argumentcaptor value is "+argumentCaptor.getValue().getClass().getName());
     	capturedArguments.forEach(e -> {
     		System.out.println(e);
     	});
     	
-    	//Assert.assertEquals(containerInspectAction.getCommand().getCommandResult(), inspectResponse);
-    	Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
-    	Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_NAME), "my_container");
+    	Assert.assertEquals(containerEnvVars.length, capturedArguments.size());
+    	
+    	for(int i=0; i<containerEnvVars.length; i++) {
+    		Assert.assertEquals(containerEnvVars[i], capturedArguments.get(i));
+    	}
     	
     }
 

@@ -19,6 +19,7 @@ package org.citrusframework.docker.command;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Arrays;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -102,6 +103,31 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand<R> {
             throw new CitrusRuntimeException(String.format("Missing docker command parameter '%s'", parameterName));
         }
     }
+    
+    /**
+     * Gets any list type docker command parameters.
+     * @return
+     */
+    protected Object[] getVarargsParameter(String parameterName, TestContext context) {
+    	if (getParameters().containsKey(parameterName)) {
+    		Object parameter = getParameters().get(parameterName);
+    		//I also wouldnt want to call replaceDynamicContentInString on non strings
+    		if (parameter.getClass().isArray()) {
+    			return Arrays.stream((Object[]) parameter)
+    				.map(parameterObject -> parameterObject instanceof String ? context.replaceDynamicContentInString(parameterObject.toString()) : parameterObject)
+    				.toArray();
+    		} else {
+    			return new Object[] {parameter instanceof String ? context.replaceDynamicContentInString(parameter.toString()) : parameter};
+    		}
+    	} else {
+    		throw new CitrusRuntimeException(String.format("Missing docker command parameter '%s'", parameterName));
+    	}
+    	
+    }
+    
+    /**
+     * Replaces any
+     */
 
     @Override
     public R getCommandResult() {
