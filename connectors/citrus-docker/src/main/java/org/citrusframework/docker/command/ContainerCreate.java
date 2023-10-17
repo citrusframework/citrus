@@ -92,7 +92,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("cmd")) {
-            if (getParameters().get("cmd") instanceof Capability[]) {
+            if (getParameters().get("cmd") instanceof String[]) {
                 command.withCmd((String[]) getParameters().get("cmd"));
             } else {
                 command.withCmd(StringUtils.delimitedListToStringArray(getParameter("cmd", context), DELIMITER));
@@ -100,11 +100,10 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("env")) {
-            if (getParameters().get("env") instanceof Capability[]) {
+            if (getParameters().get("env") instanceof String[]) {
                 command.withEnv((String[]) getParameters().get("env"));
             } else {
-            	List<String> param = Arrays.stream(getVarargsParameter("env", context)).map(p -> (String) p).collect(Collectors.toList());
-                command.withEnv(param);
+                command.withEnv(StringUtils.delimitedListToStringArray(getParameter("env", context), DELIMITER));
             }
         }
 
@@ -117,7 +116,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("port-specs")) {
-            if (getParameters().get("port-specs") instanceof Capability[]) {
+            if (getParameters().get("port-specs") instanceof String[]) {
                 command.withPortSpecs((String[]) getParameters().get("port-specs"));
             } else {
                 command.withPortSpecs(StringUtils.delimitedListToStringArray(getParameter("port-specs", context), DELIMITER));
@@ -147,7 +146,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("volumes")) {
-            if (getParameters().get("volumes") instanceof ExposedPort[]) {
+            if (getParameters().get("volumes") instanceof Volume[]) {
                 command.withVolumes((Volume[]) getParameters().get("volumes"));
             } else {
                 command.withVolumes(getVolumes(context));
@@ -174,7 +173,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
      * @return
      */
     private Volume[] getVolumes(TestContext context) {
-        String[] volumes = StringUtils.commaDelimitedListToStringArray(getParameter("volumes", context));
+    	String[] volumes = StringUtils.commaDelimitedListToStringArray(getParameter("volumes", context));
         Volume[] volumeSpecs = new Volume[volumes.length];
 
         for (int i = 0; i < volumes.length; i++) {
@@ -197,6 +196,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         return capAdd;
+    	//return Arrays.stream(getVarargsParameter(addDrop, context)).map(p -> (Capability) p).collect(Collectors.toList());
     }
 
     /**
