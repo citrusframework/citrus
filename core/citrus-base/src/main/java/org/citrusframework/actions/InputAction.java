@@ -91,11 +91,9 @@ public class InputAction extends AbstractTestAction {
         }
 
 
-        try {
+        try (BufferedReader stdin = getInputReader()) {
             do {
                 logger.info(display);
-
-                BufferedReader stdin = getInputReader();
                 input = stdin.readLine();
             } while (validAnswers != null && !checkAnswer(input));
         } catch (IOException e) {
