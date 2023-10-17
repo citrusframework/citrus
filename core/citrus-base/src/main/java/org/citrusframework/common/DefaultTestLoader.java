@@ -26,9 +26,9 @@ import java.util.function.Consumer;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.DefaultTestCase;
-import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.TestResult;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
@@ -140,7 +140,7 @@ public class DefaultTestLoader implements TestLoader {
                 testCase = new DefaultTestCase();
             }
 
-            runner = new DefaultTestCaseRunner(testCase, context);
+            runner = TestCaseRunnerFactory.createRunner(testCase, context);
         }
 
         if (testClass == null) {
