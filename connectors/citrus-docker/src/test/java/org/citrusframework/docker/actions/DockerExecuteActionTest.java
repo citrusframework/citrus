@@ -58,9 +58,11 @@ import com.github.dockerjava.api.command.VersionCmd;
 import com.github.dockerjava.api.command.WaitContainerCmd;
 import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.model.BuildResponseItem;
+import com.github.dockerjava.api.model.Capability;
 import com.github.dockerjava.api.model.ContainerConfig;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
+import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.api.model.WaitResponse;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
@@ -202,35 +204,74 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testCreateWithEnvArgs() throws Exception {
     	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
-    	reset(dockerClient, command);
-    	when(client.getEndpointConfiguration().getDockerClient().createContainerCmd(anyString())).thenReturn(command);
     	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
+    	
+    	reset(dockerClient, command);
+    	
+    	when(client.getEndpointConfiguration().getDockerClient().createContainerCmd(anyString())).thenReturn(command);
     	when(command.exec()).thenReturn(response);
     	when(response.getId()).thenReturn(UUID.randomUUID().toString());
+    	when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
     	
     	String[] containerEnvVars = {"VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"};
     	
-    	
-    	when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
-    	
     	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
     		.client(client)
-    		.command(new ContainerCreate().image("image_create").name("myContainer").env("VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"))
+    		.command(new ContainerCreate()
+    			.image("image_create")
+    			.name("myContainer")
+    			.env("VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"))
     		.build();
     	containerCreateAction.execute(context);
     	
-    	ArgumentCaptor<List<String>> argumentCaptor = ArgumentCaptor.forClass(List.class);
+    	ArgumentCaptor<String[]> argumentCaptor = ArgumentCaptor.forClass(String[].class);
     	verify(command).withEnv(argumentCaptor.capture());
-    	List<String> capturedArguments = (List<String>) argumentCaptor.getValue();
-    	System.out.println("type of argumentcaptor value is "+argumentCaptor.getValue().getClass().getName());
-    	capturedArguments.forEach(e -> {
-    		System.out.println(e);
-    	});
+    	String[] capturedArguments = (String[]) argumentCaptor.getValue();
     	
-    	Assert.assertEquals(containerEnvVars.length, capturedArguments.size());
-    	
+    	Assert.assertEquals(containerEnvVars.length, capturedArguments.length);
     	for(int i=0; i<containerEnvVars.length; i++) {
-    		Assert.assertEquals(containerEnvVars[i], capturedArguments.get(i));
+    		Assert.assertEquals(containerEnvVars[i], capturedArguments[i]);
+    	}
+    }
+    
+    @Test
+    public void testCreateWithVolumeArgs() throws Exception {
+    	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
+    	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
+    	
+    	reset(dockerClient, command);
+    	
+    	when(client.getEndpointConfiguration().getDockerClient().createContainerCmd(anyString())).thenReturn(command);
+    	when(command.exec()).thenReturn(response);
+    	when(response.getId()).thenReturn(UUID.randomUUID().toString());
+    	when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
+    	
+    	Volume[] containerVolumes = {
+	    		new Volume("/source/dir/one:/destination/dir/one"),
+	    		new Volume("/source/dir/two:/destination/dir/two"),
+	    		new Volume("/source/dir/three:/destination/dir/three")
+    		};
+    	
+    	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
+    		.client(client)
+    		.command(new ContainerCreate()
+    			.image("image_create")
+    			.name("myContainer")
+    			.volumes(
+    				new Volume("/source/dir/one:/destination/dir/one"),
+		    		new Volume("/source/dir/two:/destination/dir/two"),
+		    		new Volume("/source/dir/three:/destination/dir/three")
+		    		))
+    		.build();
+    	containerCreateAction.execute(context);
+    	
+    	ArgumentCaptor<Volume[]> argumentCaptor = ArgumentCaptor.forClass(Volume[].class);
+    	verify(command).withVolumes(argumentCaptor.capture());
+    	Volume[] capturedArguments = (Volume[]) argumentCaptor.getValue();
+    	
+    	Assert.assertEquals(containerVolumes.length, capturedArguments.length);
+    	for(int i=0; i<containerVolumes.length; i++) {
+    		Assert.assertEquals(containerVolumes[i], capturedArguments[i]);
     	}
     	
     }
