@@ -225,7 +225,7 @@
     <mockftpserver.version>3.1.0</mockftpserver.version>
     <okhttp.version>4.11.0</okhttp.version>
     <saaj.version>3.0.2</saaj.version>
-    <selenium.version>4.13.0</selenium.version>
+    <selenium.version>4.14.1</selenium.version>
     <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
     <shrinkwrap.resolver.version>3.2.1</shrinkwrap.resolver.version>
     <slf4j.version>2.0.9</slf4j.version>
