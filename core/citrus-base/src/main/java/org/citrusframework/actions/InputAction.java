@@ -91,7 +91,7 @@ public class InputAction extends AbstractTestAction {
         }
 
 
-        try (BufferedReader stdin = getInputReader();) {
+        try (BufferedReader stdin = getInputReader()) {
             do {
                 logger.info(display);
                 input = stdin.readLine();

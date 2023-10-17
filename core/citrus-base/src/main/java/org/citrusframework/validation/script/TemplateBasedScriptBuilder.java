@@ -64,7 +64,7 @@ public final class TemplateBasedScriptBuilder {
         StringBuilder scriptBody = new StringBuilder();
         String importStmt = "import ";
 
-        try (BufferedReader reader = new BufferedReader(new StringReader(scriptCode));) {
+        try (BufferedReader reader = new BufferedReader(new StringReader(scriptCode))) {
             if (scriptCode.contains(importStmt)) {
                 String line;
                 while ((line = reader.readLine()) != null) {
