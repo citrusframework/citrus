@@ -917,7 +917,7 @@
 
       <dependency>
         <groupId>com.github.docker-java</groupId>
-        <artifactId>docker-java</artifactId>
+        <artifactId>docker-java-core</artifactId>
         <version>${docker-java.version}</version>
         <exclusions>
           <exclusion>
@@ -933,6 +933,11 @@
       <dependency>
         <groupId>com.github.docker-java</groupId>
         <artifactId>docker-java-transport-okhttp</artifactId>
+        <version>${docker-java.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.docker-java</groupId>
+        <artifactId>docker-java-transport-jersey</artifactId>
         <version>${docker-java.version}</version>
       </dependency>
       <dependency>
