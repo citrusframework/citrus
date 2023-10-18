@@ -224,7 +224,7 @@
     <mockito.version>5.6.0</mockito.version>
     <mockftpserver.version>3.1.0</mockftpserver.version>
     <netty.version>4.1.100.Final</netty.version>
-    <okhttp.version>4.11.0</okhttp.version>
+    <okhttp.version>4.12.0</okhttp.version>
     <saaj.version>3.0.2</saaj.version>
     <selenium.version>4.14.1</selenium.version>
     <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
