@@ -69,7 +69,7 @@ public class Resources {
     }
 
     public static Resource create(String filePath, Class<?> contextClass) {
-        return newClasspathResource(contextClass.getPackageName().replace(".", "/") + "/" + filePath);
+        return newClasspathResource(filePath, contextClass);
     }
 
     public static Resource create(byte[] content) {
@@ -86,6 +86,9 @@ public class Resources {
 
     public static Resource newClasspathResource(String filePath) {
         return new ClasspathResource(filePath);
+    }
+    public static Resource newClasspathResource(String filePath, Class<?> contextClass) {
+        return newClasspathResource(contextClass.getPackageName().replace(".", "/") + "/" + filePath);
     }
 
     public static Resource newFileSystemResource(String filePath) {
