@@ -16,19 +16,19 @@
 
 package org.citrusframework.cucumber.backend.spring;
 
+import io.cucumber.core.backend.CucumberBackendException;
+import io.cucumber.core.backend.ObjectFactory;
+import io.cucumber.spring.SpringFactory;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.CitrusSpringContext;
 import org.citrusframework.CitrusSpringContextProvider;
-import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactoryBean;
-import io.cucumber.core.backend.CucumberBackendException;
-import io.cucumber.core.backend.ObjectFactory;
-import io.cucumber.spring.SpringFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -65,7 +65,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
     public void start() {
         delegate.start();
         context = getInstance(TestContext.class);
-        runner = new DefaultTestCaseRunner(context);
+        runner = TestCaseRunnerFactory.createRunner(context);
     }
 
     @Override

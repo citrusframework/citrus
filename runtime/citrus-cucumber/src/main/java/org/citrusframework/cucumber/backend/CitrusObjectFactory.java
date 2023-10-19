@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.citrusframework.CitrusInstanceManager;
-import org.citrusframework.DefaultTestCaseRunner;
-import org.citrusframework.TestCaseRunner;
-import org.citrusframework.annotations.CitrusAnnotations;
-import org.citrusframework.context.TestContext;
 import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.exception.CucumberException;
+import org.citrusframework.CitrusInstanceManager;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerFactory;
+import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.context.TestContext;
 
 /**
  * @author Christoph Deppisch
@@ -57,7 +57,7 @@ public class CitrusObjectFactory implements ObjectFactory {
     @Override
     public void start() {
         context = CitrusInstanceManager.getOrDefault().getCitrusContext().createTestContext();
-        runner = new DefaultTestCaseRunner(context);
+        runner = TestCaseRunnerFactory.createRunner(context);
     }
 
     @Override
