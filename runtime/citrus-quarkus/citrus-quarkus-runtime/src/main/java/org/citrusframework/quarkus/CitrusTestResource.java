@@ -25,10 +25,10 @@ import java.util.Map;
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusInstanceManager;
-import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
@@ -77,7 +77,7 @@ public class CitrusTestResource implements QuarkusTestResourceLifecycleManager {
         }
 
         context = citrus.getCitrusContext().createTestContext();
-        runner = new DefaultTestCaseRunner(context);
+        runner = TestCaseRunnerFactory.createRunner(context);
         runner.testClass(testInstance.getClass());
         runner.packageName(testInstance.getClass().getPackageName());
         runner.name(testInstance.getClass().getSimpleName());

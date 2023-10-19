@@ -28,8 +28,8 @@ import java.util.Set;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.DefaultTestCase;
-import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ClasspathResourceResolver;
@@ -73,7 +73,7 @@ public final class JUnit4Helper {
      * @return
      */
     public static TestCaseRunner createTestRunner(CitrusFrameworkMethod frameworkMethod, Class<?> testClass, TestContext context) {
-        TestCaseRunner testCaseRunner = new DefaultTestCaseRunner(new DefaultTestCase(), context);
+        TestCaseRunner testCaseRunner = TestCaseRunnerFactory.createRunner(new DefaultTestCase(), context);
         testCaseRunner.testClass(testClass);
         testCaseRunner.name(frameworkMethod.getTestName());
         testCaseRunner.packageName(frameworkMethod.getPackageName());
