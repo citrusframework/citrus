@@ -169,7 +169,12 @@ public class ResourcePathTypeResolver implements TypeResolver {
         return Stream.of();
     }
 
-    private List<String> getZipEntries() {
+    /**
+     * This method needs proper synchronization, because all instances of this class will stream on
+     * this array.
+     * @return the list of zip entries
+     */
+    private synchronized List<String> getZipEntries() {
         if (zipEntriesAsString.isEmpty()) {
             URL root = ResourcePathTypeResolver.class.getProtectionDomain().getCodeSource().getLocation();
             try (ZipInputStream in = new ZipInputStream(root.openStream())) {
