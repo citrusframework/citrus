@@ -46,24 +46,21 @@ public class ReporterConfig {
     static class LoggingReporterEnablementCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            return !context.getBeanFactory().containsBean(CITRUS_LOGGING_REPORTER)
-                    && "true".equals(context.getEnvironment().getProperty(DEFAULT_LOGGING_REPORTER_ENABLED_PROPERTY, "true"));
+            return "true".equals(context.getEnvironment().getProperty(DEFAULT_LOGGING_REPORTER_ENABLED_PROPERTY, "true"));
         }
     }
 
     static class JunitReporterEnablementCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            return !context.getBeanFactory().containsBean(CITRUS_JUNIT_REPORTER)
-                    && "true".equals(context.getEnvironment().getProperty(DEFAULT_JUNIT_REPORTER_ENABLED_PROPERTY, "true"));
+            return "true".equals(context.getEnvironment().getProperty(DEFAULT_JUNIT_REPORTER_ENABLED_PROPERTY, "true"));
         }
     }
 
     static class HtmlReporterEnablementCondition implements Condition {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            return !context.getBeanFactory().containsBean(CITRUS_HTML_REPORTER)
-                    && "true".equals(context.getEnvironment().getProperty(DEFAULT_HTML_REPORTER_ENABLED_PROPERTY, "true"));
+            return "true".equals(context.getEnvironment().getProperty(DEFAULT_HTML_REPORTER_ENABLED_PROPERTY, "true"));
         }
     }
 

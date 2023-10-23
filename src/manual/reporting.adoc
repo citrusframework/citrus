@@ -27,7 +27,8 @@ public static class OverrideReporterConfiguration {
 }
 ----
 
-In Spring, it is also possible to disable these standard reporters using the following properties:
+Note that you need to allow spring bean overriding to load this configuration as such. It's worth noting that bean overriding is not recommended by spring. Thus the following properties are provided to deactivate standard reporters as needed.
+
 [source,properties]
 ----
 citrus.default.logging.reporter.enabled=false
