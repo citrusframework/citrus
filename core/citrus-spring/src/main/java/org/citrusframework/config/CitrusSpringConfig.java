@@ -32,7 +32,9 @@ import org.citrusframework.report.TestListenersFactory;
 import org.citrusframework.report.TestSuiteListenersFactory;
 import org.citrusframework.reporter.ReporterConfig;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ResourceConverter;
+import org.citrusframework.spi.StringToResourceConverter;
+import org.citrusframework.spi.CitrusResourceWrapper;
+import org.citrusframework.spi.SpringResourceWrapper;
 import org.citrusframework.util.SpringBeanTypeConverter;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.MessageValidatorConfig;
@@ -126,7 +128,8 @@ public class CitrusSpringConfig {
     @Bean(name = "conversionService")
     public ConversionServiceFactoryBean conversionService() {
         ConversionServiceFactoryBean conversionServiceFactoryBean = new ConversionServiceFactoryBean();
-        conversionServiceFactoryBean.setConverters(Set.of(new ResourceConverter()));
+        conversionServiceFactoryBean.setConverters(Set.of(
+                new StringToResourceConverter(), new CitrusResourceWrapper.ResourceConverter(), new SpringResourceWrapper.ResourceConverter()));
 
         return conversionServiceFactoryBean;
     }

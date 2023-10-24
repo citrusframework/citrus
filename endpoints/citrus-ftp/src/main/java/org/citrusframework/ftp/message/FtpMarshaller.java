@@ -83,7 +83,7 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
      */
     public FtpMarshaller() {
         this.mapper = new ObjectMapper();
-        this.marshaller = new Jaxb2Marshaller(Resources.newClasspathResource("org/citrusframework/schema/citrus-ftp-message.xsd"), classesToBeBound);
+        this.marshaller = new Jaxb2Marshaller(Resources.fromClasspath("org/citrusframework/schema/citrus-ftp-message.xsd"), classesToBeBound);
 
         type = System.getProperty(JDBC_MARSHALLER_TYPE_PROPERTY, MessageType.XML.name());
 

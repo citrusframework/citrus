@@ -72,13 +72,13 @@ public class JmsSendReceiveJavaIT extends TestNGCitrusSpringSupport {
 
         when(send("helloServiceJmsEndpoint")
             .message()
-            .body(Resources.newClasspathResource("org/citrusframework/jms/integration/helloRequest.xml"))
+            .body(Resources.fromClasspath("org/citrusframework/jms/integration/helloRequest.xml"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 
         then(receive("helloServiceResponseJmsEndpoint")
             .message()
-            .body(Resources.newClasspathResource("org/citrusframework/jms/integration/helloResponse.xml"))
+            .body(Resources.fromClasspath("org/citrusframework/jms/integration/helloResponse.xml"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}"));
 

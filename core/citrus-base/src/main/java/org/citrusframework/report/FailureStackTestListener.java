@@ -63,7 +63,7 @@ public class FailureStackTestListener extends AbstractTestListener {
         try {
             final String testFilePath = test.getPackageName().replace('.', '/') + "/" + test.getName();
 
-            Resource testFileResource = Resources.newClasspathResource(testFilePath + FileUtils.FILE_EXTENSION_XML);
+            Resource testFileResource = Resources.fromClasspath(testFilePath + FileUtils.FILE_EXTENSION_XML);
             if (!testFileResource.exists()) {
                 return failureStack;
             }

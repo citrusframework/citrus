@@ -15,7 +15,7 @@ import org.citrusframework.spi.Resources;
 public class CitrusBackendProviderService implements BackendProviderService {
     @Override
     public Backend create(Lookup lookup, Container container, Supplier<ClassLoader> classLoader) {
-        if (Resources.newClasspathResource("org/citrusframework/CitrusSpringContext.class").exists()) {
+        if (Resources.fromClasspath("org/citrusframework/CitrusSpringContext.class").exists()) {
             return new CitrusSpringBackend(lookup, container);
         } else {
             return new CitrusBackend(lookup, container);

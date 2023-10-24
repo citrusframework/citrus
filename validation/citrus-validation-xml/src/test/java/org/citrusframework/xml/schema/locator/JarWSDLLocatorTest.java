@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 
 public class JarWSDLLocatorTest {
 
-    private final Resource wsdl = Resources.newClasspathResource("org/citrusframework/validation/SampleService.wsdl");
+    private final Resource wsdl = Resources.fromClasspath("org/citrusframework/validation/SampleService.wsdl");
 
     @Test
     public void testGetImportInputSource() {

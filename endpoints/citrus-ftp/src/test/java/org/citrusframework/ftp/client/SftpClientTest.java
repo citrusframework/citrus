@@ -73,7 +73,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
         targetPath = System.getProperty("project.build.directory");
         localFilePath = "classpath:ftp/input/hello.xml";
         remoteFilePath = targetPath + "/hello.xml";
-        inputFileAsString = FileUtils.readToString(Resources.newClasspathResource("ftp/input/hello.xml"), StandardCharsets.UTF_8);
+        inputFileAsString = FileUtils.readToString(Resources.fromClasspath("ftp/input/hello.xml"), StandardCharsets.UTF_8);
         sshServer = startSftpMockServer();
         sftpClient = createSftpClient();
     }

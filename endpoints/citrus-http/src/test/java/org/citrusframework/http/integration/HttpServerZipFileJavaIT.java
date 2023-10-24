@@ -36,7 +36,7 @@ public class HttpServerZipFileJavaIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void httpServerZipFile() {
-        ZipMessage zipMessage = new ZipMessage().addEntry(Resources.newClasspathResource("schemas"));
+        ZipMessage zipMessage = new ZipMessage().addEntry(Resources.fromClasspath("schemas"));
 
         given(http().client("echoHttpClient")
                 .send()

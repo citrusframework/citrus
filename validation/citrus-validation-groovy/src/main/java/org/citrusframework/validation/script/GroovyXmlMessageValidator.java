@@ -34,7 +34,7 @@ public class GroovyXmlMessageValidator extends GroovyScriptMessageValidator {
      * Default constructor using default script template.
      */
     public GroovyXmlMessageValidator() {
-        super(Resources.newClasspathResource("org/citrusframework/validation/xml-validation-template.groovy"));
+        super(Resources.fromClasspath("org/citrusframework/validation/xml-validation-template.groovy"));
     }
 
     @Override

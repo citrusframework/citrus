@@ -26,7 +26,7 @@ import org.springframework.core.convert.converter.Converter;
 /**
  * Spring bean converter able to construct proper Citrus resource object from given file path as String.
  */
-public class ResourceConverter implements Converter<String, Resource>, ConditionalConverter {
+public class StringToResourceConverter implements Converter<String, Resource>, ConditionalConverter {
 
     @Override
     public Resource convert(String filePath) {

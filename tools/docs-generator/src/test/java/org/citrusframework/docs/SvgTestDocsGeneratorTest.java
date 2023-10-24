@@ -50,7 +50,7 @@ public class SvgTestDocsGeneratorTest {
 
         generator.generateDoc();
 
-        String docContent = FileUtils.readToString(Resources.newFileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + "/SampleIT.svg"));
+        String docContent = FileUtils.readToString(Resources.fromFileSystem(HtmlTestDocsGenerator.getOutputDirectory() + "/SampleIT.svg"));
 
         Assert.assertTrue(docContent.contains("<title>SampleIT</title>"));
         Assert.assertTrue(docContent.contains("<desc>This is a sample test"));

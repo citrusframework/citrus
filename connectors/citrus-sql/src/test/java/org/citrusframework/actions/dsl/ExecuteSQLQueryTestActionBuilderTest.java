@@ -60,7 +60,7 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport {
         builder.variable("episodeId", "citrus:randomNumber(5)");
 
         builder.$(query().jdbcTemplate(jdbcTemplate)
-                .sqlResource(Resources.newClasspathResource("org/citrusframework/actions/dsl/query-script.sql"))
+                .sqlResource(Resources.fromClasspath("org/citrusframework/actions/dsl/query-script.sql"))
                 .validate("NAME", "Leonard")
                 .validate("CNT_EPISODES", "100000")
                 .extract("NAME", "actorName")

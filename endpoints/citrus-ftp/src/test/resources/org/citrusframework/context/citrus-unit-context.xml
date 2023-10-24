@@ -4,7 +4,7 @@
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <bean id="resourceConverter" class="org.citrusframework.spi.ResourceConverter"/>
+  <bean id="resourceConverter" class="org.citrusframework.spi.StringToResourceConverter"/>
 
   <bean id="conversionService"
         class="org.springframework.context.support.ConversionServiceFactoryBean">

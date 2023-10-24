@@ -111,7 +111,7 @@ public class ExecuteSQLTestActionBuilderTest extends UnitTestSupport {
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(sql().jdbcTemplate(jdbcTemplate)
-            .sqlResource(Resources.newClasspathResource("org/citrusframework/actions/dsl/script.sql"))
+            .sqlResource(Resources.fromClasspath("org/citrusframework/actions/dsl/script.sql"))
             .ignoreErrors(true));
 
         TestCase test = builder.getTestCase();

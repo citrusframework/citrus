@@ -468,7 +468,7 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         DockerExecuteAction action = new DockerExecuteAction.Builder()
                 .client(client)
                 .command(new ImageBuild()
-                        .dockerFile(Resources.newClasspathResource("org/citrusframework/docker/Dockerfile"))
+                        .dockerFile(Resources.fromClasspath("org/citrusframework/docker/Dockerfile"))
                         .tag("new_image:latest"))
                 .build();
         action.execute(context);

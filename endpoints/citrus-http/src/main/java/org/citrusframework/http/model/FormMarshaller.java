@@ -35,7 +35,7 @@ public class FormMarshaller implements Marshaller, Unmarshaller {
 
     public FormMarshaller() {
         this.marshaller = new Jaxb2Marshaller(
-                Resources.newClasspathResource("org/citrusframework/schema/citrus-http-message.xsd"), FormData.class, Control.class);
+                Resources.fromClasspath("org/citrusframework/schema/citrus-http-message.xsd"), FormData.class, Control.class);
     }
 
     public void marshal(Object graph, Result result) {

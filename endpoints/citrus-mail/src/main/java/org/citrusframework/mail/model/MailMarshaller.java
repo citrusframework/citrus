@@ -61,7 +61,7 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
      */
     public MailMarshaller() {
         this.mapper = new ObjectMapper();
-        this.marshaller = new Jaxb2Marshaller(Resources.newClasspathResource("org/citrusframework/schema/citrus-mail-message.xsd"), classesToBeBound);
+        this.marshaller = new Jaxb2Marshaller(Resources.fromClasspath("org/citrusframework/schema/citrus-mail-message.xsd"), classesToBeBound);
 
         type = System.getProperty(MAIL_MARSHALLER_TYPE_PROPERTY, MessageType.XML.name());
     }

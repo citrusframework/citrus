@@ -116,7 +116,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * @return list of SQL statements.
      */
     protected List<String> createStatementsFromFileResource(TestContext context) {
-        return SqlUtils.createStatementsFromFileResource(Resources.newClasspathResource(context.replaceDynamicContentInString(sqlResourcePath)));
+        return SqlUtils.createStatementsFromFileResource(Resources.fromClasspath(context.replaceDynamicContentInString(sqlResourcePath)));
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * @return list of SQL statements.
      */
     protected List<String> createStatementsFromFileResource(TestContext context, SqlUtils.LastScriptLineDecorator lineDecorator) {
-        return SqlUtils.createStatementsFromFileResource(Resources.newClasspathResource(context.replaceDynamicContentInString(sqlResourcePath)), lineDecorator);
+        return SqlUtils.createStatementsFromFileResource(Resources.fromClasspath(context.replaceDynamicContentInString(sqlResourcePath)), lineDecorator);
     }
 
     @Override

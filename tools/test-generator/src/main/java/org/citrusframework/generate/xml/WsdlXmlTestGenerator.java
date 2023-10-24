@@ -161,8 +161,8 @@ public class WsdlXmlTestGenerator extends MessagingXmlTestGenerator<WsdlXmlTestG
     @Override
     protected List<Resource> getMarshallerSchemas() {
         List<Resource> schemas = super.getMarshallerSchemas();
-        schemas.add(Resources.newClasspathResource("org/citrusframework/schema/citrus-http-testcase.xsd"));
-        schemas.add(Resources.newClasspathResource("org/citrusframework/schema/citrus-ws-testcase.xsd"));
+        schemas.add(Resources.fromClasspath("org/citrusframework/schema/citrus-http-testcase.xsd"));
+        schemas.add(Resources.fromClasspath("org/citrusframework/schema/citrus-ws-testcase.xsd"));
         return schemas;
     }
 

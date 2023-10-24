@@ -57,7 +57,7 @@ public class XsdSchemaCollection extends AbstractSchemaCollection {
 
                 for (Path finding : findings) {
                     if (finding.toString().endsWith(".xsd") || finding.toString().endsWith(".wsdl")) {
-                        schemaResources.add(Resources.newClasspathResource(finding.toString()));
+                        schemaResources.add(Resources.fromClasspath(finding.toString()));
                     }
                 }
             } catch (IOException e) {

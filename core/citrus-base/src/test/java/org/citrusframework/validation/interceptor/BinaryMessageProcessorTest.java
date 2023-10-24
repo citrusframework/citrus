@@ -66,7 +66,7 @@ public class BinaryMessageProcessorTest extends UnitTestSupport {
     public void testMessageResourceNotFound() {
 
         //GIVEN
-        final DefaultMessage message = new DefaultMessage(Resources.newFileSystemResource("unknown.txt"));
+        final DefaultMessage message = new DefaultMessage(Resources.fromFileSystem("unknown.txt"));
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN
