@@ -20,6 +20,7 @@
 package org.citrusframework.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -211,14 +212,17 @@ public class ReflectionHelper {
      * static {@link Method}.
      * @param method the method to invoke
      * @param target the target object to invoke the method on
-     * @param args the invocation arguments (may be {@code null})
+     * @param args the invocation arguments (maybe {@code null})
      * @return the invocation result, if any
      */
     public static Object invokeMethod(Method method, Object target, Object... args) {
         try {
             return method.invoke(target, args);
-        }
-        catch (Exception e) {
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            if (e.getCause() instanceof CitrusRuntimeException runtimeException) {
+                throw runtimeException;
+            }
+
             throw new CitrusRuntimeException("Failed to invoke method", e);
         }
     }
@@ -229,8 +233,8 @@ public class ReflectionHelper {
                 f.setAccessible(true);
             }
             f.set(instance, value);
-        } catch (Exception e) {
-            throw new UnsupportedOperationException("Cannot inject value of class: " + value.getClass() + " into: " + f);
+        } catch (IllegalAccessException e) {
+            throw new UnsupportedOperationException("Cannot set value of type: " + value.getClass() + " into field: " + f, e);
         }
     }
 
