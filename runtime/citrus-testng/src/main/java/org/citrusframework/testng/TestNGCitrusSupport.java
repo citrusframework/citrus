@@ -35,7 +35,6 @@ import org.citrusframework.TestGroupAware;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.annotations.CitrusXmlTest;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
@@ -94,8 +93,6 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
                     throw new CitrusRuntimeException(testResult.getThrowable());
                 }
             }
-        } else if (method.getAnnotation(CitrusXmlTest.class) != null) {
-            throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
         } else {
             callBack.runTestMethod(testResult);
         }
@@ -109,10 +106,6 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
      * @param invocationCount
      */
     protected void run(ITestResult testResult, Method method, List<TestLoader> methodTestLoaders, int invocationCount) {
-        if (method.getAnnotation(CitrusXmlTest.class) != null) {
-            throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
-        }
-
         try {
             if (citrus == null) {
                 citrus = Citrus.newInstance();

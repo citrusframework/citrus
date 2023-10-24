@@ -26,9 +26,8 @@ import org.citrusframework.TestBehavior;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusAnnotations;
-import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
@@ -82,8 +81,6 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
             CitrusAnnotations.injectTestRunner(testLoader, runner);
             testLoader.doWithTestCase(t -> JUnit4Helper.invokeTestMethod(this, frameworkMethod, ctx));
             testLoader.load();
-        } else if (frameworkMethod.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-            throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
         }
     }
 

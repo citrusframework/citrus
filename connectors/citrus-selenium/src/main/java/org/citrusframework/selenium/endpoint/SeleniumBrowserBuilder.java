@@ -41,17 +41,6 @@ public class SeleniumBrowserBuilder extends AbstractEndpointBuilder<SeleniumBrow
      * Sets the browser type.
      * @param type
      * @return
-     * @deprecated in favor of {@link #type(String)}
-     */
-    @Deprecated
-    public SeleniumBrowserBuilder browserType(String type) {
-        return this.type(type);
-    }
-
-    /**
-     * Sets the browser type.
-     * @param type
-     * @return
      */
     public SeleniumBrowserBuilder type(String type) {
         endpoint.getEndpointConfiguration().setBrowserType(type);

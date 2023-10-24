@@ -31,7 +31,6 @@ import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.annotations.CitrusXmlTest;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
@@ -73,7 +72,7 @@ public final class CitrusExtensionHelper {
      * @return
      */
     public static boolean isTestSourceMethod(Method method) {
-        return method.isAnnotationPresent(CitrusTestSource.class) || method.isAnnotationPresent(CitrusXmlTest.class);
+        return method.isAnnotationPresent(CitrusTestSource.class);
     }
 
     /**
@@ -155,18 +154,6 @@ public final class CitrusExtensionHelper {
         if (isTestFactoryMethod(method)) {
             TestLoader testLoader = new DefaultTestLoader();
             configure(testLoader, extensionContext, method, new String[]{}, null, new String[]{}, new String[]{});
-            return testLoader;
-        }
-
-        if (method.getAnnotation(CitrusXmlTest.class) != null) {
-            CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
-
-            TestLoader testLoader = TestLoader.lookup(TestLoader.SPRING)
-                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", TestLoader.SPRING)));
-
-            configure(testLoader, extensionContext, method, citrusTestAnnotation.name(),
-                    citrusTestAnnotation.packageName(), citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources());
-
             return testLoader;
         }
 

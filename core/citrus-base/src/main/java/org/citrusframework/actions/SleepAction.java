@@ -147,15 +147,6 @@ public class SleepAction extends AbstractTestAction {
             return this;
         }
 
-        /**
-         * @deprecated in favor of using {@link #milliseconds(String)}
-         */
-        @Deprecated
-        public Builder time(String expression) {
-            time(expression, TimeUnit.MILLISECONDS);
-            return this;
-        }
-
         public Builder time(String expression, TimeUnit timeUnit) {
             time = expression;
             this.timeUnit = timeUnit;

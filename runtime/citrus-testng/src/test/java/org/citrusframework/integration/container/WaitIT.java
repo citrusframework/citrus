@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import com.sun.net.httpserver.HttpServer;
 import org.testng.annotations.AfterClass;
@@ -51,6 +52,6 @@ public class WaitIT extends TestNGCitrusSpringSupport {
     }
 
     @Test
-    @CitrusXmlTest(name = "WaitIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "WaitIT")
     public void waitIT() {}
 }

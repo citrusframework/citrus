@@ -21,8 +21,6 @@ import java.util.List;
 
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.annotations.CitrusXmlTest;
-import org.citrusframework.common.TestLoader;
 import org.citrusframework.junit.CitrusFrameworkMethod;
 import org.citrusframework.junit.JUnit4Helper;
 import org.citrusframework.util.StringUtils;
@@ -75,11 +73,6 @@ public class CitrusSpringJUnit4Runner extends SpringJUnit4ClassRunner {
             } else if (method.getMethod().getAnnotation(CitrusTestSource.class) != null) {
                 CitrusTestSource citrusTestAnnotation = method.getMethod().getAnnotation(CitrusTestSource.class);
                 interceptedMethods.addAll(JUnit4Helper.findInterceptedMethods(method, citrusTestAnnotation.type(),
-                        citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
-                        citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources()));
-            } else if (method.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-                CitrusXmlTest citrusTestAnnotation = method.getMethod().getAnnotation(CitrusXmlTest.class);
-                interceptedMethods.addAll(JUnit4Helper.findInterceptedMethods(method, TestLoader.SPRING,
                         citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
                         citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources()));
             } else {

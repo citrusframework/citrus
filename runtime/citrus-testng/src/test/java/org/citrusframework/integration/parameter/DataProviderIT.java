@@ -16,7 +16,8 @@
 
 package org.citrusframework.integration.parameter;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.testng.CitrusParameters;
 import org.testng.annotations.*;
@@ -27,7 +28,7 @@ import org.testng.annotations.*;
  */
 public class DataProviderIT extends TestNGCitrusSpringSupport {
 
-    @CitrusXmlTest
+    @CitrusTestSource(type = TestLoader.SPRING)
     @CitrusParameters( "message" )
     @Test(dataProvider = "citrusDataProvider")
     public void DataProviderIT(String message) {
@@ -42,7 +43,7 @@ public class DataProviderIT extends TestNGCitrusSpringSupport {
         };
     }
 
-    @CitrusXmlTest(name = "DataProviderIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "DataProviderIT")
     @CitrusParameters( "message" )
     @Test(dataProvider = "namedDataProvider")
     public void DataProviderNameIT(String message) {

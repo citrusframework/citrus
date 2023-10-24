@@ -16,7 +16,8 @@
 
 package org.citrusframework.kubernetes.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.testng.annotations.Test;
 
 /**
@@ -28,7 +29,7 @@ import org.testng.annotations.Test;
 @Test
 public class KubernetesSendReceiveIT extends AbstractKubernetesIT {
 
-    @CitrusXmlTest(name = "KubernetesSendReceiveIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "KubernetesSendReceiveIT")
     public void kubernetesSendReceiveIT() {
     }
 }

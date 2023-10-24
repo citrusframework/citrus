@@ -58,7 +58,7 @@ The Selenium browser component supports different browser types for the commonly
 * *custom*
 
 Html unit is the default browser type and represents a headless browser that executed without displaying the graphical user interface. In case you need a totally different browser or
-you need to customize the Selenium web driver you can use the _browserType="custom"_ in combination with a web driver reference:
+you need to customize the Selenium web driver you can use the _type="custom"_ in combination with a web driver reference:
 
 [source,xml]
 ----

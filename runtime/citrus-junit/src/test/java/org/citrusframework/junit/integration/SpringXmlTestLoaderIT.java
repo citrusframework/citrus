@@ -3,7 +3,8 @@ package org.citrusframework.junit.integration;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.BeanDefinitionParserConfiguration;
 import org.citrusframework.common.SpringXmlTestLoaderConfiguration;
 import org.citrusframework.config.xml.BaseTestCaseMetaInfoParser;
@@ -26,7 +27,7 @@ import org.w3c.dom.Element;
 public class SpringXmlTestLoaderIT extends JUnit4CitrusSpringSupport {
 
     @Test
-    @CitrusXmlTest
+    @CitrusTestSource(type = TestLoader.SPRING)
     public void SpringXmlTestLoaderIT() {
         TestCase testCase = getTestCase();
         Assert.assertTrue(testCase instanceof CustomTestCase);

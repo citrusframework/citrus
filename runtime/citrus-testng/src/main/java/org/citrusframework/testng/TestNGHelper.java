@@ -34,7 +34,6 @@ import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.annotations.CitrusXmlTest;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
 import org.citrusframework.context.TestContext;
@@ -111,7 +110,7 @@ public final class TestNGHelper {
     }
 
     /**
-     * Creates test loader from @CitrusXmlTest annotated test method and saves those to local member.
+     * Creates test loader from @CitrusTestSource(type = TestLoader.SPRING) annotated test method and saves those to local member.
      * Test loaders get executed later when actual method is called by TestNG. This way user can annotate
      * multiple methods in one single class each executing several Citrus XML tests.
      *
@@ -126,10 +125,6 @@ public final class TestNGHelper {
             CitrusTestSource citrusTestAnnotation = method.getAnnotation(CitrusTestSource.class);
             methodTestLoaders.addAll(createMethodTestLoaders(method, citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
                     citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), provider, citrusTestAnnotation.type(), CitrusSettings.getTestFileNamePattern(citrusTestAnnotation.type())));
-        } else if (method.getAnnotation(CitrusXmlTest.class) != null) {
-            CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
-            methodTestLoaders.addAll(createMethodTestLoaders(method, citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
-                    citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources(), provider, TestLoader.SPRING, CitrusSettings.getTestFileNamePattern(TestLoader.SPRING)));
         }
 
         return methodTestLoaders;

@@ -16,7 +16,8 @@
 
 package org.citrusframework.docker.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.testng.annotations.Test;
 
 /**
@@ -28,6 +29,6 @@ import org.testng.annotations.Test;
 @Test
 public class DockerExecuteIT extends AbstractDockerIT {
 
-    @CitrusXmlTest(name = "DockerExecuteIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "DockerExecuteIT")
     public void dockerInfoTest() {}
 }

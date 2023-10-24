@@ -30,9 +30,8 @@ import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusAnnotations;
-import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.DefaultTestLoader;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.TestSourceAware;
@@ -42,8 +41,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.junit.CitrusFrameworkMethod;
 import org.citrusframework.junit.JUnit4Helper;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
@@ -77,14 +74,7 @@ public class JUnit4CitrusSpringSupport extends AbstractJUnit4SpringContextTests
 
         TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
-        if (frameworkMethod.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-            TestLoader testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName(), frameworkMethod.getSource(), TestLoader.SPRING);
-
-            CitrusAnnotations.injectAll(testLoader, citrus, ctx);
-            testLoader.doWithTestCase(t -> JUnit4Helper.invokeTestMethod(this, frameworkMethod, ctx));
-
-            testLoader.load();
-        } else if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null ||
+        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null ||
                 frameworkMethod.getMethod().getAnnotation(CitrusTestSource.class) != null) {
             TestCaseRunner runner = JUnit4Helper.createTestRunner(frameworkMethod, this.getClass(), ctx);
             frameworkMethod.setAttribute(JUnit4Helper.BUILDER_ATTRIBUTE, runner);

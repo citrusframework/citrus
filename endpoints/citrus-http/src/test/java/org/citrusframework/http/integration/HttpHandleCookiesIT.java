@@ -3,7 +3,8 @@ package org.citrusframework.http.integration;
 import jakarta.servlet.http.Cookie;
 
 import org.citrusframework.annotations.CitrusTest;
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
@@ -25,7 +26,7 @@ public class HttpHandleCookiesIT extends TestNGCitrusSpringSupport {
     private HttpServer httpServer;
 
     @Test
-    @CitrusXmlTest(name = "HttpCookiesIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpCookiesIT")
     public void testCookies() {}
 
     @Test

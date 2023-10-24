@@ -69,9 +69,7 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
      *
      * @param autoReadFiles
      * @return
-     * @deprecated received files are always read automatically making this flag obsolete
      */
-    @Deprecated
     public ScpClientBuilder autoReadFiles(boolean autoReadFiles) {
         endpoint.getEndpointConfiguration().setAutoReadFiles(autoReadFiles);
         return this;

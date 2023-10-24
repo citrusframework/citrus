@@ -16,7 +16,8 @@
 
 package org.citrusframework.integration.parameter;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.testng.CitrusParameters;
 import org.testng.annotations.DataProvider;
@@ -33,7 +34,7 @@ public class ParameterIT extends TestNGCitrusSpringSupport {
 
     @Test(dataProvider = "someDataProvider")
     @CitrusParameters({"someVariable"})
-    @CitrusXmlTest(name = "TestParameterIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "TestParameterIT")
     @SuppressWarnings("unused")
     public void test(String someVariable) {
     }

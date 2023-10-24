@@ -22,7 +22,6 @@ package org.citrusframework.junit.jupiter.integration.spring;
 import java.util.stream.Stream;
 
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.annotations.CitrusXmlTest;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.config.CitrusSpringConfig;
 import org.citrusframework.junit.jupiter.CitrusTestFactorySupport;
@@ -42,7 +41,7 @@ class SpringBeanXml_IT {
 
     @Test
     @DisplayName("SpringBeanXml_IT")
-    @CitrusXmlTest(name = "SpringBeanXml_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "SpringBeanXml_IT")
     void SpringBeanXml_0_IT() {
     }
 
@@ -52,7 +51,7 @@ class SpringBeanXml_IT {
     }
 
     @Test
-    @CitrusXmlTest(name = "SampleIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "SampleIT")
     void SpringBeanXml_1_IT() {
     }
 
@@ -71,7 +70,7 @@ class SpringBeanXml_IT {
     }
 
     @Test
-    @CitrusXmlTest(sources = "classpath:org/citrusframework/junit/jupiter/integration/spring/SampleIT.xml")
+    @CitrusTestSource(type = TestLoader.SPRING, sources = "classpath:org/citrusframework/junit/jupiter/integration/spring/SampleIT.xml")
     void SpringBeanXml_4_IT() {
     }
 }
