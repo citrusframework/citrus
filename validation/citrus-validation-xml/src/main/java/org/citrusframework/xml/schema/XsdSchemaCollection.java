@@ -43,26 +43,31 @@ public class XsdSchemaCollection extends AbstractSchemaCollection {
      * Loads all schema resource files from schema locations.
      */
     protected Resource loadSchemaResources() {
-        ClasspathResourceResolver resourceResolver = new ClasspathResourceResolver();
-        for (String location : schemas) {
-            try {
-                Set<Path> findings;
-                if (StringUtils.hasText(FileUtils.getFileExtension(location))) {
-                    String fileNamePattern = FileUtils.getFileName(location).replace(".", "\\.").replace("*", ".*");
-                    String basePath = FileUtils.getBasePath(location);
-                    findings = resourceResolver.getResources(basePath, fileNamePattern);
+        try {
+            ClasspathResourceResolver resourceResolver = new ClasspathResourceResolver();
+            for (String location : schemas) {
+                Resource found = Resources.create(location);
+                if (found.exists()) {
+                    schemaResources.add(found);
                 } else {
-                    findings = resourceResolver.getResources(location);
-                }
+                    Set<Path> findings;
+                    if (StringUtils.hasText(FileUtils.getFileExtension(location))) {
+                        String fileNamePattern = FileUtils.getFileName(location).replace(".", "\\.").replace("*", ".*");
+                        String basePath = FileUtils.getBasePath(location);
+                        findings = resourceResolver.getResources(basePath, fileNamePattern);
+                    } else {
+                        findings = resourceResolver.getResources(location);
+                    }
 
-                for (Path finding : findings) {
-                    if (finding.toString().endsWith(".xsd") || finding.toString().endsWith(".wsdl")) {
-                        schemaResources.add(Resources.fromClasspath(finding.toString()));
+                    for (Path finding : findings) {
+                        if (finding.toString().endsWith(".xsd") || finding.toString().endsWith(".wsdl")) {
+                            schemaResources.add(Resources.fromClasspath(finding.toString()));
+                        }
                     }
                 }
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to read schema resources for location: " + location, e);
             }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read schema collection resources", e);
         }
 
         return schemaResources.get(0);
