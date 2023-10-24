@@ -130,10 +130,10 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         finished.whenComplete((ctx, ex) -> {
             if (ex != null) {
-                logger.warn("Failure in forked send action: " + ex.getMessage());
+                LOG.warn("Failure in forked send action: " + ex.getMessage());
             } else {
                 for (Exception ctxEx : ctx.getExceptions()) {
-                    logger.warn(ctxEx.getMessage());
+                    LOG.warn(ctxEx.getMessage());
                 }
             }
         });
@@ -160,8 +160,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                     validateMessage(message, context);
                     messageEndpoint.createProducer().send(message, context);
                 } catch (Exception e) {
-                    if (e instanceof CitrusRuntimeException runtimeEx) {
-                        context.addException(runtimeEx);
+                    if (e instanceof CitrusRuntimeException) {
+                        context.addException((CitrusRuntimeException) e);
                     } else {
                         context.addException(new CitrusRuntimeException(e));
                     }
