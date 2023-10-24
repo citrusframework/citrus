@@ -171,7 +171,6 @@
     <angus-mail.version>2.0.2</angus-mail.version>
     <apache.ant.version>1.10.14</apache.ant.version>
     <apache.camel.version>4.1.0</apache.camel.version>
-    <arquillian.version>1.7.1.Final</arquillian.version>
     <bouncycastle.version>1.70</bouncycastle.version>
     <byte.buddy.version>1.14.9</byte.buddy.version>
     <citrus.db.version>0.1.4</citrus.db.version>
@@ -180,7 +179,6 @@
     <commons.codec.version>1.16.0</commons.codec.version>
     <commons.io.version>2.14.0</commons.io.version>
     <commons.lang.version>2.6</commons.lang.version>
-    <commons.logging.api.version>1.1</commons.logging.api.version>
     <commons.logging.version>1.2</commons.logging.version>
     <commons.net.version>3.10.0</commons.net.version>
     <cucumber.version>7.14.0</cucumber.version>
@@ -227,8 +225,6 @@
     <okhttp.version>4.12.0</okhttp.version>
     <saaj.version>3.0.2</saaj.version>
     <selenium.version>4.14.1</selenium.version>
-    <shrinkwrap.impl.version>1.2.6</shrinkwrap.impl.version>
-    <shrinkwrap.resolver.version>3.2.1</shrinkwrap.resolver.version>
     <slf4j.version>2.0.9</slf4j.version>
     <snappy.version>1.1.10.5</snappy.version>
     <snakeyaml.version>2.2</snakeyaml.version>
@@ -753,33 +749,6 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- Citrus arquillian dependencies -->
-      <dependency>
-        <groupId>org.jboss.arquillian.junit</groupId>
-        <artifactId>arquillian-junit-core</artifactId>
-        <version>${arquillian.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.arquillian.config</groupId>
-        <artifactId>arquillian-config-api</artifactId>
-        <version>${arquillian.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.arquillian.container</groupId>
-        <artifactId>arquillian-container-test-spi</artifactId>
-        <version>${arquillian.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.shrinkwrap.resolver</groupId>
-        <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-        <version>${shrinkwrap.resolver.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.shrinkwrap</groupId>
-        <artifactId>shrinkwrap-impl-base</artifactId>
-        <version>${shrinkwrap.impl.version}</version>
-      </dependency>
-
       <!-- Cucumber -->
       <dependency>
         <groupId>io.cucumber</groupId>
@@ -903,11 +872,6 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-slf4j2-impl</artifactId>
         <version>${log4j2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging-api</artifactId>
-        <version>${commons.logging.api.version}</version>
       </dependency>
       <dependency>
         <groupId>commons-logging</groupId>
