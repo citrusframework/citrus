@@ -2,8 +2,6 @@
 <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
   <from>foo@mail.com</from>
   <to>bar@mail.com</to>
-  <cc></cc>
-  <bcc></bcc>
   <subject>Multipart Testmail</subject>
   <body>
     <contentType>text/html; charset=utf-8</contentType>

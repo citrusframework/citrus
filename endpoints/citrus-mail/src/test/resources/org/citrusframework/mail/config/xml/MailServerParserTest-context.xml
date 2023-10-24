@@ -11,6 +11,7 @@
 
   <citrus-mail:server id="mailServer2"
                       auto-start="false"
+                      auth-required="false"
                       auto-accept="false"
                       port="25000"/>
 
@@ -18,6 +19,7 @@
                       auto-start="false"
                       split-multipart="true"
                       message-converter="messageConverter"
+                      known-users="foo@example.com:foo-user:secr3t,bar@example.com:bar-user:secr3t"
                       marshaller="marshaller"
                       mail-properties="mailProperties"
                       endpoint-adapter="endpointAdapter"/>

@@ -29,11 +29,13 @@
       <xs:attribute name="port" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>
       <xs:attribute name="endpoint-adapter" type="xs:string"/>
+      <xs:attribute name="auth-required" type="xs:boolean"/>
       <xs:attribute name="auto-start" type="xs:boolean"/>
       <xs:attribute name="auto-accept" type="xs:boolean"/>
       <xs:attribute name="split-multipart" type="xs:boolean"/>
       <xs:attribute name="mail-properties" type="xs:string"/>
       <xs:attribute name="message-converter" type="xs:string"/>
+      <xs:attribute name="known-users" type="xs:string"/>
       <xs:attribute name="marshaller" type="xs:string"/>
       <xs:attribute name="debug-logging" type="xs:boolean"/>
     </xs:complexType>

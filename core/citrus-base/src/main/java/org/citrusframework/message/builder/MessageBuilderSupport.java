@@ -442,13 +442,13 @@ public abstract class MessageBuilderSupport<T extends TestAction, B extends Mess
         }
 
         /**
-         * Expect a control message in this action.
+         * Builds message from given message.
          *
-         * @param controlMessage
+         * @param message
          * @return
          */
-        public M message(final Message controlMessage) {
-            return getMessageBuilderSupport().from(controlMessage);
+        public M message(final Message message) {
+            return getMessageBuilderSupport().from(message);
         }
 
         /**

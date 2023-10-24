@@ -54,7 +54,7 @@ public abstract class FileUtils {
 
     public static final String FILE_EXTENSION_JAVA = ".java";
     public static final String FILE_EXTENSION_XML = ".xml";
-    public static final String FILE_PATH_CHARSET_PARAMETER = ";charset=";
+    public static final String FILE_PATH_CHARSET_PARAMETER = CitrusSettings.getFilePathCharsetParameter();
 
     /** Simulation mode required for Citrus administration UI when loading test cases from Java DSL */
     private static boolean simulationMode = false;
@@ -262,7 +262,7 @@ public abstract class FileUtils {
      */
     public static Resource getFileResource(String filePath) {
         String path;
-        if (filePath.contains(FILE_PATH_CHARSET_PARAMETER)) {
+        if (filePath.contains(FileUtils.FILE_PATH_CHARSET_PARAMETER)) {
             path = filePath.substring(0, filePath.indexOf(FileUtils.FILE_PATH_CHARSET_PARAMETER));
         } else {
             path = filePath;
@@ -405,5 +405,15 @@ public abstract class FileUtils {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read input stream", e);
         }
+    }
+
+    /**
+     * Construct content type information with given charset parameter.
+     * @param contentType
+     * @param charset
+     * @return
+     */
+    public static String constructContentType(String contentType, Charset charset) {
+        return contentType + FILE_PATH_CHARSET_PARAMETER + charset;
     }
 }

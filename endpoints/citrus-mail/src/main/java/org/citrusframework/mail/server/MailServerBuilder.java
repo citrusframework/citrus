@@ -16,12 +16,13 @@
 
 package org.citrusframework.mail.server;
 
+import java.util.List;
 import java.util.Properties;
 
+import com.icegreen.greenmail.util.GreenMail;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.server.AbstractServerBuilder;
-import com.icegreen.greenmail.util.GreenMail;
 
 /**
  * @author Christoph Deppisch
@@ -68,6 +69,16 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
     }
 
     /**
+     * Enables/disables user authentication.
+     * @param authRequired
+     * @return
+     */
+    public MailServerBuilder authRequired(boolean authRequired) {
+        endpoint.setAuthRequired(authRequired);
+        return this;
+    }
+
+    /**
      * Enables/disables auto accept.
      * @param autoAccept
      * @return
@@ -104,6 +115,16 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
      */
     public MailServerBuilder messageConverter(MailMessageConverter messageConverter) {
         endpoint.setMessageConverter(messageConverter);
+        return this;
+    }
+
+    /**
+     * Sets the known users.
+     * @param users
+     * @return
+     */
+    public MailServerBuilder knownUsers(List<String> users) {
+        endpoint.setKnownUsers(users);
         return this;
     }
 }

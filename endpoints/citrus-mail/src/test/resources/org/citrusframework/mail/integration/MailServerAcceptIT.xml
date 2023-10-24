@@ -40,8 +40,6 @@
               <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
                 <from>${from}</from>
                 <to>${to}</to>
-                <cc></cc>
-                <bcc></bcc>
                 <subject>${subject}</subject>
                 <body>
                   <contentType>text/plain; charset=utf-8</contentType>
@@ -97,8 +95,6 @@
               <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
                 <from>${from}</from>
                 <to>${to}</to>
-                <cc></cc>
-                <bcc></bcc>
                 <subject>${subject}</subject>
                 <body>
                   <contentType>text/plain; charset=utf-8</contentType>
@@ -149,8 +145,6 @@
                     <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
                       <from>${from}</from>
                       <to>${to}</to>
-                      <cc></cc>
-                      <bcc></bcc>
                       <subject>${subject}</subject>
                       <body>
                         <contentType>text/plain; charset=utf-8</contentType>

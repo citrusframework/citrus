@@ -49,6 +49,7 @@ public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint
     @MailServerConfig(autoStart=false,
+            authRequired = false,
             autoAccept=false,
             port=25000)
     private MailServer mailServer2;
@@ -57,6 +58,7 @@ public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
     @MailServerConfig(autoStart=false,
             splitMultipart=true,
             messageConverter="messageConverter",
+            knownUsers= { "foo@example.com:foo-user:secr3t", "bar@example.com:bar-user:secr3t" },
             marshaller="marshaller",
             javaMailProperties="javaMailProperties",
             endpointAdapter="endpointAdapter")
@@ -92,7 +94,7 @@ public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testHttpServerParser() {
+    public void testMailServerParser() {
         CitrusAnnotations.injectEndpoints(this, context);
 
         // 1st mail server
@@ -100,29 +102,38 @@ public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(mailServer1.getPort(), 25);
         Assert.assertFalse(mailServer1.isAutoStart());
         Assert.assertFalse(mailServer1.isSplitMultipart());
+        Assert.assertTrue(mailServer1.isAuthRequired());
         Assert.assertTrue(mailServer1.isAutoAccept());
         Assert.assertEquals(mailServer1.getEndpointAdapter().getClass(), DirectEndpointAdapter.class);
         Assert.assertTrue(mailServer1.getJavaMailProperties().isEmpty());
+        Assert.assertTrue(mailServer1.getKnownUsers().isEmpty());
 
         // 2nd mail server
         Assert.assertEquals(mailServer2.getName(), "mailServer2");
         Assert.assertEquals(mailServer2.getPort(), 25000);
         Assert.assertFalse(mailServer2.isAutoStart());
         Assert.assertFalse(mailServer2.isSplitMultipart());
+        Assert.assertFalse(mailServer2.isAuthRequired());
         Assert.assertFalse(mailServer2.isAutoAccept());
         Assert.assertTrue(mailServer2.getJavaMailProperties().isEmpty());
+        Assert.assertTrue(mailServer2.getKnownUsers().isEmpty());
 
         // 3rd mail server
         Assert.assertEquals(mailServer3.getName(), "mailServer3");
         Assert.assertEquals(mailServer3.getPort(), 25);
         Assert.assertFalse(mailServer3.isAutoStart());
         Assert.assertTrue(mailServer3.isSplitMultipart());
+        Assert.assertTrue(mailServer3.isAuthRequired());
         Assert.assertTrue(mailServer3.isAutoAccept());
         Assert.assertEquals(mailServer3.getEndpointAdapter(), endpointAdapter);
         Assert.assertEquals(mailServer3.getJavaMailProperties(), mailProperties);
         Assert.assertEquals(mailServer3.getMessageConverter(), messageConverter);
         Assert.assertEquals(mailServer3.getMarshaller(), marshaller);
         Assert.assertFalse(mailServer3.getJavaMailProperties().isEmpty());
+        Assert.assertFalse(mailServer3.getKnownUsers().isEmpty());
+        Assert.assertEquals(mailServer3.getKnownUsers().size(), 2L);
+        Assert.assertEquals(mailServer3.getKnownUsers().get(0), "foo@example.com:foo-user:secr3t");
+        Assert.assertEquals(mailServer3.getKnownUsers().get(1), "bar@example.com:bar-user:secr3t");
     }
 
     @Test

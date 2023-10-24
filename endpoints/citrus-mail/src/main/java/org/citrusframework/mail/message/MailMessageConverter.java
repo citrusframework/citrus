@@ -42,6 +42,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.mail.client.MailEndpointConfiguration;
 import org.citrusframework.mail.model.AttachmentPart;
 import org.citrusframework.mail.model.BodyPart;
+import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.mail.model.MailRequest;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -66,7 +67,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     private static final Logger logger = LoggerFactory.getLogger(MailMessageConverter.class);
 
     /** Mail delivery date format */
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
     @Override
     public MimeMailMessage convertOutbound(Message message, MailEndpointConfiguration endpointConfiguration, TestContext context) {
@@ -126,7 +127,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     public MailMessage convertInbound(MimeMailMessage message, MailEndpointConfiguration endpointConfiguration, TestContext context) {
         try {
             Map<String, Object> messageHeaders = createMessageHeaders(message);
-            return createMailRequest(messageHeaders, handlePart(message.getMimeMessage()), endpointConfiguration);
+            return createMailRequest(messageHeaders, handlePart(message.getMimeMessage()), endpointConfiguration.getMarshaller());
         } catch (MessagingException | IOException e) {
             throw new CitrusRuntimeException("Failed to convert mail mime message", e);
         }
@@ -136,18 +137,26 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
      * Creates a new mail message model object from message headers.
      * @param messageHeaders
      * @param bodyPart
-     * @param endpointConfiguration
+     * @param marshaller
      * @return
      */
-    protected MailMessage createMailRequest(Map<String, Object> messageHeaders, BodyPart bodyPart, MailEndpointConfiguration endpointConfiguration) {
-        return MailMessage.request(messageHeaders)
-                        .marshaller(endpointConfiguration.getMarshaller())
+    public MailMessage createMailRequest(Map<String, Object> messageHeaders, BodyPart bodyPart, MailMarshaller marshaller) {
+        MailMessage message = MailMessage.request(messageHeaders)
+                        .marshaller(marshaller)
                         .from(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString())
                         .to(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString())
-                        .cc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString())
-                        .bcc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC).toString())
                         .subject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString())
                         .body(bodyPart);
+
+        if (StringUtils.hasText(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString())) {
+            message.cc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString());
+        }
+
+        if (StringUtils.hasText(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC).toString())) {
+            message.bcc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC).toString());
+        }
+
+        return message;
     }
 
     /**

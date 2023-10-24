@@ -16,6 +16,9 @@
 
 package org.citrusframework.mail.config.xml;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.AbstractServerParser;
 import org.citrusframework.mail.server.MailServer;
@@ -33,8 +36,13 @@ public class MailServerParser extends AbstractServerParser {
     @Override
     protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auth-required"), "authRequired");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auto-accept"), "autoAccept");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("split-multipart"), "splitMultipart");
+
+        if (element.hasAttribute("known-users")) {
+            builder.addPropertyValue("knownUsers", Arrays.stream(element.getAttribute("known-users").split(",")).collect(Collectors.toList()));
+        }
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-converter"), "messageConverter");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("marshaller"), "marshaller");

@@ -16,11 +16,11 @@
 
 package org.citrusframework.mail.client;
 
+import java.util.Properties;
+
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.mail.message.MailMessageConverter;
 import org.citrusframework.mail.model.MailMarshaller;
-
-import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
@@ -29,7 +29,7 @@ import java.util.Properties;
 public class MailClientBuilder extends AbstractEndpointBuilder<MailClient> {
 
     /** Endpoint target */
-    private MailClient endpoint = new MailClient();
+    private final MailClient endpoint = new MailClient();
 
     @Override
     protected MailClient getEndpoint() {
