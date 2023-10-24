@@ -16,8 +16,18 @@
 
 package org.citrusframework.mail.server;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Stack;
+import java.util.stream.Collectors;
+import javax.xml.transform.Source;
+
 import com.icegreen.greenmail.mail.MailAddress;
 import com.icegreen.greenmail.user.GreenMailUser;
+import com.icegreen.greenmail.user.UserException;
+import com.icegreen.greenmail.user.UserManager;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
 import jakarta.mail.AuthenticationFailedException;
@@ -36,14 +46,9 @@ import org.citrusframework.mail.model.MailRequest;
 import org.citrusframework.mail.model.MailResponse;
 import org.citrusframework.message.Message;
 import org.citrusframework.server.AbstractServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMailMessage;
-
-import javax.xml.transform.Source;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Stack;
-import java.util.stream.Collectors;
 
 /**
  * Mail server implementation starts new SMTP server instance and listens for incoming mail messages. Incoming mail messages
@@ -60,6 +65,9 @@ import java.util.stream.Collectors;
  * @since 1.4
  */
 public class MailServer extends AbstractServer {
+
+    /** Logger */
+    private static final Logger logger = LoggerFactory.getLogger(MailServer.class);
 
     /** Server port */
     private int port = 25;
@@ -79,8 +87,13 @@ public class MailServer extends AbstractServer {
     /** Should accept automatically or handled via test case */
     private boolean autoAccept = true;
 
+    /** Requires users to properly authenticate with the server */
+    private boolean authRequired = true;
+
     /** Should split multipart messages for each mime part */
     private boolean splitMultipart = false;
+
+    private final List<String> knownUsers = new ArrayList<>();
 
     /** Smtp server instance */
     private GreenMail smtpServer;
@@ -88,11 +101,18 @@ public class MailServer extends AbstractServer {
     @Override
     protected void startup() {
         smtpServer = new GreenMail(new ServerSetup(port, null, "smtp"));
+
+        if (!authRequired) {
+            smtpServer.getManagers().getSmtpManager().getUserManager().setAuthRequired(false);
+        } else {
+            addKnownUsers(smtpServer.getManagers().getSmtpManager().getUserManager());
+        }
+
         smtpServer.getManagers().getSmtpManager().getUserManager().setMessageDeliveryHandler((msg, mailAddress) -> {
             GreenMailUser user = smtpServer.getManagers().getUserManager().getUserByEmail(mailAddress.getEmail());
 
             if (null == user) {
-                String login = mailAddress.getEmail();
+                String login = mailAddress.getUser();
                 String email = mailAddress.getEmail();
                 String password = mailAddress.getEmail();
                 user = smtpServer.getManagers().getUserManager().createUser(email, login, password);
@@ -107,6 +127,30 @@ public class MailServer extends AbstractServer {
         });
 
         smtpServer.start();
+    }
+
+    private void addKnownUsers(UserManager userManager) {
+        knownUsers.stream()
+            .map(userSpec -> userSpec.split(":"))
+            .map(credentials -> {
+                if (credentials.length > 3) {
+                    return new String[] { credentials[0], credentials[1], credentials[2] };
+                } else if (credentials.length == 2) {
+                    return new String[] { credentials[0], credentials[1], credentials[0] };
+                } else if (credentials.length == 1) {
+                    return new String[] { credentials[0], credentials[0], credentials[0] };
+                } else {
+                    return credentials;
+                }
+            })
+            .filter(credentials -> credentials.length == 3)
+            .forEach(credentials -> {
+                try {
+                    userManager.createUser(credentials[0], credentials[1], credentials[2]);
+                } catch (UserException e) {
+                    logger.warn(String.format("Failed to create known user: %s:%s:%s", credentials[0], credentials[1], credentials[2]));
+                }
+            });
     }
 
     @Override
@@ -174,10 +218,10 @@ public class MailServer extends AbstractServer {
     /**
      * Split mail message into several messages. Each body and each attachment results in separate message
      * invoked on endpoint adapter. Mail message response if any should be sent only once within test case.
-     * However, latest mail response sent by test case is returned, others are ignored.
+     * However, the latest mail response sent by test case is returned, others are ignored.
      */
     private Message split(BodyPart bodyPart, Map<String, Object> messageHeaders) {
-        MailMessage mailRequest = createMailMessage(messageHeaders, bodyPart.getContent(), bodyPart.getContentType());
+        MailMessage mailRequest = messageConverter.createMailRequest(messageHeaders, new BodyPart(bodyPart.getContent(), bodyPart.getContentType()), marshaller);
 
         Stack<Message> responseStack = new Stack<>();
         if (bodyPart instanceof AttachmentPart) {
@@ -204,20 +248,6 @@ public class MailServer extends AbstractServer {
         }
     }
 
-    /**
-     * Creates a new mail message model object from message headers.
-     */
-    protected MailMessage createMailMessage(Map<String, Object> messageHeaders, String body, String contentType) {
-        return MailMessage.request(messageHeaders)
-                .marshaller(marshaller)
-                .from(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString())
-                .to(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString())
-                .cc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString())
-                .bcc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC).toString())
-                .subject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString())
-                .body(body, contentType);
-    }
-
     @Override
     public MailEndpointConfiguration getEndpointConfiguration() {
         MailEndpointConfiguration endpointConfiguration = new MailEndpointConfiguration();
@@ -237,6 +267,22 @@ public class MailServer extends AbstractServer {
         }
 
         return mailSession;
+    }
+
+    /**
+     * Users must authenticate properly with the server.
+     * @return
+     */
+    public boolean isAuthRequired() {
+        return authRequired;
+    }
+
+    /**
+     * Enable/disable the user authentication on this server.
+     * @param authRequired
+     */
+    public void setAuthRequired(boolean authRequired) {
+        this.authRequired = authRequired;
     }
 
     /**
@@ -335,5 +381,31 @@ public class MailServer extends AbstractServer {
      */
     public void setMessageConverter(MailMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Gets the known users.
+     * @return
+     */
+    public List<String> getKnownUsers() {
+        return knownUsers;
+    }
+
+    /**
+     * Sets the known users.
+     * @param knownUsers
+     */
+    public void setKnownUsers(List<String> knownUsers) {
+        this.knownUsers.addAll(knownUsers);
+    }
+
+    /**
+     * Adds a new user known to this mail server.
+     * @param email
+     * @param login
+     * @param password
+     */
+    public void addKnownUser(String email, String login, String password) {
+        this.knownUsers.add(String.join(":", email, login, password));
     }
 }

@@ -33,8 +33,8 @@ public class MailMarshallerTest {
 
     @Test(dataProvider = "mailSourceProvider")
     public void testUnmarshalMail(String requestSource, String responseSource) throws Exception {
-        MailRequest request = (MailRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.newClasspathResource(requestSource))));
-        MailResponse response = (MailResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.newClasspathResource(responseSource))));
+        MailRequest request = (MailRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.fromClasspath(requestSource))));
+        MailResponse response = (MailResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.fromClasspath(responseSource))));
 
         Assert.assertEquals(request.getFrom(), "foo@mail.com");
         Assert.assertEquals(request.getTo(), "bar@mail.com,copy@mail.com");
@@ -45,8 +45,8 @@ public class MailMarshallerTest {
 
     @Test(dataProvider = "acceptSourceProvider")
     public void testUnmarshalAccept(String requestSource, String responseSource) throws Exception {
-        AcceptRequest request = (AcceptRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.newClasspathResource(requestSource))));
-        AcceptResponse response = (AcceptResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.newClasspathResource(responseSource))));
+        AcceptRequest request = (AcceptRequest) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.fromClasspath(requestSource))));
+        AcceptResponse response = (AcceptResponse) mailMarshaller.unmarshal(new StringSource(FileUtils.readToString(Resources.fromClasspath(responseSource))));
 
         Assert.assertEquals(request.getFrom(), "foo@mail.com");
 

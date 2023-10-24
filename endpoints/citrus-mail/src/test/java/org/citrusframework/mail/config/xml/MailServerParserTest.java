@@ -44,9 +44,11 @@ public class MailServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getPort(), 25);
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isSplitMultipart());
+        Assert.assertTrue(server.isAuthRequired());
         Assert.assertTrue(server.isAutoAccept());
         Assert.assertEquals(server.getEndpointAdapter().getClass(), DirectEndpointAdapter.class);
         Assert.assertTrue(server.getJavaMailProperties().isEmpty());
+        Assert.assertTrue(server.getKnownUsers().isEmpty());
 
         // 2nd mail server
         server = servers.get("mailServer2");
@@ -54,8 +56,10 @@ public class MailServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getPort(), 25000);
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isSplitMultipart());
+        Assert.assertFalse(server.isAuthRequired());
         Assert.assertFalse(server.isAutoAccept());
         Assert.assertTrue(server.getJavaMailProperties().isEmpty());
+        Assert.assertTrue(server.getKnownUsers().isEmpty());
 
         // 3rd mail server
         server = servers.get("mailServer3");
@@ -63,11 +67,16 @@ public class MailServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getPort(), 25);
         Assert.assertFalse(server.isAutoStart());
         Assert.assertTrue(server.isSplitMultipart());
+        Assert.assertTrue(server.isAuthRequired());
         Assert.assertTrue(server.isAutoAccept());
         Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("endpointAdapter"));
         Assert.assertEquals(server.getJavaMailProperties(), beanDefinitionContext.getBean("mailProperties"));
         Assert.assertEquals(server.getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
         Assert.assertEquals(server.getMarshaller(), beanDefinitionContext.getBean("marshaller", MailMarshaller.class));
         Assert.assertFalse(server.getJavaMailProperties().isEmpty());
+        Assert.assertFalse(server.getKnownUsers().isEmpty());
+        Assert.assertEquals(server.getKnownUsers().size(), 2L);
+        Assert.assertEquals(server.getKnownUsers().get(0), "foo@example.com:foo-user:secr3t");
+        Assert.assertEquals(server.getKnownUsers().get(1), "bar@example.com:bar-user:secr3t");
     }
 }

@@ -166,6 +166,11 @@ public final class CitrusSettings {
     public static final String LOG_MASK_KEYWORDS_ENV = "CITRUS_LOG_MASK_KEYWORDS";
     public static final String LOG_MASK_KEYWORDS_DEFAULT = "password,secret,secretKey";
 
+    /** File path charset parameter */
+    public static final String FILE_PATH_CHARSET_PARAMETER_PROPERTY = "citrus.file.path.charset.parameter";
+    public static final String FILE_PATH_CHARSET_PARAMETER_ENV = "CITRUS_FILE_PATH_CHARSET_PARAMETER";
+    public static final String FILE_PATH_CHARSET_PARAMETER_DEFAULT = "; charset=";
+
     /**
      * Gets set of file name patterns for Groovy test files.
      * @return
@@ -241,6 +246,15 @@ public final class CitrusSettings {
     public static String getLogMaskValue() {
         return System.getProperty(LOG_MASK_VALUE_PROPERTY,  System.getenv(LOG_MASK_VALUE_ENV) != null ?
                 System.getenv(LOG_MASK_VALUE_ENV) : LOG_MASK_VALUE_DEFAULT);
+    }
+
+    /**
+     * Get the file path charset parameter.
+     * @return
+     */
+    public static String getFilePathCharsetParameter() {
+        return System.getProperty(FILE_PATH_CHARSET_PARAMETER_PROPERTY,  System.getenv(FILE_PATH_CHARSET_PARAMETER_ENV) != null ?
+                System.getenv(FILE_PATH_CHARSET_PARAMETER_ENV) : FILE_PATH_CHARSET_PARAMETER_DEFAULT);
     }
 
     /**

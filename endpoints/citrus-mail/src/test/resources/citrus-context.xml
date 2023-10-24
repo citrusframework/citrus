@@ -40,4 +40,22 @@
                       timeout="5000"
                       auto-start="true"/>
 
+  <citrus-mail:client id="securedMailClient"
+                      host="localhost"
+                      username="foo-user"
+                      password="secr3t"
+                      port="25075"/>
+
+  <citrus-mail:client id="unauthorizedMailClient"
+                      host="localhost"
+                      username="foo-user"
+                      password="wrong"
+                      port="25075"/>
+
+  <citrus-mail:server id="securedMailServer"
+                      port="25075"
+                      auth-required="true"
+                      known-users="@foo@citrusframework.org:foo-user:secr3t"
+                      auto-start="true"/>
+
 </beans>

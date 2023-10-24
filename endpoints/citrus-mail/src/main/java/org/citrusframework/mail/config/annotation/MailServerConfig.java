@@ -39,6 +39,12 @@ public @interface MailServerConfig {
     int port() default 25;
 
     /**
+     * User authentication required.
+     * @return
+     */
+    boolean authRequired() default true;
+
+    /**
      * Auto accept.
      * @return
      */
@@ -67,6 +73,12 @@ public @interface MailServerConfig {
      * @return
      */
     String messageConverter() default  "";
+
+    /**
+     * Known users.
+     * @return
+     */
+    String[] knownUsers() default {};
 
     /**
      * Auto start.

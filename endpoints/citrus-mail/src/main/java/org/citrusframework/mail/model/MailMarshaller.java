@@ -76,7 +76,7 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
                         try {
                             return mapper.readValue(((StreamSource) source).getReader(), type);
                         } catch (JsonParseException | JsonMappingException e2) {
-                            continue;
+                            // do nothing - ignore
                         } catch (IOException io) {
                             logger.warn("Unable to read mail JSON object from source", io);
                             throw new CitrusRuntimeException("Failed to unmarshal source", io);
@@ -91,7 +91,7 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
                 try {
                     return mapper.readValue(((StreamSource) source).getReader(), type);
                 } catch (JsonParseException | JsonMappingException e2) {
-                    continue;
+                    // do nothing - ignore
                 } catch (IOException io) {
                     throw new CitrusRuntimeException("Unable to read mail JSON object from source", io);
                 }

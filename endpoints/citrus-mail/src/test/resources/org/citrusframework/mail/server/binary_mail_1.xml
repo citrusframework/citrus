@@ -3,7 +3,6 @@
   <from>Foo &lt;foo@mail.com&gt;</from>
   <to>bar@mail.com</to>
   <cc>FooBar &lt;foobar@mail.com&gt;</cc>
-  <bcc></bcc>
   <subject>This is brand_logo.png</subject>
   <body>
     <contentType>text/plain; charset=ISO-8859-15; format=flowed</contentType>

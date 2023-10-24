@@ -41,9 +41,9 @@ public class MailRequest {
     protected String from;
     @XmlElement(required = true)
     protected String to;
-    @XmlElement(required = false)
+    @XmlElement
     protected String cc;
-    @XmlElement(required = false)
+    @XmlElement
     protected String bcc;
     @XmlElement(required = true)
     protected String subject;

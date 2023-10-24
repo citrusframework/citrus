@@ -16,6 +16,8 @@
 
 package org.citrusframework.mail.message;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -26,6 +28,7 @@ import org.citrusframework.mail.model.MailMarshaller;
 import org.citrusframework.mail.model.MailRequest;
 import org.citrusframework.mail.model.MailResponse;
 import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.util.FileUtils;
 import org.citrusframework.xml.StringResult;
 
 /**
@@ -104,11 +107,11 @@ public class MailMessage extends DefaultMessage {
             request.setTo(headers.get(CitrusMailMessageHeaders.MAIL_TO).toString());
         }
 
-        if (headers.containsKey(CitrusMailMessageHeaders.MAIL_CC)) {
+        if (headers.containsKey(CitrusMailMessageHeaders.MAIL_CC) && !headers.get(CitrusMailMessageHeaders.MAIL_CC).toString().isBlank()) {
             request.setCc(headers.get(CitrusMailMessageHeaders.MAIL_CC).toString());
         }
 
-        if (headers.containsKey(CitrusMailMessageHeaders.MAIL_BCC)) {
+        if (headers.containsKey(CitrusMailMessageHeaders.MAIL_BCC) && !headers.get(CitrusMailMessageHeaders.MAIL_BCC).toString().isBlank()) {
             request.setBcc(headers.get(CitrusMailMessageHeaders.MAIL_BCC).toString());
         }
 
@@ -248,7 +251,11 @@ public class MailMessage extends DefaultMessage {
     }
 
     public MailMessage body(String body) {
-        return body(body, "text/plain");
+        return body(body, "text/plain", StandardCharsets.UTF_8);
+    }
+
+    public MailMessage body(String body, String contentType, Charset charset) {
+        return body(body, FileUtils.constructContentType(contentType, charset));
     }
 
     public MailMessage body(String body, String contentType) {
