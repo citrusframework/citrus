@@ -45,6 +45,9 @@ public class ClassPathTestScanner extends AbstractTestScanner {
     /** Test annotation marking test classes and methods */
     private final Class<? extends Annotation> annotationType;
 
+    /** Classpath resource resolver */
+    private final ClasspathResourceResolver resolver = new ClasspathResourceResolver();
+
     /**
      * Default constructor using run configuration.
      * @param includes
@@ -57,7 +60,6 @@ public class ClassPathTestScanner extends AbstractTestScanner {
     @Override
     public List<TestClass> findTestsInPackage(String packageName) {
         try {
-            ClasspathResourceResolver resolver = new ClasspathResourceResolver();
             Set<Path> resources = resolver.getClasses(packageName);
 
             List<String> classes = new ArrayList<>();

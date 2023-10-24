@@ -79,17 +79,22 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
         try {
             ClasspathResourceResolver resourceResolver = new ClasspathResourceResolver();
             for (String location : locations) {
-                Set<Path> findings;
-                if (StringUtils.hasText(FileUtils.getFileExtension(location))) {
-                    String fileNamePattern = FileUtils.getFileName(location).replace(".", "\\.").replace("*", ".*");
-                    String basePath = FileUtils.getBasePath(location);
-                    findings = resourceResolver.getResources(basePath, fileNamePattern);
+                Resource found = Resources.create(location);
+                if (found.exists()) {
+                    addSchemas(found);
                 } else {
-                    findings = resourceResolver.getResources(location);
-                }
+                    Set<Path> findings;
+                    if (StringUtils.hasText(FileUtils.getFileExtension(location))) {
+                        String fileNamePattern = FileUtils.getFileName(location).replace(".", "\\.").replace("*", ".*");
+                        String basePath = FileUtils.getBasePath(location);
+                        findings = resourceResolver.getResources(basePath, fileNamePattern);
+                    } else {
+                        findings = resourceResolver.getResources(location);
+                    }
 
-                for (Path resource : findings) {
-                    addSchemas(Resources.fromClasspath(resource.toString()));
+                    for (Path resource : findings) {
+                        addSchemas(Resources.fromClasspath(resource.toString()));
+                    }
                 }
             }
 
