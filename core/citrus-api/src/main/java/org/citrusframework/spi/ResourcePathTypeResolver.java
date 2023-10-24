@@ -117,7 +117,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
         try {
             Stream.concat(
                     classpathResourceResolver.getResources(fullPath).stream().filter(Objects::nonNull),
-                    resolveAllFromJar(path))
+                    resolveAllFromJar(fullPath))
                     .forEach(resourcePath -> {
                         Path fileName = resourcePath.getFileName();
                         if (fileName == null) {
