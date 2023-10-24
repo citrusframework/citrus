@@ -154,7 +154,7 @@
     <maven.javadoc.plugin.version>3.5.0</maven.javadoc.plugin.version>
     <maven.nexus-staging.plugin.version>1.6.13</maven.nexus-staging.plugin.version>
     <maven.plugin.plugin.version>3.9.0</maven.plugin.plugin.version>
-    <maven.plugin.annotations.version>3.9.0</maven.plugin.annotations.version>
+    <maven.plugin.annotations.version>3.10.1</maven.plugin.annotations.version>
     <maven.release.plugin.version>3.0.1</maven.release.plugin.version>
     <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
@@ -201,7 +201,7 @@
     <jakarta.validation.version>3.0.2</jakarta.validation.version>
     <jakarta.websocket-api.version>2.1.1</jakarta.websocket-api.version>
     <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
-    <jakarta.xml.soap-api.version>3.0.0</jakarta.xml.soap-api.version>
+    <jakarta.xml.soap-api.version>3.0.1</jakarta.xml.soap-api.version>
     <javapoet.version>1.13.0</javapoet.version>
     <jaxb.version>4.0.3</jaxb.version>
     <jetty.version>11.0.17</jetty.version>
@@ -223,13 +223,13 @@
     <mockftpserver.version>3.1.0</mockftpserver.version>
     <netty.version>4.1.100.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
-    <saaj.version>3.0.2</saaj.version>
+    <saaj.version>3.0.3</saaj.version>
     <selenium.version>4.14.1</selenium.version>
     <slf4j.version>2.0.9</slf4j.version>
     <snappy.version>1.1.10.5</snappy.version>
     <snakeyaml.version>2.2</snakeyaml.version>
     <spring.version>6.0.13</spring.version>
-    <spring.ws.version>4.0.6</spring.ws.version>
+    <spring.ws.version>4.0.7</spring.ws.version>
     <spring.integration.version>6.1.4</spring.integration.version>
     <spring.restdocs.version>3.0.0</spring.restdocs.version>
     <sshd.version>2.10.0</sshd.version>
