@@ -223,8 +223,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
             variableExtractor.extractVariables(message, context);
         }
 
-        if (StringUtils.hasText(message.getName())) {
-            context.getMessageStore().storeMessage(message.getName(), message);
+        Message controlMessage = createControlMessage(context, messageType);
+        if (StringUtils.hasText(controlMessage.getName())) {
+            context.getMessageStore().storeMessage(controlMessage.getName(), message);
         } else {
             context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), message);
         }
@@ -232,8 +233,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         if (validationProcessor != null) {
             validationProcessor.validate(message, context);
         } else {
-            Message controlMessage = createControlMessage(context, messageType);
-
             if (logger.isDebugEnabled()) {
                 logger.debug("Control message:\n" + controlMessage.print(context));
             }
@@ -413,7 +412,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Gets the validationProcessor.
-     * @return the validationProcessor the validationProcessor to get.
+     * @return the validationProcessor to get.
      */
     public ValidationProcessor getValidationProcessor() {
         return validationProcessor;
