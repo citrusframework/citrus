@@ -19,6 +19,7 @@ package org.citrusframework.docker.actions;
 import java.io.File;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.List;
 
 import org.citrusframework.docker.client.DockerClient;
 import org.citrusframework.docker.command.ContainerCreate;
@@ -57,19 +58,24 @@ import com.github.dockerjava.api.command.VersionCmd;
 import com.github.dockerjava.api.command.WaitContainerCmd;
 import com.github.dockerjava.api.command.WaitContainerResultCallback;
 import com.github.dockerjava.api.model.BuildResponseItem;
+import com.github.dockerjava.api.model.Capability;
+import com.github.dockerjava.api.model.ContainerConfig;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
+import com.github.dockerjava.api.model.Volume;
 import com.github.dockerjava.api.model.WaitResponse;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
+import org.mockito.ArgumentCaptor;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 
@@ -192,6 +198,81 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_ID), response.getId());
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_NAME), "my_container");
 
+    }
+    
+    @Test
+    public void testCreateWithEnvArgs() throws Exception {
+    	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
+    	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
+    	
+    	reset(dockerClient, command);
+    	
+    	when(client.getEndpointConfiguration().getDockerClient().createContainerCmd(anyString())).thenReturn(command);
+    	when(command.exec()).thenReturn(response);
+    	when(response.getId()).thenReturn(UUID.randomUUID().toString());
+    	when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
+    	
+    	String[] containerEnvVars = {"VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"};
+    	
+    	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
+    		.client(client)
+    		.command(new ContainerCreate()
+    			.image("image_create")
+    			.name("myContainer")
+    			.env("VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"))
+    		.build();
+    	containerCreateAction.execute(context);
+    	
+    	ArgumentCaptor<String[]> argumentCaptor = ArgumentCaptor.forClass(String[].class);
+    	verify(command).withEnv(argumentCaptor.capture());
+    	String[] capturedArguments = (String[]) argumentCaptor.getValue();
+    	
+    	Assert.assertEquals(containerEnvVars.length, capturedArguments.length);
+    	for(int i=0; i<containerEnvVars.length; i++) {
+    		Assert.assertEquals(containerEnvVars[i], capturedArguments[i]);
+    	}
+    }
+    
+    @Test
+    public void testCreateWithVolumeArgs() throws Exception {
+    	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
+    	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
+    	
+    	reset(dockerClient, command);
+    	
+    	when(client.getEndpointConfiguration().getDockerClient().createContainerCmd(anyString())).thenReturn(command);
+    	when(command.exec()).thenReturn(response);
+    	when(response.getId()).thenReturn(UUID.randomUUID().toString());
+    	when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
+    	
+    	Volume[] containerVolumes = {
+	    		new Volume("/source/dir/one:/destination/dir/one"),
+	    		new Volume("/source/dir/two:/destination/dir/two"),
+	    		new Volume("/source/dir/three:/destination/dir/three")
+    		};
+    	
+    	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
+    		.client(client)
+    		.command(new ContainerCreate()
+    			.image("image_create")
+    			.name("myContainer")
+    			.volumes(
+    				new Volume("/source/dir/one:/destination/dir/one"),
+		    		new Volume("/source/dir/two:/destination/dir/two"),
+		    		new Volume("/source/dir/three:/destination/dir/three")
+		    		))
+    		.build();
+    	containerCreateAction.execute(context);
+    	
+    	ArgumentCaptor<Volume[]> argumentCaptor = ArgumentCaptor.forClass(Volume[].class);
+    	verify(command).withVolumes(argumentCaptor.capture());
+    	Volume[] capturedArguments = (Volume[]) argumentCaptor.getValue();
+    	
+    	Assert.assertEquals(containerVolumes.length, capturedArguments.length);
+    	for(int i=0; i<containerVolumes.length; i++) {
+    		Assert.assertEquals(containerVolumes[i], capturedArguments[i]);
+    	}
+    	
     }
 
     @Test

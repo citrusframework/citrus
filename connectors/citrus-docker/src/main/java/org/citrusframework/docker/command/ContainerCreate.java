@@ -17,6 +17,9 @@
 package org.citrusframework.docker.command;
 
 import java.util.stream.Stream;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
@@ -88,7 +91,8 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("cmd")) {
-            if (getParameters().get("cmd") instanceof Capability[]) {
+            if (getParameters().get("cmd") instanceof String[]
+            	|| getParameters().get("cmd") instanceof Capability[]) {
                 command.withCmd((String[]) getParameters().get("cmd"));
             } else {
                 command.withCmd(getParameter("cmd", context).split(DELIMITER));
@@ -96,7 +100,8 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("env")) {
-            if (getParameters().get("env") instanceof Capability[]) {
+            if (getParameters().get("env") instanceof String[]
+            	|| getParameters().get("env") instanceof Capability[]) {
                 command.withEnv((String[]) getParameters().get("env"));
             } else {
                 command.withEnv(getParameter("env", context).split(DELIMITER));
@@ -112,7 +117,8 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("port-specs")) {
-            if (getParameters().get("port-specs") instanceof Capability[]) {
+            if (getParameters().get("port-specs") instanceof String[]
+            	|| getParameters().get("port-specs") instanceof Capability[]) {
                 command.withPortSpecs((String[]) getParameters().get("port-specs"));
             } else {
                 command.withPortSpecs(getParameter("port-specs", context).split(DELIMITER));
@@ -142,7 +148,8 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
         }
 
         if (hasParameter("volumes")) {
-            if (getParameters().get("volumes") instanceof ExposedPort[]) {
+            if (getParameters().get("volumes") instanceof Volume[]
+            	|| getParameters().get("volumes") instanceof ExposedPort[]) {
                 command.withVolumes((Volume[]) getParameters().get("volumes"));
             } else {
                 command.withVolumes(getVolumes(context));
