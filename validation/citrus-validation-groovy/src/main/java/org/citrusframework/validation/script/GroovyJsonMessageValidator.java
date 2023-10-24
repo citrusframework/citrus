@@ -34,7 +34,7 @@ public class GroovyJsonMessageValidator extends GroovyScriptMessageValidator {
      * Default constructor using default script template.
      */
     public GroovyJsonMessageValidator() {
-        super(Resources.newClasspathResource("org/citrusframework/validation/json-validation-template.groovy"));
+        super(Resources.fromClasspath("org/citrusframework/validation/json-validation-template.groovy"));
     }
 
     @Override

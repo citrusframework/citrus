@@ -89,7 +89,7 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
                 }
 
                 for (Path resource : findings) {
-                    addSchemas(Resources.newClasspathResource(resource.toString()));
+                    addSchemas(Resources.fromClasspath(resource.toString()));
                 }
             }
 
@@ -110,7 +110,7 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
      * @param schemaName The name of the schema within the citrus schema package
      */
     protected void addCitrusSchema(String schemaName) throws IOException, SAXException, ParserConfigurationException {
-        Resource resource = Resources.newClasspathResource("classpath:org/citrusframework/schema/" + schemaName + ".xsd");
+        Resource resource = Resources.fromClasspath("classpath:org/citrusframework/schema/" + schemaName + ".xsd");
         if (resource.exists()) {
             addXsdSchema(resource);
         }

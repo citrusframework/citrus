@@ -55,7 +55,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
      * Default constructor using a default script template.
      */
     public GroovySqlResultSetValidator() {
-        this(Resources.newClasspathResource("org/citrusframework/validation/sql/sql-validation-template.groovy"));
+        this(Resources.fromClasspath("org/citrusframework/validation/sql/sql-validation-template.groovy"));
     }
 
     /**

@@ -74,7 +74,7 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport {
     public void testGroovyBuilderWithTemplate() throws IOException {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(groovy().script("context.setVariable('message', 'Groovy!')")
-                        .template(Resources.newClasspathResource("org/citrusframework/script/script-template.groovy")));
+                        .template(Resources.fromClasspath("org/citrusframework/script/script-template.groovy")));
 
         Assert.assertNotNull(context.getVariable("message"));
         Assert.assertEquals(context.getVariable("message"), "Groovy!");

@@ -42,7 +42,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport {
                         .body("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                 "</ns0:SoapMessageWithAttachmentRequest>")
-                        .attachment("MySoapAttachment", "text/plain", Resources.newClasspathResource("org/citrusframework/ws/soapAttachment.txt")),
+                        .attachment("MySoapAttachment", "text/plain", Resources.fromClasspath("org/citrusframework/ws/soapAttachment.txt")),
                 sequential().actions(
                         soap().server("soapRequestEndpoint")
                                 .receive()
@@ -53,7 +53,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSpringSupport {
                                 .validate(xml().schemaValidation(false))
                                 .extract(fromHeaders()
                                             .header("citrus_jms_messageId", "internal_correlation_id"))
-                                .attachment("MySoapAttachment", "text/plain", Resources.newClasspathResource("org/citrusframework/ws/soapAttachment.txt"))
+                                .attachment("MySoapAttachment", "text/plain", Resources.fromClasspath("org/citrusframework/ws/soapAttachment.txt"))
                                 .timeout(5000L),
                         soap().server("soapResponseEndpoint")
                                 .send()

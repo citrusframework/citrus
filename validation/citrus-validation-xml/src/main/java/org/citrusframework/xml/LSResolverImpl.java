@@ -45,7 +45,7 @@ public class LSResolverImpl implements LSResourceResolver {
     public LSInput resolveResource(String type, String namespaceURI,
             String publicId, String systemId, String baseURI) {
         LSInput input = domImpl.createLSInput();
-        Resource resource = Resources.newClasspathResource(systemId);
+        Resource resource = Resources.fromClasspath(systemId);
         if (resource.getInputStream() == null || !resource.exists()) {
             return null;
         }

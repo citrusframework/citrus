@@ -49,9 +49,9 @@ public class Resources {
 
     public static Resource create(String filePath) {
         if (filePath.startsWith(CLASSPATH_RESOURCE_PREFIX)) {
-            return newClasspathResource(filePath);
+            return fromClasspath(filePath);
         } else if (filePath.startsWith(FILESYSTEM_RESOURCE_PREFIX)) {
-            return newFileSystemResource(filePath);
+            return fromFileSystem(filePath);
         } else if (filePath.startsWith(HTTP_RESOURCE_PREFIX) || filePath.startsWith(JAR_RESOURCE_PREFIX)) {
             try {
                 return create(new URL(filePath));
@@ -60,16 +60,16 @@ public class Resources {
             }
         }
 
-        Resource file = newFileSystemResource(filePath);
+        Resource file = fromFileSystem(filePath);
         if (file.exists()) {
             return file;
         }
 
-        return newClasspathResource(filePath);
+        return fromClasspath(filePath);
     }
 
     public static Resource create(String filePath, Class<?> contextClass) {
-        return newClasspathResource(filePath, contextClass);
+        return fromClasspath(filePath, contextClass);
     }
 
     public static Resource create(byte[] content) {
@@ -84,17 +84,22 @@ public class Resources {
         return new UrlResource(url);
     }
 
-    public static Resource newClasspathResource(String filePath) {
+    public static Resource fromClasspath(String filePath) {
         return new ClasspathResource(filePath);
     }
-    public static Resource newClasspathResource(String filePath, Class<?> contextClass) {
-        return newClasspathResource(contextClass.getPackageName().replace(".", "/") + "/" + filePath);
+    public static Resource fromClasspath(String filePath, Class<?> contextClass) {
+        return fromClasspath(contextClass.getPackageName().replace(".", "/") + "/" + filePath);
     }
 
-    public static Resource newFileSystemResource(String filePath) {
+    public static Resource fromFileSystem(String filePath) {
         return new FileSystemResource(filePath);
     }
 
+    /**
+     * Removes leading resource type information from given file path for classpath and file system typed resources.
+     * @param filePath
+     * @return
+     */
     private static String getRawPath(String filePath) {
         if (filePath.startsWith(CLASSPATH_RESOURCE_PREFIX)) {
             return filePath.substring(CLASSPATH_RESOURCE_PREFIX.length());

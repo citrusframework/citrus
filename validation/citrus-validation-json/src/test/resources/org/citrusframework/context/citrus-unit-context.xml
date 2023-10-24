@@ -17,7 +17,7 @@
     <constructor-arg value="jsonTestSchema"/>
   </bean>
 
-  <bean id="resourceConverter" class="org.citrusframework.spi.ResourceConverter"/>
+  <bean id="resourceConverter" class="org.citrusframework.spi.StringToResourceConverter"/>
 
   <bean id="conversionService"
         class="org.springframework.context.support.ConversionServiceFactoryBean">

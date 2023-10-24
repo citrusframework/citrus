@@ -51,8 +51,8 @@ public class TransformActionJavaIT extends TestNGCitrusSpringSupport {
         run(echo("${result}"));
 
         run(transform()
-            .source(Resources.newClasspathResource("org/citrusframework/integration/actions/transform-source.xml"))
-            .xslt(Resources.newClasspathResource("org/citrusframework/integration/actions/transform.xslt"))
+            .source(Resources.fromClasspath("org/citrusframework/integration/actions/transform-source.xml"))
+            .xslt(Resources.fromClasspath("org/citrusframework/integration/actions/transform.xslt"))
             .result("result"));
 
 

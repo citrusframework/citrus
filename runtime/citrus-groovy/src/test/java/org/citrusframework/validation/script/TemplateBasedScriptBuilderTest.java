@@ -31,7 +31,7 @@ public class TemplateBasedScriptBuilderTest {
         Assert.assertEquals(
             TestUtils.normalizeLineEndings(
                 TemplateBasedScriptBuilder.fromTemplateResource(
-                        Resources.newClasspathResource("org/citrusframework/validation/script/script-template.groovy")
+                        Resources.fromClasspath("org/citrusframework/validation/script/script-template.groovy")
                     ).withCode("BODY")
                     .build()
             ),

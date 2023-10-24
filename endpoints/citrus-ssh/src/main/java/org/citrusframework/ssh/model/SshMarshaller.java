@@ -36,7 +36,7 @@ public class SshMarshaller implements Marshaller, Unmarshaller {
 
     public SshMarshaller() {
         this.marshaller = new Jaxb2Marshaller(
-                Resources.newClasspathResource("org/citrusframework/schema/citrus-ssh-message.xsd"), SshRequest.class, SshResponse.class);
+                Resources.fromClasspath("org/citrusframework/schema/citrus-ssh-message.xsd"), SshRequest.class, SshResponse.class);
     }
 
     public void marshal(Object graph, Result result) {

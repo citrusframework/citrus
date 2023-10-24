@@ -35,7 +35,7 @@ public class WsdlXsdSchemaTest {
 
     @Test
     public void testWsdlSchema() throws ParserConfigurationException, IOException, SAXException {
-        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.newClasspathResource("org/citrusframework/validation/SampleService.wsdl"));
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleService.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
@@ -45,7 +45,7 @@ public class WsdlXsdSchemaTest {
 
     @Test
     public void testWsdlSchemaImports() throws ParserConfigurationException, IOException, SAXException {
-        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.newClasspathResource("org/citrusframework/validation/SampleServiceWithImports.wsdl"));
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithImports.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
@@ -57,7 +57,7 @@ public class WsdlXsdSchemaTest {
 
     @Test
     public void testWsdlSchemaImportsNamespaceDiff() throws ParserConfigurationException, IOException, SAXException {
-        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.newClasspathResource("org/citrusframework/validation/SampleServiceWithImportsNamespaceDiff.wsdl"));
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithImportsNamespaceDiff.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 4);
@@ -69,7 +69,7 @@ public class WsdlXsdSchemaTest {
 
     @Test
     public void testWsdlSchemaWsdlImports() throws ParserConfigurationException, IOException, SAXException {
-        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.newClasspathResource("org/citrusframework/validation/SampleServiceWithWsdlImports.wsdl"));
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithWsdlImports.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
@@ -96,7 +96,7 @@ public class WsdlXsdSchemaTest {
 
     @Test
     public void testWsdlSchemaWsdlImportsOnly() throws ParserConfigurationException, IOException, SAXException {
-        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.newClasspathResource("org/citrusframework/validation/SampleServiceWithWsdlImportsOnly.wsdl"));
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithWsdlImportsOnly.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
@@ -108,7 +108,7 @@ public class WsdlXsdSchemaTest {
 
     @Test
     public void testWsdlSchemaDuplicateImports() throws ParserConfigurationException, IOException, SAXException {
-        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.newClasspathResource("org/citrusframework/validation/SampleServiceWithDuplicateImports.wsdl"));
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithDuplicateImports.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
@@ -118,7 +118,7 @@ public class WsdlXsdSchemaTest {
 
     @Test
     public void testWsdlSchemaNoMatchingTargetNamespace() throws ParserConfigurationException, IOException, SAXException {
-        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.newClasspathResource("org/citrusframework/validation/SampleServiceNoMatchingTargetNamespace.wsdl"));
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceNoMatchingTargetNamespace.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 2);
@@ -128,7 +128,7 @@ public class WsdlXsdSchemaTest {
 
     @Test
     public void testWsdlSchemaWithIncludes() throws ParserConfigurationException, IOException, SAXException {
-        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.newClasspathResource("org/citrusframework/validation/SampleServiceWithIncludes.wsdl"));
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/validation/SampleServiceWithIncludes.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
         Assert.assertEquals(wsdl.getSchemaResources().size(), 3);
@@ -138,7 +138,7 @@ public class WsdlXsdSchemaTest {
 
     @Test
     public void testNamespaceInheritance() throws ParserConfigurationException, IOException, SAXException {
-        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.newClasspathResource("org/citrusframework/xml/BookStore.wsdl"));
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(Resources.fromClasspath("org/citrusframework/xml/BookStore.wsdl"));
         wsdl.initialize();
         wsdl.afterPropertiesSet();
 

@@ -57,7 +57,7 @@ public class XmlTestMarshaller {
     private NamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
 
     public XmlTestMarshaller() {
-        this.schema = loadSchema(Resources.newClasspathResource("org/citrusframework/schema/citrus-testcase.xsd"));
+        this.schema = loadSchema(Resources.fromClasspath("org/citrusframework/schema/citrus-testcase.xsd"));
     }
 
     public void marshal(Object graph, Result result) {

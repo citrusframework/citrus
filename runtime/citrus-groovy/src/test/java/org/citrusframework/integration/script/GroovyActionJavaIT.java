@@ -77,6 +77,6 @@ public class GroovyActionJavaIT extends TestNGCitrusSpringSupport {
                     "}" + NEWLINE +
                   "}"));
 
-        run(groovy(Resources.newClasspathResource("org/citrusframework/integration/script/example.groovy")));
+        run(groovy(Resources.fromClasspath("org/citrusframework/integration/script/example.groovy")));
     }
 }

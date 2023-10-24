@@ -35,7 +35,7 @@ import org.codehaus.groovy.control.CompilationFailedException;
 public class GroovyScriptPayloadBuilder implements ScriptPayloadBuilder {
 
     /** Default path to script template */
-    private final Resource scriptTemplateResource = Resources.newClasspathResource("org/citrusframework/script/markup-builder-template.groovy");
+    private final Resource scriptTemplateResource = Resources.fromClasspath("org/citrusframework/script/markup-builder-template.groovy");
 
     private String script;
 

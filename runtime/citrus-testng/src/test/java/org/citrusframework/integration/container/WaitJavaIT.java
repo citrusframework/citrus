@@ -96,7 +96,7 @@ public class WaitJavaIT extends TestNGCitrusSpringSupport {
     public void waitFile() throws IOException {
         run(waitFor()
                 .file()
-                .resource(Resources.newClasspathResource("citrus.properties").getFile()));
+                .resource(Resources.fromClasspath("citrus.properties").getFile()));
     }
 
     @CitrusTest

@@ -43,7 +43,7 @@ public class ConfigurationScriptIT extends TestNGCitrusSpringSupport {
     @CitrusTest
     public void shouldRunConfigurationScript(@Optional @CitrusResource TestActionRunner runner,
                                        @Optional @CitrusResource TestContext context) throws IOException {
-        ConfigurationScript script = new ConfigurationScript(FileUtils.readToString(Resources.newClasspathResource("org/citrusframework/groovy/dsl/configuration.groovy")), citrus);
+        ConfigurationScript script = new ConfigurationScript(FileUtils.readToString(Resources.fromClasspath("org/citrusframework/groovy/dsl/configuration.groovy")), citrus);
         script.execute(context);
 
         Assert.assertTrue(context.getReferenceResolver().isResolvable("say-hello", MessageQueue.class));

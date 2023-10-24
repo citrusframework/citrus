@@ -185,7 +185,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         runner.run(receive(messageEndpoint)
                                 .message()
                                 .type(MessageType.JSON)
-                                .validate(groovy().script(Resources.newClasspathResource("org/citrusframework/actions/dsl/validation.groovy")))
+                                .validate(groovy().script(Resources.fromClasspath("org/citrusframework/actions/dsl/validation.groovy")))
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();

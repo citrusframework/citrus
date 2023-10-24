@@ -72,7 +72,7 @@ public class JsonSchemaRepository  implements Named, InitializingPhase {
                 }
 
                 for (Path resource : findings) {
-                    addSchemas(Resources.newClasspathResource(resource.toString()));
+                    addSchemas(Resources.fromClasspath(resource.toString()));
                 }
             }
         } catch (IOException e) {

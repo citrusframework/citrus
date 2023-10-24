@@ -40,7 +40,7 @@ public class ActionsScriptIT extends TestNGCitrusSpringSupport {
     @CitrusTest
     public void shouldRunActionsScript(@Optional @CitrusResource TestActionRunner runner,
                                        @Optional @CitrusResource TestContext context) throws IOException {
-        ActionsScript script = new ActionsScript(FileUtils.readToString(Resources.newClasspathResource("org/citrusframework/groovy/dsl/actions.groovy")), citrus);
+        ActionsScript script = new ActionsScript(FileUtils.readToString(Resources.fromClasspath("org/citrusframework/groovy/dsl/actions.groovy")), citrus);
         script.execute(runner, context);
     }
 }

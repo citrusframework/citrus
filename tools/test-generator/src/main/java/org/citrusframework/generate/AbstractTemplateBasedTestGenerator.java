@@ -73,7 +73,7 @@ public abstract class AbstractTemplateBasedTestGenerator<T extends TestGenerator
      */
     private String createContent(Properties properties) {
         StringBuilder contentBuilder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.newClasspathResource(getTemplateFilePath()).getInputStream()))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.fromClasspath(getTemplateFilePath()).getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 contentBuilder.append(PropertyUtils.replacePropertiesInString(line, properties));

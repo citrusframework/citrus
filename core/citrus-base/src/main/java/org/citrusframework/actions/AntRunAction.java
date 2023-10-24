@@ -92,7 +92,7 @@ public class AntRunAction extends AbstractTestAction {
 
         String buildFileResource = context.replaceDynamicContentInString(buildFilePath);
         try {
-            ProjectHelper.configureProject(project, Resources.newClasspathResource(buildFileResource).getFile());
+            ProjectHelper.configureProject(project, Resources.fromClasspath(buildFileResource).getFile());
 
             for (Entry<Object, Object> entry : properties.entrySet()) {
                 String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
@@ -170,7 +170,7 @@ public class AntRunAction extends AbstractTestAction {
             logger.info("Reading build property file: " + propertyFileResource);
             Properties fileProperties = new Properties();
             try {
-                Resource propertyResource = Resources.newClasspathResource(propertyFileResource);
+                Resource propertyResource = Resources.fromClasspath(propertyFileResource);
                 fileProperties.load(propertyResource.getInputStream());
 
                 for (Entry<Object, Object> entry : fileProperties.entrySet()) {

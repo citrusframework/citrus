@@ -51,7 +51,7 @@ public class HtmlTestDocsGeneratorTest {
 
         generator.generateDoc();
 
-        String docContent = FileUtils.readToString(Resources.newFileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
+        String docContent = FileUtils.readToString(Resources.fromFileSystem(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
         Assert.assertTrue(docContent.contains("<title>Citrus Test Documentation</title>"));
         Assert.assertTrue(docContent.contains("<img src=\"logo.png\" lowsrc=\"logo.png\" alt=\"Logo\"/>"));
@@ -79,7 +79,7 @@ public class HtmlTestDocsGeneratorTest {
 
         generator.generateDoc();
 
-        String docContent = FileUtils.readToString(Resources.newFileSystemResource(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
+        String docContent = FileUtils.readToString(Resources.fromFileSystem(HtmlTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
         Assert.assertTrue(docContent.contains("<title>CustomPageTitle</title>"));
         Assert.assertTrue(docContent.contains("<img src=\"test-logo.png\" lowsrc=\"test-logo.png\" alt=\"Logo\"/>"));

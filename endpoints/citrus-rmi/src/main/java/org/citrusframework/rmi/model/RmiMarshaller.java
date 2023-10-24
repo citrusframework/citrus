@@ -36,7 +36,7 @@ public class RmiMarshaller implements Marshaller, Unmarshaller {
 
     public RmiMarshaller() {
         this.marshaller = new Jaxb2Marshaller(
-                Resources.newClasspathResource("org/citrusframework/schema/citrus-rmi-message.xsd"), RmiServiceInvocation.class, RmiServiceResult.class);
+                Resources.fromClasspath("org/citrusframework/schema/citrus-rmi-message.xsd"), RmiServiceInvocation.class, RmiServiceResult.class);
     }
 
     public void marshal(Object graph, Result result) {

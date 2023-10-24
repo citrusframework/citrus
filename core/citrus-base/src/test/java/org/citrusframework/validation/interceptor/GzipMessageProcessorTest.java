@@ -125,7 +125,7 @@ public class GzipMessageProcessorTest extends UnitTestSupport {
     public void testProcessMessageResourceNotFound() {
 
         //GIVEN
-        final DefaultMessage message = new DefaultMessage(Resources.newFileSystemResource("unknown.txt"));
+        final DefaultMessage message = new DefaultMessage(Resources.fromFileSystem("unknown.txt"));
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN

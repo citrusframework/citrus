@@ -56,7 +56,7 @@ public class ExcelTestDocsGeneratorTest {
 
         generator.generateDoc();
 
-        String docContent = FileUtils.readToString(Resources.newFileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
+        String docContent = FileUtils.readToString(Resources.fromFileSystem(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
         Assert.assertTrue(docContent.contains("<Author>Citrus Testframework</Author>"));
         Assert.assertTrue(docContent.contains("<Data ss:Type=\"String\">Citrus Test Documentation</Data>"));
@@ -88,7 +88,7 @@ public class ExcelTestDocsGeneratorTest {
 
         generator.generateDoc();
 
-        String docContent = FileUtils.readToString(Resources.newFileSystemResource(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
+        String docContent = FileUtils.readToString(Resources.fromFileSystem(ExcelTestDocsGenerator.getOutputDirectory() + File.separator + generator.getOutputFile()));
 
         Assert.assertTrue(docContent.contains("<Author>TestFactory</Author>"));
         Assert.assertTrue(docContent.contains("<Company>TestCompany</Company>"));
