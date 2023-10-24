@@ -21,9 +21,6 @@ import java.util.List;
 
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.annotations.CitrusXmlTest;
-import org.citrusframework.common.TestLoader;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.StringUtils;
 import org.junit.Test;
 import org.junit.internal.runners.statements.InvokeMethod;
@@ -75,10 +72,6 @@ public class CitrusJUnit4Runner extends BlockJUnit4ClassRunner {
                 interceptedMethods.addAll(JUnit4Helper.findInterceptedMethods(method, citrusTestAnnotation.type(),
                         citrusTestAnnotation.name(), citrusTestAnnotation.packageName(),
                         citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources()));
-            } else if (method.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-                interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), TestLoader.SPRING, method.getName(),
-                        method.getMethod().getDeclaringClass().getPackage().getName())
-                        .withError(new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support")));
             } else {
                 interceptedMethods.add(method);
             }

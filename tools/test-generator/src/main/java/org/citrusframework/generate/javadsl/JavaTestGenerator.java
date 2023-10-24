@@ -16,21 +16,14 @@
 
 package org.citrusframework.generate.javadsl;
 
-import javax.lang.model.element.Modifier;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import javax.lang.model.element.Modifier;
 
-import org.citrusframework.TestCaseRunner;
-import org.citrusframework.annotations.CitrusResource;
-import org.citrusframework.annotations.CitrusXmlTest;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.generate.AbstractTestGenerator;
-import org.citrusframework.generate.UnitFramework;
-import org.citrusframework.util.FileUtils;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -39,6 +32,13 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import org.citrusframework.TestCaseRunner;
+import org.citrusframework.annotations.CitrusResource;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.generate.AbstractTestGenerator;
+import org.citrusframework.generate.UnitFramework;
+import org.citrusframework.util.FileUtils;
 
 /**
  * @since 2.7.4
@@ -159,7 +159,8 @@ public class JavaTestGenerator<T extends JavaTestGenerator<T>> extends AbstractT
      * @return The AnnotationSpec for XML tests
      */
     protected AnnotationSpec getCitrusAnnotation() {
-        return AnnotationSpec.builder(CitrusXmlTest.class)
+        return AnnotationSpec.builder(CitrusTestSource.class)
+                .addMember("type", "$S", "xml")
                 .addMember("name", "$S", getName())
                 .build();
     }

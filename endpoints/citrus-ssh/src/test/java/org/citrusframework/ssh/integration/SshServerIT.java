@@ -16,7 +16,8 @@
 
 package org.citrusframework.ssh.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
@@ -26,6 +27,6 @@ import org.testng.annotations.Test;
 @Test
 public class SshServerIT extends TestNGCitrusSpringSupport {
 
-    @CitrusXmlTest(name = "SshServerIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "SshServerIT")
     public void testSshServer() {}
 }

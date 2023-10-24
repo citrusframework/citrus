@@ -41,7 +41,7 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
     public void parseBrowserConfig_htmlUnitBrowserConfigured_shouldParseConfigurationSuccessfully() {
         Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
 
-        SeleniumBrowser browser = browsers.get("htmlUnitBrowser");
+        SeleniumBrowser browser = browsers.get("defaultBrowser");
         Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
         Assert.assertNull(browser.getEndpointConfiguration().getStartPageUrl());
         Assert.assertTrue(browser.getEndpointConfiguration().getEventListeners().isEmpty());
@@ -81,7 +81,7 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
     public void parseBrowserConfig_browserUsingDeprecatedConfig_shouldParseConfigurationSuccessfully() {
         Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
 
-        SeleniumBrowser browser = browsers.get("browserUsingDeprecatedConfiguration");
+        SeleniumBrowser browser = browsers.get("htmlUnitBrowser");
         Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
     }
 }

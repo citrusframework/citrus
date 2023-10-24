@@ -16,7 +16,8 @@
 
 package org.citrusframework.http.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
@@ -26,15 +27,15 @@ import org.testng.annotations.Test;
 public class FormUrlEncodedIT extends TestNGCitrusSpringSupport {
 
     @Test
-    @CitrusXmlTest(name = "FormUrlEncoded_PlainText_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_PlainText_IT")
     public void formUrlEncodedPlainText() {}
 
     @Test
-    @CitrusXmlTest(name = "FormUrlEncoded_FormData_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_FormData_IT")
     public void formUrlEncodedFormData() {}
 
     @Test(enabled = false)
-    @CitrusXmlTest(name = "FormUrlEncoded_Manual_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "FormUrlEncoded_Manual_IT")
     public void formUrlEncodedManual() {}
 
 }

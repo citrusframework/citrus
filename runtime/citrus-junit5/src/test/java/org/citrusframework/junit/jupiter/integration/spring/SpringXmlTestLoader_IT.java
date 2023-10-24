@@ -4,7 +4,8 @@ import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.common.BeanDefinitionParserConfiguration;
 import org.citrusframework.common.SpringXmlTestLoaderConfiguration;
 import org.citrusframework.common.SpringXmlTestLoaderConfigurer;
@@ -34,7 +35,7 @@ import org.w3c.dom.Element;
 class SpringXmlTestLoader_IT {
 
     @Test
-    @CitrusXmlTest(name="SpringXmlTestLoader_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name="SpringXmlTestLoader_IT")
     void SpringXmlTestLoaderIT_0_IT(@CitrusResource TestCaseRunner runner) {
         Assertions.assertNotNull(runner.getTestCase());
 

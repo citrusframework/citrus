@@ -16,7 +16,8 @@
 
 package org.citrusframework.http.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
@@ -26,7 +27,7 @@ import org.testng.annotations.Test;
  */
 public class HttpServerJmsIT extends TestNGCitrusSpringSupport {
     @Test
-    @CitrusXmlTest(name = "HttpServerJmsIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpServerJmsIT")
     public void serverJmsIT() {}
 
 

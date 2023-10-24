@@ -51,10 +51,6 @@ public class SeleniumBrowserConfigParser implements AnnotationConfigParser<Selen
             builder.type(annotation.type());
         }
 
-        if (StringUtils.hasText(annotation.browserType())) {
-            builder.browserType(annotation.browserType());
-        }
-
         if (StringUtils.hasText(annotation.webDriver())) {
             builder.webDriver(referenceResolver.resolve(annotation.webDriver(), WebDriver.class));
         }

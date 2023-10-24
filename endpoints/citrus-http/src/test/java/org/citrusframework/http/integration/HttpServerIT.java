@@ -16,7 +16,8 @@
 
 package org.citrusframework.http.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
@@ -26,22 +27,22 @@ import org.testng.annotations.Test;
 @Test
 public class HttpServerIT extends TestNGCitrusSpringSupport {
 
-    @CitrusXmlTest(name = "HttpServerIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpServerIT")
     public void testHttpServer() {}
 
     @Test
-    @CitrusXmlTest(name = "HttpServerStandaloneIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpServerStandaloneIT")
     public void serverStandaloneIT() {}
 
     @Test
-    @CitrusXmlTest(name = "HttpParallelRequest_1_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpParallelRequest_1_IT")
     public void parallelRequestsIterateIT() {}
 
     @Test
-    @CitrusXmlTest(name = "HttpParallelRequest_2_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpParallelRequest_2_IT")
     public void parallelRequestsEndpointUriIT() {}
 
     @Test
-    @CitrusXmlTest(name = "HttpParallelRequest_3_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "HttpParallelRequest_3_IT")
     public void parallelRequestsIT() {}
 }

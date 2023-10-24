@@ -16,7 +16,8 @@
 
 package org.citrusframework.jms.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
@@ -26,6 +27,6 @@ import org.testng.annotations.Test;
 @Test
 public class JmsSyncEndpointIT extends TestNGCitrusSpringSupport {
 
-    @CitrusXmlTest(name = "JmsSyncEndpointIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "JmsSyncEndpointIT")
     public void testJmsSyncEndpoint() {}
 }

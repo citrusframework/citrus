@@ -16,7 +16,8 @@
 
 package org.citrusframework.jms.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
@@ -27,6 +28,6 @@ import org.testng.annotations.Test;
 @Test
 public class JmsSoapIT extends TestNGCitrusSpringSupport {
 
-    @CitrusXmlTest(name = "JmsSoapIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "JmsSoapIT")
     public void testJmsSoap() {}
 }

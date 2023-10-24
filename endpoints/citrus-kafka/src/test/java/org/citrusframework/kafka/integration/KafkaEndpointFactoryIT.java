@@ -16,7 +16,8 @@
 
 package org.citrusframework.kafka.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
@@ -26,7 +27,7 @@ import org.testng.annotations.Test;
 @Test
 public class KafkaEndpointFactoryIT extends TestNGCitrusSpringSupport {
 
-    @CitrusXmlTest(name = "KafkaEndpointFactoryIT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "KafkaEndpointFactoryIT")
     public void testKafkaEndpointFactory() {}
 }
 

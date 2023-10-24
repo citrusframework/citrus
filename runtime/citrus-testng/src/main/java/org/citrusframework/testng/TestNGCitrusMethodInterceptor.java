@@ -25,8 +25,6 @@ import java.util.Set;
 
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.annotations.CitrusTestSource;
-import org.citrusframework.annotations.CitrusXmlTest;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ClasspathResourceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,8 +84,6 @@ public class TestNGCitrusMethodInterceptor implements IMethodInterceptor {
                             logger.error("Unable to locate file resources for test package '" + packageName + "'", e);
                         }
                     }
-                } else if (method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class) != null) {
-                    throw new CitrusRuntimeException("Unsupported XML test annotation - please add Spring support");
                 }
             }
 

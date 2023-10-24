@@ -69,8 +69,8 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser browser3;
 
     @CitrusEndpoint
-    @SeleniumBrowserConfig(browserType="htmlunit")
-    private SeleniumBrowser browserWithDeprecatedConfig;
+    @SeleniumBrowserConfig(type="htmlunit")
+    private SeleniumBrowser browser4;
 
     @Mock
     private ReferenceResolver referenceResolver;
@@ -137,11 +137,11 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void parseBrowserConfig_browserUsingDeprecatedConfig_shouldParseConfigurationSuccessfully() {
+    public void parseBrowserConfig_htmlUnitBrowserConfig_shouldParseConfigurationSuccessfully() {
         CitrusAnnotations.injectEndpoints(this, context);
 
-        Assert.assertNotNull(browserWithDeprecatedConfig);
-        Assert.assertEquals(browserWithDeprecatedConfig.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
+        Assert.assertNotNull(browser4);
+        Assert.assertEquals(browser4.getEndpointConfiguration().getBrowserType(), Browser.HTMLUNIT.browserName());
     }
 
     @Test

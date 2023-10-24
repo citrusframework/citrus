@@ -16,7 +16,8 @@
 
 package org.citrusframework.websocket.integration;
 
-import org.citrusframework.annotations.CitrusXmlTest;
+import org.citrusframework.annotations.CitrusTestSource;
+import org.citrusframework.common.TestLoader;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
@@ -26,9 +27,9 @@ import org.testng.annotations.Test;
 @Test
 public class WebSocketEndpointIT extends TestNGCitrusSpringSupport {
 
-    @CitrusXmlTest(name = "WebSocketEndpoint_1_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "WebSocketEndpoint_1_IT")
     public void testWebSocketEndpoint1() {}
 
-    @CitrusXmlTest(name = "WebSocketEndpoint_2_IT")
+    @CitrusTestSource(type = TestLoader.SPRING, name = "WebSocketEndpoint_2_IT")
     public void testWebSocketEndpoint2() {}
 }

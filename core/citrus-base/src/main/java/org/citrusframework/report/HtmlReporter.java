@@ -275,17 +275,6 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
         this.logo = logo;
     }
 
-    /**
-     * Sets the outputDirectory property.
-     *
-     * @param outputDirectory
-     * @deprecated in favor of using {@link AbstractTestReporter#setReportDirectory}.
-     */
-    @Deprecated
-    public void setOutputDirectory(String outputDirectory) {
-        setReportDirectory(outputDirectory);
-    }
-
     @Override
     public String getReportDirectory() {
         if (StringUtils.hasText(outputDirectory)) {
