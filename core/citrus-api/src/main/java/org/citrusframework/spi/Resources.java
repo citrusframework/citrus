@@ -141,7 +141,7 @@ public class Resources {
 
         @Override
         public InputStream getInputStream() {
-            return ReflectionHelper.class.getClassLoader().getResourceAsStream(location);
+            return ReflectionHelper.class.getClassLoader().getResourceAsStream(location.replace("\\","/"));
         }
 
         @Override
@@ -213,6 +213,11 @@ public class Resources {
         @Override
         public String getLocation() {
             return file.getPath();
+        }
+
+        @Override
+        public URI getURI() {
+            return file.toURI();
         }
 
         @Override
