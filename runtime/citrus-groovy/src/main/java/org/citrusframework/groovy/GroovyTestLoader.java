@@ -19,7 +19,6 @@
 
 package org.citrusframework.groovy;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.citrusframework.common.DefaultTestLoader;
@@ -71,9 +70,9 @@ public class GroovyTestLoader extends DefaultTestLoader implements TestSourceAwa
         if (StringUtils.hasText(this.source)) {
             return this.source;
         } else {
-            String path = packageName.replace('.', File.separatorChar);
-            String fileName = testName.endsWith(".groovy") ? testName : testName + ".groovy";
-            return "classpath:" + path + File.separator + fileName;
+            String path = packageName.replace('.', '/');
+            String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_GROOVY) ? testName : testName + FileUtils.FILE_EXTENSION_GROOVY;
+            return Resources.CLASSPATH_RESOURCE_PREFIX + path + "/" + fileName;
         }
     }
 

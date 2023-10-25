@@ -54,6 +54,8 @@ public abstract class FileUtils {
 
     public static final String FILE_EXTENSION_JAVA = ".java";
     public static final String FILE_EXTENSION_XML = ".xml";
+    public static final String FILE_EXTENSION_GROOVY = ".groovy";
+    public static final String FILE_EXTENSION_YAML = ".yaml";
     public static final String FILE_PATH_CHARSET_PARAMETER = CitrusSettings.getFilePathCharsetParameter();
 
     /** Simulation mode required for Citrus administration UI when loading test cases from Java DSL */
@@ -369,8 +371,17 @@ public abstract class FileUtils {
             return null;
         }
 
-        if (filePath.contains(File.separator)) {
-            return filePath.substring(0, filePath.lastIndexOf(File.separator));
+        String fileSeparator;
+        if (filePath.contains("/")) {
+            fileSeparator = "/";
+        } else if (filePath.contains("\\")) {
+            fileSeparator = "\\";
+        } else {
+            fileSeparator = File.separator;
+        }
+
+        if (filePath.contains(fileSeparator)) {
+            return filePath.substring(0, filePath.lastIndexOf(fileSeparator));
         }
 
         return filePath;

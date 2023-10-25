@@ -16,11 +16,10 @@
 
 package org.citrusframework.common;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.ArrayList;
 import java.util.List;
+
 import org.citrusframework.CitrusSpringContext;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
@@ -168,8 +167,9 @@ public class SpringXmlTestLoader extends DefaultTestLoader implements TestSource
         if (StringUtils.hasText(source)) {
             return source;
         } else {
-            return packageName.replace('.', File.separatorChar) +
-                    File.separator + testName + FileUtils.FILE_EXTENSION_XML;
+            String path = packageName.replace('.', '/');
+            String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_XML) ? testName : testName + FileUtils.FILE_EXTENSION_XML;
+            return path + "/" + fileName;
         }
     }
 
