@@ -158,7 +158,7 @@
     <maven.release.plugin.version>3.0.1</maven.release.plugin.version>
     <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
-    <maven.source.plugin.version>3.3.0</maven.source.plugin.version>
+    <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
     <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
     <maven.war.plugin.version>3.4.0</maven.war.plugin.version>
     <maven.wagon.ssh.external.version>2.7</maven.wagon.ssh.external.version>
