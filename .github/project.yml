@@ -1,4 +1,4 @@
 name: Citrus Framework
 release:
-  current-version: 4.0.0-M2
-  next-version: 4.0.0-SNAPSHOT
+  current-version: 4.0.0
+  next-version: 4.1.0-SNAPSHOT
