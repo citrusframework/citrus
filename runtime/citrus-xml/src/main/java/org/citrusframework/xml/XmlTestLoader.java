@@ -19,7 +19,6 @@
 
 package org.citrusframework.xml;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -119,8 +118,9 @@ public class XmlTestLoader extends DefaultTestLoader implements TestSourceAware 
         if (StringUtils.hasText(source)) {
             return source;
         } else {
-            return Resources.CLASSPATH_RESOURCE_PREFIX + packageName.replace('.', File.separatorChar) +
-                    File.separator + testName + FileUtils.FILE_EXTENSION_XML;
+            String path = packageName.replace('.', '/');
+            String fileName = testName.endsWith(FileUtils.FILE_EXTENSION_XML) ? testName : testName + FileUtils.FILE_EXTENSION_XML;
+            return Resources.CLASSPATH_RESOURCE_PREFIX + path + "/" + fileName;
         }
     }
 
