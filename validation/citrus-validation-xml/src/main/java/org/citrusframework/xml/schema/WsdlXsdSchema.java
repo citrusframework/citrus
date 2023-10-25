@@ -146,7 +146,8 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
                 if (locationURI.isAbsolute()) {
                     schemaLocation = wsdlImport.getLocationURI();
                 } else {
-                    schemaLocation = definition.getDocumentBaseURI().substring(0, definition.getDocumentBaseURI().lastIndexOf('/') + 1) + wsdlImport.getLocationURI();
+                    String documentBaseUri = definition.getDocumentBaseURI().replace("\\", "/");
+                    schemaLocation = documentBaseUri.substring(0, documentBaseUri.lastIndexOf('/') + 1) + wsdlImport.getLocationURI();
                 }
 
                 loadSchemas(getWsdlDefinition(Resources.create(schemaLocation)));

@@ -297,7 +297,7 @@ public abstract class FileUtils {
     }
 
     /**
-     * Extract file extension form given path.
+     * Extract file extension from given path.
      * @param path
      * @return
      */
@@ -340,7 +340,7 @@ public abstract class FileUtils {
             return "";
         }
 
-        int separatorIndex = path.lastIndexOf("/");
+        int separatorIndex = path.replace("\\", "/").lastIndexOf("/");
         return (separatorIndex != -1 ? path.substring(separatorIndex + 1) : path);
     }
 
