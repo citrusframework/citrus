@@ -73,14 +73,15 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
     @Override
     public void initialize() {
         if (mappingFile != null) {
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("Reading data dictionary mapping " + mappingFile.getLocation());
-            }
+            logger.debug("Reading data dictionary mapping: {}", mappingFile.getLocation());
 
             Properties props = new Properties();
             try (InputStream inputStream = mappingFile.getInputStream()) {
-                props.load(inputStream);
+                if (mappingFile.getFile().getName().endsWith(".xml")) {
+                    props.loadFromXML(inputStream);
+                } else {
+                    props.load(inputStream);
+                }
             } catch (IOException e) {
                 throw new CitrusRuntimeException(e);
             }
@@ -88,19 +89,16 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
             for (Map.Entry<Object, Object> entry : props.entrySet()) {
                 String key = entry.getKey().toString();
 
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Loading data dictionary mapping: " + key + "=" + props.getProperty(key));
-                }
+                logger.debug("Loading data dictionary mapping: {}={}", key, props.getProperty(key));
 
                 if (logger.isDebugEnabled() && mappings.containsKey(key)) {
-                    logger.debug("Overwriting data dictionary mapping " + key + " old value:" + mappings.get(key)
-                            + " new value:" + props.getProperty(key));
+                    logger.warn("Overwriting data dictionary mapping '{}'; old value: {} new value: {}", key, mappings.get(key), props.getProperty(key));
                 }
 
                 mappings.put(key, props.getProperty(key));
             }
 
-            logger.debug("Loaded data dictionary mapping " + mappingFile.getLocation());
+            logger.info("Loaded data dictionary mapping: {}", mappingFile.getLocation());
         }
     }
 
