@@ -171,7 +171,7 @@
     <angus-mail.version>2.0.2</angus-mail.version>
     <apache.ant.version>1.10.14</apache.ant.version>
     <apache.camel.version>4.1.0</apache.camel.version>
-    <bouncycastle.version>1.70</bouncycastle.version>
+    <bouncycastle.version>1.76</bouncycastle.version>
     <byte.buddy.version>1.14.9</byte.buddy.version>
     <citrus.db.version>0.1.4</citrus.db.version>
     <commons.dbcp2.version>2.10.0</commons.dbcp2.version>
@@ -346,12 +346,12 @@
       </dependency>
       <dependency>
         <groupId>org.bouncycastle</groupId>
-        <artifactId>bcprov-jdk15on</artifactId>
+        <artifactId>bcprov-jdk18on</artifactId>
         <version>${bouncycastle.version}</version>
       </dependency>
       <dependency>
         <groupId>org.bouncycastle</groupId>
-        <artifactId>bcpkix-jdk15on</artifactId>
+        <artifactId>bcpkix-jdk18on</artifactId>
         <version>${bouncycastle.version}</version>
       </dependency>
       <dependency>
