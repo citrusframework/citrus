@@ -1,0 +1,2 @@
+name=singletonFooMock
+type=org.citrusframework.spi.mocks.SingletonFoo

@@ -16,9 +16,9 @@
 
 package org.citrusframework.config;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import java.util.concurrent.ConcurrentHashMap;
 import org.citrusframework.config.handler.CitrusTestCaseNamespaceHandler;
 import org.citrusframework.config.xml.*;
 import org.citrusframework.spi.ResourcePathTypeResolver;
@@ -44,7 +44,7 @@ public final class CitrusNamespaceParserRegistry {
     private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /** Parser registry as map */
-    private static final Map<String, BeanDefinitionParser> BEAN_PARSER = new HashMap<>();
+    private static final Map<String, BeanDefinitionParser> BEAN_PARSER = new ConcurrentHashMap<>();
 
     static {
         registerParser("testcase", new TestCaseParser());

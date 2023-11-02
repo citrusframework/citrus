@@ -1,9 +1,9 @@
 package org.citrusframework.validation;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import java.util.concurrent.ConcurrentHashMap;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
@@ -25,7 +25,7 @@ public interface ValueMatcher {
     /** Type resolver to find custom message validators on classpath via resource path lookup */
     TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
-    Map<String, ValueMatcher> validators = new HashMap<>();
+    Map<String, ValueMatcher> validators = new ConcurrentHashMap<>();
 
     /**
      * Resolves all available validators from resource path lookup. Scans classpath for validator meta information
@@ -37,7 +37,7 @@ public interface ValueMatcher {
             validators.putAll(TYPE_RESOLVER.resolveAll());
 
             if (logger.isDebugEnabled()) {
-                validators.forEach((k, v) -> logger.debug(String.format("Found value matcher '%s' as %s", k, v.getClass())));
+                validators.forEach((k, v) -> logger.debug(String.format("Found validator '%s' as %s", k, v.getClass())));
             }
         }
         return validators;
