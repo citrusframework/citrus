@@ -1,8 +1,8 @@
 package org.citrusframework.message;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import java.util.concurrent.ConcurrentHashMap;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
@@ -24,7 +24,7 @@ public interface MessageSelector {
     /** Type resolver to find custom message selectors on classpath via resource path lookup */
     TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
-    Map<String, MessageSelectorFactory> factories = new HashMap<>();
+    Map<String, MessageSelectorFactory> factories = new ConcurrentHashMap<>();
 
     /**
      * Resolves all available selectors from resource path lookup. Scans classpath for validator meta information
@@ -36,7 +36,7 @@ public interface MessageSelector {
             factories.putAll(TYPE_RESOLVER.resolveAll());
 
             if (logger.isDebugEnabled()) {
-                factories.forEach((k, v) -> logger.debug(String.format("Found value matcher '%s' as %s", k, v.getClass())));
+                factories.forEach((k, v) -> logger.debug(String.format("Found message selector '%s' as %s", k, v.getClass())));
             }
         }
         return factories;

@@ -48,12 +48,12 @@ public interface YamlTestActionBuilder {
      * @return
      */
     static Map<String, TestActionBuilder<?>> lookup() {
-        Map<String, TestActionBuilder<?>> loader = TYPE_RESOLVER.resolveAll();
+        Map<String, TestActionBuilder<?>> builders = TYPE_RESOLVER.resolveAll();
 
         if (logger.isDebugEnabled()) {
-            loader.forEach((k, v) -> logger.debug(String.format("Found YAML test action builder '%s' as %s", k, v.getClass())));
+            builders.forEach((k, v) -> logger.debug(String.format("Found YAML test action builder '%s' as %s", k, v.getClass())));
         }
-        return loader;
+        return builders;
     }
 
     /**
