@@ -1,0 +1,9 @@
+{
+  "catalogs": {},
+  "aliases": {
+    "citrus": {
+      "script-ref": "tools/jbang/dist/CitrusJBang.java",
+      "description": "Run Citrus tests"
+    }
+  }
+}

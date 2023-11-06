@@ -21,14 +21,18 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.citrusframework.TestClass;
+import org.citrusframework.TestSource;
 import org.citrusframework.main.AbstractTestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.main.scan.ClassPathTestScanner;
 import org.citrusframework.main.scan.JarFileTestScanner;
+import org.citrusframework.testng.main.TestNGCitrusTest;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,85 +73,120 @@ public class TestNGEngine extends AbstractTestEngine {
         XmlSuite suite = new XmlSuite();
         testng.setXmlSuites(Collections.singletonList(suite));
 
-        if (getConfiguration().getTestClasses() != null && !getConfiguration().getTestClasses().isEmpty()) {
-            for (TestClass testClass : getConfiguration().getTestClasses()) {
-                logger.info(String.format("Running test %s",
-                        Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                                .orElseGet(testClass::getName)));
-
-                XmlTest test = new XmlTest(suite);
-                test.setClasses(new ArrayList<>());
-
-                try {
-                    Class<?> clazz;
-                    if (getConfiguration().getTestJar() != null) {
-                        clazz = Class.forName(testClass.getName(), false,
-                                new URLClassLoader(new URL[]{getConfiguration().getTestJar().toURI().toURL()}, getClass().getClassLoader()));
-                    } else {
-                        clazz = Class.forName(testClass.getName());
-                    }
-
-                    XmlClass xmlClass = new XmlClass(clazz);
-                    if (StringUtils.hasText(testClass.getMethod())) {
-                        xmlClass.setIncludedMethods(Collections.singletonList(new XmlInclude(testClass.getMethod())));
-                    }
-
-                    test.getClasses().add(xmlClass);
-                } catch (ClassNotFoundException | MalformedURLException e) {
-                    logger.warn("Unable to read test class: " + testClass.getName());
-                }
-            }
+        if (getConfiguration().getTestSources().isEmpty()) {
+            addTestPackages(suite, getConfiguration());
         } else {
-            List<String> packagesToRun = getConfiguration().getPackages();
-            if (packagesToRun == null || packagesToRun.isEmpty()) {
-                packagesToRun = Collections.singletonList("");
-                logger.info("Running all tests in project");
-            }
-
-            for (String packageName : packagesToRun) {
-                if (StringUtils.hasText(packageName)) {
-                    logger.info(String.format("Running tests in package %s", packageName));
-                }
-
-                XmlTest test = new XmlTest(suite);
-                test.setClasses(new ArrayList<>());
-
-                List<TestClass> classesToRun;
-                if (getConfiguration().getTestJar() != null) {
-                    classesToRun = new JarFileTestScanner(getConfiguration().getTestJar(),
-                            getConfiguration().getIncludes()).findTestsInPackage(packageName);
-                } else {
-                    classesToRun = new ClassPathTestScanner(Test.class, getConfiguration().getIncludes()).findTestsInPackage(packageName);
-                }
-
-                classesToRun.stream()
-                        .peek(testClass -> logger.info(String.format("Running test %s",
-                                Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                                        .orElseGet(testClass::getName))))
-                        .map(testClass -> {
-                            try {
-                                Class<?> clazz;
-                                if (getConfiguration().getTestJar() != null) {
-                                    clazz = Class.forName(testClass.getName(), false,
-                                            new URLClassLoader(new URL[]{getConfiguration().getTestJar().toURI().toURL()}, getClass().getClassLoader()));
-                                } else {
-                                    clazz = Class.forName(testClass.getName());
-                                }
-                                return clazz;
-                            } catch (ClassNotFoundException | MalformedURLException e) {
-                                logger.warn("Unable to read test class: " + testClass.getName());
-                                return Void.class;
-                            }
-                        })
-                        .filter(clazz -> !clazz.equals(Void.class))
-                        .map(XmlClass::new)
-                        .forEach(test.getClasses()::add);
-
-                logger.info(String.format("Found %s test classes to execute", test.getClasses().size()));
-            }
+            addTestClasses(suite, getConfiguration());
+            addTestSources(suite, getConfiguration());
         }
 
         testng.run();
+    }
+
+    private void addTestSources(XmlSuite suite, TestRunConfiguration configuration) {
+        List<TestSource> testSources = configuration.getTestSources().stream()
+                .filter(source -> !"java".equals(source.getType()))
+                .toList();
+
+        for (TestSource source : testSources) {
+            logger.info(String.format("Running test source %s", source.getName()));
+
+            XmlTest test = new XmlTest(suite);
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put(TestNGCitrusTest.TEST_NAME_PARAM, source.getName());
+            parameters.put(TestNGCitrusTest.TEST_SOURCE_PARAM, Optional.ofNullable(source.getFilePath()).orElse(""));
+            test.setParameters(parameters);
+
+            XmlClass xmlClass = new XmlClass(TestNGCitrusTest.class);
+            xmlClass.setIncludedMethods(Collections.singletonList(new XmlInclude("execute")));
+            test.setClasses(Collections.singletonList(xmlClass));
+        }
+    }
+
+    private void addTestPackages(XmlSuite suite, TestRunConfiguration configuration) {
+        List<String> packagesToRun = configuration.getPackages();
+        if (packagesToRun == null || packagesToRun.isEmpty()) {
+            packagesToRun = Collections.singletonList("");
+            logger.info("Running all tests in project");
+        }
+
+        for (String packageName : packagesToRun) {
+            if (StringUtils.hasText(packageName)) {
+                logger.info(String.format("Running tests in package %s", packageName));
+            }
+
+            XmlTest test = new XmlTest(suite);
+            test.setClasses(new ArrayList<>());
+
+            List<TestClass> classesToRun;
+            if (configuration.getTestJar() != null) {
+                classesToRun = new JarFileTestScanner(configuration.getTestJar(),
+                        configuration.getIncludes()).findTestsInPackage(packageName);
+            } else {
+                classesToRun = new ClassPathTestScanner(Test.class, configuration.getIncludes()).findTestsInPackage(packageName);
+            }
+
+            classesToRun.stream()
+                    .peek(testClass -> logger.info(String.format("Running test %s",
+                            Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
+                                    .orElseGet(testClass::getName))))
+                    .map(testClass -> {
+                        try {
+                            Class<?> clazz;
+                            if (configuration.getTestJar() != null) {
+                                clazz = Class.forName(testClass.getName(), false,
+                                        new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, getClass().getClassLoader()));
+                            } else {
+                                clazz = Class.forName(testClass.getName());
+                            }
+                            return clazz;
+                        } catch (ClassNotFoundException | MalformedURLException e) {
+                            logger.warn("Unable to read test class: " + testClass.getName());
+                            return Void.class;
+                        }
+                    })
+                    .filter(clazz -> !clazz.equals(Void.class))
+                    .map(XmlClass::new)
+                    .forEach(test.getClasses()::add);
+
+            logger.info(String.format("Found %s test classes to execute", test.getClasses().size()));
+        }
+    }
+
+    private void addTestClasses(XmlSuite suite, TestRunConfiguration configuration) {
+        List<TestClass> testClasses = configuration.getTestSources().stream()
+                .filter(source -> "java".equals(source.getType()))
+                .map(TestSource::getName)
+                .map(TestClass::fromString)
+                .toList();
+
+        for (TestClass testClass : testClasses) {
+            logger.info(String.format("Running test %s",
+                    Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
+                            .orElseGet(testClass::getName)));
+
+            XmlTest test = new XmlTest(suite);
+            test.setClasses(new ArrayList<>());
+
+            try {
+                Class<?> clazz;
+                if (configuration.getTestJar() != null) {
+                    clazz = Class.forName(testClass.getName(), false,
+                            new URLClassLoader(new URL[]{configuration.getTestJar().toURI().toURL()}, getClass().getClassLoader()));
+                } else {
+                    clazz = Class.forName(testClass.getName());
+                }
+
+                XmlClass xmlClass = new XmlClass(clazz);
+                if (StringUtils.hasText(testClass.getMethod())) {
+                    xmlClass.setIncludedMethods(Collections.singletonList(new XmlInclude(testClass.getMethod())));
+                }
+
+                test.getClasses().add(xmlClass);
+            } catch (ClassNotFoundException | MalformedURLException e) {
+                logger.warn("Unable to read test class: " + testClass.getName());
+            }
+        }
     }
 
     /**

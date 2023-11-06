@@ -25,7 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.citrusframework.TestClass;
+import org.citrusframework.TestSource;
 
 /**
  * @author Christoph Deppisch
@@ -33,14 +33,14 @@ import org.citrusframework.TestClass;
  */
 public class TestRunConfiguration {
 
-    /** Test to execute at runtime */
+    /** Test engine */
     private String engine = "junit4";
 
     /** Test to execute at runtime */
-    private List<TestClass> testClasses = new ArrayList<>();
+    private final List<TestSource> sources = new ArrayList<>();
 
     /** Package to execute at runtime */
-    private List<String> packages = new ArrayList<>();
+    private final List<String> packages = new ArrayList<>();
 
     /** Include tests based on these test name pattern */
     private String[] includes = new String[] { "^.*IT$", "^.*ITCase$", "^IT.*$" };
@@ -68,21 +68,21 @@ public class TestRunConfiguration {
     }
 
     /**
-     * Gets the testClasses.
+     * Gets the sources.
      *
      * @return
      */
-    public List<TestClass> getTestClasses() {
-        return testClasses;
+    public List<TestSource> getTestSources() {
+        return sources;
     }
 
     /**
-     * Sets the testClasses.
+     * Sets the sources.
      *
-     * @param testClasses
+     * @param sources
      */
-    public void setTestClasses(List<TestClass> testClasses) {
-        this.testClasses = testClasses;
+    public void setTestSources(List<TestSource> sources) {
+        this.sources.addAll(sources);
     }
 
     /**
@@ -100,7 +100,7 @@ public class TestRunConfiguration {
      * @param packages
      */
     public void setPackages(List<String> packages) {
-        this.packages = packages;
+        this.packages.addAll(packages);
     }
 
     /**

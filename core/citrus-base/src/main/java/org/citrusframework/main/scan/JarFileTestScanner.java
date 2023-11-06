@@ -57,7 +57,7 @@ public class JarFileTestScanner extends AbstractTestScanner {
                     String className = FileUtils.getBaseName(entry.getName()).replace( "/", "." );
                     if (packageToScan.replace( ".", "/" ).startsWith(entry.getName()) && isIncluded(className)) {
                         logger.info("Found test class candidate in test jar file: " +  entry.getName());
-                        testClasses.add(new TestClass(className));
+                        testClasses.add(TestClass.fromString(className));
                     }
                 }
             } catch (IOException e) {

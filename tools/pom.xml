@@ -18,6 +18,7 @@
     <module>test-generator</module>
     <module>docs-generator</module>
     <module>maven</module>
+    <module>jbang</module>
     <module>archetypes</module>
   </modules>
 

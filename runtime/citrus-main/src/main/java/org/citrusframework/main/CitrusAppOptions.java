@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.citrusframework.TestClass;
+import org.citrusframework.TestSource;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,19 +154,15 @@ public class CitrusAppOptions<T extends CitrusAppConfiguration> {
             protected void doProcess(T configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
 
-                    String className = value;
-                    String methodName = null;
-                    if (value.contains("#")) {
-                        className = value.substring(0, value.indexOf("#"));
-                        methodName = value.substring(value.indexOf("#") + 1);
+                    TestSource source;
+                    if (FileUtils.getFileExtension(value).isEmpty()) {
+                        // no file extension assume it is a Java class name
+                        source = TestClass.fromString(value);
+                    } else {
+                        source = FileUtils.getTestSource(value);
                     }
 
-                    TestClass testClass = new TestClass(className);
-                    if (StringUtils.hasText(methodName)) {
-                        testClass.setMethod(methodName);
-                    }
-
-                    configuration.getTestClasses().add(testClass);
+                    configuration.getTestSources().add(source);
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -t/--test option");
                 }
