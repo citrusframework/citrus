@@ -16,26 +16,23 @@
 
 package org.citrusframework;
 
+import org.citrusframework.exceptions.CitrusRuntimeException;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class TestClass {
+public class TestClass extends TestSource {
 
-    /** Test name and optional method */
-    private String name;
-    private String method;
+    /** Optional test method */
+    private final String method;
 
-    public TestClass() {
-        super();
+    public TestClass(Class<?> type) {
+        this(type, null);
     }
 
-    public TestClass(String name) {
-        this.name = name;
-    }
-
-    public TestClass(String name, String method) {
-        this(name);
+    public TestClass(Class<?> type, String method) {
+        super(type);
         this.method = method;
     }
 
@@ -49,33 +46,6 @@ public class TestClass {
     }
 
     /**
-     * Sets the method.
-     *
-     * @param method
-     */
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    /**
-     * Gets the name.
-     *
-     * @return
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name.
-     *
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * Read String representation and construct proper test class instance. Read optional method name information and class name using format
      * "fully.qualified.class.Name#optionalMethodName()"
      *
@@ -83,20 +53,23 @@ public class TestClass {
      * @return
      */
     public static TestClass fromString(String testClass) {
-        String className;
-        String methodName = null;
-        if (testClass.contains("#")) {
-            className = testClass.substring(0, testClass.indexOf("#"));
-            methodName = testClass.substring(testClass.indexOf("#") + 1);
-        } else {
-            className = testClass;
-        }
+        try {
+            String className;
+            String methodName = null;
+            if (testClass.contains("#")) {
+                className = testClass.substring(0, testClass.indexOf("#"));
+                methodName = testClass.substring(testClass.indexOf("#") + 1);
+            } else {
+                className = testClass;
+            }
 
-        TestClass test = new TestClass(className);
-        if (methodName != null && !methodName.isBlank()) {
-            test.setMethod(methodName);
-        }
+            if (methodName != null && !methodName.isBlank()) {
+                return new TestClass(Class.forName(className), methodName);
+            }
 
-        return test;
+            return new TestClass(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new CitrusRuntimeException("Failed to create test class", e);
+        }
     }
 }

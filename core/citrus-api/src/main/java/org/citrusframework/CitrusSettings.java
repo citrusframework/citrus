@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,7 +66,19 @@ public final class CitrusSettings {
             if (logger.isTraceEnabled()) {
                 logger.trace("Unable to locate Citrus application properties", e);
             } else {
-                logger.info("Unable to locate Citrus application properties");
+                logger.debug("Unable to locate Citrus application properties");
+            }
+        }
+
+        try (InputStream is = CitrusSettings.class.getClassLoader().getResourceAsStream("logging.properties")) {
+            if (is != null) {
+                LogManager.getLogManager().readConfiguration(is);
+            }
+        } catch (Exception e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Unable to configure Java util logging", e);
+            } else {
+                logger.info("Unable to configure Java util logging");
             }
         }
     }

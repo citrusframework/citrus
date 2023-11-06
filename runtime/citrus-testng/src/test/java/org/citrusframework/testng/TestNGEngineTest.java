@@ -19,6 +19,7 @@ package org.citrusframework.testng;
 import java.util.Collections;
 
 import org.citrusframework.TestClass;
+import org.citrusframework.TestSource;
 import org.citrusframework.main.TestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.testng.scan.SampleTestNGTest;
@@ -39,15 +40,23 @@ public class TestNGEngineTest {
         configuration.setIncludes(new String[] { ".*Test" });
         configuration.setPackages(Collections.singletonList(SampleTestNGTest.class.getPackage().getName()));
 
-        runTestEngine(configuration, 0L, 1L);
+        runTestEngine(configuration, 1L);
     }
 
     @Test
     public void testRunClass() {
         TestRunConfiguration configuration = new TestRunConfiguration();
-        configuration.setTestClasses(Collections.singletonList(new TestClass(SampleTestNGTest.class.getName())));
+        configuration.setTestSources(Collections.singletonList(new TestSource(SampleTestNGTest.class)));
 
-        runTestEngine(configuration, 0L, 1L);
+        runTestEngine(configuration, 1L);
+    }
+
+    @Test
+    public void testRunMethod() {
+        TestRunConfiguration configuration = new TestRunConfiguration();
+        configuration.setTestSources(Collections.singletonList(TestClass.fromString(SampleTestNGTest.class.getName() + "#sampleTest()")));
+
+        runTestEngine(configuration, 1L);
     }
 
     @Test
@@ -56,7 +65,7 @@ public class TestNGEngineTest {
         configuration.setIncludes(new String[] { ".*Foo" });
         configuration.setPackages(Collections.singletonList(SampleTestNGTest.class.getPackage().getName()));
 
-        runTestEngine(configuration, 0L, 0L);
+        runTestEngine(configuration, 0L);
     }
 
     @Test
@@ -66,12 +75,12 @@ public class TestNGEngineTest {
         Assert.assertEquals(TestEngine.lookup(configuration).getClass(), TestNGEngine.class);
     }
 
-    private void runTestEngine(TestRunConfiguration configuration, long failure, long passed) {
+    private void runTestEngine(TestRunConfiguration configuration, long passed) {
         TestNGEngine engine = new TestNGEngine(configuration);
         engine.addTestListener(new ISuiteListener() {
             @Override
             public void onFinish(ISuite suite) {
-                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getFailedTests().size(), failure);
+                Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getFailedTests().size(), 0L);
                 Assert.assertEquals(suite.getResults().values().iterator().next().getTestContext().getPassedTests().size(), passed);
             }
 

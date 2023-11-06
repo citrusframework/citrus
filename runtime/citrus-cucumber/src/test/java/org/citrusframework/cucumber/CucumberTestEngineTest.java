@@ -21,7 +21,7 @@ package org.citrusframework.cucumber;
 
 import java.util.Collections;
 
-import org.citrusframework.TestClass;
+import org.citrusframework.TestSource;
 import org.citrusframework.cucumber.integration.echo.EchoFeatureIT;
 import org.citrusframework.main.TestEngine;
 import org.citrusframework.main.TestRunConfiguration;
@@ -45,7 +45,7 @@ public class CucumberTestEngineTest {
     @Test
     public void testRunClass() {
         TestRunConfiguration configuration = new TestRunConfiguration();
-        configuration.setTestClasses(Collections.singletonList(new TestClass(EchoFeatureIT.class.getName())));
+        configuration.setTestSources(Collections.singletonList(new TestSource(EchoFeatureIT.class)));
 
         CucumberTestEngine engine = new CucumberTestEngine(configuration);
         engine.run();

@@ -18,7 +18,7 @@ package org.citrusframework.junit;
 
 import java.util.Collections;
 
-import org.citrusframework.TestClass;
+import org.citrusframework.TestSource;
 import org.citrusframework.junit.scan.SampleJUnit4Test;
 import org.citrusframework.main.TestEngine;
 import org.citrusframework.main.TestRunConfiguration;
@@ -45,7 +45,7 @@ public class JUnit4TestEngineTest {
     @Test
     public void testRunClass() {
         TestRunConfiguration configuration = new TestRunConfiguration();
-        configuration.setTestClasses(Collections.singletonList(new TestClass(SampleJUnit4Test.class.getName())));
+        configuration.setTestSources(Collections.singletonList(new TestSource(SampleJUnit4Test.class)));
 
         runTestEngine(configuration, 0L, 1L);
     }

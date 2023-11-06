@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.citrusframework.TestClass;
+import org.citrusframework.TestSource;
 import org.citrusframework.main.AbstractTestEngine;
 import org.citrusframework.main.TestRunConfiguration;
 import org.citrusframework.main.scan.ClassPathTestScanner;
@@ -57,16 +58,16 @@ public class JUnit4TestEngine extends AbstractTestEngine {
 
     @Override
     public void run() {
-        if (getConfiguration().getTestClasses() != null && !getConfiguration().getTestClasses().isEmpty()) {
-            run(getConfiguration().getTestClasses());
+        if (getConfiguration().getTestSources() != null && !getConfiguration().getTestSources().isEmpty()) {
+            run(getConfiguration().getTestSources());
         } else {
             List<String> packagesToRun = getConfiguration().getPackages();
-            if (packagesToRun.isEmpty() && getConfiguration().getTestClasses().isEmpty()) {
+            if (packagesToRun.isEmpty() && getConfiguration().getTestSources().isEmpty()) {
                 packagesToRun = Collections.singletonList("");
                 logger.info("Running all tests in project");
             }
 
-            List<TestClass> classesToRun = new ArrayList<>();
+            List<TestSource> classesToRun = new ArrayList<>();
             for (String packageName : packagesToRun) {
                 if (StringUtils.hasText(packageName)) {
                     logger.info(String.format("Running tests in package %s", packageName));
@@ -87,34 +88,42 @@ public class JUnit4TestEngine extends AbstractTestEngine {
     }
 
     /**
-     * Run given set of test classes with JUnit4.
-     * @param classesToRun
+     * Run given set of test sources with JUnit4.
+     * @param sourcesToRun
      */
-    private void run(List<TestClass> classesToRun) {
+    private void run(List<TestSource> sourcesToRun) {
         JUnitCore junit = new JUnitCore();
 
         for (RunListener listener : listeners) {
             junit.addListener(listener);
         }
 
-        junit.run(classesToRun
+        junit.run(sourcesToRun
                 .stream()
-                .peek(testClass -> logger.info(String.format("Running test %s",
-                        Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method)
-                                .orElseGet(testClass::getName))))
-                .map(testClass -> {
+                .filter(source -> source.getType().equals("java"))
+                .peek(source -> {
+                    if (source instanceof TestClass testClass) {
+                        logger.info(String.format("Running test %s",
+                                Optional.ofNullable(testClass.getMethod())
+                                        .map(method -> testClass.getName() + "#" + method)
+                                        .orElseGet(testClass::getName)));
+                    } else {
+                        logger.info(String.format("Running test %s", source.getName()));
+                    }
+                })
+                .map(source -> {
                     try {
                         Class<?> clazz;
                         if (getConfiguration().getTestJar() != null) {
-                            clazz = Class.forName(testClass.getName(), false,
+                            clazz = Class.forName(source.getName(), false,
                                     new URLClassLoader(new URL[]{ getConfiguration().getTestJar().toURI().toURL() }, getClass().getClassLoader()));
                         } else {
-                            clazz = Class.forName(testClass.getName());
+                            clazz = Class.forName(source.getName());
                         }
-                        logger.debug("Found test candidate: " + testClass.getName());
+                        logger.debug("Found test candidate: " + source.getName());
                         return clazz;
                     } catch (ClassNotFoundException | MalformedURLException e) {
-                        logger.warn("Unable to read test class: " + testClass.getName());
+                        logger.warn("Unable to read test class: " + source.getName());
                         return Void.class;
                     }
                 })

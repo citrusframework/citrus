@@ -75,7 +75,7 @@ public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport {
     }
 
     @Test(dataProvider = "testData")
-    @CitrusParameters( { "data", "designer", "context" })
+    @CitrusParameters( { "data", "runner", "context" })
     @CitrusTest
     public void injectResourcesCombinedWithParameter(String data,
                                                     @CitrusResource TestCaseRunner runner,
@@ -101,7 +101,7 @@ public class ResourceInjectionJavaIT extends TestNGCitrusSpringSupport {
     }
 
     @Test(dataProvider = "testDataObjects")
-    @CitrusParameters( { "dataContainer", "designer", "context" })
+    @CitrusParameters( { "dataContainer", "runner", "context" })
     @CitrusTest
     public void injectResourcesCombinedWithObjectParameter(DataContainer dataContainer,
                                                           @CitrusResource TestCaseRunner runner,

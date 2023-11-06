@@ -72,7 +72,7 @@ public class ClassPathTestScanner extends AbstractTestScanner {
 
             return classes.stream()
                     .distinct()
-                    .map(TestClass::new)
+                    .map(TestClass::fromString)
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new CitrusRuntimeException(String.format("Failed to scan classpath package '%s'", packageName), e);

@@ -171,6 +171,7 @@
     <angus-mail.version>2.0.2</angus-mail.version>
     <apache.ant.version>1.10.14</apache.ant.version>
     <apache.camel.version>4.1.0</apache.camel.version>
+    <ascii-table-version>1.8.0</ascii-table-version>
     <bouncycastle.version>1.76</bouncycastle.version>
     <byte.buddy.version>1.14.9</byte.buddy.version>
     <citrus.db.version>0.1.4</citrus.db.version>
@@ -202,6 +203,7 @@
     <jakarta.websocket-api.version>2.1.1</jakarta.websocket-api.version>
     <jakarta.xml.bind-api.version>4.0.1</jakarta.xml.bind-api.version>
     <jakarta.xml.soap-api.version>3.0.1</jakarta.xml.soap-api.version>
+    <jansi.version>2.4.0</jansi.version>
     <javapoet.version>1.13.0</javapoet.version>
     <jaxb.version>4.0.3</jaxb.version>
     <jetty.version>11.0.17</jetty.version>
@@ -223,6 +225,7 @@
     <mockftpserver.version>3.1.0</mockftpserver.version>
     <netty.version>4.1.100.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
+    <picoli-version>4.7.5</picoli-version>
     <saaj.version>3.0.3</saaj.version>
     <selenium.version>4.14.1</selenium.version>
     <slf4j.version>2.0.9</slf4j.version>
@@ -852,6 +855,18 @@
         <version>${json-schema-validator.version}</version>
       </dependency>
 
+      <!-- Citrus JBang -->
+      <dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>${picoli-version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.freva</groupId>
+        <artifactId>ascii-table</artifactId>
+        <version>${ascii-table-version}</version>
+      </dependency>
+
       <!-- Logging -->
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -861,6 +876,11 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>jcl-over-slf4j</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jul-to-slf4j</artifactId>
         <version>${slf4j.version}</version>
       </dependency>
       <dependency>
@@ -874,10 +894,22 @@
         <version>${log4j2.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging</artifactId>
         <version>${commons.logging.version}</version>
         <scope>provided</scope>
+      </dependency>
+
+      <!-- Color logging -->
+      <dependency>
+        <groupId>org.fusesource.jansi</groupId>
+        <artifactId>jansi</artifactId>
+        <version>${jansi.version}</version>
       </dependency>
 
       <dependency>
@@ -1100,6 +1132,11 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jul-to-slf4j</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
