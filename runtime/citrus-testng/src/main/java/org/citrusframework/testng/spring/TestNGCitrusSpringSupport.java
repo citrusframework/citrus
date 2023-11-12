@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2020-2023 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -23,7 +23,6 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusSpringContext;
@@ -66,8 +65,8 @@ import org.testng.annotations.Listeners;
  *
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = CitrusSpringConfig.class)
 @Listeners( { TestNGCitrusSpringMethodInterceptor.class } )
+@ContextConfiguration(classes =  {CitrusSpringConfig.class})
 public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
         implements GherkinTestActionRunner {
 
@@ -101,8 +100,8 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
             super.run(new TestNGHelper.FakeExecutionCallBack(callBack.getParameters()), testResult);
 
             if (testResult.getThrowable() != null) {
-                if (testResult.getThrowable() instanceof RuntimeException) {
-                    throw (RuntimeException) testResult.getThrowable();
+                if (testResult.getThrowable() instanceof RuntimeException runtimeException) {
+                    throw runtimeException;
                 } else {
                     throw new CitrusRuntimeException(testResult.getThrowable());
                 }
@@ -140,10 +139,10 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
             if (method.getAnnotation(CitrusTestSource.class) != null && !methodTestLoaders.isEmpty()) {
                 testLoader = methodTestLoaders.get(invocationCount % methodTestLoaders.size());
 
-                if (testLoader instanceof TestSourceAware) {
+                if (testLoader instanceof TestSourceAware testSourceAware) {
                     String[] sources = method.getAnnotation(CitrusTestSource.class).sources();
                     if (sources.length > 0) {
-                        ((TestSourceAware) testLoader).setSource(sources[0]);
+                        testSourceAware.setSource(sources[0]);
                     }
                 }
             } else {
@@ -153,8 +152,8 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
             CitrusAnnotations.injectAll(testLoader, citrus, ctx);
             CitrusAnnotations.injectTestRunner(testLoader, runner);
             testLoader.configureTestCase(t -> {
-                if (t instanceof TestGroupAware) {
-                    ((TestGroupAware) t).setGroups(testResult.getMethod().getGroups());
+                if (t instanceof TestGroupAware testGroupAware) {
+                    testGroupAware.setGroups(testResult.getMethod().getGroups());
                 }
             });
             testLoader.configureTestCase(t -> testCase = t);

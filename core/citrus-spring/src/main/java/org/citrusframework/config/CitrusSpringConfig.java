@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package org.citrusframework.config;
 
-import java.util.Set;
-
+import java.util.Map;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.context.TestContextFactoryBean;
 import org.citrusframework.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.functions.FunctionConfig;
+import org.citrusframework.io.CitrusResourceEditor;
 import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;
 import org.citrusframework.report.FailureStackTestListener;
@@ -31,32 +31,36 @@ import org.citrusframework.report.TestActionListenersFactory;
 import org.citrusframework.report.TestListenersFactory;
 import org.citrusframework.report.TestSuiteListenersFactory;
 import org.citrusframework.reporter.ReporterConfig;
-import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.StringToResourceConverter;
 import org.citrusframework.spi.CitrusResourceWrapper;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.SpringResourceWrapper;
+import org.citrusframework.spi.StringToResourceConverter;
 import org.citrusframework.util.SpringBeanTypeConverter;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.MessageValidatorConfig;
 import org.citrusframework.validation.interceptor.MessageProcessorsFactory;
 import org.citrusframework.validation.matcher.ValidationMatcherConfig;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
+import org.springframework.beans.factory.config.CustomEditorConfigurer;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.support.ConversionServiceFactoryBean;
 
 /**
  * @author Christoph Deppisch
  * @since 2.0
  */
 @Configuration
-@Import({ FunctionConfig.class,
-          ValidationMatcherConfig.class,
-          MessageValidatorConfig.class,
-          ReporterConfig.class,
-          CitrusConfigImport.class})
+@Import({
+        FunctionConfig.class,
+        ValidationMatcherConfig.class,
+        MessageValidatorConfig.class,
+        ReporterConfig.class,
+        CitrusConfigImport.class
+})
 @ImportResource(locations = "${systemProperties['citrus.spring.application.context']?:classpath*:citrus-context.xml}", reader = CitrusBeanDefinitionReader.class)
 public class CitrusSpringConfig {
 
@@ -125,12 +129,25 @@ public class CitrusSpringConfig {
         return new SegmentVariableExtractorRegistry();
     }
 
-    @Bean(name = "conversionService")
-    public ConversionServiceFactoryBean conversionService() {
-        ConversionServiceFactoryBean conversionServiceFactoryBean = new ConversionServiceFactoryBean();
-        conversionServiceFactoryBean.setConverters(Set.of(
-                new StringToResourceConverter(), new CitrusResourceWrapper.ResourceConverter(), new SpringResourceWrapper.ResourceConverter()));
+    @Bean
+    public StringToResourceConverter stringToResourceConverter() {
+        return new StringToResourceConverter();
+    }
 
-        return conversionServiceFactoryBean;
+    @Bean
+    public CitrusResourceWrapper.ResourceConverter citrusResourceConverter() {
+        return new CitrusResourceWrapper.ResourceConverter();
+    }
+
+    @Bean
+    public SpringResourceWrapper.ResourceConverter springResourceConverter() {
+        return new SpringResourceWrapper.ResourceConverter();
+    }
+
+    @Bean
+    public CustomEditorConfigurer citrusCustomEditorRegistrar() {
+        CustomEditorConfigurer configurer = new CustomEditorConfigurer();
+        configurer.setCustomEditors(Map.of(Resource.class, CitrusResourceEditor.class));
+        return configurer;
     }
 }
