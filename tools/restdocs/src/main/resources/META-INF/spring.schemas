@@ -25,6 +25,7 @@ http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-3.
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-3.4.0.xsd=com/consol/citrus/schema/citrus-restdocs-config-3.4.0.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.0.0-M1.xsd=org/citrusframework/schema/citrus-restdocs-config-4.0.0-M1.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.0.0-M2.xsd=org/citrusframework/schema/citrus-restdocs-config-4.0.0-M2.xsd
-http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.0.1.xsd=org/citrusframework/schema/citrus-restdocs-config-4.0.1.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.0.0.xsd=org/citrusframework/schema/citrus-restdocs-config-4.0.0.xsd
+http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.0.1.xsd=org/citrusframework/schema/citrus-restdocs-config-4.0.1.xsd
+http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config-4.1.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-restdocs-config-4.1.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd=org/citrusframework/schema/citrus-restdocs-config.xsd

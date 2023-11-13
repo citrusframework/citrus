@@ -30,8 +30,9 @@ http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-3.3.1.
 http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-3.4.0.xsd=com/consol/citrus/schema/citrus-docker-config-3.4.0.xsd
 http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-4.0.0-M1.xsd=org/citrusframework/schema/citrus-docker-config-4.0.0-M1.xsd
 http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-4.0.0-M2.xsd=org/citrusframework/schema/citrus-docker-config-4.0.0-M2.xsd
-http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-4.0.1.xsd=org/citrusframework/schema/citrus-docker-config-4.0.1.xsd
 http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-4.0.0.xsd=org/citrusframework/schema/citrus-docker-config-4.0.0.xsd
+http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-4.0.1.xsd=org/citrusframework/schema/citrus-docker-config-4.0.1.xsd
+http\://www.citrusframework.org/schema/docker/config/citrus-docker-config-4.1.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-docker-config-4.1.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/docker/config/citrus-docker-config.xsd=org/citrusframework/schema/citrus-docker-config.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-2.3.xsd=com/consol/citrus/schema/citrus-docker-testcase-2.3.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-2.4.xsd=com/consol/citrus/schema/citrus-docker-testcase-2.4.xsd
@@ -65,6 +66,7 @@ http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-3.
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-3.4.0.xsd=com/consol/citrus/schema/citrus-docker-testcase-3.4.0.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-4.0.0-M1.xsd=org/citrusframework/schema/citrus-docker-testcase-4.0.0-M1.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-4.0.0-M2.xsd=org/citrusframework/schema/citrus-docker-testcase-4.0.0-M2.xsd
-http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-4.0.1.xsd=org/citrusframework/schema/citrus-docker-testcase-4.0.1.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-4.0.0.xsd=org/citrusframework/schema/citrus-docker-testcase-4.0.0.xsd
+http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-4.0.1.xsd=org/citrusframework/schema/citrus-docker-testcase-4.0.1.xsd
+http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase-4.1.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-docker-testcase-4.1.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase.xsd=org/citrusframework/schema/citrus-docker-testcase.xsd
