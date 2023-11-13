@@ -16,6 +16,7 @@
 
 package org.citrusframework.mail.server;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -125,6 +126,16 @@ public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailSer
      */
     public MailServerBuilder knownUsers(List<String> users) {
         endpoint.setKnownUsers(users);
+        return this;
+    }
+
+    /**
+     * Sets the known users.
+     * @param users
+     * @return
+     */
+    public MailServerBuilder knownUsers(String... users) {
+        endpoint.setKnownUsers(Arrays.asList(users));
         return this;
     }
 }
