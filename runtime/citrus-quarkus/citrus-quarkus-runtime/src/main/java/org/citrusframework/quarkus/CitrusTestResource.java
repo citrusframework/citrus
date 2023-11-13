@@ -83,7 +83,7 @@ public class CitrusTestResource implements QuarkusTestResourceLifecycleManager {
         runner.name(testInstance.getClass().getSimpleName());
         runner.start();
 
-        CitrusAnnotations.parseConfiguration(testInstance, citrus.getCitrusContext());
+        citrus.getCitrusContext().parseConfiguration(testInstance);
         CitrusAnnotations.injectEndpoints(testInstance, context);
     }
 

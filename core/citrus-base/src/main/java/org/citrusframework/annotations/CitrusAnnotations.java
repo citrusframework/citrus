@@ -25,6 +25,7 @@ import org.citrusframework.CitrusContext;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestCaseRunner;
+import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.BindToRegistry;
@@ -79,7 +80,7 @@ public abstract class CitrusAnnotations {
         CitrusContext citrusContext = citrusFramework.getCitrusContext();
         injectCitrusContext(target, citrusContext);
 
-        parseConfiguration(target, citrusContext);
+        citrusContext.parseConfiguration(target);
 
         injectEndpoints(target, context);
         injectTestContext(target, context);
@@ -238,7 +239,7 @@ public abstract class CitrusAnnotations {
 
         if (configClass.isAnnotationPresent(CitrusConfiguration.class)) {
             for (Class<?> type : configClass.getAnnotation(CitrusConfiguration.class).classes()) {
-                parseConfiguration(type, citrusContext);
+                citrusContext.parseConfiguration(type);
             }
         }
 
@@ -250,9 +251,7 @@ public abstract class CitrusAnnotations {
                         Object component = m.invoke(configuration);
                         citrusContext.getReferenceResolver().bind(name, component);
 
-                        if (component instanceof MessageValidator) {
-                            citrusContext.getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
-                        }
+                        initializeComponent(name, component, citrusContext);
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new CitrusRuntimeException("Failed to invoke configuration method", e);
                     }
@@ -273,12 +272,20 @@ public abstract class CitrusAnnotations {
                         Object component = f.get(configuration);
                         citrusContext.getReferenceResolver().bind(name, component);
 
-                        if (component instanceof MessageValidator) {
-                            citrusContext.getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
-                        }
+                        initializeComponent(name, component, citrusContext);
                     } catch (IllegalAccessException e) {
                         throw new CitrusRuntimeException("Failed to access configuration field", e);
                     }
                 });
+    }
+
+    private static void initializeComponent(String name, Object component, CitrusContext citrusContext) {
+        if (component instanceof InitializingPhase c) {
+            c.initialize();
+        }
+
+        if (component instanceof MessageValidator) {
+            citrusContext.getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
+        }
     }
 }
