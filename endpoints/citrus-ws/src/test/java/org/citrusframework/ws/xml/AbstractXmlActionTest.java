@@ -32,6 +32,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 /**
@@ -56,6 +58,10 @@ public class AbstractXmlActionTest extends AbstractTestNGUnitTest {
         when(citrusContext.getReferenceResolver()).thenReturn(context.getReferenceResolver());
         when(citrusContext.getMessageValidatorRegistry()).thenReturn(context.getMessageValidatorRegistry());
         when(citrusContext.getTestContextFactory()).thenReturn(new StaticTestContextFactory(context));
+        doAnswer(invocationOnMock -> {
+            CitrusAnnotations.parseConfiguration(invocationOnMock.getArgument(0, Object.class), citrusContext);
+            return null;
+        }).when(citrusContext).parseConfiguration((Object) any());
         CitrusAnnotations.injectAll(this, citrus, context);
         return context;
     }

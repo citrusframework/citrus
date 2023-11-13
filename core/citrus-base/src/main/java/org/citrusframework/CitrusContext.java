@@ -1,7 +1,10 @@
 package org.citrusframework;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.container.AfterSuite;
@@ -20,6 +23,7 @@ import org.citrusframework.report.*;
 import org.citrusframework.spi.ReferenceRegistry;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.SimpleReferenceResolver;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.TypeConverter;
 import org.citrusframework.validation.DefaultMessageValidatorRegistry;
 import org.citrusframework.validation.MessageValidator;
@@ -29,7 +33,6 @@ import org.citrusframework.validation.matcher.DefaultValidationMatcherRegistry;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
-import org.citrusframework.util.StringUtils;
 
 /**
  * Default Citrus context implementation holds basic components used in Citrus.
@@ -61,6 +64,8 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
     private final TypeConverter typeConverter;
     private final LogModifier logModifier;
 
+    private final Set<Class<?>> configurationClasses = new HashSet<>();
+
     /**
      * Protected constructor using given builder to construct this instance.
      * @param builder the instance builder.
@@ -87,6 +92,8 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         this.logModifier = builder.logModifier;
 
         this.testContextFactory = builder.testContextFactory;
+
+        builder.configurationClasses.forEach(this::parseConfiguration);
     }
 
     /**
@@ -114,6 +121,11 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
      * @param configClass
      */
     public void parseConfiguration(Class<?> configClass) {
+        if (configurationClasses.contains(configClass)) {
+            return;
+        }
+
+        configurationClasses.add(configClass);
         CitrusAnnotations.parseConfiguration(configClass, this);
     }
 
@@ -122,6 +134,11 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
      * @param configuration
      */
     public void parseConfiguration(Object configuration) {
+        if (configurationClasses.contains(configuration.getClass())) {
+            return;
+        }
+
+        configurationClasses.add(configuration.getClass());
         CitrusAnnotations.parseConfiguration(configuration, this);
     }
 
@@ -348,6 +365,8 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
         private TypeConverter typeConverter = TypeConverter.lookupDefault();
         private LogModifier logModifier = new DefaultLogModifier();
 
+        private final Set<Class<?>> configurationClasses = new LinkedHashSet<>();
+
         public static Builder defaultContext() {
             Builder builder = new Builder();
 
@@ -506,6 +525,11 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
 
         public Builder logModifier(LogModifier modifier) {
             this.logModifier = modifier;
+            return this;
+        }
+
+        public Builder loadConfiguration(Class<?> configClass) {
+            this.configurationClasses.add(configClass);
             return this;
         }
 
