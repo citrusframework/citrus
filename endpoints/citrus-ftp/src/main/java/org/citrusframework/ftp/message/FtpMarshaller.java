@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.ftp.FtpSettings;
 import org.citrusframework.ftp.model.Command;
 import org.citrusframework.ftp.model.CommandResult;
 import org.citrusframework.ftp.model.ConnectCommand;
@@ -57,11 +58,8 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(FtpMarshaller.class);
 
-    /** System property defining message format to marshal to */
-    private static final String JDBC_MARSHALLER_TYPE_PROPERTY = "citrus.ftp.marshaller.type";
-
     /** Message type format: XML or JSON */
-    private String type;
+    private String type = FtpSettings.getMarshallerType();
 
     private final ObjectMapper mapper;
     private final Jaxb2Marshaller marshaller;
@@ -84,9 +82,6 @@ public class FtpMarshaller implements Marshaller, Unmarshaller {
     public FtpMarshaller() {
         this.mapper = new ObjectMapper();
         this.marshaller = new Jaxb2Marshaller(Resources.fromClasspath("org/citrusframework/schema/citrus-ftp-message.xsd"), classesToBeBound);
-
-        type = System.getProperty(JDBC_MARSHALLER_TYPE_PROPERTY, MessageType.XML.name());
-
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
