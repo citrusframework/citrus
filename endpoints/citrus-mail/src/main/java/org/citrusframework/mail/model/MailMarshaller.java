@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.xml.bind.JAXBException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.mail.MailSettings;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.xml.Jaxb2Marshaller;
@@ -45,11 +46,8 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(MailMarshaller.class);
 
-    /** System property defining message format to marshal to */
-    private static final String MAIL_MARSHALLER_TYPE_PROPERTY = "citrus.mail.marshaller.type";
-
     /** Message type format: XML or JSON */
-    private String type;
+    private String type = MailSettings.getMarshallerType();
 
     private final ObjectMapper mapper;
     private final Jaxb2Marshaller marshaller;
@@ -62,8 +60,6 @@ public class MailMarshaller implements Marshaller, Unmarshaller {
     public MailMarshaller() {
         this.mapper = new ObjectMapper();
         this.marshaller = new Jaxb2Marshaller(Resources.fromClasspath("org/citrusframework/schema/citrus-mail-message.xsd"), classesToBeBound);
-
-        type = System.getProperty(MAIL_MARSHALLER_TYPE_PROPERTY, MessageType.XML.name());
     }
 
     public Object unmarshal(Source source) {
