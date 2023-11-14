@@ -27,11 +27,11 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.direct.DirectEndpoint;
 import org.citrusframework.endpoint.direct.DirectEndpointBuilder;
 import org.citrusframework.junit.jupiter.CitrusSupport;
-import org.citrusframework.junit.jupiter.integration.validation.TextEqualsMessageValidator;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -102,8 +102,8 @@ public class CitrusConfigurationIT {
         private final MessageQueue messages = new DefaultMessageQueue("messages");
 
         @BindToRegistry
-        public TextEqualsMessageValidator plaintextValidator() {
-            return new TextEqualsMessageValidator();
+        public DefaultTextEqualsMessageValidator plaintextValidator() {
+            return new DefaultTextEqualsMessageValidator();
         }
 
         @BindToRegistry

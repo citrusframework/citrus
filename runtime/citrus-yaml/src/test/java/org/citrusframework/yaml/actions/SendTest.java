@@ -19,6 +19,8 @@
 
 package org.citrusframework.yaml.actions;
 
+import java.io.IOException;
+
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.SendMessageAction;
@@ -31,7 +33,7 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
-import org.citrusframework.validation.TextEqualsMessageValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
@@ -42,8 +44,6 @@ import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 
@@ -56,7 +56,7 @@ public class SendTest extends AbstractYamlActionTest {
     final DataDictionary<?> myDataDictionary = Mockito.mock(DataDictionary.class);
 
     private final DefaultMessageHeaderValidator headerValidator = new DefaultMessageHeaderValidator();
-    private final TextEqualsMessageValidator validator = new TextEqualsMessageValidator().enableTrim().normalizeLineEndings();
+    private final DefaultTextEqualsMessageValidator validator = new DefaultTextEqualsMessageValidator().enableTrim().normalizeLineEndings();
 
     @Test
     public void shouldLoadSend() throws IOException {

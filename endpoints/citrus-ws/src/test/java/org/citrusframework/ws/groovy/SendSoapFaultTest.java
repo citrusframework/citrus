@@ -31,8 +31,8 @@ import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
-import org.citrusframework.ws.TextEqualsMessageValidator;
 import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
 import org.citrusframework.ws.actions.SendSoapFaultAction;
 import org.citrusframework.ws.message.SoapMessage;
@@ -82,7 +82,7 @@ public class SendSoapFaultTest extends AbstractGroovyActionDslTest {
 
         context.getReferenceResolver().bind("soapServer", soapServer);
         context.getReferenceResolver().bind("headerValidator", new DefaultMessageHeaderValidator());
-        context.getMessageValidatorRegistry().addMessageValidator("validator", new TextEqualsMessageValidator());
+        context.getMessageValidatorRegistry().addMessageValidator("validator", new DefaultTextEqualsMessageValidator());
 
         endpointAdapter.handleMessage(new SoapMessage("<TestMessage>Hello Citrus</TestMessage>").contentType("application/xml"));
         endpointAdapter.handleMessage(new SoapMessage("<TestMessage>Hello Citrus</TestMessage>").contentType("application/xml"));

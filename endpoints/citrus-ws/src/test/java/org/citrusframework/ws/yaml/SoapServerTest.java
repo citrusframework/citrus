@@ -32,7 +32,7 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
-import org.citrusframework.ws.TextEqualsMessageValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
 import org.citrusframework.ws.actions.SendSoapMessageAction;
 import org.citrusframework.ws.message.SoapAttachment;
@@ -85,7 +85,7 @@ public class SoapServerTest extends AbstractYamlActionTest {
 
         context.getReferenceResolver().bind("soapServer", soapServer);
         context.getReferenceResolver().bind("headerValidator", new DefaultMessageHeaderValidator());
-        context.getMessageValidatorRegistry().addMessageValidator("validator", new TextEqualsMessageValidator());
+        context.getMessageValidatorRegistry().addMessageValidator("validator", new DefaultTextEqualsMessageValidator());
         context.getReferenceResolver().bind("soapAttachmentValidator", new SimpleSoapAttachmentValidator());
         context.getReferenceResolver().bind("mySoapAttachmentValidator", new SimpleSoapAttachmentValidator());
 

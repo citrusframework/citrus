@@ -3,6 +3,7 @@ package org.citrusframework;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.functions.DefaultFunctionLibrary;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
 import org.testng.annotations.BeforeMethod;
 
@@ -27,7 +28,7 @@ public abstract class UnitTestSupport {
         TestContextFactory factory = TestContextFactory.newInstance();
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
-        factory.getMessageValidatorRegistry().addMessageValidator("all", new TextEqualsMessageValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("all", new DefaultTextEqualsMessageValidator());
         return factory;
     }
 }

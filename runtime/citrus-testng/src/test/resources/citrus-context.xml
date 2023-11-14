@@ -22,7 +22,7 @@
   <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
   <!-- Text equals message validator -->
-  <bean id="textEqualsMessageValidator" class="org.citrusframework.TextEqualsMessageValidator"/>
+  <bean id="textEqualsMessageValidator" class="org.citrusframework.validation.DefaultTextEqualsMessageValidator"/>
 
   <citrus:direct-endpoint id="helloEndpoint"
                           queue="helloQueue"/>

@@ -19,11 +19,12 @@
 
 package org.citrusframework.integration.groovy
 
-import org.citrusframework.validation.TextEqualsMessageValidator
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator
+
 
 configuration {
     beans {
-        bean(TextEqualsMessageValidator.class)
+        bean(DefaultTextEqualsMessageValidator.class)
     }
 
     queues {

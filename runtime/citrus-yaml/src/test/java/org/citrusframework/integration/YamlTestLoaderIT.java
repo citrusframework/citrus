@@ -20,7 +20,7 @@ import org.citrusframework.annotations.CitrusTestSource;
 import org.citrusframework.common.TestLoader;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.TestNGCitrusSupport;
-import org.citrusframework.validation.TextEqualsMessageValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.testng.annotations.Test;
 
 /**
@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 public class YamlTestLoaderIT extends TestNGCitrusSupport {
 
     @BindToRegistry
-    TextEqualsMessageValidator textEqualsMessageValidator = new TextEqualsMessageValidator();
+    DefaultTextEqualsMessageValidator textEqualsMessageValidator = new DefaultTextEqualsMessageValidator();
 
     @CitrusTestSource(type = TestLoader.YAML, name = { "sample-test" })
     public void YamlTestLoader_1_IT() {}

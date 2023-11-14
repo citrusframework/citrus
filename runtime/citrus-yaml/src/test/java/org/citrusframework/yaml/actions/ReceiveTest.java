@@ -19,6 +19,8 @@
 
 package org.citrusframework.yaml.actions;
 
+import java.io.IOException;
+
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
 import org.citrusframework.actions.ReceiveMessageAction;
@@ -29,9 +31,9 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.FileUtils;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.MessageValidator;
-import org.citrusframework.validation.TextEqualsMessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
@@ -47,8 +49,6 @@ import org.citrusframework.yaml.YamlTestLoader;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 
@@ -71,7 +71,7 @@ public class ReceiveTest extends AbstractYamlActionTest {
         YamlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/yaml/actions/receive-test.yaml");
 
         MessageQueue helloQueue = new DefaultMessageQueue("helloQueue");
-        context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new TextEqualsMessageValidator().enableTrim().normalizeLineEndings());
+        context.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new DefaultTextEqualsMessageValidator().enableTrim().normalizeLineEndings());
         context.getReferenceResolver().bind("helloQueue", helloQueue);
         context.getReferenceResolver().bind("helloEndpoint", direct().asynchronous().queue(helloQueue).build());
 

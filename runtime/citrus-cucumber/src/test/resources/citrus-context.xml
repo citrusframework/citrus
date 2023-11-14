@@ -18,7 +18,7 @@
   </citrus:global-variables>
 
   <!-- Text equals message validator -->
-  <bean id="textEqualsMessageValidator" class="org.citrusframework.cucumber.integration.TextEqualsMessageValidator"/>
+  <bean id="textEqualsMessageValidator" class="org.citrusframework.validation.DefaultTextEqualsMessageValidator"/>
 
   <citrus:direct-endpoint id="fooEndpoint"
                            queue="foo"/>

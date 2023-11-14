@@ -11,6 +11,6 @@
     <citrus:queue id="helloQueue"/>
 
     <!-- Text equals message validator -->
-    <bean id="textEqualsMessageValidator" class="org.citrusframework.TextEqualsMessageValidator"/>
+    <bean id="textEqualsMessageValidator" class="org.citrusframework.validation.DefaultTextEqualsMessageValidator"/>
 
 </beans>

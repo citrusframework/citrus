@@ -58,8 +58,9 @@ public class MessageValidatorRegistry {
     /** Default message header validator - gets looked up via resource path */
     private MessageValidator<? extends ValidationContext> defaultMessageHeaderValidator;
 
-    /** Default empty message validator */
+    /** Default message validators used as a fallback option */
     private final DefaultEmptyMessageValidator defaultEmptyMessageValidator = new DefaultEmptyMessageValidator();
+    private final DefaultTextEqualsMessageValidator defaultTextEqualsMessageValidator = new DefaultTextEqualsMessageValidator();
 
     /**
      * Finds matching message validators for this message type.
@@ -69,6 +70,18 @@ public class MessageValidatorRegistry {
      * @return the list of matching message validators.
      */
     public List<MessageValidator<? extends ValidationContext>> findMessageValidators(String messageType, Message message) {
+        return findMessageValidators(messageType, message, false);
+    }
+
+    /**
+     * Finds matching message validators for this message type.
+     *
+     * @param messageType the message type
+     * @param message the message object
+     * @param mustFindValidator is default fallback validator allowed
+     * @return the list of matching message validators.
+     */
+    public List<MessageValidator<? extends ValidationContext>> findMessageValidators(String messageType, Message message, boolean mustFindValidator) {
         List<MessageValidator<? extends ValidationContext>> matchingValidators = new ArrayList<>();
 
         for (MessageValidator<? extends ValidationContext> validator : messageValidators.values()) {
@@ -99,8 +112,13 @@ public class MessageValidatorRegistry {
         }
 
         if (isEmptyOrDefault(matchingValidators)) {
-            logger.warn(String.format("Unable to find proper message validator. Message type is '%s' and message payload is '%s'", messageType, message.getPayload(String.class)));
-            throw new CitrusRuntimeException("Failed to find proper message validator for message");
+            if (mustFindValidator) {
+                logger.warn(String.format("Unable to find proper message validator. Message type is '%s' and message payload is '%s'", messageType, message.getPayload(String.class)));
+                throw new CitrusRuntimeException("Failed to find proper message validator for message");
+            }
+
+            logger.warn("Unable to find proper message validator - fallback to default text equals validation.");
+            matchingValidators.add(defaultTextEqualsMessageValidator);
         }
 
         if (logger.isDebugEnabled()) {
@@ -184,7 +202,7 @@ public class MessageValidatorRegistry {
     }
 
     /**
-     * Adds given message validator and allows overwrite of existing message validators in registry with same name.
+     * Adds given message validator and allows to overwrite of existing message validators in registry with same name.
      * @param name
      * @param messageValidator
      */
