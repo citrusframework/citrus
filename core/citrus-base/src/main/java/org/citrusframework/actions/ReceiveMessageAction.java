@@ -43,6 +43,7 @@ import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
 import org.citrusframework.messaging.Consumer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.HeaderValidator;
 import org.citrusframework.validation.MessageValidator;
@@ -60,7 +61,6 @@ import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.citrusframework.util.StringUtils;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link org.citrusframework.endpoint.Endpoint}
@@ -251,21 +251,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
                     }
                 }
             } else {
-                List<MessageValidator<? extends ValidationContext>> validators =
-                        context.getMessageValidatorRegistry().findMessageValidators(messageType, message);
+                boolean mustFindValidator = validationContexts.stream()
+                        .anyMatch(item -> JsonPathMessageValidationContext.class.isAssignableFrom(item.getClass()) ||
+                                XpathMessageValidationContext.class.isAssignableFrom(item.getClass()) ||
+                                ScriptValidationContext.class.isAssignableFrom(item.getClass()));
 
-                if (validators.isEmpty()) {
-                    if (controlMessage.getPayload() instanceof String &&
-                            StringUtils.hasText(controlMessage.getPayload(String.class))) {
-                        throw new CitrusRuntimeException(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
-                    } else if (validationContexts.stream().anyMatch(item -> JsonPathMessageValidationContext.class.isAssignableFrom(item.getClass())
-                            || XpathMessageValidationContext.class.isAssignableFrom(item.getClass())
-                            || ScriptValidationContext.class.isAssignableFrom(item.getClass()))) {
-                        throw new CitrusRuntimeException(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
-                    } else {
-                        logger.warn(String.format("Unable to find proper message validator for message type '%s' and validation contexts '%s'", messageType, validationContexts));
-                    }
-                }
+                List<MessageValidator<? extends ValidationContext>> validators =
+                        context.getMessageValidatorRegistry().findMessageValidators(messageType, message, mustFindValidator);
 
                 for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
                     messageValidator.validateMessage(message, controlMessage, context, validationContexts);

@@ -32,7 +32,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.SocketUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
-import org.citrusframework.ws.TextEqualsMessageValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.ws.actions.AssertSoapFault;
 import org.citrusframework.ws.client.WebServiceClient;
 import org.citrusframework.ws.message.SoapFault;
@@ -102,7 +102,7 @@ public class AssertSoapFaultTest extends AbstractXmlActionTest {
         context.getReferenceResolver().bind("soapServer", soapServer);
 
         context.getReferenceResolver().bind("headerValidator", new DefaultMessageHeaderValidator());
-        context.getMessageValidatorRegistry().addMessageValidator("validator", new TextEqualsMessageValidator());
+        context.getMessageValidatorRegistry().addMessageValidator("validator", new DefaultTextEqualsMessageValidator());
         context.getReferenceResolver().bind("soapFaultValidator", new SimpleSoapFaultValidator());
         context.getReferenceResolver().bind("customSoapFaultValidator", new SimpleSoapFaultValidator());
 

@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
-import org.citrusframework.TextEqualsMessageValidator;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.container.SequenceAfterTest;
@@ -41,6 +40,7 @@ import org.citrusframework.report.TestActionListeners;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.validation.AbstractValidationProcessor;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
@@ -545,7 +545,7 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
-        final TextEqualsMessageValidator validator = new TextEqualsMessageValidator();
+        final DefaultTextEqualsMessageValidator validator = new DefaultTextEqualsMessageValidator();
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(receive().endpoint(messageEndpoint)
@@ -575,7 +575,7 @@ public class ReceiveMessageTestActionBuilderTest extends UnitTestSupport {
 
     @Test
     public void testReceiveBuilderWithValidatorName() {
-        final TextEqualsMessageValidator validator = new TextEqualsMessageValidator();
+        final DefaultTextEqualsMessageValidator validator = new DefaultTextEqualsMessageValidator();
 
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);

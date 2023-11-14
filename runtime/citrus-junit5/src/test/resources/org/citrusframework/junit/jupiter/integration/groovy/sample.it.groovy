@@ -19,11 +19,12 @@
 
 package org.citrusframework.junit.jupiter.integration.groovy
 
-import org.citrusframework.junit.jupiter.integration.validation.TextEqualsMessageValidator
+
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator
 
 configuration {
     beans {
-        bean(TextEqualsMessageValidator.class)
+        bean(DefaultTextEqualsMessageValidator.class)
     }
 
     queues {

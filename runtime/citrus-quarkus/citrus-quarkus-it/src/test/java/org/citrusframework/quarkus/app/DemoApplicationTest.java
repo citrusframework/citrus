@@ -32,8 +32,8 @@ import org.citrusframework.endpoint.direct.annotation.DirectEndpointConfig;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.quarkus.CitrusSupport;
-import org.citrusframework.quarkus.app.validation.TextEqualsMessageValidator;
 import org.citrusframework.spi.BindToRegistry;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -67,7 +67,7 @@ public class DemoApplicationTest {
     private TestCaseRunner t;
 
     @BindToRegistry
-    private final TextEqualsMessageValidator textEqualsMessageValidator = new TextEqualsMessageValidator();
+    private final DefaultTextEqualsMessageValidator textEqualsMessageValidator = new DefaultTextEqualsMessageValidator();
 
     @CitrusResource
     private TestContext context;

@@ -39,7 +39,6 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.http.server.HttpServer;
-import org.citrusframework.http.validation.TextEqualsMessageValidator;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.Message;
@@ -48,6 +47,7 @@ import org.citrusframework.message.MessageQueue;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.util.SocketUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.HeaderValidationContext;
@@ -75,7 +75,7 @@ public class HttpClientTest extends AbstractGroovyActionDslTest {
     private final DefaultMessageHeaderValidator headerValidator = new DefaultMessageHeaderValidator();
 
     @BindToRegistry
-    private final TextEqualsMessageValidator validator = new TextEqualsMessageValidator().enableTrim();
+    private final DefaultTextEqualsMessageValidator validator = new DefaultTextEqualsMessageValidator().enableTrim();
 
     private final int port = SocketUtils.findAvailableTcpPort(8080);
     private final String uri = "http://localhost:" + port + "/test";

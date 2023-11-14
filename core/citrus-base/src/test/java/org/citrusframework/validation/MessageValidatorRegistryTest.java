@@ -74,7 +74,7 @@ public class MessageValidatorRegistryTest {
     @Mock
     private SchemaValidator<?> xmlSchemaValidator;
 
-    private MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
+    private final MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
 
     @BeforeClass
     public void setupMocks() {
@@ -116,7 +116,6 @@ public class MessageValidatorRegistryTest {
 
         messageValidatorRegistry.addSchemaValidator("jsonSchemaValidator", jsonSchemaValidator);
         messageValidatorRegistry.addSchemaValidator("xmlSchemaValidator", xmlSchemaValidator);
-
     }
 
     @Test
@@ -318,11 +317,17 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
 
         try {
-            messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("Hello"));
+            messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("Hello"), true);
             Assert.fail("Missing exception due to no proper message validator found");
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Failed to find proper message validator for message");
         }
+
+        matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("Hello"));
+        Assert.assertNotNull(matchingValidators);
+        Assert.assertEquals(matchingValidators.size(), 2L);
+        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
+        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultTextEqualsMessageValidator.class);
 
         messageValidatorRegistry.addMessageValidator("plainTextMessageValidator", plainTextMessageValidator);
 

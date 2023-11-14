@@ -23,7 +23,7 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.functions.DefaultFunctionLibrary;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
-import org.citrusframework.validation.TextEqualsMessageValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
 
 /**
@@ -38,7 +38,7 @@ public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
         factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
 
         factory.getMessageValidatorRegistry().addMessageValidator("headerValidator", new DefaultMessageHeaderValidator());
-        factory.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new TextEqualsMessageValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("textEqualsMessageValidator", new DefaultTextEqualsMessageValidator());
         return factory;
     }
 }

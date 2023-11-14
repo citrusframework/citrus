@@ -34,7 +34,7 @@ import org.citrusframework.message.Message;
 import org.citrusframework.util.FileUtils;
 import org.citrusframework.util.SocketUtils;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
-import org.citrusframework.ws.TextEqualsMessageValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.ws.actions.ReceiveSoapMessageAction;
 import org.citrusframework.ws.actions.SendSoapMessageAction;
 import org.citrusframework.ws.client.WebServiceClient;
@@ -104,7 +104,7 @@ public class SoapClientTest extends AbstractGroovyActionDslTest {
         context.getReferenceResolver().bind("soapServer", soapServer);
 
         context.getReferenceResolver().bind("headerValidator", new DefaultMessageHeaderValidator());
-        context.getMessageValidatorRegistry().addMessageValidator("validator", new TextEqualsMessageValidator());
+        context.getMessageValidatorRegistry().addMessageValidator("validator", new DefaultTextEqualsMessageValidator());
         context.getReferenceResolver().bind("soapAttachmentValidator", new SimpleSoapAttachmentValidator());
         context.getReferenceResolver().bind("mySoapAttachmentValidator", new SimpleSoapAttachmentValidator());
 

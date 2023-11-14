@@ -35,12 +35,12 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.http.server.HttpServer;
-import org.citrusframework.http.validation.TextEqualsMessageValidator;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageQueue;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
+import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.DelegatingPayloadVariableExtractor;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
@@ -66,7 +66,7 @@ public class HttpServerTest extends AbstractGroovyActionDslTest {
     private final DefaultMessageHeaderValidator headerValidator = new DefaultMessageHeaderValidator();
 
     @BindToRegistry
-    private final TextEqualsMessageValidator validator = new TextEqualsMessageValidator().enableTrim();
+    private final DefaultTextEqualsMessageValidator validator = new DefaultTextEqualsMessageValidator().enableTrim();
 
     private HttpServer httpServer;
 
