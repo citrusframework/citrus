@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.citrusframework.endpoint.AbstractPollableEndpointConfiguration;
 import org.citrusframework.endpoint.resolver.DynamicEndpointUriResolver;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
@@ -62,6 +63,9 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
     /** The rest template */
     private RestTemplate restTemplate;
 
+    /** Http client builder */
+    private HttpClientBuilder httpClient;
+
     /** Request factory */
     private ClientHttpRequestFactory requestFactory;
 
@@ -75,7 +79,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
     private HttpMessageConverter messageConverter = new HttpMessageConverter();
 
     /** Endpoint clientInterceptors */
-    private List<ClientHttpRequestInterceptor> clientInterceptors;
+    private List<ClientHttpRequestInterceptor> clientInterceptors = new ArrayList<>();
 
     /** Should http errors be handled within endpoint consumer or simply throw exception */
     private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.PROPAGATE;
@@ -110,9 +114,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      * Default constructor initializes with default logging interceptor.
      */
     public HttpEndpointConfiguration() {
-        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
-        interceptors.add(new LoggingClientInterceptor());
-        setClientInterceptors(interceptors);
+        clientInterceptors.add(new LoggingClientInterceptor());
     }
 
     /**
@@ -228,6 +230,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
     public RestTemplate getRestTemplate() {
         if (restTemplate == null) {
             restTemplate = new RestTemplate();
+            restTemplate.setInterceptors(clientInterceptors);
         }
 
         restTemplate.setRequestFactory(getRequestFactory());
@@ -298,7 +301,7 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public ClientHttpRequestFactory getRequestFactory() {
         if (requestFactory == null) {
-            requestFactory = new HttpComponentsClientHttpRequestFactory();
+            requestFactory = new HttpComponentsClientHttpRequestFactory(getHttpClient().build());
         }
 
         return requestFactory;
@@ -310,6 +313,18 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public void setRequestFactory(ClientHttpRequestFactory requestFactory) {
         this.requestFactory = requestFactory;
+    }
+
+    public HttpClientBuilder getHttpClient() {
+        if (httpClient == null) {
+            httpClient = HttpClientBuilder.create().useSystemProperties();
+        }
+
+        return httpClient;
+    }
+
+    public void setHttpClient(HttpClientBuilder httpClient) {
+        this.httpClient = httpClient;
     }
 
     /**

@@ -33,7 +33,7 @@ public class DirectSyncEndpointConfiguration extends DirectEndpointConfiguration
 
     /**
      * Gets the pollingInterval.
-     * @return the pollingInterval the pollingInterval to get.
+     * @return the pollingInterval to get.
      */
     public long getPollingInterval() {
         return pollingInterval;

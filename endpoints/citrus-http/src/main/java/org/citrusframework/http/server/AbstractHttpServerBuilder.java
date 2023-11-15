@@ -19,11 +19,13 @@
 
 package org.citrusframework.http.server;
 
-import jakarta.servlet.Filter;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.servlet.Filter;
 import org.citrusframework.http.message.HttpMessageConverter;
+import org.citrusframework.http.security.HttpAuthentication;
+import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.server.AbstractServerBuilder;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -39,6 +41,8 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /** Endpoint target */
     private final T endpoint;
+
+    private int securePort = 8443;
 
     private final B self;
 
@@ -59,6 +63,16 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
      */
     public B port(int port) {
         endpoint.setPort(port);
+        return self;
+    }
+
+    /**
+     * Sets the secure port property.
+     * @param port
+     * @return
+     */
+    public B securePort(int port) {
+        this.securePort = port;
         return self;
     }
 
@@ -255,6 +269,26 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
     @Override
     public B timeout(long timeout) {
         endpoint.setDefaultTimeout(timeout);
+        return self;
+    }
+
+    public B authentication(HttpAuthentication auth) {
+        endpoint.setSecurityHandler(auth.getSecurityHandler("/*"));
+        return self;
+    }
+
+    public B authentication(String resourcePath, HttpAuthentication auth) {
+        endpoint.setSecurityHandler(auth.getSecurityHandler(resourcePath));
+        return self;
+    }
+
+    public B secured(HttpSecureConnection conn) {
+        return secured(securePort, conn);
+    }
+
+    public B secured(int securePort, HttpSecureConnection conn) {
+        this.securePort = securePort;
+        endpoint.setConnector(conn.getServerConnector(securePort));
         return self;
     }
 }

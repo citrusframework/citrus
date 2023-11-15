@@ -21,6 +21,8 @@ import java.util.List;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
 import org.citrusframework.http.message.HttpMessageConverter;
+import org.citrusframework.http.security.HttpAuthentication;
+import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.message.ErrorHandlingStrategy;
 import org.citrusframework.message.MessageCorrelator;
 import org.springframework.http.MediaType;
@@ -38,7 +40,7 @@ import org.springframework.web.client.RestTemplate;
 public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
 
     /** Endpoint target */
-    private HttpClient endpoint = new HttpClient();
+    private final HttpClient endpoint = new HttpClient();
 
     @Override
     protected HttpClient getEndpoint() {
@@ -232,6 +234,27 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
      */
     public HttpClientBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
+        return this;
+    }
+
+    /**
+     * Sets the user authentication.
+     * @param auth
+     * @return
+     */
+    public HttpClientBuilder authentication(HttpAuthentication auth) {
+        endpoint.getEndpointConfiguration().setRequestFactory(
+                auth.getRequestFactory(endpoint.getEndpointConfiguration().getRequestUrl(), endpoint));
+        return this;
+    }
+
+    /**
+     * Enable secured connection on the client using provided SSL connection.
+     * @return
+     */
+    public HttpClientBuilder secured(HttpSecureConnection conn) {
+        endpoint.getEndpointConfiguration().getHttpClient()
+                .setConnectionManager(conn.getClientConnectionManager());
         return this;
     }
 }

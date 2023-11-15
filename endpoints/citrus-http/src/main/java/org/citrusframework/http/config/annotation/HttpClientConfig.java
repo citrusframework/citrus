@@ -141,4 +141,16 @@ public @interface HttpClientConfig {
      * @return
      */
     String actor() default "";
+
+    /**
+     * User authentication.
+     * @return
+     */
+    String authentication() default "";
+
+    /**
+     * Secured connection.
+     * @return
+     */
+    String secured() default "";
 }

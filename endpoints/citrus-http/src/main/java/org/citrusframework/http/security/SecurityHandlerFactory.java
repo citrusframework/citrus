@@ -16,9 +16,6 @@
 
 package org.citrusframework.http.security;
 
-import javax.security.auth.Subject;
-import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.citrusframework.common.InitializingPhase;
-import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
@@ -49,14 +45,14 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, InitializingPhase {
 
-    /** User credentials known to login service */
+    /** User credentials known to the login service */
     private List<User> users = new ArrayList<>();
 
     /** Realm name for this security handler */
     private String realm = "realm";
 
     /** List of constraints with mapping path as key */
-    private Map<String, Constraint> constraints = new HashMap<String, Constraint>();
+    private Map<String, Constraint> constraints = new HashMap<>();
 
     /** User login service consolidated for user authentication */
     private LoginService loginService;

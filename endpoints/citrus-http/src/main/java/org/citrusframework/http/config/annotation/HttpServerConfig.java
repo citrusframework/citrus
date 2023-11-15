@@ -182,4 +182,28 @@ public @interface HttpServerConfig {
      * @return
      */
     String actor() default "";
+
+    /**
+     * User authentication.
+     * @return
+     */
+    String authentication() default "";
+
+    /**
+     * Resource path that is secured with user authentication.
+     * @return
+     */
+    String securedPath() default "/*";
+
+    /**
+     * Secured connection.
+     * @return
+     */
+    String secured() default "";
+
+    /**
+     * Secured server port.
+     * @return
+     */
+    int securePort() default 8443;
 }

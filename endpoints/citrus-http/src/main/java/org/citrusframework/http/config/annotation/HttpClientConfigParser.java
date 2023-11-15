@@ -26,6 +26,8 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.message.HttpMessageConverter;
+import org.citrusframework.http.security.HttpAuthentication;
+import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
@@ -110,6 +112,14 @@ public class HttpClientConfigParser implements AnnotationConfigParser<HttpClient
 
         if (StringUtils.hasText(annotation.actor())) {
             builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
+        }
+
+        if (StringUtils.hasText(annotation.authentication())) {
+            builder.authentication(referenceResolver.resolve(annotation.authentication(), HttpAuthentication.class));
+        }
+
+        if (StringUtils.hasText(annotation.secured())) {
+            builder.secured(referenceResolver.resolve(annotation.secured(), HttpSecureConnection.class));
         }
 
         return builder.initialize().build();

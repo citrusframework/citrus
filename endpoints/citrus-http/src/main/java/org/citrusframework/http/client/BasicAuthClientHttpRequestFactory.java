@@ -21,10 +21,10 @@ import java.net.URI;
 import org.apache.hc.client5.http.auth.AuthCache;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
-import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.auth.BasicScheme;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.core5.http.HttpHost;
@@ -45,7 +45,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpComponentsClientHttpRequestFactory>, InitializingPhase {
 
     /** The target request factory */
-    private HttpClient httpClient;
+    private HttpClientBuilder httpClient;
 
     /** User credentials for basic authentication */
     private Credentials credentials;
@@ -59,7 +59,7 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     public HttpComponentsClientHttpRequestFactory getObject() throws Exception {
         ObjectHelper.assertNotNull(credentials, "User credentials not set properly!");
 
-        return new HttpComponentsClientHttpRequestFactory(httpClient) {
+        return new HttpComponentsClientHttpRequestFactory(httpClient.build()) {
             @Override
             protected HttpContext createHttpContext(HttpMethod httpMethod, URI uri) {
                 // we have to use preemptive authentication
@@ -99,13 +99,14 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
 
     @Override
     public void initialize() {
-        if (httpClient == null) {
-            BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(authScope, credentials);
+        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(authScope, credentials);
 
+        if (httpClient == null) {
             httpClient = HttpClients.custom()
-                    .setDefaultCredentialsProvider(credentialsProvider)
-                    .build();
+                    .setDefaultCredentialsProvider(credentialsProvider);
+        } else {
+            httpClient.setDefaultCredentialsProvider(credentialsProvider);
         }
     }
 
@@ -129,7 +130,7 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
      * Sets the httpClient.
      * @param httpClient the httpClient to set
      */
-    public void setHttpClient(HttpClient httpClient) {
+    public void setHttpClient(HttpClientBuilder httpClient) {
         this.httpClient = httpClient;
     }
 
