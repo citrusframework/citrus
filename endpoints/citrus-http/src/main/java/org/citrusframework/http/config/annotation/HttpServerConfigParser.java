@@ -29,6 +29,8 @@ import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.endpoint.EndpointAdapter;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.message.HttpMessageConverter;
+import org.citrusframework.http.security.HttpAuthentication;
+import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.spi.ReferenceResolver;
@@ -137,6 +139,14 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
 
         builder.defaultStatus(annotation.defaultStatus());
         builder.responseCacheSize(annotation.responseCacheSize());
+
+        if (StringUtils.hasText(annotation.authentication())) {
+            builder.authentication(annotation.securedPath(), referenceResolver.resolve(annotation.authentication(), HttpAuthentication.class));
+        }
+
+        if (StringUtils.hasText(annotation.secured())) {
+            builder.secured(annotation.securePort(), referenceResolver.resolve(annotation.secured(), HttpSecureConnection.class));
+        }
 
         return builder.initialize().build();
     }

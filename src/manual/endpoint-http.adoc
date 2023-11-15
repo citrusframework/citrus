@@ -1195,12 +1195,12 @@ the preferred way according to your test project requirements.
 [[http-client-basic-authentication]]
 == Http client basic authentication
 
-As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be
-username/password authentication where the credentials are transmitted in the request header section as base64 encoding.
+As a client you may have to authenticate properly in order to access a resource on the server.
+In many cases this will be basic authentication with username/password where the credentials are transmitted in the request header section with base64 encoding.
 
-The easiest approach to set the *Authorization* header for a basic authentication Http request would be to set it on your
-own in the send action definition. Of course you have to use the correct basic authentication header syntax with base64
-encoding for the username:password phrase. See this simple example.
+The easiest approach to set the *Authorization* header for a basic authentication Http request would be to explicitly set the header in the send action definition.
+Of course, you have to use the correct basic authentication header syntax with base64 encoding for the username:password phrase.
+See how it works in this simple example.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -1224,13 +1224,45 @@ http().client("httpClient")
 </http:send-request>
 ----
 
-Citrus will add this header to the Http requests and the server will read the *Authorization* username and password. For
-more convenient base64 encoding you can also use a Citrus function, see link:#functions-encode-base64[functions-encode-base64]
+Citrus will add this header to the Http requests and the server will read the *Authorization* username and password.
+For more convenient base64 encoding you can also use a Citrus function `citrus:encodeBase64(username:password)`.
+See link:#functions-encode-base64[functions-encode-base64] for more details.
 
-Now there is a more comfortable way to set the basic authentication header in all the Citrus requests. As Citrus uses
-Spring's REST support with the RestTemplate and ClientHttpRequestFactory the basic authentication is already covered there
-in a more generic way. You simply have to configure the basic authentication credentials on the RestTemplate's ClientHttpRequestFactory.
+Instead of adding the Http *Authorization* header manually you can also enable the basic authentication on the Http client endpoint.
+Simply configure the basic authentication credentials on the Citrus Http client component.
 Just see the following example and learn how to do that.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public HttpClient httpClient() {
+    return new HttpClientBuilder()
+        .requestUrl("http://localhost:8080/test")
+        .authentication(HttpAuthentication.basic("username", "password"))
+        .build();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-http:client id="httpClient"
+                    request-url="http://localhost:8080/test"
+                    request-factory="clientRequestFactory"/>
+
+<bean id="clientRequestFactory"
+    class="org.citrusframework.http.security.HttpClientRequestFactoryBean">
+    <constructor-arg>
+        <bean class="org.citrusframework.http.security.BasicAuthentication">
+            <constructor-arg value="username"/>
+            <constructor-arg value="password"/>
+        </bean>
+    </constructor-arg>
+</bean>
+----
+
+In case you need a more powerful configuration of the basic authentication you can also directly use the request factory as a configuration item for basic authentication.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -1250,7 +1282,7 @@ public BasicAuthClientHttpRequestFactory basicAuthFactory() {
     AuthScope scope = new AuthScope("localhost", "8080", "", "basic");
     factory.setAuthScope(scope);
 
-    UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("someUsername", "somePassword");
+    UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("username", "password");
     factory.setCredentials(credentials);
 
     return factory;
@@ -1274,21 +1306,21 @@ public BasicAuthClientHttpRequestFactory basicAuthFactory() {
   </property>
   <property name="credentials">
     <bean class="org.apache.hc.client5.http.auth.UsernamePasswordCredentials">
-        <constructor-arg value="someUsername"/>
-        <constructor-arg value="somePassword"/>
+        <constructor-arg value="username"/>
+        <constructor-arg value="password"/>
     </bean>
   </property>
 </bean>
 ----
 
-The advantages of this method is obvious. Now all sending test actions that reference the client component will automatically
-add the basic authentication header.
+The advantage of setting the basic authentication on the Http client is obvious.
+All test actions that reference the client component will automatically use the basic authentication.
 
 The above configuration results in Http client requests with authentication headers properly set for basic authentication.
 The client request factory takes care of adding the proper basic authentication header to each request that is sent with this
 Citrus message sender. Citrus uses preemptive authentication. The message sender only sends a single request to the server
 with all authentication information set in the message header. The request which determines the authentication scheme on the
-server is skipped. This is why you have to add some auth scope in the client request factory so Citrus can setup an authentication
+server is skipped. This is why you have to add some auth scope in the client request factory so Citrus can set up an authentication
 cache within the Http context in order to have preemptive authentication.
 
 As a result of the basic auth client request factory the following example request that is created by the Citrus Http client
@@ -1313,7 +1345,41 @@ Content-Length: 175
 [[http-server-basic-authentication]]
 == Http server basic authentication
 
-Citrus as a server can also set basic authentication so clients need to authenticate properly when accessing server resources.
+The Citrus Http server is able to configure basic authentication so clients need to authenticate properly when accessing server resources.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public HttpServer httpServer() {
+    return new HttpServerBuilder()
+        .port(8080)
+        .autoStart(true)
+        .authentication("/foo/*", HttpAuthentication.basic("username", "password"))
+        .build();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-http:server id="basicAuthHttpServer"
+                port="8080"
+                auto-start="true"
+                security-handler="securityHandlerFactory"/>
+
+<bean id="securityHandlerFactory" class="org.citrusframework.http.security.HttpSecurityHandlerFactoryBean">
+    <constructor-arg>
+        <bean class="org.citrusframework.http.security.BasicAuthentication">
+            <constructor-arg value="username"/>
+            <constructor-arg value="password"/>
+            <property name="resourcePath" value="/foo/*"/>
+        </bean>
+    </constructor-arg>
+</bean>
+----
+
+In case you need a more powerful server configuration you can also set the security handler directly.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -1338,7 +1404,7 @@ public SecurityHandlerFactory securityHandler() {
     factory.setUsers(Collections.singletonList(user));
 
     factory.setConstraints(Collections.singletonMap("/foo/*",
-                                                    new BasicAuthConstraint("CitrusRole")));
+                                    new BasicAuthConstraint("CitrusRole")));
 
     return factory;
 }
@@ -1384,6 +1450,121 @@ Just have a look at the code base and inspect the settings and properties offere
 
 TIP: This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based
 authentication constraints very easy.
+
+[[http-client-ssl]]
+== Http client SSL
+
+You can use SSL when establishing a client connection with the server.
+The Citrus Http client supports a secure connection with these settings.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public HttpClient httpClient() {
+    return new HttpClientBuilder()
+        .requestUrl("https://localhost:8080/test")
+        .secured(HttpSecureConnection.ssl())
+        .build();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-http:client id="httpClient"
+                    request-url="http://localhost:8080/test"
+                    connection-manager="sslConnectionManager"/>
+
+<bean id="sslConnectionManager"
+    class="org.citrusframework.http.security.HttpClientConnectionManagerFactory">
+    <constructor-arg>
+        <bean class="org.citrusframework.http.security.SSLConnection"/>
+    </constructor-arg>
+</bean>
+----
+
+The example Http client uses SSL secure connection.
+By default, the client will accept any server certificates and hostnames often referred to as trust-all-strategy.
+
+You may want to also use a proper trust store to explicitly accept server certificates.
+The client by default allows self-signed certificates.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public HttpClient sslHttpClient() {
+    return new HttpClientBuilder()
+        .requestUrl("https://localhost:8080/test")
+        .secured(HttpSecureConnection.ssl()
+            .trustStore("path/to/server.jks", "trustStorePassword"))
+        .build();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-http:client id="sslHttpClient"
+                    request-url="http://localhost:8080/test"
+                    connection-manager="sslConnectionManager"/>
+
+<bean id="sslConnectionManager"
+    class="org.citrusframework.http.security.HttpClientConnectionManagerFactory">
+    <constructor-arg>
+        <bean class="org.citrusframework.http.security.SSLConnection">
+            <constructor-arg value="path/to/server.jks"/>
+            <constructor-arg value="trustStorePassword"/>
+        </bean>
+    </constructor-arg>
+</bean>
+----
+
+You need to provide a key store file (.jks) and a password to access the certificates located in the store.
+The client now will do proper SSL handshake with the server in order to use secure connections.
+
+[[http-server-ssl]]
+== Http server SSL
+
+The Citrus Http server is able to configure a SSL connector so clients need to use secure connections to access the server resources.
+The connector
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@Bean
+public HttpServer sslHttpServer() {
+    return new HttpServerBuilder()
+        .port(8080)
+        .autoStart(true)
+        .secured(8443, HttpSecureConnection.ssl()
+            .keyStore("path/to/server.jks", "keyStorePassword"))
+        .build();
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<citrus-http:server id="sslHttpServer"
+                port="8080"
+                auto-start="true"
+                connector="serverConnectorFactory"/>
+
+<bean id="serverConnectorFactory" class="org.citrusframework.http.security.HttpServerConnectorFactory">
+    <constructor-arg>
+        <bean class="org.citrusframework.http.security.SSLConnection">
+            <constructor-arg value="path/to/server.jks"/>
+            <constructor-arg value="trustStorePassword"/>
+            <property name="securePort" value="8443"/>
+        </bean>
+    </constructor-arg>
+</bean>
+----
+
+The server now uses a `securePort` and a server certificate.
+In most cases the certificate in a test environment is self-signed so please make sure to allow self-signed certificates in your clients.
 
 [[http-cookies]]
 == Http cookies

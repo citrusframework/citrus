@@ -26,6 +26,7 @@ import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.common.Named;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.BindToRegistry;
@@ -249,6 +250,11 @@ public abstract class CitrusAnnotations {
                     try {
                         String name = ReferenceRegistry.getName(m.getAnnotation(BindToRegistry.class), m.getName());
                         Object component = m.invoke(configuration);
+
+                        if (component instanceof Named named) {
+                            named.setName(name);
+                        }
+
                         citrusContext.getReferenceResolver().bind(name, component);
 
                         initializeComponent(name, component, citrusContext);
@@ -270,6 +276,11 @@ public abstract class CitrusAnnotations {
                     try {
                         String name = ReferenceRegistry.getName(f.getAnnotation(BindToRegistry.class), f.getName());
                         Object component = f.get(configuration);
+
+                        if (component instanceof Named named) {
+                            named.setName(name);
+                        }
+
                         citrusContext.getReferenceResolver().bind(name, component);
 
                         initializeComponent(name, component, citrusContext);
