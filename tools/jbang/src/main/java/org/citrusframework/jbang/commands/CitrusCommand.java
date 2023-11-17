@@ -33,7 +33,7 @@ public abstract class CitrusCommand implements Callable<Integer> {
     CommandSpec spec;
 
     private final CitrusJBangMain main;
-    private File citrusDir;
+    private File userDir;
 
     //CHECKSTYLE:OFF
     @CommandLine.Option(names = { "-h", "--help" }, usageHelp = true, description = "Display the help and sub-commands")
@@ -49,17 +49,19 @@ public abstract class CitrusCommand implements Callable<Integer> {
     }
 
     public File getStatusFile(String pid) {
-        if (citrusDir == null) {
-            citrusDir = new File(System.getProperty("user.home"), ".citrus");
-        }
-        return new File(citrusDir, pid + "-status.json");
+        return new File(getUserDir(), pid + "-status.json");
     }
 
     public File getOutputFile(String pid) {
-        if (citrusDir == null) {
-            citrusDir = new File(System.getProperty("user.home"), ".citrus");
+        return new File(getUserDir(), pid + "-output.json");
+    }
+
+    protected File getUserDir() {
+        if (userDir == null) {
+            userDir = new File(System.getProperty("user.home"), ".citrus");
         }
-        return new File(citrusDir, pid + "-output.json");
+
+        return userDir;
     }
 
     protected abstract static class ParameterConsumer<T> implements IParameterConsumer {

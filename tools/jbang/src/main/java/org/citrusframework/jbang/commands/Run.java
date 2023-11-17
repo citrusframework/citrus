@@ -147,7 +147,7 @@ public class Run extends CitrusCommand {
         return exitStatus.exitStatus();
     }
 
-    private TestRunConfiguration getRunConfiguration(List<String> files) {
+    protected TestRunConfiguration getRunConfiguration(List<String> files) {
         TestRunConfiguration configuration = new TestRunConfiguration();
 
         String ext = FileUtils.getFileExtension(files.get(0));
