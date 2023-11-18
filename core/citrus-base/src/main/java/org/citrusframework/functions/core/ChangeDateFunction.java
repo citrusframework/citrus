@@ -39,6 +39,8 @@ public class ChangeDateFunction extends AbstractDateFunction {
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(ChangeDateFunction.class);
 
+    private final CalendarProvider calendarProvider = new CalendarProvider();
+
     /**
      * @see org.citrusframework.functions.Function#execute(java.util.List, org.citrusframework.context.TestContext)
      * @throws CitrusRuntimeException
@@ -48,7 +50,7 @@ public class ChangeDateFunction extends AbstractDateFunction {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = calendarProvider.getInstance();
 
         SimpleDateFormat dateFormat;
         String result = "";
@@ -79,4 +81,14 @@ public class ChangeDateFunction extends AbstractDateFunction {
         return result;
     }
 
+    static class CalendarProvider {
+
+        private CalendarProvider () {
+            // This class allows mocking in unit tests
+        }
+
+        Calendar getInstance() {
+            return Calendar.getInstance();
+        }
+    }
 }

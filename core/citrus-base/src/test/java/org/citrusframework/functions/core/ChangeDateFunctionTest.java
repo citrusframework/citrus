@@ -16,174 +16,206 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.Calendar;
-import java.util.Collections;
-
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.FunctionParameterHelper;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Calendar;
+import java.util.Collections;
+
+import static org.mockito.Mockito.doReturn;
 
 /**
  * @author Christoph Deppisch
  */
 public class ChangeDateFunctionTest extends UnitTestSupport {
-    ChangeDateFunction function = new ChangeDateFunction();
+
+    @Mock
+    private ChangeDateFunction.CalendarProvider calendarProviderMock;
+
+    private AutoCloseable mockitoContext;
+
+    private ChangeDateFunction fixture;
+
+    @BeforeMethod
+    void beforeMethodSetup() {
+        mockitoContext = MockitoAnnotations.openMocks(this);
+
+        fixture = new ChangeDateFunction();
+        ReflectionTestUtils.setField(fixture, "calendarProvider", calendarProviderMock, ChangeDateFunction.CalendarProvider.class);
+    }
 
     @Test
     public void testDefaultDateFormat() {
-        Calendar c = Calendar.getInstance();
+        Calendar c = getAndInsertMockCalendar();
         c.add(Calendar.YEAR, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$td.%1$tm.%1$tY", Calendar.getInstance()) + "', '+1y'"), context),
                 String.format("%1$td.%1$tm.%1$tY", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.MONTH, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$td.%1$tm.%1$tY", Calendar.getInstance()) + "', '+1M'"), context),
                 String.format("%1$td.%1$tm.%1$tY", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.DAY_OF_YEAR, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$td.%1$tm.%1$tY", Calendar.getInstance()) + "', '+1d'"), context),
                 String.format("%1$td.%1$tm.%1$tY", c));
     }
 
     @Test
     public void testFunction() {
-        Calendar c = Calendar.getInstance();
+        Calendar c = getAndInsertMockCalendar();
         c.add(Calendar.YEAR, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1y', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.MONTH, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1M', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.DAY_OF_YEAR, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1d', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.HOUR, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1h', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.MINUTE, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1m', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.SECOND, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1s', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.YEAR, 10);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+10y', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.YEAR, 1);
         c.add(Calendar.MONTH, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1y+1M', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
         c.add(Calendar.DAY_OF_YEAR, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1y+1M+1d', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
         c.add(Calendar.HOUR, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1y+1M+1d+1h', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
         c.add(Calendar.MINUTE, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1y+1M+1d+1h+1m', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
         c.add(Calendar.SECOND, 1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1y+1M+1d+1h+1m+1s', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.YEAR, -1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '-1y', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.MONTH, -1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '-1M', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.DAY_OF_YEAR, -1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '-1d', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.HOUR, -1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '-1h', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.MINUTE, -1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '-1m', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.SECOND, -1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '-1s', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.YEAR, -1);
         c.add(Calendar.MONTH, 1);
         c.add(Calendar.DAY_OF_YEAR, -1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '-1y+1M-1d', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
 
-        c = Calendar.getInstance();
+        c = getAndInsertMockCalendar();
         c.add(Calendar.YEAR, 1);
         c.add(Calendar.MONTH, -1);
         c.add(Calendar.DAY_OF_YEAR, -1);
-        Assert.assertEquals(function.execute(FunctionParameterHelper.getParameterList("'" +
+        Assert.assertEquals(fixture.execute(FunctionParameterHelper.getParameterList("'" +
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", Calendar.getInstance()) + "', '+1y-1M-1d', 'yyyy-MM-dd HH:mm:ss'"), context),
                 String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", c));
     }
 
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testWrongDateFormatUsage() {
-        function.execute(FunctionParameterHelper.getParameterList("'1970-01-01', '+1y'"), context);
+        fixture.execute(FunctionParameterHelper.getParameterList("'1970-01-01', '+1y'"), context);
     }
 
 	@Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.EMPTY_LIST, context);
+        fixture.execute(Collections.EMPTY_LIST, context);
+    }
+
+    private Calendar getAndInsertMockCalendar() {
+        Calendar c = Calendar.getInstance();
+        doReturn(c.clone()).when(calendarProviderMock).getInstance();
+        return c;
+    }
+
+    @AfterMethod
+    public void afterMethodTeardown() throws Exception {
+        mockitoContext.close();
     }
 }
