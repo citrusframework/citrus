@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.http.Cookie;
@@ -54,6 +55,10 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         this.cookieConverter = cookieConverter;
     }
 
+    private static String resolveCookieValue(TestContext context, Cookie cookie) {
+        return Objects.isNull(context) ? cookie.getValue() : context.replaceDynamicContentInString(cookie.getValue());
+    }
+
     @Override
     public HttpEntity<?> convertOutbound(Message message,
                                          HttpEndpointConfiguration endpointConfiguration,
@@ -63,15 +68,15 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
 
         HttpHeaders httpHeaders = createHttpHeaders(httpMessage, endpointConfiguration);
 
+        for (Cookie cookie : httpMessage.getCookies()) {
+            httpHeaders.add(
+                    HttpHeaders.COOKIE,
+                    cookie.getName() + "=" + resolveCookieValue(context, cookie));
+        }
+
         Object payload = httpMessage.getPayload();
         if (httpMessage.getStatusCode() != null) {
             return new ResponseEntity<>(payload, httpHeaders, httpMessage.getStatusCode());
-        } else {
-            for (Cookie cookie : httpMessage.getCookies()) {
-                httpHeaders.add(
-                        HttpHeaders.COOKIE,
-                        cookie.getName() + "=" + context.replaceDynamicContentInString(cookie.getValue()));
-            }
         }
 
         RequestMethod method = determineRequestMethod(endpointConfiguration, httpMessage);
