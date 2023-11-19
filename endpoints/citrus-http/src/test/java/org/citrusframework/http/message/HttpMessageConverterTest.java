@@ -16,17 +16,23 @@
 
 package org.citrusframework.http.message;
 
+import jakarta.servlet.http.Cookie;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.messaging.MessageHeaders;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import jakarta.servlet.http.Cookie;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +49,6 @@ import static org.testng.AssertJUnit.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
 
 public class HttpMessageConverterTest {
-
     private CookieConverter cookieConverterMock;
     private HttpMessageConverter messageConverter;
 
@@ -54,7 +59,7 @@ public class HttpMessageConverterTest {
     private final String payload = "Hello World!";
 
     @BeforeMethod
-    public void setUp(){
+    public void setUp() {
         cookieConverterMock = mock(CookieConverter.class);
         messageConverter = new HttpMessageConverter(cookieConverterMock);
 
@@ -64,31 +69,29 @@ public class HttpMessageConverterTest {
     }
 
     @Test
-    public void testDefaultMessageIsConvertedOnOutbound(){
-
-        //GIVEN
+    public void testDefaultMessageIsConvertedOnOutbound() {
+        // GIVEN
         Message message = new DefaultMessage(payload);
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(payload, httpEntity.getBody());
     }
 
     @Test
-    public void testHttpMessageCookiesArePreservedOnOutbound(){
-
-        //GIVEN
-        Cookie cookie = new Cookie("foo","bar");
+    public void testHttpMessageCookiesArePreservedOnOutbound() {
+        // GIVEN
+        Cookie cookie = new Cookie("foo", "bar");
         message.cookie(cookie);
 
         String expectedCookie = "foo=bar";
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         final List<String> cookies = httpEntity.getHeaders().get("Cookie");
         assert cookies != null;
         assertEquals(1, cookies.size());
@@ -96,20 +99,19 @@ public class HttpMessageConverterTest {
     }
 
     @Test
-    public void testHttpMessageCookiesValuesAreReplacedOnOutbound(){
-
-        //GIVEN
-        Cookie cookie = new Cookie("foo","${foobar}");
+    public void testHttpMessageCookiesValuesAreReplacedOnOutbound() {
+        // GIVEN
+        Cookie cookie = new Cookie("foo", "${foobar}");
         message.cookie(cookie);
 
         testContext.setVariable("foobar", "bar");
 
         String expectedCookie = "foo=bar";
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         final List<String> cookies = httpEntity.getHeaders().get("Cookie");
         assert cookies != null;
         assertEquals(1, cookies.size());
@@ -117,15 +119,14 @@ public class HttpMessageConverterTest {
     }
 
     @Test
-    public void testHttpMessageHeadersAreReplacedOnOutbound(){
+    public void testHttpMessageHeadersAreReplacedOnOutbound() {
+        // GIVEN
+        message.header("foo", "bar");
 
-        //GIVEN
-        message.header("foo","bar");
-
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         final List<String> fooHeader = httpEntity.getHeaders().get("foo");
         assert fooHeader != null;
         assertEquals(1, fooHeader.size());
@@ -133,15 +134,14 @@ public class HttpMessageConverterTest {
     }
 
     @Test
-    public void testHttpContentTypeIsPresent(){
-
-        //GIVEN
+    public void testHttpContentTypeIsPresent() {
+        // GIVEN
         endpointConfiguration.setContentType("foobar");
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         final List<String> contentTypeHeader = httpEntity.getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE);
         assert contentTypeHeader != null;
         assertEquals(1, contentTypeHeader.size());
@@ -149,16 +149,15 @@ public class HttpMessageConverterTest {
     }
 
     @Test
-    public void testHttpContentTypeContainsAlteredCharsetIsPresent(){
-
-        //GIVEN
+    public void testHttpContentTypeContainsAlteredCharsetIsPresent() {
+        // GIVEN
         endpointConfiguration.setContentType("foobar");
         endpointConfiguration.setCharset("whatever");
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         final List<String> contentTypeHeader = httpEntity.getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE);
         assert contentTypeHeader != null;
         assertEquals(1, contentTypeHeader.size());
@@ -166,16 +165,15 @@ public class HttpMessageConverterTest {
     }
 
     @Test
-    public void testHttpContentTypeCharsetIsMissingWhenEmptyIsPresent(){
-
-        //GIVEN
+    public void testHttpContentTypeCharsetIsMissingWhenEmptyIsPresent() {
+        // GIVEN
         endpointConfiguration.setContentType("foobar");
         endpointConfiguration.setCharset("");
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         final List<String> contentTypeHeader = httpEntity.getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE);
         assert contentTypeHeader != null;
         assertEquals(1, contentTypeHeader.size());
@@ -183,169 +181,159 @@ public class HttpMessageConverterTest {
     }
 
     @Test
-    public void testHttpMethodBodyIsSetForPostOnOutbound(){
-
-        //GIVEN
+    public void testHttpMethodBodyIsSetForPostOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.POST);
         message.setPayload(payload);
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(payload, httpEntity.getBody());
     }
 
     @Test
-    public void testHttpMethodBodyIsSetForPutOnOutbound(){
-
-        //GIVEN
+    public void testHttpMethodBodyIsSetForPutOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.PUT);
         message.setPayload(payload);
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(payload, httpEntity.getBody());
     }
 
     @Test
-    public void testHttpMethodBodyIsSetForDeleteOnOutbound(){
-
-        //GIVEN
+    public void testHttpMethodBodyIsSetForDeleteOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.DELETE);
         message.setPayload(payload);
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(payload, httpEntity.getBody());
     }
 
     @Test
-    public void testHttpMethodBodyIsSetForPatchOnOutbound(){
-
-        //GIVEN
+    public void testHttpMethodBodyIsSetForPatchOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.PATCH);
         message.setPayload(payload);
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(payload, httpEntity.getBody());
     }
 
     @Test
-    public void testHttpMethodBodyIsNotSetForGetOnOutbound(){
-
-        //GIVEN
+    public void testHttpMethodBodyIsNotSetForGetOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.GET);
         message.setPayload(payload);
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertNull(httpEntity.getBody());
     }
 
     @Test
-    public void testHttpMethodBodyIsNotSetForHeadOnOutbound(){
-
-        //GIVEN
+    public void testHttpMethodBodyIsNotSetForHeadOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.HEAD);
         message.setPayload(payload);
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertNull(httpEntity.getBody());
     }
 
     @Test
-    public void testHttpMethodBodyIsNotSetForOptionsOnOutbound(){
-
-        //GIVEN
+    public void testHttpMethodBodyIsNotSetForOptionsOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.OPTIONS);
         message.setPayload(payload);
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertNull(httpEntity.getBody());
     }
 
     @Test
-    public void testHttpMethodBodyIsNotSetForTraceOnOutbound(){
-
-        //GIVEN
+    public void testHttpMethodBodyIsNotSetForTraceOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.TRACE);
         message.setPayload(payload);
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertNull(httpEntity.getBody());
     }
 
-    @Test
-    public void testHttpMessageWithStatusCodeContainsNoCookiesOnOutbound(){
-        /* I've added this test to ensure that the current implementation of the HttpMessageConverter
-         * is fixed. Nevertheless, I doubt that cookies should not be set, if a http status code is preset in a
-         * incoming HTTP message. So this test might be subject to change.
-         */
 
-        //GIVEN
+    @Test
+    public void testHttpMessageWithStatusCodeContainsCookiesOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, "200");
 
-        Cookie cookie = new Cookie("foo","bar");
+        Cookie cookie = new Cookie("foo", "bar");
         message.cookie(cookie);
 
-        //WHEN
+        String expectedCookie = "foo=bar";
+
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
-        assertNull(httpEntity.getHeaders().get("Cookie"));
+        // THEN
+        final List<String> cookies = httpEntity.getHeaders().get("Cookie");
+        assert cookies != null;
+        assertEquals(1, cookies.size());
+        assertEquals(expectedCookie, cookies.get(0));
     }
 
     @Test
-    public void testCustomStatusCodeIsSetOnOutbound(){
-
-        //GIVEN
+    public void testCustomStatusCodeIsSetOnOutbound() {
+        // GIVEN
         message.setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, "555");
 
-        //WHEN
+        // WHEN
         final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(HttpStatusCode.valueOf(555), ((ResponseEntity<?>) httpEntity).getStatusCode());
     }
 
     @Test
-    public void testSpringIntegrationHeaderMapperIsUsedOnOutbound(){
-
-        //GIVEN
+    public void testSpringIntegrationHeaderMapperIsUsedOnOutbound() {
+        // GIVEN
         @SuppressWarnings("unchecked")
         HeaderMapper<HttpHeaders> headersHeaderMapperMock = (HeaderMapper<HttpHeaders>) mock(HeaderMapper.class);
         endpointConfiguration.setHeaderMapper(headersHeaderMapperMock);
 
-        //WHEN
+        // WHEN
         messageConverter.convertOutbound(new HttpMessage(), endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         verify(headersHeaderMapperMock).fromHeaders(any(MessageHeaders.class), any(HttpHeaders.class));
     }
 
     @Test
-    public void testSpringIntegrationHeaderMapperResultIsSetOnInbound(){
-
-        //GIVEN
+    public void testSpringIntegrationHeaderMapperResultIsSetOnInbound() {
+        // GIVEN
         final Map<String, Object> expectedHeaderMap = new HashMap<>();
         expectedHeaderMap.put("foo", "bar");
 
@@ -355,167 +343,143 @@ public class HttpMessageConverterTest {
 
         endpointConfiguration.setHeaderMapper(headersHeaderMapperMock);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(HttpEntity.EMPTY, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(HttpEntity.EMPTY, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals("bar", httpMessage.getHeaders().get("foo"));
     }
 
     @Test
-    public void testCitrusDefaultHeaderAreSetOnInbound(){
+    public void testCitrusDefaultHeaderAreSetOnInbound() {
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(HttpEntity.EMPTY, endpointConfiguration, testContext);
 
-        //GIVEN
-
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(HttpEntity.EMPTY, endpointConfiguration, testContext);
-
-        //THEN
+        // THEN
         assertTrue(httpMessage.getHeaders().containsKey("citrus_message_id"));
         assertTrue(httpMessage.getHeaders().containsKey("citrus_message_timestamp"));
     }
 
     @Test
-    public void testHttpEntityMessageBodyIsPreservedOnInbound(){
-
-        //GIVEN
+    public void testHttpEntityMessageBodyIsPreservedOnInbound() {
+        // GIVEN
         final HttpEntity<String> httpEntity = new HttpEntity<>(payload);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(httpMessage.getPayload(String.class), payload);
     }
 
     @Test
-    public void testHttpEntityDefaultMessageBodyIsSetOnInbound(){
-
-        //GIVEN
+    public void testHttpEntityDefaultMessageBodyIsSetOnInbound() {
+        // GIVEN
         final HttpEntity<String> httpEntity = new HttpEntity<>(null);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(httpMessage.getPayload(String.class), "");
     }
 
     @Test
-    public void testCustomHeadersAreSetOnInbound(){
-
-        //GIVEN
+    public void testCustomHeadersAreSetOnInbound() {
+        // GIVEN
         final HttpHeaders expectedHttpHeader = new HttpHeaders();
         expectedHttpHeader.put("foo", Collections.singletonList("bar"));
         final HttpEntity<?> httpEntity = new HttpEntity<>(null, expectedHttpHeader);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals("bar", httpMessage.getHeaders().get("foo"));
     }
 
     @Test
-    public void testCustomHeadersListsAreConvertedToStringOnInbound(){
-
-        //GIVEN
+    public void testCustomHeadersListsAreConvertedToStringOnInbound() {
+        // GIVEN
         final HttpHeaders expectedHttpHeader = new HttpHeaders();
         expectedHttpHeader.put("foo", Arrays.asList("bar", "foobar", "foo"));
         final HttpEntity<?> httpEntity = new HttpEntity<>(null, expectedHttpHeader);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(httpEntity, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals("bar,foobar,foo", httpMessage.getHeaders().get("foo"));
     }
 
     @Test
-    public void testStatusCodeIsSetOnInbound(){
-
-        //GIVEN
+    public void testStatusCodeIsSetOnInbound() {
+        // GIVEN
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(HttpStatus.FORBIDDEN, httpMessage.getStatusCode());
     }
 
     @Test
-    public void testCustomStatusCodeIsSetOnInbound(){
-
-        //GIVEN
+    public void testCustomStatusCodeIsSetOnInbound() {
+        // GIVEN
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(null, null, 555);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(HttpStatusCode.valueOf(555), httpMessage.getStatusCode());
     }
 
     @Test
-    public void testHttpVersionIsSetOnInbound(){
-
-        //GIVEN
+    public void testHttpVersionIsSetOnInbound() {
+        // GIVEN
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(HttpStatus.OK);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals("HTTP/1.1", httpMessage.getVersion());
     }
 
     @Test
-    public void testNoCookiesPreservedByDefaultOnInbound(){
+    public void testNoCookiesPreservedByDefaultOnInbound() {
+        // GIVEN
 
-        //GIVEN
-
-        //WHEN
+        // WHEN
         messageConverter.convertInbound(ResponseEntity.EMPTY, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         verify(cookieConverterMock, never()).convertCookies(any());
     }
 
     @Test
-    public void testCookiesPreservedOnConfigurationOnInbound(){
-
-        //GIVEN
+    public void testCookiesPreservedOnConfigurationOnInbound() {
+        // GIVEN
         Cookie cookieMock = mock(Cookie.class);
         final ResponseEntity<?> responseEntity = ResponseEntity.ok("foobar");
         when(cookieConverterMock.convertCookies(responseEntity)).thenReturn(new Cookie[]{cookieMock});
 
         endpointConfiguration.setHandleCookies(true);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals(1, httpMessage.getCookies().size());
         assertEquals(cookieMock, httpMessage.getCookies().get(0));
     }
 
 
-
     @Test
-    public void testSpringIntegrationHeaderMapperListResultIsConvertedOnInbound(){
-
-        //GIVEN
+    public void testSpringIntegrationHeaderMapperListResultIsConvertedOnInbound() {
+        // GIVEN
         final Map<String, Object> mockedHeaderMap = new HashMap<>();
         mockedHeaderMap.put("foo", Arrays.asList("bar", "foobar"));
 
@@ -525,18 +489,16 @@ public class HttpMessageConverterTest {
 
         endpointConfiguration.setHeaderMapper(headersHeaderMapperMock);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(HttpEntity.EMPTY, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(HttpEntity.EMPTY, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals("bar,foobar", httpMessage.getHeaders().get("foo"));
     }
 
     @Test
-    public void testSpringIntegrationHeaderMapperMediaTypeResultIsConvertedOnInbound(){
-
-        //GIVEN
+    public void testSpringIntegrationHeaderMapperMediaTypeResultIsConvertedOnInbound() {
+        // GIVEN
         final Map<String, Object> mockedHeaderMap = new HashMap<>();
         mockedHeaderMap.put("foo", MediaType.APPLICATION_JSON);
 
@@ -546,11 +508,10 @@ public class HttpMessageConverterTest {
 
         endpointConfiguration.setHeaderMapper(headersHeaderMapperMock);
 
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(HttpEntity.EMPTY, endpointConfiguration, testContext);
+        // WHEN
+        final HttpMessage httpMessage = messageConverter.convertInbound(HttpEntity.EMPTY, endpointConfiguration, testContext);
 
-        //THEN
+        // THEN
         assertEquals("application/json", httpMessage.getHeaders().get("foo"));
     }
 }
