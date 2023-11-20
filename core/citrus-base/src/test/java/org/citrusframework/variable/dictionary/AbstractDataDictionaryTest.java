@@ -11,7 +11,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.InvalidPropertiesFormatException;
 
@@ -48,7 +47,7 @@ public class AbstractDataDictionaryTest {
 
         // Setup mock resource
         doReturn(inputStream).when(mappingFile).getInputStream();
-        doReturn(new File("test.properties")).when(mappingFile).getFile();
+        doReturn("test.properties").when(mappingFile).getLocation();
 
         fixture.initialize();
 
@@ -69,7 +68,7 @@ public class AbstractDataDictionaryTest {
 
         // Setup mock resource
         doReturn(inputStream).when(mappingFile).getInputStream();
-        doReturn(new File("test.properties.xml")).when(mappingFile).getFile(); // Note the .xml-suffix
+        doReturn("test.properties.xml").when(mappingFile).getLocation(); // Note the .xml-suffix
 
         fixture.initialize();
 
@@ -83,7 +82,7 @@ public class AbstractDataDictionaryTest {
 
         // Setup mock resource
         doReturn(inputStream).when(mappingFile).getInputStream();
-        doReturn(new File("test.properties.xml")).when(mappingFile).getFile(); // Note the .xml-suffix
+        doReturn("test.properties.xml").when(mappingFile).getLocation(); // Note the .xml-suffix
 
         CitrusRuntimeException exception = expectThrows(CitrusRuntimeException.class, () -> fixture.initialize());
         assertTrue(exception.getCause() instanceof InvalidPropertiesFormatException);
