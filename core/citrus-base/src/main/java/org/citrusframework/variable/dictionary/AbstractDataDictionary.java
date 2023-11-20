@@ -77,7 +77,7 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
 
             Properties props = new Properties();
             try (InputStream inputStream = mappingFile.getInputStream()) {
-                if (mappingFile.getFile().getName().endsWith(".xml")) {
+                if (mappingFile.getLocation().endsWith(".xml")) {
                     props.loadFromXML(inputStream);
                 } else {
                     props.load(inputStream);
