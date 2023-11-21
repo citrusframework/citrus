@@ -63,7 +63,8 @@ public class ParallelTestActionBuilderTest extends UnitTestSupport {
                 sequential()
                     .actions(
                         echo("1st in sequential"),
-                        echo("2nd in sequential")
+                        echo("2nd in sequential"),
+                        sleep().milliseconds(200L)
                     ),
                 sleep().milliseconds(200),
                 echo("Hello World!")
