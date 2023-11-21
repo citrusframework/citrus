@@ -64,7 +64,8 @@ public class ParallelTestRunnerTest extends UnitTestSupport {
                         sequential()
                             .actions(
                                 echo("1st in sequential"),
-                                echo("2nd in sequential")
+                                echo("2nd in sequential"),
+                                sleep(200)
                             ),
                         sleep(200),
                         echo("Hello World!")
