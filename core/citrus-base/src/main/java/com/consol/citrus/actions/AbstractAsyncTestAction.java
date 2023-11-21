@@ -18,6 +18,8 @@ package com.consol.citrus.actions;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.consol.citrus.Completable;
@@ -25,7 +27,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 /**
  * Test action that performs in a separate thread. Action execution is not blocking the test execution chain. After
@@ -37,37 +38,39 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 public abstract class AbstractAsyncTestAction extends AbstractTestAction implements Completable {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(AbstractAsyncTestAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractAsyncTestAction.class);
 
     /** Future finished indicator */
     private Future<?> finished;
 
     @Override
     public final void doExecute(TestContext context) {
-        CompletableFuture<Void> result = new CompletableFuture<>();
-        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor();
+        CompletableFuture<TestContext> result = new CompletableFuture<>();
+
+        result.whenComplete((ctx, throwable) -> {
+            if (throwable != null) {
+                onError(ctx, throwable);
+            } else if (ctx.hasExceptions()) {
+                onError(ctx, ctx.getExceptions().get(0));
+            } else {
+                onSuccess(ctx);
+            }
+        });
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         finished = executor.submit(() -> {
             try {
                 doExecuteAsync(context);
-                result.complete(null);
             } catch (Exception | Error e) {
-                log.warn("Async test action execution raised error", e);
+                logger.warn("Async test action execution raised error", e);
 
                 if (e instanceof CitrusRuntimeException) {
                     context.addException((CitrusRuntimeException) e);
                 } else {
                     context.addException(new CitrusRuntimeException(e));
                 }
-
-                result.completeExceptionally(e);
-            }
-        });
-
-        result.whenComplete((nothing, throwable) -> {
-            if (throwable != null) {
-                onError(context, throwable);
-            } else {
-                onSuccess(context);
+            } finally {
+                result.complete(context);
             }
         });
     }
@@ -76,7 +79,7 @@ public abstract class AbstractAsyncTestAction extends AbstractTestAction impleme
     public boolean isDone(TestContext context) {
         return Optional.ofNullable(finished)
                 .map(future -> future.isDone() || isDisabled(context))
-                .orElse(isDisabled(context));
+                .orElseGet(() -> isDisabled(context));
     }
 
     public abstract void doExecuteAsync(TestContext context);
