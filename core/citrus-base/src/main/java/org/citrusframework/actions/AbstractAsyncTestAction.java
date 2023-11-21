@@ -45,30 +45,32 @@ public abstract class AbstractAsyncTestAction extends AbstractTestAction impleme
 
     @Override
     public final void doExecute(TestContext context) {
-        CompletableFuture<Void> result = new CompletableFuture<>();
+        CompletableFuture<TestContext> result = new CompletableFuture<>();
+
+        result.whenComplete((ctx, throwable) -> {
+            if (throwable != null) {
+                onError(ctx, throwable);
+            } else if (ctx.hasExceptions()) {
+                onError(ctx, ctx.getExceptions().get(0));
+            } else {
+                onSuccess(ctx);
+            }
+        });
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         finished = executor.submit(() -> {
             try {
                 doExecuteAsync(context);
-                result.complete(null);
             } catch (Exception | Error e) {
                 logger.warn("Async test action execution raised error", e);
 
-                if (e instanceof CitrusRuntimeException) {
-                    context.addException((CitrusRuntimeException) e);
+                if (e instanceof CitrusRuntimeException citrusEx) {
+                    context.addException(citrusEx);
                 } else {
                     context.addException(new CitrusRuntimeException(e));
                 }
-
-                result.completeExceptionally(e);
-            }
-        });
-
-        result.whenComplete((nothing, throwable) -> {
-            if (throwable != null) {
-                onError(context, throwable);
-            } else {
-                onSuccess(context);
+            } finally {
+                result.complete(context);
             }
         });
     }
