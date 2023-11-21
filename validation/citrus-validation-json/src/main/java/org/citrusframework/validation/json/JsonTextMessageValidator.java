@@ -203,7 +203,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                     for (int i = 0; i < jsonArrayControl.size(); i++) {
                         if (jsonArrayControl.get(i).getClass().isAssignableFrom(JSONObject.class)) {
                             if (!jsonArrayReceived.get(i).getClass().isAssignableFrom(JSONObject.class)) {
-                                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Value types not equal for entry: '" + jsonArrayControl.get(i) + "'",
+                                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Value types not equal for entry: '" + controlKey + "'",
                                             JSONObject.class.getName(), jsonArrayReceived.get(i).getClass().getName()));
                             }
 
@@ -211,7 +211,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                                     (JSONObject) jsonArrayControl.get(i), validationContext, context, readContext);
                         } else {
                             if (!jsonArrayControl.get(i).equals(jsonArrayReceived.get(i))) {
-                                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Values not equal for entry: '" + jsonArrayControl.get(i) + "'",
+                                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Values not equal for entry: '" + controlKey + "'",
                                             jsonArrayControl.get(i), jsonArrayReceived.get(i)));
                             }
                         }
