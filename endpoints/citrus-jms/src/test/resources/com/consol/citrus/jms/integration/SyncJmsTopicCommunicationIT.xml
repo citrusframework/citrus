@@ -9,18 +9,18 @@
       <last-updated-on>2009-11-03T00:00:00</last-updated-on>
     </meta-info>
 
-        <description>
+    <description>
       JMS topic support in synchronous JMS communication.
     </description>
         <variables>
-            <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-            <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-            <variable name="user" value="Christoph"></variable>
+            <variable name="correlationId" value="citrus:randomNumber(10)"/>
+            <variable name="messageId" value="citrus:randomNumber(10)"/>
+            <variable name="user" value="Christoph"/>
         </variables>
         <actions>
             <parallel>
                 <sequential>
-                    <sleep seconds="1"/>
+                    <sleep seconds="2"/>
                     <send endpoint="syncJmsTopicEndpoint">
                       <description>
                         Send synchronous hello request to jms topic

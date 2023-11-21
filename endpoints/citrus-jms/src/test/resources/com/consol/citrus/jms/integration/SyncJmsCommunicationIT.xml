@@ -21,9 +21,9 @@
       is guaranteed without any deficit.
     </description>
     <variables>
-      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-      <variable name="user" value="Christoph"></variable>
+      <variable name="correlationId" value="citrus:randomNumber(10)"/>
+      <variable name="messageId" value="citrus:randomNumber(10)"/>
+      <variable name="user" value="Christoph"/>
     </variables>
     <actions>
       <send endpoint="helloServiceJmsSyncEndpoint">
