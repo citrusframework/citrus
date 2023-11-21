@@ -19,14 +19,15 @@
 
 package org.citrusframework.spi;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalConverter;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class CitrusResourceWrapper implements Resource {
 
@@ -43,6 +44,10 @@ public class CitrusResourceWrapper implements Resource {
     @Override
     public String getLocation() {
         try {
+            if (delegate instanceof ClassPathResource classPathResource) {
+                return classPathResource.getURI().toString();
+            }
+
             return delegate.getFile().getPath();
         } catch (IOException e) {
             return delegate.toString();
