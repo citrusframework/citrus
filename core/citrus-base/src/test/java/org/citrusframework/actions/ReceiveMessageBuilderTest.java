@@ -210,6 +210,7 @@ class ReceiveMessageBuilderTest {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
+		when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenThrow(IOException.class);
 
         //WHEN

@@ -16,14 +16,12 @@
 
 package org.citrusframework.actions.dsl;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.actions.ExecuteSQLAction;
-import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,8 +40,6 @@ import static org.mockito.Mockito.verify;
 public class ExecuteSQLTestActionBuilderTest extends UnitTestSupport {
     private final JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private final PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
-    private final Resource resource = Mockito.mock(Resource.class);
-    private final File file = Mockito.mock(File.class);
 
     @Test
     public void testExecuteSQLBuilderWithStatement() {

@@ -107,6 +107,7 @@ public class ExecutePLSQLTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
         reset(jdbcTemplate, sqlResource);
+        when(sqlResource.exists()).thenReturn(true);
         when(sqlResource.getInputStream()).thenReturn(new ByteArrayInputStream(("TEST_STMT_1\n" +
                 "/\n" +
                 "TEST_STMT_2\n" +

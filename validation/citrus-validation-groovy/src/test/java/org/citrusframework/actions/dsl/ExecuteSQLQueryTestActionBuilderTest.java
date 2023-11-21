@@ -92,6 +92,7 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport {
         results.add(Collections.<String, Object>singletonMap("NAME", "Radj"));
 
         reset(jdbcTemplate, resource);
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert rows[0].NAME == 'Radj'".getBytes()));
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -155,6 +156,7 @@ public class ExecuteSQLQueryTestActionBuilderTest extends UnitTestSupport {
         results.add(Collections.<String, Object>singletonMap("NAME", "Sheldon"));
 
         reset(jdbcTemplate, resource);
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert rows[1].NAME == 'Howard'".getBytes()));
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);

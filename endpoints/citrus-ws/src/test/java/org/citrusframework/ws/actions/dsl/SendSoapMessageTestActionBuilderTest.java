@@ -349,6 +349,7 @@ public class SendSoapMessageTestActionBuilderTest extends UnitTestSupport {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someAttachmentData".getBytes()));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(soap().client(soapClient)

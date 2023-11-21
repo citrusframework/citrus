@@ -156,6 +156,7 @@ public class SendSoapFaultTestActionBuilderTest extends UnitTestSupport {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream(ERROR_DETAIL.getBytes()));
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
