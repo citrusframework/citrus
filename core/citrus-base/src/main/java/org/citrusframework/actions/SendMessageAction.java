@@ -96,7 +96,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     private final DataDictionary<?> dataDictionary;
 
     /** Finished indicator either called when forked send action is finished or immediately when this action has finished */
-    private CompletableFuture<Void> finished;
+    private CompletableFuture<TestContext> finished;
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(SendMessageAction.class);
@@ -129,6 +129,16 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         final Message message = createMessage(context, messageType);
         finished = new CompletableFuture<>();
 
+        finished.whenComplete((ctx, ex) -> {
+            if (ex != null) {
+                logger.warn("Failure in forked send action: " + ex.getMessage());
+            } else {
+                for (Exception ctxEx : ctx.getExceptions()) {
+                    logger.warn(ctxEx.getMessage());
+                }
+            }
+        });
+
         // extract variables from before sending message so we can save dynamic message ids
         for (VariableExtractor variableExtractor : variableExtractors) {
             variableExtractor.extractVariables(message, context);
@@ -151,13 +161,13 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                     validateMessage(message, context);
                     messageEndpoint.createProducer().send(message, context);
                 } catch (Exception e) {
-                    if (e instanceof CitrusRuntimeException) {
-                        context.addException((CitrusRuntimeException) e);
+                    if (e instanceof CitrusRuntimeException runtimeEx) {
+                        context.addException(runtimeEx);
                     } else {
                         context.addException(new CitrusRuntimeException(e));
                     }
                 } finally {
-                    finished.complete(null);
+                    finished.complete(context);
                 }
             });
         } else {
@@ -165,7 +175,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                 validateMessage(message, context);
                 messageEndpoint.createProducer().send(message, context);
             } finally {
-                finished.complete(null);
+                finished.complete(context);
             }
         }
     }
@@ -175,7 +185,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      * @param message
      */
     protected void validateMessage(Message message, TestContext context) {
-
         List<SchemaValidator<? extends SchemaValidationContext>> schemaValidators = null;
         SchemaValidationContext validationContext = null;
         String  payload = message.getPayload(String.class);
