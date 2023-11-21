@@ -16,18 +16,17 @@
 
 package org.citrusframework.variable.dictionary;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.AbstractMessageProcessor;
 import org.citrusframework.spi.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import static org.citrusframework.spi.PropertiesLoader.loadProperties;
 
 /**
  * Abstract data dictionary implementation provides global scope handling.
@@ -75,27 +74,17 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
         if (mappingFile != null) {
             logger.debug("Reading data dictionary mapping: {}", mappingFile.getLocation());
 
-            Properties props = new Properties();
-            try (InputStream inputStream = mappingFile.getInputStream()) {
-                if (mappingFile.getLocation().endsWith(".xml")) {
-                    props.loadFromXML(inputStream);
-                } else {
-                    props.load(inputStream);
-                }
-            } catch (IOException e) {
-                throw new CitrusRuntimeException(e);
-            }
-
-            for (Map.Entry<Object, Object> entry : props.entrySet()) {
+            Properties properties = loadProperties(mappingFile);
+            for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                 String key = entry.getKey().toString();
 
-                logger.debug("Loading data dictionary mapping: {}={}", key, props.getProperty(key));
+                logger.debug("Loading data dictionary mapping: {}={}", key, properties.getProperty(key));
 
                 if (logger.isDebugEnabled() && mappings.containsKey(key)) {
-                    logger.warn("Overwriting data dictionary mapping '{}'; old value: {} new value: {}", key, mappings.get(key), props.getProperty(key));
+                    logger.warn("Overwriting data dictionary mapping '{}'; old value: {} new value: {}", key, mappings.get(key), properties.getProperty(key));
                 }
 
-                mappings.put(key, props.getProperty(key));
+                mappings.put(key, properties.getProperty(key));
             }
 
             logger.info("Loaded data dictionary mapping: {}", mappingFile.getLocation());
