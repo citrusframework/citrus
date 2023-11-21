@@ -45,15 +45,16 @@ public class JmsEndpointConfigParser implements AnnotationConfigParser<JmsEndpoi
         String destinationName = annotation.destinationName();
 
         if (StringUtils.hasText(destination) || StringUtils.hasText(destinationName)) {
+            if (StringUtils.hasText(jmsTemplate)) {
+                throw new CitrusRuntimeException("When providing a jms-template, none of " +
+                        "connection-factory, destination, or destination-name should be provided");
+            }
+
             //connectionFactory
             String connectionFactory = "connectionFactory"; //default value
 
             if (StringUtils.hasText(annotation.connectionFactory())) {
                 connectionFactory = annotation.connectionFactory();
-            }
-
-            if (!StringUtils.hasText(connectionFactory)) {
-                throw new CitrusRuntimeException("Required connection-factory is missing for jms configuration");
             }
 
             builder.connectionFactory(referenceResolver.resolve(connectionFactory, ConnectionFactory.class));
@@ -65,9 +66,7 @@ public class JmsEndpointConfigParser implements AnnotationConfigParser<JmsEndpoi
                 builder.destination(annotation.destinationName());
             }
         } else if (StringUtils.hasText(jmsTemplate)) {
-            if (StringUtils.hasText(annotation.connectionFactory()) ||
-                    StringUtils.hasText(destination) ||
-                    StringUtils.hasText(destinationName)) {
+            if (StringUtils.hasText(annotation.connectionFactory())) {
                 throw new CitrusRuntimeException("When providing a jms-template, none of " +
                         "connection-factory, destination, or destination-name should be provided");
             }
@@ -79,12 +78,12 @@ public class JmsEndpointConfigParser implements AnnotationConfigParser<JmsEndpoi
         }
 
         if (annotation.autoStart() && !annotation.pubSubDomain()) {
-            throw new CitrusRuntimeException("When providing auto start enabled,  " +
+            throw new CitrusRuntimeException("When providing auto start enabled, " +
                     "pubSubDomain should also be enabled");
         }
 
         if (annotation.durableSubscription() && !annotation.pubSubDomain()) {
-            throw new CitrusRuntimeException("When providing durable subscription enabled,  " +
+            throw new CitrusRuntimeException("When providing durable subscription enabled, " +
                     "pubSubDomain should also be enabled");
         }
 

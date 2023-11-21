@@ -46,15 +46,16 @@ public class JmsSyncEndpointConfigParser implements AnnotationConfigParser<JmsSy
         String destinationName = annotation.destinationName();
 
         if (StringUtils.hasText(destination) || StringUtils.hasText(destinationName)) {
+            if (StringUtils.hasText(jmsTemplate)) {
+                throw new CitrusRuntimeException("When providing a jms-template, none of " +
+                         "connection-factory, destination, or destination-name should be provided");
+            }
+
             //connectionFactory
             String connectionFactory = "connectionFactory"; //default value
 
             if (StringUtils.hasText(annotation.connectionFactory())) {
                 connectionFactory = annotation.connectionFactory();
-            }
-
-            if (!StringUtils.hasText(connectionFactory)) {
-                throw new CitrusRuntimeException("Required connection-factory is missing for jms configuration");
             }
 
             builder.connectionFactory(referenceResolver.resolve(connectionFactory, ConnectionFactory.class));
@@ -66,9 +67,7 @@ public class JmsSyncEndpointConfigParser implements AnnotationConfigParser<JmsSy
                 builder.destination(annotation.destinationName());
             }
         } else if (StringUtils.hasText(jmsTemplate)) {
-            if (StringUtils.hasText(annotation.connectionFactory()) ||
-                    StringUtils.hasText(destination) ||
-                    StringUtils.hasText(destinationName)) {
+            if (StringUtils.hasText(annotation.connectionFactory())) {
                 throw new CitrusRuntimeException("When providing a jms-template, none of " +
                         "connection-factory, destination, or destination-name should be provided");
             }
