@@ -39,6 +39,7 @@ public class GroovyTestActionBuilderTest extends UnitTestSupport {
     @Test
     public void testGroovyBuilderWithResource() throws IOException {
         reset(scriptResource);
+        when(scriptResource.exists()).thenReturn(true);
         when(scriptResource.getInputStream()).thenReturn(new ByteArrayInputStream("println 'Wow groovy!'".getBytes()));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(groovy().script(scriptResource)

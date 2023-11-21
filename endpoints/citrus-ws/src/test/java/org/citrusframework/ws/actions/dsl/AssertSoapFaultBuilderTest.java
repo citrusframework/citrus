@@ -353,6 +353,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
     @Test
     public void testFaultDetailResource() throws IOException {
         reset(resource, referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<ErrorDetail><message>Something went wrong</message></ErrorDetail>".getBytes()));
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
@@ -453,6 +454,7 @@ public class AssertSoapFaultBuilderTest extends UnitTestSupport {
     @Test
     public void testMultipleFaultDetailsInlineAndResource() throws IOException {
         reset(resource, referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<MessageDetail><message>Something went wrong</message></MessageDetail>".getBytes()));
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);

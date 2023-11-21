@@ -18,7 +18,7 @@ package org.citrusframework.ws.actions.dsl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import org.citrusframework.DefaultTestCaseRunner;
@@ -217,7 +217,9 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                 .setHeader("operation","foo")
                 .addAttachment(testAttachment));
 
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
+        when(attachmentResource.exists()).thenReturn(true);
         when(attachmentResource.getInputStream()).thenReturn(new ByteArrayInputStream("This is an attachment".getBytes()));
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
@@ -225,7 +227,7 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
                         .receive()
                         .message()
                         .body(resource)
-                        .attachment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource, Charset.forName("UTF-8")));
+                        .attachment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource, StandardCharsets.UTF_8));
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

@@ -342,6 +342,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "bar")
                         .addHeaderData("<Header><Name>operation</Name><Value>bar</Value></Header>"));
 
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
 
@@ -398,6 +399,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .addHeaderData("<Header><Name>operation</Name><Value>foo</Value></Header>")
                         .addHeaderData("<Header><Name>operation</Name><Value>bar</Value></Header>"));
 
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))

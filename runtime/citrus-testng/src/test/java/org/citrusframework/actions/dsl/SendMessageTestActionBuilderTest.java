@@ -223,6 +223,7 @@ public class SendMessageTestActionBuilderTest extends UnitTestSupport {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(send().endpoint(messageEndpoint)
@@ -451,6 +452,7 @@ public class SendMessageTestActionBuilderTest extends UnitTestSupport {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
+        when(resource.exists()).thenReturn(true);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo1</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo2</Value></Header>".getBytes()));
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
