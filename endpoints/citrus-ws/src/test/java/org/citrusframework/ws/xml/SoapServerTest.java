@@ -89,7 +89,7 @@ public class SoapServerTest extends AbstractXmlActionTest {
         context.getReferenceResolver().bind("soapAttachmentValidator", new SimpleSoapAttachmentValidator());
         context.getReferenceResolver().bind("mySoapAttachmentValidator", new SimpleSoapAttachmentValidator());
 
-        endpointAdapter.handleMessage(createSoapMessage(new SoapAttachment("MySoapAttachment", "text/plain", "This is an attachment!")));
+        endpointAdapter.handleMessage(createSoapMessage(new SoapAttachment("MySoapAttachment", "text/plain", "This is an attachment!")).soapAction("myAction"));
         endpointAdapter.handleMessage(createSoapMessage(new SoapAttachment("MySoapAttachment", "application/xml",
                 FileUtils.readToString(FileUtils.getFileResource("classpath:org/citrusframework/ws/actions/test-attachment.xml")), "UTF-8")));
         endpointAdapter.handleMessage(createSoapMessage(new SoapAttachment("FirstSoapAttachment", "text/plain", "This is an attachment!"),

@@ -26,6 +26,7 @@ import org.citrusframework.container.AfterTest;
 import org.citrusframework.container.BeforeTest;
 import org.citrusframework.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
+import org.citrusframework.functions.DefaultFunctionRegistry;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;
@@ -37,7 +38,9 @@ import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.SimpleReferenceResolver;
 import org.citrusframework.util.TypeConverter;
+import org.citrusframework.validation.DefaultMessageValidatorRegistry;
 import org.citrusframework.validation.MessageValidatorRegistry;
+import org.citrusframework.validation.matcher.DefaultValidationMatcherRegistry;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.variable.SegmentVariableExtractorRegistry;
@@ -90,10 +93,10 @@ public class TestContextFactory implements ReferenceResolverAware {
     public static TestContextFactory newInstance() {
         TestContextFactory factory = new TestContextFactory();
 
-        factory.setFunctionRegistry(new FunctionRegistry());
-        factory.setValidationMatcherRegistry(new ValidationMatcherRegistry());
+        factory.setFunctionRegistry(new DefaultFunctionRegistry());
+        factory.setValidationMatcherRegistry(new DefaultValidationMatcherRegistry());
         factory.setGlobalVariables(new GlobalVariables());
-        factory.setMessageValidatorRegistry(new MessageValidatorRegistry());
+        factory.setMessageValidatorRegistry(new DefaultMessageValidatorRegistry());
         factory.setTestListeners(new TestListeners());
         factory.setTestActionListeners(new TestActionListeners());
         factory.setMessageListeners(new MessageListeners());

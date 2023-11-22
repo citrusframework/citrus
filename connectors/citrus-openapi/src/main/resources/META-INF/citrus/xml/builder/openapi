@@ -1,0 +1,2 @@
+type=org.citrusframework.openapi.xml.OpenApi
+ns=http://citrusframework.org/schema/xml/testcase

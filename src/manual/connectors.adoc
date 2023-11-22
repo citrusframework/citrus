@@ -1,0 +1,9 @@
+[[connectors]]
+= Connectors
+
+Connectors generally are quite similar to link:#endpoints[endpoints].
+These modules connect Citrus to a certain technology or framework rather than implementing a message transport (client and server) like endpoints usually do.
+
+Connectors typically provide a client side only implementation that enable Citrus to interact with a service or framework (e.g. Docker deamon, Selenium web driver, OpenAPI specification).
+
+include::connector-openapi.adoc[]

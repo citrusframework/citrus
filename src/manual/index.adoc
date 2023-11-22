@@ -62,6 +62,8 @@ include::endpoint-restdocs.adoc[]
 include::endpoint-component.adoc[]
 include::endpoint-adapter.adoc[]
 
+include::connectors.adoc[]
+
 include::functions.adoc[]
 include::validation-matchers.adoc[]
 

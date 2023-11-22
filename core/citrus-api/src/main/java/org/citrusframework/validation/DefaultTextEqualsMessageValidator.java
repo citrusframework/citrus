@@ -63,8 +63,26 @@ public class DefaultTextEqualsMessageValidator extends DefaultMessageValidator {
         }
 
         if (!receivedPayload.equals(controlPayload)) {
-            throw new ValidationException("Validation failed - message payload not equal!");
+            throw new ValidationException("Validation failed - message payload not equal " + getFirstDiff(receivedPayload, controlPayload));
         }
+    }
+
+    public String getFirstDiff(String received, String control) {
+        int position;
+        for (position = 0; position < received.length() && position < control.length(); position++) {
+            if (received.charAt(position) != control.charAt(position)) {
+                break;
+            }
+        }
+
+        if (position < control.length() || position < received.length()) {
+            int controlEnd = Math.min(position + 25, control.length());
+            int receivedEnd = Math.min(position + 25, received.length());
+
+            return String.format("at position %d expected '%s', but was '%s'", position + 1, control.substring(position, controlEnd), received.substring(position, receivedEnd));
+        }
+
+        return "";
     }
 
     public DefaultTextEqualsMessageValidator normalizeLineEndings() {

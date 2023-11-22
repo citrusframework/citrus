@@ -263,6 +263,13 @@
         <include>*sources.jar</include>
       </includes>
     </fileSet>
+    <fileSet>
+      <directory>connectors/citrus-openapi/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
 
     <fileSet>
       <directory>tools/citrus-restdocs/target</directory>

@@ -23,6 +23,7 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.context.DefaultValidationContext;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -48,6 +49,19 @@ public class DefaultTextEqualsMessageValidatorTest extends UnitTestSupport {
         Message controlMessage = new DefaultMessage(control);
 
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
+    }
+
+    @Test
+    public void testFirstDiff() {
+        Assert.assertEquals(validator.getFirstDiff("Hello", "Hello"), "");
+        Assert.assertEquals(validator.getFirstDiff("Hello", "Hi"), "at position 2 expected 'i', but was 'ello'");
+        Assert.assertEquals(validator.getFirstDiff("Hello bar", "Hello foo"), "at position 7 expected 'foo', but was 'bar'");
+        Assert.assertEquals(validator.getFirstDiff("Hello foo, how are you doing!", "Hello foo, how are you doing?"), "at position 29 expected '?', but was '!'");
+        Assert.assertEquals(validator.getFirstDiff("Hello foo, how are you doing!", "Hello foo, how are you doing"), "at position 29 expected '', but was '!'");
+        Assert.assertEquals(validator.getFirstDiff("Hello foo, how are you doing", "Hello foo, how are you doing!"), "at position 29 expected '!', but was ''");
+        Assert.assertEquals(validator.getFirstDiff("1", "2"), "at position 1 expected '2', but was '1'");
+        Assert.assertEquals(validator.getFirstDiff("1234", "1243"), "at position 3 expected '43', but was '34'");
+        Assert.assertEquals(validator.getFirstDiff("nospacesatall", "no spaces at all"), "at position 3 expected ' spaces at all', but was 'spacesatall'");
     }
 
     @DataProvider

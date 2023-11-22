@@ -16,14 +16,15 @@
 
 package org.citrusframework.http.actions;
 
-import jakarta.servlet.http.Cookie;
 import java.util.Optional;
 
+import jakarta.servlet.http.Cookie;
 import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageUtils;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -35,13 +36,25 @@ import org.springframework.http.HttpStatusCode;
 public class HttpClientResponseActionBuilder extends ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpClientResponseActionBuilder.HttpMessageBuilderSupport, HttpClientResponseActionBuilder> {
 
     /** Http message to send or receive */
-    private final HttpMessage httpMessage = new HttpMessage();
+    private final HttpMessage httpMessage;
 
     /**
      * Default constructor.
      */
     public HttpClientResponseActionBuilder() {
+        this.httpMessage = new HttpMessage();
         message(new HttpMessageBuilder(httpMessage))
+                .headerNameIgnoreCase(true);
+    }
+
+    /**
+     * Subclasses may use custom message builder and Http message.
+     * @param messageBuilder
+     * @param httpMessage
+     */
+    public HttpClientResponseActionBuilder(MessageBuilder messageBuilder, HttpMessage httpMessage) {
+        this.httpMessage = httpMessage;
+        message(messageBuilder)
                 .headerNameIgnoreCase(true);
     }
 

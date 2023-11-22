@@ -19,10 +19,8 @@ package org.citrusframework.selenium.actions;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.functions.DefaultFunctionLibrary;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
 import org.mockito.Mockito;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
@@ -47,10 +45,7 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
 
     @Override
     protected TestContextFactory createTestContextFactory() {
-        TestContextFactory factory = super.createTestContextFactory();
-        factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
-        factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
-        return factory;
+        return TestContextFactory.newInstance();
     }
 
     @BeforeMethod

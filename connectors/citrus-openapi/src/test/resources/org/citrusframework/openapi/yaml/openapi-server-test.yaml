@@ -1,0 +1,33 @@
+name: "OpenApiServerTest"
+author: "Christoph"
+status: "FINAL"
+variables:
+  - name: "petstoreSpec"
+    value: classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml
+  - name: "petId"
+    value: "12345"
+actions:
+  - openapi:
+      specification: ${petstoreSpec}
+      server: "httpServer"
+      receiveRequest:
+        operation: getPetById
+  - openapi:
+      specification: ${petstoreSpec}
+      server: "httpServer"
+      sendResponse:
+        operation: getPetById
+        status: 200
+
+  - openapi:
+      specification: ${petstoreSpec}
+      server: "httpServer"
+      receiveRequest:
+        operation: addPet
+        timeout: 2000
+  - openapi:
+      specification: ${petstoreSpec}
+      server: "httpServer"
+      sendResponse:
+        operation: addPet
+        status: 201

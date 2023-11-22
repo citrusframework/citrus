@@ -28,7 +28,6 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.functions.DefaultFunctionLibrary;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
@@ -39,7 +38,6 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
-import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
 import org.citrusframework.validation.xhtml.XhtmlMessageValidator;
 import org.citrusframework.validation.xhtml.XhtmlXpathMessageValidator;
 import org.citrusframework.variable.MessageHeaderVariableExtractor;
@@ -72,9 +70,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     protected TestContextFactory createTestContextFactory() {
         openMocks(this);
         TestContextFactory factory = super.createTestContextFactory();
-        factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
-        factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
-
         factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("xml", new DomXmlMessageValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("xpath", new XpathMessageValidator());

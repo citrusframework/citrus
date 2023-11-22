@@ -25,7 +25,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
-import org.citrusframework.functions.DefaultFunctionLibrary;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
@@ -33,10 +32,10 @@ import org.citrusframework.message.builder.DefaultPayloadBuilder;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.citrusframework.validation.DefaultMessageHeaderValidator;
+import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
-import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -60,9 +59,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Override
     protected TestContextFactory createTestContextFactory() {
         TestContextFactory factory = super.createTestContextFactory();
-        factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
-        factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
-     return factory;
+        factory.setMessageValidatorRegistry(new MessageValidatorRegistry());
+        return factory;
     }
 
     @Test
@@ -106,14 +104,13 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         AtomicBoolean  validated = new AtomicBoolean(false);
 
-        SchemaValidator schemaValidator = mock(SchemaValidator.class);
+        SchemaValidator<?> schemaValidator = mock(SchemaValidator.class);
         when(schemaValidator.supportsMessageType(eq("JSON"), any())).thenReturn(true);
         doAnswer(invocation-> {
-            Object argument = invocation.getArgument(2);
+            JsonMessageValidationContext argument = invocation.getArgument(2, JsonMessageValidationContext.class);
 
-            Assert.assertTrue(argument instanceof JsonMessageValidationContext);
-            Assert.assertEquals(((JsonMessageValidationContext)argument).getSchema(), "fooSchema");
-            Assert.assertEquals(((JsonMessageValidationContext)argument).getSchemaRepository(), "fooRepository");
+            Assert.assertEquals(argument.getSchema(), "fooSchema");
+            Assert.assertEquals(argument.getSchemaRepository(), "fooRepository");
 
             validated.set(true);
             return null;
@@ -142,8 +139,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertTrue(validated.get());
     }
-
-
 
     private void validateMessageToSend(Message toSend, Message controlMessage) {
         Assert.assertEquals(toSend.getPayload(String.class).trim(), controlMessage.getPayload(String.class).trim());
