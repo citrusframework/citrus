@@ -22,6 +22,7 @@ package org.citrusframework.spi;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -36,9 +37,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.stream.Collectors;
-
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +49,9 @@ import org.slf4j.LoggerFactory;
  */
 public class ClasspathResourceResolver {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(ClasspathResourceResolver.class);
 
     public Set<Path> getClasses(String path) throws IOException {
@@ -83,11 +87,12 @@ public class ClasspathResourceResolver {
 
     public Set<Path> getResources(String path, String fileNamePattern) throws IOException {
         return getResources(path).stream()
-                .filter(resource -> resource.getFileName().toString().matches(fileNamePattern))
-                .collect(Collectors.toSet());
+            .filter(resource -> resource.getFileName().toString().matches(fileNamePattern))
+            .collect(Collectors.toSet());
     }
 
-    private void findResources(String path, ClassLoader classLoader, Set<Path> result, Predicate<String> filter) throws IOException {
+    private void findResources(String path, ClassLoader classLoader, Set<Path> result,
+        Predicate<String> filter) throws IOException {
         String resourcePath;
         // If the URL is a jar, the URLClassloader.getResources() seems to require a trailing slash.  The
         // trailing slash is harmless for other URLs
@@ -113,7 +118,7 @@ public class ClasspathResourceResolver {
                 if (file.isDirectory()) {
                     loadResourcesInDirectory(resourcePath, file, result, filter);
                 } else {
-                    loadResourcesInJar(classLoader, resourcePath, new FileInputStream(file), urlPath, result, filter);
+                    loadResourcesInJar(classLoader, resourcePath, urlPath, result, filter);
                 }
             } catch (IOException e) {
                 logger.debug("Failed to read entries in url: {}", url, e);
@@ -121,8 +126,36 @@ public class ClasspathResourceResolver {
         }
     }
 
-    private void loadResourcesInJar(ClassLoader classLoader, String path, FileInputStream jarInputStream,
-                                    String urlPath, Set<Path> resources, Predicate<String> filter) {
+    private void loadResourcesInJar(ClassLoader classLoader, String path,
+        String urlPath, Set<Path> resources, Predicate<String> filter)
+        throws IOException {
+
+        String[] split = urlPath.split("!");
+
+        if (split.length == 1) {
+            readFromJarStream(classLoader, path, urlPath, resources, filter, new FileInputStream(split[0]));
+        } else if (split.length == 2) {
+            loadFromNestedJar(classLoader, path, urlPath, resources, filter, split[0], split[1]);
+        } else {
+            throw new CitrusRuntimeException("Unable to load urlPath from : "+urlPath);
+        }
+
+    }
+
+    /**
+     * Load resources from a nested jar, also known as fat jar. These are typically used in spring
+     * boot applications.
+     */
+    private static void loadFromNestedJar(ClassLoader classLoader, String path, String urlPath,
+        Set<Path> resources, Predicate<String> filter, String baseJar, String nestedJar) throws IOException {
+        try (JarFile jarFile = new JarFile(baseJar)) {
+            JarEntry jarEntry = jarFile.getJarEntry(nestedJar.substring(1));
+            readFromJarStream(classLoader, path, urlPath, resources, filter, jarFile.getInputStream(jarEntry));
+        }
+    }
+
+    private static void readFromJarStream(ClassLoader classLoader, String path, String urlPath,
+        Set<Path> resources, Predicate<String> filter, InputStream jarInputStream) {
         List<String> entries = new ArrayList<>();
         try (JarInputStream jarStream = new JarInputStream(jarInputStream);) {
             JarEntry entry;
@@ -137,19 +170,24 @@ public class ClasspathResourceResolver {
             }
 
             for (String name : entries) {
-                String shortName = name.substring(path.length());
-                logger.trace("Found resource: {} in {}", shortName, urlPath);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Found resource: {} in {}", name.substring(path.length()),
+                        urlPath);
+                }
                 URL url = classLoader.getResource(name);
                 if (url != null) {
                     resources.add(Paths.get(name));
                 }
             }
         } catch (IOException e) {
-            logger.warn("Cannot search jar file '{} due to an IOException: {}", urlPath, e.getMessage(), e);
+            logger.warn("Cannot search jar file '{} due to an IOException: {}", urlPath,
+                e.getMessage(), e);
         }
     }
 
-    private void loadResourcesInDirectory(String path, File location, Set<Path> result, Predicate<String> filter) {
+
+    private void loadResourcesInDirectory(String path, File location, Set<Path> result,
+        Predicate<String> filter) {
         File[] files = location.listFiles();
         if (files == null || files.length == 0) {
             return;
@@ -161,7 +199,8 @@ public class ClasspathResourceResolver {
             String name = file.getName().trim();
 
             if (file.isDirectory()) {
-                loadResourcesInDirectory(builder.append(path).append(name).append("/").toString(), file, result, filter);
+                loadResourcesInDirectory(builder.append(path).append(name).append("/").toString(),
+                    file, result, filter);
             } else if (file.isFile() && file.exists() && filter.test(name)) {
                 logger.trace("Found resource: {} as {}", name, file.toURI());
                 result.add(Paths.get(builder.append(path).append(name).toString()));
@@ -197,7 +236,7 @@ public class ClasspathResourceResolver {
         }
 
         // else it may be in a JAR, grab the path to the jar
-        return urlPath.contains("!") ? urlPath.substring(0, urlPath.indexOf("!")) : urlPath;
+        return urlPath.contains("!") ? urlPath.substring(0, urlPath.lastIndexOf("!")) : urlPath;
     }
 
     private Set<ClassLoader> getClassLoaders() {
@@ -208,7 +247,9 @@ public class ClasspathResourceResolver {
                 classLoaders.add(ccl);
             }
         } catch (Exception e) {
-            logger.warn("Cannot add ContextClassLoader from current thread due {}. This exception will be ignored", e.getMessage());
+            logger.warn(
+                "Cannot add ContextClassLoader from current thread due {}. This exception will be ignored",
+                e.getMessage());
         }
 
         classLoaders.add(ClasspathResourceResolver.class.getClassLoader());
