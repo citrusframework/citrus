@@ -26,6 +26,7 @@
         <include>org.citrusframework:citrus-camel</include>
         <include>org.citrusframework:citrus-ftp</include>
         <include>org.citrusframework:citrus-http</include>
+        <include>org.citrusframework:citrus-openapi</include>
         <include>org.citrusframework:citrus-jms</include>
         <include>org.citrusframework:citrus-kafka</include>
         <include>org.citrusframework:citrus-jmx</include>
@@ -315,6 +316,13 @@
     </fileSet>
     <fileSet>
       <directory>connectors/citrus-sql/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>connectors/citrus-openapi/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

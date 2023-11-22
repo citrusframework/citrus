@@ -57,7 +57,6 @@ import org.citrusframework.util.StringUtils;
  */
 public class SendMessageAction extends AbstractTestAction implements Completable {
 
-    private static final String REPORT_ENABLED_ENV = "CITRUS_SUMMARY_REPORT_ENABLED";
     /** Message endpoint instance */
     private final Endpoint endpoint;
 

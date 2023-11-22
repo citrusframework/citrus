@@ -25,6 +25,7 @@ import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageUtils;
 import org.citrusframework.http.message.HttpQueryParamHeaderValidator;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.builder.ReceiveMessageBuilderSupport;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
@@ -36,14 +37,27 @@ import org.springframework.util.MultiValueMap;
 public class HttpServerRequestActionBuilder extends ReceiveMessageAction.ReceiveMessageActionBuilder<ReceiveMessageAction, HttpServerRequestActionBuilder.HttpMessageBuilderSupport, HttpServerRequestActionBuilder> {
 
     /** Http message to send or receive */
-    private final HttpMessage httpMessage = new HttpMessage();
+    private final HttpMessage httpMessage;
 
     /**
      * Default constructor.
      */
     public HttpServerRequestActionBuilder() {
+        this.httpMessage = new HttpMessage();
         message(new HttpMessageBuilder(httpMessage))
             .headerNameIgnoreCase(true);
+        validator(new HttpQueryParamHeaderValidator());
+    }
+
+    /**
+     * Subclasses may use custom message builder and Http message.
+     * @param messageBuilder
+     * @param httpMessage
+     */
+    public HttpServerRequestActionBuilder(MessageBuilder messageBuilder, HttpMessage httpMessage) {
+        this.httpMessage = httpMessage;
+        message(messageBuilder)
+                .headerNameIgnoreCase(true);
         validator(new HttpQueryParamHeaderValidator());
     }
 

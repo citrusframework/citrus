@@ -23,6 +23,7 @@ import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.http.message.HttpMessageUtils;
 import org.citrusframework.message.Message;
+import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.builder.SendMessageBuilderSupport;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
@@ -34,13 +35,24 @@ import org.springframework.util.MultiValueMap;
 public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessageActionBuilder<SendMessageAction, HttpClientRequestActionBuilder.HttpMessageBuilderSupport, HttpClientRequestActionBuilder> {
 
     /** Http message to send or receive */
-    private final HttpMessage httpMessage = new HttpMessage();
+    private final HttpMessage httpMessage;
 
     /**
      * Default constructor initializes http message.
      */
     public HttpClientRequestActionBuilder() {
+        this.httpMessage = new HttpMessage();
         message(new HttpMessageBuilder(httpMessage));
+    }
+
+    /**
+     * Subclasses may use custom message builder and Http message.
+     * @param messageBuilder
+     * @param httpMessage
+     */
+    protected HttpClientRequestActionBuilder(MessageBuilder messageBuilder, HttpMessage httpMessage) {
+        this.httpMessage = httpMessage;
+        message(messageBuilder);
     }
 
     @Override

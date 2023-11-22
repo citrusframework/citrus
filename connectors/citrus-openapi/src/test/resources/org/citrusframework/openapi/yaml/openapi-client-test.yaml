@@ -1,0 +1,32 @@
+name: "OpenApiClientTest"
+author: "Christoph"
+status: "FINAL"
+variables:
+  - name: "petstoreSpec"
+    value: classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml
+  - name: "petId"
+    value: "12345"
+actions:
+  - openapi:
+      specification: ${petstoreSpec}
+      client: "httpClient"
+      sendRequest:
+        operation: getPetById
+  - openapi:
+      specification: ${petstoreSpec}
+      client: "httpClient"
+      receiveResponse:
+        operation: getPetById
+        status: 200
+
+  - openapi:
+      specification: ${petstoreSpec}
+      client: "httpClient"
+      sendRequest:
+        operation: addPet
+  - openapi:
+      specification: ${petstoreSpec}
+      client: "httpClient"
+      receiveResponse:
+        operation: addPet
+        status: 201

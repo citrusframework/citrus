@@ -22,7 +22,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
-import org.citrusframework.functions.DefaultFunctionLibrary;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
@@ -35,18 +34,13 @@ import org.citrusframework.validation.DefaultMessageHeaderValidator;
 import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -71,9 +65,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
 
         TestContextFactory factory = super.createTestContextFactory();
-        factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
-        factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
-
         factory.getMessageValidatorRegistry().addMessageValidator("validator", validator);
 
         factory.getReferenceResolver().bind("mockQueue", mockQueue);

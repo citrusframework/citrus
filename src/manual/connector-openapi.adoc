@@ -1,0 +1,311 @@
+[[openapi]]
+== OpenAPI support
+
+https://www.openapis.org/[OpenAPI] is a popular specification language to describe HTTP APIs and its exposure to clients.
+Citrus is able to leverage the specification to auto generate client and server request/response message data.
+The generated message data follows the rules of a given operation in the specification.
+In particular, the message body is generated from the given Json schema rules in that specification.
+This way users may do contract-driven testing where the client and the server ensure the conformity with the contract to obey to the same specification rules.
+
+NOTE: The OpenAPI support in Citrus get enabled by adding a separate Maven module as dependency to your project
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-openapi</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+[[openapi-specification]]
+=== OpenAPI specification
+
+The OpenAPI test actions in Citrus uses a specification which usually is a json or yaml document shared between the components.
+
+Sometimes the specification gets exposed by a server application via HTTP endpoint.
+You can directly load the specification from the HTTP URL.
+Or you may just point the OpenAPI components to a local specification file.
+
+Citrus supports OpenAPI on both client and server components so the next sections will describe the usage for each of those.
+
+[[openapi-client]]
+=== OpenAPI client
+
+On the client side Citrus uses the OpenAPI specification to generate a proper HTTP request that is sent to the server.
+The user just gives a valid operationId from the specification every thing else is automatically generated.
+The Citrus client message will use the proper request path (e.g. `/petstore/v3/pet`) and Content-Type (e.g. `applicaiton/json`) according to the specification rules.
+
+Of course, you can also validate the HTTP response message with auto generated validation.
+The user just gives the expected HTTP status code that is also described in the specification (e.g. 200 OK).
+The response data used as expected message content is then also generated from the specification.
+
+As an example the following OpenAPI specification defines the operation `getPetById`.
+
+.petstore-v3.yaml
+[source,yaml]
+----
+openapi: 3.0.2
+info:
+  title: Petstore
+  version: 1.0.1
+servers:
+  - url: 'http://localhost/petstore/v3/'
+paths:
+  '/pet/{petId}':
+    get:
+      operationId: getPetById
+      parameters:
+        - name: petId
+          description: ID of pet to return
+          schema:
+            format: int64
+            type: integer
+          in: path
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Pet not found
+      summary: Find pet by ID
+      description: Returns a single pet
+# ...
+----
+
+The operation defines the HTTP GET request on `/pet/{petId}` and the response `200` OK that delivers the `#/components/schemas/Pet` Json object to the calling client as a response.
+
+The Json schema for the pet defines all properties on the object.
+
+.Pet Json schema
+[source,yaml]
+----
+Pet:
+  required:
+    - category
+    - name
+    - status
+  type: object
+  properties:
+    id:
+      format: int64
+      type: integer
+    category:
+      $ref: '#/components/schemas/Category'
+    name:
+      type: string
+      example: doggie
+    photoUrls:
+      type: array
+      items:
+        type: string
+    tags:
+      type: array
+      items:
+        $ref: '#/components/schemas/Tag'
+    status:
+      description: pet status in the store
+      enum:
+        - available
+        - pending
+        - sold
+      type: string
+# ...
+----
+
+In a testcase Citrus is able to leverage this information in order to send a proper request and validate the response based on the OpenAPI specification.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+private final HttpClient httpClient = new HttpClientBuilder()
+            .requestUrl("http://localhost:%d".formatted(port))
+            .build();
+
+private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
+            Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+
+@CitrusTest
+public void openApiClientTest() {
+    when(openapi(petstoreSpec)
+                .client(httpClient)
+                .send("getPetById"));
+
+    then(openapi(petstoreSpec)
+                .client(httpClient)
+                .receive("getPetById", HttpStatus.OK));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="OpenApiClientTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <variables>
+        <variable name="petstoreSpec" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+    </variables>
+    <actions>
+        <openapi specification="${petstoreSpec}" client="httpClient">
+          <send-request operation="getPetById"/>
+        </openapi>
+
+        <openapi specification="${petstoreSpec}" client="httpClient">
+          <receive-response operation="getPetById" status="200"/>
+        </openapi>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: OpenApiClientTest
+variables:
+  - name: petstoreSpec
+    value: classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml
+actions:
+  - openapi:
+      specification: ${petstoreSpec}
+      client: "httpClient"
+      sendRequest:
+        operation: getPetById
+  - openapi:
+      specification: ${petstoreSpec}
+      client: "httpClient"
+      receiveResponse:
+        operation: getPetById
+        status: 200
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+In this very first example The client uses the OpenAPI specification to generate a proper GET HTTP request for the `getPetById` operation.
+The request is sent to the server using the request URL path `/petstore/v3/pet/${petId}` as declared in the OpenAPI specification.
+
+The resulting HTTP response from the server is verified on the client by giving the operationId and the expected status `200`.
+The OpenAPI client generates the expected control message from the given Json schema in the OpenAPI specification.
+
+The generated control message contains validation matchers and expressions as follows.
+
+.Generated control message body
+[source,json]
+----
+{
+  "id": "@isNumber()@",
+  "name": "@notEmpty()@",
+  "category": {
+    "id": "@isNumber()@",
+    "name": "@notEmpty()@"
+  },
+  "photoUrls": "@notEmpty()@",
+  "tags":  "@ignore@",
+  "status": "@matches(sold|pending|available)@"
+}
+----
+
+This control message meets the rules defined by the OpenAPI Json schema specification for the pet object.
+For instance the enum field `status` is validated with a matching expression.
+In case the OpenAPI specification changes the generated control message will change accordingly.
+
+This completes the client side OpenAPI support.
+Now let's have a closer look at the server side OpenAPI support in the next section.
+
+[[openapi-server]]
+=== OpenAPI server
+
+On the server side Citrus is able to verify incoming requests based on the OpenAPI specification.
+The expected request message content as well as the expected resource URL path and the Content-Type are automatically validated.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+private final HttpServer httpServer = new HttpServerBuilder()
+            .port(port)
+            .timeout(5000L)
+            .autoStart(true)
+            .defaultStatus(HttpStatus.NO_CONTENT)
+            .build();
+
+private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
+            Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+
+@CitrusTest
+public void openApiClientTest() {
+    when(openapi(petstoreSpec)
+                .server(httpServer)
+                .receive("addPet"));
+
+    then(openapi(petstoreSpec)
+                .server(httpServer)
+                .send("addPet", HttpStatus.CREATED));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="OpenApiClientTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <variables>
+        <variable name="petstoreSpec" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+    </variables>
+    <actions>
+        <openapi specification="${petstoreSpec}" server="httpServer">
+          <receive-request operation="addPet"/>
+        </openapi>
+
+        <openapi specification="${petstoreSpec}" server="httpServer">
+          <send-response operation="addPet" status="200"/>
+        </openapi>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: OpenApiClientTest
+variables:
+  - name: petstoreSpec
+    value: classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml
+actions:
+  - openapi:
+      specification: ${petstoreSpec}
+      server: "httpServer"
+      receiveRequest:
+        operation: addPet
+  - openapi:
+      specification: ${petstoreSpec}
+      server: "httpServer"
+      sendResponse:
+        operation: addPet
+        status: 200
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The example above uses the `addPet` operation defined in the OpenAPI specification.
+The operation expects a HTTP POST request with a pet object as message payload.
+The OpenAPI server generates an expected Json message body according to the specification.
+This ensures that the incoming client request meets the Json schema rules for the pet object.
+Also, the server will verify the HTTP request method, the Content-Type header as well as the used resource path `/petstore/v3/pet`.
+
+The given HTTP status code defines the response that should be sent by the server.
+The server will generate a proper response according to the OpenAPI specification.
+This also includes a potential response message body (e.g. pet object).

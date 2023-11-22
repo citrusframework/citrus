@@ -397,7 +397,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
     }
 
     /**
-     * Converts current builder to client builder.
+     * Converts current builder to server builder.
      * @return
      */
     private HttpServerActionBuilder asServerBuilder() {
@@ -405,7 +405,7 @@ public class Http implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             return (HttpServerActionBuilder) builder;
         }
 
-        throw new CitrusRuntimeException(String.format("Failed to convert '%s' to http client action builder",
+        throw new CitrusRuntimeException(String.format("Failed to convert '%s' to http server action builder",
                 Optional.ofNullable(builder).map(Object::getClass).map(Class::getName).orElse("null")));
     }
 

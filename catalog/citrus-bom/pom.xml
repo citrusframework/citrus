@@ -215,6 +215,11 @@
       </dependency>
       <dependency>
         <groupId>org.citrusframework</groupId>
+        <artifactId>citrus-openapi</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.citrusframework</groupId>
         <artifactId>citrus-jms</artifactId>
         <version>${project.version}</version>
       </dependency>

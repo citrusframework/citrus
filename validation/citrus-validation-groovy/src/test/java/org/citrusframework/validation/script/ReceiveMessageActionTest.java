@@ -26,7 +26,6 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
-import org.citrusframework.functions.DefaultFunctionLibrary;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageQueue;
@@ -42,18 +41,12 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.ValidationContext;
-import org.citrusframework.validation.matcher.DefaultValidationMatcherLibrary;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Christoph Deppisch
@@ -77,9 +70,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         MockitoAnnotations.openMocks(this);
 
         TestContextFactory factory = super.createTestContextFactory();
-        factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
-        factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
-
         factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("groovyJson", new GroovyJsonMessageValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("groovyText", new GroovyScriptMessageValidator());
