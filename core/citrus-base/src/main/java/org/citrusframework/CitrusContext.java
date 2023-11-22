@@ -7,17 +7,22 @@ import java.util.List;
 import java.util.Set;
 
 import org.citrusframework.annotations.CitrusAnnotations;
+import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.container.AfterSuite;
+import org.citrusframework.container.AfterTest;
 import org.citrusframework.container.BeforeSuite;
+import org.citrusframework.container.BeforeTest;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.endpoint.DefaultEndpointFactory;
 import org.citrusframework.endpoint.EndpointFactory;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.functions.DefaultFunctionRegistry;
+import org.citrusframework.functions.FunctionLibrary;
 import org.citrusframework.functions.FunctionRegistry;
 import org.citrusframework.log.DefaultLogModifier;
 import org.citrusframework.log.LogModifier;
+import org.citrusframework.message.MessageProcessor;
 import org.citrusframework.message.MessageProcessors;
 import org.citrusframework.report.*;
 import org.citrusframework.spi.ReferenceRegistry;
@@ -30,6 +35,7 @@ import org.citrusframework.validation.MessageValidator;
 import org.citrusframework.validation.MessageValidatorRegistry;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.DefaultValidationMatcherRegistry;
+import org.citrusframework.validation.matcher.ValidationMatcherLibrary;
 import org.citrusframework.validation.matcher.ValidationMatcherRegistry;
 import org.citrusframework.variable.GlobalVariables;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
@@ -337,6 +343,72 @@ public class CitrusContext implements TestListenerAware, TestActionListenerAware
     public void handleTestResults(TestResults testResults) {
         if (!getTestResults().equals(testResults)) {
             testResults.doWithResults(result -> getTestResults().addResult(result));
+        }
+    }
+
+    public void addComponent(String name, Object component) {
+        if (component instanceof InitializingPhase c) {
+            c.initialize();
+        }
+        referenceResolver.bind(name, component);
+
+        if (component instanceof MessageValidator<?> messageValidator) {
+            messageValidatorRegistry.addMessageValidator(name, messageValidator);
+            testContextFactory.getMessageValidatorRegistry().addMessageValidator(name, messageValidator);
+        }
+
+        if (component instanceof MessageProcessor messageProcessor) {
+            messageProcessors.addMessageProcessor(messageProcessor);
+            testContextFactory.getMessageProcessors().addMessageProcessor(messageProcessor);
+        }
+
+        if (component instanceof TestSuiteListener suiteListener) {
+            testSuiteListeners.addTestSuiteListener(suiteListener);
+        }
+
+        if (component instanceof TestListener testListener) {
+            testListeners.addTestListener(testListener);
+            testContextFactory.getTestListeners().addTestListener(testListener);
+        }
+
+        if (component instanceof TestReporter testReporter) {
+            testReporters.addTestReporter(testReporter);
+        }
+
+        if (component instanceof TestActionListener testActionListener) {
+            testActionListeners.addTestActionListener(testActionListener);
+            testContextFactory.getTestActionListeners().addTestActionListener(testActionListener);
+        }
+
+        if (component instanceof MessageListener messageListener) {
+            messageListeners.addMessageListener(messageListener);
+            testContextFactory.getMessageListeners().addMessageListener(messageListener);
+        }
+
+        if (component instanceof BeforeTest beforeTest) {
+            testContextFactory.getBeforeTest().add(beforeTest);
+        }
+
+        if (component instanceof AfterTest afterTest) {
+            testContextFactory.getAfterTest().add(afterTest);
+        }
+
+        if (component instanceof BeforeSuite beforeSuiteComponent) {
+            beforeSuite.add(beforeSuiteComponent);
+        }
+
+        if (component instanceof AfterSuite afterSuiteComponent) {
+            afterSuite.add(afterSuiteComponent);
+        }
+
+        if (component instanceof FunctionLibrary library) {
+            functionRegistry.addFunctionLibrary(library);
+            testContextFactory.getFunctionRegistry().addFunctionLibrary(library);
+        }
+
+        if (component instanceof ValidationMatcherLibrary library) {
+            validationMatcherRegistry.addValidationMatcherLibrary(library);
+            testContextFactory.getValidationMatcherRegistry().addValidationMatcherLibrary(library);
         }
     }
 

@@ -24,7 +24,6 @@ import java.io.IOException;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import org.citrusframework.Citrus;
-import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.groovy.dsl.GroovyShellUtils;
@@ -98,10 +97,7 @@ public class ContextConfiguration {
         callable.call();
 
         configuration.getEndpoints().forEach(endpoint -> {
-            if (endpoint instanceof InitializingPhase) {
-                ((InitializingPhase) endpoint).initialize();
-            }
-            citrus.getCitrusContext().bind(endpoint.getName(), endpoint);
+            citrus.getCitrusContext().addComponent(endpoint.getName(), endpoint);
 
             if (context != null && !context.getReferenceResolver().equals(citrus.getCitrusContext().getReferenceResolver())) {
                 context.getReferenceResolver().bind(endpoint.getName(), endpoint);

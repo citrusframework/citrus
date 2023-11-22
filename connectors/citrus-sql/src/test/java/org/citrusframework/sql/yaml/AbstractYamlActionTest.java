@@ -35,6 +35,7 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
@@ -64,6 +65,10 @@ public class AbstractYamlActionTest extends AbstractTestNGUnitTest {
             CitrusAnnotations.parseConfiguration(invocationOnMock.getArgument(0, Object.class), citrusContext);
             return null;
         }).when(citrusContext).parseConfiguration((Object) any());
+        doAnswer(invocationOnMock-> {
+            context.getReferenceResolver().bind(invocationOnMock.getArgument(0), invocationOnMock.getArgument(1));
+            return null;
+        }).when(citrusContext).addComponent(anyString(), any());
         CitrusAnnotations.injectAll(this, citrus, context);
         return context;
     }

@@ -25,15 +25,12 @@ import org.citrusframework.CitrusContext;
 import org.citrusframework.GherkinTestActionRunner;
 import org.citrusframework.TestActionRunner;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.common.InitializingPhase;
 import org.citrusframework.common.Named;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spi.ReferenceRegistry;
 import org.citrusframework.util.ReflectionHelper;
-import org.citrusframework.validation.MessageValidator;
-import org.citrusframework.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -255,9 +252,7 @@ public abstract class CitrusAnnotations {
                             named.setName(name);
                         }
 
-                        citrusContext.getReferenceResolver().bind(name, component);
-
-                        initializeComponent(name, component, citrusContext);
+                        citrusContext.addComponent(name, component);
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         throw new CitrusRuntimeException("Failed to invoke configuration method", e);
                     }
@@ -281,22 +276,10 @@ public abstract class CitrusAnnotations {
                             named.setName(name);
                         }
 
-                        citrusContext.getReferenceResolver().bind(name, component);
-
-                        initializeComponent(name, component, citrusContext);
+                        citrusContext.addComponent(name, component);
                     } catch (IllegalAccessException e) {
                         throw new CitrusRuntimeException("Failed to access configuration field", e);
                     }
                 });
-    }
-
-    private static void initializeComponent(String name, Object component, CitrusContext citrusContext) {
-        if (component instanceof InitializingPhase c) {
-            c.initialize();
-        }
-
-        if (component instanceof MessageValidator) {
-            citrusContext.getMessageValidatorRegistry().addMessageValidator(name, (MessageValidator<? extends ValidationContext>) component);
-        }
     }
 }
