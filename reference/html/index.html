@@ -663,8 +663,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.0.1,</span>
-<span id="revdate">2023-11-16</span>
+<span id="revnumber">version 4.0.2,</span>
+<span id="revdate">2023-11-22</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -820,10 +820,12 @@ $(addBlockSwitches);
 <li><a href="#http-error-handling">14.8. Http error handling</a></li>
 <li><a href="#http-client-basic-authentication">14.9. Http client basic authentication</a></li>
 <li><a href="#http-server-basic-authentication">14.10. Http server basic authentication</a></li>
-<li><a href="#http-cookies">14.11. Http cookies</a></li>
-<li><a href="#http-gzip-compression">14.12. Http Gzip compression</a></li>
-<li><a href="#http-servlet-filters">14.13. Http servlet filters</a></li>
-<li><a href="#http-servlet-context-customization">14.14. Http servlet context customization</a></li>
+<li><a href="#http-client-ssl">14.11. Http client SSL</a></li>
+<li><a href="#http-server-ssl">14.12. Http server SSL</a></li>
+<li><a href="#http-cookies">14.13. Http cookies</a></li>
+<li><a href="#http-gzip-compression">14.14. Http Gzip compression</a></li>
+<li><a href="#http-servlet-filters">14.15. Http servlet filters</a></li>
+<li><a href="#http-servlet-context-customization">14.16. Http servlet context customization</a></li>
 </ul>
 </li>
 <li><a href="#soap-webservices">15. SOAP WebServices</a>
@@ -1139,7 +1141,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.0.1</strong></p>
+<p><strong>Version: 4.0.2</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -20151,13 +20153,13 @@ the preferred way according to your test project requirements.</p>
 <div class="sect2">
 <h3 id="http-client-basic-authentication"><a class="anchor" href="#http-client-basic-authentication"></a><a class="link" href="#http-client-basic-authentication">14.9. Http client basic authentication</a></h3>
 <div class="paragraph">
-<p>As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be
-username/password authentication where the credentials are transmitted in the request header section as base64 encoding.</p>
+<p>As a client you may have to authenticate properly in order to access a resource on the server.
+In many cases this will be basic authentication with username/password where the credentials are transmitted in the request header section with base64 encoding.</p>
 </div>
 <div class="paragraph">
-<p>The easiest approach to set the <strong>Authorization</strong> header for a basic authentication Http request would be to set it on your
-own in the send action definition. Of course you have to use the correct basic authentication header syntax with base64
-encoding for the username:password phrase. See this simple example.</p>
+<p>The easiest approach to set the <strong>Authorization</strong> header for a basic authentication Http request would be to explicitly set the header in the send action definition.
+Of course, you have to use the correct basic authentication header syntax with base64 encoding for the username:password phrase.
+See how it works in this simple example.</p>
 </div>
 <div class="listingblock primary">
 <div class="title">Java</div>
@@ -20182,14 +20184,47 @@ encoding for the username:password phrase. See this simple example.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Citrus will add this header to the Http requests and the server will read the <strong>Authorization</strong> username and password. For
-more convenient base64 encoding you can also use a Citrus function, see <a href="#functions-encode-base64">functions-encode-base64</a></p>
+<p>Citrus will add this header to the Http requests and the server will read the <strong>Authorization</strong> username and password.
+For more convenient base64 encoding you can also use a Citrus function <code>citrus:encodeBase64(username:password)</code>.
+See <a href="#functions-encode-base64">functions-encode-base64</a> for more details.</p>
 </div>
 <div class="paragraph">
-<p>Now there is a more comfortable way to set the basic authentication header in all the Citrus requests. As Citrus uses
-Spring&#8217;s REST support with the RestTemplate and ClientHttpRequestFactory the basic authentication is already covered there
-in a more generic way. You simply have to configure the basic authentication credentials on the RestTemplate&#8217;s ClientHttpRequestFactory.
+<p>Instead of adding the Http <strong>Authorization</strong> header manually you can also enable the basic authentication on the Http client endpoint.
+Simply configure the basic authentication credentials on the Citrus Http client component.
 Just see the following example and learn how to do that.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> HttpClient httpClient() {
+    <span class="keyword">return</span> <span class="keyword">new</span> HttpClientBuilder()
+        .requestUrl(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080/test</span><span class="delimiter">&quot;</span></span>)
+        .authentication(HttpAuthentication.basic(<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span>))
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-http:client</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">httpClient</span><span class="delimiter">&quot;</span></span>
+                    <span class="attribute-name">request-url</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080/test</span><span class="delimiter">&quot;</span></span>
+                    <span class="attribute-name">request-factory</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">clientRequestFactory</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;bean</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">clientRequestFactory</span><span class="delimiter">&quot;</span></span>
+    <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.HttpClientRequestFactoryBean</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;constructor-arg&gt;</span>
+        <span class="tag">&lt;bean</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.BasicAuthentication</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+            <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/bean&gt;</span>
+    <span class="tag">&lt;/constructor-arg&gt;</span>
+<span class="tag">&lt;/bean&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case you need a more powerful configuration of the basic authentication you can also directly use the request factory as a configuration item for basic authentication.</p>
 </div>
 <div class="listingblock primary">
 <div class="title">Java</div>
@@ -20209,7 +20244,7 @@ Just see the following example and learn how to do that.</p>
     AuthScope scope = <span class="keyword">new</span> AuthScope(<span class="string"><span class="delimiter">&quot;</span><span class="content">localhost</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">8080</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">basic</span><span class="delimiter">&quot;</span></span>);
     factory.setAuthScope(scope);
 
-    UsernamePasswordCredentials credentials = <span class="keyword">new</span> UsernamePasswordCredentials(<span class="string"><span class="delimiter">&quot;</span><span class="content">someUsername</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">somePassword</span><span class="delimiter">&quot;</span></span>);
+    UsernamePasswordCredentials credentials = <span class="keyword">new</span> UsernamePasswordCredentials(<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span>);
     factory.setCredentials(credentials);
 
     <span class="keyword">return</span> factory;
@@ -20233,23 +20268,23 @@ Just see the following example and learn how to do that.</p>
   <span class="tag">&lt;/property&gt;</span>
   <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">credentials</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;bean</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.apache.hc.client5.http.auth.UsernamePasswordCredentials</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-        <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">someUsername</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-        <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">somePassword</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
     <span class="tag">&lt;/bean&gt;</span>
   <span class="tag">&lt;/property&gt;</span>
 <span class="tag">&lt;/bean&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The advantages of this method is obvious. Now all sending test actions that reference the client component will automatically
-add the basic authentication header.</p>
+<p>The advantage of setting the basic authentication on the Http client is obvious.
+All test actions that reference the client component will automatically use the basic authentication.</p>
 </div>
 <div class="paragraph">
 <p>The above configuration results in Http client requests with authentication headers properly set for basic authentication.
 The client request factory takes care of adding the proper basic authentication header to each request that is sent with this
 Citrus message sender. Citrus uses preemptive authentication. The message sender only sends a single request to the server
 with all authentication information set in the message header. The request which determines the authentication scheme on the
-server is skipped. This is why you have to add some auth scope in the client request factory so Citrus can setup an authentication
+server is skipped. This is why you have to add some auth scope in the client request factory so Citrus can set up an authentication
 cache within the Http context in order to have preemptive authentication.</p>
 </div>
 <div class="paragraph">
@@ -20276,7 +20311,42 @@ Content-Length: 175
 <div class="sect2">
 <h3 id="http-server-basic-authentication"><a class="anchor" href="#http-server-basic-authentication"></a><a class="link" href="#http-server-basic-authentication">14.10. Http server basic authentication</a></h3>
 <div class="paragraph">
-<p>Citrus as a server can also set basic authentication so clients need to authenticate properly when accessing server resources.</p>
+<p>The Citrus Http server is able to configure basic authentication so clients need to authenticate properly when accessing server resources.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> HttpServer httpServer() {
+    <span class="keyword">return</span> <span class="keyword">new</span> HttpServerBuilder()
+        .port(<span class="integer">8080</span>)
+        .autoStart(<span class="predefined-constant">true</span>)
+        .authentication(<span class="string"><span class="delimiter">&quot;</span><span class="content">/foo/*</span><span class="delimiter">&quot;</span></span>, HttpAuthentication.basic(<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span>))
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-http:server</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">basicAuthHttpServer</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">port</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">8080</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">auto-start</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">security-handler</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">securityHandlerFactory</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;bean</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">securityHandlerFactory</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.HttpSecurityHandlerFactoryBean</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;constructor-arg&gt;</span>
+        <span class="tag">&lt;bean</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.BasicAuthentication</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+            <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+            <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">resourcePath</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">/foo/*</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/bean&gt;</span>
+    <span class="tag">&lt;/constructor-arg&gt;</span>
+<span class="tag">&lt;/bean&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case you need a more powerful server configuration you can also set the security handler directly.</p>
 </div>
 <div class="listingblock primary">
 <div class="title">Java</div>
@@ -20301,7 +20371,7 @@ Content-Length: 175
     factory.setUsers(<span class="predefined-type">Collections</span>.singletonList(user));
 
     factory.setConstraints(<span class="predefined-type">Collections</span>.singletonMap(<span class="string"><span class="delimiter">&quot;</span><span class="content">/foo/*</span><span class="delimiter">&quot;</span></span>,
-                                                    <span class="keyword">new</span> BasicAuthConstraint(<span class="string"><span class="delimiter">&quot;</span><span class="content">CitrusRole</span><span class="delimiter">&quot;</span></span>)));
+                                    <span class="keyword">new</span> BasicAuthConstraint(<span class="string"><span class="delimiter">&quot;</span><span class="content">CitrusRole</span><span class="delimiter">&quot;</span></span>)));
 
     <span class="keyword">return</span> factory;
 }</code></pre>
@@ -20362,7 +20432,128 @@ authentication constraints very easy.
 </div>
 </div>
 <div class="sect2">
-<h3 id="http-cookies"><a class="anchor" href="#http-cookies"></a><a class="link" href="#http-cookies">14.11. Http cookies</a></h3>
+<h3 id="http-client-ssl"><a class="anchor" href="#http-client-ssl"></a><a class="link" href="#http-client-ssl">14.11. Http client SSL</a></h3>
+<div class="paragraph">
+<p>You can use SSL when establishing a client connection with the server.
+The Citrus Http client supports a secure connection with these settings.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> HttpClient httpClient() {
+    <span class="keyword">return</span> <span class="keyword">new</span> HttpClientBuilder()
+        .requestUrl(<span class="string"><span class="delimiter">&quot;</span><span class="content">https://localhost:8080/test</span><span class="delimiter">&quot;</span></span>)
+        .secured(HttpSecureConnection.ssl())
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-http:client</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">httpClient</span><span class="delimiter">&quot;</span></span>
+                    <span class="attribute-name">request-url</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080/test</span><span class="delimiter">&quot;</span></span>
+                    <span class="attribute-name">connection-manager</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sslConnectionManager</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;bean</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sslConnectionManager</span><span class="delimiter">&quot;</span></span>
+    <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.HttpClientConnectionManagerFactory</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;constructor-arg&gt;</span>
+        <span class="tag">&lt;bean</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.SSLConnection</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/constructor-arg&gt;</span>
+<span class="tag">&lt;/bean&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example Http client uses SSL secure connection.
+By default, the client will accept any server certificates and hostnames often referred to as trust-all-strategy.</p>
+</div>
+<div class="paragraph">
+<p>You may want to also use a proper trust store to explicitly accept server certificates.
+The client by default allows self-signed certificates.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> HttpClient sslHttpClient() {
+    <span class="keyword">return</span> <span class="keyword">new</span> HttpClientBuilder()
+        .requestUrl(<span class="string"><span class="delimiter">&quot;</span><span class="content">https://localhost:8080/test</span><span class="delimiter">&quot;</span></span>)
+        .secured(HttpSecureConnection.ssl()
+            .trustStore(<span class="string"><span class="delimiter">&quot;</span><span class="content">path/to/server.jks</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">trustStorePassword</span><span class="delimiter">&quot;</span></span>))
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-http:client</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sslHttpClient</span><span class="delimiter">&quot;</span></span>
+                    <span class="attribute-name">request-url</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:8080/test</span><span class="delimiter">&quot;</span></span>
+                    <span class="attribute-name">connection-manager</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sslConnectionManager</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;bean</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sslConnectionManager</span><span class="delimiter">&quot;</span></span>
+    <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.HttpClientConnectionManagerFactory</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;constructor-arg&gt;</span>
+        <span class="tag">&lt;bean</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.SSLConnection</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">path/to/server.jks</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+            <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">trustStorePassword</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/bean&gt;</span>
+    <span class="tag">&lt;/constructor-arg&gt;</span>
+<span class="tag">&lt;/bean&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You need to provide a key store file (.jks) and a password to access the certificates located in the store.
+The client now will do proper SSL handshake with the server in order to use secure connections.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="http-server-ssl"><a class="anchor" href="#http-server-ssl"></a><a class="link" href="#http-server-ssl">14.12. Http server SSL</a></h3>
+<div class="paragraph">
+<p>The Citrus Http server is able to configure a SSL connector so clients need to use secure connections to access the server resources.
+The connector</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Bean</span>
+<span class="directive">public</span> HttpServer sslHttpServer() {
+    <span class="keyword">return</span> <span class="keyword">new</span> HttpServerBuilder()
+        .port(<span class="integer">8080</span>)
+        .autoStart(<span class="predefined-constant">true</span>)
+        .secured(<span class="integer">8443</span>, HttpSecureConnection.ssl()
+            .keyStore(<span class="string"><span class="delimiter">&quot;</span><span class="content">path/to/server.jks</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">keyStorePassword</span><span class="delimiter">&quot;</span></span>))
+        .build();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;citrus-http:server</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">sslHttpServer</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">port</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">8080</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">auto-start</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span>
+                <span class="attribute-name">connector</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">serverConnectorFactory</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;bean</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">serverConnectorFactory</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.HttpServerConnectorFactory</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;constructor-arg&gt;</span>
+        <span class="tag">&lt;bean</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.http.security.SSLConnection</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+            <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">path/to/server.jks</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+            <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">trustStorePassword</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+            <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">securePort</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">8443</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/bean&gt;</span>
+    <span class="tag">&lt;/constructor-arg&gt;</span>
+<span class="tag">&lt;/bean&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The server now uses a <code>securePort</code> and a server certificate.
+In most cases the certificate in a test environment is self-signed so please make sure to allow self-signed certificates in your clients.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="http-cookies"><a class="anchor" href="#http-cookies"></a><a class="link" href="#http-cookies">14.13. Http cookies</a></h3>
 <div class="paragraph">
 <p>Cookies hold any kind of information and are saved as test information on the client side. Http servers are able to instruct
 the client (browser) to save a new cookie with name, value and some attributes. This is usually done with a <em>"Set-Cookie"</em> message
@@ -20576,7 +20767,7 @@ the cookie information is present with all specified attributes.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="http-gzip-compression"><a class="anchor" href="#http-gzip-compression"></a><a class="link" href="#http-gzip-compression">14.12. Http Gzip compression</a></h3>
+<h3 id="http-gzip-compression"><a class="anchor" href="#http-gzip-compression"></a><a class="link" href="#http-gzip-compression">14.14. Http Gzip compression</a></h3>
 <div class="paragraph">
 <p>Gzip is a very popular compression mechanism for optimizing the message transportation for large content. The Citrus http
 client and server components support gzip compression out of the box. This means that you only need to set the specific
@@ -20702,7 +20893,7 @@ in your request. The client will automatically apply compression for you.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="http-servlet-filters"><a class="anchor" href="#http-servlet-filters"></a><a class="link" href="#http-servlet-filters">14.13. Http servlet filters</a></h3>
+<h3 id="http-servlet-filters"><a class="anchor" href="#http-servlet-filters"></a><a class="link" href="#http-servlet-filters">14.15. Http servlet filters</a></h3>
 <div class="paragraph">
 <p>The Citrus http server component supports custom servlet filters that take part in handling an incoming request/response
 communication. This might be useful when customizing the basic server behavior such as custom zip/unzip mechanisms. The
@@ -20793,7 +20984,7 @@ filters. This means you always need to construct the whole servlet filter chain 
 </div>
 </div>
 <div class="sect2">
-<h3 id="http-servlet-context-customization"><a class="anchor" href="#http-servlet-context-customization"></a><a class="link" href="#http-servlet-context-customization">14.14. Http servlet context customization</a></h3>
+<h3 id="http-servlet-context-customization"><a class="anchor" href="#http-servlet-context-customization"></a><a class="link" href="#http-servlet-context-customization">14.16. Http servlet context customization</a></h3>
 <div class="paragraph">
 <p>The Citrus Http server uses Spring application context loading on startup. For high customizations you can provide a custom
 servlet context file which holds all custom configurations as Spring beans for the server. Here is a sample servlet context
@@ -37742,8 +37933,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.0.1<br>
-Last updated 2023-11-13 13:11:32 +0100
+Version 4.0.2<br>
+Last updated 2023-11-22 19:26:07 +0100
 </div>
 </div>
 <style>
