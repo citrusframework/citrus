@@ -1,11 +1,5 @@
 package org.citrusframework.spi;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.ObjectHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -27,6 +21,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.citrusframework.spi.PropertiesLoader.loadProperties;
 
@@ -192,8 +190,11 @@ public class ResourcePathTypeResolver implements TypeResolver {
 
     private Stream<Path> resolveAllFromJar(String path) {
         String rootAsString = ResourcePathTypeResolver.class.getProtectionDomain().getCodeSource().getLocation().toString();
+
         ClassLoader classLoader = ObjectHelper.assertNotNull(ResourcePathTypeResolver.class.getClassLoader());
-        if (rootAsString.endsWith(".jar") && !rootAsString.matches(".*" + File.separator + "citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar")) {
+        if (rootAsString.matches(".*jar(!/)?") &&
+            !rootAsString.replace("\\", "/")
+                .matches(".*/citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar")) {
             return getZipEntries().stream()
                     .filter(entry -> entry.startsWith(path))
                     .map(classLoader::getResource)
