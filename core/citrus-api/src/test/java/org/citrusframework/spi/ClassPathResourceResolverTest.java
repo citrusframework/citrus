@@ -1,5 +1,7 @@
 package org.citrusframework.spi;
 
+import static org.testng.Assert.assertTrue;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -9,24 +11,23 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
-class ClassPathResourceResolverTest {
+public class ClassPathResourceResolverTest {
 
     @Test
-    void loadFromFatJar() throws IOException {
+    public void loadFromFatJar() throws IOException {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread()
                 .setContextClassLoader(new SimulatedNestedJarClassLoader("fatjar.jar", "!/BOOT-INF/lib/test-nested-jar.jar", contextClassLoader));
             ClasspathResourceResolver resolver = new ClasspathResourceResolver();
             Set<Path> resources = resolver.getResources("META-INF/citrus/test/parser/core");
-            Assertions.assertTrue(
+            assertTrue(
                 resources.contains(Path.of("META-INF/citrus/test/parser/core/schema-collection")));
-            Assertions.assertTrue(resources.contains(
+            assertTrue(resources.contains(
                 Path.of("META-INF/citrus/test/parser/core/xml-data-dictionary")));
-            Assertions.assertTrue(resources.contains(
+            assertTrue(resources.contains(
                 Path.of("META-INF/citrus/test/parser/core/xpath-data-dictionary")));
         } finally {
             Thread.currentThread().setContextClassLoader(contextClassLoader);
@@ -34,18 +35,18 @@ class ClassPathResourceResolverTest {
     }
 
     @Test
-    void loadFromSimpleJar() throws IOException {
+    public void loadFromSimpleJar() throws IOException {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread()
                 .setContextClassLoader(new SimulatedNestedJarClassLoader("simplejar.jar", "", contextClassLoader));
             ClasspathResourceResolver resolver = new ClasspathResourceResolver();
             Set<Path> resources = resolver.getResources("META-INF/citrus/test/parser/core");
-            Assertions.assertTrue(
+            assertTrue(
                 resources.contains(Path.of("META-INF/citrus/test/parser/core/schema-collection")));
-            Assertions.assertTrue(resources.contains(
+            assertTrue(resources.contains(
                 Path.of("META-INF/citrus/test/parser/core/xml-data-dictionary")));
-            Assertions.assertTrue(resources.contains(
+            assertTrue(resources.contains(
                 Path.of("META-INF/citrus/test/parser/core/xpath-data-dictionary")));
         } finally {
             Thread.currentThread().setContextClassLoader(contextClassLoader);
@@ -56,7 +57,7 @@ class ClassPathResourceResolverTest {
      * A classloader that simulates resolving from a nested jar. This kind of jar, also known as fat
      * jar or uber jar is used in spring boot applications.
      */
-    private class SimulatedNestedJarClassLoader extends ClassLoader {
+    private static class SimulatedNestedJarClassLoader extends ClassLoader {
 
         private final String baseJar;
         private final String nestedJar;

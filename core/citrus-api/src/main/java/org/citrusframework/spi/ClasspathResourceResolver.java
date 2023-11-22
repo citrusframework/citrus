@@ -133,11 +133,14 @@ public class ClasspathResourceResolver {
         String[] split = urlPath.split("!");
 
         if (split.length == 1) {
-            readFromJarStream(classLoader, path, urlPath, resources, filter, new FileInputStream(split[0]));
+            try (InputStream inputStream = new FileInputStream(split[0])) {
+                readFromJarStream(classLoader, path, urlPath, resources, filter,
+                    inputStream);
+            }
         } else if (split.length == 2) {
             loadFromNestedJar(classLoader, path, urlPath, resources, filter, split[0], split[1]);
         } else {
-            throw new CitrusRuntimeException("Unable to load urlPath from : "+urlPath);
+            throw new CitrusRuntimeException("Unable to load urlPath from : " + urlPath);
         }
 
     }
@@ -150,14 +153,16 @@ public class ClasspathResourceResolver {
         Set<Path> resources, Predicate<String> filter, String baseJar, String nestedJar) throws IOException {
         try (JarFile jarFile = new JarFile(baseJar)) {
             JarEntry jarEntry = jarFile.getJarEntry(nestedJar.substring(1));
-            readFromJarStream(classLoader, path, urlPath, resources, filter, jarFile.getInputStream(jarEntry));
+            try (InputStream inputStream = jarFile.getInputStream(jarEntry)) {
+                readFromJarStream(classLoader, path, urlPath, resources, filter, inputStream);
+            }
         }
     }
 
     private static void readFromJarStream(ClassLoader classLoader, String path, String urlPath,
         Set<Path> resources, Predicate<String> filter, InputStream jarInputStream) {
         List<String> entries = new ArrayList<>();
-        try (JarInputStream jarStream = new JarInputStream(jarInputStream);) {
+        try (JarInputStream jarStream = new JarInputStream(jarInputStream)) {
             JarEntry entry;
             while ((entry = jarStream.getNextJarEntry()) != null) {
                 final String name = entry.getName().trim();
