@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2020-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -44,6 +44,8 @@ import org.citrusframework.util.StringUtils;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
+
+import static java.lang.String.format;
 
 /**
  * @author Christoph Deppisch
@@ -133,7 +135,7 @@ public final class CitrusExtensionHelper {
     public static TestCase getTestCase(ExtensionContext extensionContext) {
         ObjectHelper.assertNotNull(extensionContext, "ExtensionContext must not be null");
         return extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE).getOrComputeIfAbsent(getBaseKey(extensionContext) + TestCase.class.getSimpleName(), key -> {
-            if (CitrusExtensionHelper.isTestSourceMethod(extensionContext.getRequiredTestMethod())) {
+            if (isTestSourceMethod(extensionContext.getRequiredTestMethod())) {
                 return getTestLoader(extensionContext).getTestCase();
             } else {
                 return getTestRunner(extensionContext).getTestCase();
@@ -158,14 +160,13 @@ public final class CitrusExtensionHelper {
         }
 
         TestLoader testLoader;
-        if (CitrusExtensionHelper.isTestSourceMethod(method)) {
+        if (isTestSourceMethod(method)) {
             CitrusTestSource citrusTestAnnotation = method.getAnnotation(CitrusTestSource.class);
 
             testLoader = TestLoader.lookup(citrusTestAnnotation.type())
-                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", citrusTestAnnotation.type())));
+                    .orElseThrow(() -> new CitrusRuntimeException(format("Missing test loader for type '%s'", citrusTestAnnotation.type())));
 
-            configure(testLoader, extensionContext, method, citrusTestAnnotation.name(),
-                    citrusTestAnnotation.packageName(), citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources());
+            configure(testLoader, extensionContext, method, citrusTestAnnotation.name(), citrusTestAnnotation.packageName(), citrusTestAnnotation.packageScan(), citrusTestAnnotation.sources());
         } else {
             testLoader = new DefaultTestLoader();
             configure(testLoader, extensionContext, method, new String[]{}, null, new String[]{}, new String[]{});
@@ -222,7 +223,7 @@ public final class CitrusExtensionHelper {
     }
 
     public static Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        TestCaseRunner runner = CitrusExtensionHelper.getTestRunner(extensionContext);
+        TestCaseRunner runner = getTestRunner(extensionContext);
         if (TestCaseRunner.class.isAssignableFrom(parameterContext.getParameter().getType())) {
             return runner;
         } else if (GherkinTestActionRunner.class.isAssignableFrom(parameterContext.getParameter().getType())) {
@@ -230,10 +231,10 @@ public final class CitrusExtensionHelper {
         } else if (TestActionRunner.class.isAssignableFrom(parameterContext.getParameter().getType())) {
             return runner;
         } else if (TestContext.class.isAssignableFrom(parameterContext.getParameter().getType())) {
-            return CitrusExtensionHelper.getTestContext(extensionContext);
+            return getTestContext(extensionContext);
         }
 
-        throw new CitrusRuntimeException(String.format("Failed to resolve parameter %s", parameterContext.getParameter()));
+        throw new CitrusRuntimeException(format("Failed to resolve parameter %s", parameterContext.getParameter()));
     }
 
     /**
@@ -258,8 +259,7 @@ public final class CitrusExtensionHelper {
      * @param packagesToScan
      * @param sources
      */
-    private static void configure(TestLoader testLoader, ExtensionContext extensionContext, Method method,
-                                  String[] methodNames, String methodPackageName, String[] packagesToScan, String[] sources) {
+    private static void configure(TestLoader testLoader, ExtensionContext extensionContext, Method method, String[] methodNames, String methodPackageName, String[] packagesToScan, String[] sources) {
         String testName = extensionContext.getRequiredTestClass().getSimpleName();
         String packageName = method.getDeclaringClass().getPackage().getName();
         String source = null;
@@ -296,7 +296,7 @@ public final class CitrusExtensionHelper {
         testLoader.setTestName(testName);
         testLoader.setPackageName(packageName);
 
-        CitrusAnnotations.injectAll(testLoader, CitrusExtensionHelper.getCitrus(extensionContext));
+        CitrusAnnotations.injectAll(testLoader, getCitrus(extensionContext));
 
         if (testLoader instanceof TestSourceAware) {
             ((TestSourceAware) testLoader).setSource(source);

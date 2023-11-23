@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2020-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -176,8 +176,8 @@ public final class TestNGHelper {
             TestLoader testLoader = provider.createTestLoader(FileUtils.getBaseName(FileUtils.getFileName(file.getLocation())),
                     sourceFilePackageName.replace("/","."), type);
 
-            if (testLoader instanceof TestSourceAware) {
-                ((TestSourceAware) testLoader).setSource(source);
+            if (testLoader instanceof TestSourceAware testSourceAware) {
+                testSourceAware.setSource(source);
                 methodTestLoaders.add(testLoader);
             } else {
                 logger.warn(String.format("Test loader %s is not able to handle test source %s", testLoader.getClass(), source));

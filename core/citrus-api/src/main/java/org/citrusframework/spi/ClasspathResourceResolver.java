@@ -82,6 +82,7 @@ public class ClasspathResourceResolver {
         for (ClassLoader classLoader : getClassLoaders()) {
             findResources(path, classLoader, resources, name -> !name.endsWith(".class"));
         }
+
         return resources;
     }
 
@@ -91,11 +92,10 @@ public class ClasspathResourceResolver {
             .collect(Collectors.toSet());
     }
 
-    private void findResources(String path, ClassLoader classLoader, Set<Path> result,
-        Predicate<String> filter) throws IOException {
+    private void findResources(String path, ClassLoader classLoader, Set<Path> result, Predicate<String> filter) throws IOException {
         String resourcePath;
-        // If the URL is a jar, the URLClassloader.getResources() seems to require a trailing slash.  The
-        // trailing slash is harmless for other URLs
+        // If the URL is a jar, the URLClassloader.getResources() seems to require a trailing slash. The trailing slash
+        // is harmless for other URLs!
         if (!path.isEmpty() && !path.endsWith("/")) {
             resourcePath = path.replace(".", "/") + "/";
         } else {
@@ -126,10 +126,7 @@ public class ClasspathResourceResolver {
         }
     }
 
-    private void loadResourcesInJar(ClassLoader classLoader, String path,
-        String urlPath, Set<Path> resources, Predicate<String> filter)
-        throws IOException {
-
+    private void loadResourcesInJar(ClassLoader classLoader, String path, String urlPath, Set<Path> resources, Predicate<String> filter) throws IOException {
         String[] split = urlPath.split("!");
 
         if (split.length == 1) {
@@ -139,7 +136,6 @@ public class ClasspathResourceResolver {
         } else {
             throw new CitrusRuntimeException("Unable to load urlPath from : "+urlPath);
         }
-
     }
 
     /**
@@ -154,8 +150,7 @@ public class ClasspathResourceResolver {
         }
     }
 
-    private static void readFromJarStream(ClassLoader classLoader, String path, String urlPath,
-        Set<Path> resources, Predicate<String> filter, InputStream jarInputStream) {
+    private static void readFromJarStream(ClassLoader classLoader, String path, String urlPath, Set<Path> resources, Predicate<String> filter, InputStream jarInputStream) {
         List<String> entries = new ArrayList<>();
         try (JarInputStream jarStream = new JarInputStream(jarInputStream)) {
             JarEntry entry;
@@ -168,8 +163,7 @@ public class ClasspathResourceResolver {
 
             for (String name : entries) {
                 if (logger.isTraceEnabled()) {
-                    logger.trace("Found resource: {} in {}", name.substring(path.length()),
-                        urlPath);
+                    logger.trace("Found resource: {} in {}", name.substring(path.length()), urlPath);
                 }
                 URL url = classLoader.getResource(name);
                 if (url != null) {
@@ -177,8 +171,7 @@ public class ClasspathResourceResolver {
                 }
             }
         } catch (IOException e) {
-            logger.warn("Cannot search jar file '{} due to an IOException: {}", urlPath,
-                e.getMessage(), e);
+            logger.warn("Cannot search jar file '{} due to an IOException: {}", urlPath, e.getMessage(), e);
         }
     }
 
@@ -196,8 +189,7 @@ public class ClasspathResourceResolver {
             String name = file.getName().trim();
 
             if (file.isDirectory()) {
-                loadResourcesInDirectory(builder.append(path).append(name).append("/").toString(),
-                    file, result, filter);
+                loadResourcesInDirectory(builder.append(path).append(name).append("/").toString(), file, result, filter);
             } else if (file.isFile() && file.exists() && filter.test(name)) {
                 logger.trace("Found resource: {} as {}", name, file.toURI());
                 result.add(Paths.get(builder.append(path).append(name).toString()));
@@ -245,14 +237,12 @@ public class ClasspathResourceResolver {
     private Set<ClassLoader> getClassLoaders() {
         Set<ClassLoader> classLoaders = new LinkedHashSet<>();
         try {
-            ClassLoader ccl = Thread.currentThread().getContextClassLoader();
-            if (ccl != null) {
-                classLoaders.add(ccl);
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            if (classLoader != null) {
+                classLoaders.add(classLoader);
             }
         } catch (Exception e) {
-            logger.warn(
-                "Cannot add ContextClassLoader from current thread due {}. This exception will be ignored",
-                e.getMessage());
+            logger.warn("Cannot add ContextClassLoader from current thread due {}. This exception will be ignored", e.getMessage());
         }
 
         classLoaders.add(ClasspathResourceResolver.class.getClassLoader());

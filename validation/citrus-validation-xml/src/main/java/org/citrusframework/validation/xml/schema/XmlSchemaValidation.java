@@ -9,6 +9,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.util.SystemProvider;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
@@ -35,7 +36,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
 import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
 
 public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidationContext> {
@@ -205,16 +205,5 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     private static Optional<String> extractEnvOrProperty(SystemProvider systemProvider, String envVarName, String fallbackPropertyName) {
         return systemProvider.getEnv(envVarName)
                 .or(() -> systemProvider.getProperty(fallbackPropertyName));
-    }
-
-    static final class SystemProvider {
-
-        Optional<String> getEnv(String envVarName) {
-            return ofNullable(System.getenv(envVarName));
-        }
-
-        Optional<String> getProperty(String propertyName) {
-            return ofNullable(System.getProperty(propertyName));
-        }
     }
 }

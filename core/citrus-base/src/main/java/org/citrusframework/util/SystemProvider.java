@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -17,29 +17,19 @@
  * limitations under the License.
  */
 
-package org.citrusframework.xml;
-
-import org.citrusframework.common.TestLoader;
-import org.testng.annotations.Test;
+package org.citrusframework.util;
 
 import java.util.Optional;
 
-import static org.citrusframework.common.TestLoader.XML;
-import static org.citrusframework.common.TestLoader.lookup;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
+import static java.util.Optional.ofNullable;
 
-/**
- * @author Christoph Deppisch
- */
-public class TestLoaderTest {
+public final class SystemProvider {
 
-    @Test
-    public void shouldLookupTestLoader() {
-        assertTrue(lookup().containsKey(XML));
+    public Optional<String> getEnv(String envVarName) {
+        return ofNullable(System.getenv(envVarName));
+    }
 
-        Optional<TestLoader> lookup = lookup(XML);
-        assertTrue(lookup.isPresent());
-        assertEquals(XmlTestLoader.class, lookup.get().getClass());
+    public Optional<String> getProperty(String propertyName) {
+        return ofNullable(System.getProperty(propertyName));
     }
 }

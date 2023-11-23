@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,8 +114,8 @@ public class JUnit4CitrusSupport implements GherkinTestActionRunner, CitrusFrame
         testLoader.setTestName(testName);
         testLoader.setPackageName(packageName);
 
-        if (testLoader instanceof TestSourceAware) {
-            ((TestSourceAware) testLoader).setSource(source);
+        if (testLoader instanceof TestSourceAware testSourceAware) {
+            testSourceAware.setSource(source);
         }
 
         return testLoader;

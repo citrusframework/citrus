@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 the original author or authors.
+ * Copyright 2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -19,26 +19,23 @@
 
 package org.citrusframework.xml;
 
-import org.citrusframework.common.TestLoader;
+import org.citrusframework.common.TestLoaderAndExecutor;
 import org.testng.annotations.Test;
 
 import java.util.Optional;
 
 import static org.citrusframework.common.TestLoader.XML;
-import static org.citrusframework.common.TestLoader.lookup;
+import static org.citrusframework.common.TestLoaderAndExecutor.lookup;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
-/**
- * @author Christoph Deppisch
- */
-public class TestLoaderTest {
+public class TestLoaderAndExecutorTest {
 
     @Test
     public void shouldLookupTestLoader() {
         assertTrue(lookup().containsKey(XML));
 
-        Optional<TestLoader> lookup = lookup(XML);
+        Optional<TestLoaderAndExecutor> lookup = lookup(XML);
         assertTrue(lookup.isPresent());
         assertEquals(XmlTestLoader.class, lookup.get().getClass());
     }

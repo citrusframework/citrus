@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2020-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -18,10 +18,6 @@
  */
 
 package org.citrusframework.testng;
-
-import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.List;
 
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
@@ -50,6 +46,16 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 
+import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.List;
+
+import static java.lang.String.format;
+import static org.citrusframework.testng.TestNGHelper.BUILDER_ATTRIBUTE;
+import static org.citrusframework.testng.TestNGHelper.createMethodTestLoaders;
+import static org.citrusframework.testng.TestNGHelper.createTestCaseRunner;
+import static org.citrusframework.testng.TestNGHelper.invokeTestMethod;
+
 /**
  * Basic Citrus TestNG support base class automatically handles test case runner creation. Also provides method parameter resolution
  * and resource injection. Users can just extend this class and make use of the action runner methods provided in {@link org.citrusframework.TestActionRunner}
@@ -75,7 +81,7 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
             return;
         }
 
-        List<TestLoader> methodTestLoaders = TestNGHelper.createMethodTestLoaders(method, this::createTestLoader);
+        List<TestLoader> methodTestLoaders = createMethodTestLoaders(method, this::createTestLoader);
         if (method.getAnnotation(CitrusTest.class) != null ||
                 method.getAnnotation(CitrusTestSource.class) != null) {
             try {
@@ -113,9 +119,9 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
             TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
-            TestCaseRunner runner = TestNGHelper.createTestCaseRunner(this, method, ctx);
+            TestCaseRunner runner = createTestCaseRunner(this, method, ctx);
             runner.groups(testResult.getMethod().getGroups());
-            testResult.setAttribute(TestNGHelper.BUILDER_ATTRIBUTE, runner);
+            testResult.setAttribute(BUILDER_ATTRIBUTE, runner);
 
             delegate = runner;
 
@@ -125,10 +131,10 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
             if (method.getAnnotation(CitrusTestSource.class) != null && !methodTestLoaders.isEmpty()) {
                 testLoader = methodTestLoaders.get(invocationCount % methodTestLoaders.size());
 
-                if (testLoader instanceof TestSourceAware) {
+                if (testLoader instanceof TestSourceAware testSourceAware) {
                     String[] sources = method.getAnnotation(CitrusTestSource.class).sources();
                     if (sources.length > 0) {
-                        ((TestSourceAware) testLoader).setSource(sources[0]);
+                        testSourceAware.setSource(sources[0]);
                     }
                 }
             } else {
@@ -137,14 +143,14 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
             CitrusAnnotations.injectAll(testLoader, citrus, ctx);
             CitrusAnnotations.injectTestRunner(testLoader, runner);
-            testLoader.configureTestCase(t -> {
-                if (t instanceof TestGroupAware) {
-                    ((TestGroupAware) t).setGroups(testResult.getMethod().getGroups());
+            testLoader.configureTestCase(testCase -> {
+                if (testCase instanceof TestGroupAware testGroupAware) {
+                    testGroupAware.setGroups(testResult.getMethod().getGroups());
                 }
             });
-            TestNGHelper.invokeTestMethod(this, testResult, method, testLoader, ctx, invocationCount);
+            invokeTestMethod(this, testResult, method, testLoader, ctx, invocationCount);
         } finally {
-            testResult.removeAttribute(TestNGHelper.BUILDER_ATTRIBUTE);
+            testResult.removeAttribute(BUILDER_ATTRIBUTE);
         }
     }
 
@@ -233,7 +239,7 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
      */
     protected TestLoader createTestLoader(String testName, String packageName, String type) {
         TestLoader testLoader = TestLoader.lookup(type)
-                .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing test loader for type '%s'", type)));
+                .orElseThrow(() -> new CitrusRuntimeException(format("Missing test loader for type '%s'", type)));
 
         testLoader.setTestClass(getClass());
         testLoader.setTestName(testName);
