@@ -1,6 +1,6 @@
 package org.citrusframework.variable.dictionary;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;

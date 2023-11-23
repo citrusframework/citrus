@@ -16,6 +16,14 @@
 
 package org.citrusframework.report;
 
+import org.citrusframework.TestResult;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.PropertyUtils;
+import org.citrusframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,14 +38,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
-import org.citrusframework.TestResult;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.PropertyUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.citrusframework.util.StringUtils;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
 
 /**
  * @author Christoph Deppisch
@@ -112,12 +113,12 @@ public class JUnitReporter extends AbstractTestReporter {
         for (TestResult result: results) {
             Properties detailProps = new Properties();
             detailProps.put("test.class", result.getClassName());
-            detailProps.put("test.name", StringEscapeUtils.escapeXml(result.getTestName()));
+            detailProps.put("test.name", escapeXml(result.getTestName()));
             detailProps.put("test.duration", "0.0");
 
             if (result.isFailed()) {
                 detailProps.put("test.error.cause", Optional.ofNullable(result.getCause()).map(Object::getClass).map(Class::getName).orElseGet(() -> Objects.toString(result.getFailureType(), "")));
-                detailProps.put("test.error.msg", StringEscapeUtils.escapeXml(result.getErrorMessage()));
+                detailProps.put("test.error.msg", escapeXml(result.getErrorMessage()));
                 detailProps.put("test.error.stackTrace", Optional.ofNullable(result.getCause()).map(cause -> {
                     StringWriter writer = new StringWriter();
                     cause.printStackTrace(new PrintWriter(writer));

@@ -16,20 +16,6 @@
 
 package org.citrusframework.mail.message;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import javax.xml.transform.Source;
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
@@ -55,6 +41,20 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import javax.xml.transform.Source;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -398,9 +398,9 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
      */
     static String parseCharsetFromContentType(String contentType) {
         final String charsetPrefix = "charset=";
-        if (org.apache.commons.lang.StringUtils.contains(contentType, charsetPrefix)) {
-            String charsetName = org.apache.commons.lang.StringUtils.substringAfter(contentType, charsetPrefix);
-            return org.apache.commons.lang.StringUtils.substringBefore(charsetName, ";");
+        if (org.apache.commons.lang3.StringUtils.contains(contentType, charsetPrefix)) {
+            String charsetName = org.apache.commons.lang3.StringUtils.substringAfter(contentType, charsetPrefix);
+            return org.apache.commons.lang3.StringUtils.substringBefore(charsetName, ";");
         } else {
             return CitrusSettings.CITRUS_FILE_ENCODING;
         }

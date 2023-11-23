@@ -16,12 +16,13 @@
 
 package org.citrusframework.functions.core;
 
-import java.util.List;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
-import org.apache.commons.lang.StringEscapeUtils;
+
+import java.util.List;
+
+import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
 
 /**
  * Escapes XML fragment with escaped characters for '<', '>'.
@@ -36,7 +37,7 @@ public class EscapeXmlFunction implements Function {
             throw new InvalidFunctionUsageException("Invalid function parameter usage! Expected single parameter but found: " + parameterList.size());
         }
 
-        return StringEscapeUtils.escapeXml(parameterList.get(0));
+        return escapeXml(parameterList.get(0));
     }
 
 }
