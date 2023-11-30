@@ -133,7 +133,7 @@ public class SeleniumTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getName(), "SeleniumTest");
         Assert.assertEquals(result.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(result.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
-        Assert.assertEquals(result.getActionCount(), 23L);
+        Assert.assertEquals(result.getActionCount(), 25L);
 
         int actionIndex = 0;
 
@@ -220,6 +220,23 @@ public class SeleniumTest extends AbstractXmlActionTest {
         Assert.assertEquals(dropDownMultiSelect.getBy().toString(), "By.id: title");
         Assert.assertNull(dropDownMultiSelect.getOption());
         Assert.assertEquals(dropDownMultiSelect.getOptions().size(), 2L);
+
+        FillFormAction fillForm = (FillFormAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(fillForm.getBrowser());
+        Assert.assertEquals(fillForm.getName(), "selenium:fill-form");
+        Assert.assertNull(fillForm.getSubmitButton());
+        Assert.assertEquals(fillForm.getFormFields().size(), 2L);
+        Assert.assertEquals(fillForm.getFormFields().get(By.id("username")), "foo_user");
+        Assert.assertEquals(fillForm.getFormFields().get(By.id("password")), "secret");
+
+        fillForm = (FillFormAction) result.getTestAction(actionIndex++);
+        Assert.assertNull(fillForm.getBrowser());
+        Assert.assertEquals(fillForm.getName(), "selenium:fill-form");
+        Assert.assertNotNull(fillForm.getSubmitButton());
+        Assert.assertEquals(fillForm.getSubmitButton(), By.id("save"));
+        Assert.assertEquals(fillForm.getFormFields().size(), 2L);
+        Assert.assertEquals(fillForm.getFormFields().get(By.id("username")), "foo_user");
+        Assert.assertEquals(fillForm.getFormFields().get(By.id("password")), "secret");
 
         WaitUntilAction waitUntilAction = (WaitUntilAction) result.getTestAction(actionIndex++);
         Assert.assertNull(waitUntilAction.getBrowser());

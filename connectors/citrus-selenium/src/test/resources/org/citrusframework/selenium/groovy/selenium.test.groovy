@@ -103,6 +103,23 @@ actions {
     )
 
     $(selenium()
+        .fillForm()
+        .field("username", "foo_user")
+        .field("password", "secret")
+    )
+
+    $(selenium()
+        .fillForm()
+        .fromJson("""
+            {
+              "username": "foo_user",
+              "password": "secret"
+            }
+        """)
+        .submit(By.id("save"))
+    )
+
+    $(selenium()
         .waitUntil()
         .hidden()
         .element(By.id("dialog"))

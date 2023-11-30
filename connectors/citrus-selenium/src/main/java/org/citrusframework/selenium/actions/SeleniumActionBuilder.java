@@ -205,6 +205,16 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
     }
 
     /**
+     * Fill form action.
+     */
+    public FillFormAction.Builder fillForm() {
+		FillFormAction.Builder builder = new FillFormAction.Builder()
+                .browser(seleniumBrowser);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
      * Check input action.
      */
     public CheckInputAction.Builder checkInput() {

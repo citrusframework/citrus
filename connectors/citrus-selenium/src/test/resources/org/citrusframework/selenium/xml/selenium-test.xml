@@ -105,6 +105,28 @@
     </selenium>
 
     <selenium>
+      <fill-form>
+        <fields>
+          <field id="username" value="foo_user"/>
+          <field id="password">
+            <value>secret</value>
+          </field>
+        </fields>
+      </fill-form>
+    </selenium>
+
+    <selenium>
+      <fill-form submit="save">
+        <json>
+          {
+            "username": "foo_user",
+            "password": "secret"
+          }
+        </json>
+      </fill-form>
+    </selenium>
+
+    <selenium>
       <wait until="hidden">
         <element id="dialog"/>
       </wait>

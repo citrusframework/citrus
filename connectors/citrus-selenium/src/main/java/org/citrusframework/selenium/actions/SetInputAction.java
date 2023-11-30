@@ -46,7 +46,7 @@ public class SetInputAction extends FindElementAction {
         super.execute(webElement, browser, context);
 
         String tagName = webElement.getTagName();
-        if (null == tagName || !"select".equals(tagName.toLowerCase())) {
+        if (!"select".equalsIgnoreCase(tagName)) {
             webElement.clear();
             webElement.sendKeys(context.replaceDynamicContentInString(value));
         } else {

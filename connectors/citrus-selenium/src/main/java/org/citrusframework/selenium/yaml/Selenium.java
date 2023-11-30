@@ -115,6 +115,13 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     }
 
     /**
+     * Fill form action.
+     */
+    public void setFillForm(FillForm builder) {
+        this.builder = builder;
+    }
+
+    /**
      * Check input action.
      */
     public void setCheckInput(CheckInput builder) {
