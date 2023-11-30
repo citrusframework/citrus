@@ -131,6 +131,14 @@ public class Selenium implements TestActionBuilder<TestAction>, ReferenceResolve
     }
 
     /**
+     * Fill form action.
+     */
+    @XmlElement(name = "fill-form")
+    public void setFillForm(FillForm builder) {
+        this.builder = builder;
+    }
+
+    /**
      * Check input action.
      */
     @XmlElement(name = "check-input")

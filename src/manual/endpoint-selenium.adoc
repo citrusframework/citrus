@@ -158,6 +158,7 @@ selenium:navigate:: Navigates to new page url (including history back, forward a
 selenium:set-input:: Finds input element and sets value
 selenium:check-input:: Finds checkbox element and sets/unsets value
 selenium:dropdown-select:: Finds dropdown element and selects single or multiple value/s
+selenium:fill-form:: Fills form with given values and optionally submits form afterwards. Supports setting multiple fields at the same time.
 selenium:page:: Instantiate page object with dependency injection and execute page action with verification
 selenium:open:: Open new window
 selenium:close:: Close window by given name
@@ -357,6 +358,63 @@ selenium().select("happy").element(By.id("user-mood"));
 
 The actions above select dropdown options and set user input on text fields and checkboxes. As usual the form elements are selected by some properties such as
 ids, names or xpath expressions.
+
+[[form-fill-actions]]
+== Fill form
+
+The fill form action sets multiple form fields with given values and optionally submits the form afterwards.
+
+.XML DSL
+[source,xml]
+----
+<selenium:fill-form submit="save">
+  <selenium:fields>
+    <selenium:field id="username" value="foo_user"/>
+    <selenium:field id="password" value="${secret}"/>
+  </selenium:fields>
+</selenium:fill-form>
+----
+
+.Java DSL
+[source,java]
+----
+selenium().fillForm()
+        .field("username", "foo_user")
+        .field("password", "${secret}")
+        .submit("save");
+----
+
+The actions above set the form fields identified by its id and sets the given values. The actions supports input fields, checkboxes and drop-down select controls. Optionally the form gets submitted by clicking on the given submit button once all fields are set.
+
+The user also has the opportunity to set the form fields via Json object where each property in the Json object represents a form field.
+
+.XML DSL
+[source,xml]
+----
+<selenium:fill-form submit="save">
+    <selenium:json>
+      {
+        "username": "foo_user",
+        "password": "secret"
+      }
+    </selenium:json>
+</selenium:fill-form>
+----
+
+.Java DSL
+[source,java]
+----
+selenium().fillForm()
+        .fromJson("""
+            {
+              "username": "foo_user",
+              "password": "secret"
+            }
+        """)
+        .submit(By.id("save");
+----
+
+This will set the form fields `username` and `password` with the given values before submitting the form.
 
 [[page-actions]]
 == Page actions

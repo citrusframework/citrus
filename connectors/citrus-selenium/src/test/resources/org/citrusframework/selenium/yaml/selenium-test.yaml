@@ -80,6 +80,20 @@ actions:
           - "Dr."
 
   - selenium:
+      fill-form:
+        fields:
+          - id: "username"
+            value: "foo_user"
+          - id: "password"
+            value: "secret"
+
+  - selenium:
+      fill-form:
+        submit: "save"
+        json: |
+          { "username": "foo_user", "password": "secret" }
+
+  - selenium:
       wait-until:
         condition: "hidden"
         element:

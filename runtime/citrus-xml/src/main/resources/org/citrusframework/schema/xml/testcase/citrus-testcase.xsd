@@ -1313,6 +1313,30 @@
           </xs:complexType>
         </xs:element>
 
+        <xs:element name="fill-form">
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="fields">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="field" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="value" type="xs:string" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="json" type="xs:string"/>
+            </xs:choice>
+            <xs:attribute name="submit" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+
         <xs:element name="dropdown-select">
           <xs:complexType>
             <xs:sequence>
