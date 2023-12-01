@@ -151,7 +151,7 @@ public class EchoSteps {
                 receive("echoEndpoint")
                     .message()
                     .type(MessageType.PLAINTEXT)
-                    .body("You just said: " + body));
+                    .body(body));
     }
 
 }
