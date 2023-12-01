@@ -16,15 +16,21 @@
 
 package org.citrusframework.http.actions;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
 /**
  * Action executes http server operations such as receiving requests and sending response messages.
@@ -33,6 +39,8 @@ import org.springframework.http.HttpStatus;
  * @since 2.4
  */
 public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().enable(INDENT_OUTPUT);
 
     /** Bean reference resolver */
     private ReferenceResolver referenceResolver;
@@ -71,6 +79,32 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
      */
     public HttpServerResponseActionBuilder respond(HttpStatus status) {
         return new HttpServerSendActionBuilder().response(status);
+    }
+
+    /**
+     * Generic response builder for sending JSON response messages to client with response status 200 (OK).
+     *
+     * @return
+     */
+    public HttpServerResponseActionBuilder.HttpMessageBuilderSupport respondOkJson(String json) {
+        return new HttpServerSendActionBuilder()
+                .response(HttpStatus.OK)
+                .message()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(json);
+    }
+
+    /**
+     * Generic response builder for sending JSON response messages to client with response status 200 (OK).
+     *
+     * @return
+     */
+    public HttpServerResponseActionBuilder.HttpMessageBuilderSupport respondOkJson(Object json) {
+        try {
+            return respondOkJson(OBJECT_MAPPER.writeValueAsString(json));
+        } catch (JsonProcessingException e) {
+            throw new CitrusRuntimeException("Failed to write JSON body as string!", e);
+        }
     }
 
     /**
