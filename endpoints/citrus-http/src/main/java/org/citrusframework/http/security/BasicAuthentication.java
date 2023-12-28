@@ -1,5 +1,5 @@
 /*
- *  Copyright 2023 the original author or authors.
+ *  Copyright 2023-2024 the original author or authors.
  *
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements. See the NOTICE file distributed with
@@ -19,9 +19,6 @@
 
 package org.citrusframework.http.security;
 
-import java.net.URL;
-import java.util.Collections;
-
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -30,7 +27,12 @@ import org.citrusframework.http.client.HttpClient;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.util.StringUtils;
+
+import java.net.URL;
+
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Basic authentication implementation able to create a proper request factory with basic auth client credentials.
@@ -42,8 +44,7 @@ public class BasicAuthentication implements HttpAuthentication {
     private final String password;
 
     private String realm = "";
-
-    private String[] userRoles = new String[] { "citrus" };
+    private String[] userRoles = new String[]{"citrus"};
 
     public BasicAuthentication(String username, String password) {
         this.username = username;
@@ -54,8 +55,8 @@ public class BasicAuthentication implements HttpAuthentication {
     public SecurityHandler getSecurityHandler(String resourcePath) {
         try {
             SecurityHandlerFactory securityHandlerFactory = new SecurityHandlerFactory();
-            securityHandlerFactory.setUsers(Collections.singletonList(new User(username, password, userRoles)));
-            securityHandlerFactory.setConstraints(Collections.singletonMap(resourcePath, new BasicAuthConstraint(userRoles)));
+            securityHandlerFactory.setUsers(singletonList(new User(username, password, userRoles)));
+            securityHandlerFactory.setConstraints(singletonMap(resourcePath, new BasicAuthConstraint(userRoles)));
 
             securityHandlerFactory.setAuthenticator(new BasicAuthenticator());
             securityHandlerFactory.setRealm(realm);
@@ -78,9 +79,9 @@ public class BasicAuthentication implements HttpAuthentication {
             }
 
             URL url = null;
-            if (StringUtils.hasText(requestUrl)) {
+            if (hasText(requestUrl)) {
                 url = new URL(requestUrl);
-            } else if (httpClient != null && StringUtils.hasText(httpClient.getEndpointConfiguration().getRequestUrl())) {
+            } else if (httpClient != null && hasText(httpClient.getEndpointConfiguration().getRequestUrl())) {
                 url = new URL(httpClient.getEndpointConfiguration().getRequestUrl());
             }
 

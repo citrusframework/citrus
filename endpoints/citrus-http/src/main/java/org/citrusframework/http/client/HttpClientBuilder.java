@@ -243,8 +243,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
      * @return
      */
     public HttpClientBuilder authentication(HttpAuthentication auth) {
-        endpoint.getEndpointConfiguration().setRequestFactory(
-                auth.getRequestFactory(endpoint.getEndpointConfiguration().getRequestUrl(), endpoint));
+        endpoint.getEndpointConfiguration().setRequestFactory(auth.getRequestFactory(endpoint.getEndpointConfiguration().getRequestUrl(), endpoint));
         return this;
     }
 
@@ -253,7 +252,8 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
      * @return
      */
     public HttpClientBuilder secured(HttpSecureConnection conn) {
-        endpoint.getEndpointConfiguration().getHttpClient()
+        endpoint.getEndpointConfiguration()
+                .getHttpClient()
                 .setConnectionManager(conn.getClientConnectionManager());
         return this;
     }

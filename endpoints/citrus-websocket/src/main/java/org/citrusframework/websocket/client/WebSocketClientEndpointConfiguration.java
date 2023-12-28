@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,24 @@
 
 package org.citrusframework.websocket.client;
 
-import java.util.Collections;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.websocket.endpoint.AbstractWebSocketEndpointConfiguration;
 import org.citrusframework.websocket.handler.CitrusWebSocketHandler;
+import org.eclipse.jetty.ee10.websocket.jakarta.common.JakartaWebSocketExtension;
 import org.eclipse.jetty.websocket.core.internal.PerMessageDeflateExtension;
-import org.eclipse.jetty.websocket.jakarta.common.JakartaWebSocketExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.adapter.standard.StandardToWebSocketExtensionAdapter;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
-import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.concurrent.CompletableFuture;
+
+import static java.lang.String.format;
+import static java.util.Collections.singletonList;
+import static org.springframework.web.util.UriComponentsBuilder.fromUriString;
 
 /**
  * Web socket endpoint configuration for client side web socket communication.
@@ -75,17 +77,20 @@ public class WebSocketClientEndpointConfiguration extends AbstractWebSocketEndpo
 
         if (webSocketHttpHeaders == null) {
             webSocketHttpHeaders = new WebSocketHttpHeaders();
-            webSocketHttpHeaders.setSecWebSocketExtensions(Collections.singletonList(new StandardToWebSocketExtensionAdapter(new JakartaWebSocketExtension(new PerMessageDeflateExtension().getName()))));
-        }
+            try (PerMessageDeflateExtension perMessageDeflateExtension = new PerMessageDeflateExtension()) {
+                webSocketHttpHeaders.setSecWebSocketExtensions(singletonList(new StandardToWebSocketExtensionAdapter(new JakartaWebSocketExtension(perMessageDeflateExtension.getName()))));
+            }        }
 
-        ListenableFuture<WebSocketSession> future = client.doHandshake(handler, webSocketHttpHeaders, UriComponentsBuilder.fromUriString(url).buildAndExpand().encode().toUri());
+        CompletableFuture<WebSocketSession> future = client.execute(handler, webSocketHttpHeaders, fromUriString(url).buildAndExpand().encode().toUri());
+
         try {
             future.get();
         } catch (Exception e) {
-            String errMsg = String.format("Failed to connect to Web Socket server - '%s'", url);
+            String errMsg = format("Failed to connect to Web Socket server - '%s'", url);
             logger.error(errMsg);
             throw new CitrusRuntimeException(errMsg);
         }
+
         return handler;
     }
 

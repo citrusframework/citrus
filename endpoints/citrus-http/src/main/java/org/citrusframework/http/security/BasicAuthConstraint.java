@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,47 @@
 
 package org.citrusframework.http.security;
 
-import org.eclipse.jetty.util.security.Constraint;
+import org.eclipse.jetty.security.Constraint;
+
+import java.util.Set;
+
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toSet;
+import static org.eclipse.jetty.security.Authenticator.BASIC_AUTH;
+import static org.eclipse.jetty.security.Constraint.Transport.INHERIT;
 
 /**
- * Convenient constraint instantiation for basic authentication and multiple user roles.
- * 
+ * Convenient constraint instantiation for basic authentication and multiple user roles. Access allowed only for
+ * authenticated user with specific role(s).
+ *
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class BasicAuthConstraint extends Constraint {
+public class BasicAuthConstraint implements Constraint {
 
-    /** Serialization thingy. */
-    private static final long serialVersionUID = -2295787554785979668L;
+    private final Set<String> userRoles;
 
-    /**
-     * Default constructor using fields.
-     */
-    public BasicAuthConstraint(String[] roles) {
-        setName(Constraint.__BASIC_AUTH);
-        setRoles(roles);
-        setAuthenticate(true);
+    public BasicAuthConstraint(String[] userRoles) {
+        this.userRoles = stream(userRoles).collect(toSet());
+    }
+
+    @Override
+    public String getName() {
+        return BASIC_AUTH;
+    }
+
+    @Override
+    public Transport getTransport() {
+        return INHERIT;
+    }
+
+    @Override
+    public Authorization getAuthorization() {
+        return Authorization.SPECIFIC_ROLE;
+    }
+
+    @Override
+    public Set<String> getRoles() {
+        return userRoles;
     }
 }

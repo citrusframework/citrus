@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 the original author or authors
+ *    Copyright 2018-2024 the original author or authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,16 +16,17 @@
 
 package org.citrusframework.http.message;
 
+import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import jakarta.servlet.http.Cookie;
 import java.util.Collections;
 
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
 
 public class CookieConverterTest {
@@ -36,235 +37,219 @@ public class CookieConverterTest {
     private HttpHeaders cookieHeaders;
 
     @BeforeMethod
-    public void setUp(){
+    public void setUp() {
         cookie = new Cookie("foo", "bar");
         cookieHeaders = new HttpHeaders();
     }
 
     @Test
-    public void testCookiesAreParsedCorrectly(){
-
-        //GIVEN
+    public void testCookiesAreParsedCorrectly() {
+        // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
-        //WHEN
+        // WHEN
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
-        //THEN
+        // THEN
         assertEquals("foo", cookies[0].getName());
         assertEquals("bar", cookies[0].getValue());
     }
 
     @Test
-    public void testAdditionalCookieDirectivesAreDiscarded(){
-
-        //GIVEN
+    public void testAdditionalCookieDirectivesAreDiscarded() {
+        // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;HttpOnly"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
-        //WHEN
+        // WHEN
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
-        //THEN
+        // THEN
         assertEquals("foo", cookies[0].getName());
         assertEquals("bar", cookies[0].getValue());
     }
 
     @Test
-    public void testCookieCommentIsPreserved(){
-
-        //GIVEN
+    public void testCookieCommentIsNoLongerPreserved() {
+        // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Comment=wtf"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
-        //WHEN
+        // WHEN
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
-        //THEN
-        assertEquals("wtf", cookies[0].getComment());
+        // THEN
+        assertNull(cookies[0].getComment());
     }
 
     @Test
-    public void testCookieDomainIsPreserved(){
-
-        //GIVEN
+    public void testCookieDomainIsPreserved() {
+        // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Domain=whatever"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
-        //WHEN
+        // WHEN
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
-        //THEN
+        // THEN
         assertEquals("whatever", cookies[0].getDomain());
     }
 
     @Test
-    public void testCookieMaxAgeIsPreserved(){
-
-        //GIVEN
+    public void testCookieMaxAgeIsPreserved() {
+        // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Max-Age=42"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
-        //WHEN
+        // WHEN
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
-        //THEN
+        // THEN
         assertEquals(42, cookies[0].getMaxAge());
     }
 
     @Test
-    public void testCookiePathIsPreserved(){
-
-        //GIVEN
+    public void testCookiePathIsPreserved() {
+        // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Path=foobar"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
-        //WHEN
+        // WHEN
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
-        //THEN
+        // THEN
         assertEquals("foobar", cookies[0].getPath());
     }
 
 
     @Test
-    public void testCookieSecureIsPreserved(){
-
-        //GIVEN
+    public void testCookieSecureIsPreserved() {
+        // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Secure"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
-        //WHEN
+        // WHEN
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
-        //THEN
+        // THEN
         assertTrue(cookies[0].getSecure());
     }
 
     @Test
-    public void testCookieVersionIsPreserved(){
-
-        //GIVEN
+    public void testCookieVersionIsNoLongerPreserved() {
+        // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Version=1"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
-        //WHEN
+        // WHEN
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
-        //THEN
-        assertEquals(1, cookies[0].getVersion());
+        // THEN
+        assertEquals(0, cookies[0].getVersion());
     }
 
     @Test
-    public void testCookieHttpOnlyIsPreserved(){
-
-        //GIVEN
+    public void testCookieHttpOnlyIsPreserved() {
+        // GIVEN
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;HttpOnly"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
-        //WHEN
+        // WHEN
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
-        //THEN
+        // THEN
         assertTrue(cookies[0].isHttpOnly());
     }
 
     @Test
-    public void testCookieStringContainsVersion(){
-
-        //GIVEN
+    public void testCookieStringDoesNotContainVersion() {
+        // GIVEN
         cookie.setVersion(42);
-        String expectedCookieString = "foo=bar;Version=42";
+        String expectedCookieString = "foo=bar";
 
-        //WHEN
+        // WHEN
         final String cookieString = cookieConverter.getCookieString(cookie);
 
-        //THEN
-        assertEquals(cookieString, expectedCookieString);
+        // THEN
+        assertEquals(expectedCookieString, cookieString);
     }
 
     @Test
-    public void testCookieStringContainsPath(){
-
-        //GIVEN
+    public void testCookieStringContainsPath() {
+        // GIVEN
         cookie.setPath("/foo/bar");
         String expectedCookieString = "foo=bar;Path=/foo/bar";
 
-        //WHEN
+        // WHEN
         final String cookieString = cookieConverter.getCookieString(cookie);
 
-        //THEN
-        assertEquals(cookieString, expectedCookieString);
+        // THEN
+        assertEquals(expectedCookieString, cookieString);
     }
 
     @Test
-    public void testCookieStringContainsDomain(){
-
-        //GIVEN
+    public void testCookieStringContainsDomain() {
+        // GIVEN
         cookie.setDomain("localhost");
         String expectedCookieString = "foo=bar;Domain=localhost";
 
-        //WHEN
+        // WHEN
         final String cookieString = cookieConverter.getCookieString(cookie);
 
-        //THEN
-        assertEquals(cookieString, expectedCookieString);
+        // THEN
+        assertEquals(expectedCookieString, cookieString);
     }
 
     @Test
-    public void testCookieStringContainsMaxAge(){
-
-        //GIVEN
+    public void testCookieStringContainsMaxAge() {
+        // GIVEN
         cookie.setMaxAge(42);
         String expectedCookieString = "foo=bar;Max-Age=42";
 
-        //WHEN
+        // WHEN
         final String cookieString = cookieConverter.getCookieString(cookie);
 
-        //THEN
-        assertEquals(cookieString, expectedCookieString);
+        // THEN
+        assertEquals(expectedCookieString, cookieString);
     }
 
     @Test
-    public void testCookieStringContainsComment(){
-
-        //GIVEN
+    public void testCookieStringContainsComment() {
+        // GIVEN
         cookie.setComment("whatever");
-        String expectedCookieString = "foo=bar;Comment=whatever";
+        String expectedCookieString = "foo=bar";
 
-        //WHEN
+        // WHEN
         final String cookieString = cookieConverter.getCookieString(cookie);
 
-        //THEN
-        assertEquals(cookieString, expectedCookieString);
+        // THEN
+        assertEquals(expectedCookieString, cookieString);
     }
 
     @Test
-    public void testCookieStringContainsSecure(){
-
-        //GIVEN
+    public void testCookieStringContainsSecure() {
+        // GIVEN
         cookie.setSecure(true);
         String expectedCookieString = "foo=bar;Secure";
 
-        //WHEN
+        // WHEN
         final String cookieString = cookieConverter.getCookieString(cookie);
 
-        //THEN
-        assertEquals(cookieString, expectedCookieString);
+        // THEN
+        assertEquals(expectedCookieString, cookieString);
     }
 
     @Test
-    public void testCookieStringContainsHttpOnly(){
-
-        //GIVEN
+    public void testCookieStringContainsHttpOnly() {
+        // GIVEN
         cookie.setHttpOnly(true);
         String expectedCookieString = "foo=bar;HttpOnly";
 
-        //WHEN
+        // WHEN
         final String cookieString = cookieConverter.getCookieString(cookie);
 
-        //THEN
-        assertEquals(cookieString, expectedCookieString);
+        // THEN
+        assertEquals(expectedCookieString, cookieString);
     }
 }

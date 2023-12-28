@@ -75,7 +75,7 @@
     </bean>
 
     <bean id ="servletHandler" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.servlet.ServletHandler</value></constructor-arg>
+        <constructor-arg><value type="java.lang.Class">org.eclipse.jetty.ee10.servlet.ServletHandler</value></constructor-arg>
         <constructor-arg value="servletHandler"/>
     </bean>
 

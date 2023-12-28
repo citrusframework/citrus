@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2023 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,16 @@ package org.citrusframework.http.integration;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
-import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
+import static org.citrusframework.http.security.HttpAuthentication.basic;
+import static org.citrusframework.util.SocketUtils.findAvailableTcpPort;
 
 /**
  * @author Christoph Deppisch
@@ -36,20 +36,20 @@ import static org.citrusframework.http.actions.HttpActionBuilder.http;
 @Test
 public class HttpBasicAuthJavaIT extends TestNGCitrusSpringSupport {
 
-    private final int port = SocketUtils.findAvailableTcpPort(8888);
+    private final int port = findAvailableTcpPort(8888);
 
     @BindToRegistry
     private final HttpServer basicAuthServer = new HttpServerBuilder()
             .port(port)
             .autoStart(true)
             .defaultStatus(HttpStatus.NO_CONTENT)
-            .authentication("/secured/*", HttpAuthentication.basic("citrus", "secr3t"))
+            .authentication("/secured/*", basic("citrus", "secr3t"))
             .build();
 
     @BindToRegistry
     private final HttpClient basicAuthClient = new HttpClientBuilder()
             .requestUrl("http://localhost:%d".formatted(port))
-            .authentication(HttpAuthentication.basic("citrus", "secr3t"))
+            .authentication(basic("citrus", "secr3t"))
             .build();
 
     @CitrusTest

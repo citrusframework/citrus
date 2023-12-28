@@ -1,5 +1,5 @@
 /*
- *  Copyright 2023 the original author or authors.
+ *  Copyright 2023-2024 the original author or authors.
  *
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements. See the NOTICE file distributed with
@@ -27,6 +27,7 @@ public interface HttpAuthentication {
 
     /**
      * Security handler able to set up server user authentication on given resource path.
+     *
      * @param resourcePath
      * @return
      */
@@ -34,13 +35,14 @@ public interface HttpAuthentication {
 
     /**
      * Creates client request factory that uses the given authentication method.
+     *
      * @param requestUrl
      * @param httpClient
      * @return
      */
     ClientHttpRequestFactory getRequestFactory(String requestUrl, HttpClient httpClient);
 
-    static BasicAuthentication basic(String username, String password) {
+    static HttpAuthentication basic(String username, String password) {
         return new BasicAuthentication(username, password);
     }
 }

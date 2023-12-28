@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,21 @@
 
 package org.citrusframework.container;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.citrusframework.AbstractExceptionContainerBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.List;
+
+import static java.lang.String.format;
+import static org.citrusframework.validation.matcher.ValidationMatcherUtils.isValidationMatcherExpression;
+import static org.citrusframework.validation.matcher.ValidationMatcherUtils.resolveValidationMatcher;
 
 /**
  * Assert exception to happen in nested test action.
@@ -37,16 +40,24 @@ import org.slf4j.LoggerFactory;
  */
 public class Assert extends AbstractActionContainer {
 
-    /** Nested test action */
+    /**
+     * Nested test action
+     */
     private final TestActionBuilder<?> action;
 
-    /** Asserted exception */
+    /**
+     * Asserted exception
+     */
     private final Class<? extends Throwable> exception;
 
-    /** Localized exception message for control */
+    /**
+     * Localized exception message for control
+     */
     private final String message;
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(Assert.class);
 
     /**
@@ -63,13 +74,13 @@ public class Assert extends AbstractActionContainer {
     @Override
     public void doExecute(TestContext context) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Assert container asserting exceptions of type " + exception);
+            logger.debug("Assert container asserting exceptions of type {}", exception.getSimpleName());
         }
 
         try {
             executeAction(this.action.build(), context);
         } catch (Exception e) {
-            logger.debug("Validating caught exception ...");
+            logger.debug("Validating caught exception: {}", e.getMessage());
 
             if (!exception.isAssignableFrom(e.getClass())) {
                 throw new ValidationException("Validation failed for asserted exception type - expected: '" +
@@ -77,18 +88,20 @@ public class Assert extends AbstractActionContainer {
             }
 
             if (message != null) {
-                if (ValidationMatcherUtils.isValidationMatcherExpression(message)) {
-                    ValidationMatcherUtils.resolveValidationMatcher("message", e.getLocalizedMessage(), message, context);
+                if (isValidationMatcherExpression(message)) {
+                    resolveValidationMatcher("message", e.getLocalizedMessage(), message, context);
                 } else if (!context.replaceDynamicContentInString(message).equals(e.getLocalizedMessage())) {
                     throw new ValidationException("Validation failed for asserted exception message - expected: '" +
-                        message + "' but was: '" + e.getLocalizedMessage() + "'", e);
+                            message + "' but was: '" + e.getLocalizedMessage() + "'", e);
                 }
             }
 
             if (logger.isDebugEnabled()) {
                 logger.debug("Asserted exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
             }
+
             logger.info("Assert exception validation successful: All values OK");
+
             return;
         }
 
@@ -97,6 +110,7 @@ public class Assert extends AbstractActionContainer {
 
     /**
      * Gets the action.
+     *
      * @return the action
      */
     public TestAction getAction() {
@@ -105,6 +119,7 @@ public class Assert extends AbstractActionContainer {
 
     /**
      * Get the message to send.
+     *
      * @return the message
      */
     public String getMessage() {
@@ -113,6 +128,7 @@ public class Assert extends AbstractActionContainer {
 
     /**
      * Gets the exception.
+     *
      * @return the exception
      */
     public Class<? extends Throwable> getException() {
@@ -140,6 +156,7 @@ public class Assert extends AbstractActionContainer {
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         *
          * @return
          */
         public static Builder assertException() {
@@ -154,6 +171,7 @@ public class Assert extends AbstractActionContainer {
 
         /**
          * Catch exception type during execution.
+         *
          * @param exception
          * @return
          */
@@ -164,6 +182,7 @@ public class Assert extends AbstractActionContainer {
 
         /**
          * Catch exception type during execution.
+         *
          * @param type
          * @return
          */
@@ -171,13 +190,14 @@ public class Assert extends AbstractActionContainer {
             try {
                 this.exception = (Class<? extends Throwable>) Class.forName(type);
             } catch (ClassNotFoundException e) {
-                throw new CitrusRuntimeException(String.format("Failed to instantiate exception class of type '%s'", type), e);
+                throw new CitrusRuntimeException(format("Failed to instantiate exception class of type '%s'", type), e);
             }
             return this;
         }
 
         /**
          * Expect error message in exception.
+         *
          * @param message
          */
         public Builder message(String message) {
@@ -187,6 +207,7 @@ public class Assert extends AbstractActionContainer {
 
         /**
          * Sets the test action to execute during assert.
+         *
          * @param action
          */
         public Builder action(TestAction action) {
@@ -205,5 +226,4 @@ public class Assert extends AbstractActionContainer {
             return new Assert(this);
         }
     }
-
 }

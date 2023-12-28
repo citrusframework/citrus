@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.citrusframework.ws.server;
 
-import java.util.Arrays;
-
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.report.MessageListeners;
@@ -28,19 +26,22 @@ import org.citrusframework.ws.interceptor.LoggingEndpointInterceptor;
 import org.citrusframework.ws.message.converter.SoapMessageConverter;
 import org.citrusframework.ws.message.converter.WebServiceMessageConverter;
 import org.citrusframework.ws.servlet.CitrusMessageDispatcherServlet;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.ee10.servlet.ServletMapping;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.RequestLogHandler;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.servlet.ServletMapping;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
+
+import java.util.Arrays;
+
+import static java.nio.file.Paths.get;
 
 /**
  * Jetty server implementation wrapping a {@link Server} with Citrus server behaviour, so
@@ -50,61 +51,99 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
  */
 public class WebServiceServer extends AbstractServer {
 
-    /** Server port */
+    /**
+     * Server port
+     */
     private int port = 8080;
 
-    /** Server resource base */
+    /**
+     * Server resource base
+     */
     private String resourceBase = "src/main/resources";
 
-    /** Application context location for payload mappings etc. */
+    /**
+     * Application context location for payload mappings etc.
+     */
     private String contextConfigLocation = "classpath:org/citrusframework/ws/citrus-servlet-context.xml";
 
-    /** Server instance to be wrapped */
+    /**
+     * Server instance to be wrapped
+     */
     private Server jettyServer;
 
-    /** Use root application context as parent to build WebApplicationContext */
+    /**
+     * Use root application context as parent to build WebApplicationContext
+     */
     private boolean useRootContextAsParent = false;
 
-    /** Do only start one instance after another so we need a static lock object */
+    /**
+     * Do only start one instance after another so we need a static lock object
+     */
     private static Object serverLock = new Object();
 
-    /** Set custom connector with custom idle time and other configuration options */
+    /**
+     * Set custom connector with custom idle time and other configuration options
+     */
     private Connector connector;
 
-    /** Set list of custom connectors with custom configuration options */
+    /**
+     * Set list of custom connectors with custom configuration options
+     */
     private Connector[] connectors;
 
-    /** Servlet mapping path */
+    /**
+     * Servlet mapping path
+     */
     private String servletMappingPath = "/*";
 
-    /** Optional servlet name customization */
+    /**
+     * Optional servlet name customization
+     */
     private String servletName;
 
-    /** Context path */
+    /**
+     * Context path
+     */
     private String contextPath = "/";
 
-    /** Optional security handler for basic auth */
+    /**
+     * Optional security handler for basic auth
+     */
     private SecurityHandler securityHandler;
 
-    /** Optional servlet handler customization */
+    /**
+     * Optional servlet handler customization
+     */
     private ServletHandler servletHandler;
 
-    /** Should handle Http mime headers */
+    /**
+     * Should handle Http mime headers
+     */
     private boolean handleMimeHeaders = false;
 
-    /** Should handle Http attribute headers */
+    /**
+     * Should handle Http attribute headers
+     */
     private boolean handleAttributeHeaders = false;
 
-    /** Should keep soap envelope when creating internal message */
+    /**
+     * Should keep soap envelope when creating internal message
+     */
     private boolean keepSoapEnvelope = false;
 
-    /** Message converter implementation */
+    /**
+     * Message converter implementation
+     */
     private WebServiceMessageConverter messageConverter = new SoapMessageConverter();
 
-    /** Web service message factory bean name */
+    /**
+     * Web service message factory bean name
+     */
     private String messageFactoryName = MessageDispatcherServlet.DEFAULT_MESSAGE_FACTORY_BEAN_NAME;
 
-    /** Default SOAP header namespace and prefix */
+    /**
+     * Default SOAP header namespace and prefix
+     */
     private String soapHeaderNamespace;
     private String soapHeaderPrefix = "";
 
@@ -134,18 +173,20 @@ public class WebServiceServer extends AbstractServer {
                 jettyServer = new Server(port);
             }
 
-            HandlerCollection handlers = new HandlerCollection();
+            final Handler.Sequence handlers = new Handler.Sequence();
 
             ContextHandlerCollection contextCollection = new ContextHandlerCollection();
 
             ServletContextHandler contextHandler = new ServletContextHandler();
             contextHandler.setContextPath(contextPath);
-            contextHandler.setResourceBase(resourceBase);
+            contextHandler.setBaseResourceAsPath(get(resourceBase));
 
             //add the root application context as parent to the constructed WebApplicationContext
-            if (useRootContextAsParent && getReferenceResolver() instanceof SpringBeanReferenceResolver) {
-                contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-                        new ParentDelegatingWebApplicationContext(((SpringBeanReferenceResolver) getReferenceResolver()).getApplicationContext()));
+            if (useRootContextAsParent && getReferenceResolver() instanceof SpringBeanReferenceResolver springBeanReferenceResolver) {
+                contextHandler.setAttribute(
+                        WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
+                        new ParentDelegatingWebApplicationContext(springBeanReferenceResolver.getApplicationContext())
+                );
             }
 
             if (servletHandler == null) {
@@ -165,7 +206,6 @@ public class WebServiceServer extends AbstractServer {
             handlers.addHandler(contextCollection);
 
             handlers.addHandler(new DefaultHandler());
-            handlers.addHandler(new RequestLogHandler());
 
             jettyServer.setHandler(handlers);
 
@@ -179,6 +219,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Subclasses may add additional configuration on context handler.
+     *
      * @param contextHandler
      */
     protected void configure(ServletContextHandler contextHandler) {
@@ -218,6 +259,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the customized servlet name or default name if not set.
+     *
      * @return the servletName
      */
     public String getServletName() {
@@ -230,6 +272,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the port.
+     *
      * @return the port the port to get.
      */
     public int getPort() {
@@ -238,6 +281,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the port.
+     *
      * @param port the port to set
      */
     public void setPort(int port) {
@@ -246,6 +290,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the resourceBase.
+     *
      * @return the resourceBase the resourceBase to get.
      */
     public String getResourceBase() {
@@ -254,6 +299,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the resourceBase.
+     *
      * @param resourceBase the resourceBase to set
      */
     public void setResourceBase(String resourceBase) {
@@ -262,6 +308,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the contextConfigLocation.
+     *
      * @return the contextConfigLocation the contextConfigLocation to get.
      */
     public String getContextConfigLocation() {
@@ -270,6 +317,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the contextConfigLocation.
+     *
      * @param contextConfigLocation the contextConfigLocation to set
      */
     public void setContextConfigLocation(String contextConfigLocation) {
@@ -278,6 +326,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the connector.
+     *
      * @return the connector the connector to get.
      */
     public Connector getConnector() {
@@ -286,6 +335,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the connector.
+     *
      * @param connector the connector to set
      */
     public void setConnector(Connector connector) {
@@ -294,6 +344,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the connectors.
+     *
      * @return the connectors
      */
     public Connector[] getConnectors() {
@@ -306,6 +357,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the connectors.
+     *
      * @param connectors the connectors to set
      */
     public void setConnectors(Connector[] connectors) {
@@ -314,6 +366,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the servletMappingPath.
+     *
      * @return the servletMappingPath the servletMappingPath to get.
      */
     public String getServletMappingPath() {
@@ -322,6 +375,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the servletMappingPath.
+     *
      * @param servletMappingPath the servletMappingPath to set
      */
     public void setServletMappingPath(String servletMappingPath) {
@@ -330,6 +384,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the contextPath.
+     *
      * @return the contextPath the contextPath to get.
      */
     public String getContextPath() {
@@ -338,6 +393,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the contextPath.
+     *
      * @param contextPath the contextPath to set
      */
     public void setContextPath(String contextPath) {
@@ -346,6 +402,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the securityHandler.
+     *
      * @return the securityHandler the securityHandler to get.
      */
     public SecurityHandler getSecurityHandler() {
@@ -354,6 +411,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the securityHandler.
+     *
      * @param securityHandler the securityHandler to set
      */
     public void setSecurityHandler(SecurityHandler securityHandler) {
@@ -362,7 +420,8 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the servletHandler.
-     * @return the servletHandler the servletHandler to get.
+     *
+     * @return the servletHandler to get.
      */
     public ServletHandler getServletHandler() {
         return servletHandler;
@@ -370,6 +429,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the servletHandler.
+     *
      * @param servletHandler the servletHandler to set
      */
     public void setServletHandler(ServletHandler servletHandler) {
@@ -378,6 +438,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the servletName.
+     *
      * @param servletName the servletName to set
      */
     public void setServletName(String servletName) {
@@ -386,7 +447,8 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the useRootContextAsParent.
-     * @return the useRootContextAsParent the useRootContextAsParent to get.
+     *
+     * @return if to use the root context path as parent, or not.
      */
     public boolean isUseRootContextAsParent() {
         return useRootContextAsParent;
@@ -394,6 +456,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the useRootContextAsParent.
+     *
      * @param useRootContextAsParent the useRootContextAsParent to set
      */
     public void setUseRootContextAsParent(boolean useRootContextAsParent) {
@@ -402,6 +465,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Should handle mime headers.
+     *
      * @return
      */
     public boolean isHandleMimeHeaders() {
@@ -410,6 +474,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Enable mime headers in request message which is passed to endpoint adapter.
+     *
      * @param handleMimeHeaders the handleMimeHeaders to set
      */
     public void setHandleMimeHeaders(boolean handleMimeHeaders) {
@@ -436,6 +501,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the keep soap envelope flag.
+     *
      * @return
      */
     public boolean isKeepSoapEnvelope() {
@@ -444,6 +510,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the keep soap header flag.
+     *
      * @param keepSoapEnvelope
      */
     public void setKeepSoapEnvelope(boolean keepSoapEnvelope) {
@@ -452,6 +519,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the default soap header namespace.
+     *
      * @return
      */
     public String getSoapHeaderNamespace() {
@@ -460,6 +528,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the default soap header namespace.
+     *
      * @param soapHeaderNamespace
      */
     public void setSoapHeaderNamespace(String soapHeaderNamespace) {
@@ -468,6 +537,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the default soap header prefix.
+     *
      * @return
      */
     public String getSoapHeaderPrefix() {
@@ -476,6 +546,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the default soap header prefix.
+     *
      * @param soapHeaderPrefix
      */
     public void setSoapHeaderPrefix(String soapHeaderPrefix) {
@@ -484,6 +555,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the message converter.
+     *
      * @return
      */
     public WebServiceMessageConverter getMessageConverter() {
@@ -492,6 +564,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the message converter.
+     *
      * @param messageConverter
      */
     public void setMessageConverter(WebServiceMessageConverter messageConverter) {
@@ -500,6 +573,7 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Gets the message factory name.
+     *
      * @return
      */
     public String getMessageFactoryName() {
@@ -508,10 +582,10 @@ public class WebServiceServer extends AbstractServer {
 
     /**
      * Sets the message factory name.
+     *
      * @param messageFactoryName
      */
     public void setMessageFactoryName(String messageFactoryName) {
         this.messageFactoryName = messageFactoryName;
     }
-
 }

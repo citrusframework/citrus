@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package org.citrusframework.http.servlet;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 
 /**
@@ -36,8 +36,7 @@ import java.io.IOException;
 public class GzipServletFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         HttpServletRequest filteredRequest = request;
         HttpServletResponse filteredResponse = response;
 
@@ -51,8 +50,8 @@ public class GzipServletFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(filteredRequest, filteredResponse);
 
-        if (filteredResponse instanceof GzipHttpServletResponseWrapper) {
-            ((GzipHttpServletResponseWrapper) filteredResponse).finish();
+        if (filteredResponse instanceof GzipHttpServletResponseWrapper gzipHttpServletResponseWrapper) {
+            gzipHttpServletResponseWrapper.finish();
         }
     }
 

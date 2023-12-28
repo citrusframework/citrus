@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,6 @@
 
 package org.citrusframework.http.config.annotation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import jakarta.servlet.Filter;
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
@@ -34,12 +27,20 @@ import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.util.StringUtils;
+import org.eclipse.jetty.ee10.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.servlet.ServletHandler;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.lang3.stream.Streams.of;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * @author Christoph Deppisch
@@ -58,23 +59,23 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
 
         builder.debugLogging(annotation.debugLogging());
 
-        if (StringUtils.hasText(annotation.endpointAdapter())) {
+        if (hasText(annotation.endpointAdapter())) {
             builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
         builder.interceptors(referenceResolver.resolve(annotation.interceptors(), HandlerInterceptor.class));
 
-        if (StringUtils.hasText(annotation.actor())) {
+        if (hasText(annotation.actor())) {
             builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         builder.port(annotation.port());
 
-        if (StringUtils.hasText(annotation.contextConfigLocation())) {
+        if (hasText(annotation.contextConfigLocation())) {
             builder.contextConfigLocation(annotation.contextConfigLocation());
         }
 
-        if (StringUtils.hasText(annotation.resourceBase())) {
+        if (hasText(annotation.resourceBase())) {
             builder.resourceBase(annotation.resourceBase());
         }
 
@@ -86,8 +87,8 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
             builder.filters(referenceResolver.resolveAll(Filter.class)
                     .entrySet()
                     .stream()
-                    .filter(entry -> Stream.of(annotation.filters()).anyMatch(f -> f.equals(entry.getKey())))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+                    .filter(entry -> of(annotation.filters()).anyMatch(f -> f.equals(entry.getKey())))
+                    .collect(toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
 
         Map<String, String> filterMappings = new HashMap<>();
@@ -109,42 +110,42 @@ public class HttpServerConfigParser implements AnnotationConfigParser<HttpServer
             builder.binaryMediaTypes(binaryMediaTypes);
         }
 
-        if (StringUtils.hasText(annotation.connector())) {
+        if (hasText(annotation.connector())) {
             builder.connector(referenceResolver.resolve(annotation.connector(), Connector.class));
         }
 
-        if (StringUtils.hasText(annotation.servletName())) {
+        if (hasText(annotation.servletName())) {
             builder.servletName(annotation.servletName());
         }
 
-        if (StringUtils.hasText(annotation.servletMappingPath())) {
+        if (hasText(annotation.servletMappingPath())) {
             builder.servletMappingPath(annotation.servletMappingPath());
         }
 
-        if (StringUtils.hasText(annotation.contextPath())) {
+        if (hasText(annotation.contextPath())) {
             builder.contextPath(annotation.contextPath());
         }
 
-        if (StringUtils.hasText(annotation.servletHandler())) {
+        if (hasText(annotation.servletHandler())) {
             builder.servletHandler(referenceResolver.resolve(annotation.servletHandler(), ServletHandler.class));
         }
 
-        if (StringUtils.hasText(annotation.securityHandler())) {
+        if (hasText(annotation.securityHandler())) {
             builder.securityHandler(referenceResolver.resolve(annotation.securityHandler(), SecurityHandler.class));
         }
 
-        if (StringUtils.hasText(annotation.messageConverter())) {
+        if (hasText(annotation.messageConverter())) {
             builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), HttpMessageConverter.class));
         }
 
         builder.defaultStatus(annotation.defaultStatus());
         builder.responseCacheSize(annotation.responseCacheSize());
 
-        if (StringUtils.hasText(annotation.authentication())) {
+        if (hasText(annotation.authentication())) {
             builder.authentication(annotation.securedPath(), referenceResolver.resolve(annotation.authentication(), HttpAuthentication.class));
         }
 
-        if (StringUtils.hasText(annotation.secured())) {
+        if (hasText(annotation.secured())) {
             builder.secured(annotation.securePort(), referenceResolver.resolve(annotation.secured(), HttpSecureConnection.class));
         }
 

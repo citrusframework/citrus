@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 
 package org.citrusframework.websocket.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.websocket.endpoint.WebSocketEndpoint;
 import org.citrusframework.websocket.servlet.CitrusWebSocketDispatcherServlet;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.websocket.server.config.JettyWebSocketServletContainerInitializer;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.springframework.web.servlet.DispatcherServlet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -72,6 +72,7 @@ public class WebSocketServer extends HttpServer {
 
     /**
      * Sets the WebSocket endpoints (id, uri)
+     *
      * @param webSockets
      */
     public void setWebSockets(List<WebSocketEndpoint> webSockets) {
