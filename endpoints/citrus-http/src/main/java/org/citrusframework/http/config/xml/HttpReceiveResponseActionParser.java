@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,9 @@
 
 package org.citrusframework.http.config.xml;
 
-import java.util.List;
-
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.DescriptionElementParser;
-import org.citrusframework.config.xml.MessageSelectorParser;
 import org.citrusframework.config.xml.ReceiveMessageActionParser;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageBuilder;
@@ -34,8 +31,15 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.List;
+
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static org.citrusframework.config.xml.MessageSelectorParser.doParse;
+import static org.springframework.util.xml.DomUtils.getChildElementByTagName;
+import static org.springframework.util.xml.DomUtils.getChildElementsByTagName;
 
 /**
  * @author Christoph Deppisch
@@ -68,12 +72,12 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
 
         HttpMessage httpMessage = new HttpMessage();
 
-        Element body = DomUtils.getChildElementByTagName(element, "body");
+        Element body = getChildElementByTagName(element, "body");
         List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
 
-        Element headers = DomUtils.getChildElementByTagName(element, "headers");
+        Element headers = getChildElementByTagName(element, "headers");
         if (headers != null) {
-            List<?> headerElements = DomUtils.getChildElementsByTagName(headers, "header");
+            List<?> headerElements = getChildElementsByTagName(headers, "header");
             for (Object headerElement : headerElements) {
                 Element header = (Element) headerElement;
                 httpMessage.setHeader(header.getAttribute("name"), header.getAttribute("value"));
@@ -94,14 +98,10 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
                 httpMessage.version(version);
             }
 
-            List<?> cookieElements = DomUtils.getChildElementsByTagName(headers, "cookie");
+            List<?> cookieElements = getChildElementsByTagName(headers, "cookie");
             for (Object item : cookieElements) {
                 Element cookieElement = (Element) item;
                 Cookie cookie = new Cookie(cookieElement.getAttribute("name"), cookieElement.getAttribute("value"));
-
-                if (cookieElement.hasAttribute("comment")) {
-                    cookie.setComment(cookieElement.getAttribute("comment"));
-                }
 
                 if (cookieElement.hasAttribute("path")) {
                     cookie.setPath(cookieElement.getAttribute("path"));
@@ -112,27 +112,24 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
                 }
 
                 if (cookieElement.hasAttribute("max-age")) {
-                    cookie.setMaxAge(Integer.valueOf(cookieElement.getAttribute("max-age")));
+                    cookie.setMaxAge(parseInt(cookieElement.getAttribute("max-age")));
                 }
 
                 if (cookieElement.hasAttribute("secure")) {
-                    cookie.setSecure(Boolean.valueOf(cookieElement.getAttribute("secure")));
-                }
-
-                if (cookieElement.hasAttribute("version")) {
-                    cookie.setVersion(Integer.valueOf(cookieElement.getAttribute("version")));
+                    cookie.setSecure(parseBoolean(cookieElement.getAttribute("secure")));
                 }
 
                 httpMessage.cookie(cookie);
             }
 
-            boolean ignoreCase = headers.hasAttribute("ignore-case") ? Boolean.valueOf(headers.getAttribute("ignore-case")) : true;
-            validationContexts.stream().filter(context -> context instanceof HeaderValidationContext)
+            boolean ignoreCase = !headers.hasAttribute("ignore-case") || parseBoolean(headers.getAttribute("ignore-case"));
+            validationContexts.stream()
+                    .filter(context -> context instanceof HeaderValidationContext)
                     .map(context -> (HeaderValidationContext) context)
                     .forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
         }
 
-        MessageSelectorParser.doParse(element, builder);
+        doParse(element, builder);
 
         HttpMessageBuilder httpMessageBuilder = new HttpMessageBuilder(httpMessage);
         DefaultMessageBuilder messageContentBuilder = constructMessageBuilder(body, builder);

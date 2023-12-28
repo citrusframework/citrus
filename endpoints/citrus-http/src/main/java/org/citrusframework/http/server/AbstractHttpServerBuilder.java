@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2020-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -19,27 +19,29 @@
 
 package org.citrusframework.http.server;
 
-import java.util.List;
-import java.util.Map;
-
 import jakarta.servlet.Filter;
 import org.citrusframework.http.message.HttpMessageConverter;
 import org.citrusframework.http.security.HttpAuthentication;
 import org.citrusframework.http.security.HttpSecureConnection;
 import org.citrusframework.server.AbstractServerBuilder;
+import org.eclipse.jetty.ee10.servlet.ServletHandler;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.servlet.ServletHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  */
 public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractHttpServerBuilder<T, B>> extends AbstractServerBuilder<T, B> {
 
-    /** Endpoint target */
+    /**
+     * Endpoint target
+     */
     private final T endpoint;
 
     private int securePort = 8443;
@@ -58,6 +60,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the port property.
+     *
      * @param port
      * @return
      */
@@ -68,6 +71,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the secure port property.
+     *
      * @param port
      * @return
      */
@@ -78,6 +82,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the context config location.
+     *
      * @param configLocation
      * @return
      */
@@ -88,6 +93,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the resource base.
+     *
      * @param resourceBase
      * @return
      */
@@ -98,6 +104,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Enables/disables the root parent context.
+     *
      * @param rootParentContext
      * @return
      */
@@ -108,6 +115,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the connectors.
+     *
      * @param connectors
      * @return
      */
@@ -118,6 +126,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the connector.
+     *
      * @param connector
      * @return
      */
@@ -128,6 +137,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the filters.
+     *
      * @param filters
      * @return
      */
@@ -138,6 +148,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the filterMappings.
+     *
      * @param filterMappings
      * @return
      */
@@ -148,6 +159,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the binaryMediaTypes.
+     *
      * @param binaryMediaTypes
      * @return
      */
@@ -158,6 +170,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the servlet name.
+     *
      * @param servletName
      * @return
      */
@@ -168,6 +181,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the servlet mapping path.
+     *
      * @param servletMappingPath
      * @return
      */
@@ -178,6 +192,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the context path.
+     *
      * @param contextPath
      * @return
      */
@@ -188,6 +203,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the servlet handler.
+     *
      * @param servletHandler
      * @return
      */
@@ -198,6 +214,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the security handler.
+     *
      * @param securityHandler
      * @return
      */
@@ -208,6 +225,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the message converter.
+     *
      * @param messageConverter
      * @return
      */
@@ -218,6 +236,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the handleAttributeHeaders property.
+     *
      * @param flag
      * @return
      */
@@ -228,6 +247,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the handleCookies property.
+     *
      * @param flag
      * @return
      */
@@ -238,6 +258,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the default status code property.
+     *
      * @param status
      * @return
      */
@@ -248,6 +269,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the default response cache size on this server instance.
+     *
      * @param size
      * @return
      */
@@ -258,6 +280,7 @@ public class AbstractHttpServerBuilder<T extends HttpServer, B extends AbstractH
 
     /**
      * Sets the interceptors.
+     *
      * @param interceptors
      * @return
      */

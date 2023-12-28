@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.citrusframework.http.client;
 
-import java.net.URI;
-
 import org.apache.hc.client5.http.auth.AuthCache;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
@@ -30,10 +28,13 @@ import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.protocol.HttpContext;
 import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.util.ObjectHelper;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+
+import java.net.URI;
+
+import static org.citrusframework.util.ObjectHelper.assertNotNull;
 
 /**
  * Factory bean constructing a client request factory with
@@ -44,22 +45,29 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
  */
 public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpComponentsClientHttpRequestFactory>, InitializingPhase {
 
-    /** The target request factory */
+    /**
+     * The target request factory
+     */
     private HttpClientBuilder httpClient;
 
-    /** User credentials for basic authentication */
+    /**
+     * User credentials for basic authentication
+     */
     private Credentials credentials;
 
-    /** Authentiacation scope */
+    /**
+     * Authentiacation scope
+     */
     private AuthScope authScope = new AuthScope(new HttpHost("http", "localhost", 8080));
 
     /**
      * Construct the client factory bean with user credentials.
      */
     public HttpComponentsClientHttpRequestFactory getObject() throws Exception {
-        ObjectHelper.assertNotNull(credentials, "User credentials not set properly!");
+        assertNotNull(credentials, "User credentials not set properly!");
 
         return new HttpComponentsClientHttpRequestFactory(httpClient.build()) {
+
             @Override
             protected HttpContext createHttpContext(HttpMethod httpMethod, URI uri) {
                 // we have to use preemptive authentication
@@ -74,11 +82,11 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
                 BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 credentialsProvider.setCredentials(new AuthScope(httpTarget), credentials);
 
-                HttpClientContext ctx = HttpClientContext.create();
-                ctx.setAuthCache(authCache);
-                ctx.setCredentialsProvider(credentialsProvider);
+                HttpClientContext httpClientContext = HttpClientContext.create();
+                httpClientContext.setAuthCache(authCache);
+                httpClientContext.setCredentialsProvider(credentialsProvider);
 
-                return ctx;
+                return httpClientContext;
             }
         };
     }
@@ -112,6 +120,7 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
 
     /**
      * Sets the credentials.
+     *
      * @param credentials the credentials to set
      */
     public void setCredentials(Credentials credentials) {
@@ -120,6 +129,7 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
 
     /**
      * Sets the authScope.
+     *
      * @param authScope the authScope to set
      */
     public void setAuthScope(AuthScope authScope) {
@@ -128,10 +138,10 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
 
     /**
      * Sets the httpClient.
+     *
      * @param httpClient the httpClient to set
      */
     public void setHttpClient(HttpClientBuilder httpClient) {
         this.httpClient = httpClient;
     }
-
 }

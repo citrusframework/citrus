@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,7 @@
 
 package org.citrusframework.websocket.servlet;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import jakarta.servlet.ServletContext;
 import org.citrusframework.endpoint.adapter.EmptyResponseEndpointAdapter;
 import org.citrusframework.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import org.citrusframework.http.controller.HttpMessageController;
@@ -35,20 +32,24 @@ import org.citrusframework.websocket.server.WebSocketServer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.util.DecoratedObjectFactory;
-import org.eclipse.jetty.webapp.WebAppContext;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.isA;
-import static org.mockito.Mockito.reset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Christoph Deppisch
@@ -72,17 +73,15 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
     @Autowired
     private DefaultHandshakeHandler handshakeHandler;
 
-    @BeforeClass
+    @BeforeMethod
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        openMocks(this);
         servlet = new CitrusWebSocketDispatcherServlet(httpServer);
     }
 
     @Test
-    public void testNoBeansInContext() throws Exception {
-        reset(httpServer);
-
-        when(httpServer.getWebSockets()).thenReturn(new ArrayList<WebSocketEndpoint>());
+    public void testNoBeansInContext() {
+        when(httpServer.getWebSockets()).thenReturn(new ArrayList<>());
 
         GenericApplicationContext applicationContext = new GenericApplicationContext();
         applicationContext.refresh();
@@ -92,11 +91,9 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
     }
 
     @Test
-    public void testConfigureHandlerInterceptor() throws Exception {
+    public void testConfigureHandlerInterceptor() {
         List<Object> interceptors = new ArrayList<>();
         interceptors.add(new LoggingHandlerInterceptor());
-
-        reset(httpServer);
 
         when(httpServer.getInterceptors()).thenReturn(interceptors);
         when(httpServer.getEndpointAdapter()).thenReturn(null);
@@ -105,47 +102,43 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
 
         servlet.initStrategies(applicationContext);
 
-        Assert.assertEquals(handlerInterceptor.getInterceptors().size(), 1L);
-        Assert.assertEquals(handlerInterceptor.getInterceptors().get(0), interceptors.get(0));
-        Assert.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
+        assertEquals(handlerInterceptor.getInterceptors().size(), 1L);
+        assertEquals(handlerInterceptor.getInterceptors().get(0), interceptors.get(0));
+        assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
 
-        Assert.assertEquals(httpMessageController.getEndpointAdapter().getClass(), EmptyResponseEndpointAdapter.class);
+        assertEquals(httpMessageController.getEndpointAdapter().getClass(), EmptyResponseEndpointAdapter.class);
 
     }
 
     @Test
-    public void testConfigureMessageController() throws Exception {
-        reset(httpServer);
-
+    public void testConfigureMessageController() {
         when(httpServer.getInterceptors()).thenReturn(null);
         when(httpServer.getEndpointAdapter()).thenReturn(new TimeoutProducingEndpointAdapter());
         when(httpServer.getMessageConverter()).thenReturn(new HttpMessageConverter());
-        when(httpServer.getWebSockets()).thenReturn(new ArrayList<WebSocketEndpoint>());
+        when(httpServer.getWebSockets()).thenReturn(new ArrayList<>());
 
         servlet.initStrategies(applicationContext);
 
-        Assert.assertEquals(handlerInterceptor.getInterceptors().size(), 0L);
-        Assert.assertEquals(httpMessageController.getEndpointAdapter().getClass(), TimeoutProducingEndpointAdapter.class);
-        Assert.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
+        assertEquals(handlerInterceptor.getInterceptors().size(), 0L);
+        assertEquals(httpMessageController.getEndpointAdapter().getClass(), TimeoutProducingEndpointAdapter.class);
+        assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
 
 
     }
 
     @Test
-    public void testConfigureWebSockerHandler() throws Exception {
-        WebSocketEndpoint wsEndpoint = Mockito.mock(WebSocketEndpoint.class);
-        WebSocketEndpointConfiguration wsEndpointConfig = Mockito.mock(WebSocketEndpointConfiguration.class);
+    public void testConfigureWebSockerHandler() {
+        WebSocketEndpoint wsEndpoint = mock(WebSocketEndpoint.class);
+        WebSocketEndpointConfiguration wsEndpointConfig = mock(WebSocketEndpointConfiguration.class);
         String wsId = "wsId";
         String endpointUri = "someEndpointUri";
 
         List<WebSocketEndpoint> webSockets = new ArrayList<>();
         webSockets.add(wsEndpoint);
 
-        WebAppContext.Context servletContext = Mockito.mock(WebAppContext.Context.class);
-        ContextHandler contextHandler = Mockito.mock(ContextHandler.class);
-        DecoratedObjectFactory objectFactory = Mockito.mock(DecoratedObjectFactory.class);
-
-        reset(httpServer, servletContext, contextHandler);
+        ServletContext servletContext = mock(ServletContext.class);
+        ContextHandler contextHandler = mock(ContextHandler.class);
+        DecoratedObjectFactory objectFactory = mock(DecoratedObjectFactory.class);
 
         when(httpServer.getInterceptors()).thenReturn(null);
         when(httpServer.getEndpointAdapter()).thenReturn(null);
@@ -158,7 +151,6 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
 
         when(wsEndpointConfig.getEndpointUri()).thenReturn(endpointUri);
 
-        when(servletContext.getContextHandler()).thenReturn(contextHandler);
         when(servletContext.getAttribute(DecoratedObjectFactory.ATTR)).thenReturn(objectFactory);
         when(contextHandler.getServer()).thenReturn(new Server());
 
@@ -167,9 +159,8 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
         servlet.initStrategies(applicationContext);
 
         Map<String, ?> urlMap = urlHandlerMapping.getUrlMap();
-        Assert.assertEquals(urlMap.size(), 1);
-        Assert.assertTrue(urlMap.containsKey(endpointUri));
-        Assert.assertNotNull(urlMap.get(endpointUri));
-
+        assertEquals(urlMap.size(), 1);
+        assertTrue(urlMap.containsKey(endpointUri));
+        assertNotNull(urlMap.get(endpointUri));
     }
 }

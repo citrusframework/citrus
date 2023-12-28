@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,6 @@
 
 package org.citrusframework.http.server;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import jakarta.servlet.Filter;
 import org.citrusframework.context.SpringBeanReferenceResolver;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -32,24 +27,33 @@ import org.citrusframework.http.servlet.GzipServletFilter;
 import org.citrusframework.http.servlet.RequestCachingServletFilter;
 import org.citrusframework.report.MessageListeners;
 import org.citrusframework.server.AbstractServer;
-import org.citrusframework.util.StringUtils;
+import org.eclipse.jetty.ee10.servlet.FilterHolder;
+import org.eclipse.jetty.ee10.servlet.FilterMapping;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.ee10.servlet.ServletMapping;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.RequestLogHandler;
-import org.eclipse.jetty.servlet.FilterHolder;
-import org.eclipse.jetty.servlet.FilterMapping;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.servlet.ServletMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.nio.file.Paths.get;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.copyOf;
+import static org.citrusframework.util.StringUtils.hasText;
+import static org.springframework.http.MediaType.valueOf;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * Simple Http server implementation starting an embedded Jetty server instance with
@@ -59,72 +63,116 @@ import org.springframework.web.servlet.DispatcherServlet;
  * @since 2007
  */
 public class HttpServer extends AbstractServer {
-    /** Server port */
+    /**
+     * Server port
+     */
     private int port = 8080;
 
-    /** Server resource base */
+    /**
+     * Server resource base
+     */
     private String resourceBase = "src/main/resources";
 
-    /** Application context location for request controllers */
+    /**
+     * Application context location for request controllers
+     */
     private String contextConfigLocation = "classpath:org/citrusframework/http/citrus-servlet-context.xml";
 
-    /** Server instance to be wrapped */
+    /**
+     * Server instance to be wrapped
+     */
     private Server jettyServer;
 
-    /** Use root application context as parent to build WebApplicationContext */
+    /**
+     * Use root application context as parent to build WebApplicationContext
+     */
     private boolean useRootContextAsParent = false;
 
-    /** Do only start one instance after another, so we need a static lock object */
+    /**
+     * Do only start one instance after another, so we need a static lock object
+     */
     private static final Object serverLock = new Object();
 
-    /** Set custom connector with custom idle time and other configuration options */
+    /**
+     * Set custom connector with custom idle time and other configuration options
+     */
     private Connector connector;
 
-    /** Set list of custom connectors with custom configuration options */
+    /**
+     * Set list of custom connectors with custom configuration options
+     */
     private Connector[] connectors;
 
-    /** Set of custom servlet filters */
+    /**
+     * Set of custom servlet filters
+     */
     private Map<String, Filter> filters = new HashMap<>();
 
-    /** Set of custom servlet filter mappings */
+    /**
+     * Set of custom servlet filter mappings
+     */
     private Map<String, String> filterMappings = new HashMap<>();
 
-    /** Servlet mapping path */
+    /**
+     * Servlet mapping path
+     */
     private String servletMappingPath = "/*";
 
-    /** Optional servlet name customization */
+    /**
+     * Optional servlet name customization
+     */
     private String servletName;
 
-    /** Context path */
+    /**
+     * Context path
+     */
     private String contextPath = "/";
 
-    /** Optional security handler for basic auth */
+    /**
+     * Optional security handler for basic auth
+     */
     private SecurityHandler securityHandler;
 
-    /** Optional servlet handler customization */
+    /**
+     * Optional servlet handler customization
+     */
     private ServletHandler servletHandler;
 
-    /** Should handle http attributes */
+    /**
+     * Should handle http attributes
+     */
     private boolean handleAttributeHeaders = false;
 
-    /** Should handle http cookies */
+    /**
+     * Should handle http cookies
+     */
     private boolean handleCookies = false;
 
-    /** Default status code returned by http server */
+    /**
+     * Default status code returned by http server
+     */
     private int defaultStatusCode = HttpStatus.OK.value();
 
-    /** Default size of in memory response cahce for message tracing reasons */
+    /**
+     * Default size of in memory response cahce for message tracing reasons
+     */
     private int responseCacheSize = HttpServerSettings.responseCacheSize();
 
-    /** List of media types that should be handled with binary content processing */
-    private List<MediaType> binaryMediaTypes = Arrays.asList(MediaType.APPLICATION_OCTET_STREAM,
-                                                                MediaType.APPLICATION_PDF,
-                                                                MediaType.IMAGE_GIF,
-                                                                MediaType.IMAGE_JPEG,
-                                                                MediaType.IMAGE_PNG,
-                                                                MediaType.valueOf("application/zip"));
+    /**
+     * List of media types that should be handled with binary content processing
+     */
+    private List<MediaType> binaryMediaTypes = asList(
+            MediaType.APPLICATION_OCTET_STREAM,
+            MediaType.APPLICATION_PDF,
+            MediaType.IMAGE_GIF,
+            MediaType.IMAGE_JPEG,
+            MediaType.IMAGE_PNG,
+            valueOf("application/zip")
+    );
 
-    /** Message converter */
+    /**
+     * Message converter
+     */
     private HttpMessageConverter messageConverter = new HttpMessageConverter();
 
     @Override
@@ -153,18 +201,20 @@ public class HttpServer extends AbstractServer {
                 jettyServer = new Server(port);
             }
 
-            HandlerCollection handlers = new HandlerCollection();
+            final Handler.Sequence handlers = new Handler.Sequence();
 
             ContextHandlerCollection contextCollection = new ContextHandlerCollection();
 
             ServletContextHandler contextHandler = new ServletContextHandler();
             contextHandler.setContextPath(contextPath);
-            contextHandler.setResourceBase(resourceBase);
+            contextHandler.setBaseResourceAsPath(get(resourceBase));
 
             //add the root application context as parent to the constructed WebApplicationContext
-            if (useRootContextAsParent && getReferenceResolver() instanceof SpringBeanReferenceResolver) {
-                contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-                        new ParentDelegatingWebApplicationContext(((SpringBeanReferenceResolver) getReferenceResolver()).getApplicationContext()));
+            if (useRootContextAsParent && getReferenceResolver() instanceof SpringBeanReferenceResolver springBeanReferenceResolver) {
+                contextHandler.setAttribute(
+                        WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
+                        new ParentDelegatingWebApplicationContext(springBeanReferenceResolver.getApplicationContext())
+                );
             }
 
             if (servletHandler == null) {
@@ -176,7 +226,7 @@ public class HttpServer extends AbstractServer {
                 String filterMappingPathSpec = filterMappings.get(filterEntry.getKey());
                 FilterMapping filterMapping = new FilterMapping();
                 filterMapping.setFilterName(filterEntry.getKey());
-                filterMapping.setPathSpec(StringUtils.hasText(filterMappingPathSpec) ? filterMappingPathSpec : "/*");
+                filterMapping.setPathSpec(hasText(filterMappingPathSpec) ? filterMappingPathSpec : "/*");
 
                 FilterHolder filterHolder = new FilterHolder();
                 filterHolder.setName(filterEntry.getKey());
@@ -185,7 +235,7 @@ public class HttpServer extends AbstractServer {
                 servletHandler.addFilter(filterHolder, filterMapping);
             }
 
-            if (filters == null || filters.isEmpty()) {
+            if (isEmpty(filters)) {
                 addRequestCachingFilter();
                 addGzipFilter();
             }
@@ -202,7 +252,6 @@ public class HttpServer extends AbstractServer {
             handlers.addHandler(contextCollection);
 
             handlers.addHandler(new DefaultHandler());
-            handlers.addHandler(new RequestLogHandler());
 
             jettyServer.setHandler(handlers);
 
@@ -216,6 +265,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Subclasses may add additional configuration on context handler.
+     *
      * @param contextHandler
      */
     protected void configure(ServletContextHandler contextHandler) {
@@ -255,6 +305,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the Citrus dispatcher servlet.
+     *
      * @return
      */
     protected DispatcherServlet getDispatcherServlet() {
@@ -290,10 +341,11 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the customized servlet name or default name if not set.
+     *
      * @return the servletName
      */
     public String getServletName() {
-        if (StringUtils.hasText(servletName)) {
+        if (hasText(servletName)) {
             return servletName;
         } else {
             return getName() + "-servlet";
@@ -302,6 +354,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the port.
+     *
      * @return the port to get.
      */
     public int getPort() {
@@ -310,6 +363,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the port.
+     *
      * @param port the port to set
      */
     public void setPort(int port) {
@@ -318,6 +372,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the resourceBase.
+     *
      * @return the resourceBase to get.
      */
     public String getResourceBase() {
@@ -326,6 +381,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the resourceBase.
+     *
      * @param resourceBase the resourceBase to set
      */
     public void setResourceBase(String resourceBase) {
@@ -334,6 +390,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the contextConfigLocation.
+     *
      * @return the contextConfigLocation to get.
      */
     public String getContextConfigLocation() {
@@ -342,6 +399,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the contextConfigLocation.
+     *
      * @param contextConfigLocation the contextConfigLocation to set
      */
     public void setContextConfigLocation(String contextConfigLocation) {
@@ -350,6 +408,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the connector.
+     *
      * @return the connector to get.
      */
     public Connector getConnector() {
@@ -358,6 +417,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the connector.
+     *
      * @param connector the connector to set
      */
     public void setConnector(Connector connector) {
@@ -402,11 +462,12 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the connectors.
+     *
      * @return the connectors
      */
     public Connector[] getConnectors() {
         if (connectors != null) {
-            return Arrays.copyOf(connectors, connectors.length);
+            return copyOf(connectors, connectors.length);
         } else {
             return new Connector[]{};
         }
@@ -414,14 +475,16 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the connectors.
+     *
      * @param connectors the connectors to set
      */
     public void setConnectors(Connector[] connectors) {
-        this.connectors = Arrays.copyOf(connectors, connectors.length);
+        this.connectors = copyOf(connectors, connectors.length);
     }
 
     /**
      * Gets the servletMappingPath.
+     *
      * @return the servletMappingPath to get.
      */
     public String getServletMappingPath() {
@@ -430,6 +493,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the servletMappingPath.
+     *
      * @param servletMappingPath the servletMappingPath to set
      */
     public void setServletMappingPath(String servletMappingPath) {
@@ -438,6 +502,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the contextPath.
+     *
      * @return the contextPath to get.
      */
     public String getContextPath() {
@@ -446,6 +511,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the contextPath.
+     *
      * @param contextPath the contextPath to set
      */
     public void setContextPath(String contextPath) {
@@ -454,6 +520,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the securityHandler.
+     *
      * @return the securityHandler to get.
      */
     public SecurityHandler getSecurityHandler() {
@@ -462,6 +529,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the securityHandler.
+     *
      * @param securityHandler the securityHandler to set
      */
     public void setSecurityHandler(SecurityHandler securityHandler) {
@@ -470,6 +538,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the servletHandler.
+     *
      * @return the servletHandler to get.
      */
     public ServletHandler getServletHandler() {
@@ -478,6 +547,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the servletHandler.
+     *
      * @param servletHandler the servletHandler to set
      */
     public void setServletHandler(ServletHandler servletHandler) {
@@ -486,6 +556,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the servletName.
+     *
      * @param servletName the servletName to set
      */
     public void setServletName(String servletName) {
@@ -494,6 +565,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the useRootContextAsParent.
+     *
      * @return the useRootContextAsParent to get.
      */
     public boolean isUseRootContextAsParent() {
@@ -502,6 +574,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the useRootContextAsParent.
+     *
      * @param useRootContextAsParent the useRootContextAsParent to set
      */
     public void setUseRootContextAsParent(boolean useRootContextAsParent) {
@@ -510,6 +583,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the message converter.
+     *
      * @return
      */
     public HttpMessageConverter getMessageConverter() {
@@ -518,6 +592,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the message converter.
+     *
      * @param messageConverter
      */
     public void setMessageConverter(HttpMessageConverter messageConverter) {
@@ -562,6 +637,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Gets the response cache size.
+     *
      * @return
      */
     public int getResponseCacheSize() {
@@ -570,6 +646,7 @@ public class HttpServer extends AbstractServer {
 
     /**
      * Sets the response cache size.
+     *
      * @param responseCacheSize
      */
     public void setResponseCacheSize(int responseCacheSize) {

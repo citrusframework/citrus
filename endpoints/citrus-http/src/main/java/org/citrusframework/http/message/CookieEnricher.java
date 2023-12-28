@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 the original author or authors
+ *    Copyright 2018-2024 the original author or authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package org.citrusframework.http.message;
 
+import jakarta.servlet.http.Cookie;
 import org.citrusframework.context.TestContext;
 
-import jakarta.servlet.http.Cookie;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +29,7 @@ class CookieEnricher {
 
     /**
      * Replaces the dynamic content in the given list of cookies
+     *
      * @param cookies The list of Cookies to
      * @param context The context to replace the variables with
      */
@@ -43,10 +44,6 @@ class CookieEnricher {
                 enrichedCookie.setValue(context.replaceDynamicContentInString(cookie.getValue()));
             }
 
-            if (cookie.getComment() != null) {
-                enrichedCookie.setComment(context.replaceDynamicContentInString(cookie.getComment()));
-            }
-
             if (cookie.getPath() != null) {
                 enrichedCookie.setPath(context.replaceDynamicContentInString(cookie.getPath()));
             }
@@ -56,7 +53,6 @@ class CookieEnricher {
             }
 
             enrichedCookie.setMaxAge(cookie.getMaxAge());
-            enrichedCookie.setVersion(cookie.getVersion());
             enrichedCookie.setHttpOnly(cookie.isHttpOnly());
             enrichedCookie.setSecure(cookie.getSecure());
 
@@ -65,5 +61,4 @@ class CookieEnricher {
 
         return enrichedCookies;
     }
-
 }

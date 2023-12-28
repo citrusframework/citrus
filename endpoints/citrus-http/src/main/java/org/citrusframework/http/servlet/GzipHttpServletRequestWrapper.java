@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package org.citrusframework.http.servlet;
 
-import org.citrusframework.exceptions.CitrusRuntimeException;
-
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
@@ -58,11 +58,11 @@ public class GzipHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
         /**
          * Default constructor using wrapped input stream.
+         *
          * @param request The request to wrap
          * @throws IOException if an I/O error has occurred
          */
         public GzipServletInputStream(ServletRequest request) throws IOException {
-            super();
             gzipStream = new GZIPInputStream(request.getInputStream());
         }
 

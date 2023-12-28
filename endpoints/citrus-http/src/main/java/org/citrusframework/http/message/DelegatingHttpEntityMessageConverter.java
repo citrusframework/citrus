@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,6 @@
 
 package org.citrusframework.http.message;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.citrusframework.util.TypeConversionUtils;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -34,6 +28,15 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
 import org.springframework.util.MultiValueMap;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static org.citrusframework.util.TypeConversionUtils.convertIfNecessary;
+import static org.springframework.http.MediaType.valueOf;
 
 /**
  * @author Christoph Deppisch
@@ -63,12 +66,16 @@ public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageCon
         super(MediaType.ALL);
 
         ByteArrayHttpMessageConverter byteArrayHttpMessageConverter = new ByteArrayHttpMessageConverter();
-        byteArrayHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM,
-                                                                            MediaType.APPLICATION_PDF,
-                                                                            MediaType.IMAGE_GIF,
-                                                                            MediaType.IMAGE_JPEG,
-                                                                            MediaType.IMAGE_PNG,
-                                                                            MediaType.valueOf("application/zip")));
+        byteArrayHttpMessageConverter.setSupportedMediaTypes(
+                asList(
+                        MediaType.APPLICATION_OCTET_STREAM,
+                        MediaType.APPLICATION_PDF,
+                        MediaType.IMAGE_GIF,
+                        MediaType.IMAGE_JPEG,
+                        MediaType.IMAGE_PNG,
+                        valueOf("application/zip")
+                )
+        );
 
         if (requestMessageConverters.isEmpty()) {
             requestMessageConverters.add(byteArrayHttpMessageConverter);
@@ -126,14 +133,14 @@ public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageCon
                 .findFirst()
                 .orElse(defaultResponseMessageConverter);
 
-        if (delegate instanceof ByteArrayHttpMessageConverter) {
-            ((ByteArrayHttpMessageConverter)delegate).write(TypeConversionUtils.convertIfNecessary(responseBody, byte[].class), outputMessage.getHeaders().getContentType(), outputMessage);
-        } else if (delegate instanceof StringHttpMessageConverter) {
-            ((StringHttpMessageConverter)delegate).write(TypeConversionUtils.convertIfNecessary(responseBody, String.class), outputMessage.getHeaders().getContentType(), outputMessage);
-        } else if (delegate instanceof FormHttpMessageConverter) {
-            ((FormHttpMessageConverter)delegate).write(TypeConversionUtils.convertIfNecessary(responseBody, MultiValueMap.class), outputMessage.getHeaders().getContentType(), outputMessage);
+        if (delegate instanceof ByteArrayHttpMessageConverter byteArrayHttpMessageConverter) {
+            byteArrayHttpMessageConverter.write(convertIfNecessary(responseBody, byte[].class), outputMessage.getHeaders().getContentType(), outputMessage);
+        } else if (delegate instanceof StringHttpMessageConverter stringHttpMessageConverter) {
+            stringHttpMessageConverter.write(convertIfNecessary(responseBody, String.class), outputMessage.getHeaders().getContentType(), outputMessage);
+        } else if (delegate instanceof FormHttpMessageConverter formHttpMessageConverter) {
+            formHttpMessageConverter.write(convertIfNecessary(responseBody, MultiValueMap.class), outputMessage.getHeaders().getContentType(), outputMessage);
         } else {
-            throw new HttpMessageNotWritableException(String.format("Failed to find proper message converter for contentType '%s'", outputMessage.getHeaders().getContentType()));
+            throw new HttpMessageNotWritableException(format("Failed to find proper message converter for contentType '%s'", outputMessage.getHeaders().getContentType()));
         }
     }
 

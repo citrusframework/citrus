@@ -1,5 +1,5 @@
 /*
- *    Copyright 2018 the original author or authors
+ *    Copyright 2018-2024 the original author or authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,19 +16,24 @@
 
 package org.citrusframework.http.message;
 
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-
 import jakarta.servlet.http.Cookie;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.lang.Boolean.TRUE;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static java.lang.String.format;
+
 /**
  * Class to convert Objects from or to Cookies
- *
+ * <p>
  * This class should be replaced as soon as possible by a third party cookie parser
  * The implementation of the Serializable interface is cause by the {@link HttpMessage} implementation of Serializable
  * and the implications from that.
@@ -38,15 +43,14 @@ class CookieConverter implements Serializable {
     private static final String NAME = "Name";
     private static final String VALUE = "Value";
     private static final String SECURE = "Secure";
-    private static final String COMMENT = "Comment";
     private static final String PATH = "Path";
     private static final String DOMAIN = "Domain";
     private static final String MAX_AGE = "Max-Age";
-    private static final String VERSION = "Version";
     private static final String HTTP_ONLY = "HttpOnly";
 
     /**
      * Converts cookies from a HttpEntity into Cookie objects
+     *
      * @param httpEntity The message to convert
      * @return A array of converted cookies
      */
@@ -66,6 +70,7 @@ class CookieConverter implements Serializable {
 
     /**
      * Converts a given cookie into a HTTP conform cookie String
+     *
      * @param cookie the cookie to convert
      * @return The cookie string representation of the given cookie
      */
@@ -75,10 +80,6 @@ class CookieConverter implements Serializable {
         builder.append(cookie.getName());
         builder.append("=");
         builder.append(cookie.getValue());
-
-        if (cookie.getVersion() > 0) {
-            builder.append(";" + VERSION + "=").append(cookie.getVersion());
-        }
 
         if (StringUtils.hasText(cookie.getPath())) {
             builder.append(";" + PATH + "=").append(cookie.getPath());
@@ -90,10 +91,6 @@ class CookieConverter implements Serializable {
 
         if (cookie.getMaxAge() > 0) {
             builder.append(";" + MAX_AGE + "=").append(cookie.getMaxAge());
-        }
-
-        if (StringUtils.hasText(cookie.getComment())) {
-            builder.append(";" + COMMENT + "=").append(cookie.getComment());
         }
 
         if (cookie.getSecure()) {
@@ -109,15 +106,12 @@ class CookieConverter implements Serializable {
 
     /**
      * Converts a cookie string from a http header value into a Cookie object
+     *
      * @param cookieString The string to convert
      * @return The Cookie representation of the given String
      */
     private Cookie convertCookieString(String cookieString) {
         Cookie cookie = new Cookie(getCookieParam(NAME, cookieString), getCookieParam(VALUE, cookieString));
-
-        if (cookieString.contains(COMMENT)) {
-            cookie.setComment(getCookieParam(COMMENT, cookieString));
-        }
 
         if (cookieString.contains(PATH)) {
             cookie.setPath(getCookieParam(PATH, cookieString));
@@ -128,19 +122,15 @@ class CookieConverter implements Serializable {
         }
 
         if (cookieString.contains(MAX_AGE)) {
-            cookie.setMaxAge(Integer.valueOf(getCookieParam(MAX_AGE, cookieString)));
+            cookie.setMaxAge(parseInt(getCookieParam(MAX_AGE, cookieString)));
         }
 
         if (cookieString.contains(SECURE)) {
-            cookie.setSecure(Boolean.valueOf(getCookieParam(SECURE, cookieString)));
-        }
-
-        if (cookieString.contains(VERSION)) {
-            cookie.setVersion(Integer.valueOf(getCookieParam(VERSION, cookieString)));
+            cookie.setSecure(parseBoolean(getCookieParam(SECURE, cookieString)));
         }
 
         if (cookieString.contains(HTTP_ONLY)) {
-            cookie.setHttpOnly(Boolean.valueOf(getCookieParam(HTTP_ONLY, cookieString)));
+            cookie.setHttpOnly(parseBoolean(getCookieParam(HTTP_ONLY, cookieString)));
         }
 
         return cookie;
@@ -148,7 +138,8 @@ class CookieConverter implements Serializable {
 
     /**
      * Extract cookie param from cookie string as it was provided by "Set-Cookie" header.
-     * @param param The parameter to extract from the cookie string
+     *
+     * @param param        The parameter to extract from the cookie string
      * @param cookieString The cookie string from the cookie header to extract the parameter from
      * @return The value of the requested parameter
      */
@@ -165,8 +156,8 @@ class CookieConverter implements Serializable {
             }
         }
 
-        if(containsFlag(SECURE, param, cookieString) || containsFlag(HTTP_ONLY, param, cookieString)) {
-            return String.valueOf(true);
+        if (containsFlag(SECURE, param, cookieString) || containsFlag(HTTP_ONLY, param, cookieString)) {
+            return TRUE.toString();
         }
 
         if (cookieString.contains(param + '=')) {
@@ -179,8 +170,9 @@ class CookieConverter implements Serializable {
             }
         }
 
-        throw new CitrusRuntimeException(String.format(
-                "Unable to get cookie argument '%s' from cookie String: %s", param, cookieString));
+        throw new CitrusRuntimeException(
+                format("Unable to get cookie argument '%s' from cookie String: %s", param, cookieString)
+        );
     }
 
     private boolean containsFlag(String flag, String param, String cookieString) {

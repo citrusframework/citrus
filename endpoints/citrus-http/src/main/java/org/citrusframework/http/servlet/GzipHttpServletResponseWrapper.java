@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletResponseWrapper;
+import org.springframework.http.HttpHeaders;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
-
-import org.springframework.http.HttpHeaders;
 
 /**
  * Response wrapper wraps response output stream with gzip output stream. Write operations on that stream are
@@ -37,6 +37,7 @@ import org.springframework.http.HttpHeaders;
  * @since 2.6.2
  */
 public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
+
     private final HttpServletResponse origResponse;
     private ServletOutputStream outputStream;
     private PrintWriter printWriter;
@@ -54,6 +55,7 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
     /**
      * Finish response stream by closing.
+     *
      * @throws IOException
      */
     public void finish() throws IOException {
@@ -108,34 +110,38 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
      * Gzip enabled servlet output stream.
      */
     private class GzipServletOutputStream extends ServletOutputStream {
-        private ByteArrayOutputStream bos;
-        private GZIPOutputStream gzipStream;
-        private final AtomicBoolean open;
-        private HttpServletResponse response;
-        private ServletOutputStream outputStream;
+
+        private final ByteArrayOutputStream byteArrayOutputStream;
+        private final GZIPOutputStream gzipStream;
+        private final AtomicBoolean isOpen;
+        private final HttpServletResponse response;
+        private final ServletOutputStream outputStream;
 
         /**
          * Default constructor using wrapped output stream.
+         *
          * @param response
          * @throws IOException
          */
         public GzipServletOutputStream(HttpServletResponse response) throws IOException {
-            super();
-
             this.response = response;
-            open = new AtomicBoolean(true);
-            bos = new ByteArrayOutputStream();
+            isOpen = new AtomicBoolean(true);
+            byteArrayOutputStream = new ByteArrayOutputStream();
             outputStream = response.getOutputStream();
-            gzipStream = new GZIPOutputStream(bos);
+            gzipStream = new GZIPOutputStream(byteArrayOutputStream);
         }
 
         @Override
         public void close() throws IOException {
-            if (open.compareAndSet(true, false)) {
+            if (isOpen.compareAndSet(true, false)) {
                 gzipStream.finish();
-                byte[] bytes = bos.toByteArray();
-                response.addHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(bytes.length));
-                response.addHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
+                byte[] bytes = byteArrayOutputStream.toByteArray();
+                gzipStream.close();
+                byteArrayOutputStream.close();
+
+                response.setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(bytes.length));
+                response.setHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
+
                 outputStream.write(bytes);
                 outputStream.flush();
                 outputStream.close();
@@ -144,7 +150,7 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
         @Override
         public void flush() throws IOException {
-            if (!open.get()) {
+            if (!isOpen.get()) {
                 throw new IOException("Cannot flush a closed stream!");
             }
 
@@ -152,13 +158,13 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
         }
 
         @Override
-        public void write(byte b[]) throws IOException {
+        public void write(byte[] b) throws IOException {
             write(b, 0, b.length);
         }
 
         @Override
-        public void write(byte b[], int off, int len) throws IOException {
-            if (!open.get()) {
+        public void write(byte[] b, int off, int len) throws IOException {
+            if (!isOpen.get()) {
                 throw new IOException("Stream closed!");
             }
 
@@ -167,7 +173,7 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
         @Override
         public void write(int b) throws IOException {
-            if (!open.get()) {
+            if (!isOpen.get()) {
                 throw new IOException("Stream closed!");
             }
 
@@ -176,7 +182,7 @@ public class GzipHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
         @Override
         public boolean isReady() {
-            return open.get();
+            return isOpen.get();
         }
 
         @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,18 +24,23 @@ import org.citrusframework.websocket.client.WebSocketClientEndpointConfiguration
 import org.citrusframework.websocket.handler.CitrusWebSocketHandler;
 import org.citrusframework.websocket.message.WebSocketMessage;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.SettableListenableFuture;
-import org.springframework.web.socket.*;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketHttpHeaders;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.client.WebSocketClient;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.net.URI;
+import java.util.concurrent.CompletableFuture;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.expectThrows;
 
 public class WebSocketClientTest extends AbstractTestNGUnitTest {
 
@@ -58,42 +63,35 @@ public class WebSocketClientTest extends AbstractTestNGUnitTest {
 
         reset(client, session);
 
-        final SettableListenableFuture<WebSocketSession> future = new SettableListenableFuture<>();
-        future.set(session);
+        final CompletableFuture<WebSocketSession> future = new CompletableFuture<>();
+        future.complete(session);
 
-        doAnswer(new Answer<ListenableFuture<WebSocketSession>>() {
-            @Override
-            public ListenableFuture<WebSocketSession> answer(InvocationOnMock invocation) throws Throwable {
-                CitrusWebSocketHandler handler = (CitrusWebSocketHandler) invocation.getArguments()[0];
-                handler.afterConnectionEstablished(session);
+        doAnswer((Answer<CompletableFuture<WebSocketSession>>) invocation -> {
+            CitrusWebSocketHandler handler = (CitrusWebSocketHandler) invocation.getArguments()[0];
+            handler.afterConnectionEstablished(session);
 
-                handler.handleMessage(session, new TextMessage(responseBody));
+            handler.handleMessage(session, new TextMessage(responseBody));
 
-                return future;
-            }
-        }).when(client).doHandshake(any(CitrusWebSocketHandler.class), any(WebSocketHttpHeaders.class), any(URI.class));
+            return future;
+        }).when(client).execute(any(CitrusWebSocketHandler.class), any(WebSocketHttpHeaders.class), any(URI.class));
 
         when(session.getId()).thenReturn("test-socket-1");
         when(session.isOpen()).thenReturn(true);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
+        doAnswer(invocation -> {
+            org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
-                Assert.assertTrue(TextMessage.class.isInstance(request));
-                Assert.assertEquals(((TextMessage)request).getPayload(), requestMessage.getPayload(String.class));
-                Assert.assertTrue(request.isLast());
-                return null;
-            }
+            assertTrue(request instanceof TextMessage);
+            assertEquals(((TextMessage) request).getPayload(), requestMessage.getPayload(String.class));
+            assertTrue(request.isLast());
+            return null;
         }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
         webSocketEndpoint.createProducer().send(requestMessage, context);
 
         WebSocketMessage responseMessage = (WebSocketMessage) webSocketEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
-        Assert.assertEquals(responseMessage.getPayload(), responseBody);
-        Assert.assertTrue(responseMessage.isLast());
-
+        assertEquals(responseMessage.getPayload(), responseBody);
+        assertTrue(responseMessage.isLast());
     }
 
     @Test
@@ -111,41 +109,30 @@ public class WebSocketClientTest extends AbstractTestNGUnitTest {
 
         reset(client, session);
 
-        final SettableListenableFuture<WebSocketSession> future = new SettableListenableFuture<>();
-        future.set(session);
+        final CompletableFuture<WebSocketSession> future = new CompletableFuture<>();
+        future.complete(session);
 
-        doAnswer(new Answer<ListenableFuture<WebSocketSession>>() {
-            @Override
-            public ListenableFuture<WebSocketSession> answer(InvocationOnMock invocation) throws Throwable {
-                CitrusWebSocketHandler handler = (CitrusWebSocketHandler) invocation.getArguments()[0];
-                handler.afterConnectionEstablished(session);
-                return future;
-            }
-        }).when(client).doHandshake(any(CitrusWebSocketHandler.class), any(WebSocketHttpHeaders.class), any(URI.class));
+        doAnswer((Answer<CompletableFuture<WebSocketSession>>) invocation -> {
+            CitrusWebSocketHandler handler = (CitrusWebSocketHandler) invocation.getArguments()[0];
+            handler.afterConnectionEstablished(session);
+            return future;
+        }).when(client).execute(any(CitrusWebSocketHandler.class), any(WebSocketHttpHeaders.class), any(URI.class));
 
         when(session.getId()).thenReturn("test-socket-1");
         when(session.isOpen()).thenReturn(true);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
+        doAnswer(invocation -> {
+            org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
-                Assert.assertTrue(TextMessage.class.isInstance(request));
-                Assert.assertEquals(((TextMessage)request).getPayload(), requestMessage.getPayload(String.class));
-                Assert.assertTrue(request.isLast());
-                return null;
-            }
+            assertTrue(TextMessage.class.isInstance(request));
+            assertEquals(((TextMessage) request).getPayload(), requestMessage.getPayload(String.class));
+            assertTrue(request.isLast());
+            return null;
         }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
         webSocketEndpoint.createProducer().send(requestMessage, context);
 
-        try {
-            webSocketEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
-            Assert.fail("Missing timeout exception on web socket client");
-        } catch (ActionTimeoutException e) {
-            Assert.assertTrue(e.getMessage().contains(endpointUri));
-        }
-
+        ActionTimeoutException actionTimeoutException = expectThrows(ActionTimeoutException.class, () -> webSocketEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout()));
+        assertTrue(actionTimeoutException.getMessage().contains(endpointUri));
     }
 }

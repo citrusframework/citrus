@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,6 @@
 
 package org.citrusframework.http.interceptor;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
 import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.message.RawMessage;
 import org.citrusframework.report.MessageListeners;
@@ -37,6 +29,16 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map.Entry;
+
+import static java.lang.String.join;
+import static java.lang.System.lineSeparator;
+
 /**
  * Simple logging interceptor writes Http request and response messages to the console.
  *
@@ -45,10 +47,14 @@ import org.springframework.http.client.ClientHttpResponse;
  */
 public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
-    /** New line characters in logger files */
-    private static final String NEWLINE = System.getProperty("line.separator");
+    /**
+     * New line characters in logger files
+     */
+    private static final String NEWLINE = lineSeparator();
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(LoggingClientInterceptor.class);
 
     private MessageListeners messageListener;
@@ -56,8 +62,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
     private final TestContextFactory contextFactory = TestContextFactory.newInstance();
 
     @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-        ClientHttpRequestExecution execution) throws IOException {
+    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         handleRequest(getRequestContent(request, new String(body)));
 
         ClientHttpResponse response = execution.execute(request, body);
@@ -69,6 +74,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
     /**
      * Handles request messages for logging.
+     *
      * @param request
      */
     public void handleRequest(String request) {
@@ -84,6 +90,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
     /**
      * Handles response messages for logging.
+     *
      * @param response
      */
     public void handleResponse(String response) {
@@ -99,6 +106,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
     /**
      * Checks if message listeners are present on this interceptor.
+     *
      * @return
      */
     public boolean hasMessageListeners() {
@@ -107,6 +115,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
     /**
      * Builds request content string from request and body.
+     *
      * @param request
      * @param body
      * @return
@@ -129,6 +138,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
     /**
      * Builds response content string from response object.
+     *
      * @param response
      * @return
      * @throws IOException
@@ -156,6 +166,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
     /**
      * Append Http headers to string builder.
+     *
      * @param headers
      * @param builder
      */
@@ -163,7 +174,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         for (Entry<String, List<String>> headerEntry : headers.entrySet()) {
             builder.append(headerEntry.getKey());
             builder.append(":");
-            builder.append(headerEntry.getValue().stream().collect(Collectors.joining(",")));
+            builder.append(join(",", headerEntry.getValue()));
             builder.append(NEWLINE);
         }
     }
@@ -188,6 +199,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         }
 
         @Override
+        @Deprecated(forRemoval = true)
         public int getRawStatusCode() throws IOException {
             return this.response.getRawStatusCode();
         }
@@ -226,10 +238,10 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
     /**
      * Sets the message listener.
+     *
      * @param messageListener
      */
     public void setMessageListener(MessageListeners messageListener) {
         this.messageListener = messageListener;
     }
-
 }

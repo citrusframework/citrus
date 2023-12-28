@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,11 @@
 
 package org.citrusframework.http.interceptor;
 
-import org.springframework.util.PathMatcher;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.MappedInterceptor;
-import org.springframework.web.util.UrlPathHelper;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Adapter for {@link org.springframework.web.servlet.handler.MappedInterceptor} conditionally applies interceptor
@@ -35,26 +32,20 @@ import jakarta.servlet.http.HttpServletResponse;
 public class MappedInterceptorAdapter implements HandlerInterceptor {
 
     private final MappedInterceptor mappedInterceptor;
-    private final UrlPathHelper urlPathHelper;
-    private final PathMatcher pathMatcher;
 
     /**
      * Default constructor using mapped interceptor, url path helper as well
      * as path matcher instance.
      *
      * @param mappedInterceptor
-     * @param urlPathHelper
-     * @param pathMatcher
      */
-    public MappedInterceptorAdapter(MappedInterceptor mappedInterceptor, UrlPathHelper urlPathHelper, PathMatcher pathMatcher) {
+    public MappedInterceptorAdapter(MappedInterceptor mappedInterceptor) {
         this.mappedInterceptor = mappedInterceptor;
-        this.urlPathHelper = urlPathHelper;
-        this.pathMatcher = pathMatcher;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (mappedInterceptor.matches(urlPathHelper.getLookupPathForRequest(request), pathMatcher)) {
+        if (mappedInterceptor.matches(request)) {
             return mappedInterceptor.getInterceptor().preHandle(request, response, handler);
         }
 
@@ -63,14 +54,14 @@ public class MappedInterceptorAdapter implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (mappedInterceptor.matches(urlPathHelper.getLookupPathForRequest(request), pathMatcher)) {
+        if (mappedInterceptor.matches(request)) {
             mappedInterceptor.getInterceptor().postHandle(request, response, handler, modelAndView);
         }
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        if (mappedInterceptor.matches(urlPathHelper.getLookupPathForRequest(request), pathMatcher)) {
+        if (mappedInterceptor.matches(request)) {
             mappedInterceptor.getInterceptor().afterCompletion(request, response, handler, ex);
         }
     }
