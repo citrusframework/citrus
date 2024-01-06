@@ -500,6 +500,13 @@ The function will encode a string to binary data using base64 hexadecimal encodi
 
 encoded = *VGVzdCBGcmFtZXdvcms=*
 
+It also has an optional charset parameter that is used for encoding the input string, with UTF-8 as its default value.
+
+[source,xml]
+----
+<variable name="encoded" value="citrus:encodeBase64('Hallo Testframework', 'UTF-8')"/>
+----
+
 [[functions-decode-base64]]
 == decodeBase64()
 
@@ -511,6 +518,13 @@ The function will decode binary data to a character sequence using base64 hexade
 ----
 
 decoded = *Hallo Testframework*
+
+It also has an optional charset parameter that is used for encoding the input string, with UTF-8 as its default value.
+
+[source,xml]
+----
+<variable name="decoded" value="citrus:decodeBase64('VGVzdCBGcmFtZXdvcms=', 'UTF-8')"/>
+----
 
 [[functions-escape-xml]]
 == escapeXml()
@@ -652,6 +666,19 @@ Let's see this function in action:
 
 The function reads the file content and places the content at the position where the function has been called. This means that you can also use this function as part of Strings and message payloads for instance. This is a very powerful way to extract large message parts to separate file resources. Just add the *readFile* function somewhere to the message content and Citrus will load the extra file content and place it right into the message payload for you.
 
+This function has a second and a third optional parameter that can be used for the following:
+
+- 2nd parameter: a boolean value to indicate that the returned value should be base64 encoded. Defaults to false.
+[source,xml]
+----
+<message>citrus:readFile('classpath:some/path/to/file.txt', true)</message>
+----
+- 3rd parameter: a boolean value to indicate that a dynamic replacement (Citrus variables, functions, etc.) should be performed before the content is base64 encoded. Defaults to false.
+[source,xml]
+----
+<message>citrus:readFile('classpath:some/path/to/file.txt', true, true)</message>
+----
+
 [[functions-message]]
 == message()
 
@@ -759,6 +786,19 @@ external file or just use a test variable.
 </echo>
 ----
 
+The JSON source may also be specified in multiple parameters, in which case the arguments except the last one are concatenated with commas,
+and will be treated as the JSON source. The last parameter is always treated as the JSON path expression.
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:jsonPath('{ "message": { "id": 1000', '"text": "Some text content" } }', '$.message.id')]]></message>
+</echo>
+----
+
+In the example above, the parts `{ "message": { "id": 1000` and `"text": "Some text content" } }` will form the JSON source
+as `{ "message": { "id": 1000, "text": "Some text content" } }`.
+
 Also accessing the local message store is valid here:
 
 [source,xml]
@@ -825,3 +865,15 @@ As the Spring environment is also able to resolve System properties you can use 
 ----
 
 The default value is optional and provides an error fallback in case the environment setting is not available. In case no default value is provided the function will fail with errors.
+
+[[functions-unix-timestamp]]
+== unixTimestamp()
+
+*unixTimestamp* is a parameterless function that simply returns the current epoch timestamp as seconds.
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:unixTimestamp()]]></message>
+</echo>
+----
