@@ -206,7 +206,7 @@
     <jakarta.xml.soap-api.version>3.0.1</jakarta.xml.soap-api.version>
     <jansi.version>2.4.0</jansi.version>
     <javapoet.version>1.13.0</javapoet.version>
-    <jaxb.version>4.0.3</jaxb.version>
+    <jaxb.version>4.0.4</jaxb.version>
     <jetty.version>12.0.5</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
     <jsch.version>0.1.55</jsch.version>
