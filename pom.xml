@@ -173,7 +173,7 @@
     <apache.camel.version>4.3.0</apache.camel.version>
     <apicurio.data-models.version>1.1.27</apicurio.data-models.version>
     <ascii-table-version>1.8.0</ascii-table-version>
-    <bouncycastle.version>1.76</bouncycastle.version>
+    <bouncycastle.version>1.77</bouncycastle.version>
     <byte.buddy.version>1.14.9</byte.buddy.version>
     <citrus.db.version>0.1.4</citrus.db.version>
     <commons.dbcp2.version>2.10.0</commons.dbcp2.version>
