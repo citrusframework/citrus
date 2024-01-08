@@ -187,7 +187,7 @@
     <docker-java.version>3.3.3</docker-java.version>
     <dropwizard.metrics.version>4.2.21</dropwizard.metrics.version>
     <ftpserver.version>1.2.0</ftpserver.version>
-    <groovy.version>3.0.19</groovy.version>
+    <groovy.version>3.0.20</groovy.version>
     <greenmail.version>2.0.0</greenmail.version>
     <hamcrest.version>2.2</hamcrest.version>
     <htmlunit.version>4.13.0</htmlunit.version>
