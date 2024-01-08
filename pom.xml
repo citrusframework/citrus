@@ -240,7 +240,7 @@
     <swagger.version>1.6.9</swagger.version>
     <swagger.parser.version>2.1.16</swagger.parser.version>
     <testng.version>7.8.0</testng.version>
-    <vertx.version>4.4.6</vertx.version>
+    <vertx.version>4.5.1</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
     <xbean-spring.version>4.24</xbean-spring.version>
     <xmlbeans.version>3.0.0</xmlbeans.version>
