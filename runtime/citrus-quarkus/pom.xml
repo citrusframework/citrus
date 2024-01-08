@@ -15,7 +15,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <quarkus.platform.version>3.4.2</quarkus.platform.version>
+    <quarkus.platform.version>3.6.4</quarkus.platform.version>
   </properties>
 
   <dependencyManagement>
