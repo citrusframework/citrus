@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package org.citrusframework.kubernetes.config.annotation;
 
+import org.citrusframework.annotations.CitrusEndpointConfig;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import org.citrusframework.annotations.CitrusEndpointConfig;
 
 /**
  * @author Christoph Deppisch
@@ -55,6 +55,12 @@ public @interface KubernetesClientConfig {
      * @return
      */
     String password() default "";
+
+    /**
+     * Authentication Token
+     * @return
+     */
+    String oauthToken() default "";
 
     /**
      * Namespace

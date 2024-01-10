@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2006-2016 the original author or authors.
+  ~ Copyright 2006-2024 the original author or authors.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -30,11 +30,11 @@
       <xs:attribute name="version" type="xs:string"/>
       <xs:attribute name="username" type="xs:string"/>
       <xs:attribute name="password" type="xs:string"/>
+      <xs:attribute name="oauthToken" type="xs:string"/>
       <xs:attribute name="namespace" type="xs:string"/>
       <xs:attribute name="message-converter" type="xs:string"/>
       <xs:attribute name="object-mapper" type="xs:string"/>
       <xs:attribute name="cert-file" type="xs:string"/>
     </xs:complexType>
   </xs:element>
-
 </xs:schema>

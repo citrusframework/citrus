@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.client.KubernetesClientBuilder;
 import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.util.StringUtils;
+
+import static org.citrusframework.kubernetes.config.CredentialValidator.isValid;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * @author Christoph Deppisch
@@ -34,35 +36,43 @@ public class KubernetesClientConfigParser implements AnnotationConfigParser<Kube
     public KubernetesClient parse(KubernetesClientConfig annotation, ReferenceResolver referenceResolver) {
         KubernetesClientBuilder builder = new KubernetesClientBuilder();
 
-        if (StringUtils.hasText(annotation.url())) {
+        if (!isValid(annotation.username(), annotation.password(), annotation.oauthToken())) {
+            throw new IllegalArgumentException("Parameters not set correctly - check if either an oauthToke or password and username is set");
+        }
+
+        if (hasText(annotation.url())) {
             builder.url(annotation.url());
         }
 
-        if (StringUtils.hasText(annotation.version())) {
+        if (hasText(annotation.version())) {
             builder.version(annotation.version());
         }
 
-        if (StringUtils.hasText(annotation.username())) {
+        if (hasText(annotation.username())) {
             builder.username(annotation.username());
         }
 
-        if (StringUtils.hasText(annotation.password())) {
+        if (hasText(annotation.password())) {
             builder.password(annotation.password());
         }
 
-        if (StringUtils.hasText(annotation.namespace())) {
+        if (hasText(annotation.oauthToken())) {
+            builder.oauthToken(annotation.oauthToken());
+        }
+
+        if (hasText(annotation.namespace())) {
             builder.namespace(annotation.namespace());
         }
 
-        if (StringUtils.hasText(annotation.certFile())) {
+        if (hasText(annotation.certFile())) {
             builder.certFile(annotation.certFile());
         }
 
-        if (StringUtils.hasText(annotation.messageConverter())) {
+        if (hasText(annotation.messageConverter())) {
             builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), KubernetesMessageConverter.class));
         }
 
-        if (StringUtils.hasText(annotation.objectMapper())) {
+        if (hasText(annotation.objectMapper())) {
             builder.objectMapper(referenceResolver.resolve(annotation.objectMapper(), ObjectMapper.class));
         }
 

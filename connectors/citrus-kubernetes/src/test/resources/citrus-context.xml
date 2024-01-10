@@ -27,5 +27,4 @@
                             username="minikube"
                             namespace="default"
                             url="https://${minikube}:8443/"/>
-
 </beans>

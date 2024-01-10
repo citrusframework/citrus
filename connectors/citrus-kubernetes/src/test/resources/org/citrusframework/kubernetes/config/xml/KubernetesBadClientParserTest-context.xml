@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-k8s="http://www.citrusframework.org/schema/kubernetes/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/kubernetes/config http://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config.xsd">
+
+    <citrus-k8s:client id="k8sClient1"
+                       url="http://localhost:8843/"
+                       version="v1"
+                       username="user"
+                       namespace="user_namespace"
+                       message-converter="messageConverter"
+                       object-mapper="objectMapper"/>
+
+    <citrus-k8s:client id="k8sClient2"
+                       url="http://localhost:8843/"
+                       version="v1"
+                       username="user"
+                       password="s!cr!t"
+                       oauthToken="xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51"
+                       namespace="user_namespace"
+                       message-converter="messageConverter"
+                       object-mapper="objectMapper"/>
+
+    <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">org.citrusframework.kubernetes.message.KubernetesMessageConverter</value></constructor-arg>
+        <constructor-arg value="messageConverter"/>
+    </bean>
+
+    <bean id="objectMapper" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg><value type="java.lang.Class">com.fasterxml.jackson.databind.ObjectMapper</value></constructor-arg>
+        <constructor-arg value="objectMapper"/>
+    </bean>
+
+</beans>
