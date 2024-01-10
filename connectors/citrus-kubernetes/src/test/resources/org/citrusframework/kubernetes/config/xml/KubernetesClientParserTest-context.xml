@@ -16,6 +16,14 @@
                           message-converter="messageConverter"
                           object-mapper="objectMapper"/>
 
+  <citrus-k8s:client id="k8sClient3"
+                     url="http://localhost:8843/"
+                     version="v1"
+                     oauthToken="xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51"
+                     namespace="user_namespace"
+                     message-converter="messageConverter"
+                     object-mapper="objectMapper"/>
+
   <bean id="messageConverter" class="org.mockito.Mockito" factory-method="mock">
     <constructor-arg><value type="java.lang.Class">org.citrusframework.kubernetes.message.KubernetesMessageConverter</value></constructor-arg>
     <constructor-arg value="messageConverter"/>

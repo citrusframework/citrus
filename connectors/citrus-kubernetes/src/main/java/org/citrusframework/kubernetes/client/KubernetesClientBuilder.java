@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package org.citrusframework.kubernetes.client;
 
-import org.citrusframework.endpoint.AbstractEndpointBuilder;
-import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.ConfigBuilder;
+import org.citrusframework.endpoint.AbstractEndpointBuilder;
+import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 
 /**
  * @author Christoph Deppisch
@@ -79,6 +79,16 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
      */
     public KubernetesClientBuilder password(String password) {
         config.withPassword(password);
+        return this;
+    }
+
+    /**
+     * Sets the authentication token.
+     * @param oauthToken
+     * @return
+     */
+    public KubernetesClientBuilder oauthToken(String oauthToken) {
+        config.withOauthToken(oauthToken);
         return this;
     }
 

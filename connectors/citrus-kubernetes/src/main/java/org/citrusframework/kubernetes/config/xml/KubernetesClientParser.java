@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,20 @@
 
 package org.citrusframework.kubernetes.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import io.fabric8.kubernetes.client.Config;
 import org.citrusframework.config.xml.AbstractEndpointParser;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.endpoint.KubernetesEndpointConfiguration;
-import io.fabric8.kubernetes.client.Config;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
+
+import static org.citrusframework.config.util.BeanDefinitionParserUtils.registerBean;
+import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyReference;
+import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyValue;
+import static org.citrusframework.kubernetes.config.CredentialValidator.isValid;
 
 /**
  * Bean definition parser for kubernetes client instance.
@@ -39,21 +43,30 @@ public class KubernetesClientParser extends AbstractEndpointParser {
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
         super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
+        String username = element.getAttribute("username");
+        String password = element.getAttribute("password");
+        String oauthToken = element.getAttribute("oauthToken");
+
+        if (!isValid(username, password, oauthToken)) {
+            throw new IllegalArgumentException("Parameters not set correctly - check if either an oauthToke or password and username is set");
+        }
+
         BeanDefinitionBuilder configBuilder = BeanDefinitionBuilder.genericBeanDefinition(Config.class);
-        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("url"), "masterUrl");
-        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("version"), "apiVersion");
-        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("username"), "username");
-        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("password"), "password");
-        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("namespace"), "namespace");
-        BeanDefinitionParserUtils.setPropertyValue(configBuilder, element.getAttribute("cert-file"), "caCertFile");
+        setPropertyValue(configBuilder, element.getAttribute("url"), "masterUrl");
+        setPropertyValue(configBuilder, element.getAttribute("version"), "apiVersion");
+        setPropertyValue(configBuilder, username, "username");
+        setPropertyValue(configBuilder, password, "password");
+        setPropertyValue(configBuilder, oauthToken, "oauthToken");
+        setPropertyValue(configBuilder, element.getAttribute("namespace"), "namespace");
+        setPropertyValue(configBuilder, element.getAttribute("cert-file"), "caCertFile");
 
         String clientConfigId = element.getAttribute(ID_ATTRIBUTE) + "Config";
-        BeanDefinitionParserUtils.registerBean(clientConfigId, configBuilder.getBeanDefinition(), parserContext, shouldFireEvents());
+        registerBean(clientConfigId, configBuilder.getBeanDefinition(), parserContext, shouldFireEvents());
 
         endpointConfiguration.addPropertyReference("kubernetesClientConfig", clientConfigId);
 
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("object-mapper"), "objectMapper");
+        setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
+        setPropertyReference(endpointConfiguration, element.getAttribute("object-mapper"), "objectMapper");
     }
 
     @Override

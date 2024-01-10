@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,16 @@
 
 package org.citrusframework.kubernetes.config.xml;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.testng.AbstractBeanDefinitionParserTest;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Map;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * @author Christoph Deppisch
@@ -34,22 +36,32 @@ public class KubernetesClientParserTest extends AbstractBeanDefinitionParserTest
     public void testKubernetesClientParser() {
         Map<String, KubernetesClient> clients = beanDefinitionContext.getBeansOfType(KubernetesClient.class);
 
-        Assert.assertEquals(clients.size(), 2);
+        assertEquals(clients.size(), 3);
 
         // 1st client
         KubernetesClient client = clients.get("k8sClient1");
-        Assert.assertNotNull(client.getClient());
+        assertNotNull(client.getClient());
 
         // 2nd client
         client = clients.get("k8sClient2");
-        Assert.assertNotNull(client.getClient());
-        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl().toString(), "http://localhost:8843/");
-        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
-        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
-        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
-        Assert.assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
-        Assert.assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
-        Assert.assertEquals(client.getEndpointConfiguration().getObjectMapper(), beanDefinitionContext.getBean("objectMapper", ObjectMapper.class));
+        assertNotNull(client.getClient());
+        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "http://localhost:8843/");
+        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
+        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getUsername(), "user");
+        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getPassword(), "s!cr!t");
+        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
+        assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
+        assertEquals(client.getEndpointConfiguration().getObjectMapper(), beanDefinitionContext.getBean("objectMapper", ObjectMapper.class));
+
+        // 3rd client
+        client = clients.get("k8sClient3");
+        assertNotNull(client.getClient());
+        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "http://localhost:8843/");
+        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getApiVersion(), "v1");
+        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getOauthToken(), "xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51");
+        assertEquals(client.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
+        assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter", MessageConverter.class));
+        assertEquals(client.getEndpointConfiguration().getObjectMapper(), beanDefinitionContext.getBean("objectMapper", ObjectMapper.class));
 
     }
 }

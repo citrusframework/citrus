@@ -69,6 +69,8 @@ In case you need to set the client configuration explicitly on your environment 
               object-mapper="objectMapper"/>
 ----
 
+*Note*: You have the option to set an `oauthToken` for the client instead of using `username` and `password`.
+
 Now Citrus is able to access the Kubernetes remote API for executing commands such as list-pods, watch-services and so on. Citrus provides a set of actions that
 perform a Kubernetes command via REST. The results usually get validated in the Citrus test as usual.
 
