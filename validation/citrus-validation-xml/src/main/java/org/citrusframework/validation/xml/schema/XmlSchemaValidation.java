@@ -1,14 +1,5 @@
 package org.citrusframework.validation.xml.schema;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -33,13 +24,48 @@ import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXParseException;
 
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
+import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
+
 public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidationContext> {
+
+    public static final String NO_SCHEMA_FOUND_STRATEGY_PROPERTY_NAME = "citrus.xml.no.schema.found.strategy";
+    public static final String NO_SCHEMA_FOUND_STRATEGY_ENV_VAR_NAME = NO_SCHEMA_FOUND_STRATEGY_PROPERTY_NAME.replace(".", "_").toUpperCase();
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(XmlSchemaValidation.class);
 
     /** Transformer factory */
     private final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
+    /** fail if no schema found property */
+    private final ValidationStrategy noSchemaFoundStrategy;
+
+    public XmlSchemaValidation() {
+        this(new SystemProvider());
+    }
+
+    /**
+     * {@code protected} constructor meant for injecting mocks during tests.
+     */
+    protected XmlSchemaValidation(SystemProvider systemProvider) {
+        this(getSchemaValidationStrategy(systemProvider));
+    }
+
+    public XmlSchemaValidation(ValidationStrategy noSchemaFoundStrategy) {
+        this.noSchemaFoundStrategy = noSchemaFoundStrategy;
+    }
 
     /**
      * Validate message with an XML schema.
@@ -76,8 +102,8 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
                 schemaRepository = context.getReferenceResolver().resolve(validationContext.getSchemaRepository(), XsdSchemaRepository.class);
             } else if (schemaRepositories.size() == 1) {
                 schemaRepository = schemaRepositories.get(0);
-            } else if (schemaRepositories.size() > 0) {
-                schemaRepository = schemaRepositories.stream().filter(repository -> repository.canValidate(doc)).findFirst().orElseThrow(() -> new CitrusRuntimeException(String.format("Failed to find proper schema " + "repository for validating element '%s(%s)'", doc.getFirstChild().getLocalName(), doc.getFirstChild().getNamespaceURI())));
+            } else if (!schemaRepositories.isEmpty()) {
+                schemaRepository = schemaRepositories.stream().filter(repository -> repository.canValidate(doc)).findFirst().orElseThrow(() -> new CitrusRuntimeException(format("Failed to find proper schema " + "repository for validating element '%s(%s)'", doc.getFirstChild().getLocalName(), doc.getFirstChild().getNamespaceURI())));
             } else {
                 logger.warn("Neither schema instance nor schema repository defined - skipping XML schema validation");
                 return;
@@ -85,15 +111,22 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
 
             if (schemaRepository != null) {
                 if (!schemaRepository.canValidate(doc)) {
-                    throw new CitrusRuntimeException(String.format("Unable to find proper XML schema definition for element '%s(%s)' in schema repository '%s'", doc.getFirstChild().getLocalName(), doc.getFirstChild().getNamespaceURI(), schemaRepository.getName()));
+                    if (FAIL.equals(noSchemaFoundStrategy)) {
+                        throw new CitrusRuntimeException(format("Unable to find proper XML schema definition for element '%s(%s)' in schema repository '%s'", doc.getFirstChild().getLocalName(), doc.getFirstChild().getNamespaceURI(), schemaRepository.getName()));
+                    } else {
+                        if (logger.isTraceEnabled()) {
+                            logger.trace(createSchemaNotFoundMessage(doc, schemaRepository));
+                        }
+                        return;
+                    }
                 }
 
                 List<Resource> schemas = new ArrayList<>();
                 for (XsdSchema xsdSchema : schemaRepository.getSchemas()) {
-                    if (xsdSchema instanceof XsdSchemaCollection) {
-                        schemas.addAll(((XsdSchemaCollection) xsdSchema).getSchemaResources());
-                    } else if (xsdSchema instanceof WsdlXsdSchema) {
-                        schemas.addAll(((WsdlXsdSchema) xsdSchema).getSchemaResources());
+                    if (xsdSchema instanceof XsdSchemaCollection xsdSchemaCollection) {
+                        schemas.addAll(xsdSchemaCollection.getSchemaResources());
+                    } else if (xsdSchema instanceof WsdlXsdSchema wsdlXsdSchema) {
+                        schemas.addAll(wsdlXsdSchema.getSchemaResources());
                     } else {
                         synchronized (transformerFactory) {
                             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -145,5 +178,43 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return "XML".equals(messageType) || (message != null && IsXmlPredicate.getInstance().test(message.getPayload(String.class)));
+    }
+
+    private String createSchemaNotFoundMessage(Document doc, XsdSchemaRepository schemaRepository) {
+        return format(
+                "Unable to find proper XML schema definition for element '%s(%s)' in schema repository '%s'",
+                doc.getFirstChild().getLocalName(),
+                doc.getFirstChild().getNamespaceURI(),
+                schemaRepository.getName()
+        );
+    }
+
+    private static ValidationStrategy getSchemaValidationStrategy(SystemProvider systemProvider) {
+        return extractEnvOrProperty(systemProvider, NO_SCHEMA_FOUND_STRATEGY_ENV_VAR_NAME, NO_SCHEMA_FOUND_STRATEGY_PROPERTY_NAME)
+                .map(String::toUpperCase)
+                .map(value -> {
+                    try {
+                        return ValidationStrategy.valueOf(value);
+                    } catch (IllegalArgumentException e) {
+                        throw new CitrusRuntimeException(format("Invalid property value '%s' for no schema found strategy", value));
+                    }
+                })
+                .orElse(FAIL);
+    }
+
+    private static Optional<String> extractEnvOrProperty(SystemProvider systemProvider, String envVarName, String fallbackPropertyName) {
+        return systemProvider.getEnv(envVarName)
+                .or(() -> systemProvider.getProperty(fallbackPropertyName));
+    }
+
+    static final class SystemProvider {
+
+        Optional<String> getEnv(String envVarName) {
+            return ofNullable(System.getenv(envVarName));
+        }
+
+        Optional<String> getProperty(String propertyName) {
+            return ofNullable(System.getProperty(propertyName));
+        }
     }
 }
