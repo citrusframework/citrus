@@ -29,6 +29,9 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static org.citrusframework.validation.ValidationUtils.buildValueToBeInCollectionErrorMessage;
+import static org.testng.Assert.assertEquals;
+
 /**
  * @author Christoph Deppisch
  * @since 2.5
@@ -55,6 +58,17 @@ public class ValidationUtilsTest extends UnitTestSupport {
     @Test(dataProvider = "testDataTypeFailed", expectedExceptions = ValidationException.class)
     public void testValidateValuesTypeFailure(String actualValue, Object expectedValue, String path) throws Exception {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
+    }
+
+    @Test
+    public void testBuildValueToBeInCollectionErrorMessage() {
+        String actual = buildValueToBeInCollectionErrorMessage(
+                "This is not right",
+                "lorem",
+                List.of("dolor", "sit", "amet")
+        );
+        String expected = "This is not right, expected 'lorem' to be in '[dolor, sit, amet]'";
+        assertEquals(actual, expected);
     }
 
     @DataProvider
