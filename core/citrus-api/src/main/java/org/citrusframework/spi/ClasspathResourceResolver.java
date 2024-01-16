@@ -19,12 +19,12 @@
 
 package org.citrusframework.spi;
 
+import static org.citrusframework.spi.Resources.CLASSPATH_RESOURCE_PREFIX;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -71,8 +71,8 @@ public class ClasspathResourceResolver {
             path = path.substring(0, path.length() - 2);
         }
 
-        if (path.startsWith(Resources.CLASSPATH_RESOURCE_PREFIX)) {
-            path = path.substring(Resources.CLASSPATH_RESOURCE_PREFIX.length());
+        if (path.startsWith(CLASSPATH_RESOURCE_PREFIX)) {
+            path = path.substring(CLASSPATH_RESOURCE_PREFIX.length());
         }
 
         if (path.startsWith("/")) {
@@ -157,15 +157,12 @@ public class ClasspathResourceResolver {
     private static void readFromJarStream(ClassLoader classLoader, String path, String urlPath,
         Set<Path> resources, Predicate<String> filter, InputStream jarInputStream) {
         List<String> entries = new ArrayList<>();
-        try (JarInputStream jarStream = new JarInputStream(jarInputStream);) {
+        try (JarInputStream jarStream = new JarInputStream(jarInputStream)) {
             JarEntry entry;
             while ((entry = jarStream.getNextJarEntry()) != null) {
                 final String name = entry.getName().trim();
-                if (!entry.isDirectory() && filter.test(name)) {
-                    // name is FQN so it must start with package name
-                    if (name.startsWith(path)) {
+                if (!entry.isDirectory() && filter.test(name) && name.startsWith(path)) {
                         entries.add(name);
-                    }
                 }
             }
 
@@ -211,17 +208,7 @@ public class ClasspathResourceResolver {
     private String parseUrlPath(URL url) {
         String urlPath = URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8);
 
-        if (urlPath.startsWith("file:")) {
-            try {
-                urlPath = new URI(url.getFile()).getPath();
-            } catch (URISyntaxException e) {
-                // do nothing
-            }
-
-            if (urlPath.startsWith("file:")) {
-                urlPath = urlPath.substring(5);
-            }
-        }
+        urlPath = removeNestedProtocol(urlPath);
 
         // osgi bundles should be skipped
         if (url.toString().startsWith("bundle:") || urlPath.startsWith("bundle:")) {
@@ -237,6 +224,22 @@ public class ClasspathResourceResolver {
 
         // else it may be in a JAR, grab the path to the jar
         return urlPath.contains("!") ? urlPath.substring(0, urlPath.lastIndexOf("!")) : urlPath;
+    }
+
+    /**
+     * Removes any nested protocol from the URL path, particularly addressing cases when dealing with
+     * Spring Boot fat JARs.
+     * <p>
+     * Two common cases are:
+     * 1. 'jar:file:/path' - for nested URLs in Spring Boot versions up to 3.1.x.
+     * 2. 'jar:nested:/path' - for nested URLs in Spring Boot versions starting from 3.2.x.
+     */
+    private static String removeNestedProtocol(String urlPath) {
+        int protocolSeparatorIndex = urlPath.indexOf(':');
+        if (protocolSeparatorIndex > -1 && protocolSeparatorIndex < urlPath.indexOf('/')) {
+            urlPath = urlPath.substring(protocolSeparatorIndex+1);
+        }
+        return urlPath;
     }
 
     private Set<ClassLoader> getClassLoaders() {
