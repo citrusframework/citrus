@@ -663,8 +663,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.0.2,</span>
-<span id="revdate">2023-11-22</span>
+<span id="revnumber">version 4.1.0,</span>
+<span id="revdate">2024-01-17</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -921,14 +921,15 @@ $(addBlockSwitches);
 <li><a href="#click">23.5. Click</a></li>
 <li><a href="#hover">23.6. Hover</a></li>
 <li><a href="#form-input-actions">23.7. Form input actions</a></li>
-<li><a href="#page-actions">23.8. Page actions</a></li>
-<li><a href="#page-validation">23.9. Page validation</a></li>
-<li><a href="#wait">23.10. Wait</a></li>
-<li><a href="#navigate">23.11. Navigate</a></li>
-<li><a href="#window-actions">23.12. Window actions</a></li>
-<li><a href="#alert">23.13. Alert</a></li>
-<li><a href="#make-screenshot">23.14. Make screenshot</a></li>
-<li><a href="#clear-browser-cache">23.15. Clear browser cache</a></li>
+<li><a href="#form-fill-actions">23.8. Fill form</a></li>
+<li><a href="#page-actions">23.9. Page actions</a></li>
+<li><a href="#page-validation">23.10. Page validation</a></li>
+<li><a href="#wait">23.11. Wait</a></li>
+<li><a href="#navigate">23.12. Navigate</a></li>
+<li><a href="#window-actions">23.13. Window actions</a></li>
+<li><a href="#alert">23.14. Alert</a></li>
+<li><a href="#make-screenshot">23.15. Make screenshot</a></li>
+<li><a href="#clear-browser-cache">23.16. Clear browser cache</a></li>
 </ul>
 </li>
 <li><a href="#vert-x-event-bus">24. Vert.x event bus support</a>
@@ -1007,129 +1008,135 @@ $(addBlockSwitches);
 <li><a href="#jms-endpoint-adapter">34.5. JMS endpoint adapter</a></li>
 </ul>
 </li>
-<li><a href="#functions">35. Functions</a>
+<li><a href="#connectors">35. Connectors</a>
 <ul class="sectlevel2">
-<li><a href="#functions-concat">35.1. concat()</a></li>
-<li><a href="#functions-substring">35.2. substring()</a></li>
-<li><a href="#functions-stringlength">35.3. stringLength()</a></li>
-<li><a href="#functions-translate">35.4. translate()</a></li>
-<li><a href="#functions-substring-before">35.5. substringBefore()</a></li>
-<li><a href="#functions-substring-after">35.6. substringAfter()</a></li>
-<li><a href="#functions-round">35.7. round()</a></li>
-<li><a href="#functions-floor">35.8. floor()</a></li>
-<li><a href="#functions-ceiling">35.9. ceiling()</a></li>
-<li><a href="#functions-random-number">35.10. randomNumber()</a></li>
-<li><a href="#functions-random-string">35.11. randomString()</a></li>
-<li><a href="#functions-random-enum-value">35.12. randomEnumValue()</a></li>
-<li><a href="#functions-current-date">35.13. currentDate()</a></li>
-<li><a href="#functions-uppercase">35.14. upperCase()</a></li>
-<li><a href="#functions-lowercase">35.15. lowerCase()</a></li>
-<li><a href="#functions-average">35.16. average()</a></li>
-<li><a href="#functions-minimum">35.17. minimum()</a></li>
-<li><a href="#functions-maximum">35.18. maximum()</a></li>
-<li><a href="#functions-sum">35.19. sum()</a></li>
-<li><a href="#functions-absolute">35.20. absolute()</a></li>
-<li><a href="#functions-map-value">35.21. mapValue()</a></li>
-<li><a href="#functions-random-uuid">35.22. randomUUID()</a></li>
-<li><a href="#functions-encode-base64">35.23. encodeBase64()</a></li>
-<li><a href="#functions-decode-base64">35.24. decodeBase64()</a></li>
-<li><a href="#functions-escape-xml">35.25. escapeXml()</a></li>
-<li><a href="#functions-cdata-section">35.26. cdataSection()</a></li>
-<li><a href="#functions-digest-auth-header">35.27. digestAuthHeader()</a></li>
-<li><a href="#functions-localhost-address">35.28. localHostAddress()</a></li>
-<li><a href="#functions-change-date">35.29. changeDate()</a></li>
-<li><a href="#functions-read-file">35.30. readFile()</a></li>
-<li><a href="#functions-message">35.31. message()</a></li>
-<li><a href="#functions-xpath">35.32. xpath()</a></li>
-<li><a href="#functions-jsonpath">35.33. jsonPath()</a></li>
-<li><a href="#functions-url-encode">35.34. urlEncode()/urlDecode()</a></li>
-<li><a href="#functions-system-properties">35.35. systemProperty()</a></li>
-<li><a href="#functions-env-settings">35.36. env()</a></li>
+<li><a href="#openapi">35.1. OpenAPI support</a></li>
 </ul>
 </li>
-<li><a href="#validation-matcher">36. Validation matcher</a>
+<li><a href="#functions">36. Functions</a>
 <ul class="sectlevel2">
-<li><a href="#matcher-ignore">36.1. ignore()</a></li>
-<li><a href="#matcher-matches-xml">36.2. matchesXml()</a></li>
-<li><a href="#matcher-equals-ignore-case">36.3. equalsIgnoreCase()</a></li>
-<li><a href="#matcher-contains">36.4. contains()</a></li>
-<li><a href="#matcher-startswith">36.5. startsWith()</a></li>
-<li><a href="#matcher-endswith">36.6. endsWith()</a></li>
-<li><a href="#matcher-matches">36.7. matches()</a></li>
-<li><a href="#matcher-matches-date-pattern">36.8. matchesDatePattern()</a></li>
-<li><a href="#matcher-isnumber">36.9. isNumber()</a></li>
-<li><a href="#matcher-lowerthan">36.10. lowerThan()</a></li>
-<li><a href="#matcher-greaterthan">36.11. greaterThan()</a></li>
-<li><a href="#matcher-isweekday">36.12. isWeekday()</a></li>
-<li><a href="#matcher-variable">36.13. variable()</a></li>
-<li><a href="#matcher-daterange">36.14. dateRange()</a></li>
-<li><a href="#matcher-assert-that">36.15. assertThat()</a></li>
-<li><a href="#matcher-ignore-new-line">36.16. ignoreNewLine()</a></li>
-<li><a href="#matcher-trim-whitespace">36.17. trim()</a></li>
-<li><a href="#matcher-trim-all-whitespace">36.18. trimAllWhitespaces()</a></li>
+<li><a href="#functions-concat">36.1. concat()</a></li>
+<li><a href="#functions-substring">36.2. substring()</a></li>
+<li><a href="#functions-stringlength">36.3. stringLength()</a></li>
+<li><a href="#functions-translate">36.4. translate()</a></li>
+<li><a href="#functions-substring-before">36.5. substringBefore()</a></li>
+<li><a href="#functions-substring-after">36.6. substringAfter()</a></li>
+<li><a href="#functions-round">36.7. round()</a></li>
+<li><a href="#functions-floor">36.8. floor()</a></li>
+<li><a href="#functions-ceiling">36.9. ceiling()</a></li>
+<li><a href="#functions-random-number">36.10. randomNumber()</a></li>
+<li><a href="#functions-random-string">36.11. randomString()</a></li>
+<li><a href="#functions-random-enum-value">36.12. randomEnumValue()</a></li>
+<li><a href="#functions-current-date">36.13. currentDate()</a></li>
+<li><a href="#functions-uppercase">36.14. upperCase()</a></li>
+<li><a href="#functions-lowercase">36.15. lowerCase()</a></li>
+<li><a href="#functions-average">36.16. average()</a></li>
+<li><a href="#functions-minimum">36.17. minimum()</a></li>
+<li><a href="#functions-maximum">36.18. maximum()</a></li>
+<li><a href="#functions-sum">36.19. sum()</a></li>
+<li><a href="#functions-absolute">36.20. absolute()</a></li>
+<li><a href="#functions-map-value">36.21. mapValue()</a></li>
+<li><a href="#functions-random-uuid">36.22. randomUUID()</a></li>
+<li><a href="#functions-encode-base64">36.23. encodeBase64()</a></li>
+<li><a href="#functions-decode-base64">36.24. decodeBase64()</a></li>
+<li><a href="#functions-escape-xml">36.25. escapeXml()</a></li>
+<li><a href="#functions-cdata-section">36.26. cdataSection()</a></li>
+<li><a href="#functions-digest-auth-header">36.27. digestAuthHeader()</a></li>
+<li><a href="#functions-localhost-address">36.28. localHostAddress()</a></li>
+<li><a href="#functions-change-date">36.29. changeDate()</a></li>
+<li><a href="#functions-read-file">36.30. readFile()</a></li>
+<li><a href="#functions-message">36.31. message()</a></li>
+<li><a href="#functions-xpath">36.32. xpath()</a></li>
+<li><a href="#functions-jsonpath">36.33. jsonPath()</a></li>
+<li><a href="#functions-url-encode">36.34. urlEncode()/urlDecode()</a></li>
+<li><a href="#functions-system-properties">36.35. systemProperty()</a></li>
+<li><a href="#functions-env-settings">36.36. env()</a></li>
+<li><a href="#functions-unix-timestamp">36.37. unixTimestamp()</a></li>
 </ul>
 </li>
-<li><a href="#data-dictionaries">37. Data dictionaries</a>
+<li><a href="#validation-matcher">37. Validation matcher</a>
 <ul class="sectlevel2">
-<li><a href="#xml-data-dictionaries">37.1. XML data dictionaries</a></li>
-<li><a href="#json-data-dictionaries">37.2. JSON data dictionaries</a></li>
-<li><a href="#dictionary-scopes">37.3. Dictionary scopes</a></li>
-<li><a href="#path-mapping-strategies">37.4. Path mapping strategies</a></li>
+<li><a href="#matcher-ignore">37.1. ignore()</a></li>
+<li><a href="#matcher-matches-xml">37.2. matchesXml()</a></li>
+<li><a href="#matcher-equals-ignore-case">37.3. equalsIgnoreCase()</a></li>
+<li><a href="#matcher-contains">37.4. contains()</a></li>
+<li><a href="#matcher-startswith">37.5. startsWith()</a></li>
+<li><a href="#matcher-endswith">37.6. endsWith()</a></li>
+<li><a href="#matcher-matches">37.7. matches()</a></li>
+<li><a href="#matcher-matches-date-pattern">37.8. matchesDatePattern()</a></li>
+<li><a href="#matcher-isnumber">37.9. isNumber()</a></li>
+<li><a href="#matcher-lowerthan">37.10. lowerThan()</a></li>
+<li><a href="#matcher-greaterthan">37.11. greaterThan()</a></li>
+<li><a href="#matcher-isweekday">37.12. isWeekday()</a></li>
+<li><a href="#matcher-variable">37.13. variable()</a></li>
+<li><a href="#matcher-daterange">37.14. dateRange()</a></li>
+<li><a href="#matcher-assert-that">37.15. assertThat()</a></li>
+<li><a href="#matcher-ignore-new-line">37.16. ignoreNewLine()</a></li>
+<li><a href="#matcher-trim-whitespace">37.17. trim()</a></li>
+<li><a href="#matcher-trim-all-whitespace">37.18. trimAllWhitespaces()</a></li>
 </ul>
 </li>
-<li><a href="#test-actors">38. Test actors</a>
+<li><a href="#data-dictionaries">38. Data dictionaries</a>
 <ul class="sectlevel2">
-<li><a href="#define-test-actors">38.1. Define test actors</a></li>
-<li><a href="#link-test-actors">38.2. Link test actors</a></li>
-<li><a href="#disable-test-actors">38.3. Disable test actors</a></li>
+<li><a href="#xml-data-dictionaries">38.1. XML data dictionaries</a></li>
+<li><a href="#json-data-dictionaries">38.2. JSON data dictionaries</a></li>
+<li><a href="#dictionary-scopes">38.3. Dictionary scopes</a></li>
+<li><a href="#path-mapping-strategies">38.4. Path mapping strategies</a></li>
 </ul>
 </li>
-<li><a href="#test-suite-actions">39. Test suite actions</a>
+<li><a href="#test-actors">39. Test actors</a>
 <ul class="sectlevel2">
-<li><a href="#before-suite">39.1. Before suite</a></li>
-<li><a href="#after-suite">39.2. After suite</a></li>
-<li><a href="#before-test">39.3. Before test</a></li>
-<li><a href="#after-test">39.4. After test</a></li>
+<li><a href="#define-test-actors">39.1. Define test actors</a></li>
+<li><a href="#link-test-actors">39.2. Link test actors</a></li>
+<li><a href="#disable-test-actors">39.3. Disable test actors</a></li>
 </ul>
 </li>
-<li><a href="#customize-meta-information">40. Customize meta information</a></li>
-<li><a href="#tracing-incoming-outgoing-messages">41. Tracing incoming/outgoing messages</a></li>
-<li><a href="#reporting-and-test-results">42. Reporting and test results</a>
+<li><a href="#test-suite-actions">40. Test suite actions</a>
 <ul class="sectlevel2">
-<li><a href="#console-logging">42.1. Console logging</a></li>
-<li><a href="#junit-reports">42.2. JUnit reports</a></li>
-<li><a href="#html-reports">42.3. HTML reports</a></li>
+<li><a href="#before-suite">40.1. Before suite</a></li>
+<li><a href="#after-suite">40.2. After suite</a></li>
+<li><a href="#before-test">40.3. Before test</a></li>
+<li><a href="#after-test">40.4. After test</a></li>
 </ul>
 </li>
-<li><a href="#run-xml-tests">43. XML tests</a>
+<li><a href="#customize-meta-information">41. Customize meta information</a></li>
+<li><a href="#tracing-incoming-outgoing-messages">42. Tracing incoming/outgoing messages</a></li>
+<li><a href="#reporting-and-test-results">43. Reporting and test results</a>
 <ul class="sectlevel2">
-<li><a href="#xml-test-annotation">43.1. @CitrusTestSource annotation</a></li>
-<li><a href="#xml-test-meta-info">43.2. Test meta information</a></li>
-<li><a href="#xml-test-finally">43.3. Finally block</a></li>
-<li><a href="#xml-test-variables-cdata">43.4. Variables with CDATA sections</a></li>
-<li><a href="#xml-variables-groovy">43.5. Variables with Groovy</a></li>
-<li><a href="#xml-templates">43.6. Templates</a></li>
+<li><a href="#console-logging">43.1. Console logging</a></li>
+<li><a href="#junit-reports">43.2. JUnit reports</a></li>
+<li><a href="#html-reports">43.3. HTML reports</a></li>
 </ul>
 </li>
-<li><a href="#configuration">44. Configuration options</a>
+<li><a href="#run-xml-tests">44. XML tests</a>
 <ul class="sectlevel2">
-<li><a href="#configuration-environment-settings">44.1. Environment settings</a></li>
-<li><a href="#configuration-spring">44.2. Spring configuration settings</a></li>
-<li><a href="#configuration-property-file">44.3. Property file settings</a></li>
+<li><a href="#xml-test-annotation">44.1. @CitrusTestSource annotation</a></li>
+<li><a href="#xml-test-meta-info">44.2. Test meta information</a></li>
+<li><a href="#xml-test-finally">44.3. Finally block</a></li>
+<li><a href="#xml-test-variables-cdata">44.4. Variables with CDATA sections</a></li>
+<li><a href="#xml-variables-groovy">44.5. Variables with Groovy</a></li>
+<li><a href="#xml-templates">44.6. Templates</a></li>
 </ul>
 </li>
-<li><a href="#spring-support">45. Spring support</a>
+<li><a href="#configuration">45. Configuration options</a>
 <ul class="sectlevel2">
-<li><a href="#spring-xml-config">45.1. Spring XML application context</a></li>
-<li><a href="#spring-java-config">45.2. Spring Java config</a></li>
+<li><a href="#configuration-environment-settings">45.1. Environment settings</a></li>
+<li><a href="#configuration-spring">45.2. Spring configuration settings</a></li>
+<li><a href="#configuration-property-file">45.3. Property file settings</a></li>
 </ul>
 </li>
-<li><a href="#samples">46. Samples</a>
+<li><a href="#spring-support">46. Spring support</a>
 <ul class="sectlevel2">
-<li><a href="#samples-flightbooking">46.1. The FlightBooking sample</a></li>
+<li><a href="#spring-xml-config">46.1. Spring XML application context</a></li>
+<li><a href="#spring-java-config">46.2. Spring Java config</a></li>
 </ul>
 </li>
-<li><a href="#appendix">47. Appendix</a>
+<li><a href="#samples">47. Samples</a>
+<ul class="sectlevel2">
+<li><a href="#samples-flightbooking">47.1. The FlightBooking sample</a></li>
+</ul>
+</li>
+<li><a href="#appendix">48. Appendix</a>
 <ul class="sectlevel2">
 <li><a href="#maven-archetypes">Maven archetype</a></li>
 </ul>
@@ -1141,7 +1148,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.0.2</strong></p>
+<p><strong>Version: 4.1.0</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -2356,7 +2363,7 @@ that glue the story description to Citrus test actions. Let&#8217;s do this in a
                 receive(<span class="string"><span class="delimiter">&quot;</span><span class="content">echoEndpoint</span><span class="delimiter">&quot;</span></span>)
                     .message()
                     .type(MessageType.PLAINTEXT)
-                    .body(<span class="string"><span class="delimiter">&quot;</span><span class="content">You just said: </span><span class="delimiter">&quot;</span></span> + body));
+                    .body(body));
     }
 
 }</code></pre>
@@ -27754,6 +27761,14 @@ selenium:dropdown-select
 </tr>
 <tr>
 <td class="hdlist1">
+selenium:fill-form
+</td>
+<td class="hdlist2">
+<p>Fills form with given values and optionally submits form afterwards. Supports setting multiple fields at the same time.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
 selenium:page
 </td>
 <td class="hdlist2">
@@ -28104,7 +28119,68 @@ ids, names or xpath expressions.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="page-actions"><a class="anchor" href="#page-actions"></a><a class="link" href="#page-actions">23.8. Page actions</a></h3>
+<h3 id="form-fill-actions"><a class="anchor" href="#form-fill-actions"></a><a class="link" href="#form-fill-actions">23.8. Fill form</a></h3>
+<div class="paragraph">
+<p>The fill form action sets multiple form fields with given values and optionally submits the form afterwards.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:fill-form</span> <span class="attribute-name">submit</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">save</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;selenium:fields&gt;</span>
+    <span class="tag">&lt;selenium:field</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo_user</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;selenium:field</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${secret}</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;/selenium:fields&gt;</span>
+<span class="tag">&lt;/selenium:fill-form&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().fillForm()
+        .field(<span class="string"><span class="delimiter">&quot;</span><span class="content">username</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">foo_user</span><span class="delimiter">&quot;</span></span>)
+        .field(<span class="string"><span class="delimiter">&quot;</span><span class="content">password</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">${secret}</span><span class="delimiter">&quot;</span></span>)
+        .submit(<span class="string"><span class="delimiter">&quot;</span><span class="content">save</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The actions above set the form fields identified by its id and sets the given values. The actions supports input fields, checkboxes and drop-down select controls. Optionally the form gets submitted by clicking on the given submit button once all fields are set.</p>
+</div>
+<div class="paragraph">
+<p>The user also has the opportunity to set the form fields via Json object where each property in the Json object represents a form field.</p>
+</div>
+<div class="listingblock">
+<div class="title">XML DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;selenium:fill-form</span> <span class="attribute-name">submit</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">save</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;selenium:json&gt;</span>
+      {
+        &quot;username&quot;: &quot;foo_user&quot;,
+        &quot;password&quot;: &quot;secret&quot;
+      }
+    <span class="tag">&lt;/selenium:json&gt;</span>
+<span class="tag">&lt;/selenium:fill-form&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Java DSL</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">selenium().fillForm()
+        .fromJson(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="content">
+            {
+              </span><span class="delimiter">&quot;</span></span>username<span class="string"><span class="delimiter">&quot;</span><span class="content">: </span><span class="delimiter">&quot;</span></span>foo_user<span class="string"><span class="delimiter">&quot;</span><span class="content">,
+              </span><span class="delimiter">&quot;</span></span>password<span class="string"><span class="delimiter">&quot;</span><span class="content">: </span><span class="delimiter">&quot;</span></span>secret<span class="string"><span class="delimiter">&quot;</span><span class="content">
+            }
+        </span><span class="delimiter">&quot;</span></span><span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>)
+        .submit(By.id(<span class="string"><span class="delimiter">&quot;</span><span class="content">save</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will set the form fields <code>username</code> and <code>password</code> with the given values before submitting the form.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="page-actions"><a class="anchor" href="#page-actions"></a><a class="link" href="#page-actions">23.9. Page actions</a></h3>
 <div class="paragraph">
 <p>Page objects are a well known pattern when using Selenium. The page objects define elements that the page is working with. In addition to that the
 page objects define actions that can be executed from outside. This object-oriented approach for accessing pages and their elements is a very good idea.
@@ -28175,7 +28251,7 @@ should always be the last parameter.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="page-validation"><a class="anchor" href="#page-validation"></a><a class="link" href="#page-validation">23.9. Page validation</a></h3>
+<h3 id="page-validation"><a class="anchor" href="#page-validation"></a><a class="link" href="#page-validation">23.10. Page validation</a></h3>
 <div class="paragraph">
 <p>We can also use page object for validation purpose. The page object is loaded and instantiated as described in previous section. Then the page validator
 is called. The validator performs assertions and validation operations with the page object. Let&#8217;s see a sample page validator:</p>
@@ -28269,7 +28345,7 @@ done within the same class:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="wait"><a class="anchor" href="#wait"></a><a class="link" href="#wait">23.10. Wait</a></h3>
+<h3 id="wait"><a class="anchor" href="#wait"></a><a class="link" href="#wait">23.11. Wait</a></h3>
 <div class="paragraph">
 <p>Sometimes it is required to wait for an element to appear or disappear on the current page. The wait action will wait a given time for the element status
 to be <em>visible</em> or <em>hidden</em>.</p>
@@ -28294,7 +28370,7 @@ to Selenium limitations the minimum wait time is 1000 milliseconds.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="navigate"><a class="anchor" href="#navigate"></a><a class="link" href="#navigate">23.11. Navigate</a></h3>
+<h3 id="navigate"><a class="anchor" href="#navigate"></a><a class="link" href="#navigate">23.12. Navigate</a></h3>
 <div class="paragraph">
 <p>The action navigates to a new page either by using a new relative path or a complete new Http URL.</p>
 </div>
@@ -28323,7 +28399,7 @@ page. The second navigation action opens the relative page <em>help</em> so the 
 </div>
 </div>
 <div class="sect2">
-<h3 id="window-actions"><a class="anchor" href="#window-actions"></a><a class="link" href="#window-actions">23.12. Window actions</a></h3>
+<h3 id="window-actions"><a class="anchor" href="#window-actions"></a><a class="link" href="#window-actions">23.13. Window actions</a></h3>
 <div class="paragraph">
 <p>Selenium is able to manage multiple windows. So you can open, close and switch active windows in a Citrus test.</p>
 </div>
@@ -28370,7 +28446,7 @@ selenium_last_window
 </div>
 </div>
 <div class="sect2">
-<h3 id="alert"><a class="anchor" href="#alert"></a><a class="link" href="#alert">23.13. Alert</a></h3>
+<h3 id="alert"><a class="anchor" href="#alert"></a><a class="link" href="#alert">23.14. Alert</a></h3>
 <div class="paragraph">
 <p>We are able to access the alert dialog on the current page. Citrus will validate the displayed dialog text and accept or dismiss of the dialog.</p>
 </div>
@@ -28394,7 +28470,7 @@ In case the test action fails to find an open alert dialog the test action raise
 </div>
 </div>
 <div class="sect2">
-<h3 id="make-screenshot"><a class="anchor" href="#make-screenshot"></a><a class="link" href="#make-screenshot">23.14. Make screenshot</a></h3>
+<h3 id="make-screenshot"><a class="anchor" href="#make-screenshot"></a><a class="link" href="#make-screenshot">23.15. Make screenshot</a></h3>
 <div class="paragraph">
 <p>You can execute this action in case you want to take a screenshot of the current page. This action only works with browsers that actually display the user interface. The action will not have any effect
 when executed with Html unit web driver in headless mode.</p>
@@ -28453,7 +28529,7 @@ Citrus will automatically create a new test variable <strong>selenium_download_f
 </div>
 </div>
 <div class="sect2">
-<h3 id="clear-browser-cache"><a class="anchor" href="#clear-browser-cache"></a><a class="link" href="#clear-browser-cache">23.15. Clear browser cache</a></h3>
+<h3 id="clear-browser-cache"><a class="anchor" href="#clear-browser-cache"></a><a class="link" href="#clear-browser-cache">23.16. Clear browser cache</a></h3>
 <div class="paragraph">
 <p>When clearing the browser cache all cookies and temporary files will be deleted.</p>
 </div>
@@ -29922,6 +29998,9 @@ use the stored user authentication settings from there. For a complete list of s
               <span class="attribute-name">message-converter</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">messageConverter</span><span class="delimiter">&quot;</span></span>
               <span class="attribute-name">object-mapper</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">objectMapper</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><strong>Note</strong>: You have the option to set an <code>oauthToken</code> for the client instead of using <code>username</code> and <code>password</code>.</p>
 </div>
 <div class="paragraph">
 <p>Now Citrus is able to access the Kubernetes remote API for executing commands such as list-pods, watch-services and so on. Citrus provides a set of actions that
@@ -33511,7 +33590,359 @@ Citrus provides a "citrus-jms" configuration namespace and schema definition for
 </div>
 </div>
 <div class="sect1">
-<h2 id="functions"><a class="anchor" href="#functions"></a><a class="link" href="#functions">35. Functions</a></h2>
+<h2 id="connectors"><a class="anchor" href="#connectors"></a><a class="link" href="#connectors">35. Connectors</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Connectors generally are quite similar to <a href="#endpoints">endpoints</a>.
+These modules connect Citrus to a certain technology or framework rather than implementing a message transport (client and server) like endpoints usually do.</p>
+</div>
+<div class="paragraph">
+<p>Connectors typically provide a client side only implementation that enable Citrus to interact with a service or framework (e.g. Docker deamon, Selenium web driver, OpenAPI specification).</p>
+</div>
+<div class="sect2">
+<h3 id="openapi"><a class="anchor" href="#openapi"></a><a class="link" href="#openapi">35.1. OpenAPI support</a></h3>
+<div class="paragraph">
+<p><a href="https://www.openapis.org/">OpenAPI</a> is a popular specification language to describe HTTP APIs and its exposure to clients.
+Citrus is able to leverage the specification to auto generate client and server request/response message data.
+The generated message data follows the rules of a given operation in the specification.
+In particular, the message body is generated from the given Json schema rules in that specification.
+This way users may do contract-driven testing where the client and the server ensure the conformity with the contract to obey to the same specification rules.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The OpenAPI support in Citrus get enabled by adding a separate Maven module as dependency to your project
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+  <span class="tag">&lt;groupId&gt;</span>org.citrusframework<span class="tag">&lt;/groupId&gt;</span>
+  <span class="tag">&lt;artifactId&gt;</span>citrus-openapi<span class="tag">&lt;/artifactId&gt;</span>
+  <span class="tag">&lt;version&gt;</span>${citrus.version}<span class="tag">&lt;/version&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="openapi-specification"><a class="anchor" href="#openapi-specification"></a><a class="link" href="#openapi-specification">35.1.1. OpenAPI specification</a></h4>
+<div class="paragraph">
+<p>The OpenAPI test actions in Citrus uses a specification which usually is a json or yaml document shared between the components.</p>
+</div>
+<div class="paragraph">
+<p>Sometimes the specification gets exposed by a server application via HTTP endpoint.
+You can directly load the specification from the HTTP URL.
+Or you may just point the OpenAPI components to a local specification file.</p>
+</div>
+<div class="paragraph">
+<p>Citrus supports OpenAPI on both client and server components so the next sections will describe the usage for each of those.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="openapi-client"><a class="anchor" href="#openapi-client"></a><a class="link" href="#openapi-client">35.1.2. OpenAPI client</a></h4>
+<div class="paragraph">
+<p>On the client side Citrus uses the OpenAPI specification to generate a proper HTTP request that is sent to the server.
+The user just gives a valid operationId from the specification every thing else is automatically generated.
+The Citrus client message will use the proper request path (e.g. <code>/petstore/v3/pet</code>) and Content-Type (e.g. <code>applicaiton/json</code>) according to the specification rules.</p>
+</div>
+<div class="paragraph">
+<p>Of course, you can also validate the HTTP response message with auto generated validation.
+The user just gives the expected HTTP status code that is also described in the specification (e.g. 200 OK).
+The response data used as expected message content is then also generated from the specification.</p>
+</div>
+<div class="paragraph">
+<p>As an example the following OpenAPI specification defines the operation <code>getPetById</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">petstore-v3.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">openapi</span>: <span class="string"><span class="content">3.0.2</span></span>
+<span class="key">info</span>:
+  <span class="key">title</span>: <span class="string"><span class="content">Petstore</span></span>
+  <span class="key">version</span>: <span class="string"><span class="content">1.0.1</span></span>
+<span class="key">servers</span>:
+  - <span class="string"><span class="content">url: 'http://localhost/petstore/v3/'</span></span>
+<span class="key">paths</span>:
+  <span class="key"><span class="delimiter">'</span><span class="content">/pet/{petId}</span><span class="delimiter">'</span></span>:
+    <span class="key">get</span>:
+      <span class="key">operationId</span>: <span class="string"><span class="content">getPetById</span></span>
+      <span class="key">parameters</span>:
+        - <span class="string"><span class="content">name: petId</span></span>
+          <span class="key">description</span>: <span class="string"><span class="content">ID of pet to return</span></span>
+          <span class="key">schema</span>:
+            <span class="key">format</span>: <span class="string"><span class="content">int64</span></span>
+            <span class="key">type</span>: <span class="string"><span class="content">integer</span></span>
+          <span class="key">in</span>: <span class="string"><span class="content">path</span></span>
+          <span class="key">required</span>: <span class="string"><span class="content">true</span></span>
+      <span class="key">responses</span>:
+        <span class="key"><span class="delimiter">'</span><span class="content">200</span><span class="delimiter">'</span></span>:
+          <span class="key">content</span>:
+            <span class="key">application/json</span>:
+              <span class="key">schema</span>:
+                <span class="error">$ref</span>: <span class="error">'#/components/schemas/Pet'</span>
+        <span class="key"><span class="delimiter">'</span><span class="content">404</span><span class="delimiter">'</span></span>:
+          <span class="key">description</span>: <span class="string"><span class="content">Pet not found</span></span>
+      <span class="key">summary</span>: <span class="string"><span class="content">Find pet by ID</span></span>
+      <span class="key">description</span>: <span class="string"><span class="content">Returns a single pet</span></span>
+<span class="comment"># ...</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The operation defines the HTTP GET request on <code>/pet/{petId}</code> and the response <code>200</code> OK that delivers the <code>#/components/schemas/Pet</code> Json object to the calling client as a response.</p>
+</div>
+<div class="paragraph">
+<p>The Json schema for the pet defines all properties on the object.</p>
+</div>
+<div class="listingblock">
+<div class="title">Pet Json schema</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">Pet</span>:
+  <span class="key">required</span>:
+    - <span class="string"><span class="content">category</span></span>
+    - <span class="string"><span class="content">name</span></span>
+    - <span class="string"><span class="content">status</span></span>
+  <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
+  <span class="key">properties</span>:
+    <span class="key">id</span>:
+      <span class="key">format</span>: <span class="string"><span class="content">int64</span></span>
+      <span class="key">type</span>: <span class="string"><span class="content">integer</span></span>
+    <span class="key">category</span>:
+      <span class="error">$ref</span>: <span class="error">'#/components/schemas/Category'</span>
+    <span class="key">name</span>:
+      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+      <span class="key">example</span>: <span class="string"><span class="content">doggie</span></span>
+    <span class="key">photoUrls</span>:
+      <span class="key">type</span>: <span class="string"><span class="content">array</span></span>
+      <span class="key">items</span>:
+        <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+    <span class="key">tags</span>:
+      <span class="key">type</span>: <span class="string"><span class="content">array</span></span>
+      <span class="key">items</span>:
+        <span class="error">$ref</span>: <span class="error">'#/components/schemas/Tag'</span>
+    <span class="key">status</span>:
+      <span class="key">description</span>: <span class="string"><span class="content">pet status in the store</span></span>
+      <span class="key">enum</span>:
+        - <span class="string"><span class="content">available</span></span>
+        - <span class="string"><span class="content">pending</span></span>
+        - <span class="string"><span class="content">sold</span></span>
+      <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+<span class="comment"># ...</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In a testcase Citrus is able to leverage this information in order to send a proper request and validate the response based on the OpenAPI specification.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> <span class="directive">final</span> HttpClient httpClient = <span class="keyword">new</span> HttpClientBuilder()
+            .requestUrl(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:%d</span><span class="delimiter">&quot;</span></span>.formatted(port))
+            .build();
+
+<span class="directive">private</span> <span class="directive">final</span> OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
+            Resources.create(<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:org/citrusframework/openapi/petstore/petstore-v3.json</span><span class="delimiter">&quot;</span></span>));
+
+<span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> openApiClientTest() {
+    when(openapi(petstoreSpec)
+                .client(httpClient)
+                .send(<span class="string"><span class="delimiter">&quot;</span><span class="content">getPetById</span><span class="delimiter">&quot;</span></span>));
+
+    then(openapi(petstoreSpec)
+                .client(httpClient)
+                .receive(<span class="string"><span class="delimiter">&quot;</span><span class="content">getPetById</span><span class="delimiter">&quot;</span></span>, HttpStatus.OK));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">OpenApiClientTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;variables&gt;</span>
+        <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">petstoreSpec</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:org/citrusframework/openapi/petstore/petstore-v3.json</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/variables&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+        <span class="tag">&lt;openapi</span> <span class="attribute-name">specification</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${petstoreSpec}</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">client</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">httpClient</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+          <span class="tag">&lt;send-request</span> <span class="attribute-name">operation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">getPetById</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/openapi&gt;</span>
+
+        <span class="tag">&lt;openapi</span> <span class="attribute-name">specification</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${petstoreSpec}</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">client</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">httpClient</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+          <span class="tag">&lt;receive-response</span> <span class="attribute-name">operation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">getPetById</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">status</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">200</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/openapi&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">OpenApiClientTest</span></span>
+<span class="key">variables</span>:
+  - <span class="string"><span class="content">name: petstoreSpec</span></span>
+    <span class="key">value</span>: <span class="string"><span class="content">classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">openapi:</span><span class="content">
+      specification: ${petstoreSpec}
+      client: &quot;httpClient&quot;
+      sendRequest:
+        operation: getPetById</span></span>
+  - <span class="string"><span class="content">openapi:</span><span class="content">
+      specification: ${petstoreSpec}
+      client: &quot;httpClient&quot;
+      receiveResponse:
+        operation: getPetById
+        status: 200</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this very first example The client uses the OpenAPI specification to generate a proper GET HTTP request for the <code>getPetById</code> operation.
+The request is sent to the server using the request URL path <code>/petstore/v3/pet/${petId}</code> as declared in the OpenAPI specification.</p>
+</div>
+<div class="paragraph">
+<p>The resulting HTTP response from the server is verified on the client by giving the operationId and the expected status <code>200</code>.
+The OpenAPI client generates the expected control message from the given Json schema in the OpenAPI specification.</p>
+</div>
+<div class="paragraph">
+<p>The generated control message contains validation matchers and expressions as follows.</p>
+</div>
+<div class="listingblock">
+<div class="title">Generated control message body</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">@isNumber()@</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">@notEmpty()@</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">category</span><span class="delimiter">&quot;</span></span>: {
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">@isNumber()@</span><span class="delimiter">&quot;</span></span>,
+    <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">@notEmpty()@</span><span class="delimiter">&quot;</span></span>
+  },
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">photoUrls</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">@notEmpty()@</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">tags</span><span class="delimiter">&quot;</span></span>:  <span class="string"><span class="delimiter">&quot;</span><span class="content">@ignore@</span><span class="delimiter">&quot;</span></span>,
+  <span class="key"><span class="delimiter">&quot;</span><span class="content">status</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">@matches(sold|pending|available)@</span><span class="delimiter">&quot;</span></span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This control message meets the rules defined by the OpenAPI Json schema specification for the pet object.
+For instance the enum field <code>status</code> is validated with a matching expression.
+In case the OpenAPI specification changes the generated control message will change accordingly.</p>
+</div>
+<div class="paragraph">
+<p>This completes the client side OpenAPI support.
+Now let&#8217;s have a closer look at the server side OpenAPI support in the next section.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="openapi-server"><a class="anchor" href="#openapi-server"></a><a class="link" href="#openapi-server">35.1.3. OpenAPI server</a></h4>
+<div class="paragraph">
+<p>On the server side Citrus is able to verify incoming requests based on the OpenAPI specification.
+The expected request message content as well as the expected resource URL path and the Content-Type are automatically validated.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Java</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> <span class="directive">final</span> HttpServer httpServer = <span class="keyword">new</span> HttpServerBuilder()
+            .port(port)
+            .timeout(<span class="integer">5000L</span>)
+            .autoStart(<span class="predefined-constant">true</span>)
+            .defaultStatus(HttpStatus.NO_CONTENT)
+            .build();
+
+<span class="directive">private</span> <span class="directive">final</span> OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
+            Resources.create(<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:org/citrusframework/openapi/petstore/petstore-v3.json</span><span class="delimiter">&quot;</span></span>));
+
+<span class="annotation">@CitrusTest</span>
+<span class="directive">public</span> <span class="type">void</span> openApiClientTest() {
+    when(openapi(petstoreSpec)
+                .server(httpServer)
+                .receive(<span class="string"><span class="delimiter">&quot;</span><span class="content">addPet</span><span class="delimiter">&quot;</span></span>));
+
+    then(openapi(petstoreSpec)
+                .server(httpServer)
+                .send(<span class="string"><span class="delimiter">&quot;</span><span class="content">addPet</span><span class="delimiter">&quot;</span></span>, HttpStatus.CREATED));
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;test</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">OpenApiClientTest</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://citrusframework.org/schema/xml/testcase</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;variables&gt;</span>
+        <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">petstoreSpec</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:org/citrusframework/openapi/petstore/petstore-v3.json</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;/variables&gt;</span>
+    <span class="tag">&lt;actions&gt;</span>
+        <span class="tag">&lt;openapi</span> <span class="attribute-name">specification</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${petstoreSpec}</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">server</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">httpServer</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+          <span class="tag">&lt;receive-request</span> <span class="attribute-name">operation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">addPet</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/openapi&gt;</span>
+
+        <span class="tag">&lt;openapi</span> <span class="attribute-name">specification</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${petstoreSpec}</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">server</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">httpServer</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+          <span class="tag">&lt;send-response</span> <span class="attribute-name">operation</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">addPet</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">status</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">200</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/openapi&gt;</span>
+    <span class="tag">&lt;/actions&gt;</span>
+<span class="tag">&lt;/test&gt;</span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">YAML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="content">OpenApiClientTest</span></span>
+<span class="key">variables</span>:
+  - <span class="string"><span class="content">name: petstoreSpec</span></span>
+    <span class="key">value</span>: <span class="string"><span class="content">classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml</span></span>
+<span class="key">actions</span>:
+  - <span class="string"><span class="content">openapi:</span><span class="content">
+      specification: ${petstoreSpec}
+      server: &quot;httpServer&quot;
+      receiveRequest:
+        operation: addPet</span></span>
+  - <span class="string"><span class="content">openapi:</span><span class="content">
+      specification: ${petstoreSpec}
+      server: &quot;httpServer&quot;
+      sendResponse:
+        operation: addPet
+        status: 200</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Spring XML</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;spring:beans</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.citrusframework.org/schema/testcase</span><span class="delimiter">&quot;</span></span>
+              <span class="attribute-name">xmlns:spring</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.springframework.org/schema/beans</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+    <span class="comment">&lt;!-- NOT SUPPORTED --&gt;</span>
+<span class="tag">&lt;/spring:beans&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example above uses the <code>addPet</code> operation defined in the OpenAPI specification.
+The operation expects a HTTP POST request with a pet object as message payload.
+The OpenAPI server generates an expected Json message body according to the specification.
+This ensures that the incoming client request meets the Json schema rules for the pet object.
+Also, the server will verify the HTTP request method, the Content-Type header as well as the used resource path <code>/petstore/v3/pet</code>.</p>
+</div>
+<div class="paragraph">
+<p>The given HTTP status code defines the response that should be sent by the server.
+The server will generate a proper response according to the OpenAPI specification.
+This also includes a potential response message body (e.g. pet object).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="functions"><a class="anchor" href="#functions"></a><a class="link" href="#functions">36. Functions</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The test framework will offer several functions that are useful throughout the test execution. The functions will always return a string value that is ready for use as variable value or directly inside a text message.</p>
@@ -33555,7 +33986,7 @@ You can add custom function implementations and custom function libraries. Just 
 </table>
 </div>
 <div class="sect2">
-<h3 id="functions-concat"><a class="anchor" href="#functions-concat"></a><a class="link" href="#functions-concat">35.1. concat()</a></h3>
+<h3 id="functions-concat"><a class="anchor" href="#functions-concat"></a><a class="link" href="#functions-concat">36.1. concat()</a></h3>
 <div class="paragraph">
 <p>The function will combine several string tokens to a single string value. This means that you can combine a static text value with a variable value for instance. A first example should clarify the usage:</p>
 </div>
@@ -33601,7 +34032,7 @@ You can add custom function implementations and custom function libraries. Just 
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-substring"><a class="anchor" href="#functions-substring"></a><a class="link" href="#functions-substring">35.2. substring()</a></h3>
+<h3 id="functions-substring"><a class="anchor" href="#functions-substring"></a><a class="link" href="#functions-substring">36.2. substring()</a></h3>
 <div class="paragraph">
 <p>The function will have three parameters.</p>
 </div>
@@ -33646,7 +34077,7 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-stringlength"><a class="anchor" href="#functions-stringlength"></a><a class="link" href="#functions-stringlength">35.3. stringLength()</a></h3>
+<h3 id="functions-stringlength"><a class="anchor" href="#functions-stringlength"></a><a class="link" href="#functions-stringlength">36.3. stringLength()</a></h3>
 <div class="paragraph">
 <p>The function will calculate the number of characters in a string representation and return the number.</p>
 </div>
@@ -33665,7 +34096,7 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-translate"><a class="anchor" href="#functions-translate"></a><a class="link" href="#functions-translate">35.4. translate()</a></h3>
+<h3 id="functions-translate"><a class="anchor" href="#functions-translate"></a><a class="link" href="#functions-translate">36.4. translate()</a></h3>
 <div class="paragraph">
 <p>This function will replace regular expression matching values inside a string representation with a specified replacement string.</p>
 </div>
@@ -33689,7 +34120,7 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-substring-before"><a class="anchor" href="#functions-substring-before"></a><a class="link" href="#functions-substring-before">35.5. substringBefore()</a></h3>
+<h3 id="functions-substring-before"><a class="anchor" href="#functions-substring-before"></a><a class="link" href="#functions-substring-before">36.5. substringBefore()</a></h3>
 <div class="paragraph">
 <p>The function will search for the first occurrence of a specified string and will return the substring before that occurrence. Let us have a closer look in a simple example:</p>
 </div>
@@ -33713,7 +34144,7 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-substring-after"><a class="anchor" href="#functions-substring-after"></a><a class="link" href="#functions-substring-after">35.6. substringAfter()</a></h3>
+<h3 id="functions-substring-after"><a class="anchor" href="#functions-substring-after"></a><a class="link" href="#functions-substring-after">36.6. substringAfter()</a></h3>
 <div class="paragraph">
 <p>The function will search for the first occurrence of a specified string and will return the substring after that occurrence. Let us clarify this with a simple example:</p>
 </div>
@@ -33737,7 +34168,7 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-round"><a class="anchor" href="#functions-round"></a><a class="link" href="#functions-round">35.7. round()</a></h3>
+<h3 id="functions-round"><a class="anchor" href="#functions-round"></a><a class="link" href="#functions-round">36.7. round()</a></h3>
 <div class="paragraph">
 <p>This is a simple mathematical function that will round decimal numbers representations to their nearest non-decimal number.</p>
 </div>
@@ -33756,7 +34187,7 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-floor"><a class="anchor" href="#functions-floor"></a><a class="link" href="#functions-floor">35.8. floor()</a></h3>
+<h3 id="functions-floor"><a class="anchor" href="#functions-floor"></a><a class="link" href="#functions-floor">36.8. floor()</a></h3>
 <div class="paragraph">
 <p>This function will round down decimal number values.</p>
 </div>
@@ -33775,7 +34206,7 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-ceiling"><a class="anchor" href="#functions-ceiling"></a><a class="link" href="#functions-ceiling">35.9. ceiling()</a></h3>
+<h3 id="functions-ceiling"><a class="anchor" href="#functions-ceiling"></a><a class="link" href="#functions-ceiling">36.9. ceiling()</a></h3>
 <div class="paragraph">
 <p>Similar to floor function, but now the function will round up the decimal number values.</p>
 </div>
@@ -33794,7 +34225,7 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-random-number"><a class="anchor" href="#functions-random-number"></a><a class="link" href="#functions-random-number">35.10. randomNumber()</a></h3>
+<h3 id="functions-random-number"><a class="anchor" href="#functions-random-number"></a><a class="link" href="#functions-random-number">36.10. randomNumber()</a></h3>
 <div class="paragraph">
 <p>The random number function will provide you the opportunity to generate random number strings containing positive number letters. There is a singular Boolean parameter for that function describing whether the generated number should have exactly the amount of digits. Default value for this padding flag will be true.</p>
 </div>
@@ -33824,7 +34255,7 @@ Hello</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-random-string"><a class="anchor" href="#functions-random-string"></a><a class="link" href="#functions-random-string">35.11. randomString()</a></h3>
+<h3 id="functions-random-string"><a class="anchor" href="#functions-random-string"></a><a class="link" href="#functions-random-string">36.11. randomString()</a></h3>
 <div class="paragraph">
 <p>This function will generate a random string representation with a defined length. A second parameter for this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED). The last parameter allows also digit characters in the generated string. By default digit characters are not allowed.</p>
 </div>
@@ -33854,7 +34285,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-random-enum-value"><a class="anchor" href="#functions-random-enum-value"></a><a class="link" href="#functions-random-enum-value">35.12. randomEnumValue()</a></h3>
+<h3 id="functions-random-enum-value"><a class="anchor" href="#functions-random-enum-value"></a><a class="link" href="#functions-random-enum-value">36.12. randomEnumValue()</a></h3>
 <div class="paragraph">
 <p>This function returns one of its supplied arguments. Furthermore you can specify a custom function with a configured list of values (the enumeration). The function will randomly return an entry when called without arguments. This promotes code reuse and facilitates refactoring.</p>
 </div>
@@ -33896,7 +34327,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-current-date"><a class="anchor" href="#functions-current-date"></a><a class="link" href="#functions-current-date">35.13. currentDate()</a></h3>
+<h3 id="functions-current-date"><a class="anchor" href="#functions-current-date"></a><a class="link" href="#functions-current-date">36.13. currentDate()</a></h3>
 <div class="paragraph">
 <p>This function will definitely help you when accessing the current date. Some examples will show the usage in detail:</p>
 </div>
@@ -33931,7 +34362,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-uppercase"><a class="anchor" href="#functions-uppercase"></a><a class="link" href="#functions-uppercase">35.14. upperCase()</a></h3>
+<h3 id="functions-uppercase"><a class="anchor" href="#functions-uppercase"></a><a class="link" href="#functions-uppercase">36.14. upperCase()</a></h3>
 <div class="paragraph">
 <p>This function converts any string to upper case letters.</p>
 </div>
@@ -33950,7 +34381,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-lowercase"><a class="anchor" href="#functions-lowercase"></a><a class="link" href="#functions-lowercase">35.15. lowerCase()</a></h3>
+<h3 id="functions-lowercase"><a class="anchor" href="#functions-lowercase"></a><a class="link" href="#functions-lowercase">36.15. lowerCase()</a></h3>
 <div class="paragraph">
 <p>This function converts any string to lower case letters.</p>
 </div>
@@ -33969,7 +34400,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-average"><a class="anchor" href="#functions-average"></a><a class="link" href="#functions-average">35.16. average()</a></h3>
+<h3 id="functions-average"><a class="anchor" href="#functions-average"></a><a class="link" href="#functions-average">36.16. average()</a></h3>
 <div class="paragraph">
 <p>The function will sum up all specified number values and divide the result through the number of values.</p>
 </div>
@@ -33983,7 +34414,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-minimum"><a class="anchor" href="#functions-minimum"></a><a class="link" href="#functions-minimum">35.17. minimum()</a></h3>
+<h3 id="functions-minimum"><a class="anchor" href="#functions-minimum"></a><a class="link" href="#functions-minimum">36.17. minimum()</a></h3>
 <div class="paragraph">
 <p>This function returns the minimum value in a set of number values.</p>
 </div>
@@ -33997,7 +34428,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-maximum"><a class="anchor" href="#functions-maximum"></a><a class="link" href="#functions-maximum">35.18. maximum()</a></h3>
+<h3 id="functions-maximum"><a class="anchor" href="#functions-maximum"></a><a class="link" href="#functions-maximum">36.18. maximum()</a></h3>
 <div class="paragraph">
 <p>This function returns the maximum value in a set of number values.</p>
 </div>
@@ -34011,7 +34442,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-sum"><a class="anchor" href="#functions-sum"></a><a class="link" href="#functions-sum">35.19. sum()</a></h3>
+<h3 id="functions-sum"><a class="anchor" href="#functions-sum"></a><a class="link" href="#functions-sum">36.19. sum()</a></h3>
 <div class="paragraph">
 <p>The function will sum up all number values. The number values can also be negative.</p>
 </div>
@@ -34025,7 +34456,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-absolute"><a class="anchor" href="#functions-absolute"></a><a class="link" href="#functions-absolute">35.20. absolute()</a></h3>
+<h3 id="functions-absolute"><a class="anchor" href="#functions-absolute"></a><a class="link" href="#functions-absolute">36.20. absolute()</a></h3>
 <div class="paragraph">
 <p>The function will return the absolute number value.</p>
 </div>
@@ -34039,7 +34470,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-map-value"><a class="anchor" href="#functions-map-value"></a><a class="link" href="#functions-map-value">35.21. mapValue()</a></h3>
+<h3 id="functions-map-value"><a class="anchor" href="#functions-map-value"></a><a class="link" href="#functions-map-value">36.21. mapValue()</a></h3>
 <div class="paragraph">
 <p>This function implementation maps string keys to string values. This is very helpful when the used key is randomly chosen at runtime and the corresponding value is not defined during the design time.</p>
 </div>
@@ -34073,7 +34504,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-random-uuid"><a class="anchor" href="#functions-random-uuid"></a><a class="link" href="#functions-random-uuid">35.22. randomUUID()</a></h3>
+<h3 id="functions-random-uuid"><a class="anchor" href="#functions-random-uuid"></a><a class="link" href="#functions-random-uuid">36.22. randomUUID()</a></h3>
 <div class="paragraph">
 <p>The function will generate a random Java UUID.</p>
 </div>
@@ -34087,7 +34518,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-encode-base64"><a class="anchor" href="#functions-encode-base64"></a><a class="link" href="#functions-encode-base64">35.23. encodeBase64()</a></h3>
+<h3 id="functions-encode-base64"><a class="anchor" href="#functions-encode-base64"></a><a class="link" href="#functions-encode-base64">36.23. encodeBase64()</a></h3>
 <div class="paragraph">
 <p>The function will encode a string to binary data using base64 hexadecimal encoding.</p>
 </div>
@@ -34099,9 +34530,17 @@ Vt567JkA32</code></pre>
 <div class="paragraph">
 <p>encoded = <strong>VGVzdCBGcmFtZXdvcms=</strong></p>
 </div>
+<div class="paragraph">
+<p>It also has an optional charset parameter that is used for encoding the input string, with UTF-8 as its default value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">encoded</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:encodeBase64('Hallo Testframework', 'UTF-8')</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="functions-decode-base64"><a class="anchor" href="#functions-decode-base64"></a><a class="link" href="#functions-decode-base64">35.24. decodeBase64()</a></h3>
+<h3 id="functions-decode-base64"><a class="anchor" href="#functions-decode-base64"></a><a class="link" href="#functions-decode-base64">36.24. decodeBase64()</a></h3>
 <div class="paragraph">
 <p>The function will decode binary data to a character sequence using base64 hexadecimal decoding.</p>
 </div>
@@ -34113,9 +34552,17 @@ Vt567JkA32</code></pre>
 <div class="paragraph">
 <p>decoded = <strong>Hallo Testframework</strong></p>
 </div>
+<div class="paragraph">
+<p>It also has an optional charset parameter that is used for encoding the input string, with UTF-8 as its default value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">decoded</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus:decodeBase64('VGVzdCBGcmFtZXdvcms=', 'UTF-8')</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="functions-escape-xml"><a class="anchor" href="#functions-escape-xml"></a><a class="link" href="#functions-escape-xml">35.25. escapeXml()</a></h3>
+<h3 id="functions-escape-xml"><a class="anchor" href="#functions-escape-xml"></a><a class="link" href="#functions-escape-xml">36.25. escapeXml()</a></h3>
 <div class="paragraph">
 <p>If you want to deal with escaped XML in your test case you may want to use this function. It automatically escapes all XML special characters.</p>
 </div>
@@ -34135,7 +34582,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-cdata-section"><a class="anchor" href="#functions-cdata-section"></a><a class="link" href="#functions-cdata-section">35.26. cdataSection()</a></h3>
+<h3 id="functions-cdata-section"><a class="anchor" href="#functions-cdata-section"></a><a class="link" href="#functions-cdata-section">36.26. cdataSection()</a></h3>
 <div class="paragraph">
 <p>Usually we use CDATA sections to define message payload data inside a testcase. We might run into problems when the payload itself contains CDATA sections as nested CDATA sections are prohibited by XML nature. In this case the next function ships very usefull.</p>
 </div>
@@ -34149,7 +34596,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-digest-auth-header"><a class="anchor" href="#functions-digest-auth-header"></a><a class="link" href="#functions-digest-auth-header">35.27. digestAuthHeader()</a></h3>
+<h3 id="functions-digest-auth-header"><a class="anchor" href="#functions-digest-auth-header"></a><a class="link" href="#functions-digest-auth-header">36.27. digestAuthHeader()</a></h3>
 <div class="paragraph">
 <p>Digest authentication is a commonly used security algorithm, especially in Http communication and SOAP WebServices. Citrus offers a function to generate a digest authentication principle used in the Http header section of a message.</p>
 </div>
@@ -34186,7 +34633,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-localhost-address"><a class="anchor" href="#functions-localhost-address"></a><a class="link" href="#functions-localhost-address">35.28. localHostAddress()</a></h3>
+<h3 id="functions-localhost-address"><a class="anchor" href="#functions-localhost-address"></a><a class="link" href="#functions-localhost-address">36.28. localHostAddress()</a></h3>
 <div class="paragraph">
 <p>Test cases may use the local host address for some reason (e.g. used as authentication principle). As the tests may run on different machines at the same time we can not use static host addresses. The provided function localHostAddress() reads the local host name dynamically at runtime.</p>
 </div>
@@ -34203,7 +34650,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-change-date"><a class="anchor" href="#functions-change-date"></a><a class="link" href="#functions-change-date">35.29. changeDate()</a></h3>
+<h3 id="functions-change-date"><a class="anchor" href="#functions-change-date"></a><a class="link" href="#functions-change-date">36.29. changeDate()</a></h3>
 <div class="paragraph">
 <p>This function works with date values and manipulates those at runtime by adding or removing a date value offset. You can manipulate several date fields such as: year, month, day, hour, minute or second.</p>
 </div>
@@ -34252,7 +34699,7 @@ Vt567JkA32</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-read-file"><a class="anchor" href="#functions-read-file"></a><a class="link" href="#functions-read-file">35.30. readFile()</a></h3>
+<h3 id="functions-read-file"><a class="anchor" href="#functions-read-file"></a><a class="link" href="#functions-read-file">36.30. readFile()</a></h3>
 <div class="paragraph">
 <p>The <strong>readFile</strong> function reads a file resource from given file path and loads the complete file content as function result. The file path can be a system file path as well as a classpath file resource. The file path can have test variables as part of the path or file name. In addition to that the file content can also have test variable values and other functions.</p>
 </div>
@@ -34272,9 +34719,36 @@ Vt567JkA32</code></pre>
 <div class="paragraph">
 <p>The function reads the file content and places the content at the position where the function has been called. This means that you can also use this function as part of Strings and message payloads for instance. This is a very powerful way to extract large message parts to separate file resources. Just add the <strong>readFile</strong> function somewhere to the message content and Citrus will load the extra file content and place it right into the message payload for you.</p>
 </div>
+<div class="paragraph">
+<p>This function has a second and a third optional parameter that can be used for the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>2nd parameter: a boolean value to indicate that the returned value should be base64 encoded. Defaults to false.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;message&gt;citrus:readFile('classpath:some/path/to/file.txt', true)&lt;/message&gt;</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>3rd parameter: a boolean value to indicate that a dynamic replacement (Citrus variables, functions, etc.) should be performed before the content is base64 encoded. Defaults to false.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;message&gt;citrus:readFile('classpath:some/path/to/file.txt', true, true)&lt;/message&gt;</pre>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="functions-message"><a class="anchor" href="#functions-message"></a><a class="link" href="#functions-message">35.31. message()</a></h3>
+<h3 id="functions-message"><a class="anchor" href="#functions-message"></a><a class="link" href="#functions-message">36.31. message()</a></h3>
 <div class="paragraph">
 <p>When messages are exchanged in Citrus the content is automatically saved to an in memory storage for further access in the test case. That means that functions and test actions can access the messages
 that have been sent or received within the test case. The <strong>message</strong> function loads a message content from that message store. The message is identified by its name. Receive and send actions usually define
@@ -34331,7 +34805,7 @@ in the local message store. The <strong>message</strong> function is then able t
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-xpath"><a class="anchor" href="#functions-xpath"></a><a class="link" href="#functions-xpath">35.32. xpath()</a></h3>
+<h3 id="functions-xpath"><a class="anchor" href="#functions-xpath"></a><a class="link" href="#functions-xpath">36.32. xpath()</a></h3>
 <div class="paragraph">
 <p>The <strong>xpath</strong> function evaluates a Xpath expressions on some XML source and returns the expression result as String.</p>
 </div>
@@ -34369,7 +34843,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-jsonpath"><a class="anchor" href="#functions-jsonpath"></a><a class="link" href="#functions-jsonpath">35.33. jsonPath()</a></h3>
+<h3 id="functions-jsonpath"><a class="anchor" href="#functions-jsonpath"></a><a class="link" href="#functions-jsonpath">36.33. jsonPath()</a></h3>
 <div class="paragraph">
 <p>The <strong>jsonPath</strong> function evaluates a JsonPath expressions on some JSON source and returns the expression result as String.</p>
 </div>
@@ -34392,6 +34866,21 @@ external file or just use a test variable.</p>
 </div>
 </div>
 <div class="paragraph">
+<p>The JSON source may also be specified in multiple parameters, in which case the arguments except the last one are concatenated with commas,
+and will be treated as the JSON source. The last parameter is always treated as the JSON path expression.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;echo&gt;</span>
+    <span class="tag">&lt;message&gt;</span><span class="inline-delimiter">&lt;![CDATA[</span>citrus:jsonPath('{ &quot;message&quot;: { &quot;id&quot;: 1000', '&quot;text&quot;: &quot;Some text content&quot; } }', '$.message.id')<span class="inline-delimiter">]]&gt;</span><span class="tag">&lt;/message&gt;</span>
+<span class="tag">&lt;/echo&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above, the parts <code>{ "message": { "id": 1000</code> and <code>"text": "Some text content" } }</code> will form the JSON source
+as <code>{ "message": { "id": 1000, "text": "Some text content" } }</code>.</p>
+</div>
+<div class="paragraph">
 <p>Also accessing the local message store is valid here:</p>
 </div>
 <div class="listingblock">
@@ -34407,7 +34896,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-url-encode"><a class="anchor" href="#functions-url-encode"></a><a class="link" href="#functions-url-encode">35.34. urlEncode()/urlDecode()</a></h3>
+<h3 id="functions-url-encode"><a class="anchor" href="#functions-url-encode"></a><a class="link" href="#functions-url-encode">36.34. urlEncode()/urlDecode()</a></h3>
 <div class="paragraph">
 <p>The <strong>urlEncode</strong> function takes a String and performs proper URL encoding. The result is a URL encoded String that is using proper character escaping for Http.</p>
 </div>
@@ -34436,7 +34925,7 @@ becomes very easy then.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-system-properties"><a class="anchor" href="#functions-system-properties"></a><a class="link" href="#functions-system-properties">35.35. systemProperty()</a></h3>
+<h3 id="functions-system-properties"><a class="anchor" href="#functions-system-properties"></a><a class="link" href="#functions-system-properties">36.35. systemProperty()</a></h3>
 <div class="paragraph">
 <p>The <strong>systemProperty</strong> function resolves a System property expression at test runtime. The resulting value is returned as function result. In case the System property is not available in the JVM an optional default value is used.
 In case no default value is given the function will fail with errors.</p>
@@ -34450,7 +34939,7 @@ In case no default value is given the function will fail with errors.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="functions-env-settings"><a class="anchor" href="#functions-env-settings"></a><a class="link" href="#functions-env-settings">35.36. env()</a></h3>
+<h3 id="functions-env-settings"><a class="anchor" href="#functions-env-settings"></a><a class="link" href="#functions-env-settings">36.36. env()</a></h3>
 <div class="paragraph">
 <p>The <strong>env</strong> function can be used to access an environment specific property at test runtime. The environment property can be a variable set on the underlying operating system. Also the <code>env()</code> function is able to access
 the Spring environment settings (see <code>org.springframework.core.env.Environment</code>).</p>
@@ -34469,10 +34958,23 @@ the Spring environment settings (see <code>org.springframework.core.env.Environm
 <p>The default value is optional and provides an error fallback in case the environment setting is not available. In case no default value is provided the function will fail with errors.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="functions-unix-timestamp"><a class="anchor" href="#functions-unix-timestamp"></a><a class="link" href="#functions-unix-timestamp">36.37. unixTimestamp()</a></h3>
+<div class="paragraph">
+<p><strong>unixTimestamp</strong> is a parameterless function that simply returns the current epoch timestamp as seconds.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;echo&gt;</span>
+    <span class="tag">&lt;message&gt;</span><span class="inline-delimiter">&lt;![CDATA[</span>citrus:unixTimestamp()<span class="inline-delimiter">]]&gt;</span><span class="tag">&lt;/message&gt;</span>
+<span class="tag">&lt;/echo&gt;</span></code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="validation-matcher"><a class="anchor" href="#validation-matcher"></a><a class="link" href="#validation-matcher">36. Validation matcher</a></h2>
+<h2 id="validation-matcher"><a class="anchor" href="#validation-matcher"></a><a class="link" href="#validation-matcher">37. Validation matcher</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Message validation in Citrus is essential. The framework offers several validation mechanisms for different message types and formats. With test variables we are able to check for simple value equality. We ensure that message entries are equal to predefined expected values. Validation matcher add powerful assertion functionality on top of that. You just can use the predefined validation matcher functionalities in order to perform more complex assertions like <strong>contains</strong> or <strong>isNumber</strong> in your validation statements.</p>
@@ -34556,7 +35058,7 @@ You can add custom validation matcher implementations and custom validation matc
 </table>
 </div>
 <div class="sect2">
-<h3 id="matcher-ignore"><a class="anchor" href="#matcher-ignore"></a><a class="link" href="#matcher-ignore">36.1. ignore()</a></h3>
+<h3 id="matcher-ignore"><a class="anchor" href="#matcher-ignore"></a><a class="link" href="#matcher-ignore">37.1. ignore()</a></h3>
 <div class="paragraph">
 <p>The ignore validation matcher is a special matcher that ignores the value and is always positive in its outcome. You should use the ignore validation matcher when
 only validating the pure existence of an element. The value is ignored but the element has to be present in the message payload.</p>
@@ -34591,7 +35093,7 @@ The ignore validation matcher is the only validation matcher that is able to ski
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-matches-xml"><a class="anchor" href="#matcher-matches-xml"></a><a class="link" href="#matcher-matches-xml">36.2. matchesXml()</a></h3>
+<h3 id="matcher-matches-xml"><a class="anchor" href="#matcher-matches-xml"></a><a class="link" href="#matcher-matches-xml">37.2. matchesXml()</a></h3>
 <div class="paragraph">
 <p>The XML validation matcher implementation is the possibly most exciting one, as we can validate nested XML with full validation power (e.g. ignoring elements, variable support). The matcher checks a nested XML fragment to compare against expected XML. For instance we receive the following XML message payload for validation:</p>
 </div>
@@ -34651,7 +35153,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-equals-ignore-case"><a class="anchor" href="#matcher-equals-ignore-case"></a><a class="link" href="#matcher-equals-ignore-case">36.3. equalsIgnoreCase()</a></h3>
+<h3 id="matcher-equals-ignore-case"><a class="anchor" href="#matcher-equals-ignore-case"></a><a class="link" href="#matcher-equals-ignore-case">37.3. equalsIgnoreCase()</a></h3>
 <div class="paragraph">
 <p>This matcher implementation checks for equality without any case spelling considerations. The matcher expects a single parameter as the expected character sequence to check for.</p>
 </div>
@@ -34662,7 +35164,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-contains"><a class="anchor" href="#matcher-contains"></a><a class="link" href="#matcher-contains">36.4. contains()</a></h3>
+<h3 id="matcher-contains"><a class="anchor" href="#matcher-contains"></a><a class="link" href="#matcher-contains">37.4. contains()</a></h3>
 <div class="paragraph">
 <p>This matcher searches for a character sequence inside the actual value. If the character sequence is not found somewhere the matcher starts complaining.</p>
 </div>
@@ -34681,7 +35183,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-startswith"><a class="anchor" href="#matcher-startswith"></a><a class="link" href="#matcher-startswith">36.5. startsWith()</a></h3>
+<h3 id="matcher-startswith"><a class="anchor" href="#matcher-startswith"></a><a class="link" href="#matcher-startswith">37.5. startsWith()</a></h3>
 <div class="paragraph">
 <p>The matcher implementation asserts that the given value starts with a character sequence otherwise the matcher will arise some error.</p>
 </div>
@@ -34692,7 +35194,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-endswith"><a class="anchor" href="#matcher-endswith"></a><a class="link" href="#matcher-endswith">36.6. endsWith()</a></h3>
+<h3 id="matcher-endswith"><a class="anchor" href="#matcher-endswith"></a><a class="link" href="#matcher-endswith">37.6. endsWith()</a></h3>
 <div class="paragraph">
 <p>Ends with matcher validates a value to end with a given character sequence.</p>
 </div>
@@ -34703,7 +35205,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-matches"><a class="anchor" href="#matcher-matches"></a><a class="link" href="#matcher-matches">36.7. matches()</a></h3>
+<h3 id="matcher-matches"><a class="anchor" href="#matcher-matches"></a><a class="link" href="#matcher-matches">37.7. matches()</a></h3>
 <div class="paragraph">
 <p>You can check a value to meet a regular expression with this validation matcher. This is for instance very useful for email address validation.</p>
 </div>
@@ -34714,7 +35216,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-matches-date-pattern"><a class="anchor" href="#matcher-matches-date-pattern"></a><a class="link" href="#matcher-matches-date-pattern">36.8. matchesDatePattern()</a></h3>
+<h3 id="matcher-matches-date-pattern"><a class="anchor" href="#matcher-matches-date-pattern"></a><a class="link" href="#matcher-matches-date-pattern">37.8. matchesDatePattern()</a></h3>
 <div class="paragraph">
 <p>Date values are always difficult to check for equality. Especially when you have millisecond timestamps to deal with. Therefore the date pattern validation matcher should have some improvement for you. You simply validate the date format pattern instead of checking for total equality.</p>
 </div>
@@ -34728,7 +35230,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-isnumber"><a class="anchor" href="#matcher-isnumber"></a><a class="link" href="#matcher-isnumber">36.9. isNumber()</a></h3>
+<h3 id="matcher-isnumber"><a class="anchor" href="#matcher-isnumber"></a><a class="link" href="#matcher-isnumber">37.9. isNumber()</a></h3>
 <div class="paragraph">
 <p>Checking on values to be of numeric nature is essential. The actual value must be a numeric number otherwise the matcher raises errors. The matcher implementation does not evaluate any parameters.</p>
 </div>
@@ -34739,7 +35241,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-lowerthan"><a class="anchor" href="#matcher-lowerthan"></a><a class="link" href="#matcher-lowerthan">36.10. lowerThan()</a></h3>
+<h3 id="matcher-lowerthan"><a class="anchor" href="#matcher-lowerthan"></a><a class="link" href="#matcher-lowerthan">37.10. lowerThan()</a></h3>
 <div class="paragraph">
 <p>This matcher checks a number to be lower than a given threshold value.</p>
 </div>
@@ -34750,7 +35252,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-greaterthan"><a class="anchor" href="#matcher-greaterthan"></a><a class="link" href="#matcher-greaterthan">36.11. greaterThan()</a></h3>
+<h3 id="matcher-greaterthan"><a class="anchor" href="#matcher-greaterthan"></a><a class="link" href="#matcher-greaterthan">37.11. greaterThan()</a></h3>
 <div class="paragraph">
 <p>The matcher implementation will check on numeric values to be greater than a minimum value.</p>
 </div>
@@ -34761,7 +35263,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-isweekday"><a class="anchor" href="#matcher-isweekday"></a><a class="link" href="#matcher-isweekday">36.12. isWeekday()</a></h3>
+<h3 id="matcher-isweekday"><a class="anchor" href="#matcher-isweekday"></a><a class="link" href="#matcher-isweekday">37.12. isWeekday()</a></h3>
 <div class="paragraph">
 <p>The matcher works on date values and checks that a given date evaluates to the expected day of the week. The user defines the expected day by its name in uppercase characters. The matcher fails in case the given date is another week day than expected.</p>
 </div>
@@ -34786,7 +35288,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-variable"><a class="anchor" href="#matcher-variable"></a><a class="link" href="#matcher-variable">36.13. variable()</a></h3>
+<h3 id="matcher-variable"><a class="anchor" href="#matcher-variable"></a><a class="link" href="#matcher-variable">37.13. variable()</a></h3>
 <div class="paragraph">
 <p>This is a very special validation matcher. Instead of performing a validation logic you can save the actual value passed to the validation matcher as new test variable. This comes very handy as you can use the matcher wherever you want: JSON message payloads, XML message payloads, headers and so on.</p>
 </div>
@@ -34808,7 +35310,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-daterange"><a class="anchor" href="#matcher-daterange"></a><a class="link" href="#matcher-daterange">36.14. dateRange()</a></h3>
+<h3 id="matcher-daterange"><a class="anchor" href="#matcher-daterange"></a><a class="link" href="#matcher-daterange">37.14. dateRange()</a></h3>
 <div class="paragraph">
 <p>The matcher works on date values and checks that a given date is within the expected date range. The user defines the expected date range by specifying a from-date, a to-date and optionally a date format. The matcher fails when the given date lies outside the expected date range.</p>
 </div>
@@ -34830,7 +35332,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-assert-that"><a class="anchor" href="#matcher-assert-that"></a><a class="link" href="#matcher-assert-that">36.15. assertThat()</a></h3>
+<h3 id="matcher-assert-that"><a class="anchor" href="#matcher-assert-that"></a><a class="link" href="#matcher-assert-that">37.15. assertThat()</a></h3>
 <div class="paragraph">
 <p>Hamcrest is a very powerful matcher library with extraordinary matcher implementations. You can use Hamcrest matchers also as Citrus validation matchers.</p>
 </div>
@@ -34881,7 +35383,7 @@ Nested CDATA elements within other CDATA sections are not allowed by XML standar
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-ignore-new-line"><a class="anchor" href="#matcher-ignore-new-line"></a><a class="link" href="#matcher-ignore-new-line">36.16. ignoreNewLine()</a></h3>
+<h3 id="matcher-ignore-new-line"><a class="anchor" href="#matcher-ignore-new-line"></a><a class="link" href="#matcher-ignore-new-line">37.16. ignoreNewLine()</a></h3>
 <div class="paragraph">
 <p>This matcher implementation checks for equality with prior normalization of all new line characters. This includes new line types CR, LF and CRLF as well as multiple new lines in value and control value. So when using
 this validation matcher all new line characters are removed prior to checking for equality.</p>
@@ -34911,7 +35413,7 @@ new lines&lt;/value&gt;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-trim-whitespace"><a class="anchor" href="#matcher-trim-whitespace"></a><a class="link" href="#matcher-trim-whitespace">36.17. trim()</a></h3>
+<h3 id="matcher-trim-whitespace"><a class="anchor" href="#matcher-trim-whitespace"></a><a class="link" href="#matcher-trim-whitespace">37.17. trim()</a></h3>
 <div class="paragraph">
 <p>This trim matcher will remove leading and trailing whitespaces before checking for equality.</p>
 </div>
@@ -34934,7 +35436,7 @@ This is a value   &lt;/value&gt;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="matcher-trim-all-whitespace"><a class="anchor" href="#matcher-trim-all-whitespace"></a><a class="link" href="#matcher-trim-all-whitespace">36.18. trimAllWhitespaces()</a></h3>
+<h3 id="matcher-trim-all-whitespace"><a class="anchor" href="#matcher-trim-all-whitespace"></a><a class="link" href="#matcher-trim-all-whitespace">37.18. trimAllWhitespaces()</a></h3>
 <div class="paragraph">
 <p>Sometimes it is necessary to check equality of some value without caring for whitespaces at all. The matcher implementation will remove all whitespaces before checking for equality.</p>
 </div>
@@ -34955,7 +35457,7 @@ This is a value   &lt;/value&gt;</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="data-dictionaries"><a class="anchor" href="#data-dictionaries"></a><a class="link" href="#data-dictionaries">37. Data dictionaries</a></h2>
+<h2 id="data-dictionaries"><a class="anchor" href="#data-dictionaries"></a><a class="link" href="#data-dictionaries">38. Data dictionaries</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Data dictionaries in Citrus provide a new way to manipulate message payload data before a message is sent or received. The dictionary defines a set of keys and respective values. Just like every other dictionary it is used to translate things. In our case we translate message data elements.</p>
@@ -34964,7 +35466,7 @@ This is a value   &lt;/value&gt;</code></pre>
 <p>You can translate common message elements that are used widely throughout your domain model. As Citrus deals with different types of message data (e.g. XML, JSON) we have different dictionary implementations that are described in the next sections.</p>
 </div>
 <div class="sect2">
-<h3 id="xml-data-dictionaries"><a class="anchor" href="#xml-data-dictionaries"></a><a class="link" href="#xml-data-dictionaries">37.1. XML data dictionaries</a></h3>
+<h3 id="xml-data-dictionaries"><a class="anchor" href="#xml-data-dictionaries"></a><a class="link" href="#xml-data-dictionaries">38.1. XML data dictionaries</a></h3>
 <div class="paragraph">
 <p>As you would expect XML data dictionaries can be used together with XML formatted message payloads. To do so a dictionary has to be added to the basic Citrus Spring application context which will make the dictionary visible to all test cases:</p>
 </div>
@@ -35053,7 +35555,7 @@ TestMessage.TimeStamp=citrus:currentDate()</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="json-data-dictionaries"><a class="anchor" href="#json-data-dictionaries"></a><a class="link" href="#json-data-dictionaries">37.2. JSON data dictionaries</a></h3>
+<h3 id="json-data-dictionaries"><a class="anchor" href="#json-data-dictionaries"></a><a class="link" href="#json-data-dictionaries">38.2. JSON data dictionaries</a></h3>
 <div class="paragraph">
 <p>JSON data dictionaries complement with XML data dictionaries. As usual we have to add the JSON data dictionary to the basic Spring application context first. Once this is done the data dictionary automatically applies for all JSON message payloads in Citrus. This means that all JSON messages sent and received get translated with the JSON data dictionary implementation.</p>
 </div>
@@ -35127,7 +35629,7 @@ However when more complex JSON payloads apply for translation we might reach the
 </div>
 </div>
 <div class="sect2">
-<h3 id="dictionary-scopes"><a class="anchor" href="#dictionary-scopes"></a><a class="link" href="#dictionary-scopes">37.3. Dictionary scopes</a></h3>
+<h3 id="dictionary-scopes"><a class="anchor" href="#dictionary-scopes"></a><a class="link" href="#dictionary-scopes">38.3. Dictionary scopes</a></h3>
 <div class="paragraph">
 <p>Now that we have learned how to add data dictionaries to Citrus we need to discuss some advanced topics. Data dictionary scopes do define the boundaries where the dictionary may apply. By default data dictionaries are global scope dictionaries. This means that the data dictionary applies to all messages sent and received with Citrus. Of course message types are considered so XML data dictionaries do only apply to XML message types. However global scope dictionaries will be activated throughout all test cases and actions.</p>
 </div>
@@ -35215,7 +35717,7 @@ However when more complex JSON payloads apply for translation we might reach the
 </div>
 </div>
 <div class="sect2">
-<h3 id="path-mapping-strategies"><a class="anchor" href="#path-mapping-strategies"></a><a class="link" href="#path-mapping-strategies">37.4. Path mapping strategies</a></h3>
+<h3 id="path-mapping-strategies"><a class="anchor" href="#path-mapping-strategies"></a><a class="link" href="#path-mapping-strategies">38.4. Path mapping strategies</a></h3>
 <div class="paragraph">
 <p>Another advanced topic about data dictionaries is the path mapping strategy. When using simple path expressions the default strategy is always <strong>EXACT</strong> . This means that the path expression has to evaluate exactly to a message element within the payload data. And only this exact message element is translated.</p>
 </div>
@@ -35285,7 +35787,7 @@ However when more complex JSON payloads apply for translation we might reach the
 </div>
 </div>
 <div class="sect1">
-<h2 id="test-actors"><a class="anchor" href="#test-actors"></a><a class="link" href="#test-actors">38. Test actors</a></h2>
+<h2 id="test-actors"><a class="anchor" href="#test-actors"></a><a class="link" href="#test-actors">39. Test actors</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The concept of test actors came to our mind when reusing Citrus test cases in end-to-end test scenarios. Usually Citrus simulates all interface partners within a test case which is great for continuous integration testing. In end-to-end integration test scenarios some of our interface partners may be real and alive. Some other interface partners still require Citrus simulation logic.</p>
@@ -35297,7 +35799,7 @@ However when more complex JSON payloads apply for translation we might reach the
 <p>With test actors we have the opportunity to link test actions, in particular send/receive message actions, to a test actor. The test actor can be disabled in configuration very easy and following from that all linked send/receive actions are disabled, too. One Citrus test case is runnable with different test setup scenarios where different partner applications on the one hand are available as real life applications and on the other hand require simulation.</p>
 </div>
 <div class="sect2">
-<h3 id="define-test-actors"><a class="anchor" href="#define-test-actors"></a><a class="link" href="#define-test-actors">38.1. Define test actors</a></h3>
+<h3 id="define-test-actors"><a class="anchor" href="#define-test-actors"></a><a class="link" href="#define-test-actors">39.1. Define test actors</a></h3>
 <div class="paragraph">
 <p>First thing to do is to define one or more test actors in Citrus configuration. A test actor represents a participating party (e.g. interface partner, backend application). We write the test actors into the central Spring application context. We can use a special Citrus Spring XML schema so definitions are quite easy:</p>
 </div>
@@ -35313,7 +35815,7 @@ However when more complex JSON payloads apply for translation we might reach the
 </div>
 </div>
 <div class="sect2">
-<h3 id="link-test-actors"><a class="anchor" href="#link-test-actors"></a><a class="link" href="#link-test-actors">38.2. Link test actors</a></h3>
+<h3 id="link-test-actors"><a class="anchor" href="#link-test-actors"></a><a class="link" href="#link-test-actors">39.2. Link test actors</a></h3>
 <div class="paragraph">
 <p>We need to link the test actors to message send and receive actions in our test cases. We can do this in two different ways. First we can set a test actor reference on a message sender and message receiver.</p>
 </div>
@@ -35347,7 +35849,7 @@ However when more complex JSON payloads apply for translation we might reach the
 </div>
 </div>
 <div class="sect2">
-<h3 id="disable-test-actors"><a class="anchor" href="#disable-test-actors"></a><a class="link" href="#disable-test-actors">38.3. Disable test actors</a></h3>
+<h3 id="disable-test-actors"><a class="anchor" href="#disable-test-actors"></a><a class="link" href="#disable-test-actors">39.3. Disable test actors</a></h3>
 <div class="paragraph">
 <p>Usually both airline applications are simulated in our integration tests. But this time we want to change this by introducing a royal airline application which is online as a real application instance. So we need to skip all simulated message interactions for the royal airline application in our Citrus tests. This is easy as we have linked all send/receive actions to one of our test actors. So we can disable the royal airline test actor in our configuration:</p>
 </div>
@@ -35375,7 +35877,7 @@ Server ports may be of special interest when dealing with different test scenari
 </div>
 </div>
 <div class="sect1">
-<h2 id="test-suite-actions"><a class="anchor" href="#test-suite-actions"></a><a class="link" href="#test-suite-actions">39. Test suite actions</a></h2>
+<h2 id="test-suite-actions"><a class="anchor" href="#test-suite-actions"></a><a class="link" href="#test-suite-actions">40. Test suite actions</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A test framework should also provide the functionality to do some work before and after the test run. You could think of preparing/deleting the data in a database or starting/stopping a server in this section before/after a test run. These tasks fit best into the initialization and cleanup phases of Citrus.</p>
@@ -35410,7 +35912,7 @@ It is important to notice that the Citrus configuration components that we are g
 </div>
 </div>
 <div class="sect2">
-<h3 id="before-suite"><a class="anchor" href="#before-suite"></a><a class="link" href="#before-suite">39.1. Before suite</a></h3>
+<h3 id="before-suite"><a class="anchor" href="#before-suite"></a><a class="link" href="#before-suite">40.1. Before suite</a></h3>
 <div class="paragraph">
 <p>You can influence the behavior of a test run in the initialization phase actually before the tests are executed. See the next code example to find out how it works with actions that take place before the first test is executed:</p>
 </div>
@@ -35556,7 +36058,7 @@ the sequence execution is skipped.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="after-suite"><a class="anchor" href="#after-suite"></a><a class="link" href="#after-suite">39.2. After suite</a></h3>
+<h3 id="after-suite"><a class="anchor" href="#after-suite"></a><a class="link" href="#after-suite">40.2. After suite</a></h3>
 <div class="paragraph">
 <p>A test run may require the test environment to be clean. Therefore it is a good idea to purge all JMS destinations or clean up the database after the test run in order to avoid errors in follow-up test runs. Just like we prepared some data in actions before suite we can clean up the test run in actions after the tests are finished. The Spring bean syntax here is not significantly different to those in before suite section:</p>
 </div>
@@ -35693,7 +36195,7 @@ the sequence execution is skipped.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="before-test"><a class="anchor" href="#before-test"></a><a class="link" href="#before-test">39.3. Before test</a></h3>
+<h3 id="before-test"><a class="anchor" href="#before-test"></a><a class="link" href="#before-test">40.3. Before test</a></h3>
 <div class="paragraph">
 <p>Before each test is executed it also might sound reasonable to purge all JMS queues for instance. In case a previous test fails some messages might be left in the JMS queues. Also the database might be in dirty state. The follow-up test then will be confronted with these invalid messages and data. Purging all JMS destinations before a test is therefore a good idea. Just like we prepared some data in actions before suite we can clean up the data before a test starts to execute.</p>
 </div>
@@ -35809,7 +36311,7 @@ the sequence execution is skipped.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="after-test"><a class="anchor" href="#after-test"></a><a class="link" href="#after-test">39.4. After test</a></h3>
+<h3 id="after-test"><a class="anchor" href="#after-test"></a><a class="link" href="#after-test">40.4. After test</a></h3>
 <div class="paragraph">
 <p>The same logic that applies to the <strong>before-test</strong> configuration component can be done after each test. The <strong>after-test</strong> configuration component defines test actions executed after each test. Just like we prepared some data in actions before a test we can clean up the data after a test has finished execution.</p>
 </div>
@@ -35928,7 +36430,7 @@ the sequence execution is skipped.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="customize-meta-information"><a class="anchor" href="#customize-meta-information"></a><a class="link" href="#customize-meta-information">40. Customize meta information</a></h2>
+<h2 id="customize-meta-information"><a class="anchor" href="#customize-meta-information"></a><a class="link" href="#customize-meta-information">41. Customize meta information</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Test cases in Citrus are usually provided with some meta information like the author’s name or the date of creation. In Citrus you are able to extend this test case meta information with your own very specific criteria.</p>
@@ -36039,7 +36541,7 @@ We use a separate namespace declaration with a custom namespace prefix “custom
 </div>
 </div>
 <div class="sect1">
-<h2 id="tracing-incoming-outgoing-messages"><a class="anchor" href="#tracing-incoming-outgoing-messages"></a><a class="link" href="#tracing-incoming-outgoing-messages">41. Tracing incoming/outgoing messages</a></h2>
+<h2 id="tracing-incoming-outgoing-messages"><a class="anchor" href="#tracing-incoming-outgoing-messages"></a><a class="link" href="#tracing-incoming-outgoing-messages">42. Tracing incoming/outgoing messages</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As we deal with message based interfaces Citrus will send and receive a lot of messages during a test run. Now we may want to see these messages in chronological order as they were processed by Citrus. We can enable message tracing in Citrus in order to save messages to the file system for further investigations.</p>
@@ -36153,7 +36655,7 @@ Be aware of adding the Spring <strong>util</strong> XML namespace to the applica
 </div>
 </div>
 <div class="sect1">
-<h2 id="reporting-and-test-results"><a class="anchor" href="#reporting-and-test-results"></a><a class="link" href="#reporting-and-test-results">42. Reporting and test results</a></h2>
+<h2 id="reporting-and-test-results"><a class="anchor" href="#reporting-and-test-results"></a><a class="link" href="#reporting-and-test-results">43. Reporting and test results</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The framework generates different reports and results after a test run for you. These report and result pages will help you to get an overview of the test cases that were executed and which one were failing.</p>
@@ -36194,7 +36696,7 @@ citrus.default.html.reporter.enabled=false</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="console-logging"><a class="anchor" href="#console-logging"></a><a class="link" href="#console-logging">42.1. Console logging</a></h3>
+<h3 id="console-logging"><a class="anchor" href="#console-logging"></a><a class="link" href="#console-logging">43.1. Console logging</a></h3>
 <div class="paragraph">
 <p>During the test run the framework will provide a huge amount of information that is printed out to the console. This includes current test progress, validation results and error information. This enables the user to quickly supervise the test run progress. Failures in tests will be printed to the console just the time the error occurred. The detailed stack trace information and the detailed error messages are helpful to get the idea what went wrong.</p>
 </div>
@@ -36234,7 +36736,7 @@ citrus.default.html.reporter.enabled=false</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="junit-reports"><a class="anchor" href="#junit-reports"></a><a class="link" href="#junit-reports">42.2. JUnit reports</a></h3>
+<h3 id="junit-reports"><a class="anchor" href="#junit-reports"></a><a class="link" href="#junit-reports">43.2. JUnit reports</a></h3>
 <div class="paragraph">
 <p>As tests are executed as TestNG test cases, the framework will also generate JUnit compliant XML and HTML reports. JUnit test reports are very popular and find support in many build management and development tools. In general the Citrus test reports give you an overall picture of all tests and tell you which of them were failing.</p>
 </div>
@@ -36243,7 +36745,7 @@ citrus.default.html.reporter.enabled=false</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="html-reports"><a class="anchor" href="#html-reports"></a><a class="link" href="#html-reports">42.3. HTML reports</a></h3>
+<h3 id="html-reports"><a class="anchor" href="#html-reports"></a><a class="link" href="#html-reports">43.3. HTML reports</a></h3>
 <div class="paragraph">
 <p>Citrus creates HTML reports after each test run. The report provides detailed information on the test run with a summary of all test results. You can find the report after a test run in the directory <strong><em>${project.build.directory}/citrus-reports</em></strong> .</p>
 </div>
@@ -36327,7 +36829,7 @@ citrus.html.report.logo
 </div>
 </div>
 <div class="sect1">
-<h2 id="run-xml-tests"><a class="anchor" href="#run-xml-tests"></a><a class="link" href="#run-xml-tests">43. XML tests</a></h2>
+<h2 id="run-xml-tests"><a class="anchor" href="#run-xml-tests"></a><a class="link" href="#run-xml-tests">44. XML tests</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As an alternative to using the Citrus Java DSL users can use pure XML as a test definition file. The XML file holds all
@@ -36447,7 +36949,7 @@ test logic to the generated XML file.</p>
 that the Java class is able to find and load the XML file when running the test.</p>
 </div>
 <div class="sect2">
-<h3 id="xml-test-annotation"><a class="anchor" href="#xml-test-annotation"></a><a class="link" href="#xml-test-annotation">43.1. @CitrusTestSource annotation</a></h3>
+<h3 id="xml-test-annotation"><a class="anchor" href="#xml-test-annotation"></a><a class="link" href="#xml-test-annotation">44.1. @CitrusTestSource annotation</a></h3>
 <div class="paragraph">
 <p>Each XML test in Citrus defines the <code>@CitrusTestSource</code> annotation in the Java class. This annotation makes Citrus search for the
 XML file that represents the Citrus test within your classpath.</p>
@@ -36649,7 +37151,7 @@ classes. This means names must not contain whitespace characters except <code>'-
 </div>
 </div>
 <div class="sect2">
-<h3 id="xml-test-meta-info"><a class="anchor" href="#xml-test-meta-info"></a><a class="link" href="#xml-test-meta-info">43.2. Test meta information</a></h3>
+<h3 id="xml-test-meta-info"><a class="anchor" href="#xml-test-meta-info"></a><a class="link" href="#xml-test-meta-info">44.2. Test meta information</a></h3>
 <div class="paragraph">
 <p>The user is able to provide some additional information about the test case. The meta-info section at the very beginning of the
 test case holds information like author, status or creation date.</p>
@@ -36732,7 +37234,7 @@ The usage of CDATA sections for large descriptions may be a good idea, too.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="xml-test-finally"><a class="anchor" href="#xml-test-finally"></a><a class="link" href="#xml-test-finally">43.3. Finally block</a></h3>
+<h3 id="xml-test-finally"><a class="anchor" href="#xml-test-finally"></a><a class="link" href="#xml-test-finally">44.3. Finally block</a></h3>
 <div class="paragraph">
 <p>Java developers might be familiar with the concept of try-catch-finally blocks. The <strong><em>finally</em></strong> section contains a list of
 test actions that will be executed guaranteed at the very end of the test case even if errors did occur during the execution before.</p>
@@ -36792,7 +37294,7 @@ executed regardless the test case state (successful or failed).</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="xml-test-variables-cdata"><a class="anchor" href="#xml-test-variables-cdata"></a><a class="link" href="#xml-test-variables-cdata">43.4. Variables with CDATA sections</a></h3>
+<h3 id="xml-test-variables-cdata"><a class="anchor" href="#xml-test-variables-cdata"></a><a class="link" href="#xml-test-variables-cdata">44.4. Variables with CDATA sections</a></h3>
 <div class="paragraph">
 <p>When using the XML test definition you must obey the XML rules for variable values. First of all you need to escape XML
 reserved characters such as <code>&lt;</code>, <code>&amp;</code> or <code>"</code> with <code>&lt;</code>, <code>&amp;</code> or <code>&quot;</code>. Other values such as XML snippets would
@@ -36828,7 +37330,7 @@ also interfere with the XML well-formed paradigm. You can use CDATA sections wit
 </div>
 </div>
 <div class="sect2">
-<h3 id="xml-variables-groovy"><a class="anchor" href="#xml-variables-groovy"></a><a class="link" href="#xml-variables-groovy">43.5. Variables with Groovy</a></h3>
+<h3 id="xml-variables-groovy"><a class="anchor" href="#xml-variables-groovy"></a><a class="link" href="#xml-variables-groovy">44.5. Variables with Groovy</a></h3>
 <div class="paragraph">
 <p>You can also use a script to create variable values. This is extremely handy when you have very complex variable values.
 Just code a small Groovy script for instance in order to define the variable value. A small sample should give you the
@@ -36871,7 +37373,7 @@ engine implementation. You can add additional engine implementations to your pro
 </div>
 </div>
 <div class="sect2">
-<h3 id="xml-templates"><a class="anchor" href="#xml-templates"></a><a class="link" href="#xml-templates">43.6. Templates</a></h3>
+<h3 id="xml-templates"><a class="anchor" href="#xml-templates"></a><a class="link" href="#xml-templates">44.6. Templates</a></h3>
 <div class="paragraph">
 <p>Templates group action sequences to a logical unit. You can think of templates as reusable components that are used in several
 XML tests. The maintenance is much more efficient because you need to apply changes only on the templates and all referenced
@@ -37058,7 +37560,7 @@ do not affect the test case neither.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuration"><a class="anchor" href="#configuration"></a><a class="link" href="#configuration">44. Configuration options</a></h2>
+<h2 id="configuration"><a class="anchor" href="#configuration"></a><a class="link" href="#configuration">45. Configuration options</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You have several options to customize your Citrus project. Citrus uses default settings that can be overwritten to some
@@ -37067,7 +37569,7 @@ context). Citrus registers components in the context in order to share those wit
 customize the behavior of these components over environment variables and system properties.</p>
 </div>
 <div class="sect2">
-<h3 id="configuration-environment-settings"><a class="anchor" href="#configuration-environment-settings"></a><a class="link" href="#configuration-environment-settings">44.1. Environment settings</a></h3>
+<h3 id="configuration-environment-settings"><a class="anchor" href="#configuration-environment-settings"></a><a class="link" href="#configuration-environment-settings">45.1. Environment settings</a></h3>
 <div class="paragraph">
 <p>Citrus as an application reads general settings from system properties and environment variables. The Citrus framework
 settings initialize on the startup and evaluate environment settings in favor of using default values.</p>
@@ -37183,7 +37685,7 @@ such as Docker or Kubernetes. The following settings do support this kind of env
 </table>
 </div>
 <div class="sect2">
-<h3 id="configuration-spring"><a class="anchor" href="#configuration-spring"></a><a class="link" href="#configuration-spring">44.2. Spring configuration settings</a></h3>
+<h3 id="configuration-spring"><a class="anchor" href="#configuration-spring"></a><a class="link" href="#configuration-spring">45.2. Spring configuration settings</a></h3>
 <div class="paragraph">
 <p>When spring framework is enabled in Citrus you can set specific settings regarding the Spring
 application context.</p>
@@ -37236,7 +37738,7 @@ application context.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="configuration-property-file"><a class="anchor" href="#configuration-property-file"></a><a class="link" href="#configuration-property-file">44.3. Property file settings</a></h3>
+<h3 id="configuration-property-file"><a class="anchor" href="#configuration-property-file"></a><a class="link" href="#configuration-property-file">45.3. Property file settings</a></h3>
 <div class="paragraph">
 <p>As mentioned in the previous section Citrus as a framework references some basic settings from system environment properties
 or variables. You can overwrite these settings in a central property file which is loaded at the very beginning of the
@@ -37284,7 +37786,7 @@ You can use <strong>classpath:</strong> and <strong>file:</strong> path prefix i
 </div>
 </div>
 <div class="sect1">
-<h2 id="spring-support"><a class="anchor" href="#spring-support"></a><a class="link" href="#spring-support">45. Spring support</a></h2>
+<h2 id="spring-support"><a class="anchor" href="#spring-support"></a><a class="link" href="#spring-support">46. Spring support</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Spring framework provides an awesome set of projects, libraries and tools and is a wide spread and well appreciated
@@ -37298,7 +37800,7 @@ context. In the following you can use Spring autowiring and configuration in you
 <p>Read the following chapters to know more about how to use Citrus together with Spring.</p>
 </div>
 <div class="sect2">
-<h3 id="spring-xml-config"><a class="anchor" href="#spring-xml-config"></a><a class="link" href="#spring-xml-config">45.1. Spring XML application context</a></h3>
+<h3 id="spring-xml-config"><a class="anchor" href="#spring-xml-config"></a><a class="link" href="#spring-xml-config">46.1. Spring XML application context</a></h3>
 <div class="paragraph">
 <p>Citrus supports the Spring framework as IoC container in order to load all components as Spring beans in a central
 application context. By default, Citrus loads basic components as Spring beans in a Spring Java config class.</p>
@@ -37366,7 +37868,7 @@ So you are free to modularize your configuration in several files that get loade
 </div>
 </div>
 <div class="sect2">
-<h3 id="spring-java-config"><a class="anchor" href="#spring-java-config"></a><a class="link" href="#spring-java-config">45.2. Spring Java config</a></h3>
+<h3 id="spring-java-config"><a class="anchor" href="#spring-java-config"></a><a class="link" href="#spring-java-config">46.2. Spring Java config</a></h3>
 <div class="paragraph">
 <p>You can also use pure Java code to load Spring beans as a configuration. Citrus is able to load the Spring beans from a
 configuration class. Please define the configuration class with the System property <code>citrus.spring.java.config</code> or with
@@ -37442,13 +37944,13 @@ application context during start.
 </div>
 </div>
 <div class="sect1">
-<h2 id="samples"><a class="anchor" href="#samples"></a><a class="link" href="#samples">46. Samples</a></h2>
+<h2 id="samples"><a class="anchor" href="#samples"></a><a class="link" href="#samples">47. Samples</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter gives some samples where you can see Citrus in action.</p>
 </div>
 <div class="sect2">
-<h3 id="samples-flightbooking"><a class="anchor" href="#samples-flightbooking"></a><a class="link" href="#samples-flightbooking">46.1. The FlightBooking sample</a></h3>
+<h3 id="samples-flightbooking"><a class="anchor" href="#samples-flightbooking"></a><a class="link" href="#samples-flightbooking">47.1. The FlightBooking sample</a></h3>
 <div class="paragraph">
 <p>A simple project example should give you the idea how Citrus works. The system under test is a flight booking service that handles travel requests from a travel agency. A travel request consists of a complete travel route including several flights. The FlightBookingService application will split the complete travel booking into separate flight bookings that are sent to the respective airlines in charge. The booking and customer data is persisted in a database.</p>
 </div>
@@ -37462,7 +37964,7 @@ application context during start.
 <p>In our example two different airlines are connected to the FlightBookingService application: the SmartAriline over JMS and the RoyalAirline over Http.</p>
 </div>
 <div class="sect3">
-<h4 id="flightbooking-use-case"><a class="anchor" href="#flightbooking-use-case"></a><a class="link" href="#flightbooking-use-case">46.1.1. The use case</a></h4>
+<h4 id="flightbooking-use-case"><a class="anchor" href="#flightbooking-use-case"></a><a class="link" href="#flightbooking-use-case">47.1.1. The use case</a></h4>
 <div class="paragraph">
 <p>The use case that we would like to test is quite simple. The test should handle a simple travel booking and expect a positive processing to the end. The test case neither simulates business errors nor technical problems. Next picture shows the use case as a sequence diagram.</p>
 </div>
@@ -37474,7 +37976,7 @@ application context during start.
 </div>
 </div>
 <div class="sect3">
-<h4 id="flightbooking-simulated-systems"><a class="anchor" href="#flightbooking-simulated-systems"></a><a class="link" href="#flightbooking-simulated-systems">46.1.2. Configure the simulated systems</a></h4>
+<h4 id="flightbooking-simulated-systems"><a class="anchor" href="#flightbooking-simulated-systems"></a><a class="link" href="#flightbooking-simulated-systems">47.1.2. Configure the simulated systems</a></h4>
 <div class="paragraph">
 <p>Citrus simulates all surrounding applications in their behavior during the test. The simulated applications are: TravelAgency, SmartAirline and RoyalAirline. The simulated systems have to be configured in the Citrus configuration first. The configuration is done in Spring XML configuration files, as Citrus uses Spring to glue all its services together.</p>
 </div>
@@ -37560,7 +38062,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="flightbooking-http-adapter"><a class="anchor" href="#flightbooking-http-adapter"></a><a class="link" href="#flightbooking-http-adapter">46.1.3. Configure the Http adapter</a></h4>
+<h4 id="flightbooking-http-adapter"><a class="anchor" href="#flightbooking-http-adapter"></a><a class="link" href="#flightbooking-http-adapter">47.1.3. Configure the Http adapter</a></h4>
 <div class="paragraph">
 <p>The RoyalAirline is connected to our system using Http request/response communication. This means we have to simulate a Http server in the test that accepts client requests and provides proper responses. Citrus offers a Http server implementation that will listen on a port for client requests. The adapter forwards incoming request to the test engine over JMS and receives a proper response that is forwarded as a Http response to the client. The next picture shows this mechanism in detail.</p>
 </div>
@@ -37594,7 +38096,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="flightbooking-test-case"><a class="anchor" href="#flightbooking-test-case"></a><a class="link" href="#flightbooking-test-case">46.1.4. The test case</a></h4>
+<h4 id="flightbooking-test-case"><a class="anchor" href="#flightbooking-test-case"></a><a class="link" href="#flightbooking-test-case">47.1.4. The test case</a></h4>
 <div class="paragraph">
 <p>The test case definition is also a Spring configuration file. Citrus offers a customized XML syntax to define a test case. This XML test defining language is supposed to be easy to understand and more specific to the domain we are dealing with. Next listing shows the whole test case definition. Keep in mind that a test case defines every step in the use case. So we define sending and receiving actions of the use case as described in the sequence diagram we saw earlier.</p>
 </div>
@@ -37858,7 +38360,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="appendix"><a class="anchor" href="#appendix"></a><a class="link" href="#appendix">47. Appendix</a></h2>
+<h2 id="appendix"><a class="anchor" href="#appendix"></a><a class="link" href="#appendix">48. Appendix</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="maven-archetypes"><a class="anchor" href="#maven-archetypes"></a><a class="link" href="#maven-archetypes">Maven archetype</a></h3>
@@ -37933,8 +38435,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.0.2<br>
-Last updated 2023-11-22 19:26:07 +0100
+Version 4.1.0<br>
+Last updated 2024-01-17 20:46:33 +0100
 </div>
 </div>
 <style>
