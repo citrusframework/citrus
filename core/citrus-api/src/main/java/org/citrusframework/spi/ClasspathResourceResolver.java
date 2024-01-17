@@ -1,5 +1,5 @@
 /*
- *  Copyright 2023 the original author or authors.
+ *  Copyright 2023-2024 the original author or authors.
  *
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements. See the NOTICE file distributed with
@@ -149,7 +149,7 @@ public class ClasspathResourceResolver {
     private static void loadFromNestedJar(ClassLoader classLoader, String path, String urlPath,
         Set<Path> resources, Predicate<String> filter, String baseJar, String nestedJar) throws IOException {
         try (JarFile jarFile = new JarFile(baseJar)) {
-            JarEntry jarEntry = jarFile.getJarEntry(nestedJar.substring(1));
+            JarEntry jarEntry = jarFile.getJarEntry(nestedJar.startsWith("/") ? nestedJar.substring(1) : nestedJar);
             readFromJarStream(classLoader, path, urlPath, resources, filter, jarFile.getInputStream(jarEntry));
         }
     }
