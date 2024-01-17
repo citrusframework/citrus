@@ -12,7 +12,7 @@ import org.citrusframework.report.JUnitReporter;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.ITestContext;
+import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -37,19 +37,20 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     protected Citrus citrus;
 
     @BeforeClass(alwaysRun = true)
-    public void beforeSuite(ITestContext testContext) throws Exception {
+    public void beforeSuite() throws Exception {
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
-        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+        citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
     }
 
     /**
      * Runs tasks after test suite.
-     * @param testContext the test context.
      */
     @AfterClass(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
+    public void afterSuite() {
         if (citrus != null) {
-            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+            citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
         }
     }
 

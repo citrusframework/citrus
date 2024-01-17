@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusSpringContext;
@@ -49,8 +50,8 @@ import org.citrusframework.util.ObjectHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.IHookCallBack;
-import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
@@ -196,7 +197,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
     }
 
     @BeforeSuite(alwaysRun = true)
-    public final void beforeSuite(ITestContext testContext) {
+    public final void beforeSuite() {
         try {
             springTestContextPrepareTestInstance();
         } catch (Exception e) {
@@ -207,7 +208,8 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         CitrusAnnotations.injectCitrusFramework(this, citrus);
         beforeSuite(citrus.getCitrusContext());
-        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+        citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
     }
 
     /**
@@ -218,10 +220,11 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
     }
 
     @AfterSuite(alwaysRun = true)
-    public final void afterSuite(ITestContext testContext) {
+    public final void afterSuite() {
         if (citrus != null) {
             afterSuite(citrus.getCitrusContext());
-            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+            citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
         }
     }
 
