@@ -43,6 +43,7 @@ http\://www.citrusframework.org/schema/ws/config/citrus-ws-config-4.0.0-M2.xsd=o
 http\://www.citrusframework.org/schema/ws/config/citrus-ws-config-4.0.0.xsd=org/citrusframework/schema/citrus-ws-config-4.0.0.xsd
 http\://www.citrusframework.org/schema/ws/config/citrus-ws-config-4.0.1.xsd=org/citrusframework/schema/citrus-ws-config-4.0.1.xsd
 http\://www.citrusframework.org/schema/ws/config/citrus-ws-config-4.0.2.xsd=org/citrusframework/schema/citrus-ws-config-4.0.2.xsd
+http\://www.citrusframework.org/schema/ws/config/citrus-ws-config-4.1.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-ws-config-4.1.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/ws/config/citrus-ws-config-4.1.0.xsd=org/citrusframework/schema/citrus-ws-config-4.1.0.xsd
 http\://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd=org/citrusframework/schema/citrus-ws-config.xsd
 http\://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase-1.1.xsd=com/consol/citrus/schema/citrus-ws-testcase-1.1.xsd
@@ -89,5 +90,6 @@ http\://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase-4.0.0-M2.x
 http\://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase-4.0.0.xsd=org/citrusframework/schema/citrus-ws-testcase-4.0.0.xsd
 http\://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase-4.0.1.xsd=org/citrusframework/schema/citrus-ws-testcase-4.0.1.xsd
 http\://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase-4.0.2.xsd=org/citrusframework/schema/citrus-ws-testcase-4.0.2.xsd
+http\://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase-4.1.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-ws-testcase-4.1.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase-4.1.0.xsd=org/citrusframework/schema/citrus-ws-testcase-4.1.0.xsd
 http\://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd=org/citrusframework/schema/citrus-ws-testcase.xsd
