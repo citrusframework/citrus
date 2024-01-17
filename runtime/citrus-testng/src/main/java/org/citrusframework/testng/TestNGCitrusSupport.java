@@ -42,8 +42,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.IHookCallBack;
 import org.testng.IHookable;
-import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
@@ -180,11 +180,12 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
     }
 
     @BeforeSuite(alwaysRun = true)
-    public final void beforeSuite(ITestContext testContext) {
+    public final void beforeSuite() {
         citrus = Citrus.newInstance();
         CitrusAnnotations.injectCitrusFramework(this, citrus);
         beforeSuite(citrus.getCitrusContext());
-        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+        citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
     }
 
     /**
@@ -195,10 +196,11 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
     }
 
     @AfterSuite(alwaysRun = true)
-    public final void afterSuite(ITestContext testContext) {
+    public final void afterSuite() {
         if (citrus != null) {
             afterSuite(citrus.getCitrusContext());
-            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+            citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
         }
     }
 

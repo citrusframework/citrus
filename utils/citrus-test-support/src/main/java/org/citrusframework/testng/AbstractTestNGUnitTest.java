@@ -21,7 +21,6 @@ import org.citrusframework.context.TestContextFactory;
 import org.citrusframework.util.ObjectHelper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.ITestContext;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
@@ -42,11 +41,10 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContext
 
     /**
      * Runs tasks before test suite.
-     * @param testContext the test context.
      * @throws Exception on error.
      */
     @BeforeSuite(alwaysRun = true)
-    public void beforeSuite(ITestContext testContext) throws Exception {
+    public void beforeSuite() throws Exception {
         springTestContextPrepareTestInstance();
         ObjectHelper.assertNotNull(applicationContext, "Missing proper application context in before suite initialization");
     }
