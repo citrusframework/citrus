@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
@@ -64,7 +63,15 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     private NamespaceContextBuilder namespaceContextBuilder;
 
     /** Default schema validator */
-    private final XmlSchemaValidation schemaValidator = new XmlSchemaValidation();
+    private final XmlSchemaValidation schemaValidator;
+
+    public DomXmlMessageValidator() {
+        this(new XmlSchemaValidation());
+    }
+
+    public DomXmlMessageValidator(XmlSchemaValidation schemaValidator) {
+        this.schemaValidator = schemaValidator;
+    }
 
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,

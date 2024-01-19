@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
+import static org.mockito.Mockito.mock;
+import static org.springframework.test.util.ReflectionTestUtils.getField;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertTrue;
+
 /**
  * @author Christoph Deppisch
  */
@@ -94,6 +100,26 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         factory.getReferenceResolver().bind("testSchema2", testSchema2);
         factory.getReferenceResolver().bind("testSchema3", testSchema3);
         return factory;
+    }
+
+    @Test
+    public void constructorWithoutArguments() {
+        Object xmlSchemaValidation = getField(validator, DomXmlMessageValidator.class, "schemaValidator");
+
+        assertTrue(xmlSchemaValidation instanceof XmlSchemaValidation);
+        assertNotNull(xmlSchemaValidation);
+    }
+
+    @Test
+    public void allArgsConstructor() {
+        XmlSchemaValidation xmlSchemaValidationMock = mock(XmlSchemaValidation.class);
+        DomXmlMessageValidator domXmlMessageValidator = new DomXmlMessageValidator(xmlSchemaValidationMock);
+
+        Object xmlSchemaValidation = getField(domXmlMessageValidator, DomXmlMessageValidator.class, "schemaValidator");
+
+        assertTrue(xmlSchemaValidation instanceof XmlSchemaValidation);
+        assertNotNull(xmlSchemaValidation);
+        assertEquals(xmlSchemaValidationMock, xmlSchemaValidation);
     }
 
     @Test
