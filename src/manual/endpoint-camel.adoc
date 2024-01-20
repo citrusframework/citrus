@@ -60,7 +60,7 @@ The Citrus endpoint component for Camel interaction is defined as follows in you
 ----
 @Bean
 public CamelEndpoint helloCamelEndpoint() {
-    return new CamelEndpoint()
+    return new CamelEndpointBuilder()
         .endpointUri("direct:hello")
         .build();
 }
@@ -124,7 +124,7 @@ context with `camel-context=&quot;camelContext&quot;`.
 ----
 @Bean
 public CamelEndpoint helloCamelEndpoint() {
-    return new CamelEndpoint()
+    return new CamelEndpointBuilder()
         .camelContext(specialCamelContext)
         .endpointUri("direct:hello")
         .build();
@@ -193,7 +193,7 @@ Citrus is able to receive this route message with an endpoint component like thi
 ----
 @Bean
 public CamelEndpoint greetingsFeed() {
-    return new CamelEndpoint()
+    return new CamelEndpointBuilder()
         .endpointUri("seda:greetings-feed")
         .build();
 }
@@ -249,7 +249,7 @@ The basic configuration for a synchronous Camel endpoint component looks like fo
 ----
 @Bean
 public CamelSyncEndpoint helloCamelEndpoint() {
-    return new CamelEndpoint()
+    return new CamelSyncEndpointBuilder()
         .endpointUri("direct:hello")
         .timeout(1000L)
         .pollingInterval(300L)
@@ -516,8 +516,8 @@ The endpoint offers an optional attribute called `camel-context`.
 ----
 @Bean
 public CamelEndpoint newsCamelEndpoint() {
-    return new CamelEndpoint()
-        .camelContext(newsContext)
+    return new CamelEndpointBuilder()
+        .camelContext(newsContext())
         .endpointUri("direct:news")
         .build();
 }
@@ -687,7 +687,7 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusTest
-    public void createCamelRoute() {
+    public void removeCamelRoutes() {
         $(camel().camelContext(camelContext)
             .route()
             .remove("route_1", "route_2", "route_3"));
@@ -724,7 +724,7 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusTest
-    public void createCamelRoute() {
+    public void startThenStopCamelRoutes() {
         $(camel().camelContext(camelContext)
             .route()
             .start("route_1"));
@@ -855,12 +855,12 @@ public class CamelControlBusIT extends TestNGCitrusSpringSupport {
     public void createCamelRoute() {
         $(camel().camelContext(camelContext)
             .controlbus()
-            .language(SimpleBuilder.simple("${camelContext.getRouteStatus('my_route')}"))
+            .language("simple", "${camelContext.getRouteStatus('my_route')}")
             .result(ServiceStatus.Stopped));
 
         $(camel().camelContext(camelContext)
             .controlbus()
-            .language(SimpleBuilder.simple("${camelContext.stop()}")));
+            .language("simple", "${camelContext.stop()}"));
     }
 }
 ----
