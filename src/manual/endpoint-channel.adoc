@@ -2,7 +2,7 @@
 = Message channel support
 
 Message channels represent the in memory messaging solution in Citrus. Producer and consumer components are linked via channels
-exchanging messages in memory. The transport comes from Spring Integration project (https://spring.io/projects/spring-integration[https://spring.io/projects/spring-integration]).
+exchanging messages in memory. The transport comes from the link:https://spring.io/projects/spring-integration[Spring Integration] project.
 
 This opens up a lot of great possibilities to interact with the Spring Integration transport adapters for FTP, TCP/IP and
 so on. In addition to that the message channel support provides us a good way to exchange messages in memory.
