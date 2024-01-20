@@ -221,7 +221,7 @@ Once you have added the *ws* namespace from above to your test case you are read
     </message>
 </ws:send>
 
-          <ws:receive endpoint="soapServer" soap-action="MySoapService/sayHello">
+<ws:receive endpoint="soapServer" soap-action="MySoapService/sayHello">
     <message>
         [...]
     </message>
@@ -821,8 +821,8 @@ So far we have used assert action wrapper in order to catch SOAP fault exception
 [source,xml]
 ----
 <citrus-ws:client id="soapClient"
-                               request-url="http://localhost:8090/test"
-                               fault-strategy="propagateError"/>
+                  request-url="http://localhost:8090/test"
+                  fault-strategy="propagateError"/>
 ----
 
 We have configured a fault strategy *propagateError* so the message sender will not raise client exceptions but inform the receive action with SOAP fault message contents. By default the fault strategy raises client exceptions (fault-strategy= *throwsException*).

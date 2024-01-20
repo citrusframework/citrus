@@ -22,8 +22,8 @@ As you can see the library defines one-to-many functions either referenced as no
 [source,xml]
 ----
 foo:randomNumber()
-      foo:randomString()
-      foo:customFunction()
+foo:randomString()
+foo:customFunction()
 ----
 
 TIP: You can add custom function implementations and custom function libraries. Just use a custom prefix for your library. The default Citrus function library uses the *citrus:* prefix.In the next chapters the default functions offered by the framework will be described in detail.
@@ -585,7 +585,6 @@ You can use these digest headers in messages sent by Citrus like this:
     value="vflig:digestAuthHeader('${username}','${password}','${authRealm}',
                             '${nonceKey}','POST','${uri}','${opaque}','${algorithm}')"/>
 </header>
-
 ----
 
 This will set a Http Authorization header with the respective digest in the request message. So your test is ready for client digest authentication.
