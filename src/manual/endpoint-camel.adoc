@@ -271,7 +271,7 @@ The poll interval is an optional setting in order to manage the amount of reply 
 Once the endpoint was able to receive the reply message synchronously the test case can receive the reply.
 In case the reply message is not available in time we raise some timeout error and the test will fail.
 
-In a first test scenario we write a test case the sends a message to the synchronous endpoint and waits for the synchronous
+In a first test scenario we write a test case that sends a message to the synchronous endpoint and waits for the synchronous
 reply message to arrive.
 So we have two actions on the same Citrus endpoint, first send then receive.
 
@@ -343,7 +343,7 @@ send(helloCamelEndpoint)
 </send>
 ----
 
-This is pretty simple. Citrus takes care on setting the Camel exchange pattern *InOut* while using synchronous communications.
+This is pretty simple. Citrus takes care of setting the Camel exchange pattern *InOut* while using synchronous communications.
 The Camel routes do respond and Citrus is able to receive the synchronous messages accordingly.
 With this pattern you can interact with Camel routes where Citrus simulates synchronous clients and consumers.
 
@@ -394,7 +394,7 @@ These properties such as *CamelToEndpoint* or *CamelCorrelationId* are also adde
 [[camel-exception-handling]]
 == Camel exception handling
 
-Let us suppose following route definition:
+Let us suppose the following route definition:
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -755,7 +755,7 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
 
 Starting and stopping Camel routes at runtime is important when temporarily Citrus need to receive a message on a Camel endpoint URI.
 We can stop a route, use a Citrus camel endpoint instead for validation and start the route after the test is done.
-This way wen can also simulate errors and failure scenarios in a Camel route interaction.
+This way we can also simulate errors and failure scenarios in a Camel route interaction.
 
 [[camel-controlbus-actions]]
 == Camel controlbus actions
