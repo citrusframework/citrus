@@ -1,7 +1,7 @@
 [[apache-camel]]
 = Apache Camel support
 
-[Apache Camel](https://camel.apache.org) is a fantastic Open Source integration framework that empowers you to quickly
+link:https://camel.apache.org[Apache Camel] is a fantastic Open Source integration framework that empowers you to quickly
 and easily integrate various systems consuming or producing data.
 
 Camel implements the enterprise integration patterns for building mediation and routing rules in your software.
@@ -1083,4 +1083,4 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport {
 ----
 
 The example above uses the `base64` data format provided in Camel to marshal/unmarshal the message content to/from a base64 encoded String.
-Camel provides support for many data formats as you can see in the [documentation on data formats](https://camel.apache.org/components/latest/dataformats/index.html).
+Camel provides support for many data formats as you can see in the link:https://camel.apache.org/components/latest/dataformats/index.html[documentation on data formats].
