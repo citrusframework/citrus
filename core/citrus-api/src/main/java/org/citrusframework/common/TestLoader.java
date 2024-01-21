@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,30 @@
 
 package org.citrusframework.common;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import org.citrusframework.TestCase;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+
+import static java.util.stream.Collectors.toMap;
+
 /**
  * Test loader interface.
+ * <p>
+ * <b>Deprecation notice:</b> Implementations of this interface load <i>and</i> execute test cases in one breath. That
+ * is very intransparent to end-users. It is therefore supersed by the {@link TestLoaderAndExecutor}, which splits
+ * loading and execution of test cases into multiple methods, or at least has a more transparent API.
+ *
  * @author Christoph Deppisch
  * @since 2.1
+ * @deprecated use {@link TestLoaderAndExecutor} instead
  */
+@Deprecated
 public interface TestLoader {
 
     /** Logger */
@@ -48,19 +57,18 @@ public interface TestLoader {
     String GROOVY = "groovy";
 
     /**
-     * Loads and creates new test case object.
-     * @return
+     * Loads and creates new test case object. The test case is expected to be cached and returned by {@link TestLoader#getTestCase()}.
      */
     void load();
 
     /**
      * Adds test case handler that is called before test case gets executed.
-     * @param handler
+     * @param configurer
      */
-    void configureTestCase(Consumer<TestCase> handler);
+    void configureTestCase(Consumer<TestCase> configurer);
 
     /**
-     * Adds test case handler that is called once the test case has been loaded.
+     * Adds test case handler that is called once the test case has been executed.
      * @param handler
      */
     void doWithTestCase(Consumer<TestCase> handler);
@@ -80,14 +88,19 @@ public interface TestLoader {
     /**
      * Resolves all available test loader from resource path lookup. Scans classpath for test loader meta information
      * and instantiates the components.
-     * @return
+     *
+     * @return the available test loaders
      */
     static Map<String, TestLoader> lookup() {
-        Map<String, TestLoader> loader = TYPE_RESOLVER.resolveAll();
+        Map<String, TestLoader> loader = TYPE_RESOLVER.resolveAll()
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() instanceof TestLoader)
+                .collect(toMap(Map.Entry::getKey, e -> ((TestLoader) e.getValue())));
 
         if (logger.isDebugEnabled()) {
             loader.forEach((k, v) -> logger.debug(String.format("Found test loader '%s' as %s", k, v.getClass())));
         }
+
         return loader;
     }
 
@@ -95,14 +108,17 @@ public interface TestLoader {
      * Resolves test loader from resource path lookup with given resource name. Scans classpath for test loader meta information
      * with given name and returns instance of the loader. Returns optional instead of throwing exception when no test loader
      * could be found.
-     * @param loader
-     * @return
+     *
+     * @param loader the name of the test loader
+     * @return the test loader, if present
      */
     static Optional<TestLoader> lookup(String loader) {
         try {
             return Optional.of(TYPE_RESOLVER.resolve(loader));
         } catch (CitrusRuntimeException e) {
             logger.warn(String.format("Failed to resolve test loader from resource '%s/%s'", RESOURCE_PATH, loader));
+        } catch (ClassCastException ignore) {
+            // Ignore exception
         }
 
         return Optional.empty();

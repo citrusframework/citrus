@@ -589,3 +589,58 @@ on a dedicated local context. See the *global-context* attribute that is set to 
 
 After that template instances won't influence each other anymore. But notice that variable changes inside the template then
 do not affect the test case neither.
+
+[[xml-sharded]]
+== Using the Sharded XML Test Loader in Citrus Framework
+
+The `ShardedXmlTestLoader` is a powerful tool within the Citrus framework designed to facilitate the loading and execution of XML-based test cases in a distributed or sharded manner.
+This chapter provides an overview of its functionality and guides you through the process of configuring and using the Sharded XML Test Loader.
+
+[[xml-sharded-overview]]
+=== Overview
+
+The `ShardedXmlTestLoader` extends the capabilities of standard test loader and specializes in handling test cases defined in XML.
+It allows for dividing test cases into different shards, enabling parallel or distributed execution and thus improving test execution efficiency and scalability.
+
+[[xml-sharded-configuration]]
+=== Configuration
+
+The loader can be configured using environment variables or system properties.
+The key configuration parameters include:
+
+- *Total number of shards*: Defines how many shards the test cases should be divided into.
+- *Shard number*: Specifies the specific shard number that this loader instance will handle.
+- *Ignore patterns*: Optional patterns to ignore certain test cases during loading.
+
+The following table summarizes the configuration options:
+
+[options="header"]
+|===
+| Configuration | Environment Variable | System Property
+| Total number of shards | `ORG_CITRUSFRAMEWORK_SHARDING_TOTAL` | `org.citrusframework.sharding.total`
+| Shard number | `ORG_CITRUSFRAMEWORK_SHARDING_NUMBER` | `org.citrusframework.sharding.number`
+| Shard seed | `ORG_CITRUSFRAMEWORK_SHARDING_SEED` | `org.citrusframework.sharding.seed`
+|===
+
+[[xml-sharded-usage]]
+=== Usage
+
+To use the `ShardedXmlTestLoader`, you will typically instantiate it and provide the necessary configuration through its constructor or setters.
+Here's a basic example:
+
+[source,java]
+----
+ShardedXmlTestLoader testLoader = new ShardedXmlTestLoader(new String[]{"com.example.tests"}, null);
+List<TestCase> testCases = testLoader.loadShard().getOrLoadShard();
+testCases.forEach(testCase -> testLoader.executeTestCase(testCase));
+----
+
+In this example, we create an instance of `ShardedXmlTestLoader` with the following parameters:
+
+- *Packages to scan*: `com.example.tests`
+- *Ignore patterns*: `null` (none)
+
+It relies on sharding configuration from either environment variables or properties.
+Additional constructors exist, such that the total number of shards, as well as the current shard number can be programmatically configured (see <<xml-sharded-configuration, Configuration>>).
+
+The loader then loads and executes the test cases belonging to the specified shard.

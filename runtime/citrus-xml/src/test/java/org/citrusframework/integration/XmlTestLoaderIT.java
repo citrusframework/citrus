@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,14 +34,14 @@ public class XmlTestLoaderIT extends TestNGCitrusSupport {
     DefaultTextEqualsMessageValidator textEqualsMessageValidator = new DefaultTextEqualsMessageValidator();
 
     @CitrusTestSource(type = TestLoader.XML, name = { "sample-test" })
-    public void XmlTestLoader_1_IT() {}
+    public void xmlTestLoader_1_IT() {}
 
     @CitrusTestSource(type = TestLoader.XML, name = { "echo-test", "sleep-test" }, packageName = "org.citrusframework.xml.actions")
-    public void XmlTestLoader_2_IT() {}
+    public void xmlTestLoader_2_IT() {}
 
     @CitrusTestSource(type = TestLoader.XML, packageScan = "org.citrusframework.integration")
-    public void XmlTestLoader_3_IT() {}
+    public void xmlTestLoader_3_IT() {}
 
     @CitrusTestSource(type = TestLoader.XML, sources = { "classpath:org/citrusframework/xml/actions/create-variables-test.xml" })
-    public void XmlTestLoader_4_IT() {}
+    public void xmlTestLoader_4_IT() {}
 }

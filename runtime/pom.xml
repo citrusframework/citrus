@@ -25,6 +25,4 @@
     <module>citrus-groovy</module>
     <module>citrus-cucumber</module>
   </modules>
-
 </project>
-

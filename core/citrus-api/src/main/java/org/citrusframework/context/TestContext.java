@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -904,6 +904,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * Empty test case implementation used as test result when tests fail before execution.
      */
     private static class EmptyTestCase implements TestCase {
+
         private final String testName;
         private final String packageName;
 

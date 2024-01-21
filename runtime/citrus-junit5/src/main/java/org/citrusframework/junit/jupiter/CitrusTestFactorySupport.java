@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -19,6 +19,13 @@
 
 package org.citrusframework.junit.jupiter;
 
+import org.citrusframework.CitrusInstanceManager;
+import org.citrusframework.CitrusSettings;
+import org.citrusframework.common.TestLoader;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.ClasspathResourceResolver;
+import org.junit.jupiter.api.DynamicTest;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -28,14 +35,14 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import org.citrusframework.CitrusInstanceManager;
-import org.citrusframework.CitrusSettings;
-import org.citrusframework.annotations.CitrusAnnotations;
-import org.citrusframework.common.TestLoader;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.ClasspathResourceResolver;
-import org.citrusframework.util.FileUtils;
-import org.junit.jupiter.api.DynamicTest;
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
+import static org.citrusframework.annotations.CitrusAnnotations.injectAll;
+import static org.citrusframework.common.TestLoader.GROOVY;
+import static org.citrusframework.common.TestLoader.SPRING;
+import static org.citrusframework.common.TestLoader.XML;
+import static org.citrusframework.common.TestLoader.lookup;
+import static org.citrusframework.util.FileUtils.getBaseName;
 
 /**
  * @author Christoph Deppisch
@@ -55,21 +62,23 @@ public final class CitrusTestFactorySupport {
     }
 
     public static CitrusTestFactorySupport xml() {
-        return factory(TestLoader.XML);
+        return factory(XML);
     }
 
     public static CitrusTestFactorySupport groovy() {
-        return factory(TestLoader.GROOVY);
+        return factory(GROOVY);
     }
 
     public static CitrusTestFactorySupport springXml() {
-        return factory(TestLoader.SPRING);
+        return factory(SPRING);
     }
 
     /**
-     * Creates stream of dynamic tests based on package scan. Scans package for all Xml test case files and creates dynamic test instance for it.
-     * @param packagesToScan
-     * @return
+     * Creates stream of dynamic tests based on package scan. Scans package for all test case files and creates dynamic
+     * test instance for it.
+     *
+     * @param packagesToScan package patterns to scan.
+     * @return loaded test cases
      */
     public Stream<DynamicTest> packageScan(String ... packagesToScan) {
         List<DynamicTest> tests = new ArrayList<>();
@@ -87,7 +96,7 @@ public final class CitrusTestFactorySupport {
 
                         filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
-                        String testName = FileUtils.getBaseName(String.valueOf(fileResource.getFileName()));
+                        String testName = getBaseName(valueOf(fileResource.getFileName()));
 
                         TestLoader testLoader = createTestLoader(testName, filePath);
                         tests.add(DynamicTest.dynamicTest(testName, () -> handler.accept(testLoader)));
@@ -139,15 +148,15 @@ public final class CitrusTestFactorySupport {
     }
 
     private TestLoader createTestLoader(String testName, String packageName) {
-        TestLoader testLoader = TestLoader.lookup(type)
-                .orElseThrow(() -> new CitrusRuntimeException(String.format("Missing '%s' test loader in project classpath - " +
+        TestLoader testLoader = lookup(type)
+                .orElseThrow(() -> new CitrusRuntimeException(format("Missing '%s' test loader in project classpath - " +
                         "please add proper Citrus module to the project", type)));
 
         testLoader.setTestClass(DynamicTest.class);
         testLoader.setTestName(testName);
         testLoader.setPackageName(packageName);
 
-        CitrusAnnotations.injectAll(testLoader, CitrusInstanceManager.getOrDefault());
+        injectAll(testLoader, CitrusInstanceManager.getOrDefault());
 
         return testLoader;
     }

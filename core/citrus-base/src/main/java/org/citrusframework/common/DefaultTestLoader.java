@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -75,8 +75,7 @@ public class DefaultTestLoader implements TestLoader {
     /**
      * Constructor with context file and parent application context field for simple initialisation.
      **/
-    public DefaultTestLoader(Class<?> testClass, String testName, String packageName,
-        CitrusContext citrusContext) {
+    public DefaultTestLoader(Class<?> testClass, String testName, String packageName, CitrusContext citrusContext) {
         this.testClass = testClass;
         this.testName = testName;
         this.packageName = packageName;

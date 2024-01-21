@@ -1,5 +1,5 @@
 /*
- *  Copyright 2023 the original author or authors.
+ *  Copyright 2023-2024 the original author or authors.
  *
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements. See the NOTICE file distributed with
@@ -28,6 +28,7 @@ import org.citrusframework.context.TestContext;
  *  @since 4.0
  */
 public interface TestCaseRunnerProvider {
+
     /**
      * Creates a TestCaseRunner which runs the given {@link TestCase} and the given {@link TestContext}.
      * @param testCase
@@ -42,5 +43,4 @@ public interface TestCaseRunnerProvider {
      * @return
      */
     TestCaseRunner createTestCaseRunner(TestContext context);
-
 }
