@@ -143,8 +143,40 @@ The test now uses the `@CitrusSpringSupport` annotation which combines the `@Ext
 and `@ExtendWith(SpringExtension.class)` annotation. This way the test combines the Spring application context management with
 the Citrus Java DSL functionality.
 
-You can load Spring beans with `@Autowired` into your test. Also you can use the `@CitrusResource` annotations to inject
-the test action runner fluent Java API.
+You can load Spring beans with `@Autowired` into your test.
+Also, you can use the `@CitrusResource` annotations to inject the test action runner fluent Java API.
 
-TIP: The Spring application context should use the basic `CitrusSpringConfig` configuration class to load all Citrus
-components as Spring beans. You can customize the Spring application context by adding more configuration classes.
+TIP: The Spring application context should use the basic `CitrusSpringConfig` configuration class to load all Citrus components as Spring beans.
+You can customize the Spring application context by adding more configuration classes.
+
+[[junit5-test-sharding]]
+=== Test Sharding
+
+You can run your JUnit5 test cases in order in a distributed manner, facilitating test sharding.
+The following snipped showcases you how to get started within a Spring/XML test case environment.
+Note that sharding is available with all kind of `Stream`-sources.
+
+[source,java]
+----
+import static org.citrusframework.junit.jupiter.CitrusTestFactorySupport.springXml;
+import static org.citrusframework.sharding.Shard.createShard;
+
+import org.citrusframework.config.CitrusSpringConfig;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringSupport;
+import org.citrusframework.junit.jupiter.spring.CitrusSpringXmlTestFactory;
+import org.springframework.test.context.ContextConfiguration;
+
+@CitrusSpringSupport
+@ContextConfiguration(classes = {CitrusSpringConfig.class})
+class SpringBeanXml_IT {
+
+    @CitrusSpringXmlTestFactory
+    Stream<DynamicTest> shardedSpringBeanXml_IT() {
+        return createShard(
+            springXml().packageScan("org.citrusframework.junit.jupiter.simple")
+        );
+    }
+}
+----
+
+All the available configuration options are documented withing the chapter link:runtimes-sharded.adoc[Sharding Test Cases]
