@@ -1,0 +1,31 @@
+[[runtime-sharded]]
+== Sharding Test Cases
+
+Sharding is a powerful option within the Citrus framework designed to facilitate the loading and execution of test cases in a distributed manner.
+Sharding test execution is expected to save roughly `[TIME] * 1 / 2` of execution time per runner.
+
+This chapter provides an overview of the available functionality and guides you through the process of configuring and using test loaders with sharding.
+
+[[runtime-sharded-configuration]]
+=== Configuration
+
+First of all, you need to wrap your test case loading with the `org.citrusframework.sharding.Shard#createShard(Stream<T> items)` method.
+Have a look at the previous runtime chapters to get to know how to do this with the test framework of your choice.
+
+Once you're done doing so, the sharding can be configured using environment variables or system properties.
+The following two key configuration parameters are required for sharded test loading:
+
+- *Total number of shards*: Defines how many shards the test cases should be divided into.
+- *Shard number*: Specifies the specific shard number that this loader instance will handle.
+
+The following table summarizes the full configuration options:
+
+[options="header"]
+|===
+| Configuration | Environment Variable | System Property
+| Total number of shards | `CITRUS_SHARDING_TOTAL` | `citrus.sharding.total`
+| Shard number | `CITRUS_SHARDING_NUMBER` | `citrus.sharding.number`
+| Shard seed | `CITRUS_SHARDING_SEED` | `citrus.sharding.seed`
+|===
+
+When writing test cases in Java, additional constructors exist, such that the total number of shards, as well as the current shard number can be programmatically configured.
