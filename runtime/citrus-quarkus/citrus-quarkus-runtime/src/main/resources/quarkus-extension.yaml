@@ -12,7 +12,7 @@ metadata:
     - jms
     - bdd
   guide: https://github.com/christophd/citrus-demo-quarkus
-  icon-url: https://citrusframework.org/img/
+  icon-url: https://citrusframework.org/img/citrus.png
   categories:
     - "testing"
     - "messaging"
