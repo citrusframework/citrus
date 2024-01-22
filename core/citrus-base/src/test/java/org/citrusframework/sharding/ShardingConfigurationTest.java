@@ -22,7 +22,6 @@ package org.citrusframework.sharding;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.SystemProvider;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -40,6 +39,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.testng.Assert.expectThrows;
 
@@ -50,7 +50,7 @@ public class ShardingConfigurationTest {
 
     @BeforeMethod
     void beforeMethodSetup() {
-        MockitoAnnotations.openMocks(this);
+        openMocks(this);
     }
 
     @DataProvider
@@ -64,6 +64,12 @@ public class ShardingConfigurationTest {
         assertEquals(totalNumberOfShards, getField(fixture, "totalNumberOfShards"));
         assertEquals(shardNumber, getField(fixture, "shardNumber"));
         assertEquals(seed, getField(fixture, "seed"));
+    }
+
+    @Test
+    public void unshardedDefaultConfiguration() {
+        var fixture = new ShardingConfiguration();
+        assertProperties(fixture, 1, 0, "1");
     }
 
     @Test
@@ -120,12 +126,6 @@ public class ShardingConfigurationTest {
         var fixture = new ShardingConfiguration(systemProviderMock);
 
         assertProperties(fixture, 66, 55, seed);
-    }
-
-    @Test
-    public void defaultConfiguration() {
-        var fixture = new ShardingConfiguration();
-        assertProperties(fixture, 1, 0, "1");
     }
 
     @Test

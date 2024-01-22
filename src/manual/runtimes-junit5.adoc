@@ -156,6 +156,7 @@ You can run your JUnit5 test cases in order in a distributed manner, facilitatin
 The following snipped showcases you how to get started within a Spring/XML test case environment.
 Note that sharding is available with all kind of `Stream`-sources.
 
+.Sharded JUnit5 Spring/XML test
 [source,java]
 ----
 import static org.citrusframework.junit.jupiter.CitrusTestFactorySupport.springXml;
