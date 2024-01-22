@@ -11,7 +11,7 @@
 
   <artifactId>citrus-quarkus</artifactId>
   <name>Citrus :: Runtime :: Quarkus Runtime</name>
-  <description>Citrus Quarkus Runtime</description>
+  <description>Adds Citrus support to your Quarkus tests. Citrus is an Open Source Java integration testing framework supporting a wide range of message protocols and data formats (Kafka, Http REST, JMS, TCP/IP, SOAP, FTP/SFTP, XML, Json, and more)</description>
 
   <dependencies>
     <dependency>
