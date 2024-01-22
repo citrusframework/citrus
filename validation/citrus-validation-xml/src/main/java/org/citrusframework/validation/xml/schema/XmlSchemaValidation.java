@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.citrusframework.validation.xml.schema;
 
 import org.citrusframework.XmlValidationHelper;
@@ -9,6 +25,7 @@ import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
+import org.citrusframework.util.SystemProvider;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
@@ -35,7 +52,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
 import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
 
 public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidationContext> {
@@ -205,16 +221,5 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     private static Optional<String> extractEnvOrProperty(SystemProvider systemProvider, String envVarName, String fallbackPropertyName) {
         return systemProvider.getEnv(envVarName)
                 .or(() -> systemProvider.getProperty(fallbackPropertyName));
-    }
-
-    static final class SystemProvider {
-
-        Optional<String> getEnv(String envVarName) {
-            return ofNullable(System.getenv(envVarName));
-        }
-
-        Optional<String> getProperty(String propertyName) {
-            return ofNullable(System.getProperty(propertyName));
-        }
     }
 }

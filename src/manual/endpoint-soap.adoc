@@ -1,7 +1,7 @@
 [[soap-webservices]]
 = SOAP WebServices
 
-SOAP Web Services over HTTP is a widely used communication scenario in modern enterprise applications. A SOAP Web Service client is posting a SOAP request via HTTP to a server. SOAP via HTTP is a synchronous message protocol by default so the client is waiting synchronously for the response message. Citrus provides both SOAP client and server components in order to meet both directions of this scenario. The components used are very similar to the HTTP components that were have discussed in the sections before.
+SOAP Web Services over HTTP is a widely used communication scenario in modern enterprise applications. A SOAP Web Service client is posting a SOAP request via HTTP to a server. SOAP via HTTP is a synchronous message protocol by default so the client is waiting synchronously for the response message. Citrus provides both SOAP client and server components in order to meet both directions of this scenario. The components used are very similar to the HTTP components that were discussed in the sections before.
 
 NOTE: The SOAP WebService components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.
 
@@ -14,7 +14,7 @@ NOTE: The SOAP WebService components in Citrus are kept in a separate Maven modu
 </dependency>
 ----
 
-In order to use the SOAP WebService support you need to include the specific XML configuration schema provided by Citrus. See following XML definition to find out how to include the citrus-ws namespace.
+In order to use the SOAP WebService support you need to include the specific XML configuration schema provided by Citrus. See the following XML definition to find out how to include the citrus-ws namespace.
 
 [source,xml]
 ----
@@ -130,7 +130,7 @@ is able to log request/response messages during communication.
 [[soap-server]]
 == SOAP server
 
-Every client need a server to talk to. When receiving SOAP messages we require a web server instance listening on a port. Citrus is using an embedded Jetty server instance in combination with the Spring Web Service API in order to accept SOAP request calls asa server. See how the Citrus SOAP server is configured in the Spring configuration.
+Every client needs a server to talk to. When receiving SOAP messages we require a web server instance listening on a port. Citrus is using an embedded Jetty server instance in combination with the Spring Web Service API in order to accept SOAP request calls as a server. See how the Citrus SOAP server is configured in the Spring configuration.
 
 [source,xml]
 ----
@@ -146,7 +146,7 @@ Test cases interact with this server instance via message channels by default. T
 
 image:figure_010.jpg[figure_010.jpg]
 
-The figure above shows the basic setup with inbound channel and reply channel. You as a tester should not worry about this to much. By default you as a tester just use the server as synchronous endpoint in your test case. This means that you simply receive a message from the server and send a response back.
+The figure above shows the basic setup with inbound channel and reply channel. You as a tester should not worry about this too much. By default you as a tester just use the server as synchronous endpoint in your test case. This means that you simply receive a message from the server and send a response back.
 
 [source,xml]
 ----
@@ -173,11 +173,11 @@ The figure above shows the basic setup with inbound channel and reply channel. Y
 
 As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically send the response back to the calling client. In most cases this is what you need to simulate a SOAP server instance in Citrus. Of course we have some more customization possibilities that we will go over later on. These customizations are optional so you can also skip the next description on endpoint adapters if you are happy with just what you have learned about the SOAP server component in Citrus.
 
-Just like the HTTP server component the SOAP server component by default uses the channel endpoint adapter in order to forward all incoming requests to an in memory message channel. This is done completely behind the scenes. The Citrus configuration has become a lot easier here so you do not have to configure this by default. When nothing else is set the test case does not worry about that settings on the server and just uses the server id reference as synchronous endpoint.
+Just like the HTTP server component the SOAP server component by default uses the channel endpoint adapter in order to forward all incoming requests to an in-memory message channel. This is done completely behind the scenes. The Citrus configuration has become a lot easier here so you do not have to configure this by default. When nothing else is set the test case does not worry about that setting on the server and just uses the server id reference as synchronous endpoint.
 
 TIP: The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored too internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention *{serverName}.inbound* where *{serverName}* is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.
 
-However we do not want to loose the great extendability and customizing capabilities of the Citrus server component. This is why you can optionally define the endpoint adapter implementation used by the Citrus SOAP server. We provide several message endpoint adapter implementations for different simulation strategies. With these endpoint adapters you should be able to generate proper SOAP response messages for the client in various ways. Before we have a closer look at the different adapter implementations we want to show how you can set a custom endpoint adapter on the server component.
+However, we do not want to lose the great extendability and customizing capabilities of the Citrus server component. This is why you can optionally define the endpoint adapter implementation used by the Citrus SOAP server. We provide several message endpoint adapter implementations for different simulation strategies. With these endpoint adapters you should be able to generate proper SOAP response messages for the client in various ways. Before we have a closer look at the different adapter implementations we want to show how you can set a custom endpoint adapter on the server component.
 
 [source,xml]
 ----
@@ -190,12 +190,12 @@ However we do not want to loose the great extendability and customizing capabili
         <citrus:empty-response-adapter id="emptyResponseEndpointAdapter"/>
 ----
 
-With this endpoint adapter configuration above we change the Citrus server behavior from scratch. Now the server automatically sends back an empty SOAP response message every time. Setting a custom endpoint adapter implementation with custom logic is easy as defining a custom endpoint adapter Spring bean and reference it in the server attribute. You can read more about endpoint adapters in link:#endpoint-adapter[endpoint-adapter].
+With this endpoint adapter configuration above we change the Citrus server behavior from scratch. Now the server automatically sends back an empty SOAP response message every time. Setting a custom endpoint adapter implementation with custom logic is as easy as defining a custom endpoint adapter Spring bean and reference it in the server attribute. You can read more about endpoint adapters in link:#endpoint-adapter[endpoint-adapter].
 
 [[soap-send-and-receive]]
 == SOAP send and receive
 
-Citrus provides test actions for sending and receiving messages of all kind. Different message content and different message transports are available to these send and receive actions. When using SOAP message transport we might need to set special information on that messages. These are special SOAP headers, SOAP faults and so on. So we have created a special SOAP namespace for all your SOAP related send and receive operations in an XML DSL test:
+Citrus provides test actions for sending and receiving messages of all kind. Different message content and different message transports are available to these send and receive actions. When using SOAP message transport we might need to set special information on those messages. These are special SOAP headers, SOAP faults and so on. So we have created a special SOAP namespace for all your SOAP related send and receive operations in an XML DSL test:
 
 [source,xml]
 ----
@@ -221,14 +221,14 @@ Once you have added the *ws* namespace from above to your test case you are read
     </message>
 </ws:send>
 
-          <ws:receive endpoint="soapServer" soap-action="MySoapService/sayHello">
+<ws:receive endpoint="soapServer" soap-action="MySoapService/sayHello">
     <message>
         [...]
     </message>
 </ws:receive>
 ----
 
-The special namespace contains following elements:
+The special namespace contains the following elements:
 
 [horizontal]
 send:: Special send operation for sending out SOAP message content.
@@ -319,7 +319,7 @@ Secondly a SOAP message is able to contain customized SOAP headers. These are ke
 </header>
 ----
 
-The key is defined as qualified QName character sequence which has a mandatory XML namespace and a prefix along with a header name. Last not least a SOAP header can contain whole XML fragment values. The next example shows how to set these XML fragments as SOAP header in Citrus:
+The key is defined as qualified QName character sequence which has a mandatory XML namespace and a prefix along with a header name. Last but not least a SOAP header can contain whole XML fragment values. The next example shows how to set these XML fragments as SOAP header in Citrus:
 
 [source,xml]
 ----
@@ -344,7 +344,7 @@ You can also use external file resources to set this SOAP header XML fragment as
 </header>
 ----
 
-This completes the SOAP header possibilities for sending SOAP messages with Citrus. Of course you can also use these variants in SOAP message header validation. You define expected SOAP headers, SOAP action and XML fragments and Citrus will match incoming request to that. Just use *citrus_soap_action* header key in your receiving message action and you validate this SOAP header accordingly.
+This completes the SOAP header possibilities for sending SOAP messages with Citrus. Of course you can also use these variants in SOAP message header validation. You define expected SOAP headers, SOAP action and XML fragments and Citrus will match incoming requests to that. Just use *citrus_soap_action* header key in your receiving message action and you validate this SOAP header accordingly.
 
 When validating SOAP header XML fragments you need to define the whole XML header fragment as expected header data like this:
 
@@ -512,7 +512,7 @@ the _org.citrusframework.ws.interceptor.LoggingEndpointInterceptor_ explicitly i
 [[soap-1-2]]
 == SOAP 1.2
 
-By default Citrus components use SOAP 1.1 version. Fortunately SOAP 1.2 is supported same way. As we already mentioned before the Citrus SOAP components do use a SOAP message factory for creating messages in SOAP format.
+By default Citrus components use SOAP 1.1 version. Fortunately SOAP 1.2 is supported the same way. As we already mentioned before the Citrus SOAP components do use a SOAP message factory for creating messages in SOAP format.
 
 [source,xml]
 ----
@@ -673,7 +673,7 @@ As a client we send out a request and receive a SOAP fault as response. By defau
 </assert>
 ----
 
-The SOAP message sending action is surrounded by a simple assert action. The asserted exception class is the *_SoapFaultClientException_* that we have mentioned before. This means that the test expects the exception to be thrown during the communication. In case the exception is missing the test is fails.
+The SOAP message sending action is surrounded by a simple assert action. The asserted exception class is the *_SoapFaultClientException_* that we have mentioned before. This means that the test expects the exception to be thrown during the communication. In case the exception is missing the test fails.
 
 So far we have used the Citrus core capabilities of asserting an exception. This basic assertion test action is not able to offer direct access to the SOAP fault-code and fault-string values for validation. The basic assert action simply has no access to the actual SOAP fault elements. Fortunately we can use the *citrus-ws* namespace again which offers a special assert action implementation especially designed for SOAP faults in this case.
 
@@ -700,7 +700,7 @@ So far we have used the Citrus core capabilities of asserting an exception. This
 
 The special assert action offers several attributes to validate the expected SOAP fault. Namely these are *"fault-code"*, *"fault-string"* and *"fault-actor"* . The *fault-code* is defined as a QName string and is mandatory for the validation. The fault assertion also supports test variable replacement as usual.
 
-The time you use SOAP fault validation you need to tell Citrus how to validate the SOAP faults. Citrus needs an instance of a *_SoapFaultValitator_* that we need to add to the Spring application context. By default Citrus is searching for a bean with the id *'soapFaultValidator'* .
+The time you use SOAP fault validation you need to tell Citrus how to validate the SOAP faults. Citrus needs an instance of a *_SoapFaultValidator_* that we need to add to the Spring application context. By default Citrus is searching for a bean with the id *'soapFaultValidator'* .
 
 [source,xml]
 ----
@@ -821,8 +821,8 @@ So far we have used assert action wrapper in order to catch SOAP fault exception
 [source,xml]
 ----
 <citrus-ws:client id="soapClient"
-                               request-url="http://localhost:8090/test"
-                               fault-strategy="propagateError"/>
+                  request-url="http://localhost:8090/test"
+                  fault-strategy="propagateError"/>
 ----
 
 We have configured a fault strategy *propagateError* so the message sender will not raise client exceptions but inform the receive action with SOAP fault message contents. By default the fault strategy raises client exceptions (fault-strategy= *throwsException*).
@@ -1015,7 +1015,7 @@ As client Citrus is able to add attachments to the SOAP message. I think it is b
 
 NOTE: In the previous chapters you may have already noticed the *citrus-ws* namespace that stands for the SOAP extensions in Citrus. Please include the *citrus-ws* namespace in your test case as described earlier in this chapter so you can use the attachment support.
 
-The special send action of the SOAP extension namespace is aware of SOAP attachments. The attachment content usually consists of a *content-id* a *content-type* and the actual content as plain text or binary content. Inside the test case you can use external file resources or inline CDATA sections for the attachment content. As you are familiar with Citrus you may know this already from other actions.
+The special send action of the SOAP extension namespace is aware of SOAP attachments. The attachment content usually consists of a *content-id*, a *content-type* and the actual content as plain text or binary content. Inside the test case you can use external file resources or inline CDATA sections for the attachment content. As you are familiar with Citrus you may know this already from other actions.
 
 Citrus will construct a SOAP message with the SOAP attachment. Currently only one attachment per message is supported.
 
@@ -1057,7 +1057,7 @@ You can define several validator instances in the Citrus configuration. The vali
 [[soap-mtom]]
 == SOAP MTOM support
 
-MTOM (Message Transmission Optimization Mechanism) enables you to send and receive large SOAP message content using streamed data handlers. This optimizes the resource allocation on server and client side where not all data is loaded into memory when marshalling/unmarshalling the message payload data. In detail MTOM enabled messages do have a XOP package inside the message payload replacing the actual large content data. The content is then streamed aas separate attachment. Server and client can operate with a data handler providing access to the streamed content. This is very helpful when using large binary content inside a SOAP message for instance.
+MTOM (Message Transmission Optimization Mechanism) enables you to send and receive large SOAP message content using streamed data handlers. This optimizes the resource allocation on server and client side where not all data is loaded into memory when marshalling/unmarshalling the message payload data. In detail MTOM-enabled messages do have a XOP package inside the message payload replacing the actual large content data. The content is then streamed aas separate attachment. Server and client can operate with a data handler providing access to the streamed content. This is very helpful when using large binary content inside a SOAP message for instance.
 
 Citrus is able to both send and receive MTOM enabled SOAP messages on client and server. Just use the *mtom-enabled* flag when sending a SOAP message:
 
@@ -1158,7 +1158,7 @@ The listing above defines two inline MTOM attachments. The first attachment *cid
 </SOAP-ENV:Envelope>
 ----
 
-The image content is a base64Binary String and the icon a heyBinary String. Of course this mechanism also is supported in receive actions on the server side where the expected message content is added als inline MTOM data before validation takes place.
+The image content is a base64Binary String and the icon a hexBinary String. Of course this mechanism also is supported in receive actions on the server side where the expected message content is added as inline MTOM data before validation takes place.
 
 [[soap-client-basic-authentication]]
 == SOAP client basic authentication
@@ -1194,9 +1194,9 @@ Citrus provides a comfortable way to set the HTTP message sender with basic auth
 </bean>
 ----
 
-The above configuration results in SOAP requests with authentication headers properly set for basic authentication. The special message sender takes care on adding the proper basic authentication header to each request that is sent with this Citrus message sender. By default preemptive authentication is used. The message sender only sends a single request to the server with all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope so Citrus can setup an authentication cache within the HTTP context in order to have preemptive authentication.
+The above configuration results in SOAP requests with authentication headers properly set for basic authentication. The special message sender takes care of adding the proper basic authentication header to each request that is sent with this Citrus message sender. By default preemptive authentication is used. The message sender only sends a single request to the server with all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope so Citrus can setup an authentication cache within the HTTP context in order to have preemptive authentication.
 
-TIP: You can also skip the message sender configuration and set the *Authorization* header on each request in your send action definition on your own. Be aware of setting the header as HTTP mime header using the correct prefix and take care on using the correct basic authentication with base64 encoding for the *username:password* phrase.
+TIP: You can also skip the message sender configuration and set the *Authorization* header on each request in your send action definition on your own. Be aware of setting the header as HTTP mime header using the correct prefix and take care of using the correct basic authentication with base64 encoding for the *username:password* phrase.
 
 [source,xml]
 ----
@@ -1299,10 +1299,10 @@ citrus_soap_ws_addressing_action:: addressing action URI
 citrus_soap_ws_addressing_replyTo:: addressing reply to endpoint reference as URI
 citrus_soap_ws_addressing_faultTo:: addressing fault to endpoint reference as URI
 
-When using this message headers you are able to explicitly overwrite the WsAddressing headers. Test variables are supported of course when specifying the values. Most of the values
+When using these message headers you are able to explicitly overwrite the WsAddressing headers. Test variables are supported of course when specifying the values. Most of the values
 are parsed to a URI value at the end so please make sure to use correct URI String representations.
 
-NOTE: The WS-Addressing specification knows several versions. Supported version are:
+NOTE: The WS-Addressing specification knows several versions. Supported versions are:
 
 [horizontal]
 VERSION10:: WS-Addressing 1.0 May 2006

@@ -1,7 +1,7 @@
 [[apache-camel]]
 = Apache Camel support
 
-[Apache Camel](https://camel.apache.org) is a fantastic Open Source integration framework that empowers you to quickly
+link:https://camel.apache.org[Apache Camel] is a fantastic Open Source integration framework that empowers you to quickly
 and easily integrate various systems consuming or producing data.
 
 Camel implements the enterprise integration patterns for building mediation and routing rules in your software.
@@ -60,7 +60,7 @@ The Citrus endpoint component for Camel interaction is defined as follows in you
 ----
 @Bean
 public CamelEndpoint helloCamelEndpoint() {
-    return new CamelEndpoint()
+    return new CamelEndpointBuilder()
         .endpointUri("direct:hello")
         .build();
 }
@@ -124,7 +124,7 @@ context with `camel-context=&quot;camelContext&quot;`.
 ----
 @Bean
 public CamelEndpoint helloCamelEndpoint() {
-    return new CamelEndpoint()
+    return new CamelEndpointBuilder()
         .camelContext(specialCamelContext)
         .endpointUri("direct:hello")
         .build();
@@ -193,7 +193,7 @@ Citrus is able to receive this route message with an endpoint component like thi
 ----
 @Bean
 public CamelEndpoint greetingsFeed() {
-    return new CamelEndpoint()
+    return new CamelEndpointBuilder()
         .endpointUri("seda:greetings-feed")
         .build();
 }
@@ -249,7 +249,7 @@ The basic configuration for a synchronous Camel endpoint component looks like fo
 ----
 @Bean
 public CamelSyncEndpoint helloCamelEndpoint() {
-    return new CamelEndpoint()
+    return new CamelSyncEndpointBuilder()
         .endpointUri("direct:hello")
         .timeout(1000L)
         .pollingInterval(300L)
@@ -271,7 +271,7 @@ The poll interval is an optional setting in order to manage the amount of reply 
 Once the endpoint was able to receive the reply message synchronously the test case can receive the reply.
 In case the reply message is not available in time we raise some timeout error and the test will fail.
 
-In a first test scenario we write a test case the sends a message to the synchronous endpoint and waits for the synchronous
+In a first test scenario we write a test case that sends a message to the synchronous endpoint and waits for the synchronous
 reply message to arrive.
 So we have two actions on the same Citrus endpoint, first send then receive.
 
@@ -343,7 +343,7 @@ send(helloCamelEndpoint)
 </send>
 ----
 
-This is pretty simple. Citrus takes care on setting the Camel exchange pattern *InOut* while using synchronous communications.
+This is pretty simple. Citrus takes care of setting the Camel exchange pattern *InOut* while using synchronous communications.
 The Camel routes do respond and Citrus is able to receive the synchronous messages accordingly.
 With this pattern you can interact with Camel routes where Citrus simulates synchronous clients and consumers.
 
@@ -394,7 +394,7 @@ These properties such as *CamelToEndpoint* or *CamelCorrelationId* are also adde
 [[camel-exception-handling]]
 == Camel exception handling
 
-Let us suppose following route definition:
+Let us suppose the following route definition:
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -516,8 +516,8 @@ The endpoint offers an optional attribute called `camel-context`.
 ----
 @Bean
 public CamelEndpoint newsCamelEndpoint() {
-    return new CamelEndpoint()
-        .camelContext(newsContext)
+    return new CamelEndpointBuilder()
+        .camelContext(newsContext())
         .endpointUri("direct:news")
         .build();
 }
@@ -687,7 +687,7 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusTest
-    public void createCamelRoute() {
+    public void removeCamelRoutes() {
         $(camel().camelContext(camelContext)
             .route()
             .remove("route_1", "route_2", "route_3"));
@@ -724,7 +724,7 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
 
     @Test
     @CitrusTest
-    public void createCamelRoute() {
+    public void startThenStopCamelRoutes() {
         $(camel().camelContext(camelContext)
             .route()
             .start("route_1"));
@@ -755,7 +755,7 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
 
 Starting and stopping Camel routes at runtime is important when temporarily Citrus need to receive a message on a Camel endpoint URI.
 We can stop a route, use a Citrus camel endpoint instead for validation and start the route after the test is done.
-This way wen can also simulate errors and failure scenarios in a Camel route interaction.
+This way we can also simulate errors and failure scenarios in a Camel route interaction.
 
 [[camel-controlbus-actions]]
 == Camel controlbus actions
@@ -855,12 +855,12 @@ public class CamelControlBusIT extends TestNGCitrusSpringSupport {
     public void createCamelRoute() {
         $(camel().camelContext(camelContext)
             .controlbus()
-            .language(SimpleBuilder.simple("${camelContext.getRouteStatus('my_route')}"))
+            .language("simple", "${camelContext.getRouteStatus('my_route')}")
             .result(ServiceStatus.Stopped));
 
         $(camel().camelContext(camelContext)
             .controlbus()
-            .language(SimpleBuilder.simple("${camelContext.stop()}")));
+            .language("simple", "${camelContext.stop()}"));
     }
 }
 ----
@@ -1083,4 +1083,4 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport {
 ----
 
 The example above uses the `base64` data format provided in Camel to marshal/unmarshal the message content to/from a base64 encoded String.
-Camel provides support for many data formats as you can see in the [documentation on data formats](https://camel.apache.org/components/latest/dataformats/index.html).
+Camel provides support for many data formats as you can see in the link:https://camel.apache.org/components/latest/dataformats/index.html[documentation on data formats].

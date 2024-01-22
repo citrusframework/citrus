@@ -124,7 +124,7 @@ failsafe configuration for Citrus.
       </goals>
     </execution>
   </executions>
- </plugin>
+</plugin>
 ----
 
 The Citrus test sources go to the default Maven test source directory `src/test/java` and `src/test/resources`.
@@ -213,7 +213,7 @@ You can use the Gradle wrapper for compile, package and test the sample with Gra
 .Run the build with Gradle
 [source,bash]
 ----
- gradlew clean build
+gradlew clean build
 ----
 
 This executes all Citrus test cases during the build. You will be able to see Citrus performing some integration test logging output.
