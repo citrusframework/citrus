@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.min;
+import static java.util.Arrays.stream;
 import static java.util.Collections.shuffle;
 import static java.util.stream.Collectors.toCollection;
 
@@ -48,43 +49,66 @@ public final class Shard {
     }
 
     /**
-     * Creates a sharded stream from the input stream using the default sharding configuration. Note that the initial
-     * stream will be terminated!
+     * Creates a sharded stream from the input array using the default sharding configuration.
      *
-     * @param <T>   The type of elements in the stream.
-     * @param input The input stream to be sharded.
+     * @param <T>       The type of elements in the stream.
+     * @param testCases The input array to be sharded.
      * @return A sharded stream based on the default sharding configuration.
      */
-    public static <T> Stream<T> createShard(Stream<T> input) {
-        return createShard(input, new ShardingConfiguration());
+    public static <T> T[] createShard(T[] testCases) {
+        return createShard(testCases, new ShardingConfiguration());
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public static <T> T[] createShard(T[] testCases, ShardingConfiguration shardingConfiguration) {
+        return createShard(stream(testCases), shardingConfiguration)
+                .toList()
+                .toArray(
+                        size -> (T[]) java.lang.reflect.Array.newInstance(
+                                testCases.getClass().getComponentType(), size)
+                );
     }
 
     /**
-     * Creates a sharded stream from the input stream using the provided sharding configuration. Note that the initial
-     * stream will be terminated!
+     * Creates a sharded stream from the input stream using the default sharding configuration.
+     * Note that the initial stream will be terminated!
+     *
+     * @param <T>       The type of elements in the stream.
+     * @param testCases The input stream to be sharded.
+     * @return A sharded stream based on the default sharding configuration.
+     */
+    public static <T> Stream<T> createShard(Stream<T> testCases) {
+        return createShard(testCases, new ShardingConfiguration());
+    }
+
+    /**
+     * Creates a sharded stream from the input stream using the provided sharding configuration.
+     * Note that the initial stream will be terminated!
      *
      * @param <T>                   The type of elements in the stream.
-     * @param input                 The input stream to be sharded.
+     * @param testCases             The input stream to be sharded.
      * @param shardingConfiguration The configuration for sharding.
      * @return A sharded stream based on the provided sharding configuration.
      */
-    public static <T> Stream<T> createShard(Stream<T> input, ShardingConfiguration shardingConfiguration) {
-        return createShard(input, shardingConfiguration, false);
+    public static <T> Stream<T> createShard(Stream<T> testCases, ShardingConfiguration shardingConfiguration) {
+        return createShard(testCases, shardingConfiguration, false);
     }
 
 
     /**
      * Creates a sharded stream from the input stream using the provided sharding configuration and a flag to determine
-     * whether the stream should be parallel. Note that the initial stream will be terminated!
+     * whether the stream should be parallel.
+     * Note that the initial stream will be terminated!
      *
      * @param <T>                   The type of elements in the stream.
-     * @param input                 The input stream to be sharded.
+     * @param testCases             The input stream to be sharded.
      * @param shardingConfiguration The configuration for sharding.
-     * @param parallel              A flag indicating whether the resulting stream should be parallel.
+     * @param parallel              A flag indicating whether the resulting stream should be
+     *                              parallel.
      * @return A sharded stream based on the provided sharding configuration.
      */
-    public static <T> Stream<T> createShard(Stream<T> input, ShardingConfiguration shardingConfiguration, boolean parallel) {
-        List<T> itemList = input.collect(toCollection(ArrayList::new));
+    public static <T> Stream<T> createShard(Stream<T> testCases, ShardingConfiguration shardingConfiguration, boolean parallel) {
+        List<T> itemList = testCases.collect(toCollection(ArrayList::new));
 
         var random = new Random(shardingConfiguration.getSeed());
         shuffle(itemList, random);

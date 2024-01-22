@@ -19,14 +19,20 @@
 
 package org.citrusframework.sharding;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.citrusframework.TestCase;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Array;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.range;
 import static org.citrusframework.sharding.Shard.createShard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,20 +43,12 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.openMocks;
+import static org.testng.AssertJUnit.assertFalse;
 
 public class ShardTest {
 
-    @Mock
-    private ShardingConfiguration shardingConfigurationMock;
-
-    private List<TestCase> testCases;
-
-    @BeforeMethod
-    void beforeMethodSetup() {
-        MockitoAnnotations.openMocks(this);
-
-        testCases = createTestCases(10);
-    }
+    private static final List<TestCase> TEST_CASES = createTestCases(10);
 
     private static List<TestCase> createTestCases(int numberOfTestCases) {
         assertTrue(numberOfTestCases > 0);
@@ -59,94 +57,183 @@ public class ShardTest {
                 .toList();
     }
 
-    @Test
-    public void loadOneShard() {
-        var shard1 = prepareAndLoadShard(1, 0);
-        assertEquals(10, shard1.size());
+    @Mock
+    protected ShardingConfiguration shardingConfigurationMock;
+
+    @BeforeMethod
+    public void beforeMethodSetup() {
+        openMocks(this);
     }
 
-    @Test
-    public void loadMultipleShards() {
-        var shard1 = prepareAndLoadShard(2, 0);
-        var shard2 = prepareAndLoadShard(2, 1);
-
-        assertEquals(5, shard1.size());
-        assertEquals(5, shard2.size());
-
-        assertTrue(shard1.stream().noneMatch(shard2::contains));
+    protected void configureShardingConfiguration(int totalNumberOfShards, int shardNumber) {
+        doReturn(totalNumberOfShards).when(shardingConfigurationMock).getTotalNumberOfShards();
+        doReturn(shardNumber).when(shardingConfigurationMock).getShardNumber();
     }
 
-    @Test
-    public void unequalDistributionOnOddNumberOfShards() {
-        var shard1 = prepareAndLoadShard(3, 0);
-        var shard2 = prepareAndLoadShard(3, 1);
-        var shard3 = prepareAndLoadShard(3, 2);
+    protected <T> Pair<T, T> testMultipleShards(BiFunction<Integer, Integer, T> createShardWithConfiguration, Function<T, Integer> sizeExtractor) {
+        var shard1 = createShardWithConfiguration.apply(2, 0);
+        var shard2 = createShardWithConfiguration.apply(2, 1);
 
-        assertEquals(4, shard1.size());
-        assertEquals(4, shard2.size());
-        assertEquals(2, shard3.size());
+        assertEquals(5, sizeExtractor.apply(shard1));
+        assertEquals(5, sizeExtractor.apply(shard2));
 
-        assertTrue(shard1.stream().noneMatch(shard2::contains));
-        assertTrue(shard1.stream().noneMatch(shard3::contains));
-        assertTrue(shard2.stream().noneMatch(shard3::contains));
+        return Pair.of(shard1, shard2);
     }
 
-    @Test
-    public void unequalDistributionOnOddNumberOfTestCases() {
+    protected <T> Triple<T, T, T> testUnequalDistributionOnOddNumberOfShards(BiFunction<Integer, Integer, T> createShardWithConfiguration, Function<T, Integer> sizeExtractor) {
+        var shard1 = createShardWithConfiguration.apply(3, 0);
+        var shard2 = createShardWithConfiguration.apply(3, 1);
+        var shard3 = createShardWithConfiguration.apply(3, 2);
+
+        assertEquals(4, sizeExtractor.apply(shard1));
+        assertEquals(4, sizeExtractor.apply(shard2));
+        assertEquals(2, sizeExtractor.apply(shard3));
+
+        return Triple.of(shard1, shard2, shard3);
+    }
+
+    protected <T> Pair<T, T> testUnequalDistributionOnOddNumberOfTestCases(BiFunction<List<TestCase>, ShardingConfiguration, T> testCasesToResult, Function<T, Integer> sizeExtractor) {
         doReturn(2).when(shardingConfigurationMock).getTotalNumberOfShards();
 
         var oddNumberOfTestCases = createTestCases(11);
 
         doReturn(0).when(shardingConfigurationMock).getShardNumber();
-        var shard1 = createShard(oddNumberOfTestCases.stream(), shardingConfigurationMock).toList();
+        var shard1 = testCasesToResult.apply(oddNumberOfTestCases, shardingConfigurationMock);
 
         doReturn(1).when(shardingConfigurationMock).getShardNumber();
-        var shard2 = createShard(oddNumberOfTestCases.stream(), shardingConfigurationMock).toList();
+        var shard2 = testCasesToResult.apply(oddNumberOfTestCases, shardingConfigurationMock);
 
-        assertEquals(6, shard1.size());
-        assertEquals(5, shard2.size());
+        assertEquals(6, sizeExtractor.apply(shard1));
+        assertEquals(5, sizeExtractor.apply(shard2));
 
-        assertTrue(shard1.stream().noneMatch(shard2::contains));
+        return Pair.of(shard1, shard2);
     }
 
-    @Test
-    public void sameSeedEquality() {
-        doReturn(2).when(shardingConfigurationMock).getTotalNumberOfShards();
-        doReturn(0).when(shardingConfigurationMock).getShardNumber();
+    public static class ArrayApiTest extends ShardTest {
 
-        var testCases = createTestCases(10);
+        @Test
+        public void unsharded() {
+            var unsharded = createArrayShardWithShardingConfiguration(1, 0);
+            assertEquals(10, unsharded.length);
+        }
 
-        // Create two sharded test loaders with same seed => should load same shard
-        doReturn("first-seed".hashCode()).when(shardingConfigurationMock).getSeed();
+        @Test
+        public void unshardedDefaultConfiguration() {
+            var unsharded = createShard(TEST_CASES.toArray(new TestCase[0]));
+            assertEquals(10, unsharded.length);
+        }
 
-        var shard1 = createShard(testCases.stream(), shardingConfigurationMock).toList();
-        var shard2 = createShard(testCases.stream(), shardingConfigurationMock).toList();
+        @Test
+        public void withMultipleShards() {
+            var shards = testMultipleShards(this::createArrayShardWithShardingConfiguration, Array::getLength);
+            assertTrue(stream(shards.getLeft()).noneMatch(asList(shards.getRight())::contains));
+        }
 
-        assertEquals(shard1, shard2);
+        @Test
+        public void unequalDistributionOnOddNumberOfShards() {
+            var shards = testUnequalDistributionOnOddNumberOfShards(this::createArrayShardWithShardingConfiguration, Array::getLength);
 
-        verify(shardingConfigurationMock, times(2)).getSeed();
-        clearInvocations(shardingConfigurationMock);
+            assertTrue(stream(shards.getLeft()).noneMatch(asList(shards.getMiddle())::contains));
+            assertTrue(stream(shards.getLeft()).noneMatch(asList(shards.getRight())::contains));
+            assertTrue(stream(shards.getMiddle()).noneMatch(asList(shards.getRight())::contains));
+        }
 
-        // Now switch the seed => new shards, unequal to first two
-        doReturn("different-seed".hashCode()).when(shardingConfigurationMock).getSeed();
+        @Test
+        public void unequalDistributionOnOddNumberOfTestCases() {
+            var shards = testUnequalDistributionOnOddNumberOfTestCases((testCases, shardingConfiguration) -> createShard(testCases.toArray(new TestCase[0]), shardingConfiguration), Array::getLength);
+            assertTrue(stream(shards.getLeft()).noneMatch(asList(shards.getRight())::contains));
+        }
 
-        var shard3 = createShard(testCases.stream(), shardingConfigurationMock).toList();
-        var shard4 = createShard(testCases.stream(), shardingConfigurationMock).toList();
+        private TestCase[] createArrayShardWithShardingConfiguration(int totalNumberOfShards, int shardNumber) {
+            configureShardingConfiguration(totalNumberOfShards, shardNumber);
 
-        assertNotEquals(shard1, shard3);
-        assertNotEquals(shard2, shard3);
-        assertNotEquals(shard1, shard4);
-        assertNotEquals(shard2, shard4);
-
-        assertEquals(shard3, shard4);
-
-        verify(shardingConfigurationMock, times(2)).getSeed();
+            return createShard(TEST_CASES.toArray(new TestCase[0]), shardingConfigurationMock);
+        }
     }
 
-    private List<TestCase> prepareAndLoadShard(int totalNumberOfShards, int shardNumber) {
-        doReturn(totalNumberOfShards).when(shardingConfigurationMock).getTotalNumberOfShards();
-        doReturn(shardNumber).when(shardingConfigurationMock).getShardNumber();
+    public static class StreamApiTest extends ShardTest {
 
-        return createShard(testCases.stream(), shardingConfigurationMock).toList();
+        @Test
+        public void unsharded() {
+            var unsharded = createStreamApiShardWithShardingConfiguration(1, 0);
+            assertEquals(10, unsharded.size());
+        }
+
+        @Test
+        public void unshardedDefaultConfiguration() {
+            var unsharded = createShard(TEST_CASES.stream()).toList();
+            assertEquals(10, unsharded.size());
+        }
+
+        @Test
+        public void multipleShards() {
+            var shards = testMultipleShards(this::createStreamApiShardWithShardingConfiguration, List::size);
+            assertTrue(shards.getLeft().stream().noneMatch(shards.getRight()::contains));
+        }
+
+        @Test
+        public void unequalDistributionOnOddNumberOfShards() {
+            var shards = testUnequalDistributionOnOddNumberOfShards(this::createStreamApiShardWithShardingConfiguration, List::size);
+
+            assertTrue(shards.getLeft().stream().noneMatch(shards.getMiddle()::contains));
+            assertTrue(shards.getLeft().stream().noneMatch(shards.getRight()::contains));
+            assertTrue(shards.getMiddle().stream().noneMatch(shards.getRight()::contains));
+        }
+
+        @Test
+        public void unequalDistributionOnOddNumberOfTestCases() {
+            var shards = testUnequalDistributionOnOddNumberOfTestCases((testCases, shardingConfiguration) -> createShard(testCases.stream(), shardingConfiguration).toList(), List::size);
+            assertTrue(shards.getLeft().stream().noneMatch(shards.getRight()::contains));
+        }
+
+        @Test
+        public void sameSeedEquality() {
+            configureShardingConfiguration(2, 0);
+
+            var testCases = createTestCases(10);
+
+            // Create two sharded test loaders with same seed => should load same shard
+            doReturn("first-seed".hashCode()).when(shardingConfigurationMock).getSeed();
+
+            var shard1 = createShard(testCases.stream(), shardingConfigurationMock).toList();
+            var shard2 = createShard(testCases.stream(), shardingConfigurationMock).toList();
+
+            assertEquals(shard1, shard2);
+
+            verify(shardingConfigurationMock, times(2)).getSeed();
+            clearInvocations(shardingConfigurationMock);
+
+            // Now switch the seed => new shards, unequal to first two
+            doReturn("different-seed".hashCode()).when(shardingConfigurationMock).getSeed();
+
+            var shard3 = createShard(testCases.stream(), shardingConfigurationMock).toList();
+            var shard4 = createShard(testCases.stream(), shardingConfigurationMock).toList();
+
+            assertNotEquals(shard1, shard3);
+            assertNotEquals(shard2, shard3);
+            assertNotEquals(shard1, shard4);
+            assertNotEquals(shard2, shard4);
+
+            assertEquals(shard3, shard4);
+
+            verify(shardingConfigurationMock, times(2)).getSeed();
+        }
+
+        private List<TestCase> createStreamApiShardWithShardingConfiguration(int totalNumberOfShards, int shardNumber) {
+            configureShardingConfiguration(totalNumberOfShards, shardNumber);
+
+            var stream = createShard(TEST_CASES.stream(), shardingConfigurationMock);
+            assertFalse(stream.isParallel());
+
+            return stream.toList();
+        }
+
+        @Test
+        public void parallelStream() {
+            int numberOfTestCases = 10;
+            var resultingStream = createShard(createTestCases(numberOfTestCases).stream(), new ShardingConfiguration(), true);
+            assertTrue(resultingStream.isParallel());
+            assertEquals(numberOfTestCases, resultingStream.toList().size());
+        }
     }
 }
