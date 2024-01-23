@@ -185,7 +185,7 @@
     <commons.net.version>3.10.0</commons.net.version>
     <cucumber.version>7.15.0</cucumber.version>
     <docker-java.version>3.3.4</docker-java.version>
-    <dropwizard.metrics.version>4.2.23</dropwizard.metrics.version>
+    <dropwizard.metrics.version>4.2.24</dropwizard.metrics.version>
     <ftpserver.version>1.2.0</ftpserver.version>
     <groovy.version>3.0.20</groovy.version>
     <greenmail.version>2.0.1</greenmail.version>
