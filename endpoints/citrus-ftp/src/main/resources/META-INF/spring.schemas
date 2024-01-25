@@ -36,7 +36,7 @@ http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-4.0.0-M2.xsd
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-4.0.0.xsd=org/citrusframework/schema/citrus-ftp-config-4.0.0.xsd
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-4.0.1.xsd=org/citrusframework/schema/citrus-ftp-config-4.0.1.xsd
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-4.0.2.xsd=org/citrusframework/schema/citrus-ftp-config-4.0.2.xsd
-http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-4.2.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-ftp-config-4.2.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-4.1.1.xsd=org/citrusframework/schema/citrus-ftp-config-4.1.1.xsd
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-4.1.0.xsd=org/citrusframework/schema/citrus-ftp-config-4.1.0.xsd
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config.xsd=org/citrusframework/schema/citrus-ftp-config.xsd
 http\://www.citrusframework.org/schema/scp/config/citrus-scp-config-2.7.6.xsd=com/consol/citrus/schema/citrus-scp-config-2.7.6.xsd
@@ -60,7 +60,7 @@ http\://www.citrusframework.org/schema/scp/config/citrus-scp-config-4.0.0-M2.xsd
 http\://www.citrusframework.org/schema/scp/config/citrus-scp-config-4.0.0.xsd=org/citrusframework/schema/citrus-scp-config-4.0.0.xsd
 http\://www.citrusframework.org/schema/scp/config/citrus-scp-config-4.0.1.xsd=org/citrusframework/schema/citrus-scp-config-4.0.1.xsd
 http\://www.citrusframework.org/schema/scp/config/citrus-scp-config-4.0.2.xsd=org/citrusframework/schema/citrus-scp-config-4.0.2.xsd
-http\://www.citrusframework.org/schema/scp/config/citrus-scp-config-4.2.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-scp-config-4.2.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/scp/config/citrus-scp-config-4.1.1.xsd=org/citrusframework/schema/citrus-scp-config-4.1.1.xsd
 http\://www.citrusframework.org/schema/scp/config/citrus-scp-config-4.1.0.xsd=org/citrusframework/schema/citrus-scp-config-4.1.0.xsd
 http\://www.citrusframework.org/schema/scp/config/citrus-scp-config.xsd=org/citrusframework/schema/citrus-scp-config.xsd
 http\://www.citrusframework.org/schema/sftp/config/citrus-sftp-config-2.7.5.xsd=com/consol/citrus/schema/citrus-sftp-config-2.7.5.xsd
@@ -82,6 +82,6 @@ http\://www.citrusframework.org/schema/sftp/config/citrus-sftp-config-4.0.0-M2.x
 http\://www.citrusframework.org/schema/sftp/config/citrus-sftp-config-4.0.0.xsd=org/citrusframework/schema/citrus-sftp-config-4.0.0.xsd
 http\://www.citrusframework.org/schema/sftp/config/citrus-sftp-config-4.0.1.xsd=org/citrusframework/schema/citrus-sftp-config-4.0.1.xsd
 http\://www.citrusframework.org/schema/sftp/config/citrus-sftp-config-4.0.2.xsd=org/citrusframework/schema/citrus-sftp-config-4.0.2.xsd
-http\://www.citrusframework.org/schema/sftp/config/citrus-sftp-config-4.2.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-sftp-config-4.2.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/sftp/config/citrus-sftp-config-4.1.1.xsd=org/citrusframework/schema/citrus-sftp-config-4.1.1.xsd
 http\://www.citrusframework.org/schema/sftp/config/citrus-sftp-config-4.1.0.xsd=org/citrusframework/schema/citrus-sftp-config-4.1.0.xsd
 http\://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd=org/citrusframework/schema/citrus-sftp-config.xsd
