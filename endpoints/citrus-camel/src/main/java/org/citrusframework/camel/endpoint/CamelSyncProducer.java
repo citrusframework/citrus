@@ -81,7 +81,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
         context.onOutboundMessage(message);
 
-        Exchange response = getProducerTemplate()
+        Exchange response = getProducerTemplate(context)
                 .request(endpointUri, new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {

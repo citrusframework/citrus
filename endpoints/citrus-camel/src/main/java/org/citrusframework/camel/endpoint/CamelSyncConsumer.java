@@ -76,9 +76,9 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
         Exchange exchange;
         if (endpointConfiguration.getEndpoint() != null) {
-            exchange = getConsumerTemplate().receive(endpointConfiguration.getEndpoint(), timeout);
+            exchange = getConsumerTemplate(context).receive(endpointConfiguration.getEndpoint(), timeout);
         } else {
-            exchange = getConsumerTemplate().receive(endpointUri, timeout);
+            exchange = getConsumerTemplate(context).receive(endpointUri, timeout);
         }
 
         if (exchange == null) {
@@ -113,7 +113,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
             logger.debug("Sending reply message to camel endpoint: '" + exchange.getFromEndpoint() + "'");
         }
 
-        getConsumerTemplate().doneUoW(exchange);
+        getConsumerTemplate(context).doneUoW(exchange);
 
         context.onOutboundMessage(message);
 
