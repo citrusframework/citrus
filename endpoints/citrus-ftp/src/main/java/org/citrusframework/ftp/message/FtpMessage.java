@@ -53,7 +53,7 @@ public class FtpMessage extends DefaultMessage {
     private CommandType command;
     private CommandResultType commandResult;
 
-    private final FtpMarshaller marshaller = new FtpMarshaller();
+    private FtpMarshaller marshaller = new FtpMarshaller();
 
     /**
      * Constructs copy of given message.
@@ -392,12 +392,16 @@ public class FtpMessage extends DefaultMessage {
 
     @Override
     public <T> T getPayload(Class<T> type) {
+        return getPayload(type, marshaller);
+    }
+
+    public <T> T getPayload(Class<T> type, FtpMarshaller marshaller) {
         if (CommandType.class.isAssignableFrom(type)) {
-            return (T) getCommand();
+            return (T) getCommand(marshaller);
         } else if (CommandResultType.class.isAssignableFrom(type)) {
-            return (T) getCommandResult();
+            return (T) getCommandResult(marshaller);
         } else if (String.class.equals(type)) {
-            return (T) getPayload();
+            return (T) getPayload(marshaller);
         } else {
             return super.getPayload(type);
         }
@@ -405,6 +409,10 @@ public class FtpMessage extends DefaultMessage {
 
     @Override
     public Object getPayload() {
+        return getPayload(marshaller);
+    }
+
+    public Object getPayload(FtpMarshaller marshaller) {
         StringResult payloadResult = new StringResult();
         if (command != null) {
             marshaller.marshal(command, payloadResult);
@@ -417,14 +425,28 @@ public class FtpMessage extends DefaultMessage {
         return super.getPayload();
     }
 
+    @Override
+    public DefaultMessage setPayload(Object payload) {
+        if (payload instanceof CommandType commandType) {
+            this.command = commandType;
+        } else if (payload instanceof CommandResultType commandResultType) {
+            this.commandResult = commandResultType;
+        }
+        return super.setPayload(payload);
+    }
+
     /**
      * Gets the command result if any or tries to unmarshal String payload representation to an command result model.
      * @return
      */
-    private <T extends CommandResultType> T getCommandResult() {
+    private <T extends CommandResultType> T getCommandResult(FtpMarshaller marshaller) {
         if (commandResult == null) {
-            if (getPayload() instanceof String) {
-                this.commandResult = (T) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+            Object payload = getPayload(marshaller);
+
+            if (payload instanceof CommandResultType commandResultType) {
+                this.commandResult = commandResultType;
+            } else if (payload instanceof String payloadString) {
+                this.commandResult = (T) marshaller.unmarshal(new StringSource(payloadString));
             }
         }
 
@@ -435,10 +457,14 @@ public class FtpMessage extends DefaultMessage {
      * Gets the command if any or tries to unmarshal String payload representation to an command model.
      * @return
      */
-    private <T extends CommandType> T getCommand() {
+    private <T extends CommandType> T getCommand(FtpMarshaller marshaller) {
         if (command == null) {
-            if (getPayload() instanceof String) {
-                this.command = (T) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+            Object payload = getPayload(marshaller);
+
+            if (payload instanceof CommandType commandType) {
+                this.command = commandType;
+            } else if (payload instanceof String payloadString) {
+                this.command = (T) marshaller.unmarshal(new StringSource(payloadString));
             }
         }
 
@@ -466,6 +492,11 @@ public class FtpMessage extends DefaultMessage {
         }
 
         setHeader(FtpMessageHeaders.FTP_COMMAND, header);
+    }
+
+    public FtpMessage marshaller(FtpMarshaller marshaller) {
+        this.marshaller = marshaller;
+        return this;
     }
 
 }
