@@ -16,6 +16,8 @@
 
 package org.citrusframework.camel.endpoint;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.MessageTimeoutException;
@@ -75,9 +77,9 @@ public class CamelConsumer implements Consumer {
 
         Exchange exchange;
         if (endpointConfiguration.getEndpoint() != null) {
-            exchange = getConsumerTemplate().receive(endpointConfiguration.getEndpoint(), timeout);
+            exchange = getConsumerTemplate(context).receive(endpointConfiguration.getEndpoint(), timeout);
         } else {
-            exchange = getConsumerTemplate().receive(endpointUri, timeout);
+            exchange = getConsumerTemplate(context).receive(endpointUri, timeout);
         }
 
         if (exchange == null) {
@@ -95,11 +97,24 @@ public class CamelConsumer implements Consumer {
     /**
      * Creates new consumer template if not present yet. Create consumer template only once which is
      * mandatory for direct endpoints that do only support one single consumer at a time.
+     * @param context
      * @return
      */
-    protected ConsumerTemplate getConsumerTemplate() {
+    protected ConsumerTemplate getConsumerTemplate(TestContext context) {
         if (consumerTemplate == null) {
-            consumerTemplate = endpointConfiguration.getCamelContext().createConsumerTemplate();
+            if (endpointConfiguration.getCamelContext() != null) {
+                consumerTemplate = endpointConfiguration.getCamelContext().createConsumerTemplate();
+            } else {
+                if (context.getReferenceResolver().resolveAll(CamelContext.class).size() == 1) {
+                    endpointConfiguration.setCamelContext(context.getReferenceResolver().resolve(CamelContext.class));
+                } else if (context.getReferenceResolver().isResolvable("camelContext")) {
+                    endpointConfiguration.setCamelContext(context.getReferenceResolver().resolve("camelContext", CamelContext.class));
+                } else {
+                    endpointConfiguration.setCamelContext(new DefaultCamelContext());
+                }
+
+                consumerTemplate = endpointConfiguration.getCamelContext().createConsumerTemplate();
+            }
         }
 
         return consumerTemplate;

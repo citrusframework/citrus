@@ -24,6 +24,8 @@ import java.util.function.Function;
 import org.citrusframework.camel.actions.CamelActionBuilder;
 import org.citrusframework.camel.actions.CamelControlBusAction;
 import org.citrusframework.camel.actions.CamelRouteActionBuilder;
+import org.citrusframework.camel.endpoint.CamelEndpoint;
+import org.citrusframework.camel.endpoint.CamelEndpointBuilder;
 import org.citrusframework.camel.message.CamelDataFormatMessageProcessor;
 import org.citrusframework.camel.message.CamelMessageProcessor;
 import org.citrusframework.camel.message.CamelRouteProcessor;
@@ -74,7 +76,29 @@ public class CamelSupport {
      * Constructs proper endpoint uri from endpoint uri builder.
      * @return
      */
-    public String endpoint(EndpointUriBuilder builder) {
+    public CamelEndpoint endpoint(EndpointUriBuilder builder) {
+        return new CamelEndpointBuilder()
+                .camelContext(camelContext)
+                .endpoint(builder)
+                .build();
+    }
+
+    /**
+     * Constructs proper endpoint uri from endpoint uri builder.
+     * @return
+     */
+    public CamelEndpoint endpoint(String endpointUri) {
+        return new CamelEndpointBuilder()
+                .camelContext(camelContext)
+                .endpoint(() -> endpointUri)
+                .build();
+    }
+
+    /**
+     * Constructs proper endpoint uri from endpoint uri builder.
+     * @return
+     */
+    public String endpointUri(EndpointUriBuilder builder) {
         return "camel:" + builder.getUri();
     }
 

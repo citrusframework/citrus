@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.endpoint;
 
+import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
@@ -69,11 +70,11 @@ public class CamelProducer implements Producer {
 
         Exchange camelExchange;
         if (endpointConfiguration.getEndpoint() != null) {
-            camelExchange = getProducerTemplate()
+            camelExchange = getProducerTemplate(context)
                     .send(endpointConfiguration.getEndpoint(), exchange ->
                             endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context));
         } else {
-            camelExchange = getProducerTemplate()
+            camelExchange = getProducerTemplate(context)
                     .send(endpointUri, exchange ->
                             endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context));
         }
@@ -90,11 +91,24 @@ public class CamelProducer implements Producer {
     /**
      * Creates new producer template if not present yet. Create producer template only once which is
      * mandatory for direct endpoints that do only support one single producer at a time.
+     * @param context
      * @return
      */
-    protected ProducerTemplate getProducerTemplate() {
+    protected ProducerTemplate getProducerTemplate(TestContext context) {
         if (producerTemplate == null) {
-            producerTemplate = endpointConfiguration.getCamelContext().createProducerTemplate();
+            if (endpointConfiguration.getCamelContext() != null) {
+                producerTemplate = endpointConfiguration.getCamelContext().createProducerTemplate();
+            } else if (context.getReferenceResolver() != null) {
+                if (context.getReferenceResolver().resolveAll(CamelContext.class).size() == 1) {
+                    endpointConfiguration.setCamelContext(context.getReferenceResolver().resolve(CamelContext.class));
+                } else if (context.getReferenceResolver().isResolvable("camelContext")) {
+                    endpointConfiguration.setCamelContext(context.getReferenceResolver().resolve("camelContext", CamelContext.class));
+                } else {
+                    endpointConfiguration.setCamelContext(new DefaultCamelContext());
+                }
+
+                producerTemplate = endpointConfiguration.getCamelContext().createProducerTemplate();
+            }
         }
 
         return producerTemplate;
