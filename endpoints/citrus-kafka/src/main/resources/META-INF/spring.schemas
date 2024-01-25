@@ -32,8 +32,9 @@ http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.0.0-M2
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.0.0.xsd=org/citrusframework/schema/citrus-kafka-config-4.0.0.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.0.1.xsd=org/citrusframework/schema/citrus-kafka-config-4.0.1.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.0.2.xsd=org/citrusframework/schema/citrus-kafka-config-4.0.2.xsd
-http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.1.1.xsd=org/citrusframework/schema/citrus-kafka-config-4.1.1.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.1.0.xsd=org/citrusframework/schema/citrus-kafka-config-4.1.0.xsd
+http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.1.1.xsd=org/citrusframework/schema/citrus-kafka-config-4.1.1.xsd
+http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config-4.2.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-kafka-config-4.2.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/kafka/config/citrus-kafka-config.xsd=org/citrusframework/schema/citrus-kafka-config.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-2.8.0.xsd=com/consol/citrus/schema/citrus-kafka-testcase-2.8.0.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-3.0.0-M1.xsd=com/consol/citrus/schema/citrus-kafka-testcase-3.0.0-M1.xsd
@@ -53,6 +54,7 @@ http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.0.
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.0.0.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.0.0.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.0.1.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.0.1.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.0.2.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.0.2.xsd
-http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.1.1.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.1.1.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.1.0.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.1.0.xsd
+http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.1.1.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.1.1.xsd
+http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase-4.2.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-kafka-testcase-4.2.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/kafka/testcase/citrus-kafka-testcase.xsd=org/citrusframework/schema/citrus-kafka-testcase.xsd
