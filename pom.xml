@@ -72,6 +72,26 @@
       </roles>
     </developer>
     <developer>
+      <id>bbortt</id>
+      <name>Timon Borter</name>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>PostFinance AG</organization>
+      <organizationUrl>https://www.postfinance.ch/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>tschlat</id>
+      <name>Thorsten Schlathoelter</name>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>PostFinance AG</organization>
+      <organizationUrl>https://www.postfinance.ch/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
       <id>svettwer</id>
       <name>Sven Hettwer</name>
       <email>citrus-dev@googlegroups.com</email>
