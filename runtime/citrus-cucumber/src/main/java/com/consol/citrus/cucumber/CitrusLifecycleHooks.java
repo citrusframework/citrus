@@ -25,8 +25,6 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.cucumber.backend.Scenario;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 
 /**
  * @author Christoph Deppisch
@@ -43,7 +41,6 @@ public class CitrusLifecycleHooks {
     @CitrusResource
     private TestContext context;
 
-    @Before
     public void before(Scenario scenario) {
         if (runner != null) {
             runner.name(scenario.getName());
@@ -52,7 +49,6 @@ public class CitrusLifecycleHooks {
         }
     }
 
-    @After
     public void after(Scenario scenario) {
         if (runner != null) {
             if (context != null && scenario.isFailed()) {
