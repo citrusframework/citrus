@@ -48,6 +48,9 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
     /** Test context */
     private TestContext context;
 
+    /** Test context factory */
+    private TestContextFactoryBean testContextFactory;
+
     /** Static self reference */
     private static CitrusSpringObjectFactory selfReference;
 
@@ -64,7 +67,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
     @Override
     public void start() {
         delegate.start();
-        context = getInstance(TestContext.class);
+        context = createTestContext();
         runner = TestCaseRunnerFactory.createRunner(context);
     }
 
@@ -75,17 +78,6 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
 
     @Override
     public <T> T getInstance(Class<T> type) {
-        if (context == null) {
-            try {
-                TestContextFactoryBean contextFactoryBean = delegate.getInstance(TestContextFactoryBean.class);
-                context = contextFactoryBean.getObject();
-                initializeCitrus(context, contextFactoryBean.getApplicationContext());
-            } catch (CucumberBackendException e) {
-                logger.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
-                context = CitrusInstanceManager.getOrDefault().getCitrusContext().createTestContext();
-            }
-        }
-
         if (TestContext.class.isAssignableFrom(type)) {
             return (T) context;
         }
@@ -102,13 +94,33 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
     }
 
     /**
+     * Creates new test context for a test case. Uses the test context factory loaded by the Spring application context.
+     * Caches the test context factory to avoid initializing Citrus multiple times.
+     * Only refreshes the Citrus context in initialization when the Spring application context changes and therefore also the
+     * test context factory instance is different to the cached one.
+     * @return new test context instance created from the test context factory.
+     */
+    private TestContext createTestContext() {
+        try {
+            TestContextFactoryBean testContextFactoryBean = delegate.getInstance(TestContextFactoryBean.class);
+            if (this.testContextFactory == null || !this.testContextFactory.equals(testContextFactoryBean)) {
+                this.testContextFactory = testContextFactoryBean;
+                initializeCitrus(testContextFactory.getApplicationContext());
+            }
+
+            return testContextFactory.getObject();
+        } catch (CucumberBackendException e) {
+            logger.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
+            return CitrusInstanceManager.getOrDefault().getCitrusContext().createTestContext();
+        }
+    }
+
+    /**
      * Initialize new Citrus instance only if it has not been initialized before
      * or in case given application context is different to that one stored in the Citrus context.
-     *
-     * @param context
      * @param applicationContext
      */
-    private void initializeCitrus(TestContext context, ApplicationContext applicationContext) {
+    private void initializeCitrus(ApplicationContext applicationContext) {
         if (CitrusInstanceManager.hasInstance()) {
             CitrusContext citrusContext = CitrusInstanceManager.getOrDefault().getCitrusContext();
 
