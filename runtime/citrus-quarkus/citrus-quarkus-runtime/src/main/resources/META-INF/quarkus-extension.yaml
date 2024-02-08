@@ -17,6 +17,4 @@ metadata:
     - "testing"
     - "messaging"
     - "integration"
-  scm:
-    url: "https://github.com/citrusframework/citrus"
   status: "preview"
