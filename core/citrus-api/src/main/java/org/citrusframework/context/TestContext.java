@@ -432,7 +432,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @param cause
      * @return
      */
-    public CitrusRuntimeException handleError(String testName, String packageName, String message, Exception cause) {
+    public RuntimeException handleError(String testName, String packageName, String message, Exception cause) {
         // Create empty dummy test case for logging purpose
         TestCase dummyTest = new EmptyTestCase(testName, packageName);
 
@@ -443,7 +443,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         testListeners.onTestFailure(dummyTest, exception);
         testListeners.onTestFinish(dummyTest);
 
-        return exception;
+        return new RuntimeException(cause);
     }
 
     /**
