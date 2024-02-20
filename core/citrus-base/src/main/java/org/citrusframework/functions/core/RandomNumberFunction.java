@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@ import java.util.Random;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
+
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
 
 /**
  * Function returning a random numeric value. Argument specifies the number of digits and
@@ -49,13 +52,13 @@ public class RandomNumberFunction implements Function {
             throw new InvalidFunctionUsageException("Too many parameters for function");
         }
 
-        numberLength = Integer.valueOf(parameterList.get(0));
+        numberLength = parseInt(parameterList.get(0));
         if (numberLength < 0) {
             throw new InvalidFunctionUsageException("Invalid parameter definition. Number of letters must not be positive non-zero integer value");
         }
 
         if (parameterList.size() > 1) {
-            paddingOn = Boolean.valueOf(parameterList.get(1));
+            paddingOn = parseBoolean(parameterList.get(1));
         }
 
         return getRandomNumber(numberLength, paddingOn);

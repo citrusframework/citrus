@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.*;
 import org.testng.Assert;
@@ -51,16 +50,13 @@ public class ClickActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecute() throws Exception {
-        when(webDriver.findElement(any(By.class))).thenAnswer(new Answer<WebElement>() {
-            @Override
-            public WebElement answer(InvocationOnMock invocation) throws Throwable {
-                By select = (By) invocation.getArguments()[0];
+    public void testExecute() {
+        when(webDriver.findElement(any(By.class))).thenAnswer((Answer<WebElement>) invocation -> {
+            By select = (By) invocation.getArguments()[0];
 
-                Assert.assertEquals(select.getClass(), By.ById.class);
-                Assert.assertEquals(select.toString(), "By.id: myButton");
-                return element;
-            }
+            Assert.assertEquals(select.getClass(), By.ById.class);
+            Assert.assertEquals(select.toString(), "By.id: myButton");
+            return element;
         });
 
         ClickAction action =  new ClickAction.Builder()
@@ -82,5 +78,4 @@ public class ClickActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
-
 }

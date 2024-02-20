@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.correlation.CorrelationManager;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyConsumer;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import org.slf4j.Logger;

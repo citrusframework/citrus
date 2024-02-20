@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,11 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
+
 /**
  * Bean definition parser for java action in test case.
  *
@@ -47,7 +52,7 @@ public class JavaActionParser implements BeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("ref"), "instance");
 
         Element constructorElement = DomUtils.getChildElementByTagName(element, "constructor");
-        List<Object> arguments = new ArrayList<Object>();
+        List<Object> arguments = new ArrayList<>();
         if (constructorElement != null) {
             List<Element> argumentList = DomUtils.getChildElementsByTagName(constructorElement, "argument");
             for (Element arg : argumentList) {
@@ -57,7 +62,7 @@ public class JavaActionParser implements BeanDefinitionParser {
         }
 
         Element methodElement = DomUtils.getChildElementByTagName(element, "method");
-        arguments = new ArrayList<Object>();
+        arguments = new ArrayList<>();
         if (methodElement != null) {
             String methodName = methodElement.getAttribute("name");
             beanDefinition.addPropertyValue("methodName", methodName);
@@ -78,13 +83,13 @@ public class JavaActionParser implements BeanDefinitionParser {
         } else if (type.equals("String[]")) {
             return value.split(",");
         } else if (type.equals("boolean")) {
-            return Boolean.valueOf(value).booleanValue();
+            return parseBoolean(value);
         }  else if (type.equals("int")) {
-            return Integer.valueOf(value).intValue();
+            return parseInt(value);
         } else if (type.equals("long")) {
-            return Long.valueOf(value);
+            return parseLong(value);
         } else if (type.equals("double")) {
-            return Double.valueOf(value);
+            return parseDouble(value);
         }
 
         throw new BeanCreationException("Found unsupported method argument type: '" + type + "'");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2019 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * @author Christoph Deppisch
@@ -394,12 +396,12 @@ public class HttpMessage extends DefaultMessage {
         final Object statusCode = getHeader(HttpMessageHeaders.HTTP_STATUS_CODE);
 
         if (statusCode != null) {
-            if (statusCode instanceof HttpStatusCode) {
-                return (HttpStatusCode) statusCode;
-            } else if (statusCode instanceof Integer) {
-                return HttpStatusCode.valueOf((Integer) statusCode);
+            if (statusCode instanceof HttpStatusCode httpStatusCode) {
+                return httpStatusCode;
+            } else if (statusCode instanceof Integer integer) {
+                return HttpStatusCode.valueOf(integer);
             } else {
-                return HttpStatusCode.valueOf(Integer.valueOf(statusCode.toString()));
+                return HttpStatusCode.valueOf(parseInt(statusCode.toString()));
             }
         }
         return null;
@@ -543,7 +545,7 @@ public class HttpMessage extends DefaultMessage {
             }
 
             if (statusLine.length > 1) {
-                response.status(HttpStatusCode.valueOf(Integer.valueOf(statusLine[1])));
+                response.status(HttpStatusCode.valueOf(parseInt(statusLine[1])));
             }
 
             return parseHttpMessage(reader, response);

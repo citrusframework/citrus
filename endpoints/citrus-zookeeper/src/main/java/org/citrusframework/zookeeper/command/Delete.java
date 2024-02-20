@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import org.citrusframework.zookeeper.client.ZooClient;
 import org.apache.zookeeper.AsyncCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * @author Martin Maher
@@ -47,7 +49,7 @@ public class Delete extends AbstractZooCommand<ZooResponse> {
         setCommandResult(commandResult);
 
         String path = this.getParameter(PATH, context);
-        int version = Integer.valueOf(this.getParameter(VERSION, context));
+        int version = parseInt(this.getParameter(VERSION, context));
 
         try {
             zookeeperClient.getZooKeeperClient().delete(path, version, getDeleteCallback(commandResult), null);
@@ -79,12 +81,9 @@ public class Delete extends AbstractZooCommand<ZooResponse> {
     }
 
     private AsyncCallback.VoidCallback getDeleteCallback(final ZooResponse commandResult) {
-        return new AsyncCallback.VoidCallback() {
-            @Override
-            public void processResult(int responseCode, String path, Object ctx) {
-                commandResult.setResponseParam(RESPONSE_CODE, responseCode);
-                commandResult.setResponseParam(PATH, path);
-            }
+        return (responseCode, path, ctx) -> {
+            commandResult.setResponseParam(RESPONSE_CODE, responseCode);
+            commandResult.setResponseParam(PATH, path);
         };
     }
 

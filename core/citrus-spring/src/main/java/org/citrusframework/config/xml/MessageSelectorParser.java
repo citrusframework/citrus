@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,8 +50,8 @@ public abstract class MessageSelectorParser {
 
             Map<String, String> messageSelectorMap = new HashMap<>();
             List<?> messageSelectorElements = DomUtils.getChildElementsByTagName(messageSelectorElement, "element");
-            for (Iterator<?> iter = messageSelectorElements.iterator(); iter.hasNext();) {
-                Element selectorElement = (Element) iter.next();
+            for (Object o : messageSelectorElements) {
+                Element selectorElement = (Element) o;
                 messageSelectorMap.put(selectorElement.getAttribute("name"), selectorElement.getAttribute("value"));
             }
             builder.addPropertyValue("messageSelectorMap", messageSelectorMap);

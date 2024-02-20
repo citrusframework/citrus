@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -51,11 +51,13 @@ public class TemplateTest extends AbstractXmlActionTest {
         Assert.assertEquals(template.getParameter().get("foo"), "");
         Assert.assertEquals(template.getParameter().get("bar"), "barValue");
         Assert.assertEquals(template.getParameter().get("baz"),
-                "\n" +
-                        "        foo\n" +
-                        "        bar\n" +
-                        "        baz\n" +
-                        "      ");
+                """
+
+                        foo
+                        bar
+                        baz
+                      \
+                """);
         Assert.assertEquals(template.getActions().size(), 2);
         Assert.assertFalse(template.isGlobalContext());
     }

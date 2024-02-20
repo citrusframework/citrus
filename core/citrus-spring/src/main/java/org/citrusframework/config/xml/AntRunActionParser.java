@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.citrusframework.config.xml;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -56,9 +55,9 @@ public class AntRunActionParser implements BeanDefinitionParser {
             BeanDefinitionParserUtils.setPropertyValue(beanDefinition, propertiesElement.getAttribute("file"), "propertyFilePath");
 
             List<?> propertyElements = DomUtils.getChildElementsByTagName(propertiesElement, "property");
-            if (propertyElements.size() > 0) {
-                for (Iterator<?> iter = propertyElements.iterator(); iter.hasNext();) {
-                    Element propertyElement = (Element) iter.next();
+            if (!propertyElements.isEmpty()) {
+                for (Object o : propertyElements) {
+                    Element propertyElement = (Element) o;
                     properties.put(propertyElement.getAttribute("name"), propertyElement.getAttribute("value"));
                 }
 

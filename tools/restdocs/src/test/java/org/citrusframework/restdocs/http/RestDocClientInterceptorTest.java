@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import java.net.URI;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -78,13 +77,10 @@ public class RestDocClientInterceptorTest {
 
         ClientHttpRequestExecution configureExecution = Mockito.mock(ClientHttpRequestExecution.class);
 
-        when(configureExecution.execute(any(HttpRequest.class), any(byte[].class))).thenAnswer(new Answer<ClientHttpResponse>() {
-            @Override
-            public ClientHttpResponse answer(InvocationOnMock invocation) throws Throwable {
-                interceptor.intercept((HttpRequest) invocation.getArguments()[0], (byte[]) invocation.getArguments()[1], execution);
+        when(configureExecution.execute(any(HttpRequest.class), any(byte[].class))).thenAnswer((Answer<ClientHttpResponse>) invocation -> {
+            interceptor.intercept((HttpRequest) invocation.getArguments()[0], (byte[]) invocation.getArguments()[1], execution);
 
-                return response;
-            }
+            return response;
         });
 
         CitrusRestDocsSupport.restDocsConfigurer(restDocumentation).intercept(request, "TestMessage".getBytes(), configureExecution);
@@ -98,13 +94,10 @@ public class RestDocClientInterceptorTest {
 
         ClientHttpRequestExecution configureExecution = Mockito.mock(ClientHttpRequestExecution.class);
 
-        when(configureExecution.execute(any(HttpRequest.class), any(byte[].class))).thenAnswer(new Answer<ClientHttpResponse>() {
-            @Override
-            public ClientHttpResponse answer(InvocationOnMock invocation) throws Throwable {
-                interceptor.intercept((HttpRequest) invocation.getArguments()[0], (byte[]) invocation.getArguments()[1], execution);
+        when(configureExecution.execute(any(HttpRequest.class), any(byte[].class))).thenAnswer((Answer<ClientHttpResponse>) invocation -> {
+            interceptor.intercept((HttpRequest) invocation.getArguments()[0], (byte[]) invocation.getArguments()[1], execution);
 
-                return response;
-            }
+            return response;
         });
 
         CitrusRestDocsSupport.restDocsConfigurer(restDocumentation).snippets().withTemplateFormat(TemplateFormats.markdown()).intercept(request, "TestMessage".getBytes(), configureExecution);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -229,20 +228,10 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
     }
 
     private void sendStandardInput(ChannelExec pCh, String pInput) {
-        OutputStream os = null;
-        try {
-            os = pCh.getOutputStream();
+        try (var os = pCh.getOutputStream()) {
             os.write(pInput.getBytes());
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Cannot write to standard input of SSH channel: " + e,e);
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    // best try
-                }
-            }
+            throw new CitrusRuntimeException("Cannot write to standard input of SSH channel: " + e, e);
         }
     }
 

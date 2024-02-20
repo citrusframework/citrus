@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,15 +61,18 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCustomScriptExecutorImplementation() {
-        String script = "import org.citrusframework.*\n" +
-        		"import org.citrusframework.variable.*\n" +
-        		"import org.citrusframework.context.TestContext\n" +
-        		"import org.citrusframework.script.GroovyAction.ScriptExecutor\n\n" +
-        		"public class GScript implements ScriptExecutor {\n" +
-        		"public void execute(TestContext context) {\n" +
-        		    "context.setVariable('text', 'Script with class definition test successful.')\n" +
-        		    "println context.getVariable('text')\n" +
-        		"}}";
+        String script = """
+                import org.citrusframework.*
+                import org.citrusframework.variable.*
+                import org.citrusframework.context.TestContext
+                import org.citrusframework.script.GroovyAction.ScriptExecutor
+
+                public class GScript implements ScriptExecutor {
+                    public void execute(TestContext context) {
+                        context.setVariable('text', 'Script with class definition test successful.')
+                        println context.getVariable('text')
+                    }
+                }""";
 
         GroovyAction bean = new GroovyAction.Builder()
                 .script(script)
@@ -79,10 +82,12 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCustomClassImplementation() {
-        String script = "public class CustomClass {\n" +
-                "public void run() {\n" +
-                    "println 'Just executed custom class implementation'\n" +
-                "}}";
+        String script = """
+                public class CustomClass {
+                    public void run() {
+                        println 'Just executed custom class implementation'
+                    }
+                }""";
 
         GroovyAction bean = new GroovyAction.Builder()
                 .script(script)

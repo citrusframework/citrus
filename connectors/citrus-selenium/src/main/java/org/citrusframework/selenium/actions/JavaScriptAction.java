@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,8 +64,7 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
         try {
-            if (browser.getWebDriver() instanceof JavascriptExecutor) {
-                JavascriptExecutor jsEngine = ((JavascriptExecutor) browser.getWebDriver());
+            if (browser.getWebDriver() instanceof JavascriptExecutor jsEngine) {
                 jsEngine.executeScript(context.replaceDynamicContentInString(script), context.resolveDynamicValuesInArray(arguments.toArray()));
 
                 List<String> errors = new ArrayList<>();

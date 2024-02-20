@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -110,9 +110,7 @@ public class TestActions {
                 action = ((JAXBElement<?>) object).getValue();
             }
 
-            if (object instanceof Node) {
-                Node node = (Node) object;
-
+            if (object instanceof Node node) {
                 Optional<TestActionBuilder<?>> builder = XmlTestActionBuilder.lookup(node.getLocalName(), node.getNamespaceURI());
                 if (builder.isPresent()) {
                     try {

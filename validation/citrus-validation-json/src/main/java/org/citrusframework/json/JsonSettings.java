@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2021-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -19,7 +19,12 @@
 
 package org.citrusframework.json;
 
-import net.minidev.json.parser.JSONParser;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static net.minidev.json.parser.JSONParser.MODE_JSON_SIMPLE;
+import static net.minidev.json.parser.JSONParser.MODE_PERMISSIVE;
+import static net.minidev.json.parser.JSONParser.MODE_RFC4627;
+import static net.minidev.json.parser.JSONParser.MODE_STRICTEST;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +37,7 @@ public final class JsonSettings {
 
     private static final String PERMISSIVE_MODE_PROPERTY = "citrus.json.permissive.mode";
     private static final String PERMISSIVE_MODE_ENV = "CITRUS_JSON_PERMISSIVE_MODE";
-    private static final String PERMISSIVE_MODE_DEFAULT = String.valueOf(JSONParser.MODE_JSON_SIMPLE);
+    private static final String PERMISSIVE_MODE_DEFAULT = String.valueOf(MODE_JSON_SIMPLE);
 
     /**
      * Private constructor prevent instantiation of utility class
@@ -49,18 +54,13 @@ public final class JsonSettings {
         String mode = System.getProperty(PERMISSIVE_MODE_PROPERTY, System.getenv(PERMISSIVE_MODE_ENV) != null ?
                         System.getenv(PERMISSIVE_MODE_ENV) : PERMISSIVE_MODE_DEFAULT);
 
-        switch (mode) {
-            case "SIMPLE":
-                return JSONParser.MODE_JSON_SIMPLE;
-            case "RFC4627":
-                return JSONParser.MODE_RFC4627;
-            case "STRICTEST":
-                return JSONParser.MODE_STRICTEST;
-            case "PERMISSIVE":
-                return JSONParser.MODE_PERMISSIVE;
-            default:
-                return Integer.parseInt(mode);
-        }
+        return switch (mode) {
+            case "SIMPLE" -> MODE_JSON_SIMPLE;
+            case "RFC4627" -> MODE_RFC4627;
+            case "STRICTEST" -> MODE_STRICTEST;
+            case "PERMISSIVE" -> MODE_PERMISSIVE;
+            default -> parseInt(mode);
+        };
     }
 
     /**
@@ -68,7 +68,7 @@ public final class JsonSettings {
      * @return
      */
     public static boolean isStrict() {
-        return Boolean.parseBoolean(
+        return parseBoolean(
                 System.getProperty(MESSAGE_VALIDATION_STRICT_PROPERTY, System.getenv(MESSAGE_VALIDATION_STRICT_ENV) != null ?
                         System.getenv(MESSAGE_VALIDATION_STRICT_ENV) : MESSAGE_VALIDATION_STRICT_DEFAULT));
     }

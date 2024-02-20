@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
 
         reset(connectionFactory, destination, connection, session, messageConsumer);
 
@@ -105,7 +105,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
 
         reset(connectionFactory, destination, connection, session, messageConsumer);
 
@@ -165,7 +165,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         when(session.createProducer(replyDestination)).thenReturn(messageProducer);
 
         when(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).thenReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<>()));
 
         when(session.getTransacted()).thenReturn(false);
 
@@ -191,7 +191,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer().getName()),
                 requestMessage.getId(), context);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -202,7 +202,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         when(session.createProducer(replyDestination)).thenReturn(messageProducer);
 
         when(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).thenReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<>()));
 
         when(session.getTransacted()).thenReturn(false);
 
@@ -229,7 +229,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                 dummyEndpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(dummyEndpoint.createConsumer().getName()),
                 "123456789", context);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         try {
@@ -279,7 +279,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer().getName()),
                 "123456789", context);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,13 +51,11 @@ public class FillFormAction extends AbstractSeleniumAction {
 
     @Override
     public void execute(SeleniumBrowser browser, TestContext context) {
-        formFields.forEach((by, value) -> {
-            new SetInputAction.Builder()
-                    .element(by)
-                    .value(value)
-                    .build()
-                    .execute(browser, context);
-        });
+        formFields.forEach((by, value) -> new SetInputAction.Builder()
+                .element(by)
+                .value(value)
+                .build()
+                .execute(browser, context));
 
         if (submitButton != null) {
             new ClickAction.Builder()

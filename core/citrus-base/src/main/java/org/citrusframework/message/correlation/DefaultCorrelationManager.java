@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
     private static final Logger logger = LoggerFactory.getLogger(DefaultCorrelationManager.class);
 
     /** Map of managed objects */
-    private ObjectStore<T> objectStore = new DefaultObjectStore<T>();
+    private ObjectStore<T> objectStore = new DefaultObjectStore<>();
 
     @Override
     public void saveCorrelationKey(String correlationKeyName, String correlationKey, TestContext context) {

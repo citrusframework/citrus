@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public abstract class SqlUtils {
      */
     public static List<String> createStatementsFromFileResource(Resource sqlResource, LastScriptLineDecorator lineDecorator) {
         BufferedReader reader = null;
-        StringBuffer buffer;
+        StringBuilder buffer;
 
         List<String> stmts = new ArrayList<>();
 
@@ -80,13 +80,13 @@ public abstract class SqlUtils {
             }
 
             reader = new BufferedReader(new InputStreamReader(sqlResource.getInputStream()));
-            buffer = new StringBuffer();
+            buffer = new StringBuilder();
 
             String line;
             while (reader.ready()) {
                 line = reader.readLine();
 
-                if (line != null && !line.trim().startsWith(SQL_COMMENT) && line.trim().length() > 0) {
+                if (line != null && !line.trim().startsWith(SQL_COMMENT) && !line.trim().isEmpty()) {
                     if (line.trim().endsWith(getStatementEndingCharacter(lineDecorator))) {
                         if (lineDecorator != null) {
                             buffer.append(lineDecorator.decorate(line));
@@ -102,7 +102,7 @@ public abstract class SqlUtils {
 
                         stmts.add(stmt);
                         buffer.setLength(0);
-                        buffer = new StringBuffer();
+                        buffer = new StringBuilder();
                     } else {
                         buffer.append(line);
 

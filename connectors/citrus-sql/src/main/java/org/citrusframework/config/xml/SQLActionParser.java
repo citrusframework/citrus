@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public class SQLActionParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        List<String> statements = new ArrayList<String>();
+        List<String> statements = new ArrayList<>();
         List<Element> stmtElements = DomUtils.getChildElementsByTagName(element, "statement");
         for (Element stmt : stmtElements) {
             statements.add(DomUtils.getTextValue(stmt));

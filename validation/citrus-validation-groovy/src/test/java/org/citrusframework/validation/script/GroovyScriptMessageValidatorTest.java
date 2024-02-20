@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,9 +48,10 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testGroovyScriptValidation() throws ValidationException {
-        String validationScript = "assert headers.operation == 'unitTesting'\n" +
-        		"assert payload == 'This is plain text!'\n" +
-        		"assert payload.contains('!')";
+        String validationScript = """
+                assert headers.operation == 'unitTesting'
+                assert payload == 'This is plain text!'
+                assert payload.contains('!')""";
 
         ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)
@@ -62,9 +63,10 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testGroovyScriptValidationVariableSupport() throws ValidationException {
-        String validationScript = "assert headers.operation == 'unitTesting'\n" +
-                "assert payload == '${plainText}'\n" +
-                "assert payload.contains('!')";
+        String validationScript = """
+                assert headers.operation == 'unitTesting'
+                assert payload == '${plainText}'
+                assert payload.contains('!')""";
 
         context.setVariable("plainText", "This is plain text!");
 
@@ -78,9 +80,10 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testGroovyScriptValidationWrongValue() throws ValidationException {
-        String validationScript = "assert headers.operation == 'somethingElse'\n" +
-                "assert payload == 'This is plain text!'\n" +
-                "assert payload.contains('!')";
+        String validationScript = """
+                assert headers.operation == 'somethingElse'
+                assert payload == 'This is plain text!'
+                assert payload.contains('!')""";
 
         ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
                 .scriptType(ScriptTypes.GROOVY)

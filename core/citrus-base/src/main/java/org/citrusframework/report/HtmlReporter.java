@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,15 +166,16 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
         BufferedReader reader = null;
 
         try {
-            if (cause instanceof CitrusRuntimeException) {
-                CitrusRuntimeException ex = (CitrusRuntimeException) cause;
+            if (cause instanceof CitrusRuntimeException ex) {
                 if (!ex.getFailureStack().isEmpty()) {
                     FailureStackElement stackElement = ex.getFailureStack().pop();
                     if (stackElement.getLineNumberStart() > 0) {
                         reader = new BufferedReader(Resources.fromClasspath(stackElement.getTestFilePath() + FileUtils.FILE_EXTENSION_XML).getReader());
 
-                        codeSnippet.append("<div class=\"code-snippet\">");
-                        codeSnippet.append("<h2 class=\"code-title\">" + stackElement.getTestFilePath() + ".xml</h2>");
+                        codeSnippet.append("<div class=\"code-snippet\">")
+                                .append("<h2 class=\"code-title\">")
+                                .append(stackElement.getTestFilePath())
+                                .append(".xml</h2>");
 
                         String line;
                         String codeStyle;
@@ -194,8 +195,13 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
                             }
 
                             if (StringUtils.hasText(codeStyle)) {
-                                codeSnippet.append("<pre class=\"" + codeStyle +"\"><span class=\"line-number\">" + lineIndex + ":</span>" +
-                                        line.replaceAll(">", "&gt;").replaceAll("<", "&lt;") + "</pre>");
+                                codeSnippet.append("<pre class=\"")
+                                        .append(codeStyle)
+                                        .append("\"><span class=\"line-number\">")
+                                        .append(lineIndex)
+                                        .append(":</span>")
+                                        .append(line.replaceAll(">", "&gt;").replaceAll("<", "&lt;"))
+                                        .append("</pre>");
                             }
 
                             lineIndex++;

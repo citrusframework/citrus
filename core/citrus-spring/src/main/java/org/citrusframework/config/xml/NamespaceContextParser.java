@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class NamespaceContextParser implements BeanDefinitionParser {
      * @param element the source element.
      */
     private void parseNamespaceDefinitions(BeanDefinitionBuilder builder, Element element) {
-        Map<String, String> namespaces = new LinkedHashMap<String, String>();
+        Map<String, String> namespaces = new LinkedHashMap<>();
         for (Element namespace : DomUtils.getChildElementsByTagName(element, "namespace")) {
             namespaces.put(namespace.getAttribute("prefix"), namespace.getAttribute("uri"));
         }

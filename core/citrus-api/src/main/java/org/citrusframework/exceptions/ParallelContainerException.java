@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.citrusframework.exceptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ public class ParallelContainerException extends CitrusRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private List<CitrusRuntimeException> exceptions = new ArrayList<CitrusRuntimeException>();
+    private List<CitrusRuntimeException> exceptions;
     
     public ParallelContainerException(List<CitrusRuntimeException> nestedExceptions) {
         super();
@@ -44,7 +43,7 @@ public class ParallelContainerException extends CitrusRuntimeException {
         
         builder.append("Several actions failed in parallel container");
         for (CitrusRuntimeException exception : exceptions) {
-            builder.append("\n\t+ " + exception.getClass().getName() + ": " + exception.getLocalizedMessage());
+            builder.append("\n\t+ ").append(exception.getClass().getName()).append(": ").append(exception.getLocalizedMessage());
         }
         
         return builder.toString();

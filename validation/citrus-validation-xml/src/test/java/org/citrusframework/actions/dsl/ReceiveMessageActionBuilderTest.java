@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1426,18 +1426,19 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                         .setHeader("operation", "sayHello"));
 
         when(schema.getTargetNamespace()).thenReturn("http://citrusframework.org/test");
-        when(schema.getSource()).thenReturn(new StringSource("<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n" +
-                "     xmlns=\"http://citrusframework.org/test\"\n" +
-                "     targetNamespace=\"http://citrusframework.org/test\"\n" +
-                "     elementFormDefault=\"qualified\"\n" +
-                "     attributeFormDefault=\"unqualified\">\n" +
-                "    <xs:element name=\"TestRequest\">\n" +
-                "      <xs:complexType>\n" +
-                "          <xs:sequence>\n" +
-                "            <xs:element name=\"Message\" type=\"xs:string\"/>\n" +
-                "          </xs:sequence>\n" +
-                "      </xs:complexType>\n" +
-                "    </xs:element></xs:schema>"));
+        when(schema.getSource()).thenReturn(new StringSource("""
+                <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns="http://citrusframework.org/test"
+                     targetNamespace="http://citrusframework.org/test"
+                     elementFormDefault="qualified"
+                     attributeFormDefault="unqualified">
+                    <xs:element name="TestRequest">
+                      <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="Message" type="xs:string"/>
+                          </xs:sequence>
+                      </xs:complexType>
+                    </xs:element></xs:schema>"""));
 
         context.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext).withFallback(referenceResolver));
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);

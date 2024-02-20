@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ import org.testng.annotations.Test;
 
 import static org.citrusframework.dsl.PathExpressionSupport.path;
 import static org.citrusframework.zookeeper.actions.ZooExecuteAction.Builder.zookeeper;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ public class MaxFunctionTest extends UnitTestSupport {
 
     @Test
     public void testFunction() {
-        List<String> params = new ArrayList<String>();
+        List<String> params = new ArrayList<>();
         params.add("3");
         params.add("5.2");
         params.add("4.7");

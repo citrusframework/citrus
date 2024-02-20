@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,6 @@
 package org.citrusframework.docker.command;
 
 import java.util.stream.Stream;
-import java.util.stream.Collectors;
-import java.util.Arrays;
-import java.util.List;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.docker.actions.DockerExecuteAction;
@@ -34,6 +31,10 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Volume;
+
+import static com.github.dockerjava.api.model.ExposedPort.tcp;
+import static com.github.dockerjava.api.model.ExposedPort.udp;
+import static java.lang.Integer.parseInt;
 
 /**
  * @author Christoph Deppisch
@@ -215,11 +216,11 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
             String portSpec = context.replaceDynamicContentInString(ports[i]);
 
             if (portSpec.startsWith("udp:")) {
-                exposedPorts[i] = ExposedPort.udp(Integer.valueOf(portSpec.substring("udp:".length())));
+                exposedPorts[i] = udp(parseInt(portSpec.substring("udp:".length())));
             } else if (portSpec.startsWith("tcp:")) {
-                exposedPorts[i] = ExposedPort.tcp(Integer.valueOf(portSpec.substring("tcp:".length())));
+                exposedPorts[i] = tcp(parseInt(portSpec.substring("tcp:".length())));
             } else {
-                exposedPorts[i] = ExposedPort.tcp(Integer.valueOf(portSpec));
+                exposedPorts[i] = tcp(parseInt(portSpec));
             }
         }
 
@@ -243,7 +244,7 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
                 Integer hostPort = Integer.valueOf(binding[0]);
                 Integer port = Integer.valueOf(binding[1]);
 
-                portsBindings.bind(Stream.of(exposedPorts).filter(exposed -> port.equals(exposed.getPort())).findAny().orElseGet(() -> ExposedPort.tcp(port)), Ports.Binding.bindPort(hostPort));
+                portsBindings.bind(Stream.of(exposedPorts).filter(exposed -> port.equals(exposed.getPort())).findAny().orElseGet(() -> tcp(port)), Ports.Binding.bindPort(hostPort));
             }
         }
 

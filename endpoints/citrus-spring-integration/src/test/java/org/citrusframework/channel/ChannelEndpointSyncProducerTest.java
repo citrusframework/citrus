@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        Map<String, Object> responseHeaders = new HashMap<>();
         final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
@@ -84,7 +84,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        Map<String, Object> responseHeaders = new HashMap<>();
         final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
@@ -108,7 +108,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        Map<String, Object> responseHeaders = new HashMap<>();
         final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
@@ -139,7 +139,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        Map<String, Object> responseHeaders = new HashMap<>();
         final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
@@ -168,7 +168,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
+        Map<String, Object> responseHeaders = new HashMap<>();
         final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();

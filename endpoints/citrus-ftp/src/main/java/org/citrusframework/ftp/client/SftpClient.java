@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -201,7 +201,7 @@ public class SftpClient extends FtpClient {
             String localFilePath = context.replaceDynamicContentInString(command.getFile().getPath());
             String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(command.getTarget().getPath()));
 
-            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElseGet(() -> DataType.BINARY.name()));
+            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElseGet(DataType.BINARY::name));
             try (InputStream localFileInputStream = getLocalFileInputStream(command.getFile().getPath(), dataType, context)) {
                 sftp.put(localFileInputStream, remoteFilePath);
             }

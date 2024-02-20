@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class CreateVariablesActionParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
-        Map<String, String> variables = new LinkedHashMap<String, String>();
+        Map<String, String> variables = new LinkedHashMap<>();
         List<Element> variableElements = DomUtils.getChildElementsByTagName(element, "variable");
         for (Element variable : variableElements) {
             Element variableValueElement = DomUtils.getChildElementByTagName(variable, "value");

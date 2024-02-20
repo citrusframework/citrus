@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.citrusframework.config.util;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +38,9 @@ public class ValidateMessageParserUtil {
      */
     public static void parseJsonPathElements(Element validateElement, Map<String, Object> validateJsonPathExpressions) {
         List<?> jsonPathElements = DomUtils.getChildElementsByTagName(validateElement, "json-path");
-        if (jsonPathElements.size() > 0) {
-            for (Iterator<?> jsonPathIterator = jsonPathElements.iterator(); jsonPathIterator.hasNext();) {
-                Element jsonPathElement = (Element) jsonPathIterator.next();
+        if (!jsonPathElements.isEmpty()) {
+            for (Object pathElement : jsonPathElements) {
+                Element jsonPathElement = (Element) pathElement;
                 String expression = jsonPathElement.getAttribute("expression");
                 if (StringUtils.hasText(expression)) {
                     validateJsonPathExpressions.put(expression, jsonPathElement.getAttribute("value"));

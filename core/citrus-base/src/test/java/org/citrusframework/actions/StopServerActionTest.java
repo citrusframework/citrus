@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class StopServerActionTest extends UnitTestSupport {
         when(server1.getName()).thenReturn("MyServer1");
         when(server2.getName()).thenReturn("MyServer2");
 
-        List<Server> serverList = new ArrayList<Server>();
+        List<Server> serverList = new ArrayList<>();
         serverList.add(server1);
         serverList.add(server2);
 

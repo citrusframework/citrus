@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,15 +70,15 @@ public class RestDocSoapRequestConverter implements RequestConverter<MessageCont
 
     protected HttpHeaders extractHeaders(MessageContext messageContext) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        if (messageContext.getRequest() instanceof SaajSoapMessage) {
-            Map<String, String> mimeHeaders = new HashMap<String, String>();
-            MimeHeaders messageMimeHeaders = ((SaajSoapMessage)messageContext.getRequest()).getSaajMessage().getMimeHeaders();
+        if (messageContext.getRequest() instanceof SaajSoapMessage saajSoapMessage) {
+            Map<String, String> mimeHeaders = new HashMap<>();
+            MimeHeaders messageMimeHeaders = saajSoapMessage.getSaajMessage().getMimeHeaders();
 
             if (messageMimeHeaders != null) {
-                Iterator<?> mimeHeaderIterator = messageMimeHeaders.getAllHeaders();
+                Iterator<MimeHeader> mimeHeaderIterator = messageMimeHeaders.getAllHeaders();
                 while (mimeHeaderIterator.hasNext()) {
-                    MimeHeader mimeHeader = (MimeHeader)mimeHeaderIterator.next();
-                    // http headers can have multipile values so headers might occur several times in map
+                    MimeHeader mimeHeader = mimeHeaderIterator.next();
+                    // http headers can have multiple values so headers might occur several times in map
                     if (mimeHeaders.containsKey(mimeHeader.getName())) {
                         // header is already present, so concat values to a single comma delimited string
                         String value = mimeHeaders.get(mimeHeader.getName());
@@ -89,7 +89,7 @@ public class RestDocSoapRequestConverter implements RequestConverter<MessageCont
                     }
                 }
 
-                for (Map.Entry<String, String> httpHeaderEntry : mimeHeaders.entrySet()) {
+                for (var httpHeaderEntry : mimeHeaders.entrySet()) {
                     httpHeaders.add(httpHeaderEntry.getKey(), httpHeaderEntry.getValue());
                 }
             }

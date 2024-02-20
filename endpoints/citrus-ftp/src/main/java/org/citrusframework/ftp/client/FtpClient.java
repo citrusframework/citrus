@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,9 @@
 
 package org.citrusframework.ftp.client;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.TimeZone;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
-import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
@@ -60,6 +48,21 @@ import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.TimeZone;
+
+import static org.apache.commons.net.ftp.FTP.ASCII_FILE_TYPE;
+import static org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE;
+import static org.apache.commons.net.ftp.FTP.EBCDIC_FILE_TYPE;
+import static org.apache.commons.net.ftp.FTP.LOCAL_FILE_TYPE;
 import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
 
 /**
@@ -68,13 +71,19 @@ import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
  */
 public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingPhase, ShutdownPhase {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(FtpClient.class);
 
-    /** Apache ftp client */
+    /**
+     * Apache ftp client
+     */
     private FTPClient ftpClient;
 
-    /** Store of reply messages */
+    /**
+     * Store of reply messages
+     */
     private CorrelationManager<Message> correlationManager;
 
     /**
@@ -86,6 +95,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Default constructor using endpoint configuration.
+     *
      * @param endpointConfiguration
      */
     protected FtpClient(FtpEndpointConfiguration endpointConfiguration) {
@@ -164,15 +174,16 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Perform list files operation and provide file information as response.
+     *
      * @param list
      * @param context
      * @return
      */
     protected FtpMessage listFiles(ListCommand list, TestContext context) {
         String remoteFilePath = Optional.ofNullable(list.getTarget())
-                                        .map(ListCommand.Target::getPath)
-                                        .map(context::replaceDynamicContentInString)
-                                        .orElse("");
+                .map(ListCommand.Target::getPath)
+                .map(context::replaceDynamicContentInString)
+                .orElse("");
 
         try {
             List<String> fileNames = new ArrayList<>();
@@ -195,6 +206,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Performs delete file operation.
+     *
      * @param delete
      * @param context
      */
@@ -251,6 +263,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Check file path type directory or file.
+     *
      * @param remoteFilePath
      * @return
      * @throws IOException
@@ -258,14 +271,13 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
     protected boolean isDirectory(String remoteFilePath) throws IOException {
         if (!ftpClient.changeWorkingDirectory(remoteFilePath)) { // not a directory or not accessible
 
-            switch (ftpClient.listFiles(remoteFilePath).length) {
-                case 0:
-                    throw new CitrusRuntimeException("Remote file path does not exist or is not accessible: " + remoteFilePath);
-                case 1:
-                    return false;
-                default:
-                    throw new CitrusRuntimeException("Unexpected file type result for file path: " + remoteFilePath);
-            }
+            return switch (ftpClient.listFiles(remoteFilePath).length) {
+                case 0 ->
+                        throw new CitrusRuntimeException("Remote file path does not exist or is not accessible: " + remoteFilePath);
+                case 1 -> false;
+                default ->
+                        throw new CitrusRuntimeException("Unexpected file type result for file path: " + remoteFilePath);
+            };
         } else {
             return true;
         }
@@ -273,6 +285,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Performs store file operation.
+     *
      * @param command
      * @param context
      */
@@ -281,7 +294,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             String localFilePath = context.replaceDynamicContentInString(command.getFile().getPath());
             String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(command.getTarget().getPath()));
 
-            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElseGet(() -> DataType.BINARY.name()));
+            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElseGet(DataType.BINARY::name));
             try (InputStream localFileInputStream = getLocalFileInputStream(command.getFile().getPath(), dataType, context)) {
                 ftpClient.setFileType(getFileType(dataType));
 
@@ -318,6 +331,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Performs retrieve file operation.
+     *
      * @param command
      */
     protected FtpMessage retrieveFile(GetCommand command, TestContext context) {
@@ -329,7 +343,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 Files.createDirectories(Paths.get(localFilePath).getParent());
             }
 
-            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElseGet(() -> DataType.BINARY.name()));
+            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElseGet(DataType.BINARY::name));
             try (FileOutputStream localFileOutputStream = new FileOutputStream(localFilePath)) {
                 ftpClient.setFileType(getFileType(dataType));
 
@@ -358,35 +372,30 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Get file type from info string.
+     *
      * @param typeInfo
      * @return
      */
     private int getFileType(String typeInfo) {
-        switch (typeInfo) {
-            case "ASCII":
-                return FTP.ASCII_FILE_TYPE;
-            case "BINARY":
-                return FTP.BINARY_FILE_TYPE;
-            case "EBCDIC":
-                return FTP.EBCDIC_FILE_TYPE;
-            case "LOCAL":
-                return FTP.LOCAL_FILE_TYPE;
-            default:
-                return FTP.BINARY_FILE_TYPE;
-        }
+        return switch (typeInfo) {
+            case "ASCII" -> ASCII_FILE_TYPE;
+            case "BINARY" -> BINARY_FILE_TYPE;
+            case "EBCDIC" -> EBCDIC_FILE_TYPE;
+            case "LOCAL" -> LOCAL_FILE_TYPE;
+            default -> BINARY_FILE_TYPE;
+        };
     }
 
     /**
      * If the target path is a directory (ends with "/"), add the file name from the source path to the target path.
      * Otherwise, don't do anything
-     *
+     * <p>
      * Example:
      * <p>
      * sourcePath="/some/dir/file.pdf"<br>
      * targetPath="/other/dir/"<br>
      * returns: "/other/dir/file.pdf"
      * </p>
-     *
      */
     protected static String addFileNameToTargetPath(String sourcePath, String targetPath) {
         if (targetPath.endsWith("/")) {
@@ -398,6 +407,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Opens a new connection and performs login with user name and password if set.
+     *
      * @throws IOException
      */
     protected void connectAndLogin() throws IOException {
@@ -529,6 +539,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Sets the apache ftp client.
+     *
      * @param ftpClient
      */
     public void setFtpClient(FTPClient ftpClient) {
@@ -537,6 +548,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Gets the apache ftp client.
+     *
      * @return
      */
     public FTPClient getFtpClient() {
@@ -545,6 +557,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Sets the correlation manager.
+     *
      * @param correlationManager
      */
     public void setCorrelationManager(CorrelationManager<Message> correlationManager) {

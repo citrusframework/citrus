@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,12 +108,13 @@ public class ExecutePLSQLTestActionBuilderTest extends UnitTestSupport {
     public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
         reset(jdbcTemplate, sqlResource);
         when(sqlResource.exists()).thenReturn(true);
-        when(sqlResource.getInputStream()).thenReturn(new ByteArrayInputStream(("TEST_STMT_1\n" +
-                "/\n" +
-                "TEST_STMT_2\n" +
-                "/\n" +
-                "TEST_STMT_3\n" +
-                "/").getBytes()));
+        when(sqlResource.getInputStream()).thenReturn(new ByteArrayInputStream(("""
+                TEST_STMT_1
+                /
+                TEST_STMT_2
+                /
+                TEST_STMT_3
+                /""").getBytes()));
 
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(plsql().jdbcTemplate(jdbcTemplate)
@@ -128,12 +129,13 @@ public class ExecutePLSQLTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "plsql");
         Assert.assertFalse(action.isIgnoreErrors());
         Assert.assertEquals(action.getStatements().size(), 0L);
-        Assert.assertEquals(action.getScript(), ("TEST_STMT_1\n" +
-                "/\n" +
-                "TEST_STMT_2\n" +
-                "/\n" +
-                "TEST_STMT_3\n" +
-                "/"));
+        Assert.assertEquals(action.getScript(), ("""
+                TEST_STMT_1
+                /
+                TEST_STMT_2
+                /
+                TEST_STMT_3
+                /"""));
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
 
         verify(jdbcTemplate).execute("TEST_STMT_1");
@@ -172,10 +174,11 @@ public class ExecutePLSQLTestActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner builder = new DefaultTestCaseRunner(context);
         builder.$(plsql().jdbcTemplate(jdbcTemplate)
                         .ignoreErrors(true)
-                        .sqlScript(("TEST_STMT_1\n" +
-                                "/\n" +
-                                "TEST_STMT_2\n" +
-                                "/")));
+                        .sqlScript(("""
+                                TEST_STMT_1
+                                /
+                                TEST_STMT_2
+                                /""")));
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -187,10 +190,11 @@ public class ExecutePLSQLTestActionBuilderTest extends UnitTestSupport {
         Assert.assertTrue(action.isIgnoreErrors());
         Assert.assertEquals(action.getStatements().size(), 0L);
         Assert.assertNull(action.getSqlResourcePath());
-        Assert.assertEquals(action.getScript(), ("TEST_STMT_1\n" +
-                "/\n" +
-                "TEST_STMT_2\n" +
-                "/"));
+        Assert.assertEquals(action.getScript(), ("""
+                TEST_STMT_1
+                /
+                TEST_STMT_2
+                /"""));
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
 
         verify(jdbcTemplate).execute("TEST_STMT_1");

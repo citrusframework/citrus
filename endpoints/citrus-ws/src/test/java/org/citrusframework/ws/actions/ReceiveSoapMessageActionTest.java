@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,6 @@ import org.citrusframework.ws.message.SoapMessage;
 import org.citrusframework.ws.validation.SoapAttachmentValidator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -83,16 +81,13 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent(), "TestAttachment!");
-                Assert.assertNull(soapAttachment.getContentId());
-                Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
-                return null;
-            }
+        doAnswer(invocation -> {
+            Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+            SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
+            Assert.assertEquals(soapAttachment.getContent(), "TestAttachment!");
+            Assert.assertNull(soapAttachment.getContentId());
+            Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
+            return null;
         }).when(attachmentValidator).validateAttachment((SoapMessage)any(), any(List.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -127,17 +122,14 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-                Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
-                Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
-                Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-16");
-                return null;
-            }
+        doAnswer(invocation -> {
+            Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+            SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
+            Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+            Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
+            Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
+            Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-16");
+            return null;
         }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List)any());
 
         when(endpoint.getActor()).thenReturn(null);
@@ -178,24 +170,21 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 2L);
+        doAnswer(invocation -> {
+            Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 2L);
 
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World1!</Message></TestAttachment>");
-                Assert.assertEquals(soapAttachment.getContentId(), "1stAttachment");
-                Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
-                Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
+            SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
+            Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World1!</Message></TestAttachment>");
+            Assert.assertEquals(soapAttachment.getContentId(), "1stAttachment");
+            Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
+            Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
 
-                soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(1);
-                Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World2!</Message></TestAttachment>");
-                Assert.assertEquals(soapAttachment.getContentId(), "2ndAttachment");
-                Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
-                Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-16");
-                return null;
-            }
+            soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(1);
+            Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World2!</Message></TestAttachment>");
+            Assert.assertEquals(soapAttachment.getContentId(), "2ndAttachment");
+            Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
+            Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-16");
+            return null;
         }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List)any());
 
         when(endpoint.getActor()).thenReturn(null);
@@ -230,17 +219,14 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent(), "");
-                Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
-                Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
-                Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
-                return null;
-            }
+        doAnswer(invocation -> {
+            Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+            SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
+            Assert.assertEquals(soapAttachment.getContent(), "");
+            Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
+            Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
+            Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
+            return null;
         }).when(attachmentValidator).validateAttachment(any(SoapMessage.class), any(List.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -301,17 +287,14 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-                Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
-                Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
-                Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
-                return null;
-            }
+        doAnswer(invocation -> {
+            Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+            SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
+            Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+            Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
+            Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
+            Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
+            return null;
         }).when(attachmentValidator).validateAttachment(any(SoapMessage.class), any(List.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -348,17 +331,14 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-                Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
-                Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
-                Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
-                return null;
-            }
+        doAnswer(invocation -> {
+            Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+            SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
+            Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+            Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
+            Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
+            Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
+            return null;
         }).when(attachmentValidator).validateAttachment(any(SoapMessage.class), any(List.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -395,17 +375,14 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
-                SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-                Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
-                Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
-                Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
-                return null;
-            }
+        doAnswer(invocation -> {
+            Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
+            SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
+            Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+            Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
+            Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
+            Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
+            return null;
         }).when(attachmentValidator).validateAttachment(any(SoapMessage.class), any(List.class));
 
         when(endpoint.getActor()).thenReturn(null);

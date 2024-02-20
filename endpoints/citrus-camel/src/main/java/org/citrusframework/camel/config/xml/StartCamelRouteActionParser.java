@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package org.citrusframework.camel.config.xml;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.citrusframework.camel.actions.StartCamelRouteAction;
@@ -38,9 +37,9 @@ public class StartCamelRouteActionParser extends AbstractCamelRouteActionParser 
     public void parse(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
         List<String> routeIds = new ArrayList<>();
         List<?> routeElements = DomUtils.getChildElementsByTagName(element, "route");
-        if (routeElements.size() > 0) {
-            for (Iterator<?> iter = routeElements.iterator(); iter.hasNext();) {
-                Element routeElement = (Element) iter.next();
+        if (!routeElements.isEmpty()) {
+            for (Object o : routeElements) {
+                Element routeElement = (Element) o;
                 routeIds.add(routeElement.getAttribute("id"));
             }
 

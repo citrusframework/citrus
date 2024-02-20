@@ -1,5 +1,5 @@
 /*
- *  Copyright 2006-2016 the original author or authors.
+ *  Copyright 2006-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ public class FormData {
     })
     public static class Controls {
         @XmlElement(name = "control", required = true)
-        protected List<Control> controls = new ArrayList<Control>();
+        protected List<Control> controls = new ArrayList<>();
 
         public List<Control> getControls() {
             return this.controls;

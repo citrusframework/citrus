@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,7 +101,7 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
      * @return
      */
     public static <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container)  {
-        return new AbstractTestContainerBuilder<T, B>() {
+        return new AbstractTestContainerBuilder<>() {
             @Override
             public T doBuild() {
                 return container;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * @author Martin Maher
@@ -49,7 +51,7 @@ public class SetData extends AbstractZooCommand<ZooResponse> {
 
         String path = this.getParameter(PATH, context);
         String data = this.getParameter(DATA, context);
-        int version = Integer.valueOf(this.getParameter(VERSION, context));
+        int version = parseInt(this.getParameter(VERSION, context));
 
         try {
             Stat stat = zookeeperClient.getZooKeeperClient().setData(path, data.getBytes(), version);

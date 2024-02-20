@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,21 +137,23 @@ public final class XMLUtils {
             }
         }
 
-        StringBuffer pathName;
+        StringBuilder pathName;
         Node parent;
-        for (int j=0; j<elements.getLength(); j++) {
-            int cnt = numToks-1;
-            pathName = new StringBuffer(element);
+        for (int j = 0; j < elements.getLength(); j++) {
+            int cnt = numToks - 1;
+            pathName = new StringBuilder(element);
             parent = elements.item(j).getParentNode();
             do {
                 if (parent != null) {
                     pathName.insert(0, '.');
-                    pathName.insert(0, parent.getLocalName());//getNodeName());
+                    pathName.insert(0, parent.getLocalName());
 
                     parent = parent.getParentNode();
                 }
             } while (parent != null && --cnt > 0);
-            if (pathName.toString().equals(pathExpression)) {return elements.item(j);}
+            if (pathName.toString().equals(pathExpression)) {
+                return elements.item(j);
+            }
         }
 
         return null;
@@ -278,7 +280,7 @@ public final class XMLUtils {
      * @return map containing namespace prefix - namespace url pairs.
      */
     public static Map<String, String> lookupNamespaces(Node referenceNode) {
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
 
         Node node;
         if (referenceNode.getNodeType() == Node.DOCUMENT_NODE) {

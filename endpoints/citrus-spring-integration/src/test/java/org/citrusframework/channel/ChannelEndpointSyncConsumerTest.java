@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,6 @@ import org.citrusframework.message.MessageCorrelator;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
@@ -70,7 +68,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannel(replyChannel)
@@ -104,7 +102,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannel(replyChannel)
@@ -175,7 +173,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setTimeout(10000L);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannel(replyChannel)
@@ -211,7 +209,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setTimeout(500L);
         endpoint.getEndpointConfiguration().setPollingInterval(100);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannel(replyChannel)
@@ -275,7 +273,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setTimeout(500L);
         endpoint.getEndpointConfiguration().setPollingInterval(150L);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .build();
@@ -326,17 +324,14 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer().getName()),
                 request.getId(), context);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(messagingTemplate, replyChannel);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertEquals(((GenericMessage)invocation.getArguments()[1]).getPayload(), message.getPayload());
-                return null;
-            }
+        doAnswer(invocation -> {
+            Assert.assertEquals(((GenericMessage)invocation.getArguments()[1]).getPayload(), message.getPayload());
+            return null;
         }).when(messagingTemplate).send(eq(replyChannel), any(org.springframework.messaging.Message.class));
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
@@ -380,7 +375,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                 dummyEndpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(dummyEndpoint.createConsumer().getName()),
                 "123456789", context);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         try {
@@ -408,7 +403,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer().getName()),
                 "123456789", context);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();

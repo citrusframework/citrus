@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class DateRangeValidationMatcherTest {
             if (expectedErrorMessage == null) {
                 fail("Was not expecting exception but got one", e);
             }
-            Assert.assertTrue(e.getMessage().indexOf(expectedErrorMessage) > -1, String.format("Expected error '%s' not found in '%s'", expectedErrorMessage, e.getMessage()));
+            Assert.assertTrue(e.getMessage().contains(expectedErrorMessage), String.format("Expected error '%s' not found in '%s'", expectedErrorMessage, e.getMessage()));
         }
     }
 

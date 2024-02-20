@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -49,9 +49,10 @@ public class GroovyTemplateLoaderTest extends UnitTestSupport {
         Assert.assertEquals(template.getParameter().size(), 3);
         Assert.assertEquals(template.getParameter().get("foo"), "");
         Assert.assertEquals(template.getParameter().get("bar"), "barValue");
-        Assert.assertEquals(template.getParameter().get("baz"), "foo\n" +
-                "        bar\n" +
-                "        baz");
+        Assert.assertEquals(template.getParameter().get("baz"), """
+                foo
+                        bar
+                        baz""");
         Assert.assertEquals(template.getActions().size(), 2);
         Assert.assertFalse(template.isGlobalContext());
     }

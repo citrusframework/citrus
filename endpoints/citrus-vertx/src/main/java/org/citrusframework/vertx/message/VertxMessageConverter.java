@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.citrusframework.vertx.message;
 
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.*;
-import org.citrusframework.message.Message;
 import org.citrusframework.vertx.endpoint.VertxEndpointConfiguration;
 
 /**

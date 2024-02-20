@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,11 +77,9 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
                     mappingName + "' in Spring bean context", e);
         }
 
-        taskExecutor.execute(new Runnable() {
-            public void run() {
-                prepareExecution(request, test);
-                test.execute(testContext);
-            }
+        taskExecutor.execute(() -> {
+            prepareExecution(request, test);
+            test.execute(testContext);
         });
 
         return endpointAdapterDelegate.handleMessage(request);

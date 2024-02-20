@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,13 +54,22 @@ public class TemplateBasedScriptBuilderTest {
 
     @Test
     public void testCustomImports() {
-        Assert.assertEquals(TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")
-                .withCode("import org.citrusframework.MyClass;\n" +
-                		"import org.citrusframework.SomeOtherClass;\n" +
-                		"importedBODYimported\n" +
-                		"this is also script body\n\n" +
-                		"END")
-                .build(), "import org.citrusframework.MyClass;\nimport org.citrusframework.SomeOtherClass;\n" +
-                		"+++HEAD+++importedBODYimported\nthis is also script body\n\nEND+++TAIL+++");
+        Assert.assertEquals(
+                TemplateBasedScriptBuilder.fromTemplateScript("+++HEAD+++@SCRIPTBODY@+++TAIL+++")
+                        .withCode("""
+                                import org.citrusframework.MyClass;
+                                import org.citrusframework.SomeOtherClass;
+                                importedBODYimported
+                                this is also script body
+
+                                END""")
+                        .build(),
+                """
+                        import org.citrusframework.MyClass;
+                        import org.citrusframework.SomeOtherClass;
+                        +++HEAD+++importedBODYimported
+                        this is also script body
+
+                        END+++TAIL+++""");
     }
 }

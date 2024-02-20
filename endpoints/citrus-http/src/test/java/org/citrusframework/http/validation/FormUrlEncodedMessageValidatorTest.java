@@ -1,5 +1,5 @@
 /*
- *  Copyright 2006-2016 the original author or authors.
+ *  Copyright 2006-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,18 +45,19 @@ public class FormUrlEncodedMessageValidatorTest extends AbstractTestNGUnitTest {
         return factory;
     }
 
-    private String expectedFormData = "<form-data xmlns=\"http://www.citrusframework.org/schema/http/message\">\n" +
-                "<content-type>application/x-www-form-urlencoded</content-type>\n" +
-                "<action>/form-test</action>\n" +
-                "<controls>\n" +
-                    "<control name=\"password\">\n" +
-                        "<value>s!cr!t</value>\n" +
-                    "</control>\n" +
-                    "<control name=\"username\">\n" +
-                        "<value>test</value>\n" +
-                    "</control>\n" +
-                "</controls>\n" +
-            "</form-data>";
+    private String expectedFormData = """
+            <form-data xmlns="http://www.citrusframework.org/schema/http/message">
+                <content-type>application/x-www-form-urlencoded</content-type>
+                <action>/form-test</action>
+                <controls>
+                    <control name="password">
+                        <value>s!cr!t</value>
+                    </control>
+                    <control name="username">
+                        <value>test</value>
+                    </control>
+                </controls>
+            </form-data>""";
 
     @Test
     public void testValidateMessagePayload() throws Exception {

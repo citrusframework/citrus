@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,7 +137,7 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
                         "please add proper validation logic");
             }
 
-            return new JsonMappingValidationProcessor<T>(resultType, mapper) {
+            return new JsonMappingValidationProcessor<>(resultType, mapper) {
                 @Override
                 public void validate(T payload, Map<String, Object> headers, TestContext context) {
                     validationProcessor.validate(payload, headers, context);

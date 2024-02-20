@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 
+import static java.lang.Double.parseDouble;
+
 /**
  * Function returns the closest integer value to a decimal argument.
  *
@@ -38,7 +40,6 @@ public class RoundFunction implements Function {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 
-        return Long.valueOf(Math.round(Double.valueOf((parameterList.get(0))))).toString();
+        return Long.valueOf(Math.round(parseDouble(parameterList.get(0)))).toString();
     }
-
 }

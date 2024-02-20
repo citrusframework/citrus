@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,11 +73,9 @@ public final class MessageHeaderUtils {
             return true;
         } else if (headerName.equals("expirationDate")) {
             return true;
-        } else if (headerName.startsWith("jms_")) {
-            return true;
+        } else {
+            return headerName.startsWith("jms_");
         }
-
-        return false;
     }
 
     /**
@@ -88,14 +86,11 @@ public final class MessageHeaderUtils {
      * @param value
      */
     public static void setHeader(Message message, String name, String value) {
-        if (name.equals(SEQUENCE_NUMBER)) {
-            message.setHeader(SEQUENCE_NUMBER, Integer.valueOf(value));
-        } else if (name.equals(SEQUENCE_SIZE)) {
-            message.setHeader(SEQUENCE_SIZE, Integer.valueOf(value));
-        } else if (name.equals(PRIORITY)) {
-            message.setHeader(PRIORITY, Integer.valueOf(value));
-        } else {
-            message.setHeader(name, value);
+        switch (name) {
+            case SEQUENCE_NUMBER -> message.setHeader(SEQUENCE_NUMBER, Integer.valueOf(value));
+            case SEQUENCE_SIZE -> message.setHeader(SEQUENCE_SIZE, Integer.valueOf(value));
+            case PRIORITY -> message.setHeader(PRIORITY, Integer.valueOf(value));
+            default -> message.setHeader(name, value);
         }
     }
 

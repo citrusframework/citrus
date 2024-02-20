@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public abstract class AbstractDataDictionaryParser implements BeanDefinitionPars
      * @param element the source element.
      */
     private void parseMappingDefinitions(BeanDefinitionBuilder builder, Element element) {
-        HashMap<String, String> mappings = new HashMap<String, String>();
+        HashMap<String, String> mappings = new HashMap<>();
         for (Element matcher : DomUtils.getChildElementsByTagName(element, "mapping")) {
             mappings.put(matcher.getAttribute("path"), matcher.getAttribute("value"));
         }
