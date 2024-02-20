@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@ package org.citrusframework;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import static java.lang.Math.max;
+import static java.util.stream.Collectors.joining;
 
 /**
  * Class representing test results (failed, successful, skipped)
@@ -207,20 +208,18 @@ public final class TestResult {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        if (parameters != null && parameters.size() > 0) {
+        if (parameters != null && !parameters.isEmpty()) {
             builder.append(" ")
                     .append(testName)
                     .append("(")
-                    .append(parameters.values().stream().map(Object::toString).collect(Collectors.joining(",")))
+                    .append(parameters.values().stream().map(Object::toString).collect(joining(",")))
                     .append(") ");
         } else {
             builder.append(" ").append(testName).append(" ");
         }
 
         int spaces = 65 - builder.length();
-        for (int i = 0; i < spaces; i++) {
-            builder.append(".");
-        }
+        builder.append(".".repeat(max(0, spaces)));
 
         switch (result) {
             case SUCCESS:

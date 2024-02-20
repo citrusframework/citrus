@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,19 +82,20 @@ public class JsonSchemaValidationTest {
                 .thenReturn(Collections.singletonList(schema));
 
         // Create the received message
-        Message receivedMessage = new DefaultMessage("[\n" +
-                "              {\n" +
-                "                \"id\": 2,\n" +
-                "                \"name\": \"An ice sculpture\",\n" +
-                "                \"price\": 12.50,\n" +
-                "                \"tags\": [\"cold\", \"ice\"],\n" +
-                "                \"dimensions\": {\n" +
-                    "                \"length\": 7.0,\n" +
-                    "                \"width\": 12.0,\n" +
-                    "                \"height\": 9.5\n" +
-                "                 }\n" +
-                "              }\n" +
-                "            ]");
+        Message receivedMessage = new DefaultMessage("""
+                [
+                  {
+                    "id": 2,
+                    "name": "An ice sculpture",
+                    "price": 12.50,
+                    "tags": ["cold", "ice"],
+                    "dimensions": {
+                    "length": 7.0,
+                    "width": 12.0,
+                    "height": 9.5
+                     }
+                  }
+                ]""");
 
 
         GraciousProcessingReport report = fixture.validate(
@@ -124,18 +125,19 @@ public class JsonSchemaValidationTest {
         when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, referenceResolverMock))
                 .thenReturn(Collections.singletonList(schema));
 
-        Message receivedMessage = new DefaultMessage("[\n" +
-                "              {\n" +
-                "                \"name\": \"An ice sculpture\",\n" +
-                "                \"price\": 12.50,\n" +
-                "                \"tags\": [\"cold\", \"ice\"],\n" +
-                "                \"dimensions\": {\n" +
-                    "                \"length\": 7.0,\n" +
-                    "                \"width\": 12.0,\n" +
-                    "                \"height\": 9.5\n" +
-                "                 }\n" +
-                "              }\n" +
-                "            ]");
+        Message receivedMessage = new DefaultMessage("""
+                [
+                  {
+                    "name": "An ice sculpture",
+                    "price": 12.50,
+                    "tags": ["cold", "ice"],
+                    "dimensions": {
+                    "length": 7.0,
+                    "width": 12.0,
+                    "height": 9.5
+                     }
+                  }
+                ]""");
 
         GraciousProcessingReport report = fixture.validate(
                 receivedMessage,
@@ -170,19 +172,20 @@ public class JsonSchemaValidationTest {
         when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, referenceResolverMock))
                 .thenReturn(Collections.singletonList(schema));
 
-        Message receivedMessage = new DefaultMessage("[\n" +
-                "              {\n" +
-                "                \"id\": 2,\n" +
-                "                \"name\": \"An ice sculpture\",\n" +
-                "                \"price\": 12.50,\n" +
-                "                \"tags\": [\"cold\", \"ice\"],\n" +
-                "                \"dimensions\": {\n" +
-                    "                \"length\": 7.0,\n" +
-                    "                \"width\": 12.0,\n" +
-                    "                \"height\": 9.5\n" +
-                "                 }\n" +
-                "              }\n" +
-                "            ]");
+        Message receivedMessage = new DefaultMessage("""
+                [
+                  {
+                    "id": 2,
+                    "name": "An ice sculpture",
+                    "price": 12.50,
+                    "tags": ["cold", "ice"],
+                    "dimensions": {
+                    "length": 7.0,
+                    "width": 12.0,
+                    "height": 9.5
+                     }
+                  }
+                ]""");
 
         GraciousProcessingReport report = fixture.validate(
                 receivedMessage,
@@ -222,19 +225,20 @@ public class JsonSchemaValidationTest {
         when(jsonSchemaFilterMock.filter(repositoryList,  validationContextMock, referenceResolverMock))
                 .thenReturn(List.of(invalidSchema, validSchema));
 
-        Message receivedMessage = new DefaultMessage("[\n" +
-                "              {\n" +
-                "                \"id\": 2,\n" +
-                "                \"name\": \"An ice sculpture\",\n" +
-                "                \"price\": 12.50,\n" +
-                "                \"tags\": [\"cold\", \"ice\"],\n" +
-                "                \"dimensions\": {\n" +
-                    "                \"length\": 7.0,\n" +
-                    "                \"width\": 12.0,\n" +
-                    "                \"height\": 9.5\n" +
-                "                 }\n" +
-                "              }\n" +
-                "            ]");
+        Message receivedMessage = new DefaultMessage("""
+                [
+                  {
+                    "id": 2,
+                    "name": "An ice sculpture",
+                    "price": 12.50,
+                    "tags": ["cold", "ice"],
+                    "dimensions": {
+                    "length": 7.0,
+                    "width": 12.0,
+                    "height": 9.5
+                     }
+                  }
+                ]""");
 
         GraciousProcessingReport report = fixture.validate(
                 receivedMessage,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.citrusframework.config.xml;
 
-import java.util.*;
-
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -25,6 +23,12 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * Bean definition parser for call template action in test case.
@@ -46,25 +50,25 @@ public class CallTemplateParser implements BeanDefinitionParser {
 
         List<?> parameterElements = DomUtils.getChildElementsByTagName(element, "parameter");
 
-        if (parameterElements != null && parameterElements.size() > 0) {
-            Map<String, String> parameters = new LinkedHashMap<String, String>();
+        if (!isEmpty(parameterElements)) {
+            Map<String, String> parameters = new LinkedHashMap<>();
 
-            for (Iterator<?> iter = parameterElements.iterator(); iter.hasNext();) {
-                Element parameterElement = (Element) iter.next();
+            for (Object o : parameterElements) {
+                Element parameterElement = (Element) o;
                 final String name = parameterElement.getAttribute("name");
                 String value = null;
                 if (parameterElement.hasAttribute("value")) {
-                	value = parameterElement.getAttribute("value");
+                    value = parameterElement.getAttribute("value");
                 } else {
-                	Element valueElement = DomUtils.getChildElementByTagName(parameterElement, "value");
-                	if (valueElement != null) {
-                		value = valueElement.getTextContent();
-                	}
+                    Element valueElement = DomUtils.getChildElementByTagName(parameterElement, "value");
+                    if (valueElement != null) {
+                        value = valueElement.getTextContent();
+                    }
                 }
                 if (value != null) {
-                	parameters.put(name, value);
+                    parameters.put(name, value);
                 } else {
-                	throw new BeanCreationException("Please provide either value attribute or value element for parameter");
+                    throw new BeanCreationException("Please provide either value attribute or value element for parameter");
                 }
             }
 

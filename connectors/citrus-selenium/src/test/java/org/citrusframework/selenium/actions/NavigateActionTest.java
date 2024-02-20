@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.net.URL;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Browser;
@@ -52,14 +51,11 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testNavigatePageUrl() throws Exception {
+    public void testNavigatePageUrl() {
         seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.CHROME.browserName());
-        doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertEquals(invocation.getArguments()[0].toString(), "http://localhost:8080");
-                return null;
-            }
+        doAnswer((Answer<Object>) invocation -> {
+            Assert.assertEquals(invocation.getArguments()[0].toString(), "http://localhost:8080");
+            return null;
         }).when(navigation).to(any(URL.class));
 
         NavigateAction action =  new NavigateAction.Builder()
@@ -72,14 +68,11 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testNavigatePageUrlInternetExplorer() throws Exception {
+    public void testNavigatePageUrlInternetExplorer() {
         seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.IE.browserName());
-        doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Assert.assertTrue(invocation.getArguments()[0].toString().startsWith("http://localhost:8080?timestamp="));
-                return null;
-            }
+        doAnswer((Answer<Object>) invocation -> {
+            Assert.assertTrue(invocation.getArguments()[0].toString().startsWith("http://localhost:8080?timestamp="));
+            return null;
         }).when(navigation).to(any(URL.class));
 
         NavigateAction action =  new NavigateAction.Builder()
@@ -92,7 +85,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testNavigateRelativePageUrl() throws Exception {
+    public void testNavigateRelativePageUrl(){
         seleniumBrowser.getEndpointConfiguration().setBrowserType(Browser.IE.browserName());
         seleniumBrowser.getEndpointConfiguration().setStartPageUrl("http://localhost:8080");
 
@@ -106,7 +99,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteBack() throws Exception {
+    public void testExecuteBack(){
         NavigateAction action =  new NavigateAction.Builder()
                 .browser(seleniumBrowser)
                 .page("back")
@@ -117,7 +110,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteForward() throws Exception {
+    public void testExecuteForward(){
         NavigateAction action =  new NavigateAction.Builder()
                 .browser(seleniumBrowser)
                 .page("forward")
@@ -128,7 +121,7 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteRefresh() throws Exception {
+    public void testExecuteRefresh(){
         NavigateAction action =  new NavigateAction.Builder()
                 .browser(seleniumBrowser)
                 .page("refresh")

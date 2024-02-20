@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -414,11 +414,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
@@ -444,11 +444,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         context.setVariable("myOperation", "sayHello");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "${myOperation}");
         controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
@@ -472,11 +472,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "${myOperation}");
         controlMessageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
@@ -530,14 +530,14 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         headers.put("Operation", "myOperation");
 
         MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor.Builder()
                 .headers(headers)
                 .build();
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
@@ -685,7 +685,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, Object> messageElements = new HashMap<>();
         messageElements.put("/pfx:TestRequest/pfx:Message", "Hello World!");
 
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
         namespaces.put("pfx", "http://citrusframework.org/unittest");
 
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -913,7 +913,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, Object> extractMessageElements = new HashMap<>();
         extractMessageElements.put("/pfx:TestRequest/pfx:Message", "messageVar");
 
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
         namespaces.put("pfx", "http://citrusframework.org/unittest");
 
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
@@ -978,7 +978,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         String messageSelector = "Operation = 'sayHello'";
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
@@ -1005,7 +1005,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         String messageSelector = "Operation = 'sayHello'";
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
@@ -1034,7 +1034,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
@@ -1062,7 +1062,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 

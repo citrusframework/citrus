@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,10 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import static java.lang.Math.abs;
+
 /**
  * Function returning the absolute value of a decimal number.
  *
@@ -41,10 +45,9 @@ public class AbsoluteFunction implements Function {
         String param = parameterList.get(0);
 
         if (param.contains(".")) {
-            return String.valueOf(Math.abs(Double.valueOf(param)));
+            return String.valueOf(abs(parseDouble(param)));
         } else {
-            return String.valueOf(Math.abs(Integer.valueOf(param)));
+            return String.valueOf(abs(parseInt(param)));
         }
     }
-
 }

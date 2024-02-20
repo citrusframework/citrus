@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,16 +41,14 @@ public class ChannelMessageConverter implements MessageConverter<org.springframe
         }
 
         Map<String, Object> headers = new LinkedHashMap<>();
-        for (Map.Entry<String, Object> headerEntry: internalMessage.getHeaders().entrySet()) {
+        for (var headerEntry : internalMessage.getHeaders().entrySet()) {
             if (endpointConfiguration.isFilterInternalHeaders()) {
                 if (!headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
                     headers.put(headerEntry.getKey(), headerEntry.getValue());
                 }
-            } else {
-                if (!headerEntry.getKey().equals(org.citrusframework.message.MessageHeaders.ID)
-                        && !headerEntry.getKey().equals(org.citrusframework.message.MessageHeaders.TIMESTAMP)) {
-                    headers.put(headerEntry.getKey(), headerEntry.getValue());
-                }
+            } else if (!headerEntry.getKey().equals(org.citrusframework.message.MessageHeaders.ID)
+                    && !headerEntry.getKey().equals(org.citrusframework.message.MessageHeaders.TIMESTAMP)) {
+                headers.put(headerEntry.getKey(), headerEntry.getValue());
             }
         }
 
@@ -68,10 +66,8 @@ public class ChannelMessageConverter implements MessageConverter<org.springframe
         Map<String, Object> messageHeaders = new LinkedHashMap<>(externalMessage.getHeaders());
 
         Object payload = externalMessage.getPayload();
-        if (payload instanceof Message) {
-            Message nestedMessage = (Message) payload;
-
-            for (Map.Entry<String, Object> headerEntry : messageHeaders.entrySet()) {
+        if (payload instanceof Message nestedMessage) {
+            for (var headerEntry : messageHeaders.entrySet()) {
                 if (endpointConfiguration.isFilterInternalHeaders()) {
                     if (!headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
                         nestedMessage.setHeader(headerEntry.getKey(), headerEntry.getValue());

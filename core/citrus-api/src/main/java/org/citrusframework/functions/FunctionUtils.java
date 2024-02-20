@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package org.citrusframework.functions;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.variable.VariableUtils;
+
+import static java.util.Objects.requireNonNullElse;
 
 /**
  * Utility class for functions.
@@ -57,12 +59,12 @@ public final class FunctionUtils {
         }
 
         String newString = stringValue;
-        StringBuffer strBuffer = new StringBuffer();
+        var strBuffer = new StringBuilder();
 
-        boolean isVarComplete = false;
-        StringBuffer variableNameBuf = new StringBuffer();
+        boolean isVarComplete;
+        var variableNameBuf = new StringBuilder();
 
-        int startIndex = 0;
+        int startIndex;
         int curIndex;
         int searchIndex;
 
@@ -104,14 +106,13 @@ public final class FunctionUtils {
 
                 startIndex = curIndex;
 
-                variableNameBuf = new StringBuffer();
-                isVarComplete = false;
+                variableNameBuf = new StringBuilder();
             }
 
             strBuffer.append(newString.substring(startIndex));
             newString = strBuffer.toString();
 
-            strBuffer = new StringBuffer();
+            strBuffer = new StringBuilder();
         }
 
         return newString;
@@ -141,10 +142,6 @@ public final class FunctionUtils {
 
         String value = library.getFunction(function).execute(FunctionParameterHelper.getParameterList(parameterString), context);
 
-        if (value == null) {
-            return "";
-        } else {
-            return value;
-        }
+        return requireNonNullElse(value, "");
     }
 }

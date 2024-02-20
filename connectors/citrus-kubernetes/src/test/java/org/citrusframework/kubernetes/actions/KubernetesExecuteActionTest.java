@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,6 @@ import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -49,7 +47,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testListPods() throws Exception {
+    public void testListPods() {
         final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
@@ -74,7 +72,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testListPodsInNamespace() throws Exception {
+    public void testListPodsInNamespace() {
         final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
@@ -99,7 +97,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testListPodsInDefaultClientNamespace() throws Exception {
+    public void testListPodsInDefaultClientNamespace() {
         final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
@@ -125,7 +123,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testListPodsWithLabels() throws Exception {
+    public void testListPodsWithLabels() {
         final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
@@ -134,16 +132,13 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(kubernetesClient.pods()).thenReturn(clientOperation);
         when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
-        when(clientOperation.withLabels(anyMap())).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
-                Assert.assertEquals(labels.size(), 2);
-                Assert.assertEquals(labels.get("app"), null);
-                Assert.assertEquals(labels.get("pod_label"), "active");
+        when(clientOperation.withLabels(anyMap())).thenAnswer(invocation -> {
+            Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
+            Assert.assertEquals(labels.size(), 2);
+            Assert.assertEquals(labels.get("app"), null);
+            Assert.assertEquals(labels.get("pod_label"), "active");
 
-                return clientOperation;
-            }
+            return clientOperation;
         });
         when(clientOperation.list()).thenReturn(response);
 
@@ -161,7 +156,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testListPodsWithoutLabels() throws Exception {
+    public void testListPodsWithoutLabels() {
         final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
@@ -170,16 +165,13 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(kubernetesClient.pods()).thenReturn(clientOperation);
         when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
-        when(clientOperation.withoutLabels(anyMap())).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
-                Assert.assertEquals(labels.size(), 2);
-                Assert.assertEquals(labels.get("app"), null);
-                Assert.assertEquals(labels.get("pod_label"), "inactive");
+        when(clientOperation.withoutLabels(anyMap())).thenAnswer(invocation -> {
+            Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
+            Assert.assertEquals(labels.size(), 2);
+            Assert.assertEquals(labels.get("app"), null);
+            Assert.assertEquals(labels.get("pod_label"), "inactive");
 
-                return clientOperation;
-            }
+            return clientOperation;
         });
         when(clientOperation.list()).thenReturn(response);
 
@@ -197,7 +189,7 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testListPodsMixedLabels() throws Exception {
+    public void testListPodsMixedLabels() {
         final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
@@ -206,27 +198,21 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(kubernetesClient.pods()).thenReturn(clientOperation);
         when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
-        when(clientOperation.withLabels(anyMap())).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
-                Assert.assertEquals(labels.size(), 2);
-                Assert.assertEquals(labels.get("app"), null);
-                Assert.assertEquals(labels.get("with"), "active");
+        when(clientOperation.withLabels(anyMap())).thenAnswer(invocation -> {
+            Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
+            Assert.assertEquals(labels.size(), 2);
+            Assert.assertEquals(labels.get("app"), null);
+            Assert.assertEquals(labels.get("with"), "active");
 
-                return clientOperation;
-            }
+            return clientOperation;
         });
-        when(clientOperation.withoutLabels(anyMap())).thenAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
-                Assert.assertEquals(labels.size(), 2);
-                Assert.assertEquals(labels.get("running"), null);
-                Assert.assertEquals(labels.get("without"), "inactive");
+        when(clientOperation.withoutLabels(anyMap())).thenAnswer(invocation -> {
+            Map<String, String> labels = (Map<String, String>) invocation.getArguments()[0];
+            Assert.assertEquals(labels.size(), 2);
+            Assert.assertEquals(labels.get("running"), null);
+            Assert.assertEquals(labels.get("without"), "inactive");
 
-                return clientOperation;
-            }
+            return clientOperation;
         });
         when(clientOperation.list()).thenReturn(response);
 

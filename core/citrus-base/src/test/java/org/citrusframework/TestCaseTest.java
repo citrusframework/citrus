@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,9 +170,7 @@ public class TestCaseTest extends UnitTestSupport {
         final TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
-        testcase.addTestAction(action(context -> {
-                context.addException(new CitrusRuntimeException("This failed in forked action"));
-        }).build());
+        testcase.addTestAction(action(context -> context.addException(new CitrusRuntimeException("This failed in forked action"))).build());
 
         testcase.addTestAction(new EchoAction.Builder().message("Everything is fine!").build());
 

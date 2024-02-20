@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
     public void testTranslateExactMatchStrategy() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text><OtherText>No changes</OtherText></TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("Something.Else", "NotFound!");
         mappings.put("TestMessage.Text", "Hello!");
 
@@ -45,18 +45,19 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>Hello!</Text>\n" +
-                "    <OtherText>No changes</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>Hello!</Text>
+                    <OtherText>No changes</OtherText>
+                </TestMessage>""");
     }
 
     @Test
     public void testTranslateStartsWithStrategy() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text><OtherText>Good Bye!</OtherText></TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("TestMessage.Text", "Hello!");
         mappings.put("TestMessage.Other", "Bye!");
 
@@ -65,18 +66,19 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.STARTS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>Hello!</Text>\n" +
-                "    <OtherText>Bye!</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>Hello!</Text>
+                    <OtherText>Bye!</OtherText>
+                </TestMessage>""");
     }
 
     @Test
     public void testTranslateEndsWithStrategy() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text><OtherText>Good Bye!</OtherText></TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("Text", "Hello!");
 
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
@@ -84,18 +86,19 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>Hello!</Text>\n" +
-                "    <OtherText>Hello!</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>Hello!</Text>
+                    <OtherText>Hello!</OtherText>
+                </TestMessage>""");
     }
 
     @Test
     public void testTranslateAttributes() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text name=\"helloText\">Hello World!</Text><OtherText name=\"goodbyeText\">No changes</OtherText></TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("TestMessage.Text", "Hello!");
         mappings.put("TestMessage.Text.name", "newName");
 
@@ -103,18 +106,19 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text name=\"newName\">Hello!</Text>\n" +
-                "    <OtherText name=\"goodbyeText\">No changes</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text name="newName">Hello!</Text>
+                    <OtherText name="goodbyeText">No changes</OtherText>
+                </TestMessage>""");
     }
 
     @Test
     public void testTranslateMultipleAttributes() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text name=\"helloText\">Hello World!</Text><OtherText name=\"goodbyeText\">No changes</OtherText></TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("name", "newName");
 
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
@@ -122,18 +126,19 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text name=\"newName\">Hello World!</Text>\n" +
-                "    <OtherText name=\"newName\">No changes</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text name="newName">Hello World!</Text>
+                    <OtherText name="newName">No changes</OtherText>
+                </TestMessage>""");
     }
 
     @Test
     public void testTranslateWithVariables() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text name=\"\">Hello World!</Text><OtherText>No changes</OtherText></TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("TestMessage.Text", "${newText}");
         mappings.put("TestMessage.Text.name", "citrus:upperCase('text')");
 
@@ -143,11 +148,12 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text name=\"TEXT\">Hello!</Text>\n" +
-                "    <OtherText>No changes</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text name="TEXT">Hello!</Text>
+                    <OtherText>No changes</OtherText>
+                </TestMessage>""");
     }
 
     @Test
@@ -161,48 +167,51 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.initialize();
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text name=\"newName\">Hello!</Text>\n" +
-                "    <OtherText>No changes</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text name="newName">Hello!</Text>
+                    <OtherText>No changes</OtherText>
+                </TestMessage>""");
     }
 
     @Test
     public void testTranslateWithNestedAndEmptyElements() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text><value></value></Text><OtherText></OtherText></TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("TestMessage.Text.value", "Hello!");
 
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>\n" +
-                "        <value>Hello!</value>\n" +
-                "    </Text>\n" +
-                "    <OtherText/>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>
+                        <value>Hello!</value>
+                    </Text>
+                    <OtherText/>
+                </TestMessage>""");
     }
 
     @Test
     public void testTranslateNoResult() {
         Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text><OtherText>No changes</OtherText></TestMessage>");
 
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("Something.Else", "NotFound!");
 
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>Hello World!</Text>\n" +
-                "    <OtherText>No changes</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>Hello World!</Text>
+                    <OtherText>No changes</OtherText>
+                </TestMessage>""");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package org.citrusframework.config.xml;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.util.ValidateMessageParserUtil;
 import org.citrusframework.config.util.VariableExtractorParserUtil;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.builder.DefaultMessageBuilder;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
@@ -52,6 +50,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import static java.lang.Boolean.parseBoolean;
+import static org.citrusframework.util.StringUtils.hasText;
+
 /**
  * Bean definition parser for receive action in test case.
  *
@@ -64,7 +65,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String endpointUri = element.getAttribute("endpoint");
 
-        if (!StringUtils.hasText(endpointUri)) {
+        if (!hasText(endpointUri)) {
             throw new BeanCreationException("Endpoint reference must not be empty");
         }
 
@@ -82,7 +83,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
 
         String receiveTimeout = element.getAttribute("timeout");
-        if (StringUtils.hasText(receiveTimeout)) {
+        if (hasText(receiveTimeout)) {
             builder.addPropertyValue("receiveTimeout", Long.valueOf(receiveTimeout));
         }
 
@@ -111,7 +112,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         List<ValidationContext> validationContexts = new ArrayList<>();
         if (messageElement != null) {
             String messageType = messageElement.getAttribute("type");
-            if (StringUtils.hasText(messageType)) {
+            if (hasText(messageType)) {
                 builder.addPropertyValue("messageType", messageType);
             }
 
@@ -119,12 +120,12 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             validationContexts.add(headerValidationContext);
 
             String headerValidator = messageElement.getAttribute("header-validator");
-            if (StringUtils.hasText(headerValidator)) {
+            if (hasText(headerValidator)) {
                 headerValidationContext.addHeaderValidator(headerValidator);
             }
 
             String headerValidatorExpression = messageElement.getAttribute("header-validators");
-            if (StringUtils.hasText(headerValidatorExpression)) {
+            if (hasText(headerValidatorExpression)) {
                 Stream.of(headerValidatorExpression.split(","))
                         .map(String::trim)
                         .forEach(headerValidationContext::addHeaderValidator);
@@ -153,12 +154,12 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
             ManagedList<RuntimeBeanReference> validators = new ManagedList<>();
             String messageValidator = messageElement.getAttribute("validator");
-            if (StringUtils.hasText(messageValidator)) {
+            if (hasText(messageValidator)) {
                 validators.add(new RuntimeBeanReference(messageValidator));
             }
 
             String messageValidatorExpression = messageElement.getAttribute("validators");
-            if (StringUtils.hasText(messageValidatorExpression)) {
+            if (hasText(messageValidatorExpression)) {
                 Stream.of(messageValidatorExpression.split(","))
                         .map(String::trim)
                         .map(RuntimeBeanReference::new)
@@ -170,7 +171,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             }
 
             String dataDictionary = messageElement.getAttribute("data-dictionary");
-            if (StringUtils.hasText(dataDictionary)) {
+            if (hasText(dataDictionary)) {
                 builder.addPropertyReference("dataDictionary", dataDictionary);
             }
         } else {
@@ -214,10 +215,10 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         JsonMessageValidationContext.Builder context = new JsonMessageValidationContext.Builder();
 
         if (messageElement != null) {
-            Set<String> ignoreExpressions = new HashSet<String>();
+            Set<String> ignoreExpressions = new HashSet<>();
             List<?> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
-            for (Iterator<?> iter = ignoreElements.iterator(); iter.hasNext(); ) {
-                Element ignoreValue = (Element) iter.next();
+            for (Object ignoreElement : ignoreElements) {
+                Element ignoreValue = (Element) ignoreElement;
                 ignoreExpressions.add(ignoreValue.getAttribute("path"));
             }
             ignoreExpressions.forEach(context::ignore);
@@ -239,7 +240,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         if (messageElement != null) {
             addSchemaInformationToValidationContext(messageElement, context);
 
-            Set<String> ignoreExpressions = new HashSet<String>();
+            Set<String> ignoreExpressions = new HashSet<>();
             List<Element> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
             for (Element ignoreValue : ignoreElements) {
                 ignoreExpressions.add(ignoreValue.getAttribute("path"));
@@ -249,9 +250,9 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             parseNamespaceValidationElements(messageElement, context);
 
             //Catch namespace declarations for namespace context
-            Map<String, String> namespaces = new HashMap<String, String>();
+            Map<String, String> namespaces = new HashMap<>();
             List<Element> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
-            if (namespaceElements.size() > 0) {
+            if (!namespaceElements.isEmpty()) {
                 for (Element namespaceElement : namespaceElements) {
                     namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
                 }
@@ -269,17 +270,17 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      */
     private void addSchemaInformationToValidationContext(Element messageElement, SchemaValidationContext.Builder<?> context) {
         String schemaValidation = messageElement.getAttribute("schema-validation");
-        if (StringUtils.hasText(schemaValidation)) {
-            context.schemaValidation(Boolean.valueOf(schemaValidation));
+        if (hasText(schemaValidation)) {
+            context.schemaValidation(parseBoolean(schemaValidation));
         }
 
         String schema = messageElement.getAttribute("schema");
-        if (StringUtils.hasText(schema)) {
+        if (hasText(schema)) {
             context.schema(schema);
         }
 
         String schemaRepository = messageElement.getAttribute("schema-repository");
-        if (StringUtils.hasText(schemaRepository)) {
+        if (hasText(schemaRepository)) {
             context.schemaRepository(schemaRepository);
         }
     }
@@ -356,7 +357,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                             .scriptType(type);
 
                     String filePath = scriptElement.getAttribute("file");
-                    if (StringUtils.hasText(filePath)) {
+                    if (hasText(filePath)) {
                         context.scriptResource(filePath);
                         if (scriptElement.hasAttribute("charset")) {
                             context.scriptResourceCharset(scriptElement.getAttribute("charset"));
@@ -428,7 +429,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             Element validateElement, Map<String, Object> validateXpathExpressions) {
         //check for xpath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
-        if (StringUtils.hasText(pathExpression) && !JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
+        if (hasText(pathExpression) && !JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
             //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
             if (validateElement.hasAttribute("result-type")) {
                 pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
@@ -439,11 +440,11 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
         //check for xpath validation elements - new style preferred
         List<?> xpathElements = DomUtils.getChildElementsByTagName(validateElement, "xpath");
-        if (xpathElements.size() > 0) {
-            for (Iterator<?> xpathIterator = xpathElements.iterator(); xpathIterator.hasNext();) {
-                Element xpathElement = (Element) xpathIterator.next();
+        if (!xpathElements.isEmpty()) {
+            for (Object element : xpathElements) {
+                Element xpathElement = (Element) element;
                 String expression = xpathElement.getAttribute("expression");
-                if (StringUtils.hasText(expression)) {
+                if (hasText(expression)) {
                     //construct expression with explicit result-type, like boolean:/TestMessage/Value
                     if (xpathElement.hasAttribute("result-type")) {
                         expression = xpathElement.getAttribute("result-type") + ":" + expression;

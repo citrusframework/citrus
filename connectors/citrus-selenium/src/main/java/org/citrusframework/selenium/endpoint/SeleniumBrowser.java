@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,6 @@
  */
 
 package org.citrusframework.selenium.endpoint;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.citrusframework.context.TestContext;
@@ -57,6 +50,18 @@ import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static com.gargoylesoftware.htmlunit.BrowserVersion.CHROME;
+import static com.gargoylesoftware.htmlunit.BrowserVersion.FIREFOX;
+import static com.gargoylesoftware.htmlunit.BrowserVersion.FIREFOX_ESR;
+import static com.gargoylesoftware.htmlunit.BrowserVersion.INTERNET_EXPLORER;
 
 /**
  * Selenium browser provides access to web driver and initializes Selenium environment from endpoint configuration.
@@ -220,33 +225,30 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
         } else if (Browser.CHROME.is(browserType)) {
             return new ChromeDriver();
         } else if (Browser.HTMLUNIT.is(browserType)) {
-            BrowserVersion browserVersion = null;
-            switch (getEndpointConfiguration().getVersion()) {
-                case "FIREFOX":
-                    browserVersion = BrowserVersion.FIREFOX;
-                    break;
-                case "FIREFOX_78":
-                case "FIREFOX_ESR":
-                    browserVersion = BrowserVersion.FIREFOX_ESR;
-                    break;
-                case "INTERNET_EXPLORER":
-                    browserVersion = BrowserVersion.INTERNET_EXPLORER;
-                    break;
-                case "CHROME":
-                    browserVersion = BrowserVersion.CHROME;
-                    break;
-            }
-
-            HtmlUnitDriver htmlUnitDriver;
-            if (browserVersion != null) {
-                htmlUnitDriver = new HtmlUnitDriver(browserVersion, getEndpointConfiguration().isJavaScript());
-            } else {
-                htmlUnitDriver = new HtmlUnitDriver(getEndpointConfiguration().isJavaScript());
-            }
+            HtmlUnitDriver htmlUnitDriver = getHtmlUnitDriver();
             return htmlUnitDriver;
         }
 
         throw new CitrusRuntimeException("Unsupported local browser type: " + browserType);
+    }
+
+    private HtmlUnitDriver getHtmlUnitDriver() {
+        BrowserVersion browserVersion = switch (getEndpointConfiguration().getVersion()) {
+            case "FIREFOX" -> FIREFOX;
+            case "FIREFOX_78", "FIREFOX_ESR" -> FIREFOX_ESR;
+            case "INTERNET_EXPLORER" -> INTERNET_EXPLORER;
+            case "CHROME" -> CHROME;
+            default -> null;
+        };
+
+        HtmlUnitDriver htmlUnitDriver;
+        if (browserVersion != null) {
+            htmlUnitDriver = new HtmlUnitDriver(browserVersion, getEndpointConfiguration().isJavaScript());
+        } else {
+            htmlUnitDriver = new HtmlUnitDriver(getEndpointConfiguration().isJavaScript());
+        }
+
+        return htmlUnitDriver;
     }
 
     /**

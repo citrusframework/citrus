@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
         when(session.createProducer(destination)).thenReturn(messageProducer);
 
         when(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).thenReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<>()));
 
         when(session.getTransacted()).thenReturn(false);
 
@@ -110,7 +110,7 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
         when(session.createProducer(destinationQueue)).thenReturn(messageProducer);
 
         when(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).thenReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<>()));
 
         when(session.getTransacted()).thenReturn(false);
 
@@ -122,7 +122,7 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Message is empty - unable to send empty message")
-    public void testSendEmptyMessage() throws JMSException {
+    public void testSendEmptyMessage() {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 

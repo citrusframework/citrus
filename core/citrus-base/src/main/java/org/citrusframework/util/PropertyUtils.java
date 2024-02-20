@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,11 +67,11 @@ public final class PropertyUtils {
      * @return
      */
     public static String replacePropertiesInString(final String line, Properties properties) {
-        StringBuffer newStr = new StringBuffer();
+        StringBuilder newStr = new StringBuilder();
 
         boolean isVarComplete = false;
 
-        StringBuffer propertyName = new StringBuffer();
+        StringBuilder propertyName = new StringBuilder();
 
         int startIndex = 0;
         int curIndex;
@@ -79,13 +79,11 @@ public final class PropertyUtils {
         while ((searchIndex = line.indexOf(PROPERTY_MARKER, startIndex)) != -1) {
             //first check if property Marker is escaped by '\' character
             if (searchIndex != 0 && line.charAt((searchIndex-1)) == '\\') {
-                newStr.append(line.substring(startIndex, searchIndex-1));
+                newStr.append(line, startIndex, searchIndex-1);
                 newStr.append(PROPERTY_MARKER);
                 startIndex = searchIndex + 1;
                 continue;
             }
-
-            isVarComplete = false;
 
             curIndex = searchIndex + 1;
 
@@ -105,12 +103,12 @@ public final class PropertyUtils {
                         + PROPERTY_MARKER + propertyName.toString() + PROPERTY_MARKER + "'");
             }
 
-            newStr.append(line.substring(startIndex, searchIndex));
+            newStr.append(line, startIndex, searchIndex);
             newStr.append(properties.getProperty(propertyName.toString(), "")); // property value
 
             startIndex = curIndex;
 
-            propertyName = new StringBuffer();
+            propertyName = new StringBuilder();
             isVarComplete = false;
         }
 

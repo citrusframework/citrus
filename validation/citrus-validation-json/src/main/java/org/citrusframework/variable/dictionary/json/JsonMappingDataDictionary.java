@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.citrusframework.variable.dictionary.json;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import net.minidev.json.JSONArray;
@@ -26,9 +25,11 @@ import net.minidev.json.parser.ParseException;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.Message;
-import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.lang.String.format;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Simple json data dictionary implementation holds a set of mappings where keys are json path expressions to match
@@ -45,7 +46,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
 
     @Override
     protected void processMessage(Message message, TestContext context) {
-        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
+        if (message.getPayload() == null || !hasText(message.getPayload(String.class))) {
             return;
         }
 
@@ -75,7 +76,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
         if (getPathMappingStrategy().equals(PathMappingStrategy.EXACT)) {
             if (mappings.containsKey(jsonPath)) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, mappings.get(jsonPath)));
+                    logger.debug(format("Data dictionary setting element '%s' with value: %s", jsonPath, mappings.get(jsonPath)));
                 }
                 return convertIfNecessary(mappings.get(jsonPath), value, context);
             }
@@ -83,7 +84,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (jsonPath.endsWith(entry.getKey())) {
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
+                        logger.debug(format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }
@@ -92,7 +93,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
                 if (jsonPath.startsWith(entry.getKey())) {
                     if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
+                        logger.debug(format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
                     return convertIfNecessary(entry.getValue(), value, context);
                 }
@@ -109,25 +110,20 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
      * @param context
      */
     private void traverseJsonData(JSONObject jsonData, String jsonPath, TestContext context) {
-        for (Iterator it = jsonData.entrySet().iterator(); it.hasNext();) {
-            Map.Entry jsonEntry = (Map.Entry) it.next();
-
-            if (jsonEntry.getValue() instanceof JSONObject) {
-                traverseJsonData((JSONObject) jsonEntry.getValue(), (StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()), context);
-            } else if (jsonEntry.getValue() instanceof JSONArray) {
-                JSONArray jsonArray = (JSONArray) jsonEntry.getValue();
+        for (var stringObjectEntry : jsonData.entrySet()) {
+            if (stringObjectEntry.getValue() instanceof JSONObject jsonObject) {
+                traverseJsonData(jsonObject, (hasText(jsonPath) ? jsonPath + "." + stringObjectEntry.getKey() : stringObjectEntry.getKey()), context);
+            } else if (stringObjectEntry.getValue() instanceof JSONArray jsonArray) {
                 for (int i = 0; i < jsonArray.size(); i++) {
                     if (jsonArray.get(i) instanceof JSONObject) {
-                        traverseJsonData((JSONObject) jsonArray.get(i), String.format((StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()) + "[%s]", i), context);
+                        traverseJsonData((JSONObject) jsonArray.get(i), format((hasText(jsonPath) ? jsonPath + "." + stringObjectEntry.getKey() : stringObjectEntry.getKey()) + "[%s]", i), context);
                     } else {
-                        jsonArray.set(i, translate(String.format((StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()) + "[%s]", i), jsonArray.get(i), context));
+                        jsonArray.set(i, translate(format((hasText(jsonPath) ? jsonPath + "." + stringObjectEntry.getKey() : stringObjectEntry.getKey()) + "[%s]", i), jsonArray.get(i), context));
                     }
                 }
             } else {
-                jsonEntry.setValue(translate((StringUtils.hasText(jsonPath) ? jsonPath + "." + jsonEntry.getKey() : jsonEntry.getKey().toString()),
-                        jsonEntry.getValue() != null ? jsonEntry.getValue() : null, context));
+                stringObjectEntry.setValue(translate((hasText(jsonPath) ? jsonPath + "." + stringObjectEntry.getKey() : stringObjectEntry.getKey()), stringObjectEntry.getValue() != null ? stringObjectEntry.getValue() : null, context));
             }
         }
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class FailureStackElement {
      * @return the stack trace message.
      */
     public String getStackMessage() {
-        if (lineNumberEnd.longValue() > 0 && !lineNumberStart.equals(lineNumberEnd)) {
+        if (lineNumberEnd > 0 && !lineNumberStart.equals(lineNumberEnd)) {
             return "at " + testFilePath + "(" + actionName + ":" + lineNumberStart + "-" + lineNumberEnd + ")";
         } else {
             return "at " + testFilePath + "(" + actionName + ":" + lineNumberStart + ")";

@@ -14,20 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.citrusframework.jbang.commands;
+
+import org.citrusframework.jbang.CitrusJBangMain;
+import org.citrusframework.util.FileUtils;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Stack;
 
-import org.citrusframework.util.FileUtils;
-import org.citrusframework.jbang.CitrusJBangMain;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
+import static java.nio.file.Files.writeString;
 
 @Command(name = "init", description = "Creates a new Citrus test")
 public class Init extends CitrusCommand {
@@ -68,16 +70,14 @@ public class Init extends CitrusCommand {
         File target = new File(directory, file);
         content = content.replaceFirst("\\{\\{ \\.Name }}", name);
 
-        Files.write(target.toPath(), content.getBytes(StandardCharsets.UTF_8));
+        writeString(target.toPath(), content);
         return 0;
     }
 
     static class FileConsumer extends ParameterConsumer<Init> {
         @Override
         protected void doConsumeParameters(Stack<String> args, Init cmd) {
-            String arg = args.pop();
-            cmd.file = arg;
+            cmd.file = args.pop();
         }
     }
-
 }

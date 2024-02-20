@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,9 @@ import java.util.List;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
-import org.citrusframework.util.StringUtils;
+
+import static java.lang.Integer.parseInt;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Function implements simple substring functionality.
@@ -48,7 +50,7 @@ public class SubstringFunction implements Function {
         String beginIndex = parameterList.get(1);
         String endIndex = null;
 
-        if (!StringUtils.hasText(beginIndex)) {
+        if (!hasText(beginIndex)) {
             throw new InvalidFunctionUsageException("Invalid beginIndex - please check function parameters");
         }
 
@@ -56,13 +58,12 @@ public class SubstringFunction implements Function {
             endIndex = parameterList.get(2);
         }
 
-        if (StringUtils.hasText(endIndex)) {
-            targetString = targetString.substring(Integer.valueOf(beginIndex), Integer.valueOf(endIndex));
+        if (hasText(endIndex)) {
+            targetString = targetString.substring(parseInt(beginIndex), parseInt(endIndex));
         } else {
-            targetString = targetString.substring(Integer.valueOf(beginIndex));
+            targetString = targetString.substring(parseInt(beginIndex));
         }
 
         return targetString;
     }
-
 }

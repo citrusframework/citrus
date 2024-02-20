@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -377,8 +377,10 @@ public class XMLUtilsTest {
 
         Document doc = XMLUtils.parseMessagePayload(payload);
 
-        Assert.assertEquals(XMLUtils.serialize(doc), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<testRequest xmlns=\"http://citrusframework.org/test-default\">ÄäÖöÜü</testRequest>\n");
+        Assert.assertEquals(XMLUtils.serialize(doc), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <testRequest xmlns="http://citrusframework.org/test-default">ÄäÖöÜü</testRequest>
+                """);
     }
 
     @Test

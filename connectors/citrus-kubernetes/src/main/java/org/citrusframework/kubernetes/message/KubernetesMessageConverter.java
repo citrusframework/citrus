@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,40 @@
 
 package org.citrusframework.kubernetes.message;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.kubernetes.command.*;
+import org.citrusframework.kubernetes.command.CommandResult;
+import org.citrusframework.kubernetes.command.CreatePod;
+import org.citrusframework.kubernetes.command.CreateService;
+import org.citrusframework.kubernetes.command.DeletePod;
+import org.citrusframework.kubernetes.command.DeleteService;
+import org.citrusframework.kubernetes.command.GetPod;
+import org.citrusframework.kubernetes.command.GetService;
+import org.citrusframework.kubernetes.command.Info;
+import org.citrusframework.kubernetes.command.KubernetesCommand;
+import org.citrusframework.kubernetes.command.ListEndpoints;
+import org.citrusframework.kubernetes.command.ListEvents;
+import org.citrusframework.kubernetes.command.ListNamespaces;
+import org.citrusframework.kubernetes.command.ListNodes;
+import org.citrusframework.kubernetes.command.ListPods;
+import org.citrusframework.kubernetes.command.ListReplicationControllers;
+import org.citrusframework.kubernetes.command.ListServices;
+import org.citrusframework.kubernetes.command.WatchEventResult;
+import org.citrusframework.kubernetes.command.WatchNamespaces;
+import org.citrusframework.kubernetes.command.WatchNodes;
+import org.citrusframework.kubernetes.command.WatchPods;
+import org.citrusframework.kubernetes.command.WatchReplicationControllers;
+import org.citrusframework.kubernetes.command.WatchServices;
 import org.citrusframework.kubernetes.endpoint.KubernetesEndpointConfiguration;
 import org.citrusframework.kubernetes.model.KubernetesRequest;
 import org.citrusframework.kubernetes.model.KubernetesResponse;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.util.StringUtils;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -89,48 +110,28 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
             throw new CitrusRuntimeException("Missing command name property");
         }
 
-        switch (commandName) {
-            case "info":
-                return new Info();
-            case "list-events":
-                return new ListEvents();
-            case "list-endpoints":
-                return new ListEndpoints();
-            case "create-pod":
-                return new CreatePod();
-            case "get-pod":
-                return new GetPod();
-            case "delete-pod":
-                return new DeletePod();
-            case "list-pods":
-                return new ListPods();
-            case "watch-pods":
-                return new WatchPods();
-            case "list-namespaces":
-                return new ListNamespaces();
-            case "watch-namespaces":
-                return new WatchNamespaces();
-            case "list-nodes":
-                return new ListNodes();
-            case "watch-nodes":
-                return new WatchNodes();
-            case "list-replication-controllers":
-                return new ListReplicationControllers();
-            case "watch-replication-controllers":
-                return new WatchReplicationControllers();
-            case "create-service":
-                return new CreateService();
-            case "get-service":
-                return new GetService();
-            case "delete-service":
-                return new DeleteService();
-            case "list-services":
-                return new ListServices();
-            case "watch-services":
-                return new WatchServices();
-            default:
-                throw new CitrusRuntimeException("Unknown kubernetes command: " + commandName);
-        }
+        return switch (commandName) {
+            case "info" -> new Info();
+            case "list-events" -> new ListEvents();
+            case "list-endpoints" -> new ListEndpoints();
+            case "create-pod" -> new CreatePod();
+            case "get-pod" -> new GetPod();
+            case "delete-pod" -> new DeletePod();
+            case "list-pods" -> new ListPods();
+            case "watch-pods" -> new WatchPods();
+            case "list-namespaces" -> new ListNamespaces();
+            case "watch-namespaces" -> new WatchNamespaces();
+            case "list-nodes" -> new ListNodes();
+            case "watch-nodes" -> new WatchNodes();
+            case "list-replication-controllers" -> new ListReplicationControllers();
+            case "watch-replication-controllers" -> new WatchReplicationControllers();
+            case "create-service" -> new CreateService();
+            case "get-service" -> new GetService();
+            case "delete-service" -> new DeleteService();
+            case "list-services" -> new ListServices();
+            case "watch-services" -> new WatchServices();
+            default -> throw new CitrusRuntimeException("Unknown kubernetes command: " + commandName);
+        };
     }
 
     /**
@@ -139,7 +140,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
      * @return
      */
     private Map<String,Object> createMessageHeaders(KubernetesCommand<?> command) {
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
 
         headers.put(KubernetesMessageHeaders.COMMAND, command.getName());
 

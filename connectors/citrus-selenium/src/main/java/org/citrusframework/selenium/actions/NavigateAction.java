@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,37 +50,36 @@ public class NavigateAction extends AbstractSeleniumAction {
 
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
-        if (page.equals("back")) {
-            browser.getWebDriver().navigate().back();
-        } else if (page.equals("forward")) {
-            browser.getWebDriver().navigate().forward();
-        } else if (page.equals("refresh")) {
-            browser.getWebDriver().navigate().refresh();
-        } else {
-            try {
-                if (Browser.IE.is(browser.getEndpointConfiguration().getBrowserType())) {
-                    String cachingSafeUrl = BrowserUtils.makeIECachingSafeUrl(context.replaceDynamicContentInString(page), new Date().getTime());
-                    browser.getWebDriver().navigate().to(new URL(cachingSafeUrl));
-                } else {
-                    browser.getWebDriver().navigate().to(new URL(context.replaceDynamicContentInString(page)));
-                }
-            } catch (MalformedURLException ex) {
-                String baseUrl = browser.getWebDriver().getCurrentUrl();
+        switch (page) {
+            case "back" -> browser.getWebDriver().navigate().back();
+            case "forward" -> browser.getWebDriver().navigate().forward();
+            case "refresh" -> browser.getWebDriver().navigate().refresh();
+            default -> {
                 try {
-                    new URL(baseUrl);
-                } catch (MalformedURLException e) {
-                    if (StringUtils.hasText(browser.getEndpointConfiguration().getStartPageUrl())) {
-                        baseUrl = browser.getEndpointConfiguration().getStartPageUrl();
+                    if (Browser.IE.is(browser.getEndpointConfiguration().getBrowserType())) {
+                        String cachingSafeUrl = BrowserUtils.makeIECachingSafeUrl(context.replaceDynamicContentInString(page), new Date().getTime());
+                        browser.getWebDriver().navigate().to(new URL(cachingSafeUrl));
                     } else {
-                        throw new CitrusRuntimeException("Failed to create relative page URL - must set start page on browser", ex);
+                        browser.getWebDriver().navigate().to(new URL(context.replaceDynamicContentInString(page)));
                     }
-                }
-                String lastChar = baseUrl.substring(baseUrl.length() - 1);
-                if (!lastChar.equals("/")) {
-                    baseUrl = baseUrl + "/";
-                }
+                } catch (MalformedURLException ex) {
+                    String baseUrl = browser.getWebDriver().getCurrentUrl();
+                    try {
+                        new URL(baseUrl);
+                    } catch (MalformedURLException e) {
+                        if (StringUtils.hasText(browser.getEndpointConfiguration().getStartPageUrl())) {
+                            baseUrl = browser.getEndpointConfiguration().getStartPageUrl();
+                        } else {
+                            throw new CitrusRuntimeException("Failed to create relative page URL - must set start page on browser", ex);
+                        }
+                    }
+                    String lastChar = baseUrl.substring(baseUrl.length() - 1);
+                    if (!lastChar.equals("/")) {
+                        baseUrl = baseUrl + "/";
+                    }
 
-                browser.getWebDriver().navigate().to(baseUrl + context.replaceDynamicContentInString(page));
+                    browser.getWebDriver().navigate().to(baseUrl + context.replaceDynamicContentInString(page));
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public class ParallelTest extends UnitTestSupport {
 
         reset(action);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
+        List<TestAction> actionList = new ArrayList<>();
         actionList.add(action);
 
         parallelAction.setActions(actionList);
@@ -61,7 +61,7 @@ public class ParallelTest extends UnitTestSupport {
 
         reset(action);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
+        List<TestAction> actionList = new ArrayList<>();
         actionList.add(new EchoAction.Builder().build());
         actionList.add(action);
         actionList.add(new EchoAction.Builder().build());
@@ -77,7 +77,7 @@ public class ParallelTest extends UnitTestSupport {
     public void testParallelActions() {
         Parallel parallelAction = new Parallel.Builder().build();
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
+        List<TestAction> actionList = new ArrayList<>();
         actionList.add(new EchoAction.Builder().build());
         actionList.add(new EchoAction.Builder().build());
         actionList.add(new EchoAction.Builder().build());
@@ -96,7 +96,7 @@ public class ParallelTest extends UnitTestSupport {
     public void testOneActionThatIsFailing() {
         Parallel parallelAction = new Parallel.Builder().build();
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
+        List<TestAction> actionList = new ArrayList<>();
         actionList.add(new FailAction.Builder().build());
 
         parallelAction.setActions(actionList);
@@ -108,7 +108,7 @@ public class ParallelTest extends UnitTestSupport {
     public void testOnlyActionFailingActions() {
         Parallel parallelAction = new Parallel.Builder().build();
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
+        List<TestAction> actionList = new ArrayList<>();
         actionList.add(new FailAction.Builder().build());
         actionList.add(new FailAction.Builder().build());
         actionList.add(new FailAction.Builder().build());
@@ -122,7 +122,7 @@ public class ParallelTest extends UnitTestSupport {
     public void testSingleFailingAction() {
         Parallel parallelAction = new Parallel.Builder().build();
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
+        List<TestAction> actionList = new ArrayList<>();
         actionList.add(new EchoAction.Builder().build());
         actionList.add(new FailAction.Builder().build());
         actionList.add(new EchoAction.Builder().build());
@@ -138,7 +138,7 @@ public class ParallelTest extends UnitTestSupport {
 
         reset(action);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
+        List<TestAction> actionList = new ArrayList<>();
         actionList.add(new EchoAction.Builder().build());
         actionList.add(new FailAction.Builder().build());
         actionList.add(action);

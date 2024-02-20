@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,16 +42,19 @@ public class LoadPropertiesJavaIT extends TestNGCitrusSpringSupport {
 
         run(echo("Verify variables support (replacement in properties)"));
 
-        run(groovy("import org.citrusframework.*\n" +
-          "import org.citrusframework.variable.*\n" +
-          "import org.citrusframework.context.TestContext\n" +
-          "import org.citrusframework.script.GroovyAction.ScriptExecutor\n" +
-          "import org.testng.Assert;\n" +
-          "public class GScript implements ScriptExecutor {\n" +
-              "public void execute(TestContext context) {\n" +
-                  "Assert.assertEquals(\"${welcomeText}\", \"Hello Mr. X\")\n" +
-                  "Assert.assertEquals(\"${todayDate}\", \"${checkDate}\")\n" +
-              "}\n" +
-          "}\n"));
+        run(groovy("""
+                import org.citrusframework.*
+                import org.citrusframework.variable.*
+                import org.citrusframework.context.TestContext
+                import org.citrusframework.script.GroovyAction.ScriptExecutor
+                import org.testng.Assert;
+                
+                public class GScript implements ScriptExecutor {
+                    public void execute(TestContext context) {
+                        Assert.assertEquals("${welcomeText}", "Hello Mr. X")
+                        Assert.assertEquals("${todayDate}", "${checkDate}")
+                    }
+                }
+                """));
     }
 }

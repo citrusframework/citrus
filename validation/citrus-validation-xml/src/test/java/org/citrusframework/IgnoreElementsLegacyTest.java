@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ public class IgnoreElementsLegacyTest extends UnitTestSupport {
             + "</element>"
             + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("root.element.sub-elementA");
         ignoreMessageElements.add("sub-elementB");
 
@@ -107,7 +107,7 @@ public class IgnoreElementsLegacyTest extends UnitTestSupport {
             + "</element>"
             + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("root.element.sub-elementA.attribute");
         ignoreMessageElements.add("sub-elementB.attribute");
 
@@ -143,7 +143,7 @@ public class IgnoreElementsLegacyTest extends UnitTestSupport {
                         + "<element additonal-attribute='some'>Wrong text</element>"
                         + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("root");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
@@ -169,7 +169,7 @@ public class IgnoreElementsLegacyTest extends UnitTestSupport {
             + "</element>"
             + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("root.element.sub-elementA");
         ignoreMessageElements.add("sub-elementB");
 

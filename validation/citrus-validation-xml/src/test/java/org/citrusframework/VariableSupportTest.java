@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -236,7 +236,7 @@ public class VariableSupportTest extends UnitTestSupport {
         context.getVariables().put("variableB", "B");
         context.getVariables().put("variableC", "C");
 
-        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<>();
         validateHeaderValues.put("header-valueA", "${variableA}");
         validateHeaderValues.put("header-valueB", "${variableB}");
         validateHeaderValues.put("header-valueC", "${variableC}");
@@ -283,7 +283,7 @@ public class VariableSupportTest extends UnitTestSupport {
 
         context.getVariables().put("variableC", "c");
 
-        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<>();
         validateHeaderValues.put("header-valueA", "citrus:upperCase('a')");
         validateHeaderValues.put("header-valueB", "citrus:upperCase('b')");
         validateHeaderValues.put("header-valueC", "citrus:upperCase(${variableC})");
@@ -332,7 +332,7 @@ public class VariableSupportTest extends UnitTestSupport {
         context.getVariables().put("variableB", "header-valueB");
         context.getVariables().put("variableC", "header-valueC");
 
-        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<>();
         validateHeaderValues.put("${variableA}", "A");
         validateHeaderValues.put("${variableB}", "B");
         validateHeaderValues.put("${variableC}", "C");
@@ -377,7 +377,7 @@ public class VariableSupportTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
+        HashMap<String, Object> validateHeaderValues = new HashMap<>();
         validateHeaderValues.put("citrus:concat('header', '-', 'valueA')", "A");
         validateHeaderValues.put("citrus:concat('header', '-', 'valueB')", "B");
         validateHeaderValues.put("citrus:concat('header', '-', 'valueC')", "C");

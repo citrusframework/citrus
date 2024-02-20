@@ -16,11 +16,6 @@
 
 package org.citrusframework.validation.xml;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
@@ -30,7 +25,6 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.util.MessageUtils;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.AbstractMessageValidator;
 import org.citrusframework.validation.ValidationUtils;
@@ -47,6 +41,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.ls.LSException;
+
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Default message validator implementation. Working on XML messages
@@ -121,7 +123,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             return;
         }
 
-        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
+        if (receivedMessage.getPayload() == null || !hasText(receivedMessage.getPayload(String.class))) {
             throw new ValidationException("Unable to validate message namespaces - receive message payload was empty");
         }
 
@@ -216,12 +218,12 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         String controlMessagePayload = controlMessage.getPayload(String.class);
 
-        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload(String.class))) {
-            if (StringUtils.hasText(controlMessagePayload)) {
+        if (receivedMessage.getPayload() == null || !hasText(receivedMessage.getPayload(String.class))) {
+            if (hasText(controlMessagePayload)) {
                 throw new ValidationException("Unable to validate message payload - received message payload was empty, control message payload is not");
             }
             return;
-        } else if (!StringUtils.hasText(controlMessagePayload)) {
+        } else if (!hasText(controlMessagePayload)) {
             logger.debug("Skip message payload validation as no control message payload was defined");
             return;
         }
@@ -308,19 +310,18 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             XmlMessageValidationContext validationContext,
             NamespaceContext namespaceContext, TestContext context) {
 
-        if (!(source instanceof DocumentType)) {
+        if (!(source instanceof DocumentType sourceDTD)) {
             throw new ValidationException("Missing document type definition in expected xml fragment");
         }
 
         DocumentType receivedDTD = (DocumentType) received;
-        DocumentType sourceDTD = (DocumentType) source;
 
         if (logger.isDebugEnabled()) {
             logger.debug("Validating document type definition: " +
                     receivedDTD.getPublicId() + " (" + receivedDTD.getSystemId() + ")");
         }
 
-        if (!StringUtils.hasText(sourceDTD.getPublicId())) {
+        if (!hasText(sourceDTD.getPublicId())) {
             if (receivedDTD.getPublicId() != null) {
                 throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
                         sourceDTD.getPublicId(), receivedDTD.getPublicId()));
@@ -330,14 +331,12 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 logger.debug("Document type public id: '" + receivedDTD.getPublicId() +
                         "' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
-        } else {
-            if (!StringUtils.hasText(receivedDTD.getPublicId()) || !receivedDTD.getPublicId().equals(sourceDTD.getPublicId())) {
-                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
-                        sourceDTD.getPublicId(), receivedDTD.getPublicId()));
-            }
+        } else if (!hasText(receivedDTD.getPublicId()) || !receivedDTD.getPublicId().equals(sourceDTD.getPublicId())) {
+            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
+                    sourceDTD.getPublicId(), receivedDTD.getPublicId()));
         }
 
-        if (!StringUtils.hasText(sourceDTD.getSystemId())) {
+        if (!hasText(sourceDTD.getSystemId())) {
             if (receivedDTD.getSystemId() != null) {
                 throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
                         sourceDTD.getSystemId(), receivedDTD.getSystemId()));
@@ -347,11 +346,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 logger.debug("Document type system id: '" + receivedDTD.getSystemId() +
                         "' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
-        } else {
-            if (!StringUtils.hasText(receivedDTD.getSystemId()) || !receivedDTD.getSystemId().equals(sourceDTD.getSystemId())) {
-                throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
-                        sourceDTD.getSystemId(), receivedDTD.getSystemId()));
-            }
+        } else if (!hasText(receivedDTD.getSystemId()) || !receivedDTD.getSystemId().equals(sourceDTD.getSystemId())) {
+            throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
+                    sourceDTD.getSystemId(), receivedDTD.getSystemId()));
         }
 
         validateXmlTree(received.getNextSibling(),
@@ -580,18 +577,16 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @return true if node value contains validation matcher, false if not
      */
     private boolean isValidationMatcherExpression(Node node) {
-        switch (node.getNodeType()) {
-            case Node.ELEMENT_NODE:
-                return node.getFirstChild() != null &&
-                StringUtils.hasText(node.getFirstChild().getNodeValue()) &&
-                ValidationMatcherUtils.isValidationMatcherExpression(node.getFirstChild().getNodeValue().trim());
-
-            case Node.ATTRIBUTE_NODE:
-                return StringUtils.hasText(node.getNodeValue()) &&
-                ValidationMatcherUtils.isValidationMatcherExpression(node.getNodeValue().trim());
-
-            default: return false; //validation matchers makes no sense
-        }
+        return switch (node.getNodeType()) {
+            case Node.ELEMENT_NODE ->
+                    node.getFirstChild() != null
+                            && hasText(node.getFirstChild().getNodeValue())
+                            && ValidationMatcherUtils.isValidationMatcherExpression(node.getFirstChild().getNodeValue().trim());
+            case Node.ATTRIBUTE_NODE ->
+                    hasText(node.getNodeValue())
+                            && ValidationMatcherUtils.isValidationMatcherExpression(node.getNodeValue().trim());
+            default -> false; //validation matchers makes no sense
+        };
     }
 
     @Override

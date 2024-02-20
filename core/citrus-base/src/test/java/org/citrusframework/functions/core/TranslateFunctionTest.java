@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ public class TranslateFunctionTest extends UnitTestSupport {
 
     @Test
     public void testFunction() {
-        List<String> params = new ArrayList<String>();
+        List<String> params = new ArrayList<>();
         params.add("H.llo TestFr.mework");
         params.add("\\.");
         params.add("a");
@@ -43,7 +43,7 @@ public class TranslateFunctionTest extends UnitTestSupport {
 
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testMissingParameter() {
-        List<String> params = new ArrayList<String>();
+        List<String> params = new ArrayList<>();
         params.add("H.llo TestFr.mework");
         params.add("\\.");
         function.execute(params, context);

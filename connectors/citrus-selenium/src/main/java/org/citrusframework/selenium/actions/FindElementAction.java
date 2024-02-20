@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,6 @@
 
 package org.citrusframework.selenium.actions;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.ValidationException;
@@ -28,6 +24,10 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Finds element in DOM tree on current page and validates its properties and settings.
@@ -164,24 +164,16 @@ public class FindElementAction extends AbstractSeleniumAction {
             return by;
         }
 
-        switch (property) {
-            case "id":
-                return By.id(context.replaceDynamicContentInString(propertyValue));
-            case "class-name":
-                return By.className(context.replaceDynamicContentInString(propertyValue));
-            case "link-text":
-                return By.linkText(context.replaceDynamicContentInString(propertyValue));
-            case "css-selector":
-                return By.cssSelector(context.replaceDynamicContentInString(propertyValue));
-            case "name":
-                return By.name(context.replaceDynamicContentInString(propertyValue));
-            case "tag-name":
-                return By.tagName(context.replaceDynamicContentInString(propertyValue));
-            case "xpath":
-                return By.xpath(context.replaceDynamicContentInString(propertyValue));
-        }
-
-        throw new CitrusRuntimeException("Unknown selector type: " + property);
+        return switch (property) {
+            case "id" -> By.id(context.replaceDynamicContentInString(propertyValue));
+            case "class-name" -> By.className(context.replaceDynamicContentInString(propertyValue));
+            case "link-text" -> By.linkText(context.replaceDynamicContentInString(propertyValue));
+            case "css-selector" -> By.cssSelector(context.replaceDynamicContentInString(propertyValue));
+            case "name" -> By.name(context.replaceDynamicContentInString(propertyValue));
+            case "tag-name" -> By.tagName(context.replaceDynamicContentInString(propertyValue));
+            case "xpath" -> By.xpath(context.replaceDynamicContentInString(propertyValue));
+            default -> throw new CitrusRuntimeException("Unknown selector type: " + property);
+        };
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class ValidationMatcherLibraryParser implements BeanDefinitionParser {
      * @param element the source element.
      */
     private void parseMatcherDefinitions(BeanDefinitionBuilder builder, Element element) {
-        ManagedMap<String, Object> matchers = new ManagedMap<String, Object>();
+        ManagedMap<String, Object> matchers = new ManagedMap<>();
         for (Element matcher : DomUtils.getChildElementsByTagName(element, "matcher")) {
             if (matcher.hasAttribute("ref")) {
                 matchers.put(matcher.getAttribute("name"), new RuntimeBeanReference(matcher.getAttribute("ref")));

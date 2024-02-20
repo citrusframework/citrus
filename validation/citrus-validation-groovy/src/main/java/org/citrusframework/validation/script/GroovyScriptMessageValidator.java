@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,11 +78,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
             if (StringUtils.hasText(validationScript)) {
                 logger.debug("Start groovy message validation ...");
 
-                GroovyClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
-                    public GroovyClassLoader run() {
-                        return new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
-                    }
-                });
+                GroovyClassLoader loader = AccessController.doPrivileged((PrivilegedAction<GroovyClassLoader>) () -> new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader()));
                 Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                                                             .withCode(validationScript)
                                                             .build());

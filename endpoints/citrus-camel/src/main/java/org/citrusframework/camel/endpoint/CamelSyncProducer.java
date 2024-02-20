@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import org.citrusframework.message.correlation.CorrelationManager;
 import org.citrusframework.message.correlation.PollingCorrelationManager;
 import org.citrusframework.messaging.ReplyConsumer;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,14 +81,10 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         context.onOutboundMessage(message);
 
         Exchange response = getProducerTemplate(context)
-                .request(endpointUri, new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context);
-                        logger.info("Message was sent to camel endpoint: '" + endpointUri + "'");
-                    }
+                .request(endpointUri, exchange -> {
+                    endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context);
+                    logger.info("Message was sent to camel endpoint: '" + endpointUri + "'");
                 });
-
 
         logger.info("Received synchronous reply message on camel endpoint: '" + endpointUri + "'");
         Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration, context);

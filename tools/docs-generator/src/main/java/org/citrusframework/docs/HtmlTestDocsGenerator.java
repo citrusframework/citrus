@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.*;
 
+import static java.lang.Integer.parseInt;
+
 /**
  * Class to automatically generate a list of all available tests in HTML.
  * 
@@ -47,9 +49,9 @@ public class HtmlTestDocsGenerator extends AbstractTestDocsGenerator {
     }
     
     @Override
-    public void doHeader(OutputStream buffered) throws TransformerException, IOException, SAXException {
+    public void doHeader(OutputStream buffered) throws IOException {
         List<File> testFiles = getTestFiles();
-        int maxEntries = testFiles.size() / Integer.valueOf(getTestDocProperties().getProperty("overview.columns"));
+        int maxEntries = testFiles.size() / parseInt(getTestDocProperties().getProperty("overview.columns"));
 
         buffered.write("<td style=\"border:1px solid #bbbbbb;\">".getBytes());
         buffered.write("<ol>".getBytes());

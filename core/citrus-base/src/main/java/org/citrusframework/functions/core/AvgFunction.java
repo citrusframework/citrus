@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 
+import static java.lang.Double.parseDouble;
+
 /**
  * Function returning the average of a set of numeric values.
  *
@@ -41,10 +43,9 @@ public class AvgFunction implements Function {
         double result = 0.0;
 
         for (String token : parameterList) {
-            result += Double.valueOf(token);
+            result += parseDouble(token);
         }
 
         return Double.valueOf(result / parameterList.size()).toString();
     }
-
 }

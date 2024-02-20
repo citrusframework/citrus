@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,30 +99,14 @@ public class DelegatingHttpEntityMessageConverterTest {
     @DataProvider
     public Object[][] writeProvider() {
         return new Object[][] {
-                new Object[] { "Hello Citrus!", (Consumer<ByteArrayOutputStream>) outStream -> {
-                    Assert.assertEquals(new String(outStream.toByteArray()), "Hello Citrus!");
-                }, MediaType.TEXT_PLAIN },
-                new Object[] { "{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> {
-                    Assert.assertEquals(new String(outStream.toByteArray()), "{ \"message\": \"Hello Citrus!\" }");
-                }, MediaType.APPLICATION_JSON },
-                new Object[] { "{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> {
-                    Assert.assertEquals(new String(outStream.toByteArray()), "{ \"message\": \"Hello Citrus!\" }");
-                }, MediaType.APPLICATION_JSON_UTF8 },
-                new Object[] { "<message>Hello Citrus!</message>", (Consumer<ByteArrayOutputStream>) outStream -> {
-                    Assert.assertEquals(new String(outStream.toByteArray()), "<message>Hello Citrus!</message>");
-                }, MediaType.APPLICATION_XML },
-                new Object[] { formData, (Consumer<ByteArrayOutputStream>) outStream -> {
-                    Assert.assertEquals(new String(outStream.toByteArray()), "message=Hello+Citrus%21&user=Leonard");
-                }, MediaType.APPLICATION_FORM_URLENCODED },
-                new Object[] { pdfData, (Consumer<ByteArrayOutputStream>) outStream -> {
-                    Assert.assertEquals(outStream.toByteArray(), pdfData);
-                }, MediaType.APPLICATION_PDF },
-                new Object[] { imageData, (Consumer<ByteArrayOutputStream>) outStream -> {
-                    Assert.assertEquals(outStream.toByteArray(), imageData);
-                }, MediaType.APPLICATION_OCTET_STREAM },
-                new Object[] { imageData, (Consumer<ByteArrayOutputStream>) outStream -> {
-                    Assert.assertEquals(outStream.toByteArray(), imageData);
-                }, MediaType.IMAGE_PNG }
+                new Object[] { "Hello Citrus!", (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "Hello Citrus!"), MediaType.TEXT_PLAIN },
+                new Object[] { "{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "{ \"message\": \"Hello Citrus!\" }"), MediaType.APPLICATION_JSON },
+                new Object[] { "{ \"message\": \"Hello Citrus!\" }", (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "{ \"message\": \"Hello Citrus!\" }"), MediaType.APPLICATION_JSON_UTF8 },
+                new Object[] { "<message>Hello Citrus!</message>", (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "<message>Hello Citrus!</message>"), MediaType.APPLICATION_XML },
+                new Object[] { formData, (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(new String(outStream.toByteArray()), "message=Hello+Citrus%21&user=Leonard"), MediaType.APPLICATION_FORM_URLENCODED },
+                new Object[] { pdfData, (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(outStream.toByteArray(), pdfData), MediaType.APPLICATION_PDF },
+                new Object[] { imageData, (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(outStream.toByteArray(), imageData), MediaType.APPLICATION_OCTET_STREAM },
+                new Object[] { imageData, (Consumer<ByteArrayOutputStream>) outStream -> Assert.assertEquals(outStream.toByteArray(), imageData), MediaType.IMAGE_PNG }
         };
     }
 }

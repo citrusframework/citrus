@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.citrusframework.context.TestContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static java.lang.Integer.parseInt;
 import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariable;
 import static org.citrusframework.container.Iterate.Builder.iterate;
 import static org.testng.Assert.assertEquals;
@@ -66,7 +67,7 @@ public class IterateTestActionBuilderTest extends UnitTestSupport {
                 () -> new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
-                    Assert.assertTrue(Integer.valueOf(context.getVariable("index")) > 0);
+                    Assert.assertTrue(parseInt(context.getVariable("index")) > 0);
                 }
             }));
 

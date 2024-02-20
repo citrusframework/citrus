@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import java.util.Map;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.restdocs.ManualRestDocumentation;
 import org.springframework.restdocs.RestDocumentationContext;
@@ -114,45 +113,33 @@ public class RestDocSoapClientInterceptorTest {
         when(messageContext.getRequest()).thenReturn(request);
         when(messageContext.getResponse()).thenReturn(response);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                restDocConfiguration = (Map<String, Object>) invocation.getArguments()[1];
-                when(messageContext.getProperty(CitrusRestDocSoapConfigurer.REST_DOC_SOAP_CONFIGURATION)).thenReturn(restDocConfiguration);
-                return null;
-            }
+        doAnswer(invocation -> {
+            restDocConfiguration = (Map<String, Object>) invocation.getArguments()[1];
+            when(messageContext.getProperty(CitrusRestDocSoapConfigurer.REST_DOC_SOAP_CONFIGURATION)).thenReturn(restDocConfiguration);
+            return null;
         }).when(messageContext).setProperty(eq(CitrusRestDocSoapConfigurer.REST_DOC_SOAP_CONFIGURATION), any());
         when(messageContext.containsProperty(CitrusRestDocSoapConfigurer.REST_DOC_SOAP_CONFIGURATION)).thenReturn(true);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                restDocumentationContext = (RestDocumentationContext) invocation.getArguments()[1];
-                when(messageContext.getProperty(RestDocumentationContext.class.getName())).thenReturn(restDocumentationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            restDocumentationContext = (RestDocumentationContext) invocation.getArguments()[1];
+            when(messageContext.getProperty(RestDocumentationContext.class.getName())).thenReturn(restDocumentationContext);
+            return null;
         }).when(messageContext).setProperty(eq(RestDocumentationContext.class.getName()), any());
 
-        doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                OutputStream os = (OutputStream) invocation.getArguments()[0];
+        doAnswer((Answer<Object>) invocation -> {
+            OutputStream os = (OutputStream) invocation.getArguments()[0];
 
-                FileCopyUtils.copy(requestBody.getBytes(), os);
+            FileCopyUtils.copy(requestBody.getBytes(), os);
 
-                return null;
-            }
+            return null;
         }).when(request).writeTo(any(OutputStream.class));
 
-        doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                OutputStream os = (OutputStream) invocation.getArguments()[0];
+        doAnswer((Answer<Object>) invocation -> {
+            OutputStream os = (OutputStream) invocation.getArguments()[0];
 
-                FileCopyUtils.copy(responseBody.getBytes(), os);
+            FileCopyUtils.copy(responseBody.getBytes(), os);
 
-                return null;
-            }
+            return null;
         }).when(response).writeTo(any(OutputStream.class));
 
         this.interceptor = CitrusRestDocsSoapSupport.restDocsInterceptor(identifier, snippets);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public abstract class XPathUtils {
      * @return
      */
     public static Map<String, String> getDynamicNamespaces(String expression) {
-        Map<String, String> namespaces = new HashMap<String, String>();
+        Map<String, String> namespaces = new HashMap<>();
 
         if (expression.contains(DYNAMIC_NS_START) && expression.contains(DYNAMIC_NS_END)) {
             String[] tokens = expression.split("\\" + DYNAMIC_NS_START);

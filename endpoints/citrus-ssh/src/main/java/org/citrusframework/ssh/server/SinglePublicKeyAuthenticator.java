@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,17 +83,15 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
      * @return
      */
     private PublicKey readKey(InputStream is) {
-        try (InputStreamReader isr = new InputStreamReader(is);
-             PEMParser r = new PEMParser(isr)) {
-            Object o = r.readObject();
-            if (o instanceof PEMKeyPair) {
-                PEMKeyPair keyPair = (PEMKeyPair) o;
-                if (keyPair.getPublicKeyInfo() != null &&
-                        keyPair.getPublicKeyInfo().getEncoded().length > 0) {
+        try (InputStreamReader inputStreamReader = new InputStreamReader(is); PEMParser pemParser = new PEMParser(inputStreamReader)) {
+            Object o = pemParser.readObject();
+            if (o instanceof PEMKeyPair keyPair) {
+                if (keyPair.getPublicKeyInfo() != null
+                        && keyPair.getPublicKeyInfo().getEncoded().length > 0) {
                     return BouncyCastleProvider.getPublicKey(keyPair.getPublicKeyInfo());
                 }
-            } else if (o instanceof SubjectPublicKeyInfo) {
-                return BouncyCastleProvider.getPublicKey((SubjectPublicKeyInfo) o);
+            } else if (o instanceof SubjectPublicKeyInfo subjectPublicKeyInfo) {
+                return BouncyCastleProvider.getPublicKey(subjectPublicKeyInfo);
             }
         } catch (IOException e) {
             // Ignoring, returning null
@@ -102,5 +100,4 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
 
         return null;
     }
-
 }

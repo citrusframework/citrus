@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
         try {
             List<File> testFiles = getTestFiles();
 
-            for (File testFile : testFiles) {
+            for (var testFile : testFiles) {
                 logger.info("Working on test " + testFile.getName());
 
                 fos = getFileOutputStream(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
@@ -76,11 +76,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
                 buffered.flush();
                 fos.close();
             }
-        } catch (TransformerException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (SAXException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IOException e) {
+        } catch (TransformerException | SAXException | IOException e) {
             throw new CitrusRuntimeException(e);
         } finally {
             if (buffered != null) {

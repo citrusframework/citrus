@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,7 +151,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
 
         builder.addPropertyValue("messageBuilder", httpMessageBuilder);
 
-        List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+        List<VariableExtractor> variableExtractors = new ArrayList<>();
         parseExtractHeaderElements(element, variableExtractors);
 
         if (!variableExtractors.isEmpty()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
             + "</element>"
             + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("//root/element/sub-elementA");
         ignoreMessageElements.add("//sub-elementB");
 
@@ -119,7 +119,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("//sub-element");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
@@ -156,7 +156,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("//sub-element[1]");
         ignoreMessageElements.add("//sub-element[3]");
 
@@ -197,7 +197,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("/*");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
@@ -223,7 +223,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("//root/element/sub-elementA/@attribute");
         ignoreMessageElements.add("//sub-elementB/@attribute");
 
@@ -250,7 +250,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("//@attribute");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
@@ -293,7 +293,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("//sub-element[1]/@attribute");
         ignoreMessageElements.add("//sub-element[2]/@attribute");
 
@@ -329,7 +329,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
                         + "<element additonal-attribute='some'>Wrong text</element>"
                         + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("//root");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
@@ -355,7 +355,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("//root/element/sub-elementA");
         ignoreMessageElements.add("//sub-elementB");
 
@@ -437,7 +437,7 @@ public class IgnoreElementsTest extends UnitTestSupport {
                 + "</element>"
                 + "</root>"));
 
-        Set<String> ignoreMessageElements = new HashSet<String>();
+        Set<String> ignoreMessageElements = new HashSet<>();
         ignoreMessageElements.add("//something-else");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()

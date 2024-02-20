@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,11 +63,12 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>Hello!</Text>\n" +
-                "    <OtherText name=\"bar\">No changes</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>Hello!</Text>
+                    <OtherText name="bar">No changes</OtherText>
+                </TestMessage>""");
     }
 
     @Test
@@ -82,11 +83,12 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>Hello!</Text>\n" +
-                "    <OtherText name=\"bar\">Hello!</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>Hello!</Text>
+                    <OtherText name="bar">Hello!</OtherText>
+                </TestMessage>""");
     }
 
     @Test
@@ -101,11 +103,12 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">\n" +
-                "    <ns1:Text>Hello!</ns1:Text>\n" +
-                "    <ns1:OtherText name=\"bar\">No changes</ns1:OtherText>\n" +
-                "</ns1:TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <ns1:TestMessage xmlns:ns1="http://www.foo.bar">
+                    <ns1:Text>Hello!</ns1:Text>
+                    <ns1:OtherText name="bar">No changes</ns1:OtherText>
+                </ns1:TestMessage>""");
     }
 
     @Test
@@ -126,11 +129,12 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setNamespaceContextBuilder(namespaceContextBuilder);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">\n" +
-                "    <ns1:Text>Hello!</ns1:Text>\n" +
-                "    <ns1:OtherText name=\"bar\">No changes</ns1:OtherText>\n" +
-                "</ns1:TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <ns1:TestMessage xmlns:ns1="http://www.foo.bar">
+                    <ns1:Text>Hello!</ns1:Text>
+                    <ns1:OtherText name="bar">No changes</ns1:OtherText>
+                </ns1:TestMessage>""");
     }
 
     @Test
@@ -147,11 +151,12 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>Hello!</Text>\n" +
-                "    <OtherText name=\"bar\">No changes</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>Hello!</Text>
+                    <OtherText name="bar">No changes</OtherText>
+                </TestMessage>""");
     }
 
     @Test
@@ -163,11 +168,12 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.initialize();
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>Hello!</Text>\n" +
-                "    <OtherText name=\"bar\">GoodBye!</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>Hello!</Text>
+                    <OtherText name="bar">GoodBye!</OtherText>
+                </TestMessage>""");
     }
 
     @Test
@@ -182,11 +188,12 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
 
         dictionary.processMessage(message, context);
-        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestMessage>\n" +
-                "    <Text>Hello World!</Text>\n" +
-                "    <OtherText name=\"bar\">No changes</OtherText>\n" +
-                "</TestMessage>");
+        Assert.assertEquals(message.getPayload(String.class).trim(), """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestMessage>
+                    <Text>Hello World!</Text>
+                    <OtherText name="bar">No changes</OtherText>
+                </TestMessage>""");
     }
 
     @Test

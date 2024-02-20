@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,8 +54,10 @@ public class ValidateSqlResultSetJavaIT extends TestNGCitrusSpringSupport {
 
         run(query(dataSource)
             .statement("SELECT REQUEST_TAG AS RTAG, DESCRIPTION AS DESC FROM ORDERS")
-            .validateScript("assert rows.size() == ${rowsCount}\n" +
-                    "assert rows[0].RTAG == '${rtag}'\n" +
-                    "assert rows[0].DESC == '${desc}'\n", ScriptTypes.GROOVY));
+            .validateScript("""
+                    assert rows.size() == ${rowsCount}
+                    assert rows[0].RTAG == '${rtag}'
+                    assert rows[0].DESC == '${desc}'
+                    """, ScriptTypes.GROOVY));
     }
 }

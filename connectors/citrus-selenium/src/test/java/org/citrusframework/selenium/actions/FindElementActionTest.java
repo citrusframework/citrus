@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.selenium.endpoint.SeleniumBrowser;
 import org.citrusframework.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -56,16 +55,13 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(dataProvider = "findByProvider")
-    public void testExecuteFindBy(String property, String value, final By by) throws Exception {
-        when(webDriver.findElement(any(By.class))).thenAnswer(new Answer<WebElement>() {
-            @Override
-            public WebElement answer(InvocationOnMock invocation) throws Throwable {
-                By select = (By) invocation.getArguments()[0];
+    public void testExecuteFindBy(String property, String value, final By by) {
+        when(webDriver.findElement(any(By.class))).thenAnswer((Answer<WebElement>) invocation -> {
+            By select = (By) invocation.getArguments()[0];
 
-                Assert.assertEquals(select.getClass(), by.getClass());
-                Assert.assertEquals(select.toString(), by.toString());
-                return element;
-            }
+            Assert.assertEquals(select.getClass(), by.getClass());
+            Assert.assertEquals(select.toString(), by.toString());
+            return element;
         });
 
         FindElementAction action =  new FindElementAction.Builder()
@@ -91,16 +87,13 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteFindByVariableSupport() throws Exception {
-        when(webDriver.findElement(any(By.class))).thenAnswer(new Answer<WebElement>() {
-            @Override
-            public WebElement answer(InvocationOnMock invocation) throws Throwable {
-                By select = (By) invocation.getArguments()[0];
+    public void testExecuteFindByVariableSupport() {
+        when(webDriver.findElement(any(By.class))).thenAnswer((Answer<WebElement>) invocation -> {
+            By select = (By) invocation.getArguments()[0];
 
-                Assert.assertEquals(select.getClass(), By.ById.class);
-                Assert.assertEquals(select.toString(), By.id("clickMe").toString());
-                return element;
-            }
+            Assert.assertEquals(select.getClass(), By.ById.class);
+            Assert.assertEquals(select.toString(), By.id("clickMe").toString());
+            return element;
         });
 
         context.setVariable("myId", "clickMe");
@@ -115,20 +108,17 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testExecuteFindByValidation() throws Exception {
+    public void testExecuteFindByValidation() {
         when(element.getText()).thenReturn("Click Me!");
         when(element.getAttribute("type")).thenReturn("submit");
         when(element.getCssValue("color")).thenReturn("red");
 
-        when(webDriver.findElement(any(By.class))).thenAnswer(new Answer<WebElement>() {
-            @Override
-            public WebElement answer(InvocationOnMock invocation) throws Throwable {
-                By select = (By) invocation.getArguments()[0];
+        when(webDriver.findElement(any(By.class))).thenAnswer((Answer<WebElement>) invocation -> {
+            By select = (By) invocation.getArguments()[0];
 
-                Assert.assertEquals(select.getClass(), By.ByName.class);
-                Assert.assertEquals(select.toString(), By.name("clickMe").toString());
-                return element;
-            }
+            Assert.assertEquals(select.getClass(), By.ByName.class);
+            Assert.assertEquals(select.toString(), By.name("clickMe").toString());
+            return element;
         });
 
         FindElementAction action =  new FindElementAction.Builder()
@@ -145,21 +135,18 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test(dataProvider = "validationErrorProvider")
-    public void testExecuteFindByValidationFailed(String tagName, String text, String attribute, String cssStyle, boolean displayed, boolean enabled, String errorMsg) throws Exception {
+    public void testExecuteFindByValidationFailed(String tagName, String text, String attribute, String cssStyle, boolean displayed, boolean enabled, String errorMsg) {
         when(element.getTagName()).thenReturn("button");
         when(element.getText()).thenReturn("Click Me!");
         when(element.getAttribute("type")).thenReturn("submit");
         when(element.getCssValue("color")).thenReturn("red");
 
-        when(webDriver.findElement(any(By.class))).thenAnswer(new Answer<WebElement>() {
-            @Override
-            public WebElement answer(InvocationOnMock invocation) throws Throwable {
-                By select = (By) invocation.getArguments()[0];
+        when(webDriver.findElement(any(By.class))).thenAnswer((Answer<WebElement>) invocation -> {
+            By select = (By) invocation.getArguments()[0];
 
-                Assert.assertEquals(select.getClass(), By.ByName.class);
-                Assert.assertEquals(select.toString(), By.name("clickMe").toString());
-                return element;
-            }
+            Assert.assertEquals(select.getClass(), By.ByName.class);
+            Assert.assertEquals(select.toString(), By.name("clickMe").toString());
+            return element;
         });
 
         FindElementAction action =  new FindElementAction.Builder()

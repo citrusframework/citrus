@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package org.citrusframework.zookeeper.client;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
@@ -111,11 +110,6 @@ public class ZooClient {
     }
 
     private Watcher getConnectionWatcher() {
-        return new Watcher() {
-            @Override
-            public void process(WatchedEvent event) {
-                logger.debug(String.format("Connection Event: %s", event.toString()));
-            }
-        };
+        return event -> logger.debug(String.format("Connection Event: %s", event.toString()));
     }
 }

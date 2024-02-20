@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(jmsTemplate, connectionFactory, destination);
@@ -84,7 +84,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
 
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -111,7 +111,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
 
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -168,7 +168,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
 
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -193,11 +193,11 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
 
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -227,7 +227,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
 
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -255,7 +255,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
 
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 

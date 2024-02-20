@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,8 +59,8 @@ public class AntRunActionTest extends UnitTestSupport {
 
 	@Test
     public void testRunTargets() {
-        final List<String> executedTargets = new ArrayList<String>();
-        final List<String> echoMessages = new ArrayList<String>();
+        final List<String> executedTargets = new ArrayList<>();
+        final List<String> echoMessages = new ArrayList<>();
 
         AntRunAction ant = new AntRunAction.Builder()
                 .buildFilePath("classpath:org/citrusframework/actions/build.xml")

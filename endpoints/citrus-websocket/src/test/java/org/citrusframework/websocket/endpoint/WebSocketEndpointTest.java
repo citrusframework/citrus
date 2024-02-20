@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import org.citrusframework.websocket.handler.CitrusWebSocketHandler;
 import org.citrusframework.websocket.message.WebSocketMessage;
 import org.citrusframework.websocket.server.WebSocketServerEndpointConfiguration;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.web.socket.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -58,16 +56,13 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
         when(session.getId()).thenReturn("test-socket-1");
         when(session.isOpen()).thenReturn(true);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
+        doAnswer(invocation -> {
+            org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
-                Assert.assertTrue(TextMessage.class.isInstance(request));
-                Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
-                Assert.assertTrue(request.isLast());
-                return null;
-            }
+            Assert.assertTrue(TextMessage.class.isInstance(request));
+            Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
+            Assert.assertTrue(request.isLast());
+            return null;
         }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
         handler.afterConnectionEstablished(session);
@@ -104,28 +99,22 @@ public class WebSocketEndpointTest extends AbstractTestNGUnitTest {
         when(session.isOpen()).thenReturn(true);
         when(session2.isOpen()).thenReturn(true);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
+        doAnswer(invocation -> {
+            org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
-                Assert.assertTrue(TextMessage.class.isInstance(request));
-                Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
-                Assert.assertTrue(request.isLast());
-                return null;
-            }
+            Assert.assertTrue(TextMessage.class.isInstance(request));
+            Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
+            Assert.assertTrue(request.isLast());
+            return null;
         }).when(session).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
+        doAnswer(invocation -> {
+            org.springframework.web.socket.WebSocketMessage request = (org.springframework.web.socket.WebSocketMessage) invocation.getArguments()[0];
 
-                Assert.assertTrue(TextMessage.class.isInstance(request));
-                Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
-                Assert.assertTrue(request.isLast());
-                return null;
-            }
+            Assert.assertTrue(TextMessage.class.isInstance(request));
+            Assert.assertEquals(((TextMessage)request).getPayload(), responseMessage.getPayload(String.class));
+            Assert.assertTrue(request.isLast());
+            return null;
         }).when(session2).sendMessage(any(org.springframework.web.socket.WebSocketMessage.class));
 
         handler.afterConnectionEstablished(session);

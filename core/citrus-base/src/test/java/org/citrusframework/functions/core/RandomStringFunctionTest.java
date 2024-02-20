@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,15 @@
 package org.citrusframework.functions.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 /**
  * @author Christoph Deppisch
@@ -33,81 +35,81 @@ public class RandomStringFunctionTest extends UnitTestSupport {
 
     @Test
     public void testFunction() {
-        List<String> params = new ArrayList<String>();
+        List<String> params = new ArrayList<>();
         params.add("3");
 
-        Assert.assertTrue(function.execute(params, context).length() == 3);
+        Assert.assertEquals(function.execute(params, context).length(), 3);
 
-        params = new ArrayList<String>();
+        params = new ArrayList<>();
         params.add("3");
         params.add("UPPERCASE");
 
-        Assert.assertTrue(function.execute(params, context).length() == 3);
+        Assert.assertEquals(function.execute(params, context).length(), 3);
 
-        params = new ArrayList<String>();
+        params = new ArrayList<>();
         params.add("3");
         params.add("LOWERCASE");
 
-        Assert.assertTrue(function.execute(params, context).length() == 3);
+        Assert.assertEquals(function.execute(params, context).length(), 3);
 
-        params = new ArrayList<String>();
+        params = new ArrayList<>();
         params.add("3");
         params.add("MIXED");
 
-        Assert.assertTrue(function.execute(params, context).length() == 3);
+        Assert.assertEquals(function.execute(params, context).length(), 3);
 
-        params = new ArrayList<String>();
+        params = new ArrayList<>();
         params.add("3");
         params.add("UNKNOWN");
 
-        Assert.assertTrue(function.execute(params, context).length() == 3);
+        Assert.assertEquals(function.execute(params, context).length(), 3);
     }
 
     @Test
     public void testWithNumbers() {
-        List<String> params = new ArrayList<String>();
-        params = new ArrayList<String>();
+        List<String> params;
+        params = new ArrayList<>();
         params.add("10");
         params.add("UPPERCASE");
         params.add("true");
 
-        Assert.assertTrue(function.execute(params, context).length() == 10);
+        Assert.assertEquals(function.execute(params, context).length(), 10);
 
-        params = new ArrayList<String>();
+        params = new ArrayList<>();
         params.add("10");
         params.add("LOWERCASE");
         params.add("true");
 
-        Assert.assertTrue(function.execute(params, context).length() == 10);
+        Assert.assertEquals(function.execute(params, context).length(), 10);
 
-        params = new ArrayList<String>();
+        params = new ArrayList<>();
         params.add("10");
         params.add("MIXED");
         params.add("true");
 
-        Assert.assertTrue(function.execute(params, context).length() == 10);
+        Assert.assertEquals(function.execute(params, context).length(), 10);
 
-        params = new ArrayList<String>();
+        params = new ArrayList<>();
         params.add("10");
         params.add("UNKNOWN");
         params.add("true");
 
-        Assert.assertTrue(function.execute(params, context).length() == 10);
+        Assert.assertEquals(function.execute(params, context).length(), 10);
     }
 
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testWrongParameterUsage() {
-        function.execute(Collections.singletonList("-1"), context);
+        function.execute(singletonList("-1"), context);
     }
 
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList(), context);
+        function.execute(emptyList(), context);
     }
 
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testTooManyParameters() {
-        List<String> params = new ArrayList<String>();
+        List<String> params = new ArrayList<>();
         params.add("3");
         params.add("UPPERCASE");
         params.add("true");

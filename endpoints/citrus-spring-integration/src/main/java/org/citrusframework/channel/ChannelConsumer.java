@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,13 +71,11 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
 
         Message message;
         if (StringUtils.hasText(selector)) {
-            if (!(destinationChannel instanceof MessageSelectingQueueChannel)) {
-                throw new CitrusRuntimeException("Message channel type '" + endpointConfiguration.getChannel().getClass() +
-                        "' does not support selective receive operations.");
+            if (!(destinationChannel instanceof MessageSelectingQueueChannel queueChannel)) {
+                throw new CitrusRuntimeException("Message channel type '" + endpointConfiguration.getChannel().getClass() + "' does not support selective receive operations.");
             }
 
             MessageSelector messageSelector = new DispatchingMessageSelector(selector, endpointConfiguration.getBeanFactory(), context);
-            MessageSelectingQueueChannel queueChannel = ((MessageSelectingQueueChannel) destinationChannel);
 
             if (timeout <= 0) {
                 message = endpointConfiguration.getMessageConverter().convertInbound(queueChannel.receive(messageSelector), endpointConfiguration, context);

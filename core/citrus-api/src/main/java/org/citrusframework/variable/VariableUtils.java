@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,10 +141,10 @@ public final class VariableUtils {
     * @return
     */
    public static String replaceVariablesInString(final String str, TestContext context, boolean enableQuoting) {
-       StringBuffer newStr = new StringBuffer();
+       var newStr = new StringBuilder();
 
        boolean isVarComplete;
-       StringBuffer variableNameBuf = new StringBuffer();
+       var variableNameBuf = new StringBuilder();
 
        int startIndex = 0;
        int curIndex;
@@ -180,18 +180,17 @@ public final class VariableUtils {
                throw new NoSuchVariableException("Variable: " + variableNameBuf.toString() + " could not be found");
            }
 
-           newStr.append(str.substring(startIndex, searchIndex));
+           newStr.append(str, startIndex, searchIndex);
 
            if (enableQuoting) {
-               newStr.append("'" + value + "'");
+               newStr.append("'").append(value).append("'");
            } else {
                newStr.append(value);
            }
 
            startIndex = curIndex;
 
-           variableNameBuf = new StringBuffer();
-           isVarComplete = false;
+           variableNameBuf = new StringBuilder();
        }
 
        newStr.append(str.substring(startIndex));

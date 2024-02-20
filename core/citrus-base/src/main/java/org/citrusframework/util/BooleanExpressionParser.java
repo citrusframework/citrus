@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2019 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,21 @@
 
 package org.citrusframework.util;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
 
 /**
  * Parses boolean expression strings and evaluates to boolean result.
@@ -38,18 +40,17 @@ public final class BooleanExpressionParser {
     /**
      * List of known non-boolean operators
      */
-    private static final List<String> OPERATORS = new ArrayList<>(Arrays.asList("lt", "lt=", "gt", "gt=", "<", "<=", ">", ">="));
+    private static final List<String> OPERATORS = new ArrayList<>(asList("lt", "lt=", "gt", "gt=", "<", "<=", ">", ">="));
 
     /**
      * List of known boolean operators
      */
-    private static final List<String> BOOLEAN_OPERATORS = new ArrayList<>(Arrays.asList("=", "and", "or"));
+    private static final List<String> BOOLEAN_OPERATORS = new ArrayList<>(asList("=", "and", "or"));
 
     /**
      * List of known boolean values
      */
-    private static final List<String> BOOLEAN_VALUES = new ArrayList<>(
-            Arrays.asList(TRUE.toString(), FALSE.toString()));
+    private static final List<String> BOOLEAN_VALUES = new ArrayList<>(asList(TRUE.toString(), FALSE.toString()));
 
     /**
      * SeparatorToken is an explicit type to identify different kinds of separators.
@@ -124,7 +125,7 @@ public final class BooleanExpressionParser {
                 }
             }
 
-            result = Boolean.valueOf(evaluateExpressionStack(operators, values));
+            result = parseBoolean(evaluateExpressionStack(operators, values));
 
             if (logger.isDebugEnabled()) {
                 logger.debug("Boolean expression {} evaluates to {}", expression, result);
@@ -315,27 +316,15 @@ public final class BooleanExpressionParser {
      * @return true/false as String
      */
     private static String getBooleanResultAsString(final String operator, final String rightOperand, final String leftOperand) {
-        switch (operator) {
-            case "lt":
-            case "<":
-                return Boolean.toString(Integer.valueOf(leftOperand) < Integer.valueOf(rightOperand));
-            case "lt=":
-            case "<=":
-                return Boolean.toString(Integer.valueOf(leftOperand) <= Integer.valueOf(rightOperand));
-            case "gt":
-            case ">":
-                return Boolean.toString(Integer.valueOf(leftOperand) > Integer.valueOf(rightOperand));
-            case "gt=":
-            case ">=":
-                return Boolean.toString(Integer.valueOf(leftOperand) >= Integer.valueOf(rightOperand));
-            case "=":
-                return Boolean.toString(Integer.parseInt(leftOperand) == Integer.parseInt(rightOperand));
-            case "and":
-                return Boolean.toString(Boolean.valueOf(leftOperand) && Boolean.valueOf(rightOperand));
-            case "or":
-                return Boolean.toString(Boolean.valueOf(leftOperand) || Boolean.valueOf(rightOperand));
-            default:
-                throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
-        }
+        return switch (operator) {
+            case "lt", "<" -> Boolean.toString(parseInt(leftOperand) < parseInt(rightOperand));
+            case "lt=", "<=" -> Boolean.toString(parseInt(leftOperand) <= parseInt(rightOperand));
+            case "gt", ">" -> Boolean.toString(parseInt(leftOperand) > parseInt(rightOperand));
+            case "gt=", ">=" -> Boolean.toString(parseInt(leftOperand) >= parseInt(rightOperand));
+            case "=" -> Boolean.toString(parseInt(leftOperand) == parseInt(rightOperand));
+            case "and" -> Boolean.toString(parseBoolean(leftOperand) && parseBoolean(rightOperand));
+            case "or" -> Boolean.toString(parseBoolean(leftOperand) || parseBoolean(rightOperand));
+            default -> throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
+        };
     }
 }

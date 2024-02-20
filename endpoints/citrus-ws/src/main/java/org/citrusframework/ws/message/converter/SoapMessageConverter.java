@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -225,15 +225,14 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         }
 
         final WebServiceConnection connection = transportContext.getConnection();
-        if (connection instanceof HttpServletConnection) {
+        if (connection instanceof HttpServletConnection servletConnection) {
             final UrlPathHelper pathHelper = new UrlPathHelper();
-            final HttpServletConnection servletConnection = (HttpServletConnection) connection;
             final HttpServletRequest httpServletRequest = servletConnection.getHttpServletRequest();
             message.setHeader(SoapMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(httpServletRequest));
             message.setHeader(SoapMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(httpServletRequest));
 
             final String queryParams = pathHelper.getOriginatingQueryString(httpServletRequest);
-            message.setHeader(SoapMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
+            message.setHeader(SoapMessageHeaders.HTTP_QUERY_PARAMS, queryParams);
 
             message.setHeader(SoapMessageHeaders.HTTP_REQUEST_METHOD, httpServletRequest.getMethod());
 
@@ -318,8 +317,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             return;
         }
 
-        if (message instanceof SaajSoapMessage) {
-            final SaajSoapMessage soapMsg = (SaajSoapMessage) message;
+        if (message instanceof SaajSoapMessage soapMsg) {
             final MimeHeaders headers = soapMsg.getSaajMessage().getMimeHeaders();
             headers.setHeader(name, value.toString());
         } else {
@@ -337,21 +335,21 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      */
     protected void handleInboundMimeHeaders(final org.springframework.ws.soap.SoapMessage soapMessage,
                                             final SoapMessage message) {
-        final Map<String, String> mimeHeaders = new HashMap<String, String>();
+        final Map<String, String> mimeHeaders = new HashMap<>();
         MimeHeaders messageMimeHeaders = null;
 
         // to get access to mime headers we need to get implementation specific here
-        if (soapMessage instanceof SaajSoapMessage) {
-            messageMimeHeaders = ((SaajSoapMessage)soapMessage).getSaajMessage().getMimeHeaders();
+        if (soapMessage instanceof SaajSoapMessage saajSoapMessage) {
+            messageMimeHeaders = saajSoapMessage.getSaajMessage().getMimeHeaders();
         } else {
             logger.warn("Unsupported SOAP message implementation - skipping mime headers");
         }
 
         if (messageMimeHeaders != null) {
-            final Iterator<?> mimeHeaderIterator = messageMimeHeaders.getAllHeaders();
+            final Iterator<MimeHeader> mimeHeaderIterator = messageMimeHeaders.getAllHeaders();
             while (mimeHeaderIterator.hasNext()) {
-                final MimeHeader mimeHeader = (MimeHeader)mimeHeaderIterator.next();
-                // http headers can have multpile values so headers might occur several times in map
+                final MimeHeader mimeHeader = mimeHeaderIterator.next();
+                // http headers can have multiple values so headers might occur several times in map
                 if (mimeHeaders.containsKey(mimeHeader.getName())) {
                     // header is already present, so concat values to a single comma delimited string
                     String value = mimeHeaders.get(mimeHeader.getName());
@@ -362,7 +360,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                 }
             }
 
-            for (final Entry<String, String> httpHeaderEntry : mimeHeaders.entrySet()) {
+            for (var httpHeaderEntry : mimeHeaders.entrySet()) {
                 message.setHeader(httpHeaderEntry.getKey(), httpHeaderEntry.getValue());
             }
         }

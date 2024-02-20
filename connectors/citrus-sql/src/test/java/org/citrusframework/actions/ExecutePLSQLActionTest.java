@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,13 +128,14 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
     public void testPLSQLExecutionWithFileResource() {
         executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-plsql.sql");
 
-        String controlStatement = "DECLARE\n" +
-                "    Zahl1 number(2);\n" +
-                "    Text varchar(20) := 'Hello World!';\n" +
-                "BEGIN\n" +
-                "    EXECUTE IMMEDIATE \"\n" +
-                "        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"\n" +
-                "END;";
+        String controlStatement = """
+                DECLARE
+                    Zahl1 number(2);
+                    Text varchar(20) := 'Hello World!';
+                BEGIN
+                    EXECUTE IMMEDIATE "
+                        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';"
+                END;""";
 
         reset(jdbcTemplate);
 
@@ -178,13 +179,14 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
 
         executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-plsql-with-variables.sql");
 
-        String controlStatement = "DECLARE\n" +
-                "    Zahl1 number(2);\n" +
-                "    Text varchar(20) := 'Hello World!';\n" +
-                "BEGIN\n" +
-                "    EXECUTE IMMEDIATE \"\n" +
-                "        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"\n" +
-                "END;";
+        String controlStatement = """
+                DECLARE
+                    Zahl1 number(2);
+                    Text varchar(20) := 'Hello World!';
+                BEGIN
+                    EXECUTE IMMEDIATE "
+                        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';"
+                END;""";
 
         reset(jdbcTemplate);
         executePLSQLActionBuilder.build().execute(context);
@@ -229,13 +231,14 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
     public void testPLSQLExecutionWithFileResourceMultipleStmts() {
         executePLSQLActionBuilder.sqlResource("classpath:org/citrusframework/actions/test-plsql-multiple-stmts.sql");
 
-        String controlStatement = "DECLARE\n" +
-                "    Zahl1 number(2);\n" +
-                "    Text varchar(20) := 'Hello World!';\n" +
-                "BEGIN\n" +
-                "    EXECUTE IMMEDIATE \"\n" +
-                "        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"\n" +
-                "END;";
+        String controlStatement = """
+                DECLARE
+                    Zahl1 number(2);
+                    Text varchar(20) := 'Hello World!';
+                BEGIN
+                    EXECUTE IMMEDIATE "
+                        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';"
+                END;""";
 
         reset(jdbcTemplate);
         executePLSQLActionBuilder.build().execute(context);

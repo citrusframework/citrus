@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,18 +62,17 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testNoBeansInContext() throws Exception {
+    public void testNoBeansInContext() {
         reset(webServiceServer);
         GenericApplicationContext applicationContext = new GenericApplicationContext();
         applicationContext.refresh();
 
         servlet.initStrategies(applicationContext);
-
     }
 
     @Test
-    public void testConfigureHandlerInterceptor() throws Exception {
-        List<Object> interceptors = new ArrayList<Object>();
+    public void testConfigureHandlerInterceptor() {
+        List<Object> interceptors = new ArrayList<>();
         interceptors.add(new LoggingEndpointInterceptor());
         interceptors.add(new SoapMustUnderstandEndpointInterceptor());
 
@@ -101,11 +100,10 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(webServiceEndpoint.getEndpointConfiguration().isKeepSoapEnvelope());
         Assert.assertNull(webServiceEndpoint.getDefaultNamespaceUri());
         Assert.assertEquals(webServiceEndpoint.getDefaultPrefix(), "");
-
     }
 
     @Test
-    public void testConfigureMessageEndpoint() throws Exception {
+    public void testConfigureMessageEndpoint() {
         reset(webServiceServer);
 
         when(webServiceServer.getInterceptors()).thenReturn(null);
@@ -127,6 +125,5 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(webServiceEndpoint.getEndpointConfiguration().isKeepSoapEnvelope());
         Assert.assertEquals(webServiceEndpoint.getDefaultNamespaceUri(), "http://citrusframework.org");
         Assert.assertEquals(webServiceEndpoint.getDefaultPrefix(), "CITRUS");
-
     }
 }

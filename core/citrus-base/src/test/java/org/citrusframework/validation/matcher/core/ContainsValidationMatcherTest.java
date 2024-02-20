@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static java.util.Objects.requireNonNullElse;
 
 public class ContainsValidationMatcherTest extends UnitTestSupport {
 
@@ -51,11 +53,7 @@ public class ContainsValidationMatcherTest extends UnitTestSupport {
 			Assert.assertTrue(e.getMessage().contains(fieldName));
 			Assert.assertTrue(e.getMessage().contains(control.get(0)));
 
-            if (value != null) {
-			    Assert.assertTrue(e.getMessage().contains(value));
-            } else {
-                Assert.assertTrue(e.getMessage().contains("null"));
-            }
+            Assert.assertTrue(e.getMessage().contains(requireNonNullElse(value, "null")));
 		}
     }
 }

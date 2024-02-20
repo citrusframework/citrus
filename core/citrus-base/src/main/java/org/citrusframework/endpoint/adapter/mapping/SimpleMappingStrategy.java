@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 public class SimpleMappingStrategy implements EndpointAdapterMappingStrategy {
 
     /** Simple map holds mapping key and endpoint adapters */
-    private Map<String, EndpointAdapter> adapterMappings = new HashMap<String, EndpointAdapter>();
+    private Map<String, EndpointAdapter> adapterMappings = new HashMap<>();
 
     @Override
     public EndpointAdapter getEndpointAdapter(String mappingKey) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,8 +62,7 @@ public interface Message extends Serializable {
             return print();
         }
 
-        if (context.getLogModifier() instanceof LogMessageModifier) {
-            LogMessageModifier modifier = ((LogMessageModifier) context.getLogModifier());
+        if (context.getLogModifier() instanceof LogMessageModifier modifier) {
             return print(modifier.maskBody(this), modifier.maskHeaders(this), modifier.maskHeaderData(this));
         }
 

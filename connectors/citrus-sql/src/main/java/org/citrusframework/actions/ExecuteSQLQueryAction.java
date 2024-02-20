@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * Action executes SQL queries and offers result set validation.
@@ -98,9 +100,9 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
         try {
             //for control result set validation
-            final Map<String, List<String>> columnValuesMap = new HashMap<String, List<String>>();
+            final Map<String, List<String>> columnValuesMap = new HashMap<>();
             //for groovy script validation
-            final List<Map<String, Object>> allResultRows = new ArrayList<Map<String, Object>>();
+            final List<Map<String, Object>> allResultRows = new ArrayList<>();
 
             if (getTransactionManager() != null) {
                 if (logger.isDebugEnabled()) {
@@ -108,7 +110,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 }
 
                 TransactionTemplate transactionTemplate = new TransactionTemplate(getTransactionManager());
-                transactionTemplate.setTimeout(Integer.valueOf(context.replaceDynamicContentInString(getTransactionTimeout())));
+                transactionTemplate.setTimeout(parseInt(context.replaceDynamicContentInString(getTransactionTimeout())));
                 transactionTemplate.setIsolationLevelName(context.replaceDynamicContentInString(getTransactionIsolationLevel()));
                 transactionTemplate.execute(status -> {
                     executeStatements(statementsToUse, allResultRows, columnValuesMap, context);
@@ -197,7 +199,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 String columnValue;
                 String columnName = column.getKey();
                 if (!columnValuesMap.containsKey(columnName)) {
-                    columnValuesMap.put(columnName, new ArrayList<String>());
+                    columnValuesMap.put(columnName, new ArrayList<>());
                 }
 
                 if (column.getValue() instanceof byte[]) {

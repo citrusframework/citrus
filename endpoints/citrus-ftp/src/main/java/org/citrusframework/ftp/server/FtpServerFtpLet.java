@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,8 @@ import org.apache.ftpserver.ftplet.FtpletResult;
 import org.apache.ftpserver.ftplet.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * Ftp servlet implementation that logs incoming connections and commands forwarding those to
@@ -178,7 +180,7 @@ public class FtpServerFtpLet implements Ftplet {
     private void writeFtpReply(FtpSession session, FtpMessage response) {
         try {
             CommandResultType commandResult = response.getPayload(CommandResultType.class);
-            FtpReply reply = new DefaultFtpReply(Integer.valueOf(commandResult.getReplyCode()), commandResult.getReplyString());
+            FtpReply reply = new DefaultFtpReply(parseInt(commandResult.getReplyCode()), commandResult.getReplyString());
 
             session.write(reply);
         } catch (FtpException e) {

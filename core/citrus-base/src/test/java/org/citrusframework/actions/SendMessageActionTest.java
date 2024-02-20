@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,10 +100,11 @@ public class SendMessageActionTest extends UnitTestSupport {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -157,10 +158,11 @@ public class SendMessageActionTest extends UnitTestSupport {
 
         context.setVariable("myText", "Hello World!");
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -185,10 +187,11 @@ public class SendMessageActionTest extends UnitTestSupport {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload-with-functions.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -213,9 +216,7 @@ public class SendMessageActionTest extends UnitTestSupport {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
 
-        MessageProcessor processor = (message, context) -> {
-            message.setPayload(message.getPayload(String.class).replaceAll("\\?", "Hello World!"));
-        };
+        MessageProcessor processor = (message, context) -> message.setPayload(message.getPayload(String.class).replaceAll("\\?", "Hello World!"));
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -243,11 +244,11 @@ public class SendMessageActionTest extends UnitTestSupport {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        final Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        final Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
-        final Map<String, Object> headers = new HashMap<String, Object>();
+        final Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
@@ -276,11 +277,11 @@ public class SendMessageActionTest extends UnitTestSupport {
 
         context.setVariable("myOperation", "sayHello");
 
-        final Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        final Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
-        final Map<String, Object> headers = new HashMap<String, Object>();
+        final Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "${myOperation}");
         messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
@@ -331,7 +332,7 @@ public class SendMessageActionTest extends UnitTestSupport {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        final Map<String, Object> headers = new HashMap<String, Object>();
+        final Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "${myOperation}");
         messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
@@ -359,15 +360,15 @@ public class SendMessageActionTest extends UnitTestSupport {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>Hello World!</Message></TestRequest>"));
 
-        final Map<String, Object> controlHeaders = new HashMap<String, Object>();
+        final Map<String, Object> controlHeaders = new HashMap<>();
         controlHeaders.put("Operation", "sayHello");
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
-        final Map<String, Object> headers = new HashMap<String, Object>();
+        final Map<String, Object> headers = new HashMap<>();
         headers.put("Operation", "sayHello");
         messageBuilder.addHeaderBuilder(new DefaultHeaderBuilder(headers));
 
-        Map<String, String> extractVars = new HashMap<String, String>();
+        Map<String, String> extractVars = new HashMap<>();
         extractVars.put("Operation", "myOperation");
         extractVars.put(MessageHeaders.ID, "correlationId");
 
@@ -495,10 +496,11 @@ public class SendMessageActionTest extends UnitTestSupport {
         DefaultMessageBuilder messageBuilder = new DefaultMessageBuilder();
         messageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-iso-encoding.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="ISO-8859-1"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);

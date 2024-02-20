@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.citrusframework.http.client;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Random;
 
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
@@ -40,7 +39,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.HttpClientErrorException;
@@ -49,6 +47,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 
 /**
@@ -157,7 +156,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setRestTemplate(restTemplate);
 
         StringHttpMessageConverter messageConverter = Mockito.mock(StringHttpMessageConverter.class);
-        when(restTemplate.getMessageConverters()).thenReturn(Collections.<HttpMessageConverter<?>>singletonList(messageConverter));
+        when(restTemplate.getMessageConverters()).thenReturn(singletonList(messageConverter));
 
         doAnswer((Answer<ResponseEntity>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];

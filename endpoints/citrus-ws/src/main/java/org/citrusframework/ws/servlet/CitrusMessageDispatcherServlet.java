@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,7 +111,7 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
      * @return
      */
     private List<EndpointInterceptor> adaptInterceptors(List<Object> interceptors) {
-        List<EndpointInterceptor> endpointInterceptors = new ArrayList<EndpointInterceptor>();
+        List<EndpointInterceptor> endpointInterceptors = new ArrayList<>();
 
         if (interceptors != null) {
             for (Object interceptor : interceptors) {

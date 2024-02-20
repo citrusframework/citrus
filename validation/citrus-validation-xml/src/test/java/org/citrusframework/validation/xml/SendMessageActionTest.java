@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,10 +65,11 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             .expressions(overwriteElements)
             .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -101,10 +102,11 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .expressions(overwriteElements)
                 .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -138,10 +140,11 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .expressions(overwriteElements)
                 .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">\n" +
-                "    <ns0:Message>Hello World!</ns0:Message>\n" +
-                "</ns0:TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <ns0:TestRequest xmlns:ns0="http://citrusframework.org/unittest">
+                    <ns0:Message>Hello World!</ns0:Message>
+                </ns0:TestRequest>""");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -175,10 +178,11 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .expressions(overwriteElements)
                 .build();
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest xmlns=\"http://citrusframework.org/unittest\">\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest xmlns="http://citrusframework.org/unittest">
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);

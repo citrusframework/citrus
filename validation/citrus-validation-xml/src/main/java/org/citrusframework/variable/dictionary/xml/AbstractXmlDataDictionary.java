@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,9 +91,7 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<N
 
         @Override
         public short acceptNode(Node node) {
-            if (node instanceof Element) {
-                Element element = (Element) node;
-
+            if (node instanceof Element element) {
                 if (StringUtils.hasText(DomUtils.getTextValue(element))) {
                     element.setTextContent(translate(element, DomUtils.getTextValue(element), context));
                 } else if (!element.hasChildNodes()) {

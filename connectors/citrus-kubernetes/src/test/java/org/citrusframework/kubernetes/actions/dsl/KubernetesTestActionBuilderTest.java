@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,16 +122,12 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport {
         builder.$(kubernetes().client(client)
             .nodes()
             .list()
-            .validate((nodes, context) -> {
-                Assert.assertNotNull(nodes.getResult());
-            }));
+            .validate((nodes, context) -> Assert.assertNotNull(nodes.getResult())));
 
         builder.$(kubernetes().client(client)
             .namespaces()
             .list()
-            .validate((namespaces, context) -> {
-                Assert.assertNotNull(namespaces.getResult());
-            }));
+            .validate((namespaces, context) -> Assert.assertNotNull(namespaces.getResult())));
 
         builder.$(kubernetes().client(client)
             .nodes()

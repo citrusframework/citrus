@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.springframework.ws.soap.server.SoapEndpointInterceptor;
  */
 public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterceptor {
 
-    private List<String> acceptedHeaders = new ArrayList<String>();
+    private List<String> acceptedHeaders = new ArrayList<>();
     
     /**
      * (non-Javadoc)
@@ -39,19 +39,14 @@ public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterc
      */
     public boolean understands(SoapHeaderElement header) {
         //see if header is accepted
-        if (header.getName() != null && acceptedHeaders.contains(header.getName().toString())) {
-            return true;
-        }
-        
-        return false;
+        return header.getName() != null && acceptedHeaders.contains(header.getName().toString());
     }
     
     /**
      * (non-Javadoc)
      * @see org.springframework.ws.server.EndpointInterceptor#handleFault(org.springframework.ws.context.MessageContext, java.lang.Object)
      */
-    public boolean handleFault(MessageContext messageContext, Object endpoint)
-            throws Exception {
+    public boolean handleFault(MessageContext messageContext, Object endpoint) {
         return true;
     }
 
@@ -59,8 +54,7 @@ public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterc
      * (non-Javadoc)
      * @see org.springframework.ws.server.EndpointInterceptor#handleRequest(org.springframework.ws.context.MessageContext, java.lang.Object)
      */
-    public boolean handleRequest(MessageContext messageContext, Object endpoint)
-            throws Exception {
+    public boolean handleRequest(MessageContext messageContext, Object endpoint) {
         return true;
     }
 
@@ -68,16 +62,14 @@ public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterc
      * (non-Javadoc)
      * @see org.springframework.ws.server.EndpointInterceptor#handleResponse(org.springframework.ws.context.MessageContext, java.lang.Object)
      */
-    public boolean handleResponse(MessageContext messageContext, Object endpoint)
-            throws Exception {
+    public boolean handleResponse(MessageContext messageContext, Object endpoint) {
         return true;
     }
     
     /**
      * {@inheritDoc}
      */
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) 
-            throws Exception {
+    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
     }
     
     /**
@@ -86,5 +78,4 @@ public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterc
     public void setAcceptedHeaders(List<String> acceptedHeaders) {
         this.acceptedHeaders = acceptedHeaders;
     }
-    
 }

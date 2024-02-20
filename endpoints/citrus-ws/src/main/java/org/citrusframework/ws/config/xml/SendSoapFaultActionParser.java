@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,8 +80,8 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
      */
     private void parseFaultDetail(BeanDefinitionBuilder builder, Element faultElement) {
         List<Element> faultDetailElements = DomUtils.getChildElementsByTagName(faultElement, "fault-detail");
-        List<String> faultDetails = new ArrayList<String>();
-        List<String> faultDetailResourcePaths = new ArrayList<String>();
+        List<String> faultDetails = new ArrayList<>();
+        List<String> faultDetailResourcePaths = new ArrayList<>();
 
         for (Element faultDetailElement : faultDetailElements) {
             if (faultDetailElement.hasAttribute("file")) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,9 +169,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
             } else {
                 addNotificationListener(objectName, correlationKey, serverConnection);
             }
-        } catch (JMException e) {
-            throw new CitrusRuntimeException("Failed to execute MBean operation", e);
-        } catch (IOException e) {
+        } catch (JMException | IOException e) {
             throw new CitrusRuntimeException("Failed to execute MBean operation", e);
         }
     }
@@ -248,18 +246,15 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
      * Schedules an attempt to re-initialize a lost connection after the reconnect delay
      */
     public void scheduleReconnect() {
-        Runnable startRunnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    MBeanServerConnection serverConnection = getNetworkConnection();
-                    if (notificationListener != null) {
-                        serverConnection.addNotificationListener(objectName, notificationListener, getEndpointConfiguration().getNotificationFilter(), getEndpointConfiguration().getNotificationHandback());
-                    }
-                } catch (Exception e) {
-                    logger.warn("Failed to reconnect to JMX MBean server. {}", e.getMessage());
-                    scheduleReconnect();
+        Runnable startRunnable = () -> {
+            try {
+                MBeanServerConnection serverConnection = getNetworkConnection();
+                if (notificationListener != null) {
+                    serverConnection.addNotificationListener(objectName, notificationListener, getEndpointConfiguration().getNotificationFilter(), getEndpointConfiguration().getNotificationHandback());
                 }
+            } catch (Exception e) {
+                logger.warn("Failed to reconnect to JMX MBean server. {}", e.getMessage());
+                scheduleReconnect();
             }
         };
         logger.info("Reconnecting to MBean server {} in {} milliseconds.", getEndpointConfiguration().getServerUrl(), getEndpointConfiguration().getDelayOnReconnect());
@@ -274,12 +269,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     private void addNotificationListener(ObjectName objectName, final String correlationKey, MBeanServerConnection serverConnection) {
         try {
-            notificationListener = new NotificationListener() {
-                @Override
-                public void handleNotification(Notification notification, Object handback) {
-                    correlationManager.store(correlationKey, new DefaultMessage(notification.getMessage()));
-                }
-            };
+            notificationListener = (notification, handback) -> correlationManager.store(correlationKey, new DefaultMessage(notification.getMessage()));
 
             serverConnection.addNotificationListener(objectName, notificationListener, getEndpointConfiguration().getNotificationFilter(), getEndpointConfiguration().getNotificationHandback());
         } catch (InstanceNotFoundException e) {

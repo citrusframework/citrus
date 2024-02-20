@@ -69,24 +69,22 @@ public class BeansConfiguration extends GroovyObjectSupport {
         Object[] args = (Object[]) argLine;
         if (args.length == 2) {
             Class<?> type = (Class<?>) args[0];
-            if (args[1] instanceof Closure) {
-                Closure<?> closure = (Closure<?>) args[1];
+            if (args[1] instanceof Closure<?> closure) {
 
                 try {
-                    Object bean = type.newInstance();
+                    Object bean = type.getDeclaredConstructor().newInstance();
                     closure.setResolveStrategy(Closure.DELEGATE_ONLY);
                     closure.setDelegate(bean);
                     closure.call();
 
                     citrus.getCitrusContext().bind(name, bean);
                     return bean;
-                } catch (InstantiationException | IllegalAccessException e) {
+                } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
                     throw new GroovyRuntimeException(String.format("Failed to instantiate bean of type '%s'", type), e);
                 }
             }
         } else if (args.length == 1) {
-            if (args[0] instanceof Closure) {
-                Closure<?> closure = (Closure<?>) args[0];
+            if (args[0] instanceof Closure<?> closure) {
                 closure.setResolveStrategy(Closure.DELEGATE_ONLY);
 
                 Object bean = closure.call();

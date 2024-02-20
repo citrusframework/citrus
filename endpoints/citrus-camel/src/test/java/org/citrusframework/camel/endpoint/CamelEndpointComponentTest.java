@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,7 +104,7 @@ public class CamelEndpointComponentTest {
     public void testCreateEndpointWithParameters() throws Exception {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
-        Map<String, CamelContext> camelContextMap = new HashMap<String, CamelContext>();
+        Map<String, CamelContext> camelContextMap = new HashMap<>();
         camelContextMap.put("someCamelContext", Mockito.mock(CamelContext.class));
         camelContextMap.put("myCamelContext", camelContext);
 
@@ -127,7 +127,7 @@ public class CamelEndpointComponentTest {
     public void testCreateEndpointWithCamelParameters() throws Exception {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
-        Map<String, CamelContext> camelContextMap = new HashMap<String, CamelContext>();
+        Map<String, CamelContext> camelContextMap = new HashMap<>();
         camelContextMap.put("someCamelContext", Mockito.mock(CamelContext.class));
         camelContextMap.put("myCamelContext", camelContext);
 

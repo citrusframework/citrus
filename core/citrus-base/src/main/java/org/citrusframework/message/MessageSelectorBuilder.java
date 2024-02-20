@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class MessageSelectorBuilder {
      * @return
      */
     public static MessageSelectorBuilder fromKeyValueMap(Map<String, Object> valueMap) {
-        StringBuffer buf = new StringBuffer();
+        var buf = new StringBuilder();
 
         Iterator<Entry<String, Object>> iter = valueMap.entrySet().iterator();
 
@@ -85,7 +85,7 @@ public class MessageSelectorBuilder {
             String key = entry.getKey();
             String value = entry.getValue().toString();
 
-            buf.append(key + " = '" + value + "'");
+            buf.append(key).append(" = '").append(value).append("'");
         }
 
         while (iter.hasNext()) {
@@ -93,7 +93,7 @@ public class MessageSelectorBuilder {
         	String key = entry.getKey();
             String value = entry.getValue().toString();
 
-            buf.append(" AND " + key + " = '" + value + "'");
+            buf.append(" AND ").append(key).append(" = '").append(value).append("'");
         }
 
         return new MessageSelectorBuilder(buf.toString());
@@ -104,7 +104,7 @@ public class MessageSelectorBuilder {
      * @return
      */
     public Map<String, String> toKeyValueMap() {
-        Map<String, String> valueMap = new HashMap<String, String>();
+        Map<String, String> valueMap = new HashMap<>();
         String[] tokens;
 
         if (selectorString.contains(" AND")) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,16 +43,18 @@ public class ExecutePLSQLJavaIT extends TestNGCitrusSpringSupport {
             .ignoreErrors(true));
 
         run(plsql(dataSource)
-            .sqlScript("BEGIN\n" +
-                            "EXECUTE IMMEDIATE 'create or replace function test (v_id in number) return number is\n" +
-                              "begin\n" +
-                               "if v_id  is null then\n" +
-                                "return 0;\n" +
-                                "end if;\n" +
-                                "return v_id;\n" +
-                              "end;';\n" +
-                        "END;\n" +
-                        "/")
+            .sqlScript("""
+                    BEGIN
+                    EXECUTE IMMEDIATE 'create or replace function test(v_id in number)
+                        return number is
+                        begin
+                        if v_id  is null then
+                                            return 0;
+                        end if;
+                        return v_id;
+                        end;';
+                    END;
+                    /""")
             .ignoreErrors(true));
     }
 }

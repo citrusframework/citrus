@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,16 +58,17 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
                 .context(camelContext)
-                .routeContext("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">\n" +
-                        "<route id=\"route_1\">\n" +
-                        "<from uri=\"direct:test1\"/>\n" +
-                        "<to uri=\"mock:test1\"/>\n" +
-                        "</route>\n" +
-                        "<route id=\"route_2\">\n" +
-                        "<from uri=\"direct:test2\"/>\n" +
-                        "<to uri=\"mock:test2\"/>\n" +
-                        "</route>\n" +
-                        "</routeContext>")
+                .routeContext("""
+                        <routeContext xmlns="http://camel.apache.org/schema/spring">
+                            <route id="route_1">
+                                <from uri="direct:test1"/>
+                                <to uri="mock:test1"/>
+                            </route>
+                            <route id="route_2">
+                                <from uri="direct:test2"/>
+                                <to uri="mock:test2"/>
+                            </route>
+                        </routeContext>""")
                 .build();
         action.execute(context);
 
@@ -93,12 +94,13 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
                 .context(camelContext)
-                .routeContext("<routeContext xmlns=\"http://camel.apache.org/schema/spring\">\n" +
-                    "<route id=\"${routeId}\">\n" +
-                        "<from uri=\"direct:${endpointUri}\"/>\n" +
-                        "<to uri=\"mock:${endpointUri}\"/>\n" +
-                    "</route>\n" +
-                "</routeContext>")
+                .routeContext("""
+                        <routeContext xmlns="http://camel.apache.org/schema/spring">
+                            <route id="${routeId}">
+                                <from uri="direct:${endpointUri}"/>
+                                <to uri="mock:${endpointUri}"/>
+                            </route>
+                        </routeContext>""")
                 .build();
 
         action.execute(context);

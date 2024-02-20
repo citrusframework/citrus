@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,8 +65,8 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
     public void testSoapBody() throws TransformerException, IOException {
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
 
-        Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
-        Set<Attachment> soapAttachments = new HashSet<Attachment>();
+        Set<SoapHeaderElement> soapHeaders = new HashSet<>();
+        Set<Attachment> soapAttachments = new HashSet<>();
 
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
@@ -96,8 +96,8 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
     public void testSoapAction() throws TransformerException, IOException {
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
 
-        Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
-        Set<Attachment> soapAttachments = new HashSet<Attachment>();
+        Set<SoapHeaderElement> soapHeaders = new HashSet<>();
+        Set<Attachment> soapAttachments = new HashSet<>();
 
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
@@ -132,8 +132,8 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
 
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
 
-        Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
-        Set<Attachment> soapAttachments = new HashSet<Attachment>();
+        Set<SoapHeaderElement> soapHeaders = new HashSet<>();
+        Set<Attachment> soapAttachments = new HashSet<>();
 
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
@@ -166,10 +166,10 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
 
         SoapHeaderElement soapHeaderElement = Mockito.mock(SoapHeaderElement.class);
 
-        Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
+        Set<SoapHeaderElement> soapHeaders = new HashSet<>();
         soapHeaders.add(soapHeaderElement);
 
-        Set<Attachment> soapAttachments = new HashSet<Attachment>();
+        Set<Attachment> soapAttachments = new HashSet<>();
 
         reset(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
 
@@ -208,8 +208,8 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
 
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
 
-        Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
-        Set<Attachment> soapAttachments = new HashSet<Attachment>();
+        Set<SoapHeaderElement> soapHeaders = new HashSet<>();
+        Set<Attachment> soapAttachments = new HashSet<>();
         soapAttachments.add(attachment);
 
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,12 +140,8 @@ public class SshServerTest {
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*Address already in use.*")
     public void doubleStart() throws IOException {
         prepareServer(true);
-        ServerSocket s = null;
-        try {
-            s = new ServerSocket(port);
+        try (var ignored = new ServerSocket(port)) {
             server.start();
-        } finally {
-            if (s != null) s.close();
         }
     }
 

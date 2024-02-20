@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,8 +64,7 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
             // now let's parse the routes with JAXB
             try {
                 Object value = CamelUtils.getJaxbContext().createUnmarshaller().unmarshal(new StringSource(context.replaceDynamicContentInString(routeContext)));
-                if (value instanceof CamelRouteContextFactoryBean) {
-                    CamelRouteContextFactoryBean factoryBean = (CamelRouteContextFactoryBean) value;
+                if (value instanceof CamelRouteContextFactoryBean factoryBean) {
                     routesToUse = factoryBean.getRoutes();
                 } else {
                     throw new CitrusRuntimeException(String.format("Failed to parse routes from given route context - expected %s but found %s",

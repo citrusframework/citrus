@@ -515,7 +515,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/test");
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -530,7 +530,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</ns1:element>"
                     + "</ns1:root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -545,7 +545,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/default");
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
 
@@ -561,7 +561,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/default");
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
         expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
@@ -578,7 +578,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/wrong");
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -593,7 +593,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</ns1:element>"
                     + "</ns1:root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1/wrong");
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -608,7 +608,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/default/wrong");
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
 
@@ -624,7 +624,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/default");
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1/wrong");
         expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
@@ -641,7 +641,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/default");
         expectedNamespaces.put("nswrong", "http://citrusframework.org/ns1");
         expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
@@ -658,7 +658,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</ns0:element>"
                     + "</ns0:root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/default");
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
         expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
@@ -675,7 +675,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("ns0", "http://citrusframework.org/default");
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
         expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
@@ -692,7 +692,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/default");
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
         expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
@@ -710,7 +710,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "</element>"
                     + "</root>");
 
-        Map<String, String> expectedNamespaces = new HashMap<String, String>();
+        Map<String, String> expectedNamespaces = new HashMap<>();
         expectedNamespaces.put("", "http://citrusframework.org/default");
         expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
         expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
@@ -758,7 +758,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                     + "</root>");
 
 
-        Set<String> ignoreExpressions = new HashSet<String>();
+        Set<String> ignoreExpressions = new HashSet<>();
         ignoreExpressions.add("//root/element/sub-element1");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()

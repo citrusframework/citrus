@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2022-2024 the original author or authors.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements. See the NOTICE file distributed with
@@ -142,10 +142,11 @@ public class SendTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpointUri(), "helloEndpoint");
 
-        controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
         receivedMessage = helloQueue.receive();
         headerValidator.validateMessage(receivedMessage, controlMessage, context, new HeaderValidationContext());
         validator.validateMessage(receivedMessage, controlMessage, context, new DefaultValidationContext());

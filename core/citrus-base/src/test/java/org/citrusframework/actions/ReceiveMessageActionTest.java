@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
-import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageDirection;
@@ -207,10 +206,11 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -278,10 +278,11 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
 
         context.setVariable("myText", "Hello World!");
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -313,10 +314,11 @@ public class ReceiveMessageActionTest extends UnitTestSupport {
         DefaultMessageBuilder controlMessageBuilder = new DefaultMessageBuilder();
         controlMessageBuilder.setPayloadBuilder(new FileResourcePayloadBuilder("classpath:org/citrusframework/actions/test-request-payload-with-functions.xml"));
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<TestRequest>\n" +
-                "    <Message>Hello World!</Message>\n" +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <TestRequest>
+                    <Message>Hello World!</Message>
+                </TestRequest>""");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);

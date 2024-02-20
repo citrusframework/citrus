@@ -1,5 +1,5 @@
 /**
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import org.citrusframework.functions.Function;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import static java.lang.Integer.parseInt;
 
 /**
  * Abstract date value handling function provides base date value manipulation helpers.
@@ -54,7 +56,7 @@ public abstract class AbstractDateFunction implements Function {
      * @return
      */
     protected int getDateValueOffset(String offsetString, char c) {
-        ArrayList<Character> charList = new ArrayList<Character>();
+        ArrayList<Character> charList = new ArrayList<>();
 
         int index = offsetString.indexOf(c);
         if (index != -1) {
@@ -62,17 +64,16 @@ public abstract class AbstractDateFunction implements Function {
                 if (Character.isDigit(offsetString.charAt(i))) {
                     charList.add(0, offsetString.charAt(i));
                 } else {
-
-                    StringBuffer offsetValue = new StringBuffer();
+                    StringBuilder offsetValue = new StringBuilder();
                     offsetValue.append("0");
-                    for (int j = 0; j < charList.size(); j++) {
-                        offsetValue.append(charList.get(j));
+                    for (var character : charList) {
+                        offsetValue.append(character);
                     }
 
                     if (offsetString.charAt(i) == '-') {
-                        return Integer.valueOf("-" + offsetValue.toString());
+                        return parseInt("-" + offsetValue);
                     } else {
-                        return Integer.valueOf(offsetValue.toString());
+                        return parseInt(offsetValue.toString());
                     }
                 }
             }
