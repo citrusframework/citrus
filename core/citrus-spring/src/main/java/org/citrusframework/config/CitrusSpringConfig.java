@@ -144,7 +144,7 @@ public class CitrusSpringConfig {
     }
 
     @Bean
-    public CustomEditorConfigurer citrusCustomEditorRegistrar() {
+    public static CustomEditorConfigurer citrusCustomEditorRegistrar() {
         CustomEditorConfigurer configurer = new CustomEditorConfigurer();
         configurer.setCustomEditors(Map.of(Resource.class, CitrusResourceEditor.class));
         return configurer;
