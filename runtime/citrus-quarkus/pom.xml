@@ -15,7 +15,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <quarkus.platform.version>3.6.4</quarkus.platform.version>
+    <quarkus.platform.version>3.8.0</quarkus.platform.version>
   </properties>
 
   <dependencyManagement>
@@ -28,6 +28,11 @@
       <dependency>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-arc-deployment</artifactId>
+        <version>${quarkus.platform.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-junit5</artifactId>
         <version>${quarkus.platform.version}</version>
       </dependency>
 
