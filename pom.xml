@@ -228,7 +228,7 @@
     <jansi.version>2.4.1</jansi.version>
     <javapoet.version>1.13.0</javapoet.version>
     <jaxb.version>4.0.4</jaxb.version>
-    <jetty.version>12.0.5</jetty.version>
+    <jetty.version>12.0.6</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
     <jsch.version>0.1.55</jsch.version>
     <json-path.version>2.9.0</json-path.version>
