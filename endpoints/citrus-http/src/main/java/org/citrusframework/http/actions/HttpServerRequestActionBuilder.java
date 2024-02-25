@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,8 +44,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
      */
     public HttpServerRequestActionBuilder() {
         this.httpMessage = new HttpMessage();
-        message(new HttpMessageBuilder(httpMessage))
-            .headerNameIgnoreCase(true);
+        message(new HttpMessageBuilder(httpMessage)).headerNameIgnoreCase(true);
         validator(new HttpQueryParamHeaderValidator());
     }
 
@@ -56,8 +55,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
      */
     public HttpServerRequestActionBuilder(MessageBuilder messageBuilder, HttpMessage httpMessage) {
         this.httpMessage = httpMessage;
-        message(messageBuilder)
-                .headerNameIgnoreCase(true);
+        message(messageBuilder).headerNameIgnoreCase(true);
         validator(new HttpQueryParamHeaderValidator());
     }
 

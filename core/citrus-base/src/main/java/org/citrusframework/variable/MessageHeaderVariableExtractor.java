@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,16 @@
 
 package org.citrusframework.variable;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.UnknownElementException;
 import org.citrusframework.message.Message;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static java.lang.String.format;
 
 /**
  * Variable extractor reading message headers and saves them to new test variables.
@@ -33,7 +34,9 @@ import org.citrusframework.message.Message;
  */
 public class MessageHeaderVariableExtractor implements VariableExtractor {
 
-    /** Map holding header names and target variable names */
+    /**
+     * Map holding header names and target variable names
+     */
     private final Map<String, Object> headerMappings;
 
     public MessageHeaderVariableExtractor() {
@@ -42,6 +45,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
 
     /**
      * Constructor using fluent builder.
+     *
      * @param builder
      */
     private MessageHeaderVariableExtractor(Builder builder) {
@@ -52,21 +56,21 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
      * Reads header information and saves new test variables.
      */
     public void extractVariables(Message message, TestContext context) {
-        if (headerMappings.isEmpty()) { return; }
+        if (headerMappings.isEmpty()) {
+            return;
+        }
 
-        for (Entry<String, Object> entry : headerMappings.entrySet()) {
-            String headerElementName = entry.getKey();
-            String targetVariableName = Optional.ofNullable(entry.getValue())
+        headerMappings.forEach((headerElementName, value) -> {
+            String targetVariableName = Optional.ofNullable(value)
                     .map(Object::toString)
-                    .orElseThrow(() -> new CitrusRuntimeException(String.format("Variable name must be set for extractor " +
-                            "on header '%s'", headerElementName)));
+                    .orElseThrow(() -> new CitrusRuntimeException(format("Variable name must be set for extractor on header '%s'", headerElementName)));
 
             if (message.getHeader(headerElementName) == null) {
                 throw new UnknownElementException("Could not find header element " + headerElementName + " in received header");
             }
 
             context.setVariable(targetVariableName, message.getHeader(headerElementName).toString());
-        }
+        });
     }
 
     /**
@@ -78,6 +82,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
 
         /**
          * Static entry method for builder.
+         *
          * @return
          */
         public static Builder fromHeaders() {
@@ -86,6 +91,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
 
         /**
          * Evaluate all header name expressions and store values as new variables to the test context.
+         *
          * @param expressions
          * @return
          */
@@ -96,6 +102,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
 
         /**
          * Reads header by its name and stores value as new variable to the test context.
+         *
          * @param headerName
          * @param variableName
          * @return
@@ -125,6 +132,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
 
     /**
      * Gets the headerMappings.
+     *
      * @return the headerMappings
      */
     public Map<String, Object> getHeaderMappings() {
