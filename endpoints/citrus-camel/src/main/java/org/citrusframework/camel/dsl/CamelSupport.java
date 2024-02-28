@@ -21,6 +21,12 @@ package org.citrusframework.camel.dsl;
 
 import java.util.function.Function;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Processor;
+import org.apache.camel.builder.DataFormatClause;
+import org.apache.camel.builder.ExpressionClauseSupport;
+import org.apache.camel.model.OutputDefinition;
+import org.apache.camel.model.ProcessorDefinition;
 import org.citrusframework.camel.actions.CamelActionBuilder;
 import org.citrusframework.camel.actions.CamelControlBusAction;
 import org.citrusframework.camel.actions.CamelRouteActionBuilder;
@@ -30,13 +36,7 @@ import org.citrusframework.camel.message.CamelDataFormatMessageProcessor;
 import org.citrusframework.camel.message.CamelMessageProcessor;
 import org.citrusframework.camel.message.CamelRouteProcessor;
 import org.citrusframework.camel.message.CamelTransformMessageProcessor;
-import org.citrusframework.camel.message.format.DataFormatClauseSupport;
 import org.citrusframework.endpoint.EndpointUriBuilder;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Processor;
-import org.apache.camel.builder.ExpressionClauseSupport;
-import org.apache.camel.model.OutputDefinition;
-import org.apache.camel.model.ProcessorDefinition;
 
 /**
  * Support class combining all available Apache Camel Java DSL capabilities.
@@ -174,15 +174,15 @@ public class CamelSupport {
      * Message processor marshalling message body with given data format.
      * @return
      */
-    public DataFormatClauseSupport<CamelDataFormatMessageProcessor.Builder> marshal() {
-        return CamelDataFormatMessageProcessor.Builder.marshal().camelContext(camelContext);
+    public DataFormatClause<CamelDataFormatMessageProcessor.Builder.InlineProcessDefinition> marshal() {
+        return CamelDataFormatMessageProcessor.Builder.marshal(camelContext);
     }
 
     /**
      * Message processor unmarshalling message body with given data format.
      * @return
      */
-    public DataFormatClauseSupport<CamelDataFormatMessageProcessor.Builder> unmarshal() {
-        return CamelDataFormatMessageProcessor.Builder.unmarshal().camelContext(camelContext);
+    public DataFormatClause<CamelDataFormatMessageProcessor.Builder.InlineProcessDefinition> unmarshal() {
+        return CamelDataFormatMessageProcessor.Builder.unmarshal(camelContext);
     }
 }
