@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
 
 package org.citrusframework.functions;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Stack;
 
 /**
  * Helper class parsing a parameter string and converting the tokens to a parameter list.
@@ -34,62 +33,94 @@ public final class FunctionParameterHelper {
     
     /**
      * Convert a parameter string to a list of parameters.
-     * 
+     *
      * @param parameterString comma separated parameter string.
      * @return list of parameters.
      */
     public static List<String> getParameterList(String parameterString) {
-        List<String> parameterList = new ArrayList<>();
-
-        StringTokenizer tok = new StringTokenizer(parameterString, ",");
-        while (tok.hasMoreElements()) {
-            String param = tok.nextToken().trim();
-            parameterList.add(cutOffSingleQuotes(param));
-        }
-
-        List<String> postProcessed = new ArrayList<>();
-        for (int i = 0; i < parameterList.size(); i++) {
-            int next = i + 1;
-
-            String processed = parameterList.get(i);
-
-            if (processed.startsWith("'") && !processed.endsWith("'")) {
-                while (next < parameterList.size()) {
-                    if (parameterString.contains(processed + ", " + parameterList.get(next))) {
-                        processed += ", " + parameterList.get(next);
-                    } else if (parameterString.contains(processed + "," + parameterList.get(next))) {
-                        processed += "," + parameterList.get(next);
-                    } else if (parameterString.contains(processed + " , " + parameterList.get(next))) {
-                        processed += " , " + parameterList.get(next);
-                    } else {
-                        processed += parameterList.get(next);
-                    }
-
-                    i++;
-                    if (parameterList.get(next).endsWith("'")) {
-                        break;
-                    } else {
-                        next++;
-                    }
-                }
-
-            }
-
-            postProcessed.add(cutOffSingleQuotes(processed));
-        }
-
-        return postProcessed;
+        return new ParameterParser(parameterString).parse();
     }
 
-    private static String cutOffSingleQuotes(String param) {
-        if (param.equals("'")) {
-            return "";
+    public static class ParameterParser {
+
+        private final String parameterString;
+        private final Stack<String> parameterList = new Stack<>();
+        private String currentParameter = "";
+        private int lastQuoteIndex = -1;
+        private boolean isBetweenParams = false;
+
+        public ParameterParser(String parameterString) {
+            this.parameterString = parameterString;
         }
 
-        if (param.length() > 1 && param.charAt(0) == '\'' && param.charAt(param.length()-1) == '\'') {
-            return param.substring(1, param.length()-1);
+        public List<String> parse() {
+            parameterList.clear();
+            for (int i = 0; i < parameterString.length(); i++) {
+                parseCharacterAt(i);
+            }
+            return parameterList.stream().toList();
         }
 
-        return param;
+        private void parseCharacterAt(int i) {
+            char c = parameterString.charAt(i);
+            if (isParameterSeparatingComma(c)) {
+                isBetweenParams = true;
+                addCurrentParamIfNotEmpty();
+            } else if (isNestedSingleQuote(c)) {
+                lastQuoteIndex = i;
+                appendCurrentValueToLastParameter();
+            } else if (isStartingSingleQuote(c)) {
+                isBetweenParams = false;
+                lastQuoteIndex = i;
+            } else if (isSingleQuote(c)) { // closing quote
+                addCurrentParamIfNotEmpty();
+            } else {
+                if (isBetweenParams && !String.valueOf(c).matches("\\s")) isBetweenParams = false;
+                if (!isBetweenParams) currentParameter += c;
+            }
+            if (isLastChar(i)) { //  TestFramework!
+                addCurrentParamIfNotEmpty();
+            }
+        }
+
+        private void appendCurrentValueToLastParameter() {
+            currentParameter = "%s'%s'".formatted(parameterList.pop(), currentParameter);
+        }
+
+        private boolean isLastChar(int i) {
+            return i == parameterString.length() - 1;
+        }
+
+        private boolean isNestedSingleQuote(char c) {
+            return isSingleQuote(c) && isNotWithinSingleQuotes() && !currentParameter.trim().isEmpty();
+        }
+
+        private boolean isStartingSingleQuote(char c) {
+            return isSingleQuote(c) && isNotWithinSingleQuotes();
+        }
+
+        private boolean isParameterSeparatingComma(char c) {
+            return isComma(c) && isNotWithinSingleQuotes();
+        }
+
+        private boolean isComma(char c) {
+            return c == ',';
+        }
+
+        private boolean isNotWithinSingleQuotes() {
+            return lastQuoteIndex < 0;
+        }
+
+        private static boolean isSingleQuote(char c) {
+            return c == '\'';
+        }
+
+        private void addCurrentParamIfNotEmpty() {
+            if (!currentParameter.replaceAll("^'|'$", "").isEmpty()) {
+                parameterList.add(currentParameter);
+            }
+            lastQuoteIndex = -1;
+            currentParameter = "";
+        }
     }
 }
