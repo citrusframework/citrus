@@ -21,10 +21,12 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.exceptions.NoSuchFunctionException;
 import org.citrusframework.exceptions.NoSuchFunctionLibraryException;
 import org.citrusframework.functions.core.CurrentDateFunction;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.functions.FunctionUtils.resolveFunction;
@@ -104,23 +106,54 @@ public class FunctionUtilsTest extends UnitTestSupport {
         resolveFunction("doesnotexist:concat('Hello', ' TestFramework!')", context);
     }
 
-    @Test
-    void shouldReplaceIfStringIsJson() {
+    @DataProvider
+    public static String[][] validParameterLists() {
+        return new String[][]{
+                {
+                        "citrus:concat('{\"lorem\": [\"ipsum\", \"other\"]}')",
+                        "{\"lorem\": [\"ipsum\", \"other\"]}"
+                },
+                {
+                        // has two spaces here ----------------\/
+                        "citrus:concat('{\"lorem\": [\"ipsum\",  \"other\"]}')",
+                        "{\"lorem\": [\"ipsum\",  \"other\"]}"
+                },
+                {
+                        // has no space here ----------------\/
+                        "citrus:concat('{\"lorem\": [\"ipsum\",\"other\"]}')",
+                        "{\"lorem\": [\"ipsum\",\"other\"]}"
+                },
+                {
+                        // with linebreak after comma
+                        """
+                        citrus:upperCase('{
+                            "myValues": [
+                                "O15o3a8",
+                                "PhDjdSruZgG"
+                            ]
+                        }')
+                        """,
+                        """
+                        {
+                            "MYVALUES": [
+                                "O15O3A8",
+                                "PHDJDSRUZGG"
+                            ]
+                        }
+                        """
+                }
+        };
+    }
+
+    @Test(dataProvider = "validParameterLists")
+    void shouldReplaceWithCommasInValue(String given, String expected) {
         var contextSpy = spy(context);
         when(contextSpy.getFunctionRegistry()).thenReturn(spy(context.getFunctionRegistry()));
         List<FunctionLibrary> functionLibraries = List.of(new DefaultFunctionLibrary());
         when(contextSpy.getFunctionRegistry().getFunctionLibraries()).thenReturn(functionLibraries);
-        var input = """
-        {
-            "myValues": [
-                "O15o3a8",
-                "PhDjdSruZgG"
-            ]
-        }
-        """;
 
-        var result = FunctionUtils.replaceFunctionsInString(input, context, false);
+        var result = FunctionUtils.replaceFunctionsInString(given, context, false);
 
-        assertThat(result).isEqualTo(input);
+        assertThat(result).isEqualTo(expected);
     }
 }

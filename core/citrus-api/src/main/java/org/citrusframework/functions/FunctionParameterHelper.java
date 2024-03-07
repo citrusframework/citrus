@@ -21,16 +21,16 @@ import java.util.Stack;
 
 /**
  * Helper class parsing a parameter string and converting the tokens to a parameter list.
- * 
+ *
  * @author Christoph Deppisch
  */
 public final class FunctionParameterHelper {
-    
+
     /**
      * Prevent class instantiation.
      */
     private FunctionParameterHelper() {}
-    
+
     /**
      * Convert a parameter string to a list of parameters.
      *

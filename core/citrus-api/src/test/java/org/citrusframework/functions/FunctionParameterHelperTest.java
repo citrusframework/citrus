@@ -71,7 +71,7 @@ class FunctionParameterHelperTest {
         String json = """
                 {"myValues": ["O15o3a8","PhDjdSruZgG"]}""";
         var result = getParameterList(wrappedInSingleQuotes(json));
-        assertThat(result).contains(json);
+        assertThat(result).containsExactly(json);
     }
 
     @Test
@@ -87,7 +87,7 @@ class FunctionParameterHelperTest {
                     ]
                 }""";
         var result = getParameterList(wrappedInSingleQuotes(json));
-        assertThat(result).contains(json);
+        assertThat(result).containsExactly(json);
     }
 
     @Test
