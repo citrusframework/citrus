@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,9 +74,7 @@ import org.slf4j.LoggerFactory;
  * for replacing dynamic content(variables and functions) in message payloads and headers.
  */
 public class TestContext implements ReferenceResolverAware, TestActionListenerAware {
-    /**
-     * Logger
-     */
+
     private static final Logger logger = LoggerFactory.getLogger(TestContext.class);
 
     /**
@@ -439,9 +437,13 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         CitrusRuntimeException exception = new CitrusRuntimeException(message, cause);
 
         // inform test listeners with failed test
-        testListeners.onTestStart(dummyTest);
-        testListeners.onTestFailure(dummyTest, exception);
-        testListeners.onTestFinish(dummyTest);
+        try {
+            testListeners.onTestStart(dummyTest);
+            testListeners.onTestFailure(dummyTest, exception);
+            testListeners.onTestFinish(dummyTest);
+        } catch (Exception e) {
+            logger.warn("Executing error handler listener failed!", e);
+        }
 
         return exception;
     }
@@ -903,7 +905,8 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     /**
      * Empty test case implementation used as test result when tests fail before execution.
      */
-    private static class EmptyTestCase implements TestCase {
+    static class EmptyTestCase implements TestCase {
+
         private final String testName;
         private final String packageName;
 
