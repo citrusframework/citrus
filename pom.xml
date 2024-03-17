@@ -708,7 +708,7 @@
       <dependency>
         <groupId>org.eclipse.angus</groupId>
         <artifactId>angus-activation</artifactId>
-        <version>${jakarta.activation.version}</version>
+        <version>${angus-mail.version}</version>
       </dependency>
 
       <!-- Citrus vert.x dependencies -->
