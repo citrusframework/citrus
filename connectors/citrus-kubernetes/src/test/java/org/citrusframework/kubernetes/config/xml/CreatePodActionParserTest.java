@@ -36,7 +36,7 @@ public class CreatePodActionParserTest extends AbstractActionParserTest<Kubernet
         Assert.assertEquals(action.getCommand().getClass(), CreatePod.class);
         Assert.assertEquals(action.getKubernetesClient().getClass(), KubernetesClient.class);
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
-        Assert.assertEquals(((CreatePod) action.getCommand()).getTemplate(), "classpath:templates/hello-jetty.yml");
+        Assert.assertEquals(((CreatePod) action.getCommand()).getTemplate(), "classpath:templates/hello-netty.yml");
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCommand());

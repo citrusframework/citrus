@@ -20,11 +20,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import io.fabric8.kubernetes.api.model.Doneable;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import io.fabric8.kubernetes.client.dsl.ClientResource;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
@@ -35,15 +33,16 @@ import org.citrusframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractCreateCommand<R extends KubernetesResource, D extends Doneable<R>, T extends KubernetesCommand<R>> extends AbstractClientCommand<ClientMixedOperation<R, ? extends KubernetesResourceList, D, ? extends ClientResource<R, D>>, R, T> {
+public abstract class AbstractCreateCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends io.fabric8.kubernetes.client.dsl.Resource<T>, C extends KubernetesCommand<T, T>>
+        extends AbstractClientCommand<T, T, L, R, C> {
 
     /** Optional resource object to create */
-    private R resource;
+    private T resource;
 
-    /** Template yml file to specify target */
+    /** Template yaml file to specify target */
     private String template;
 
-    /** Template yml resource to specify target */
+    /** Template yaml resource to specify target */
     private Resource templateResource;
 
     /**
@@ -56,26 +55,27 @@ public abstract class AbstractCreateCommand<R extends KubernetesResource, D exte
     }
 
     @Override
-    public void execute(ClientMixedOperation<R, ? extends KubernetesResourceList, D, ? extends ClientResource<R, D>> operation, TestContext context) {
+    public void execute(MixedOperation<T, L, R> operation, TestContext context) {
         if (resource != null) {
-            operation.create(resource);
-            setCommandResult(new CommandResult<>(resource));
+            T result = operation.resource(resource).create();
+            setCommandResult(new CommandResult<>(result));
         } else if (StringUtils.hasText(getTemplate()) || templateResource != null) {
-            R resource = operation.load(getTemplateAsStream(context)).get();
-            operation.create(resource);
-            setCommandResult(new CommandResult<>(resource));
+            R resource = operation.load(getTemplateAsStream(context));
+            T result = operation.resource(resource.item()).create();
+            setCommandResult(new CommandResult<>(result));
         } else {
-            setCommandResult(new CommandResult<>(specify(operation.createNew(), context).done()));
+            T result = operation.resource(specify(getResourceName(context), context)).create();
+            setCommandResult(new CommandResult<>(result));
         }
     }
 
     /**
-     * Specify pod to create.
-     * @param pod
+     * Specify resource to create.
+     * @param name
      * @param context
      * @return
      */
-    protected abstract D specify(D pod, TestContext context);
+    protected abstract T specify(String name, TestContext context);
 
     /**
      * Create input stream from template resource and add test variable support.
@@ -140,7 +140,7 @@ public abstract class AbstractCreateCommand<R extends KubernetesResource, D exte
      *
      * @return
      */
-    public R getResource() {
+    public T getResource() {
         return resource;
     }
 
@@ -149,7 +149,7 @@ public abstract class AbstractCreateCommand<R extends KubernetesResource, D exte
      *
      * @param resource
      */
-    public void setResource(R resource) {
+    public void setResource(T resource) {
         this.resource = resource;
     }
 }

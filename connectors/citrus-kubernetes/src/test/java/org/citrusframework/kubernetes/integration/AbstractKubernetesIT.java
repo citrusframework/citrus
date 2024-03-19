@@ -16,55 +16,13 @@
 
 package org.citrusframework.kubernetes.integration;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.IHookCallBack;
-import org.testng.ITestResult;
-import org.testng.annotations.BeforeSuite;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
+@ContextConfiguration(classes = KubernetesServiceConfiguration.class)
 public class AbstractKubernetesIT extends TestNGCitrusSpringSupport {
-
-    /** Logger */
-    private static final Logger logger = LoggerFactory.getLogger(AbstractKubernetesIT.class);
-
-    /** Kubernetes' connection state, checks connectivity only once per test run */
-    private static boolean connected = false;
-
-    @BeforeSuite(alwaysRun = true)
-    public void checkKubernetesEnvironment() {
-        boolean enabled = Boolean.parseBoolean(System.getProperty("citrus.kuberenetes.it.enabled", Boolean.FALSE.toString()));
-        if (enabled) {
-            try {
-                Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
-                    KubernetesClient kubernetesClient = new DefaultKubernetesClient();
-                    kubernetesClient.pods().list();
-                    return true;
-                });
-
-                connected = future.get(5000, TimeUnit.MILLISECONDS);
-            } catch (Exception e) {
-                logger.warn("Skipping Kubernetes test execution as no proper Kubernetes environment is available on host system!", e);
-            }
-        }
-    }
-
-    @Override
-    public void run(IHookCallBack callBack, ITestResult testResult) {
-        if (connected) {
-            super.run(callBack, testResult);
-        } else {
-            testResult.setStatus(ITestResult.SKIP);
-        }
-    }
 }

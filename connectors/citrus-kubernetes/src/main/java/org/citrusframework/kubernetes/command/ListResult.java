@@ -16,9 +16,13 @@
 
 package org.citrusframework.kubernetes.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -30,54 +34,81 @@ import jakarta.validation.constraints.NotNull;
 @JsonPropertyOrder({
         "apiVersion",
         "kind",
-        "success"
+        "items"
 })
-public class DeleteResult {
+public class ListResult<T> {
 
     @NotNull
     @JsonProperty("apiVersion")
-    private String apVersion;
+    private String apiVersion = "v1";
 
     @NotNull
     @JsonProperty("kind")
     private String kind;
 
     @NotNull
-    @JsonProperty("success")
-    private Boolean success;
+    @JsonProperty
+    private List<T> items;
 
     /**
-     * Gets the success.
-     *
-     * @return
+     * Default constructor.
      */
-    public Boolean getSuccess() {
-        return success;
+    public ListResult() {
+        super();
     }
 
     /**
-     * Sets the success.
-     *
-     * @param success
+     * Constructor using result model.
+     * @param items
      */
-    public void setSuccess(Boolean success) {
-        this.success = success;
+    public ListResult(List<T> items) {
+        if (items != null) {
+            if (items instanceof HasMetadata kubernetesResource) {
+                this.apiVersion = kubernetesResource.getApiVersion();
+                this.kind = kubernetesResource.getKind();
+            } else if (!items.isEmpty() && items.get(0) instanceof HasMetadata kubernetesResource) {
+                this.apiVersion = kubernetesResource.getApiVersion();
+                this.kind = kubernetesResource.getKind() + "List";
+            }
+        }
+
+        this.items = items;
+    }
+
+    /**
+     * Gets the items.
+     * @return
+     */
+    public List<T> getItems() {
+        if (items == null) {
+            items = new ArrayList<>();
+        }
+
+        return items;
+    }
+
+    /**
+     * Sets the items.
+     * @param items
+     */
+    public void setItems(List<T> items) {
+        this.items = items;
     }
 
     /**
      * Gets the api version.
      * @return
      */
-    public String getApVersion() {
-        return apVersion;
+    public String getApiVersion() {
+        return apiVersion;
     }
 
     /**
      * Sets the api version.
-     * @param apVersion
+     * @param apiVersion
      */
-    public void setApVersion(String apVersion) {
-        this.apVersion = apVersion;
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
     }
 
     /**
@@ -95,4 +126,5 @@ public class DeleteResult {
     public void setKind(String kind) {
         this.kind = kind;
     }
+
 }

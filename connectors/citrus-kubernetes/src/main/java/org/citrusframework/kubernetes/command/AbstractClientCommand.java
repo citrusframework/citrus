@@ -16,9 +16,10 @@
 
 package org.citrusframework.kubernetes.command;
 
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
@@ -28,7 +29,7 @@ import org.citrusframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractClientCommand<O extends ClientNonNamespaceOperation, R extends KubernetesResource, T extends KubernetesCommand<R>> extends AbstractKubernetesCommand<R, T> {
+public abstract class AbstractClientCommand<T extends HasMetadata, O, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, O>> extends AbstractKubernetesCommand<T, O, C> {
 
     /**
      * Default constructor initializing the command name.
@@ -41,24 +42,20 @@ public abstract class AbstractClientCommand<O extends ClientNonNamespaceOperatio
 
     @Override
     public final void execute(KubernetesClient kubernetesClient, TestContext context) {
-        O operation = operation(kubernetesClient, context);
+        MixedOperation<T, L, R> operation = operation(kubernetesClient, context);
 
         if (hasParameter(KubernetesMessageHeaders.LABEL)) {
             operation.withLabels(getLabels(getParameters().get(KubernetesMessageHeaders.LABEL).toString(), context));
             operation.withoutLabels(getWithoutLabels(getParameters().get(KubernetesMessageHeaders.LABEL).toString(), context));
         }
 
-        if (hasParameter(KubernetesMessageHeaders.NAME)) {
-            operation = (O) operation.withName(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAME).toString()));
-        }
-
-        if (operation instanceof ClientMixedOperation) {
+        if (operation != null && isNamespaceOperation()) {
             if (hasParameter(KubernetesMessageHeaders.NAMESPACE)) {
-                operation = (O) ((ClientMixedOperation) operation).inNamespace(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString()));
+                operation = (MixedOperation<T, L, R>) operation.inNamespace(context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAMESPACE).toString()));
             } else if (StringUtils.hasText(kubernetesClient.getClient().getNamespace())) {
-                operation = (O) ((ClientMixedOperation) operation).inNamespace(kubernetesClient.getClient().getNamespace());
+                operation = (MixedOperation<T, L, R>) operation.inNamespace(kubernetesClient.getClient().getNamespace());
             } else {
-                operation = (O) ((ClientMixedOperation) operation).inAnyNamespace();
+                operation = (MixedOperation<T, L, R>) operation.inAnyNamespace();
             }
         }
 
@@ -66,11 +63,28 @@ public abstract class AbstractClientCommand<O extends ClientNonNamespaceOperatio
     }
 
     /**
+     * Indicates that the command is supposed to be a namespaced operation.
+     * Non namespace operations are listing namespaces or nodes for instance.
+     * @return
+     */
+    protected boolean isNamespaceOperation() {
+        return true;
+    }
+
+    protected String getResourceName(TestContext context) {
+        if (hasParameter(KubernetesMessageHeaders.NAME)) {
+            return context.replaceDynamicContentInString(getParameters().get(KubernetesMessageHeaders.NAME).toString());
+        }
+
+        return null;
+    }
+
+    /**
      * Execute the mixed operation
      * @param operation
      * @param context
      */
-    protected abstract void execute(O operation, TestContext context);
+    protected abstract void execute(MixedOperation<T, L, R> operation, TestContext context);
 
     /**
      * Subclasses provide operation to call.
@@ -78,6 +92,6 @@ public abstract class AbstractClientCommand<O extends ClientNonNamespaceOperatio
      * @param context
      * @return
      */
-    protected abstract O operation(KubernetesClient kubernetesClient, TestContext context);
+    protected abstract MixedOperation<T, L, R> operation(KubernetesClient kubernetesClient, TestContext context);
 
 }

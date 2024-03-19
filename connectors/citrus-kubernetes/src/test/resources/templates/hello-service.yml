@@ -1,12 +1,9 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: hello-jetty
-  namespace: default
-  selfLink: /api/v1/namespaces/default/services/hello-jetty
-  uid: citrus:randomUUID()
+  name: hello-netty
   labels:
-    service: hello-jetty
+    service: hello-netty
 spec:
   ports:
     - protocol: TCP
@@ -14,6 +11,6 @@ spec:
       targetPort: 8080
       nodePort: 31citrus:randomNumber(3)
   selector:
-    server: hello-jetty
+    server: hello-netty
   type: NodePort
   sessionAffinity: None

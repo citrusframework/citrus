@@ -16,30 +16,14 @@
 
 package org.citrusframework.kubernetes.message;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import io.fabric8.kubernetes.api.model.KubernetesResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.kubernetes.command.CommandResult;
-import org.citrusframework.kubernetes.command.CreatePod;
-import org.citrusframework.kubernetes.command.CreateService;
-import org.citrusframework.kubernetes.command.DeletePod;
-import org.citrusframework.kubernetes.command.DeleteService;
-import org.citrusframework.kubernetes.command.GetPod;
-import org.citrusframework.kubernetes.command.GetService;
-import org.citrusframework.kubernetes.command.Info;
-import org.citrusframework.kubernetes.command.KubernetesCommand;
-import org.citrusframework.kubernetes.command.ListEndpoints;
-import org.citrusframework.kubernetes.command.ListEvents;
-import org.citrusframework.kubernetes.command.ListNamespaces;
-import org.citrusframework.kubernetes.command.ListNodes;
-import org.citrusframework.kubernetes.command.ListPods;
-import org.citrusframework.kubernetes.command.ListReplicationControllers;
-import org.citrusframework.kubernetes.command.ListServices;
-import org.citrusframework.kubernetes.command.WatchEventResult;
-import org.citrusframework.kubernetes.command.WatchNamespaces;
-import org.citrusframework.kubernetes.command.WatchNodes;
-import org.citrusframework.kubernetes.command.WatchPods;
-import org.citrusframework.kubernetes.command.WatchReplicationControllers;
-import org.citrusframework.kubernetes.command.WatchServices;
+import org.citrusframework.kubernetes.command.*;
 import org.citrusframework.kubernetes.endpoint.KubernetesEndpointConfiguration;
 import org.citrusframework.kubernetes.model.KubernetesRequest;
 import org.citrusframework.kubernetes.model.KubernetesResponse;
@@ -47,30 +31,26 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageConverter;
 import org.citrusframework.util.StringUtils;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class KubernetesMessageConverter implements MessageConverter<KubernetesCommand<?>, KubernetesCommand<?>, KubernetesEndpointConfiguration> {
+public class KubernetesMessageConverter implements MessageConverter<KubernetesCommand<?, ?>, KubernetesCommand<?, ?>, KubernetesEndpointConfiguration> {
 
     @Override
-    public KubernetesCommand<?> convertOutbound(Message message, KubernetesEndpointConfiguration endpointConfiguration, TestContext context) {
-        KubernetesCommand<?> command = getCommand(message, endpointConfiguration);
+    public KubernetesCommand<?, ?> convertOutbound(Message message, KubernetesEndpointConfiguration endpointConfiguration, TestContext context) {
+        KubernetesCommand<?, ?> command = getCommand(message, endpointConfiguration);
         convertOutbound(command, message, endpointConfiguration, context);
 
         return command;
     }
 
     @Override
-    public void convertOutbound(KubernetesCommand<?> command, Message message, KubernetesEndpointConfiguration endpointConfiguration, TestContext context) {
+    public void convertOutbound(KubernetesCommand<?, ?> command, Message message, KubernetesEndpointConfiguration endpointConfiguration, TestContext context) {
     }
 
     @Override
-    public Message convertInbound(KubernetesCommand<?> command, KubernetesEndpointConfiguration endpointConfiguration, TestContext context) {
+    public Message convertInbound(KubernetesCommand<?, ?> command, KubernetesEndpointConfiguration endpointConfiguration, TestContext context) {
         KubernetesResponse response = new KubernetesResponse();
         KubernetesMessage message = KubernetesMessage.response(response);
 
@@ -105,7 +85,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
      * @param commandName
      * @return
      */
-    private KubernetesCommand<?> getCommandByName(String commandName) {
+    private KubernetesCommand<?, ?> getCommandByName(String commandName) {
         if (!StringUtils.hasText(commandName)) {
             throw new CitrusRuntimeException("Missing command name property");
         }
@@ -139,7 +119,7 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
      * @param command
      * @return
      */
-    private Map<String,Object> createMessageHeaders(KubernetesCommand<?> command) {
+    private Map<String,Object> createMessageHeaders(KubernetesCommand<?, ?> command) {
         Map<String, Object> headers = new HashMap<>();
 
         headers.put(KubernetesMessageHeaders.COMMAND, command.getName());
@@ -159,10 +139,10 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
      * @param endpointConfiguration
      * @return
      */
-    private KubernetesCommand<?> getCommand(Message message, KubernetesEndpointConfiguration endpointConfiguration) {
+    private KubernetesCommand<?, ?> getCommand(Message message, KubernetesEndpointConfiguration endpointConfiguration) {
         Object payload = message.getPayload();
 
-        KubernetesCommand<?> command;
+        KubernetesCommand<?, ?> command;
         if (message instanceof KubernetesMessage) {
             command = createCommandFromRequest(message.getPayload(KubernetesRequest.class));
         } else if (message.getHeaders().containsKey(KubernetesMessageHeaders.COMMAND) &&
@@ -187,8 +167,8 @@ public class KubernetesMessageConverter implements MessageConverter<KubernetesCo
         return command;
     }
 
-    private KubernetesCommand<?> createCommandFromRequest(KubernetesRequest request) {
-        KubernetesCommand<?> command = getCommandByName(request.getCommand());
+    private KubernetesCommand<?, ?> createCommandFromRequest(KubernetesRequest request) {
+        KubernetesCommand<?, ?> command = getCommandByName(request.getCommand());
 
         if (StringUtils.hasText(request.getName())) {
             command.getParameters().put(KubernetesMessageHeaders.NAME, request.getName());

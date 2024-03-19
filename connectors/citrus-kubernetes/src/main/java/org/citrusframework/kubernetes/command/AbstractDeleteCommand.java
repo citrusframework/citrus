@@ -16,53 +16,66 @@
 
 package org.citrusframework.kubernetes.command;
 
+import java.util.List;
+
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.api.model.StatusDetails;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import io.fabric8.kubernetes.client.dsl.ClientResource;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractDeleteCommand<D extends DeleteResult, R extends KubernetesResource, T extends KubernetesCommand<D>> extends AbstractClientCommand<ClientMixedOperation<R, ? extends KubernetesResourceList, ? extends Doneable<R>, ? extends ClientResource<R, ? extends Doneable<R>>>, D, T> {
+public abstract class AbstractDeleteCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, DeleteResult>> extends AbstractClientCommand<T, DeleteResult, L, R, C> {
 
     /** Target resource type */
-    private Class<R> type;
+    private final Class<T> type;
 
-    /** Optional resource object to create */
-    private R resource;
+    /** Optional resource object to delete */
+    private T resource;
 
     /**
      * Default constructor initializing the command name.
      *
      * @param name
      */
-    public AbstractDeleteCommand(String name, Class<R> type) {
+    public AbstractDeleteCommand(String name, Class<T> type) {
         super("delete-" + name);
         this.type = type;
     }
 
     @Override
-    public void execute(ClientMixedOperation<R, ? extends KubernetesResourceList, ? extends Doneable<R>, ? extends ClientResource<R, ? extends Doneable<R>>> operation, TestContext context) {
-        Boolean success;
+    public void execute(MixedOperation<T, L, R> operation, TestContext context) {
+        boolean success;
 
         if (getParameters().containsKey(KubernetesMessageHeaders.NAME)) {
-            success = operation.delete();
+            List<StatusDetails> results = operation.delete();
+            success = !results.isEmpty();
+        } else if (resource != null) {
+            List<StatusDetails> results = operation.resource(resource).delete();
+            success = !results.isEmpty();
         } else {
-            KubernetesResourceList items = operation.list();
-            if (items.getItems()!= null && !items.getItems().isEmpty()) {
+            KubernetesResourceList<T> items = operation.list();
+            if (items.getItems() != null && !items.getItems().isEmpty()) {
                 success = operation.delete(items.getItems());
             } else {
-                success = false;
+                success = true;
             }
         }
 
-        D result = (D) new DeleteResult();
-        result.setType(type.getSimpleName());
-        result.setSuccess(success);
+        DeleteResult result = new DeleteResult();
+        if (resource != null) {
+            result.setApVersion(result.getApVersion());
+            result.setKind(result.getKind());
+        } else {
+            result.setKind(type.getSimpleName());
+        }
 
+        result.setSuccess(success);
         setCommandResult(new CommandResult<>(result));
     }
 
@@ -71,7 +84,7 @@ public abstract class AbstractDeleteCommand<D extends DeleteResult, R extends Ku
      *
      * @return
      */
-    public R getResource() {
+    public T getResource() {
         return resource;
     }
 
@@ -80,7 +93,7 @@ public abstract class AbstractDeleteCommand<D extends DeleteResult, R extends Ku
      *
      * @param resource
      */
-    public void setResource(R resource) {
+    public void setResource(T resource) {
         this.resource = resource;
     }
 }

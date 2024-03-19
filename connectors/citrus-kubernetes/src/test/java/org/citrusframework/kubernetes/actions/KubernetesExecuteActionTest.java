@@ -18,14 +18,17 @@ package org.citrusframework.kubernetes.actions;
 
 import java.util.Map;
 
-import org.citrusframework.kubernetes.client.KubernetesClient;
-import org.citrusframework.kubernetes.command.ListPods;
-import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import org.citrusframework.kubernetes.client.KubernetesClient;
+import org.citrusframework.kubernetes.command.ListPods;
+import org.citrusframework.kubernetes.command.ListResult;
+import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
+import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -37,18 +40,20 @@ import static org.mockito.Mockito.when;
 
 public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
-    private io.fabric8.kubernetes.client.KubernetesClient kubernetesClient = Mockito.mock(io.fabric8.kubernetes.client.KubernetesClient.class);
+    private final KubernetesClient client = new KubernetesClient();
 
-    private KubernetesClient client = new KubernetesClient();
+    @Mock
+    private io.fabric8.kubernetes.client.KubernetesClient kubernetesClient;
 
     @BeforeClass
     public void setup() {
+        MockitoAnnotations.openMocks(this);
         client.getEndpointConfiguration().setKubernetesClient(kubernetesClient);
     }
 
     @Test
     public void testListPods() {
-        final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
+        final MixedOperation clientOperation = Mockito.mock(MixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
 
@@ -66,14 +71,14 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
         Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
+        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
 
         verify(clientOperation).inAnyNamespace();
     }
 
     @Test
     public void testListPodsInNamespace() {
-        final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
+        final MixedOperation clientOperation = Mockito.mock(MixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
 
@@ -91,14 +96,14 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getParameters().size(), 1);
         Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
+        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
 
         verify(clientOperation).inNamespace("myNamespace");
     }
 
     @Test
     public void testListPodsInDefaultClientNamespace() {
-        final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
+        final MixedOperation clientOperation = Mockito.mock(MixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
 
@@ -117,14 +122,14 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
         Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
+        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
 
         verify(clientOperation).inNamespace("myNamespace");
     }
 
     @Test
     public void testListPodsWithLabels() {
-        final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
+        final MixedOperation clientOperation = Mockito.mock(MixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
 
@@ -152,12 +157,12 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,pod_label=active");
         Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
+        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
     }
 
     @Test
     public void testListPodsWithoutLabels() {
-        final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
+        final MixedOperation clientOperation = Mockito.mock(MixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
 
@@ -185,12 +190,12 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "!app,pod_label!=inactive");
         Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
+        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
     }
 
     @Test
     public void testListPodsMixedLabels() {
-        final ClientMixedOperation clientOperation = Mockito.mock(ClientMixedOperation.class);
+        final MixedOperation clientOperation = Mockito.mock(MixedOperation.class);
         PodList response = new PodList();
         response.getItems().add(new Pod());
 
@@ -228,6 +233,6 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,!running,with=active,without!=inactive");
         Assert.assertFalse(action.getCommand().getCommandResult().hasError());
-        Assert.assertEquals(action.getCommand().getCommandResult().getResult(), response);
+        Assert.assertEquals(((ListResult) action.getCommand().getCommandResult().getResult()).getItems(), response.getItems());
     }
 }

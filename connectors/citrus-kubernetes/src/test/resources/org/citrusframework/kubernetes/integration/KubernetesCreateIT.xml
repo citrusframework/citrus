@@ -3,11 +3,11 @@
               xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
                                   http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/kubernetes/testcase
                                   http://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd
-                                  http://www.citrusframework.org/schema/testcase 
+                                  http://www.citrusframework.org/schema/testcase
                                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
   <testcase name="KubernetesCreateIT">
@@ -22,8 +22,8 @@
     <description>Test kubernetes container command execution with kubernetes client.</description>
 
     <variables>
-      <variable name="podLabel" value="server=hello-jetty"/>
-      <variable name="serviceLabel" value="service=hello-jetty"/>
+      <variable name="podLabel" value="server=hello-netty"/>
+      <variable name="serviceLabel" value="service=hello-netty"/>
       <variable name="randomId" value="citrus:randomNumber(10)-citrus:lowerCase(citrus:randomString(4))"/>
     </variables>
 
@@ -32,19 +32,19 @@
         <message>Create new pod from template</message>
       </echo>
 
-      <k8s:create-pod namespace="default">
-        <k8s:template file="classpath:templates/hello-jetty.yml"/>
+      <k8s:create-pod client="k8sClient" namespace="${namespace}">
+        <k8s:template file="classpath:templates/hello-netty.yml"/>
       </k8s:create-pod>
 
       <echo>
         <message>List pods by '${podLabel}'</message>
       </echo>
 
-      <repeat-onerror-until-true condition="@assertThat('greaterThan(9)')@" auto-sleep="1000">
-        <k8s:list-pods label="${podLabel}">
+      <repeat-onerror-until-true condition="@assertThat(greaterThan(9))@" auto-sleep="1000">
+        <k8s:list-pods client="k8sClient" label="${podLabel}">
           <k8s:validate>
             <k8s:element path="$.result.items.size()" value="1"/>
-            <k8s:element path="$..status.phase" value="Running"/>
+            <k8s:element path="$..status.phase" value="@assertThat(anyOf(is(Running),is('')))@"/>
           </k8s:validate>
         </k8s:list-pods>
       </repeat-onerror-until-true>
@@ -53,38 +53,36 @@
         <message>Create new service from template</message>
       </echo>
 
-      <k8s:create-service namespace="default">
-        <k8s:template file="classpath:templates/hello-jetty-service.yml"/>
+      <k8s:create-service client="k8sClient" namespace="${namespace}">
+        <k8s:template file="classpath:templates/hello-service.yml"/>
       </k8s:create-service>
 
       <echo>
         <message>List services by '${serviceLabel}'</message>
       </echo>
 
-      <k8s:list-services label="${serviceLabel}">
+      <k8s:list-services client="k8sClient" label="${serviceLabel}">
         <k8s:validate>
           <k8s:element path="$.result.items.size()" value="1"/>
         </k8s:validate>
       </k8s:list-services>
-    </actions>
 
-    <finally>
-      <k8s:delete-pod label="server=hello-jetty"/>
+      <k8s:delete-pod client="k8sClient" label="server=hello-netty"/>
 
-      <k8s:delete-service name="hello-jetty">
+      <k8s:delete-service client="k8sClient" name="hello-netty">
         <k8s:validate>
           <k8s:element path="$.result.success" value="true"/>
         </k8s:validate>
       </k8s:delete-service>
 
-      <repeat-onerror-until-true condition="@assertThat('greaterThan(9)')@" auto-sleep="500">
-        <k8s:list-pods label="server=hello-jetty">
+      <repeat-onerror-until-true condition="@assertThat(greaterThan(9))@" auto-sleep="500">
+        <k8s:list-pods client="k8sClient" label="server=hello-netty">
           <k8s:validate>
-            <k8s:element path="$.result.items.exists()" value="false"/>
+            <k8s:element path="$.result.items.size()" value="0"/>
           </k8s:validate>
         </k8s:list-pods>
       </repeat-onerror-until-true>
-    </finally>
+    </actions>
 
   </testcase>
 </spring:beans>

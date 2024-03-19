@@ -16,16 +16,18 @@
 
 package org.citrusframework.kubernetes.command;
 
+import io.fabric8.kubernetes.api.model.ReplicationController;
+import io.fabric8.kubernetes.api.model.ReplicationControllerList;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.RollableScalableResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.api.model.ReplicationControllerList;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListReplicationControllers extends AbstractListCommand<ReplicationControllerList, ListReplicationControllers> {
+public class ListReplicationControllers extends AbstractListCommand<ReplicationController, ReplicationControllerList, RollableScalableResource<ReplicationController>, ListReplicationControllers> {
 
     /**
      * Default constructor initializing the command name.
@@ -35,7 +37,7 @@ public class ListReplicationControllers extends AbstractListCommand<ReplicationC
     }
 
     @Override
-    protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
+    protected MixedOperation<ReplicationController, ReplicationControllerList, RollableScalableResource<ReplicationController>> operation(KubernetesClient kubernetesClient, TestContext context) {
         return kubernetesClient.getClient().replicationControllers();
     }
 }

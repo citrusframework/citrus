@@ -1,0 +1,31 @@
+{
+  "apiVersion": "v1",
+  "kind": "Pod",
+  "metadata": {
+    "generation": "@isNumber()@",
+    "uid": "@ignore@",
+    "resourceVersion": "@isNumber()@",
+    "creationTimestamp": "@ignore@",
+    "name": "hello-netty-${randomId}",
+    "namespace": "test",
+    "labels": {
+      "server": "hello-netty"
+    }
+  },
+  "spec": {
+    "containers": [
+      {
+        "image": "netty",
+        "imagePullPolicy": "IfNotPresent",
+        "name": "hello-netty",
+        "ports": [
+          {
+            "protocol": "TCP",
+            "containerPort": 8080
+          }
+        ]
+      }
+    ],
+    "restartPolicy": "Always"
+  }
+}

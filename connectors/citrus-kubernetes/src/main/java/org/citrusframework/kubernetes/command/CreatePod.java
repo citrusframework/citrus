@@ -18,13 +18,13 @@ package org.citrusframework.kubernetes.command;
 
 import io.fabric8.kubernetes.api.model.ContainerFluent;
 import io.fabric8.kubernetes.api.model.ContainerPortFluent;
-import io.fabric8.kubernetes.api.model.DoneablePod;
-import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.api.model.PodFluent;
+import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.PodSpecFluent;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import io.fabric8.kubernetes.client.dsl.ClientResource;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.PodResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
@@ -34,7 +34,7 @@ import org.citrusframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class CreatePod extends AbstractCreateCommand<Pod, DoneablePod, CreatePod> {
+public class CreatePod extends AbstractCreateCommand<Pod, PodList, PodResource, CreatePod> {
 
     /** Docker image name */
     private String image;
@@ -55,16 +55,18 @@ public class CreatePod extends AbstractCreateCommand<Pod, DoneablePod, CreatePod
     }
 
     @Override
-    protected ClientMixedOperation<Pod, ? extends KubernetesResourceList, DoneablePod, ? extends ClientResource<Pod, DoneablePod>> operation(KubernetesClient kubernetesClient, TestContext context) {
+    protected MixedOperation<Pod, PodList, PodResource> operation(KubernetesClient kubernetesClient, TestContext context) {
         return kubernetesClient.getClient().pods();
     }
 
     @Override
-    protected DoneablePod specify(DoneablePod pod, TestContext context) {
-        PodFluent.MetadataNested metadata = pod.editOrNewMetadata();
+    protected Pod specify(String name, TestContext context) {
+        PodBuilder builder = new PodBuilder();
 
-        if (getParameters().containsKey(KubernetesMessageHeaders.NAME)) {
-            metadata.withName(getParameter(KubernetesMessageHeaders.NAME, context));
+        PodFluent<PodBuilder>.MetadataNested<PodBuilder> metadata = builder.editOrNewMetadata();
+
+        if (StringUtils.hasText(name)) {
+            metadata.withName(name);
         }
 
         if (getParameters().containsKey(KubernetesMessageHeaders.LABEL)) {
@@ -77,10 +79,10 @@ public class CreatePod extends AbstractCreateCommand<Pod, DoneablePod, CreatePod
 
         metadata.endMetadata();
 
-        PodFluent.SpecNested spec = pod.editOrNewSpec();
+        PodFluent<PodBuilder>.SpecNested<PodBuilder> spec = builder.editOrNewSpec();
         if (StringUtils.hasText(image)) {
-            PodSpecFluent.ContainersNested containers = spec.addNewContainer();
-            ContainerFluent container = containers.withImage(context.replaceDynamicContentInString(image));
+            PodSpecFluent<PodFluent<PodBuilder>.SpecNested<PodBuilder>>.ContainersNested<PodFluent<PodBuilder>.SpecNested<PodBuilder>> containers = spec.addNewContainer();
+            ContainerFluent<PodSpecFluent<PodFluent<PodBuilder>.SpecNested<PodBuilder>>.ContainersNested<PodFluent<PodBuilder>.SpecNested<PodBuilder>>> container = containers.withImage(context.replaceDynamicContentInString(image));
 
             if (StringUtils.hasText(containerName)) {
                 container.withName(context.replaceDynamicContentInString(containerName));
@@ -91,8 +93,8 @@ public class CreatePod extends AbstractCreateCommand<Pod, DoneablePod, CreatePod
             }
 
             if (StringUtils.hasText(containerPort)) {
-                ContainerFluent.PortsNested ports = container.addNewPort();
-                ContainerPortFluent port = ports.withContainerPort(Integer.valueOf(context.replaceDynamicContentInString(containerPort)));
+                ContainerFluent<PodSpecFluent<PodFluent<PodBuilder>.SpecNested<PodBuilder>>.ContainersNested<PodFluent<PodBuilder>.SpecNested<PodBuilder>>>.PortsNested<PodSpecFluent<PodFluent<PodBuilder>.SpecNested<PodBuilder>>.ContainersNested<PodFluent<PodBuilder>.SpecNested<PodBuilder>>> ports = container.addNewPort();
+                ContainerPortFluent<ContainerFluent<PodSpecFluent<PodFluent<PodBuilder>.SpecNested<PodBuilder>>.ContainersNested<PodFluent<PodBuilder>.SpecNested<PodBuilder>>>.PortsNested<PodSpecFluent<PodFluent<PodBuilder>.SpecNested<PodBuilder>>.ContainersNested<PodFluent<PodBuilder>.SpecNested<PodBuilder>>>> port = ports.withContainerPort(Integer.valueOf(context.replaceDynamicContentInString(containerPort)));
 
                 port.withProtocol(context.replaceDynamicContentInString(protocol));
 
@@ -106,7 +108,7 @@ public class CreatePod extends AbstractCreateCommand<Pod, DoneablePod, CreatePod
 
         spec.endSpec();
 
-        return pod;
+        return builder.build();
     }
 
     /**

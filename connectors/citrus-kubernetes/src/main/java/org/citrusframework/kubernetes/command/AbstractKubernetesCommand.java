@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
@@ -31,10 +31,10 @@ import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T extends KubernetesCommand<R>> implements KubernetesCommand<R> {
+public abstract class AbstractKubernetesCommand<T extends HasMetadata, O, C extends KubernetesCommand<T, O>> implements KubernetesCommand<T, O> {
 
     /** Self reference for generics support */
-    private final T self;
+    private final C self;
 
     /** Command name */
     private final String name;
@@ -43,10 +43,10 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
     private Map<String, Object> parameters = new HashMap<>();
 
     /** Command result if any */
-    private CommandResult<R> commandResult;
+    private CommandResult<O> commandResult;
 
     /** Optional command result validation */
-    private CommandResultCallback<R> resultCallback;
+    private CommandResultCallback<O> resultCallback;
 
     /**
      * Default constructor initializing the command name.
@@ -54,7 +54,7 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
      */
     public AbstractKubernetesCommand(String name) {
         this.name = name;
-        this.self = (T) this;
+        this.self = (C) this;
     }
 
     /**
@@ -79,7 +79,7 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
     }
 
     @Override
-    public CommandResult<R> getCommandResult() {
+    public CommandResult<O> getCommandResult() {
         return commandResult;
     }
 
@@ -87,7 +87,7 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
      * Sets the command result if any.
      * @param commandResult
      */
-    protected void setCommandResult(CommandResult<R> commandResult) {
+    protected void setCommandResult(CommandResult<O> commandResult) {
         this.commandResult = commandResult;
     }
 
@@ -115,24 +115,24 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
      * @param value
      * @return
      */
-    public T withParam(String name, String value) {
+    public C withParam(String name, String value) {
         parameters.put(name, value);
         return self;
     }
 
     @Override
-    public T validate(CommandResultCallback<R> callback) {
+    public C validate(CommandResultCallback<O> callback) {
         this.resultCallback = callback;
         return self;
     }
 
     @Override
-    public CommandResultCallback<R> getResultCallback() {
+    public CommandResultCallback<O> getResultCallback() {
         return resultCallback;
     }
 
     @Override
-    public T label(String key, String value) {
+    public C label(String key, String value) {
         if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
             withParam(KubernetesMessageHeaders.LABEL, key + "=" + value);
         } else {
@@ -142,7 +142,7 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
     }
 
     @Override
-    public T label(String key) {
+    public C label(String key) {
         if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
             withParam(KubernetesMessageHeaders.LABEL, key);
         } else {
@@ -152,19 +152,19 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
     }
 
     @Override
-    public T namespace(String key) {
+    public C namespace(String key) {
         withParam(KubernetesMessageHeaders.NAMESPACE, key);
         return self;
     }
 
     @Override
-    public T name(String key) {
+    public C name(String key) {
         withParam(KubernetesMessageHeaders.NAME, key);
         return self;
     }
 
     @Override
-    public T withoutLabel(String key, String value) {
+    public C withoutLabel(String key, String value) {
         if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
             withParam(KubernetesMessageHeaders.LABEL, key + "!=" + value);
         } else {
@@ -174,7 +174,7 @@ public abstract class AbstractKubernetesCommand<R extends KubernetesResource, T 
     }
 
     @Override
-    public T withoutLabel(String key) {
+    public C withoutLabel(String key) {
         if (!hasParameter(KubernetesMessageHeaders.LABEL)) {
             withParam(KubernetesMessageHeaders.LABEL, "!" + key);
         } else {

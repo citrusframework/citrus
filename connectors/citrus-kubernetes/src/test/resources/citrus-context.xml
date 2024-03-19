@@ -16,15 +16,10 @@
   <citrus:global-variables>
     <citrus:variable name="project.name" value="Citrus Kubernetes Integration Testing"/>
     <citrus:variable name="apiVersion" value="v1"/>
-    <citrus:variable name="namespace" value="default"/>
-    <citrus:variable name="minikube" value="${minikube}"/>
+    <citrus:variable name="namespace" value="test"/>
   </citrus:global-variables>
 
   <!-- Test Listeners -->
   <bean class="org.citrusframework.report.MessageTracingTestListener"/>
 
-  <citrus-k8s:client id="k8sClient"
-                            username="minikube"
-                            namespace="default"
-                            url="https://${minikube}:8443/"/>
 </beans>

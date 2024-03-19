@@ -22,19 +22,14 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.fabric8.kubernetes.api.model.EndpointsList;
-import io.fabric8.kubernetes.api.model.EventList;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.Endpoints;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Namespace;
-import io.fabric8.kubernetes.api.model.NamespaceList;
 import io.fabric8.kubernetes.api.model.Node;
-import io.fabric8.kubernetes.api.model.NodeList;
 import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.ReplicationController;
-import io.fabric8.kubernetes.api.model.ReplicationControllerList;
 import io.fabric8.kubernetes.api.model.Service;
-import io.fabric8.kubernetes.api.model.ServiceList;
+import io.fabric8.kubernetes.api.model.events.v1.Event;
 import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.actions.AbstractTestAction;
 import org.citrusframework.context.TestContext;
@@ -43,6 +38,8 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.command.*;
 import org.citrusframework.message.DefaultMessage;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.MessageValidator;
@@ -64,7 +61,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     private final KubernetesClient kubernetesClient;
 
     /** Kubernetes command to execute */
-    private final KubernetesCommand command;
+    private final KubernetesCommand<?, ?> command;
 
     /** Control command result for validation */
     private final String commandResult;
@@ -119,7 +116,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
      * @param command
      * @param context
      */
-    private void validateCommandResult(KubernetesCommand command, TestContext context) {
+    private void validateCommandResult(KubernetesCommand<?, ?> command, TestContext context) {
         if (logger.isDebugEnabled()) {
             logger.debug("Starting Kubernetes command result validation");
         }
@@ -151,7 +148,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         }
 
         if (command.getResultCallback() != null && result != null) {
-            command.getResultCallback().validateCommandResult(result, context);
+            command.validateCommandResult(context);
         }
     }
 
@@ -250,14 +247,16 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<KubernetesExecuteAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<KubernetesExecuteAction, Builder> implements ReferenceResolverAware {
 
-        private KubernetesClient kubernetesClient = new KubernetesClient();
-        private KubernetesCommand command;
+        private KubernetesClient kubernetesClient;
+        private KubernetesCommand<?, ?> command;
         private String commandResult;
-        private Map<String, Object> commandResultExpressions = new HashMap<>();
+        private final Map<String, Object> commandResultExpressions = new HashMap<>();
         private MessageValidator<? extends ValidationContext> jsonMessageValidator;
         private MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
+
+        private ReferenceResolver referenceResolver;
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -278,7 +277,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         /**
          * Use a kubernetes command.
          */
-        public Builder command(KubernetesCommand command) {
+        public Builder command(KubernetesCommand<?, ?> command) {
             this.command = command;
             return this;
         }
@@ -314,10 +313,20 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             return this;
         }
 
+        public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+            return this;
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+        }
+
         /**
          * Use a info command.
          */
-        public BaseActionBuilder<InfoResult, ?> info() {
+        public BaseActionBuilder<InfoResult, InfoResult, ?> info() {
             return new BaseActionBuilder<>(new Info());
         }
 
@@ -373,12 +382,12 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         /**
          * Base kubernetes action builder with namespace.
          */
-        public class NamespacedActionBuilder<R extends KubernetesResource> extends BaseActionBuilder<R, NamespacedActionBuilder<R>> {
+        public class NamespacedActionBuilder<T extends HasMetadata, O> extends BaseActionBuilder<T, O, NamespacedActionBuilder<T, O>> {
             /**
              * Constructor using command.
              * @param command
              */
-            NamespacedActionBuilder(KubernetesCommand command) {
+            NamespacedActionBuilder(KubernetesCommand<T, O> command) {
                 super(command);
             }
 
@@ -387,7 +396,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * @param key
              * @return
              */
-            public NamespacedActionBuilder<R> namespace(String key) {
+            public NamespacedActionBuilder<T, O> namespace(String key) {
                 command.namespace(key);
                 return this;
             }
@@ -396,12 +405,12 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         /**
          * Base kubernetes action builder with name option.
          */
-        public class NamedActionBuilder<R extends KubernetesResource> extends BaseActionBuilder<R, NamedActionBuilder<R>> {
+        public class NamedActionBuilder<T extends HasMetadata, O> extends BaseActionBuilder<T, O, NamedActionBuilder<T, O>> {
             /**
              * Constructor using command.
              * @param command
              */
-            NamedActionBuilder(KubernetesCommand command) {
+            NamedActionBuilder(KubernetesCommand<T, O> command) {
                 super(command);
             }
 
@@ -410,7 +419,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * @param key
              * @return
              */
-            public NamedActionBuilder<R> name(String key) {
+            public NamedActionBuilder<T, O> name(String key) {
                 command.name(key);
                 return this;
             }
@@ -420,7 +429,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * @param key
              * @return
              */
-            public NamedActionBuilder<R> namespace(String key) {
+            public NamedActionBuilder<T, O> namespace(String key) {
                 command.namespace(key);
                 return this;
             }
@@ -429,16 +438,16 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         /**
          * Base kubernetes action builder.
          */
-        public class BaseActionBuilder<R extends KubernetesResource, B extends BaseActionBuilder<R, B>> extends AbstractTestActionBuilder<KubernetesExecuteAction, B> {
+        public class BaseActionBuilder<T extends HasMetadata, O, B extends BaseActionBuilder<T, O, B>> extends AbstractTestActionBuilder<KubernetesExecuteAction, B> {
 
             /** Kubernetes command */
-            protected final KubernetesCommand command;
+            protected final KubernetesCommand<T, O> command;
 
             /**
              * Constructor using command.
              * @param command
              */
-            BaseActionBuilder(KubernetesCommand command) {
+            BaseActionBuilder(KubernetesCommand<T, O> command) {
                 this.command = command;
                 command(command);
             }
@@ -469,7 +478,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * @param callback
              * @return
              */
-            public B validate(CommandResultCallback<R> callback) {
+            public B validate(CommandResultCallback<O> callback) {
                 command.validate(callback);
                 return self;
             }
@@ -521,7 +530,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * @param command
              * @return
              */
-            protected B command(KubernetesCommand command) {
+            protected B command(KubernetesCommand<T, O> command) {
                 Builder.this.command(command);
                 return self;
             }
@@ -539,7 +548,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             /**
              * List pods.
              */
-            public NamespacedActionBuilder<PodList> list() {
+            public NamespacedActionBuilder<Pod, ListResult<Pod>> list() {
                 ListPods command = new ListPods();
                 return new NamespacedActionBuilder<>(command);
             }
@@ -548,7 +557,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Creates new pod.
              * @param pod
              */
-            public NamedActionBuilder<Pod> create(Pod pod) {
+            public NamedActionBuilder<Pod, Pod> create(Pod pod) {
                 CreatePod command = new CreatePod();
                 command.setPod(pod);
                 return new NamedActionBuilder<>(command);
@@ -558,7 +567,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Create new pod from template.
              * @param template
              */
-            public NamedActionBuilder<Pod> create(Resource template) {
+            public NamedActionBuilder<Pod, Pod> create(Resource template) {
                 CreatePod command = new CreatePod();
                 command.setTemplateResource(template);
                 return new NamedActionBuilder<>(command);
@@ -568,7 +577,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Create new pod from template path.
              * @param templatePath
              */
-            public NamedActionBuilder<Pod> create(String templatePath) {
+            public NamedActionBuilder<Pod, Pod> create(String templatePath) {
                 CreatePod command = new CreatePod();
                 command.setTemplate(templatePath);
                 return new NamedActionBuilder<>(command);
@@ -578,7 +587,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Gets pod by name.
              * @param name
              */
-            public NamedActionBuilder<Pod> get(String name) {
+            public NamedActionBuilder<Pod, Pod> get(String name) {
                 GetPod command = new GetPod();
                 command.name(name);
                 return new NamedActionBuilder<>(command);
@@ -588,16 +597,24 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Deletes pod by name.
              * @param name
              */
-            public NamedActionBuilder<DeleteResult> delete(String name) {
+            public NamedActionBuilder<Pod, DeleteResult> delete(String name) {
                 DeletePod command = new DeletePod();
                 command.name(name);
                 return new NamedActionBuilder<>(command);
             }
 
             /**
+             * Deletes pods.
+             */
+            public NamedActionBuilder<Pod, DeleteResult> delete() {
+                DeletePod command = new DeletePod();
+                return new NamedActionBuilder<>(command);
+            }
+
+            /**
              * Watch pods.
              */
-            public NamedActionBuilder<Pod> watch() {
+            public NamedActionBuilder<Pod, Pod> watch() {
                 return new NamedActionBuilder<>(new WatchPods());
             }
         }
@@ -609,7 +626,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             /**
              * List services.
              */
-            public NamespacedActionBuilder<ServiceList> list() {
+            public NamespacedActionBuilder<Service, ListResult<Service>> list() {
                 return new NamespacedActionBuilder<>(new ListServices());
             }
 
@@ -617,7 +634,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Creates new service.
              * @param pod
              */
-            public NamedActionBuilder<Service> create(Service pod) {
+            public NamedActionBuilder<Service, Service> create(Service pod) {
                 CreateService command = new CreateService();
                 command.setService(pod);
                 return new NamedActionBuilder<>(command);
@@ -627,7 +644,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Create new service from template.
              * @param template
              */
-            public NamedActionBuilder<Service> create(Resource template) {
+            public NamedActionBuilder<Service, Service> create(Resource template) {
                 CreateService command = new CreateService();
                 command.setTemplateResource(template);
                 return new NamedActionBuilder<>(command);
@@ -637,7 +654,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Create new service from template path.
              * @param templatePath
              */
-            public NamedActionBuilder<Service> create(String templatePath) {
+            public NamedActionBuilder<Service, Service> create(String templatePath) {
                 CreateService command = new CreateService();
                 command.setTemplate(templatePath);
                 return new NamedActionBuilder<>(command);
@@ -647,7 +664,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Gets service by name.
              * @param name
              */
-            public NamedActionBuilder<Service> get(String name) {
+            public NamedActionBuilder<Service, Service> get(String name) {
                 GetService command = new GetService();
                 command.name(name);
                 return new NamedActionBuilder<>(command);
@@ -657,16 +674,24 @@ public class KubernetesExecuteAction extends AbstractTestAction {
              * Deletes service by name.
              * @param name
              */
-            public NamedActionBuilder<DeleteResult> delete(String name) {
+            public NamedActionBuilder<Service, DeleteResult> delete(String name) {
                 DeleteService command = new DeleteService();
                 command.name(name);
                 return new NamedActionBuilder<>(command);
             }
 
             /**
+             * Deletes services.
+             */
+            public NamedActionBuilder<Service, DeleteResult> delete() {
+                DeleteService command = new DeleteService();
+                return new NamedActionBuilder<>(command);
+            }
+
+            /**
              * Watch services.
              */
-            public NamedActionBuilder<Service> watch() {
+            public NamedActionBuilder<Service, Service> watch() {
                 return new NamedActionBuilder<>(new WatchServices());
             }
         }
@@ -678,7 +703,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             /**
              * List endpoints.
              */
-            public NamespacedActionBuilder<EndpointsList> list() {
+            public NamespacedActionBuilder<Endpoints, ListResult<Endpoints>> list() {
                 return new NamespacedActionBuilder<>(new ListEndpoints());
             }
         }
@@ -690,14 +715,14 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             /**
              * List nodes.
              */
-            public BaseActionBuilder<NodeList, ?> list() {
+            public BaseActionBuilder<Node, ListResult<Node>, ?> list() {
                 return new BaseActionBuilder<>(new ListNodes());
             }
 
             /**
              * Watch nodes.
              */
-            public BaseActionBuilder<Node, ?> watch() {
+            public BaseActionBuilder<Node, Node, ?> watch() {
                 return new BaseActionBuilder<>(new WatchNodes());
             }
         }
@@ -709,14 +734,14 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             /**
              * List namespaces.
              */
-            public BaseActionBuilder<NamespaceList, ?> list() {
+            public BaseActionBuilder<Namespace, ListResult<Namespace>, ?> list() {
                 return new BaseActionBuilder<>(new ListNamespaces());
             }
 
             /**
              * Watch namespaces.
              */
-            public BaseActionBuilder<Namespace, ?> watch() {
+            public BaseActionBuilder<Namespace, Namespace, ?> watch() {
                 return new BaseActionBuilder<>(new WatchNamespaces());
             }
         }
@@ -728,7 +753,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             /**
              * List endpoints.
              */
-            public NamespacedActionBuilder<EventList> list() {
+            public NamespacedActionBuilder<Event, ListResult<Event>> list() {
                 return new NamespacedActionBuilder<>(new ListEvents());
             }
         }
@@ -740,20 +765,28 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             /**
              * List replication controllers.
              */
-            public NamespacedActionBuilder<ReplicationControllerList> list() {
+            public NamespacedActionBuilder<ReplicationController, ListResult<ReplicationController>> list() {
                 return new NamespacedActionBuilder<>(new ListReplicationControllers());
             }
 
             /**
              * Watch pods.
              */
-            public NamespacedActionBuilder<ReplicationController> watch() {
+            public NamespacedActionBuilder<ReplicationController, ReplicationController> watch() {
                 return new NamespacedActionBuilder<>(new WatchReplicationControllers());
             }
         }
 
         @Override
         public KubernetesExecuteAction build() {
+            if (kubernetesClient == null) {
+                if (referenceResolver != null && referenceResolver.isResolvable(KubernetesClient.class)) {
+                    kubernetesClient = referenceResolver.resolve(KubernetesClient.class);
+                } else {
+                    kubernetesClient = new KubernetesClient();
+                }
+            }
+
             return new KubernetesExecuteAction(this);
         }
     }

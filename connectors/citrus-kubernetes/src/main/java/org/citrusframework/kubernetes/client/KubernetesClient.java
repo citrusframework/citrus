@@ -42,7 +42,7 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
     private static final Logger logger = LoggerFactory.getLogger(KubernetesClient.class);
 
     /** Store of reply messages */
-    private CorrelationManager<KubernetesCommand> correlationManager;
+    private final CorrelationManager<KubernetesCommand<?, ?>> correlationManager;
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -76,7 +76,7 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
             logger.debug("Sending Kubernetes request to: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
         }
 
-        KubernetesCommand<?> command = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
+        KubernetesCommand<?, ?> command = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
         command.execute(this, context);
 
         logger.info("Kubernetes request was sent to endpoint: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
@@ -103,14 +103,14 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        KubernetesCommand command = correlationManager.find(selector, timeout);
+        KubernetesCommand<?, ?> command = correlationManager.find(selector, timeout);
 
         if (command == null) {
             throw new MessageTimeoutException(timeout, getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
         }
 
         if (command.getResultCallback() != null) {
-            command.getResultCallback().validateCommandResult(command.getCommandResult(), context);
+            command.validateCommandResult(context);
         }
 
         return getEndpointConfiguration().getMessageConverter().convertInbound(command, getEndpointConfiguration(), context);

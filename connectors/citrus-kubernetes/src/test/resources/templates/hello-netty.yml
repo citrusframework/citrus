@@ -1,0 +1,15 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: hello-netty-${randomId}
+  labels:
+    server: hello-netty
+spec:
+  containers:
+    - name: hello-netty
+      image: netty
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+  restartPolicy: Always

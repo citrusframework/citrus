@@ -10,7 +10,7 @@
     <testcase name="CreatePodActionParserTest">
         <actions>
             <k8s:create-pod>
-                <k8s:template file="classpath:templates/hello-jetty.yml"/>
+                <k8s:template file="classpath:templates/hello-netty.yml"/>
             </k8s:create-pod>
 
             <k8s:create-pod name="myPod" label="pod=new" namespace="default" client="myK8sClient">

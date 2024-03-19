@@ -16,17 +16,21 @@
 
 package org.citrusframework.kubernetes.command;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-
 import java.util.Map;
 
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.kubernetes.client.KubernetesClient;
+
 /**
+ * Command executes an operation on the kubernetes client (e.g. list, create).
+ * Type parameter:
+ * <T> the Kubernetes resource that this command operates with (e.g. Pod, Service, Secret, ...)
+ * <O> the command output that may be validated (e.g. Pod, PodList, InfoResult, ...)
  * @author Christoph Deppisch
  * @since 2.7
  */
-public interface KubernetesCommand<R extends KubernetesResource> {
+public interface KubernetesCommand<T extends HasMetadata, O> {
 
     /**
      * Executes command with given kubernetes client and test context.
@@ -52,19 +56,19 @@ public interface KubernetesCommand<R extends KubernetesResource> {
      * @param callback
      * @return
      */
-    KubernetesCommand<R> validate(CommandResultCallback<R> callback);
+    KubernetesCommand<T, O> validate(CommandResultCallback<O> callback);
 
     /**
      * Provides access to this command result if any.
      * @return
      */
-    CommandResult<R> getCommandResult();
+    CommandResult<O> getCommandResult();
 
     /**
      * Gets the command result callback.
      * @return
      */
-    CommandResultCallback<R> getResultCallback();
+    CommandResultCallback<O> getResultCallback();
 
     /**
      * Sets the label parameter.
@@ -72,28 +76,28 @@ public interface KubernetesCommand<R extends KubernetesResource> {
      * @param value
      * @return
      */
-    KubernetesCommand<R> label(String key, String value);
+    KubernetesCommand<T, O> label(String key, String value);
 
     /**
      * Sets the label parameter.
      * @param key
      * @return
      */
-    KubernetesCommand<R> label(String key);
+    KubernetesCommand<T, O> label(String key);
 
     /**
      * Sets the namespace parameter.
      * @param key
      * @return
      */
-    KubernetesCommand<R> namespace(String key);
+    KubernetesCommand<T, O> namespace(String key);
 
     /**
      * Sets the name parameter.
      * @param key
      * @return
      */
-    KubernetesCommand<R> name(String key);
+    KubernetesCommand<T, O> name(String key);
 
     /**
      * Sets the without label parameter.
@@ -101,12 +105,20 @@ public interface KubernetesCommand<R extends KubernetesResource> {
      * @param value
      * @return
      */
-    KubernetesCommand<R> withoutLabel(String key, String value);
+    KubernetesCommand<T, O> withoutLabel(String key, String value);
 
     /**
      * Sets the without label parameter.
      * @param key
      * @return
      */
-    KubernetesCommand<R> withoutLabel(String key);
+    KubernetesCommand<T, O> withoutLabel(String key);
+
+    /**
+     * Validate command result using the specified command result callback.
+     * @param context
+     */
+    default void validateCommandResult(TestContext context) {
+        getResultCallback().validateCommandResult(getCommandResult(), context);
+    }
 }
