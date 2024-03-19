@@ -16,17 +16,18 @@
 
 package org.citrusframework.kubernetes.command;
 
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.PodResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import io.fabric8.kubernetes.client.dsl.ClientPodResource;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class GetPod extends AbstractGetCommand<Pod, GetPod> {
+public class GetPod extends AbstractGetCommand<Pod, PodList, PodResource, GetPod> {
 
     /**
      * Default constructor initializing the command name.
@@ -36,7 +37,7 @@ public class GetPod extends AbstractGetCommand<Pod, GetPod> {
     }
 
     @Override
-    protected ClientMixedOperation<Pod, PodList, DoneablePod, ClientPodResource<Pod, DoneablePod>> operation(KubernetesClient kubernetesClient, TestContext context) {
+    protected MixedOperation<Pod, PodList, PodResource> operation(KubernetesClient kubernetesClient, TestContext context) {
         return kubernetesClient.getClient().pods();
     }
 }

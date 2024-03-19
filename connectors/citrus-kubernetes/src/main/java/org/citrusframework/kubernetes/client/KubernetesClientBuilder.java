@@ -28,8 +28,8 @@ import org.citrusframework.kubernetes.message.KubernetesMessageConverter;
 public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesClient> {
 
     /** Endpoint target */
-    private KubernetesClient endpoint = new KubernetesClient();
-    private ConfigBuilder config = new ConfigBuilder();
+    private final KubernetesClient endpoint = new KubernetesClient();
+    private final ConfigBuilder config = new ConfigBuilder();
 
     @Override
     public KubernetesClient build() {
@@ -40,6 +40,16 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     @Override
     protected KubernetesClient getEndpoint() {
         return endpoint;
+    }
+
+    /**
+     * Sets the Fabric8 client instance.
+     * @param client
+     * @return
+     */
+    public KubernetesClientBuilder client(io.fabric8.kubernetes.client.KubernetesClient client) {
+        endpoint.getEndpointConfiguration().setKubernetesClient(client);
+        return this;
     }
 
     /**

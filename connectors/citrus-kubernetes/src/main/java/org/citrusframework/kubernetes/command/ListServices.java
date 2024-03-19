@@ -16,16 +16,18 @@
 
 package org.citrusframework.kubernetes.command;
 
+import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.ServiceList;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.ServiceResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.api.model.ServiceList;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListServices extends AbstractListCommand<ServiceList, ListServices> {
+public class ListServices extends AbstractListCommand<Service, ServiceList, ServiceResource<Service>, ListServices> {
 
     /**
      * Default constructor initializing the command name.
@@ -35,7 +37,7 @@ public class ListServices extends AbstractListCommand<ServiceList, ListServices>
     }
 
     @Override
-    protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
+    protected MixedOperation<Service, ServiceList, ServiceResource<Service>> operation(KubernetesClient kubernetesClient, TestContext context) {
         return kubernetesClient.getClient().services();
     }
 }

@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "generation": "@isNumber()@",
+    "uid": "@ignore@",
+    "resourceVersion": "@isNumber()@",
+    "creationTimestamp": "@ignore@",
+    "name": "hello-netty",
+    "namespace": "test",
+    "labels": {
+      "service": "hello-netty"
+    }
+  },
+  "apiVersion": "v1",
+  "kind": "Service",
+  "spec": {
+    "sessionAffinity": "None",
+    "selector": {
+      "server": "hello-netty"
+    },
+    "ports": [
+      {
+        "protocol": "TCP",
+        "port": 8080,
+        "nodePort": "@ignore@",
+        "targetPort": 8080
+      }
+    ],
+    "type": "NodePort"
+  }
+}

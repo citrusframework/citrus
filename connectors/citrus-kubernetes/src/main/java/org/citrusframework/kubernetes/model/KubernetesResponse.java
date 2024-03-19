@@ -18,7 +18,6 @@ package org.citrusframework.kubernetes.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
 
 /**
  * @author Christoph Deppisch
@@ -33,7 +32,7 @@ public class KubernetesResponse {
 
     /** The result model */
     @JsonProperty("result")
-    private KubernetesResource<?> result;
+    private Object result;
 
     /** Optional error on this result */
     @JsonProperty("error")
@@ -79,7 +78,7 @@ public class KubernetesResponse {
      * Gets the result property.
      * @return
      */
-    public KubernetesResource<?> getResult() {
+    public Object getResult() {
         return result;
     }
 
@@ -87,7 +86,7 @@ public class KubernetesResponse {
      * Sets the result property.
      * @param value
      */
-    public void setResult(KubernetesResource<?> value) {
+    public void setResult(Object value) {
         this.result = value;
     }
 

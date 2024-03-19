@@ -20,15 +20,20 @@ import java.net.URL;
 import java.util.UUID;
 
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.NamespaceList;
 import io.fabric8.kubernetes.api.model.Node;
 import io.fabric8.kubernetes.api.model.NodeList;
+import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.ServiceList;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.PodResource;
+import io.fabric8.kubernetes.client.dsl.Resource;
+import io.fabric8.kubernetes.client.dsl.ServiceResource;
 import org.citrusframework.DefaultTestCaseRunner;
 import org.citrusframework.TestCase;
 import org.citrusframework.kubernetes.UnitTestSupport;
@@ -42,8 +47,11 @@ import org.citrusframework.kubernetes.command.WatchEventResult;
 import org.citrusframework.kubernetes.command.WatchNodes;
 import org.citrusframework.kubernetes.command.WatchServices;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.kubernetes.actions.KubernetesExecuteAction.Builder.kubernetes;
@@ -59,15 +67,27 @@ import static org.mockito.Mockito.when;
  */
 public class KubernetesTestActionBuilderTest extends UnitTestSupport {
 
-    private final io.fabric8.kubernetes.client.KubernetesClient k8sClient = Mockito.mock(io.fabric8.kubernetes.client.KubernetesClient.class);
+    @Mock
+    private MixedOperation<Pod, PodList, PodResource> podsOperation;
+    @Mock
+    private MixedOperation<Service, ServiceList, ServiceResource<Service>> servicesOperation;
+    @Mock
+    private MixedOperation<Namespace, NamespaceList, Resource<Namespace>> namespacesOperation;
+    @Mock
+    private MixedOperation<Node, NodeList, Resource<Node>> nodesOperation;
+    @Mock
+    private ServiceResource<Service> serviceResource;
+
+    @Mock
+    private io.fabric8.kubernetes.client.KubernetesClient k8sClient;
+
+    @BeforeClass
+    private void setupMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void testKubernetesBuilder() throws Exception {
-        ClientMixedOperation podsOperation = Mockito.mock(ClientMixedOperation.class);
-        ClientNonNamespaceOperation namespacesOperation = Mockito.mock(ClientNonNamespaceOperation.class);
-        ClientNonNamespaceOperation nodesOperation = Mockito.mock(ClientNonNamespaceOperation.class);
-        ClientMixedOperation servicesOperation = Mockito.mock(ClientMixedOperation.class);
-
         Watch watch = Mockito.mock(Watch.class);
 
         CreateContainerResponse response = new CreateContainerResponse();
@@ -98,7 +118,7 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport {
             ((Watcher) invocationOnMock.getArguments()[0]).eventReceived(Watcher.Action.MODIFIED, new Service());
             return watch;
         });
-        when(servicesOperation.withName("myService")).thenReturn(servicesOperation);
+        when(servicesOperation.withName("myService")).thenReturn(serviceResource);
         when(servicesOperation.inNamespace("myNamespace")).thenReturn(servicesOperation);
 
         final KubernetesClient client = new KubernetesClient();
@@ -142,7 +162,7 @@ public class KubernetesTestActionBuilderTest extends UnitTestSupport {
             .validate((services, context) -> {
                 Assert.assertNotNull(services);
                 Assert.assertNotNull(services.getResult());
-                Assert.assertEquals(((WatchEventResult) services).getAction(), Watcher.Action.MODIFIED);
+                Assert.assertEquals(((WatchEventResult<Service>) services).getAction(), Watcher.Action.MODIFIED);
             }));
 
         TestCase test = builder.getTestCase();

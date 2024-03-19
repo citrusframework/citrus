@@ -10,7 +10,7 @@
     <testcase name="CreateServiceActionParserTest">
         <actions>
             <k8s:create-service>
-                <k8s:template file="classpath:templates/hello-jetty-service.yml"/>
+                <k8s:template file="classpath:templates/hello-service.yml"/>
             </k8s:create-service>
 
             <k8s:create-service name="myService" label="service=new" namespace="default" client="myK8sClient">

@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
  */
 public class KubernetesEndpointComponentTest {
 
-    private TestContext context = new TestContext();
+    private final TestContext context = new TestContext();
 
     @Test
     public void testCreateClientEndpoint() throws Exception {
@@ -62,7 +62,7 @@ public class KubernetesEndpointComponentTest {
 
         Assert.assertEquals(endpoint.getClass(), KubernetesClient.class);
 
-        Assert.assertEquals(((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "https://localhost:8443");
+        Assert.assertEquals(((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "https://localhost:8443/");
         Assert.assertEquals(((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "myNamespace");
         Assert.assertEquals(((KubernetesClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
     }

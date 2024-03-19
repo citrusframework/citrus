@@ -4,13 +4,13 @@
               xmlns:k8s="http://www.citrusframework.org/schema/kubernetes/testcase"
               xmlns:http="http://www.citrusframework.org/schema/http/testcase"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
                                   http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/kubernetes/testcase
                                   http://www.citrusframework.org/schema/kubernetes/testcase/citrus-kubernetes-testcase.xsd
                                   http://www.citrusframework.org/schema/http/testcase
                                   http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
-                                  http://www.citrusframework.org/schema/testcase 
+                                  http://www.citrusframework.org/schema/testcase
                                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
   <testcase name="KubernetesExecuteIT">
@@ -33,17 +33,19 @@
         <message>Validate kubernetes API version</message>
       </echo>
 
-      <k8s:info>
+      <k8s:info client="k8sClient">
         <k8s:validate>
-          <k8s:result>{
-            "result": {
-              "clientVersion": "1.4.34",
-              "apiVersion": "${apiVersion}",
-              "kind":"Info",
-              "masterUrl": "https://${minikube}:8443/",
-              "namespace": "${namespace}"
+          <k8s:result>
+            {
+              "result": {
+                "clientVersion": "6.10.0",
+                "apiVersion": "${apiVersion}",
+                "kind":"Info",
+                "masterUrl": "@matches('http://localhost:[0-9]+/')@",
+                "namespace": "${namespace}"
+              }
             }
-          }</k8s:result>
+          </k8s:result>
         </k8s:validate>
       </k8s:info>
 
@@ -51,51 +53,29 @@
         <message>List all pods</message>
       </echo>
 
-      <k8s:list-pods>
+      <create-variables>
+        <variable name="randomId" value="citrus:randomNumber(10)-citrus:lowerCase(citrus:randomString(4))"/>
+      </create-variables>
+
+      <k8s:create-pod client="k8sClient" namespace="${namespace}">
+        <k8s:template file="classpath:templates/hello-netty.yml"/>
+      </k8s:create-pod>
+
+      <k8s:list-pods client="k8sClient">
         <k8s:validate>
-          <k8s:result>{
-            "result": {
-              "apiVersion":"${apiVersion}",
-              "kind":"PodList",
-              "metadata":"@ignore@",
-              "items":[{
-                "apiVersion":"${apiVersion}",
-                "kind":"Pod",
-                "metadata":"@ignore@",
-                "spec":{
-                  "containers":[
-                    {
-                      "args":[],
-                      "command":[],
-                      "env":[],
-                      "image":"gcr.io/google_containers/echoserver:1.4",
-                      "imagePullPolicy":"IfNotPresent",
-                      "name":"hello-minikube",
-                      "ports":[{
-                        "containerPort":8080,
-                        "protocol":"TCP"
-                      }],
-                      "resources":{},
-                      "terminationMessagePath":"/dev/termination-log",
-                      "volumeMounts":"@ignore@"
-                    }
-                  ],
-                  "dnsPolicy":"ClusterFirst",
-                  "imagePullSecrets":[],
-                  "nodeName":"minikube",
-                  "restartPolicy":"Always",
-                  "securityContext":{"supplementalGroups":[]},
-                  "serviceAccount":"default",
-                  "serviceAccountName":"default",
-                  "terminationGracePeriodSeconds":30,
-                  "volumes":"@ignore@"
-                },
-                "status": "@ignore@"
-              }]
+          <k8s:result>
+            {
+              "result": {
+                "apiVersion": "v1",
+                "kind": "PodList",
+                "items":[
+                  citrus:readFile('templates/pod.json')
+                ]
+              }
             }
-          }</k8s:result>
+          </k8s:result>
           <k8s:element path="$.result.items.size()" value="1"/>
-          <k8s:element path="$..status.phase" value="Running"/>
+          <k8s:element path="$..status.phase" value="@assertThat(anyOf(is(Running),is('')))@"/>
           <k8s:element path="$..metadata.name" value="@variable('podName')@"/>
         </k8s:validate>
       </k8s:list-pods>
@@ -104,161 +84,72 @@
         <message>List all services</message>
       </echo>
 
-      <k8s:list-services>
+      <k8s:create-service client="k8sClient" namespace="${namespace}">
+        <k8s:template file="classpath:templates/hello-service.yml"/>
+      </k8s:create-service>
+
+      <k8s:list-services client="k8sClient">
         <k8s:validate>
-          <k8s:result>{
-            "result": {
-              "apiVersion":"${apiVersion}",
-              "kind":"ServiceList",
-              "metadata":"@ignore@",
-              "items":"@ignore@"
+          <k8s:result>
+            {
+              "result": {
+                "apiVersion": "v1",
+                "kind": "ServiceList",
+                "items":[
+                  citrus:readFile('templates/service.json')
+                ]
+              }
             }
-          }</k8s:result>
-          <k8s:element path="$.result.items.size()" value="2"/>
+          </k8s:result>
+          <k8s:element path="$.result.items.size()" value="1"/>
         </k8s:validate>
       </k8s:list-services>
 
       <echo>
-        <message>Get hello-minikube service by name</message>
+        <message>Get service by name</message>
       </echo>
 
-      <k8s:get-service name="hello-minikube">
+      <k8s:get-service client="k8sClient" name="hello-netty">
         <k8s:validate>
-          <k8s:result>{
-            "result": {
-              "apiVersion":"${apiVersion}",
-              "kind":"Service",
-              "metadata": {
-                "creationTimestamp":"@ignore@",
-                "finalizers":[],
-                "labels": {
-                  "run":"hello-minikube"
-                },
-                "name":"hello-minikube",
-                "namespace":"default",
-                "ownerReferences":[],
-                "resourceVersion":"@ignore@",
-                "selfLink":"/api/${apiVersion}/namespaces/default/services/hello-minikube",
-                "uid":"@ignore@"
-              },
-              "spec": {
-                "clusterIP":"@ignore@",
-                "deprecatedPublicIPs":[],
-                "externalIPs":[],
-                "loadBalancerSourceRanges":[],
-                "ports":[{
-                  "nodePort":"@variable('servicePort')@",
-                  "port":8080,
-                  "protocol":"TCP",
-                  "targetPort":8080
-                }],
-                "selector": {
-                  "run":"hello-minikube"
-                },
-                "sessionAffinity":"None",
-                "type":"NodePort"
-              },
-              "status":"@ignore@"
+          <k8s:result>
+            {
+              "result": citrus:readFile('templates/service.json')
             }
-          }</k8s:result>
+          </k8s:result>
         </k8s:validate>
       </k8s:get-service>
-
-      <echo>
-        <message>Invoke hello-minikube pod service</message>
-      </echo>
-
-      <http:send-request uri="http://${minikube}:${servicePort}/hello">
-        <http:POST>
-          <http:headers content-type="text/plain"/>
-          <http:body type="plaintext">
-            <http:data>Hello</http:data>
-          </http:body>
-        </http:POST>
-      </http:send-request>
-
-      <http:receive-response uri="http://${minikube}:${servicePort}/hello">
-        <http:headers status="200" reason-phrase="OK"/>
-        <http:body type="plaintext">
-          <http:data>@endsWith('Hello')@</http:data>
-        </http:body>
-      </http:receive-response>
 
       <echo>
         <message>List all endpoints</message>
       </echo>
 
-      <k8s:list-endpoints>
+      <k8s:list-endpoints client="k8sClient">
         <k8s:validate>
-          <k8s:result>{
-            "result": {
-              "apiVersion":"${apiVersion}",
-              "kind":"EndpointsList",
-              "metadata":"@ignore@",
-              "items":"@ignore@"
+          <k8s:result>
+            {
+              "result": {
+                "apiVersion": "v1",
+                "kind": "EndpointsList",
+                "items": []
+              }
             }
-          }</k8s:result>
-          <k8s:element path="$.result.items.size()" value="2"/>
+          </k8s:result>
         </k8s:validate>
       </k8s:list-endpoints>
       <k8s:list-events/>
 
       <echo>
-        <message>Get hello-minikube pod by '${podName}'</message>
+        <message>Get pod by name '${podName}'</message>
       </echo>
 
-      <k8s:get-pod name="${podName}">
+      <k8s:get-pod client="k8sClient" name="${podName}">
         <k8s:validate>
-          <k8s:result>{
-            "result": {
-              "apiVersion":"${apiVersion}",
-              "kind":"Pod",
-              "metadata": {
-                  "annotations":"@ignore@",
-                  "creationTimestamp":"@ignore@",
-                  "finalizers":[],
-                  "generateName":"@startsWith('hello-minikube-')@",
-                  "labels":{
-                    "pod-template-hash":"@ignore@",
-                    "run":"hello-minikube"
-                  },
-                  "name":"${podName}",
-                  "namespace":"default",
-                  "ownerReferences":"@ignore@",
-                  "resourceVersion":"@ignore@",
-                  "selfLink":"/api/${apiVersion}/namespaces/default/pods/${podName}",
-                  "uid":"@ignore@"
-              },
-              "spec": {
-                "containers": [{
-                  "args":[],
-                  "command":[],
-                  "env":[],
-                  "image":"gcr.io/google_containers/echoserver:1.4",
-                  "imagePullPolicy":"IfNotPresent",
-                  "name":"hello-minikube",
-                  "ports":[{
-                    "containerPort":8080,
-                    "protocol":"TCP"
-                  }],
-                  "resources":{},
-                  "terminationMessagePath":"/dev/termination-log",
-                  "volumeMounts":"@ignore@"
-                }],
-                "dnsPolicy":"ClusterFirst",
-                "imagePullSecrets":"@ignore@",
-                "nodeName":"minikube",
-                "restartPolicy":"Always",
-                "securityContext":"@ignore@",
-                "serviceAccount":"default",
-                "serviceAccountName":"default",
-                "terminationGracePeriodSeconds":30,
-                "volumes":"@ignore@"
-              },
-              "status": "@ignore@"
+          <k8s:result>
+            {
+              "result": citrus:readFile('templates/pod.json')
             }
-          }</k8s:result>
-          <k8s:element path="$..status.phase" value="Running"/>
+          </k8s:result>
+          <k8s:element path="$..status.phase" value="@assertThat(anyOf(is(Running),is('')))@"/>
         </k8s:validate>
       </k8s:get-pod>
 

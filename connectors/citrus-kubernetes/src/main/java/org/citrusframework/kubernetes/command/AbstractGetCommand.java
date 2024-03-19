@@ -16,16 +16,17 @@
 
 package org.citrusframework.kubernetes.command;
 
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
 import org.citrusframework.context.TestContext;
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import io.fabric8.kubernetes.client.dsl.ClientResource;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractGetCommand<R extends KubernetesResource, T extends KubernetesCommand<R>> extends AbstractClientCommand<ClientMixedOperation<R, ? extends KubernetesResourceList, ? extends Doneable<R>, ? extends ClientResource<R, ? extends Doneable<R>>>, R, T> {
+public abstract class AbstractGetCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, T>> extends AbstractClientCommand<T, T, L, R, C> {
 
     /**
      * Default constructor initializing the command name.
@@ -37,7 +38,8 @@ public abstract class AbstractGetCommand<R extends KubernetesResource, T extends
     }
 
     @Override
-    public void execute(ClientMixedOperation<R, ? extends KubernetesResourceList, ? extends Doneable<R>, ? extends ClientResource<R, ? extends Doneable<R>>> operation, TestContext context) {
-        setCommandResult(new CommandResult<>(operation.get()));
+    public void execute(MixedOperation<T, L, R> operation, TestContext context) {
+        String resourceName = getResourceName(context);
+        setCommandResult(new CommandResult<>(operation.withName(resourceName).get()));
     }
 }

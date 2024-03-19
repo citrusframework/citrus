@@ -24,7 +24,7 @@ import io.fabric8.kubernetes.client.Version;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class Info extends AbstractKubernetesCommand<InfoResult, Info> {
+public class Info extends AbstractKubernetesCommand<InfoResult, InfoResult, Info> {
 
     /**
      * Default constructor initializing the command name.

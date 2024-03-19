@@ -16,16 +16,18 @@
 
 package org.citrusframework.kubernetes.command;
 
+import io.fabric8.kubernetes.api.model.events.v1.Event;
+import io.fabric8.kubernetes.api.model.events.v1.EventList;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.api.model.EventList;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListEvents extends AbstractListCommand<EventList, ListEvents> {
+public class ListEvents extends AbstractListCommand<Event, EventList, Resource<Event>, ListEvents> {
 
     /**
      * Default constructor initializing the command name.
@@ -35,7 +37,7 @@ public class ListEvents extends AbstractListCommand<EventList, ListEvents> {
     }
 
     @Override
-    protected ClientMixedOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getClient().events();
+    protected MixedOperation<Event, EventList, Resource<Event>> operation(KubernetesClient kubernetesClient, TestContext context) {
+        return kubernetesClient.getClient().events().v1().events();
     }
 }

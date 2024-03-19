@@ -16,15 +16,18 @@
 
 package org.citrusframework.kubernetes.command;
 
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
 import org.citrusframework.context.TestContext;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+import org.citrusframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractListCommand<R extends KubernetesResource, T extends KubernetesCommand<R>> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
+public abstract class AbstractListCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, ListResult<T>>> extends AbstractClientCommand<T, ListResult<T>, L, R, C> {
 
     /**
      * Default constructor initializing the command name.
@@ -36,7 +39,14 @@ public abstract class AbstractListCommand<R extends KubernetesResource, T extend
     }
 
     @Override
-    public void execute(ClientNonNamespaceOperation operation, TestContext context) {
-        setCommandResult(new CommandResult<>((R) operation.list()));
+    public void execute(MixedOperation<T, L, R> operation, TestContext context) {
+        L list = operation.list();
+
+        ListResult<T> result = new ListResult<>(list.getItems());
+        if (!StringUtils.hasText(result.getKind())) {
+            result.setKind(list.getClass().getSimpleName());
+        }
+
+        setCommandResult(new CommandResult<>(result));
     }
 }

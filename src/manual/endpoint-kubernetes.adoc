@@ -452,16 +452,14 @@ by giving a `.yml` file holding all information how to create the new resource. 
 kind: Pod
 apiVersion: v1
 metadata:
-  name: hello-jetty-${randomId}
+  name: hello-netty-${randomId}
   namespace: default
-  selfLink: /api/v1/namespaces/default/pods/hello-jetty-${randomId}
-  uid: citrus:randomUUID()
   labels:
-    server: hello-jetty
+    server: hello-netty
 spec:
   containers:
-    - name: hello-jetty
-      image: jetty:9.3
+    - name: hello-netty
+      image: netty
       imagePullPolicy: IfNotPresent
       ports:
         - containerPort: 8080
@@ -483,12 +481,10 @@ port to clients as Kubernetes service.
 kind: Service
 apiVersion: v1
 metadata:
-  name: hello-jetty
+  name: hello-netty
   namespace: default
-  selfLink: /api/v1/namespaces/default/services/hello-jetty
-  uid: citrus:randomUUID()
   labels:
-    service: hello-jetty
+    service: hello-netty
 spec:
   ports:
     - protocol: TCP
@@ -496,12 +492,12 @@ spec:
       targetPort: 8080
       nodePort: 31citrus:randomNumber(3)
   selector:
-    server: hello-jetty
+    server: hello-netty
   type: NodePort
   sessionAffinity: None
 ----
 
-The service resource maps the port _8080_ and selects all pods with label _server=hello-jetty_. This makes the jetty container available to clients. The service type is _NodePort_ which means
+The service resource maps the port _8080_ and selects all pods with label _server=hello-netty_. This makes the jetty container available to clients. The service type is _NodePort_ which means
 that clients outside of Kubernetes are also able to access the service by using the dynamic port _nodePort=31xxx_. We can use Citrus functions such as _randomNumber_ in the YAML files.
 
 In the test case we can use these YAML files to create the resources in Kubernetes:
@@ -510,11 +506,11 @@ In the test case we can use these YAML files to create the resources in Kubernet
 [source,xml]
 ----
 <k8s:create-pod namespace="default">
-  <k8s:template file="classpath:templates/hello-jetty-pod.yml"/>
+  <k8s:template file="classpath:templates/hello-netty-pod.yml"/>
 </k8s:create-pod>
 
 <k8s:create-service namespace="default">
-  <k8s:template file="classpath:templates/hello-jetty-service.yml"/>
+  <k8s:template file="classpath:templates/hello-service.yml"/>
 </k8s:create-service>
 ----
 
@@ -525,12 +521,12 @@ In the test case we can use these YAML files to create the resources in Kubernet
 public void createPodsTest() {
     kubernetes()
         .pods()
-        .create(new ClassPathResource("templates/hello-jetty-pod.yml"))
+        .create(new ClassPathResource("templates/hello-netty-pod.yml"))
         .namespace("default");
 
     kubernetes()
         .services()
-        .create(new ClassPathResource("templates/hello-jetty-service.yml"))
+        .create(new ClassPathResource("templates/hello-service.yml"))
         .namespace("default");
 }
 ----
@@ -540,8 +536,8 @@ Therefore we might add a list-pods action that waits for the new resources to ap
 
 [source,xml]
 ----
-<repeat-onerror-until-true condition="@assertThat('greaterThan(9)')@" auto-sleep="1000">
-  <k8s:list-pods label="server=hello-jetty">
+<repeat-onerror-until-true condition="@assertThat(greaterThan(9))@" auto-sleep="1000">
+  <k8s:list-pods label="server=hello-netty">
     <k8s:validate>
       <k8s:element path="$.result.items.size()" value="1"/>
       <k8s:element path="$..status.phase" value="Running"/>
@@ -550,7 +546,7 @@ Therefore we might add a list-pods action that waits for the new resources to ap
 </repeat-onerror-until-true>
 ----
 
-With this repeat on error action we wait for the new _server=hello-jetty_ labeled pod to be in state _Running_.
+With this repeat on error action we wait for the new _server=hello-netty_ labeled pod to be in state _Running_.
 
 [[delete-resources]]
 == Delete resources

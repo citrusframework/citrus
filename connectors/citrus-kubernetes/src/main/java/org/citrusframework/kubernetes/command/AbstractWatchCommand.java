@@ -20,14 +20,17 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.exceptions.MessageTimeoutException;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.api.model.HasMetadata;
+import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
-import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+import io.fabric8.kubernetes.client.WatcherException;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.MessageTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public abstract class AbstractWatchCommand<R extends KubernetesResource, T extends KubernetesCommand<R>> extends AbstractClientCommand<ClientNonNamespaceOperation, R, T> {
+public abstract class AbstractWatchCommand<T extends HasMetadata, L extends KubernetesResourceList<T>, R extends Resource<T>, C extends KubernetesCommand<T, T>> extends AbstractClientCommand<T, T, L, R, C> {
 
     /** Logger */
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -46,8 +49,8 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
     /** Timeout to wait for watch result */
     private long timeout = 5000L;
 
-    private BlockingQueue<WatchEventResult<R>> results = new ArrayBlockingQueue<>(1);
-    private WatchEventResult<R> cachedResult;
+    private final BlockingQueue<WatchEventResult<T>> results = new ArrayBlockingQueue<>(1);
+    private WatchEventResult<T> cachedResult;
 
     /**
      * Default constructor initializing the command name.
@@ -59,10 +62,10 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
     }
 
     @Override
-    public void execute(ClientNonNamespaceOperation operation, TestContext context) {
-        watch = (Watch) operation.watch(new Watcher<R>() {
+    public void execute(MixedOperation<T, L, R> operation, TestContext context) {
+        watch = operation.watch(new Watcher<T>() {
             @Override
-            public void eventReceived(Action action, R resource) {
+            public void eventReceived(Action action, T resource) {
                 if (results.isEmpty() && cachedResult == null) {
                     results.add(new WatchEventResult<>(resource, action));
                 } else {
@@ -71,7 +74,7 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
             }
 
             @Override
-            public void onClose(KubernetesClientException cause) {
+            public void onClose(WatcherException cause) {
                 if (results.isEmpty()&& cachedResult == null) {
                     results.add(new WatchEventResult<>(cause));
                 }
@@ -80,13 +83,13 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
     }
 
     @Override
-    public WatchEventResult<R> getCommandResult() {
+    public WatchEventResult<T> getCommandResult() {
         if (cachedResult != null) {
             return cachedResult;
         }
 
         try {
-            WatchEventResult<R> watchEventResult = results.poll(timeout, TimeUnit.MILLISECONDS);
+            WatchEventResult<T> watchEventResult = results.poll(timeout, TimeUnit.MILLISECONDS);
             if (watchEventResult == null) {
                 throw new MessageTimeoutException(timeout, "watchEventResultQueue");
             }

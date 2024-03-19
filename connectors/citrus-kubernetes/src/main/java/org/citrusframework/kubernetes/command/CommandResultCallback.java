@@ -17,18 +17,17 @@
 package org.citrusframework.kubernetes.command;
 
 import org.citrusframework.context.TestContext;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public interface CommandResultCallback<R extends KubernetesResource> {
+public interface CommandResultCallback<T> {
 
     /**
      * Callback method called with command result for validation.
      * @param result
      * @param context
      */
-    void validateCommandResult(CommandResult<R> result, TestContext context);
+    void validateCommandResult(CommandResult<T> result, TestContext context);
 }

@@ -16,14 +16,14 @@
 
 package org.citrusframework.kubernetes.command;
 
-import io.fabric8.kubernetes.api.model.DoneableService;
-import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.ServiceBuilder;
 import io.fabric8.kubernetes.api.model.ServiceFluent;
+import io.fabric8.kubernetes.api.model.ServiceList;
 import io.fabric8.kubernetes.api.model.ServicePortFluent;
 import io.fabric8.kubernetes.api.model.ServiceSpecFluent;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import io.fabric8.kubernetes.client.dsl.ClientResource;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.ServiceResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
 import org.citrusframework.kubernetes.message.KubernetesMessageHeaders;
@@ -33,7 +33,7 @@ import org.citrusframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class CreateService extends AbstractCreateCommand<Service, DoneableService, CreateService> {
+public class CreateService extends AbstractCreateCommand<Service, ServiceList, ServiceResource<Service>, CreateService> {
 
     private String selector;
 
@@ -50,16 +50,17 @@ public class CreateService extends AbstractCreateCommand<Service, DoneableServic
     }
 
     @Override
-    protected ClientMixedOperation<Service, ? extends KubernetesResourceList, DoneableService, ? extends ClientResource<Service, DoneableService>> operation(KubernetesClient kubernetesClient, TestContext context) {
+    protected MixedOperation<Service, ServiceList, ServiceResource<Service>> operation(KubernetesClient kubernetesClient, TestContext context) {
         return kubernetesClient.getClient().services();
     }
 
     @Override
-    protected DoneableService specify(DoneableService service, TestContext context) {
-        ServiceFluent.MetadataNested metadata = service.editOrNewMetadata();
+    protected Service specify(String name, TestContext context) {
+        ServiceBuilder builder = new ServiceBuilder();
+        ServiceFluent<ServiceBuilder>.MetadataNested<ServiceBuilder> metadata = builder.editOrNewMetadata();
 
-        if (getParameters().containsKey(KubernetesMessageHeaders.NAME)) {
-            metadata.withName(getParameter(KubernetesMessageHeaders.NAME, context));
+        if (StringUtils.hasText(name)) {
+            metadata.withName(name);
         }
 
         if (getParameters().containsKey(KubernetesMessageHeaders.LABEL)) {
@@ -72,14 +73,14 @@ public class CreateService extends AbstractCreateCommand<Service, DoneableServic
 
         metadata.endMetadata();
 
-        ServiceFluent.SpecNested spec = service.editOrNewSpec();
+        ServiceFluent<ServiceBuilder>.SpecNested<ServiceBuilder> spec = builder.editOrNewSpec();
         if (StringUtils.hasText(selector)) {
             spec.withSelector(getLabels(selector, context));
         }
 
         if (StringUtils.hasText(port)) {
-            ServiceSpecFluent.PortsNested ports = spec.addNewPort();
-            ServicePortFluent container = ports.withPort(Integer.valueOf(context.replaceDynamicContentInString(port)));
+            ServiceSpecFluent<ServiceFluent<ServiceBuilder>.SpecNested<ServiceBuilder>>.PortsNested<ServiceFluent<ServiceBuilder>.SpecNested<ServiceBuilder>> ports = spec.addNewPort();
+            ServicePortFluent<ServiceSpecFluent<ServiceFluent<ServiceBuilder>.SpecNested<ServiceBuilder>>.PortsNested<ServiceFluent<ServiceBuilder>.SpecNested<ServiceBuilder>>> container = ports.withPort(Integer.valueOf(context.replaceDynamicContentInString(port)));
 
             if (StringUtils.hasText(targetPort)) {
                 container.withNewTargetPort(Integer.valueOf(context.replaceDynamicContentInString(targetPort)));
@@ -98,7 +99,7 @@ public class CreateService extends AbstractCreateCommand<Service, DoneableServic
 
         spec.endSpec();
 
-        return service;
+        return builder.build();
     }
 
     /**

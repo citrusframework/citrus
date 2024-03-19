@@ -36,7 +36,7 @@ public class CreateServiceActionParserTest extends AbstractActionParserTest<Kube
         Assert.assertEquals(action.getCommand().getClass(), CreateService.class);
         Assert.assertEquals(action.getKubernetesClient().getClass(), KubernetesClient.class);
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
-        Assert.assertEquals(((CreateService) action.getCommand()).getTemplate(), "classpath:templates/hello-jetty-service.yml");
+        Assert.assertEquals(((CreateService) action.getCommand()).getTemplate(), "classpath:templates/hello-service.yml");
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCommand());

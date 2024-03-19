@@ -25,7 +25,7 @@ import io.fabric8.kubernetes.client.dsl.*;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class ListNamespaces extends AbstractListCommand<NamespaceList, ListNamespaces> {
+public class ListNamespaces extends AbstractListCommand<Namespace, NamespaceList, Resource<Namespace>, ListNamespaces> {
 
     /**
      * Default constructor initializing the command name.
@@ -35,7 +35,12 @@ public class ListNamespaces extends AbstractListCommand<NamespaceList, ListNames
     }
 
     @Override
-    protected ClientNonNamespaceOperation operation(KubernetesClient kubernetesClient, TestContext context) {
-        return kubernetesClient.getClient().namespaces();
+    protected MixedOperation<Namespace, NamespaceList, Resource<Namespace>> operation(KubernetesClient kubernetesClient, TestContext context) {
+        return (MixedOperation<Namespace, NamespaceList, Resource<Namespace>>) kubernetesClient.getClient().namespaces();
+    }
+
+    @Override
+    protected boolean isNamespaceOperation() {
+        return false;
     }
 }

@@ -23,13 +23,13 @@
             <k8s:list-events/>
             <k8s:list-pods label="pod_label"/>
             <k8s:create-pod namespace="default">
-                <k8s:template file="classpath:templates/hello-jetty.yml"/>
+                <k8s:template file="classpath:templates/hello-Netty.yml"/>
             </k8s:create-pod>
             <k8s:get-pod name="myPod"/>
             <k8s:delete-pod name="myPod"/>
             <k8s:list-services label="!service_label" namespace="myNamespace"/>
             <k8s:create-service namespace="default">
-                <k8s:template file="classpath:templates/hello-jetty-service.yml"/>
+                <k8s:template file="classpath:templates/hello-service.yml"/>
             </k8s:create-service>
             <k8s:get-service name="myService" namespace="myNamespace"/>
             <k8s:delete-service name="myService" namespace="myNamespace"/>

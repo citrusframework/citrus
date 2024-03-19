@@ -16,17 +16,18 @@
 
 package org.citrusframework.kubernetes.command;
 
+import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.ServiceList;
+import io.fabric8.kubernetes.client.dsl.MixedOperation;
+import io.fabric8.kubernetes.client.dsl.ServiceResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.api.model.*;
-import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
-import io.fabric8.kubernetes.client.dsl.ClientResource;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class DeleteService extends AbstractDeleteCommand<DeleteResult, Service, DeleteService> {
+public class DeleteService extends AbstractDeleteCommand<Service, ServiceList, ServiceResource<Service>, DeleteService> {
 
     /**
      * Default constructor initializing the command name.
@@ -36,7 +37,7 @@ public class DeleteService extends AbstractDeleteCommand<DeleteResult, Service, 
     }
 
     @Override
-    protected ClientMixedOperation<Service, ServiceList, DoneableService, ClientResource<Service, DoneableService>> operation(KubernetesClient kubernetesClient, TestContext context) {
+    protected MixedOperation<Service, ServiceList, ServiceResource<Service>> operation(KubernetesClient kubernetesClient, TestContext context) {
         return kubernetesClient.getClient().services();
     }
 }
