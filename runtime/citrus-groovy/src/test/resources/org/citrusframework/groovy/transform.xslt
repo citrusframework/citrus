@@ -5,7 +5,7 @@
 		<body>
 			<h2>Test Request</h2>
 			<p>Message: <xsl:value-of select="TestRequest/Message"/></p>
-		</body>  
+		</body>
 	</html>
 </xsl:template>
 </xsl:stylesheet>

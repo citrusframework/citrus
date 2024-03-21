@@ -4,17 +4,17 @@
    xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
    xmlns:util="http://www.springframework.org/schema/util"
    xsi:schemaLocation="
-   http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans.xsd
    http://www.springframework.org/schema/util
    http://www.springframework.org/schema/util/spring-util.xsd
-   http://www.citrusframework.org/schema/config 
+   http://www.citrusframework.org/schema/config
    http://www.citrusframework.org/schema/config/citrus-config.xsd
-   http://www.citrusframework.org/schema/http/config 
+   http://www.citrusframework.org/schema/http/config
    http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd">
 
   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
-   
+
   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
     <property name="messageConverters">
       <util:list id="converters">
@@ -22,7 +22,7 @@
       </util:list>
     </property>
   </bean>
-   
+
   <bean class="org.citrusframework.http.controller.HttpMessageController">
     <property name="endpointAdapter" ref="mockResponseEndpointAdapter"/>
   </bean>
