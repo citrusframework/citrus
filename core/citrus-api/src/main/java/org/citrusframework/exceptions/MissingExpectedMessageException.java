@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 package org.citrusframework.exceptions;
 
 /**
- * This exception is thrown when a message receiving action 
+ * This exception is thrown when a message receiving action
  * does not specify any expected content.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class MissingExpectedMessageException extends CitrusRuntimeException {

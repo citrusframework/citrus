@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,24 +35,24 @@ public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
     public void testReceiveSelected() {
         MessageSelectingQueueChannel channel = new MessageSelectingQueueChannel();
         channel.setPollingInterval(100L);
-        
+
         channel.send(MessageBuilder.withPayload("FooMessage").setHeader("foo", "bar").build());
-        
+
         MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar", context);
-        
+
         Message<?> receivedMessage = channel.receive(selector, 1000L);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), "FooMessage");
         Assert.assertEquals(receivedMessage.getHeaders().get("foo"), "bar");
     }
-    
+
     @Test
     public void testWithRetry() {
         MessageSelectingQueueChannel channel = new MessageSelectingQueueChannel();
         channel.setPollingInterval(100L);
-        
+
         channel.send(MessageBuilder.withPayload("FooMessage").setHeader("foo", "bar").build());
-        
+
         final AtomicLong retries = new AtomicLong();
         MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar", context) {
             @Override
@@ -60,21 +60,21 @@ public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
                 return retries.incrementAndGet() > 7;
             }
         };
-        
+
         Message<?> receivedMessage = channel.receive(selector, 1000L);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), "FooMessage");
         Assert.assertEquals(receivedMessage.getHeaders().get("foo"), "bar");
         Assert.assertEquals(retries.get(), 8L);
     }
-    
+
     @Test
     public void testRetryExceeded() {
         MessageSelectingQueueChannel channel = new MessageSelectingQueueChannel();
         channel.setPollingInterval(500L);
-        
+
         channel.send(MessageBuilder.withPayload("FooMessage").setHeader("foos", "bars").build());
-        
+
         final AtomicLong retries = new AtomicLong();
         MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar", context) {
             @Override
@@ -83,20 +83,20 @@ public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
                 return super.accept(message);
             }
         };
-        
+
         Message<?> receivedMessage = channel.receive(selector, 1000L);
-        
+
         Assert.assertNull(receivedMessage);
         Assert.assertEquals(retries.get(), 3L);
     }
-    
+
     @Test
     public void testRetryExceededWithTimeoutRest() {
         MessageSelectingQueueChannel channel = new MessageSelectingQueueChannel();
         channel.setPollingInterval(400L);
-        
+
         channel.send(MessageBuilder.withPayload("FooMessage").setHeader("foos", "bars").build());
-        
+
         final AtomicLong retries = new AtomicLong();
         MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar", context) {
             @Override
@@ -105,9 +105,9 @@ public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
                 return super.accept(message);
             }
         };
-        
+
         Message<?> receivedMessage = channel.receive(selector, 1000L);
-        
+
         Assert.assertNull(receivedMessage);
         Assert.assertEquals(retries.get(), 4L);
     }

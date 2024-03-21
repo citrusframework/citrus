@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
- * Copyright 2006-2010 the original author or authors.
+<!--
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-	xmlns:spring="http://www.springframework.org/schema/beans" 
-	xmlns:citrus="http://www.citrusframework.org/schema/testcase"	
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:spring="http://www.springframework.org/schema/beans"
+	xmlns:citrus="http://www.citrusframework.org/schema/testcase"
 	xmlns:svg="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns="http://www.w3.org/2000/svg"
 	exclude-result-prefixes="spring citrus">
-	
+
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" doctype-public="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"/>
-	
+
 	<xsl:template match="spring:beans">
 		<xsl:apply-templates select="citrus:testcase" />
 	</xsl:template>
-	
+
 	<xsl:template match="/spring:beans/citrus:testcase">
 		<svg xmlns:svg="http://www.w3.org/2000/svg" version="1.0" width="210mm" height="297mm">
 			<title><xsl:value-of select="@name"/></title>
@@ -104,15 +104,15 @@
 				</symbol>
 				<symbol id="echoIcon">
 					<path d="M 52.883118,22.38961 A 20.987013,11.688312 0 1 1 10.909092,22.38961 A 20.987013,11.688312 0 1 1 52.883118,22.38961 z"
-						transform="translate(-6.8311688,-5.5844156)" 
+						transform="translate(-6.8311688,-5.5844156)"
 						style="opacity:1;fill:#c8c4b7;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
 					<path d="M 10.077921,24.623376 C 10.79638,32.393861 10.637431,36.504863 5.6103892,42.389611 C 15.103884,33.974057 21.938859,27.937934 29.61039,28.259741"
 						style="fill:#c8c4b7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
 					<path d="M 14.753247,11.766234 L 38.12987,11.87013"
 						style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:8, 1;stroke-dashoffset:0;stroke-opacity:1" />
-					<path d="M 9.7922081,15.454546 L 33.168831,15.558442" 
+					<path d="M 9.7922081,15.454546 L 33.168831,15.558442"
 						style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:6, 1;stroke-dashoffset:0;stroke-opacity:1" />
-					<path d="M 15.792208,19.454546 L 39.168831,19.558442" 
+					<path d="M 15.792208,19.454546 L 39.168831,19.558442"
 						style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:8, 1;stroke-dashoffset:0;stroke-opacity:1" />
 				</symbol>
 				<symbol id="sleep">
@@ -134,9 +134,9 @@
 						style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
 					<path d="M 19.26613,29.053776 C 19.4413,28.505868 19.824258,28.041668 20.157169,27.582427 C 20.294248,27.40176 20.427713,27.218293 20.568406,27.040427 C 20.727739,26.838995 21.52427,25.879326 21.659216,25.717143 C 22.401944,24.824512 23.14551,23.933053 23.897582,23.048271 C 25.503222,21.163057 27.205421,19.364302 28.955071,17.61287 C 29.937919,16.614524 30.904571,15.60049 31.921766,14.636841 C 32.491454,14.081234 33.106919,13.575463 33.690649,13.035435 C 33.868005,12.870387 34.039042,12.698572 34.20048,12.517966 L 35.600741,11.922129 C 35.446875,12.123769 35.258172,12.296338 35.072333,12.468612 C 34.478701,13.028437 33.822608,13.521665 33.240714,14.095427 C 32.188919,15.072979 31.185174,16.099435 30.16702,17.111734 C 28.384703,18.849738 26.661818,20.648813 25.05956,22.555469 C 24.328794,23.426666 23.609789,24.30615 22.895171,25.190619 C 22.884368,25.203989 21.908101,26.415032 21.853899,26.485734 C 21.722056,26.657711 21.59929,26.836462 21.471985,27.011825 C 21.169536,27.446405 20.843218,27.88162 20.65483,28.380388 L 19.26613,29.053776 z"
 						style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-					<rect width="2.2857144" height="3.6363637" x="22.233767" y="7.2727275"  
+					<rect width="2.2857144" height="3.6363637" x="22.233767" y="7.2727275"
 						style="opacity:1;fill:#8c0e0a;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-					<rect width="2.2857144" height="3.6363637" x="22.233765" y="35.064934" 
+					<rect width="2.2857144" height="3.6363637" x="22.233765" y="35.064934"
 						style="opacity:1;fill:#8c0e0a;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
 					<rect width="2.2857144" height="3.6363637" x="-24.831169" y="35.584415" transform="matrix(0,-1,1,0,0,0)"
 						style="opacity:1;fill:#8c0e0a;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
@@ -186,7 +186,7 @@
 				<text x="20" y="50" style="font-size:36px">
 					TestCase: <xsl:value-of select="@name"/>
 				</text>
-				
+
 				<text x="20" y="70" style="font-size:14px;fill:grey">
 					<xsl:call-template name="word-wrap">
 						<xsl:with-param name="tobewrapped" select="normalize-space(citrus:description/text())"/>
@@ -195,14 +195,14 @@
 				</text>
 				<g>
 					<use x="200" y="150" xlink:href="#start"/>
-					
+
 					<xsl:call-template name="arrow">
 						<xsl:with-param name="startPoint">255,210</xsl:with-param>
 						<xsl:with-param name="endPoint">255,250</xsl:with-param>
 					</xsl:call-template>
-					
+
 					<xsl:apply-templates select="citrus:actions/citrus:send | citrus:actions/citrus:receive | citrus:actions/citrus:echo | citrus:actions/citrus:sleep"/>
-					
+
 					<xsl:element name="use">
 						<xsl:attribute name="x">200</xsl:attribute>
 						<xsl:attribute name="y"><xsl:value-of select="250 + (count(citrus:actions/citrus:send)+count(citrus:actions/citrus:receive)+count(citrus:actions/citrus:echo)+count(citrus:actions/citrus:sleep))*100"/></xsl:attribute>
@@ -212,7 +212,7 @@
 			</g>
 		</svg>
 	</xsl:template>
-	
+
 	<xsl:template match="citrus:send | citrus:receive">
 		<xsl:variable name="yPos" select="150 + (position() * 100)"/>
 		<xsl:element name="use">
@@ -220,7 +220,7 @@
 			<xsl:attribute name="y"><xsl:value-of select="$yPos"/></xsl:attribute>
 			<xsl:attribute name="xlink:href">#<xsl:value-of select="name()"/></xsl:attribute>
 		</xsl:element>
-		
+
 		<xsl:element name="text">
 			<xsl:attribute name="x">350</xsl:attribute>
 			<xsl:attribute name="y"><xsl:value-of select="$yPos"/></xsl:attribute>
@@ -234,13 +234,13 @@
 				</tspan>
 			</xsl:if>
 		</xsl:element>
-		
+
 		<xsl:call-template name="arrow">
 			<xsl:with-param name="startPoint"><xsl:value-of select="concat('255,', (($yPos)+60))"/></xsl:with-param>
 			<xsl:with-param name="endPoint"><xsl:value-of select="concat('255,', (($yPos)+100))"/></xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
-	
+
 	<xsl:template match="citrus:echo">
 		<xsl:variable name="yPos" select="150 + (position() * 100)"/>
 		<xsl:element name="use">
@@ -248,7 +248,7 @@
 			<xsl:attribute name="y"><xsl:value-of select="$yPos"/></xsl:attribute>
 			<xsl:attribute name="xlink:href">#<xsl:value-of select="name()"/></xsl:attribute>
 		</xsl:element>
-		
+
 		<xsl:element name="text">
 			<xsl:attribute name="x">350</xsl:attribute>
 			<xsl:attribute name="y"><xsl:value-of select="$yPos"/></xsl:attribute>
@@ -260,13 +260,13 @@
 				</tspan>
 			</xsl:if>
 		</xsl:element>
-		
+
 		<xsl:call-template name="arrow">
 			<xsl:with-param name="startPoint"><xsl:value-of select="concat('255,', (($yPos)+60))"/></xsl:with-param>
 			<xsl:with-param name="endPoint"><xsl:value-of select="concat('255,', (($yPos)+100))"/></xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
-	
+
 	<xsl:template match="citrus:sleep">
 		<xsl:variable name="yPos" select="150 + (position() * 100)"/>
 		<xsl:element name="use">
@@ -274,7 +274,7 @@
 			<xsl:attribute name="y"><xsl:value-of select="$yPos"/></xsl:attribute>
 			<xsl:attribute name="xlink:href">#<xsl:value-of select="name()"/></xsl:attribute>
 		</xsl:element>
-		
+
 		<xsl:element name="text">
 			<xsl:attribute name="x">350</xsl:attribute>
 			<xsl:attribute name="y"><xsl:value-of select="$yPos"/></xsl:attribute>
@@ -288,13 +288,13 @@
 				</tspan>
 			</xsl:if>
 		</xsl:element>
-		
+
 		<xsl:call-template name="arrow">
 			<xsl:with-param name="startPoint"><xsl:value-of select="concat('255,', (($yPos)+60))"/></xsl:with-param>
 			<xsl:with-param name="endPoint"><xsl:value-of select="concat('255,', (($yPos)+100))"/></xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
-	
+
 	<xsl:template name="word-wrap">
 		<xsl:param name="tobewrapped"/>
 		<xsl:param name="linelength" select="80"/>
@@ -312,7 +312,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template name="arrow">
 		<xsl:param name="startPoint"/>
 		<xsl:param name="endPoint"/>
@@ -325,7 +325,7 @@
 			</xsl:attribute>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<xsl:template match="text()" />
 
 </xsl:stylesheet>

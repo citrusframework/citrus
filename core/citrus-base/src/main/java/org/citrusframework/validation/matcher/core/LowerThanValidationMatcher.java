@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * ValidationMatcher based on on Double < Double.
- * 
+ *
  * @author Christian Wied
  */
 public class LowerThanValidationMatcher implements ValidationMatcher {
@@ -42,7 +42,7 @@ public class LowerThanValidationMatcher implements ValidationMatcher {
                     + "'. Received value is '" + value
                     + "', control value is '" + control + "'", e);
 		}
-    	
+
         if (!(dValue < dControl)) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ import java.util.List;
 
 /**
  * Special exception thrown in case several actions in a parallel container have failed.
- * The exception receives a list of exceptions and provides detailed to string method for 
+ * The exception receives a list of exceptions and provides detailed to string method for
  * overview of failed exceptions.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class ParallelContainerException extends CitrusRuntimeException {
@@ -30,22 +30,22 @@ public class ParallelContainerException extends CitrusRuntimeException {
     private static final long serialVersionUID = 1L;
 
     private List<CitrusRuntimeException> exceptions;
-    
+
     public ParallelContainerException(List<CitrusRuntimeException> nestedExceptions) {
         super();
-        
+
         this.exceptions = nestedExceptions;
     }
-    
+
     @Override
     public String getMessage() {
         StringBuilder builder = new StringBuilder();
-        
+
         builder.append("Several actions failed in parallel container");
         for (CitrusRuntimeException exception : exceptions) {
             builder.append("\n\t+ ").append(exception.getClass().getName()).append(": ").append(exception.getLocalizedMessage());
         }
-        
+
         return builder.toString();
     }
 }

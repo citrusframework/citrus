@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ import java.util.List;
 
 
 /**
- * Interface for SOAP attachment validators. 
- * 
+ * Interface for SOAP attachment validators.
+ *
  * The Citrus {@link org.citrusframework.ws.server.WebServiceEndpoint} implementation adds the received SOAP attachments as
  * {@link org.springframework.ws.mime.Attachment} implementations to the Spring integration message header. The header name will be the
  * attachment's contentId. The header value is the {@link org.springframework.ws.mime.Attachment} object.
- *  
+ *
  * @author Christoph Deppisch
  */
 public interface SoapAttachmentValidator {
@@ -36,7 +36,7 @@ public interface SoapAttachmentValidator {
     /**
      * Validate attachments in soap message. List of control attachments should
      * be present and get validated.
-     * 
+     *
      * @param soapMessage
      * @param controlAttachments
      */

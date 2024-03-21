@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ public class FailActionParserTest extends AbstractActionParserTest<FailAction> {
     public void testActionParser() {
         assertActionCount(2);
         assertActionClassAndName(FailAction.class, "fail");
-        
+
         FailAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessage(), "Something went wrong");
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessage(), "Generated error to interrupt test execution");
     }

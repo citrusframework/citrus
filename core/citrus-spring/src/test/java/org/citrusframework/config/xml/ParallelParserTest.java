@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,12 @@ public class ParallelParserTest extends AbstractActionParserTest<Parallel> {
     public void testActionParser() {
         assertActionCount(2);
         assertActionClassAndName(Parallel.class, "parallel");
-        
+
         Parallel action = getNextTestActionFromTest();
         Assert.assertEquals(action.getActionCount(), 2);
         Assert.assertEquals(action.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(action.getActions().get(1).getClass(), EchoAction.class);
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getActionCount(), 3);
         Assert.assertEquals(action.getActions().get(0).getClass(), Parallel.class);

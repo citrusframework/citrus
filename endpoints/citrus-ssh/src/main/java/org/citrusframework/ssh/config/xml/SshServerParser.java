@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 
 /**
  * Parser for the configuration of an SSH server
- * 
+ *
  * @author Roland Huss, Christoph Deppisch
  */
 public class SshServerParser extends AbstractServerParser {

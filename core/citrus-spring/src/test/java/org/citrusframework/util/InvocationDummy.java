@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class InvocationDummy {
             logger.debug("Constructor with argument: " + arg);
         }
     }
-    
+
     public InvocationDummy(Integer arg1, String arg2, Boolean arg3) {
         if (logger.isDebugEnabled()) {
         	if (logger.isDebugEnabled()) {
@@ -57,13 +57,13 @@ public class InvocationDummy {
             logger.debug("Methode invoke no arguments");
         }
     }
-    
+
     public void invoke(String text) {
     	if (logger.isDebugEnabled()) {
             logger.debug("Methode invoke with string argument: '" + text + "'");
         }
     }
-    
+
     public void invoke(String[] args) {
         for (var arg : args) {
             if (logger.isDebugEnabled()) {

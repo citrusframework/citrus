@@ -1,5 +1,5 @@
 /*
- *  Copyright 2006-2016 the original author or authors.
+ *  Copyright the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,10 +60,10 @@ public class BinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected 'SGVsbG8gQ2l0cnVzIQ=='"));
             Assert.assertTrue(e.getMessage().contains("but was 'SGVsbG8gV29ybGQh'"));
-            
+
             return;
         }
-        
+
         Assert.fail("Missing validation exception due to wrong number of JSON entries");
     }
 }

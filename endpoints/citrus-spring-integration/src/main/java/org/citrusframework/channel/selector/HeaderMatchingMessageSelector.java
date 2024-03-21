@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import org.springframework.messaging.MessageHeaders;
 import java.util.*;
 
 /**
- * Message selector matches one or more header elements with the message header. Only in case all 
+ * Message selector matches one or more header elements with the message header. Only in case all
  * matching header elements are present in message header and its value matches the expected value
  * the message is accepted.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class HeaderMatchingMessageSelector extends AbstractMessageSelector {
@@ -39,7 +39,7 @@ public class HeaderMatchingMessageSelector extends AbstractMessageSelector {
     public HeaderMatchingMessageSelector(String selectKey, String matchingValue, TestContext context) {
         super(selectKey, matchingValue, context);
     }
-    
+
     @Override
     public boolean accept(Message<?> message) {
         MessageHeaders messageHeaders = message.getHeaders();

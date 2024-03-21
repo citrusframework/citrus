@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,13 @@ import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 /**
  * Handles and accepts must understand header entries in SOAP requests. The supported header entries are configured
  * via simple HashMap where key is the namespace uri and value the header name (local part).
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterceptor {
 
     private List<String> acceptedHeaders = new ArrayList<>();
-    
+
     /**
      * (non-Javadoc)
      * @see org.springframework.ws.soap.server.SoapEndpointInterceptor#understands(org.springframework.ws.soap.SoapHeaderElement)
@@ -41,7 +41,7 @@ public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterc
         //see if header is accepted
         return header.getName() != null && acceptedHeaders.contains(header.getName().toString());
     }
-    
+
     /**
      * (non-Javadoc)
      * @see org.springframework.ws.server.EndpointInterceptor#handleFault(org.springframework.ws.context.MessageContext, java.lang.Object)
@@ -65,13 +65,13 @@ public class SoapMustUnderstandEndpointInterceptor implements SoapEndpointInterc
     public boolean handleResponse(MessageContext messageContext, Object endpoint) {
         return true;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
     }
-    
+
     /**
      * @param acceptedHeaders the acceptedHeaders to set
      */

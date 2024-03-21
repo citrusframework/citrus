@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,21 +31,21 @@ public class IterateParserTest extends AbstractActionParserTest<Iterate> {
     public void testActionParser() {
         assertActionCount(3);
         assertActionClassAndName(Iterate.class, "iterate");
-        
+
         Iterate action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "i lt 3");
         Assert.assertEquals(action.getIndexName(), "i");
         Assert.assertEquals(action.getStart(), 1);
         Assert.assertEquals(action.getStep(), 1);
         Assert.assertEquals(action.getActionCount(), 1);
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "index lt= 2");
         Assert.assertEquals(action.getIndexName(), "index");
         Assert.assertEquals(action.getStart(), 1);
         Assert.assertEquals(action.getStep(), 1);
         Assert.assertEquals(action.getActionCount(), 1);
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "i lt= 10");
         Assert.assertEquals(action.getIndexName(), "i");

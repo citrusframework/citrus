@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.w3c.dom.Document;
 /**
  * Abstract schema mapping strategy extracts target namespace and root element name
  * for subclasses.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class AbstractSchemaMappingStrategy implements XsdSchemaMappingStrategy {
@@ -32,14 +32,14 @@ public abstract class AbstractSchemaMappingStrategy implements XsdSchemaMappingS
      * {@inheritDoc}
      */
     public XsdSchema getSchema(List<XsdSchema> schemas, Document doc) {
-        return getSchema(schemas, doc.getFirstChild().getNamespaceURI(), 
+        return getSchema(schemas, doc.getFirstChild().getNamespaceURI(),
                 doc.getFirstChild().getLocalName());
     }
-    
+
     /**
      * Subclasses must override this method in order to detect schema for
      * target namespace and/or root element name.
-     * 
+     *
      * @param schemas
      * @param namespace
      * @param elementName

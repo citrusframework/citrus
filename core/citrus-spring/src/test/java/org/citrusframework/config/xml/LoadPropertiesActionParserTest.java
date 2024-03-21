@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ public class LoadPropertiesActionParserTest extends AbstractActionParserTest<Loa
     public void testLoadPropertiesActionParser() {
         assertActionCount(1);
         assertActionClassAndName(LoadPropertiesAction.class, "load");
-        
+
         LoadPropertiesAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getFilePath(), "classpath:org/citrusframework/actions/load.properties");
     }
-    
+
     @Test
     public void testLoadPropertiesActionParserError() {
         try {

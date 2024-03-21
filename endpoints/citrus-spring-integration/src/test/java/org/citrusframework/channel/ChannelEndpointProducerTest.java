@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
     private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
     private MessageChannel channel = Mockito.mock(MessageChannel.class);
     private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessage() {
@@ -46,16 +46,16 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         reset(messagingTemplate, channel);
 
         endpoint.createProducer().send(message, context);
 
         verify(messagingTemplate).send(eq(channel), any(org.springframework.messaging.Message.class));
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageChannelNameResolver() {
@@ -65,18 +65,18 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setChannelName("testChannel");
 
         endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         reset(messagingTemplate, channel, channelResolver);
-        
+
         when(channelResolver.resolveDestination("testChannel")).thenReturn(channel);
 
         endpoint.createProducer().send(message, context);
 
         verify(messagingTemplate).send(eq(channel), any(org.springframework.messaging.Message.class));
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageFailed() {
@@ -84,9 +84,9 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         reset(messagingTemplate, channel);
 
         doThrow(new MessageDeliveryException("Internal error!")).when(messagingTemplate).send(eq(channel), any(org.springframework.messaging.Message.class));
@@ -100,8 +100,8 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(e.getCause().getLocalizedMessage(), "Internal error!");
             return;
         }
-        
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because no message was received");    
+
+        Assert.fail("Missing " + CitrusRuntimeException.class + " because no message was received");
     }
-    
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import java.io.IOException;
 /**
  * Receiver callback invoked by framework on response message. Callback fills an internal message representation with
  * the response information for further message processing.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SoapResponseMessageCallback implements WebServiceMessageCallback {
@@ -60,7 +60,7 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
         // convert and set response for later access via getResponse():
         response = endpointConfiguration.getMessageConverter().convertInbound(responseMessage, endpointConfiguration, context);
     }
-    
+
     /**
      * Gets the constructed Spring Integration response message object.
      * @return the response message.

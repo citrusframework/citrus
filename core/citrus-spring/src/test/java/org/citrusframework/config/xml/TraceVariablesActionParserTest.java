@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ public class TraceVariablesActionParserTest extends AbstractActionParserTest<Tra
     public void testTraceVariablesActionParser() {
         assertActionCount(2);
         assertActionClassAndName(TraceVariablesAction.class, "trace");
-        
+
         TraceVariablesAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getVariableNames().size(), 0);
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getVariableNames().size(), 1);
         Assert.assertEquals(action.getVariableNames().get(0), "foo");

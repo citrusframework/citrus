@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -178,7 +178,7 @@ public class TestContextTest extends UnitTestSupport {
 
         SegmentVariableExtractor jsonExtractorMock = Mockito.mock(SegmentVariableExtractor.class);
         context.getSegmentVariableExtractorRegistry().getSegmentValueExtractors().add(jsonExtractorMock);
-        
+
         Mockito.doReturn(true).when(jsonExtractorMock).canExtract(Mockito.eq(context), Mockito.eq(json), Mockito.any());
         Mockito.doReturn("Peter").when(jsonExtractorMock).extractValue(Mockito.eq(context), Mockito.eq(json), Mockito.any());
 
@@ -232,7 +232,7 @@ public class TestContextTest extends UnitTestSupport {
 
         Assert.assertThrows(() -> context.getVariable(String.format("${%s}", variableExpression)));
     }
-    
+
     @Test
     public void testUnknownFromPathExpression() {
         context.setVariable("helloData", new DataContainer("hello"));
@@ -459,7 +459,7 @@ public class TestContextTest extends UnitTestSupport {
         private final Object data;
 
         private final int[] intVals =  new int[] {0, 1, 2, 3, 4};
-        
+
         private static final String CONSTANT = "FOO";
 
         /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import java.io.IOException;
 /**
  * Sender callback invoked by framework with actual web service request before message is sent.
  * Web service message is filled with content from internal message representation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SoapRequestMessageCallback implements WebServiceMessageCallback {
@@ -41,7 +41,7 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
 
     /** Test context */
     private final TestContext context;
-    
+
     /**
      * Constructor using internal message and endpoint configuration as fields.
      *
@@ -54,7 +54,7 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
         this.endpointConfiguration = endpointConfiguration;
         this.context = context;
     }
-    
+
     /**
      * Callback method called before request message  is sent.
      */

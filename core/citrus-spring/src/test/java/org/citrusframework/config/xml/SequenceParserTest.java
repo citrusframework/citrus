@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class SequenceParserTest extends AbstractActionParserTest<Sequence> {
     public void testActionParser() {
         assertActionCount(1);
         assertActionClassAndName(Sequence.class, "sequential");
-        
+
         Sequence action = getNextTestActionFromTest();
         Assert.assertEquals(action.getActionCount(), 2);
     }

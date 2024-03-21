@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,11 @@ public class ActionParserTest extends AbstractActionParserTest<TestAction> {
     @Test
     public void testActionParser() {
         assertActionCount(1);
-        
+
         Assert.assertEquals(getTestCase().getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(getTestCase().getActions().get(0).getName(), "action:echoAction");
     }
-    
+
     @Test
     public void testActionParserBrokenReference() {
         try {
@@ -47,7 +47,7 @@ public class ActionParserTest extends AbstractActionParserTest<TestAction> {
             Assert.assertTrue(e.getMessage().contains("Could not resolve parent bean definition 'brokenRef'"));
         }
     }
-    
+
     @Test
     public void testActionParserMissingReference() {
         try {

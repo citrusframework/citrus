@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,13 @@ import java.util.List;
 
 /**
  * ValidationMatcher based on Double > Double.
- * 
+ *
  * @author Christian Wied
  */
 public class IsNumberValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
-        
+
     	Double dValue;
     	try {
     		dValue = Double.parseDouble(value);
@@ -40,7 +40,7 @@ public class IsNumberValidationMatcher implements ValidationMatcher {
                     + "'. Received value is '" + value
                     + "' and is not a number", e);
 		}
-    	
+
     	if (dValue.isNaN() || dValue.isInfinite()) {
     		throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName

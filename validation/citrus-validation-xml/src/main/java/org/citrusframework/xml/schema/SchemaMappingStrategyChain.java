@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,11 @@ import org.w3c.dom.Document;
 /**
  * Special schema mapping strategy delegating to several other strategies in
  * a mapping chain. The first mapping strategy finding a proper schema wins.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SchemaMappingStrategyChain implements XsdSchemaMappingStrategy {
-    
+
     /** List of strategies to use in this chain */
     private List<XsdSchemaMappingStrategy> strategies = new ArrayList<>();
 
@@ -37,15 +37,15 @@ public class SchemaMappingStrategyChain implements XsdSchemaMappingStrategy {
      */
     public XsdSchema getSchema(List<XsdSchema> schemas, Document doc) {
         XsdSchema schema = null;
-        
+
         for (XsdSchemaMappingStrategy strategy : strategies) {
             schema = strategy.getSchema(schemas, doc);
-            
+
             if (schema != null) {
                 return schema;
             }
         }
-        
+
         return schema;
     }
 

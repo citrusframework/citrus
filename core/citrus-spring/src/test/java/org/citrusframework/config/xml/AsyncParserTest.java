@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class AsyncParserTest extends AbstractActionParserTest<Async> {
     public void testActionParser() {
         assertActionCount(2);
         assertActionClassAndName(Async.class, "async");
-        
+
         Async action = getNextTestActionFromTest();
         Assert.assertEquals(action.getActionCount(), 2L);
         Assert.assertEquals(action.getSuccessActions().size(), 0L);

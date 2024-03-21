@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 public class CreateTestMojoTest {
 
     private Prompter prompter = Mockito.mock(Prompter.class);
-    
+
     private XmlTestGenerator xmlTestGenerator = Mockito.mock(XmlTestGenerator.class);
     private XsdXmlTestGenerator xsdXmlTestGenerator = Mockito.mock(XsdXmlTestGenerator.class);
     private WsdlXmlTestGenerator wsdlXmlTestGenerator = Mockito.mock(WsdlXmlTestGenerator.class);
@@ -50,7 +50,7 @@ public class CreateTestMojoTest {
     private SwaggerJavaTestGenerator swaggerJavaTestGenerator = Mockito.mock(SwaggerJavaTestGenerator.class);
 
     private CreateTestMojo mojo;
-    
+
     @BeforeMethod
     public void setup() {
         mojo = new CreateTestMojo(xmlTestGenerator,
@@ -63,7 +63,7 @@ public class CreateTestMojoTest {
                                     swaggerJavaTestGenerator);
         mojo.setPrompter(prompter);
     }
-    
+
     @Test
     public void testCreate() throws PrompterException, MojoExecutionException, MojoFailureException {
         reset(prompter, xmlTestGenerator);
@@ -84,7 +84,7 @@ public class CreateTestMojoTest {
         when(xmlTestGenerator.withDescription("TODO")).thenReturn(xmlTestGenerator);
         when(xmlTestGenerator.usePackage("org.citrusframework.foo")).thenReturn(xmlTestGenerator);
         when(xmlTestGenerator.withName("FooTest")).thenReturn(xmlTestGenerator);
-        
+
         mojo.execute();
 
         verify(xmlTestGenerator).create();
@@ -176,7 +176,7 @@ public class CreateTestMojoTest {
 
         verify(xsdXmlTestGenerator, times(0)).create();
     }
-    
+
     @Test
     public void testSuiteFromWsdl() throws MojoExecutionException, PrompterException, MojoFailureException {
         reset(prompter, wsdlXmlTestGenerator);

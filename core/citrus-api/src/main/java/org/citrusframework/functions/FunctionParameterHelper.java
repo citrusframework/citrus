@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,19 +22,19 @@ import java.util.StringTokenizer;
 
 /**
  * Helper class parsing a parameter string and converting the tokens to a parameter list.
- * 
+ *
  * @author Christoph Deppisch
  */
 public final class FunctionParameterHelper {
-    
+
     /**
      * Prevent class instantiation.
      */
     private FunctionParameterHelper() {}
-    
+
     /**
      * Convert a parameter string to a list of parameters.
-     * 
+     *
      * @param parameterString comma separated parameter string.
      * @return list of parameters.
      */
