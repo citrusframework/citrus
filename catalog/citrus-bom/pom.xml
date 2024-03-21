@@ -61,6 +61,26 @@
       </roles>
     </developer>
     <developer>
+      <id>bbortt</id>
+      <name>Timon Borter</name>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>PostFinance AG</organization>
+      <organizationUrl>https://www.postfinance.ch/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>tschlat</id>
+      <name>Thorsten Schlathoelter</name>
+      <email>citrus-dev@googlegroups.com</email>
+      <organization>PostFinance AG</organization>
+      <organizationUrl>https://www.postfinance.ch/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
       <id>svettwer</id>
       <name>Sven Hettwer</name>
       <email>citrus-dev@googlegroups.com</email>
@@ -99,8 +119,8 @@
   </scm>
 
   <organization>
-    <name>ConSol Software GmbH</name>
-    <url>https://www.consol.com/</url>
+    <name>Citrus Framework Community</name>
+    <url>https://citrusframework.org</url>
   </organization>
 
   <mailingLists>
@@ -127,86 +147,86 @@
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-api</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-base</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-core</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-spring</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Runtimes -->
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-cucumber</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-testng</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-junit</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-junit5</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-main</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-arquillian</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-groovy</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-xml</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-yaml</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Endpoints -->
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-camel</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-ftp</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-http</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
@@ -216,130 +236,130 @@
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-jms</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-kafka</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-jmx</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-mail</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-rmi</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-ssh</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-vertx</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-websocket</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-ws</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-zookeeper</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-spring-integration</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Validation -->
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-validation-xml</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-validation-json</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-validation-text</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-validation-binary</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-validation-groovy</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-validation-hamcrest</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Connectors -->
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-docker</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-selenium</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-kubernetes</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-sql</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Tools -->
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-restdocs</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-maven-plugin</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
 
       <!-- Catalog -->
       <dependency>
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-endpoint-catalog</artifactId>
-        <version>${project.version}</version>
+        <version>3.5.0-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
