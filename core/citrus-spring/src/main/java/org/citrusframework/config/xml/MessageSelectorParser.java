@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.*;
 
 /**
  * Bean definition parser for message selector elements of test actions.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class MessageSelectorParser {
@@ -34,7 +34,7 @@ public abstract class MessageSelectorParser {
      */
     private MessageSelectorParser() {
     }
-    
+
     /**
      * Static parse method taking care of test action description.
      * @param element

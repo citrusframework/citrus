@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import java.util.*;
 /**
  * Message selector dispatches incoming messages to several other selector implementations
  * according to selector names.
- * 
+ *
  * By default uses {@link HeaderMatchingMessageSelector} and supports {@link RootQNameMessageSelector} and
  * {@link XpathPayloadMessageSelector}.
- * 
+ *
  * @author Christoph Deppisch
  * @since 1.2
  */
@@ -41,7 +41,7 @@ public class DispatchingMessageSelector implements MessageSelector {
 
     /** List of header elements to match */
     private final Map<String, String> matchingHeaders;
-    
+
     /** Spring bean factory */
     private final BeanFactory beanFactory;
 
@@ -58,7 +58,7 @@ public class DispatchingMessageSelector implements MessageSelector {
         this.beanFactory = beanFactory;
         this.context = context;
         this.matchingHeaders = MessageSelectorBuilder.withString(selector).toKeyValueMap();
-        
+
         Assert.isTrue(matchingHeaders.size() > 0, "Invalid empty message selector");
 
         factories.add(new RootQNameMessageSelector.Factory());
@@ -76,7 +76,7 @@ public class DispatchingMessageSelector implements MessageSelector {
                 .map(factory -> (BeanFactoryAware) factory)
                 .forEach(factory -> factory.setBeanFactory(beanFactory));
     }
-    
+
     @Override
     public boolean accept(Message<?> message) {
         return matchingHeaders.entrySet()

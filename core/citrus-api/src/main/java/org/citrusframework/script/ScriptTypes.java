@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,17 @@ package org.citrusframework.script;
  * Script type constants representing possible script languages used in test cases. We do not
  * use enumeration here because people out there need to have the opportunity to add new script types
  * in test cases without having to change the enumeration.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class ScriptTypes {
-    
+
     /**
      * Prevent instantiation.
      */
     private ScriptTypes() {
     }
-    
+
     /** Groovy */
     public static final String GROOVY = "groovy";
 }

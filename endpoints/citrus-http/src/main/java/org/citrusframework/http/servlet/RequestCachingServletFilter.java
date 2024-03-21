@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,19 +26,19 @@ import org.springframework.web.filter.OncePerRequestFilter;
 /**
  * Servlet filter introduces a caching mechanism for request message data. With
  * usual servlet request implementation data can only be read once.
- * 
- * For logging and tracing reasons we introduce a servlet request wrapper caching 
+ *
+ * For logging and tracing reasons we introduce a servlet request wrapper caching
  * the request data.
- * 
+ *
  * @author Christoph Deppisch
  * @since 1.2
  */
 public class RequestCachingServletFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
         filterChain.doFilter(new CachingHttpServletRequestWrapper(request), response);
     }
-    
+
 }

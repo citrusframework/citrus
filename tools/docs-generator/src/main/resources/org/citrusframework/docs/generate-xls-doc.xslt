@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- 
- * Copyright 2006-2010 the original author or authors.
+<!--
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * limitations under the License.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:spring="http://www.springframework.org/schema/beans"
 	xmlns:citrus="http://www.citrusframework.org/schema/testcase"
     xmlns:header="http://www.citrusframework.org/schema/doc/header"
 	xmlns="urn:schemas-microsoft-com:office:spreadsheet"
@@ -36,7 +36,7 @@
             </xsl:for-each>
         </Row>
     </xsl:template>
-    
+
 	<xsl:template match="/spring:beans">
 		<xsl:apply-templates select="citrus:testcase" />
 	</xsl:template>
@@ -48,14 +48,14 @@
 			</Data>
 			<NamedCell ss:Name="_FilterDatabase"/>
 		</Cell>
-		
+
 		<Cell>
 			<Data ss:Type="String">
 				<xsl:value-of select="citrus:meta-info/citrus:author" />
 			</Data>
 			<NamedCell ss:Name="_FilterDatabase"/>
 		</Cell>
-		
+
 		<Cell>
 			<Data ss:Type="String">
 				<xsl:value-of select="citrus:meta-info/citrus:status" />
@@ -68,18 +68,18 @@
 				<xsl:value-of select="normalize-space(citrus:description)" />
 			</Data>
 			<NamedCell ss:Name="_FilterDatabase"/>
-		</Cell>				
-		
+		</Cell>
+
 		<Cell>
 			<Data ss:Type="String">
 				<xsl:value-of select="citrus:meta-info/citrus:creationdate" />
 			</Data>
 			<NamedCell ss:Name="_FilterDatabase"/>
 		</Cell>
-        
+
         <xsl:apply-templates select="citrus:meta-info/*"/>
 	</xsl:template>
-    
+
     <xsl:template match="citrus:meta-info/*">
         <xsl:if test="namespace-uri(.) != 'http://www.citrusframework.org/schema/testcase'">
             <Cell>
@@ -88,11 +88,11 @@
                 </Data>
                 <NamedCell ss:Name="_FilterDatabase"/>
             </Cell>
-        </xsl:if> 
-        
-        <xsl:apply-templates/>       
+        </xsl:if>
+
+        <xsl:apply-templates/>
     </xsl:template>
-    
+
 	<xsl:template match="text()" />
 
 </xsl:stylesheet>

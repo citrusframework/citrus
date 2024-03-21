@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import java.util.Properties;
 
 /**
  * Class to automatically generate a visual representation of a {@link org.citrusframework.TestCase} in SVG.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2007
  */
@@ -45,18 +45,18 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
     public SvgTestDocsGenerator() {
         super("", "");
     }
-    
+
     /**
      * Generates the test documentation.
      */
     public void generateDoc() {
         FileOutputStream fos = null;
         BufferedOutputStream buffered = null;
-        
+
         Transformer t = getTransformer("generate-svg-doc.xslt", "text/xml", "xml");
         t.setOutputProperty(OutputKeys.INDENT, "yes");
         t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-        
+
         try {
             List<File> testFiles = getTestFiles();
 
@@ -65,14 +65,14 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
 
                 fos = getFileOutputStream(testFile.getName().substring(0, testFile.getName().lastIndexOf('.')) + ".svg");
                 buffered = new BufferedOutputStream(fos);
-                
+
                 Source xml = new DOMSource(getDocumentBuilder().parse(testFile));
                 StreamResult res = new StreamResult(buffered);
-                
+
                 t.transform(xml, res);
-                
+
                 logger.info("Finished test " + testFile.getName());
-                
+
                 buffered.flush();
                 fos.close();
             }
@@ -86,7 +86,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
                     logger.error("Failed to close output stream", e);
                 }
             }
-            
+
             if (fos != null) {
                 try {
                     fos.close();
@@ -96,7 +96,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
             }
         }
     }
-    
+
     /**
      * Builds a new test doc generator.
      * @return
@@ -104,7 +104,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
     public static SvgTestDocsGenerator build() {
         return new SvgTestDocsGenerator();
     }
-    
+
     /**
      * Adds a custom test source directory.
      * @param testDir the test source directory.
@@ -114,7 +114,7 @@ public final class SvgTestDocsGenerator extends AbstractTestDocsGenerator {
         this.setSrcDirectory(testDir);
         return this;
     }
-    
+
     @Override
     public void doBody(OutputStream buffered) throws TransformerException,
             IOException, SAXException {

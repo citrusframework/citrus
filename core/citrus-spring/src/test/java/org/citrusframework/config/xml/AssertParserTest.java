@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class AssertParserTest extends AbstractActionParserTest<org.citrusframewo
     public void testAssertParser() {
         assertActionCount(1);
         assertActionClassAndName(org.citrusframework.container.Assert.class, "assert");
-        
+
         org.citrusframework.container.Assert action = getNextTestActionFromTest();
         Assert.assertEquals(action.getDescription(), "This action asserts an exception in nested actions");
         Assert.assertEquals(action.getMessage(), "This went wrong");

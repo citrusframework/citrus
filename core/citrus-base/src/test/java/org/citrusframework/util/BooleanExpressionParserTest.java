@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2019 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
  * @author Christoph Deppisch
  */
 public class BooleanExpressionParserTest {
-    
+
     @Test
     public void testExpressionParser() {
         Assert.assertTrue(BooleanExpressionParser.evaluate("1 = 1"));
@@ -69,7 +69,7 @@ public class BooleanExpressionParserTest {
         Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) or (true = false)"));
         Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false    ) or (    true = false)"));
     }
-    
+
     @Test
     public void testExpressionParserWithUnknownOperator() {
         try {
@@ -78,10 +78,10 @@ public class BooleanExpressionParserTest {
             Assert.assertEquals(e.getLocalizedMessage(), "Unknown operator 'wahr'");
             return;
         }
-        
+
         Assert.fail("Missing " + CitrusRuntimeException.class + " because of unknown operator");
     }
-    
+
     @Test
     public void testExpressionParserWithBrokenExpression() {
         try {
@@ -90,7 +90,7 @@ public class BooleanExpressionParserTest {
             Assert.assertEquals(e.getLocalizedMessage(), "Unable to parse boolean expression '1 = '. Maybe expression is incomplete!");
             return;
         }
-        
+
         Assert.fail("Missing " + CitrusRuntimeException.class + " because of broken expression");
     }
 }

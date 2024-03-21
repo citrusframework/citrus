@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
     @Test
     public void testWebServerParser() {
         Iterator<WebServiceServer> servers = beanDefinitionContext.getBeansOfType(WebServiceServer.class).values().iterator();
-        
+
         // 1st server
         WebServiceServer server = servers.next();
         Assert.assertEquals(server.getName(), "soapServer1");
@@ -128,7 +128,7 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(server.getSecurityHandler(), beanDefinitionContext.getBean("securityHandler"));
         Assert.assertEquals(server.getConnectors().length, 0);
         Assert.assertNull(server.getConnector());
-        
+
         // 6th server
         server = servers.next();
         Assert.assertEquals(server.getName(), "soapServer6");

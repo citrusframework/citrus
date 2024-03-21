@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,14 +35,14 @@ import java.util.List;
  * uri
  * opaque
  * algorithm
- * 
+ *
  * @author Christoph Deppisch
  */
 public class DigestAuthHeaderFunction implements Function {
-    
+
     /** Nonce is valid for 60 seconds */
     private Long nonceValidity = 60000L;
-    
+
     /**
       * {@inheritDoc}
       */
@@ -61,13 +61,13 @@ public class DigestAuthHeaderFunction implements Function {
         String uri = parameterList.get(5);
         String opaque = parameterList.get(6);
         String algorithm = parameterList.get(7);
-        
+
         String digest1 = username + ":" + realm + ":" + password;
         String digest2 = method + ":" + uri;
-        
+
         Long expirationTime = System.currentTimeMillis() + nonceValidity;
         String nonce = Base64.encodeBase64String((expirationTime + ":" + getDigestHex(algorithm, expirationTime + ":" + noncekey)).getBytes());
-        
+
         authorizationHeader.append("Digest username=");
         authorizationHeader.append(username);
         authorizationHeader.append(",realm=");
@@ -82,14 +82,14 @@ public class DigestAuthHeaderFunction implements Function {
         authorizationHeader.append(getDigestHex(algorithm, opaque));
         authorizationHeader.append(",algorithm=");
         authorizationHeader.append(algorithm);
-        
+
         return authorizationHeader.toString();
     }
 
     /**
      * Generates digest hexadecimal string representation of a key with given
      * algorithm.
-     * 
+     *
      * @param algorithm
      * @param key
      * @return
@@ -100,7 +100,7 @@ public class DigestAuthHeaderFunction implements Function {
         } else if (algorithm.equals("sha")) {
             return DigestUtils.shaHex(key);
         }
-        
+
         throw new CitrusRuntimeException("Unsupported digest algorithm: " + algorithm);
     }
 
@@ -111,5 +111,5 @@ public class DigestAuthHeaderFunction implements Function {
     public void setNonceValidity(Long nonceValidity) {
         this.nonceValidity = nonceValidity;
     }
-    
+
 }

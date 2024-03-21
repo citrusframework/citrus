@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
     public void testSQLActionParser() {
         assertActionCount(5);
         assertActionClassAndName(ExecuteSQLQueryAction.class, "sqlQuery:testDataSource");
-        
+
         // 1st action
         ExecuteSQLQueryAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
@@ -53,7 +53,7 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getExtractVariables().size(), 0);
-        
+
         // 2nd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
@@ -68,7 +68,7 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getExtractVariables().size(), 0);
-        
+
         // 3rd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
@@ -95,11 +95,11 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         Assert.assertEquals(action.getStatements().get(0), "select A as A_COLUMN, B as B_COLUMN from C");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
-        
+
         Assert.assertNotNull(action.getScriptValidationContext());
         Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
         Assert.assertEquals(action.getScriptValidationContext().getValidationScript().trim(), "assert rows.size() == 2");
-        
+
         // 5th action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
@@ -108,13 +108,13 @@ public class ExecuteSQLQueryActionParserTest extends AbstractActionParserTest<Ex
         Assert.assertEquals(action.getStatements().get(0), "select A as A_COLUMN, B as B_COLUMN from C");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
-        
+
         Assert.assertNotNull(action.getScriptValidationContext());
         Assert.assertNotNull(action.getScriptValidationContext().getValidationScriptResourcePath());
         Assert.assertEquals(action.getScriptValidationContext().getValidationScriptResourcePath(), "classpath:org/citrusframework/script/example.groovy");
         Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "");
     }
-    
+
     @Test
     public void testMissingDataSourceBeanRef() {
         try {

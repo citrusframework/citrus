@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@ package org.citrusframework;
  * Actor performs send/receive message actions. With send/receive actors we can enable/disable Citrus message simulation
  * very easily. This enables a fast switch in end-to-end testing when a simulated application suddenly is real and we have to disable
  * the simulated communication parts in a test.
- *  
+ *
  * @author Christoph Deppisch
  * @since 1.3
  */
 public class TestActor {
     /** The name of this actor*/
     private String name;
-    
+
     /** Marks if this test actor should not participate in tests */
     private boolean disabled = false;
 
@@ -63,5 +63,5 @@ public class TestActor {
         this.disabled = disabled;
     }
 
-    
+
 }

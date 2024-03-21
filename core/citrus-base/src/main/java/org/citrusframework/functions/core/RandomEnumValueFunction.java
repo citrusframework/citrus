@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ import java.util.Random;
 
 /**
  * Function to choose one random value from a list of strings. The enumeration values to choose from
- * can either be specified as parameters or in the {@link RandomEnumValueFunction#values} property of 
+ * can either be specified as parameters or in the {@link RandomEnumValueFunction#values} property of
  * an instance of this class. These two possibilities can only be used exclusively - either empty values
  * property and non-empty parameters or empty parameters and non-empty values property.
  * <p>Example custom function definition and the corresponding usage in a test:</p>
- * 
+ *
  * <code>
  * <pre>
  * &lt;bean id="myCustomFunctionLibrary" class="org.citrusframework.functions.FunctionLibrary"&gt;
@@ -59,7 +59,7 @@ import java.util.Random;
  * &lt;variable name="httpStatusCode" value="custom:randomHttpStatusCode()" /&gt;
  * </pre>
  * </code>
- * <p>The other usage possibility is to choose a random value from a list of values given as argument 
+ * <p>The other usage possibility is to choose a random value from a list of values given as argument
  * like this which achieves the same result as the previously shown custom function:</p>
  * <code>
  * <pre>
@@ -67,14 +67,14 @@ import java.util.Random;
  * </pre>
  * </code>
  * You should choose which one of the two flavours to use based on the number of times you use this function - if you need it in
- * only one special case you may go with specifying the list as arguments otherwise you should define a custom function and reuse it. 
- * 
+ * only one special case you may go with specifying the list as arguments otherwise you should define a custom function and reuse it.
+ *
  * @author Dimo Velev (dimo.velev@gmail.com)
  */
 public class RandomEnumValueFunction implements Function {
 	private Random random = new Random(System.currentTimeMillis());
 	private List<String> values = null;
-	
+
 	/**
 	 * @see Function#execute(java.util.List, org.citrusframework.context.TestContext)
 	 */
@@ -91,7 +91,7 @@ public class RandomEnumValueFunction implements Function {
 
 	/**
 	 * Pseudo-randomly choose one of the supplied values and return it.
-	 * 
+	 *
 	 * @param values
 	 * @return
 	 * @throws IllegalArgumentException if the values supplied are <code>null</code> or an empty list.
@@ -100,9 +100,9 @@ public class RandomEnumValueFunction implements Function {
 		if (values == null || values.isEmpty()) {
 			throw new InvalidFunctionUsageException("No values to choose from");
 		}
-		
+
 		final int idx = random.nextInt(values.size());
-		
+
 		return values.get(idx);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,11 @@ import java.util.Map;
 
 /**
  * Message selector accepts XML messages in case XPath expression evaluation result matches
- * the expected value. With this selector someone can select messages according to a message payload XML 
+ * the expected value. With this selector someone can select messages according to a message payload XML
  * element value for instance.
- * 
+ *
  * Syntax is xpath://root/element
- * 
+ *
  * @author Christoph Deppisch
  * @since 1.2
  */
@@ -42,17 +42,17 @@ public class XpathPayloadMessageSelector extends AbstractMessageSelector {
 
     /** Special selector element name identifying this message selector implementation */
     public static final String SELECTOR_PREFIX = "xpath:";
-    
+
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(XpathPayloadMessageSelector.class);
-    
+
     /**
      * Default constructor using fields.
      */
     public XpathPayloadMessageSelector(String selectKey, String matchingValue, TestContext context) {
         super(selectKey.substring(SELECTOR_PREFIX.length()), matchingValue, context);
     }
-    
+
     @Override
     public boolean accept(Message<?> message) {
         Document doc;
@@ -63,10 +63,10 @@ public class XpathPayloadMessageSelector extends AbstractMessageSelector {
             logger.warn("Ignoring non XML message for XPath message selector (" + e.getClass().getName() + ")");
             return false; // non XML message - not accepted
         }
-        
+
         try {
             Map<String, String> namespaces = XMLUtils.lookupNamespaces(doc);
-            
+
             // add default namespace mappings
             namespaces.putAll(context.getNamespaceContextBuilder().getNamespaceMappings());
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class ReceiveSoapMessageActionParserTest extends AbstractActionParserTest
     public void testReceiveSoapMessageActionParser() {
         assertActionCount(3);
         assertActionClassAndName(ReceiveSoapMessageAction.class, "receive");
-        
+
         // 1st action
         ReceiveSoapMessageAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("soapAttachmentValidator"));

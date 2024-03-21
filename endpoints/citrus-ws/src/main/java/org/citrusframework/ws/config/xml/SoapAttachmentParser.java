@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 
 /**
  * Parser for SOAP attachment element in Citrus ws namespace.
- * 
+ *
  * @author Christoph Deppisch
  */
 public final class SoapAttachmentParser {
@@ -32,7 +32,7 @@ public final class SoapAttachmentParser {
     private SoapAttachmentParser() {
         //prevent instantiation
     }
-    
+
     /**
      * Parse the attachment element with all children and attributes.
      * @param attachmentElement
@@ -59,12 +59,12 @@ public final class SoapAttachmentParser {
         if (attachmentElement.hasAttribute("encoding-type")) {
             soapAttachment.setEncodingType(attachmentElement.getAttribute("encoding-type"));
         }
-        
+
         Element attachmentDataElement = DomUtils.getChildElementByTagName(attachmentElement, "data");
         if (attachmentDataElement != null) {
             soapAttachment.setContent(DomUtils.getTextValue(attachmentDataElement));
         }
-        
+
         Element attachmentResourceElement = DomUtils.getChildElementByTagName(attachmentElement, "resource");
         if (attachmentResourceElement != null) {
             soapAttachment.setContentResourcePath(attachmentResourceElement.getAttribute("file"));

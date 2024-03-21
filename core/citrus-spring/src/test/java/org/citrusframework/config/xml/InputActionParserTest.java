@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,22 +31,22 @@ public class InputActionParserTest extends AbstractActionParserTest<InputAction>
     public void testInputActionParser() {
         assertActionCount(4);
         assertActionClassAndName(InputAction.class, "input");
-        
+
         InputAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessage(), "Press return key to continue ...");
         Assert.assertNull(action.getValidAnswers());
         Assert.assertEquals(action.getVariable(), "userinput");
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessage(), "Do you want to continue?");
         Assert.assertNull(action.getValidAnswers());
         Assert.assertEquals(action.getVariable(), "userinput");
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessage(), "Do you want to continue?");
         Assert.assertEquals(action.getValidAnswers(), "yes/no");
         Assert.assertEquals(action.getVariable(), "userinput");
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessage(), "Do you want to continue?");
         Assert.assertEquals(action.getValidAnswers(), "y/n");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Library holding a set of functions. Each library defines a function prefix as namespace, so
  * there will be no naming conflicts when using multiple libraries at a time.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class FunctionLibrary {
@@ -39,10 +39,10 @@ public class FunctionLibrary {
 
     /** Function library prefix */
     private String prefix = DEFAULT_PREFIX;
-    
+
     /**
      * Try to find function in library by name.
-     * 
+     *
      * @param functionName function name.
      * @return the function instance.
      * @throws NoSuchFunctionException
@@ -57,7 +57,7 @@ public class FunctionLibrary {
 
     /**
      * Does this function library know a function with the given name.
-     * 
+     *
      * @param functionName name to search for.
      * @return boolean flag to mark existence.
      */

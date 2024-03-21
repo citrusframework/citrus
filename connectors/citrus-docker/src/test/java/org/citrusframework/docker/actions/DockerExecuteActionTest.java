@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -196,21 +196,21 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable(DockerMessageHeaders.CONTAINER_NAME), "my_container");
 
     }
-    
+
     @Test
     public void testCreateWithEnvArgs() throws Exception {
     	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
     	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
-    	
+
     	reset(dockerClient, command);
-    	
+
     	when(client.getEndpointConfiguration().getDockerClient().createContainerCmd(anyString())).thenReturn(command);
     	when(command.exec()).thenReturn(response);
     	when(response.getId()).thenReturn(UUID.randomUUID().toString());
     	when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
-    	
+
     	String[] containerEnvVars = {"VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"};
-    	
+
     	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
     		.client(client)
     		.command(new ContainerCreate()
@@ -219,35 +219,35 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
     			.env("VAR_1=value_1","VAR_2=value_2","VAR_3=value_3"))
     		.build();
     	containerCreateAction.execute(context);
-    	
+
     	ArgumentCaptor<String[]> argumentCaptor = ArgumentCaptor.forClass(String[].class);
     	verify(command).withEnv(argumentCaptor.capture());
     	String[] capturedArguments = (String[]) argumentCaptor.getValue();
-    	
+
     	Assert.assertEquals(containerEnvVars.length, capturedArguments.length);
     	for(int i=0; i<containerEnvVars.length; i++) {
     		Assert.assertEquals(containerEnvVars[i], capturedArguments[i]);
     	}
     }
-    
+
     @Test
     public void testCreateWithVolumeArgs() throws Exception {
     	CreateContainerCmd command = Mockito.mock(CreateContainerCmd.class);
     	CreateContainerResponse response = Mockito.mock(CreateContainerResponse.class);
-    	
+
     	reset(dockerClient, command);
-    	
+
     	when(client.getEndpointConfiguration().getDockerClient().createContainerCmd(anyString())).thenReturn(command);
     	when(command.exec()).thenReturn(response);
     	when(response.getId()).thenReturn(UUID.randomUUID().toString());
     	when(dockerClient.createContainerCmd("image_create")).thenReturn(command);
-    	
+
     	Volume[] containerVolumes = {
 	    		new Volume("/source/dir/one:/destination/dir/one"),
 	    		new Volume("/source/dir/two:/destination/dir/two"),
 	    		new Volume("/source/dir/three:/destination/dir/three")
     		};
-    	
+
     	DockerExecuteAction containerCreateAction = new DockerExecuteAction.Builder()
     		.client(client)
     		.command(new ContainerCreate()
@@ -260,16 +260,16 @@ public class DockerExecuteActionTest extends AbstractTestNGUnitTest {
 		    		))
     		.build();
     	containerCreateAction.execute(context);
-    	
+
     	ArgumentCaptor<Volume[]> argumentCaptor = ArgumentCaptor.forClass(Volume[].class);
     	verify(command).withVolumes(argumentCaptor.capture());
     	Volume[] capturedArguments = (Volume[]) argumentCaptor.getValue();
-    	
+
     	Assert.assertEquals(containerVolumes.length, capturedArguments.length);
     	for(int i=0; i<containerVolumes.length; i++) {
     		Assert.assertEquals(containerVolumes[i], capturedArguments[i]);
     	}
-    	
+
     }
 
     @Test

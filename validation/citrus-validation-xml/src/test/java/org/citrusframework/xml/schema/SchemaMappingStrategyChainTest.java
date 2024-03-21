@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2024 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,77 +30,77 @@ import static org.mockito.Mockito.*;
  * @author Christoph Deppisch
  */
 public class SchemaMappingStrategyChainTest {
-    
+
     private XsdSchema schemaMock = Mockito.mock(XsdSchema.class);
-    
+
     @Test
     public void testStrategyChain() {
         Document doc = Mockito.mock(Document.class);
         Node rootNode = Mockito.mock(Node.class);
-        
+
         SchemaMappingStrategyChain strategy = new SchemaMappingStrategyChain();
         RootQNameSchemaMappingStrategy qNameStrategy = new RootQNameSchemaMappingStrategy();
         TargetNamespaceSchemaMappingStrategy namespaceStrategy = new TargetNamespaceSchemaMappingStrategy();
-        
+
         List<XsdSchema> schemas = new ArrayList<>();
         schemas.add(schemaMock);
 
         Map<String, XsdSchema> mappings = new HashMap<>();
         mappings.put("{http://citrusframework.org/schema}foo", schemaMock);
         qNameStrategy.setMappings(mappings);
-        
+
         List<XsdSchemaMappingStrategy> strategies = new ArrayList<>();
         strategies.add(qNameStrategy);
         strategies.add(namespaceStrategy);
-        
+
         strategy.setStrategies(strategies);
 
         reset(doc, rootNode, schemaMock);
-        
+
         when(doc.getFirstChild()).thenReturn(rootNode);
         when(rootNode.getNamespaceURI()).thenReturn("http://citrusframework.org/schema");
         when(rootNode.getLocalName()).thenReturn("foo");
-        
+
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
 
-        
+
         Assert.assertEquals(strategy.getSchema(schemas, doc), schemaMock);
 
     }
-    
+
     @Test
     public void testStrategyChainFallback() {
         Document doc = Mockito.mock(Document.class);
         Node rootNode = Mockito.mock(Node.class);
-        
+
         SchemaMappingStrategyChain strategy = new SchemaMappingStrategyChain();
         RootQNameSchemaMappingStrategy qNameStrategy = new RootQNameSchemaMappingStrategy();
         TargetNamespaceSchemaMappingStrategy namespaceStrategy = new TargetNamespaceSchemaMappingStrategy();
-        
+
         List<XsdSchema> schemas = new ArrayList<>();
         schemas.add(schemaMock);
 
         Map<String, XsdSchema> mappings = new HashMap<>();
         mappings.put("{http://citrusframework.org/schema}foo", schemaMock);
         qNameStrategy.setMappings(mappings);
-        
+
         List<XsdSchemaMappingStrategy> strategies = new ArrayList<>();
         strategies.add(qNameStrategy);
         strategies.add(namespaceStrategy);
-        
+
         strategy.setStrategies(strategies);
 
         reset(doc, rootNode, schemaMock);
-        
+
         when(doc.getFirstChild()).thenReturn(rootNode);
         when(rootNode.getNamespaceURI()).thenReturn("http://citrusframework.org/schema");
         when(rootNode.getLocalName()).thenReturn("bar");
-        
+
         when(schemaMock.getTargetNamespace()).thenReturn("http://citrusframework.org/schema");
 
-        
+
         Assert.assertEquals(strategy.getSchema(schemas, doc), schemaMock);
 
     }
-    
+
 }

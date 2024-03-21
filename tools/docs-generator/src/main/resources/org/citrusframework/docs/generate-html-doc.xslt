@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- 
- * Copyright 2006-2010 the original author or authors.
+<!--
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * limitations under the License.
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:spring="http://www.springframework.org/schema/beans"
 	xmlns:citrus="http://www.citrusframework.org/schema/testcase"
 	exclude-result-prefixes="spring citrus">
 
@@ -66,25 +66,25 @@
 				<xsl:element name="div">
 					<xsl:attribute name="id"><xsl:value-of select="concat(//citrus:testcase/@name, generate-id(), 'variables')" />+</xsl:attribute>
 					<xsl:attribute name="style">font-size:10pt;display:block</xsl:attribute>
-		
+
 					<xsl:element name="a">
 						<xsl:attribute name="href">javascript:showDetails('<xsl:value-of select="concat(//citrus:testcase/@name, generate-id(), 'variables')" />')</xsl:attribute>
 						<xsl:attribute name="style">text-decoration:none</xsl:attribute>
 						+ show variables ...
 					</xsl:element>
 				</xsl:element>
-		
+
 				<xsl:element name="div">
 					<xsl:attribute name="id"><xsl:value-of select="concat(//citrus:testcase/@name, generate-id(), 'variables')" />-</xsl:attribute>
 					<xsl:attribute name="style">font-size:10pt;display:none</xsl:attribute>
-		
+
 					<xsl:element name="a">
 						<xsl:attribute name="href">javascript:hideDetails('<xsl:value-of select="concat(//citrus:testcase/@name, generate-id(), 'variables')" />')</xsl:attribute>
 						<xsl:attribute name="style">text-decoration:none</xsl:attribute>
 						- hide variables ...
 					</xsl:element>
 				</xsl:element>
-		
+
 				<xsl:element name="div">
 					<xsl:attribute name="id"><xsl:value-of select="concat(//citrus:testcase/@name, generate-id(), 'variables')" /></xsl:attribute>
 					<xsl:attribute name="style">font-size:8pt;display:none</xsl:attribute>
@@ -92,7 +92,7 @@
 						<xsl:apply-templates select="citrus:variables/*"/>
 					</ul>
 				</xsl:element>
-				
+
 				<xsl:apply-templates select="citrus:actions/*" />
 			</ul>
 		</xsl:element>
@@ -106,8 +106,8 @@
 		</li>
 		<xsl:apply-templates />
 	</xsl:template>
-	
-	<xsl:template match="citrus:echo">		
+
+	<xsl:template match="citrus:echo">
 		<br/>
 		<font style="font-size:smaller;font-style:italic;">
 			<xsl:value-of select="." />
@@ -147,7 +147,7 @@
 		</xsl:element>
 
 	</xsl:template>
-	
+
 	<xsl:template match="citrus:message/citrus:resource">
 		<xsl:param name="ident" select="concat(//citrus:testcase/@name, generate-id())" />
 
@@ -180,7 +180,7 @@
 		</xsl:element>
 
 	</xsl:template>
-	
+
 	<xsl:template match="citrus:variables/citrus:variable | citrus:create-variables/citrus:variable">
 		<li>
 			<xsl:value-of select="@name" /><xsl:text>=</xsl:text><xsl:value-of select="@value" />

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
     public void testJavaActionParser() {
         assertActionCount(3);
         assertActionClassAndName(JavaAction.class, "java");
-        
+
         JavaAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getClassName(), "org.citrusframework.util.InvocationDummy");
         Assert.assertEquals(action.getMethodName(), "invoke");
@@ -41,7 +41,7 @@ public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
         Assert.assertEquals(action.getConstructorArgs().get(0), "Test Invocation");
         Assert.assertEquals(action.getMethodArgs().size(), 1);
         Assert.assertEquals(action.getMethodArgs().get(0), new String[] {"1", "2"});
-        
+
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getClassName(), "org.citrusframework.util.InvocationDummy");
         Assert.assertEquals(action.getMethodName(), "invoke");
@@ -50,7 +50,7 @@ public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
         Assert.assertEquals(action.getMethodArgs().get(0), 4);
         Assert.assertEquals(action.getMethodArgs().get(1), "Test");
         Assert.assertEquals(action.getMethodArgs().get(2), true);
-        
+
         action = getNextTestActionFromTest();
         Assert.assertNull(action.getClassName());
         Assert.assertNotNull(action.getInstance());
@@ -61,7 +61,7 @@ public class JavaActionParserTest extends AbstractActionParserTest<JavaAction> {
         Assert.assertEquals(action.getMethodArgs().get(1), "Test invocation");
         Assert.assertEquals(action.getMethodArgs().get(2), false);
     }
-    
+
     @Test
     public void testUnsupportedMethodType() {
         try {

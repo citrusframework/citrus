@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.citrusframework.validation.context.ValidationContext;
 /**
  * Basic control message validator for all message types. Subclasses only have to add
  * specific logic for message payload validation. This validator is based on a control message.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class DefaultMessageValidator extends AbstractMessageValidator<ValidationContext> {

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2006-2016 the original author or authors.
+ *  Copyright the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * Message validator automatically converts received binary data message payload to base64 String. Assumes control
  * message payload is also base64 encoded String so we can compare the text data with normal plain text validation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class BinaryBase64MessageValidator extends PlainTextMessageValidator {
@@ -40,7 +40,7 @@ public class BinaryBase64MessageValidator extends PlainTextMessageValidator {
 
         super.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
-    
+
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.BINARY_BASE64.toString());

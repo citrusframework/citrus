@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,12 @@ public class HelloServiceImpl extends AbstractMarshallingHelloService {
         response.setCorrelationId(request.getPayload().getCorrelationId());
         response.setUser("HelloService");
         response.setText("Hello " + request.getPayload().getUser());
-        
+
         MessageBuilder<HelloResponse> builder = MessageBuilder.withPayload(response);
         builder.setHeader("CorrelationId", request.getHeaders().get("CorrelationId"));
         builder.setHeader("Operation", "sayHello");
         builder.setHeader("Type", "response");
-        
+
         return builder.build();
     }
 
