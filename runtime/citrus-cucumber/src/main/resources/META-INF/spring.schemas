@@ -30,5 +30,5 @@ http\://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcas
 http\://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase-4.0.2.xsd=org/citrusframework/schema/citrus-cucumber-testcase-4.0.2.xsd
 http\://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase-4.1.0.xsd=org/citrusframework/schema/citrus-cucumber-testcase-4.1.0.xsd
 http\://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase-4.1.1.xsd=org/citrusframework/schema/citrus-cucumber-testcase-4.1.1.xsd
-http\://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase-4.2.0-SNAPSHOT.xsd=org/citrusframework/schema/citrus-cucumber-testcase-4.2.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase-4.2.0.xsd=org/citrusframework/schema/citrus-cucumber-testcase-4.2.0.xsd
 http\://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd=org/citrusframework/schema/citrus-cucumber-testcase.xsd
