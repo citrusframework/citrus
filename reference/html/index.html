@@ -663,8 +663,8 @@ $(addBlockSwitches);
 <h1>Citrus</h1>
 <div class="details">
 <span id="author" class="author">Authors: The Citrus Community</span><br>
-<span id="revnumber">version 4.1.1,</span>
-<span id="revdate">2024-01-25</span>
+<span id="revnumber">version 4.2.0,</span>
+<span id="revdate">2024-03-25</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -690,6 +690,7 @@ $(addBlockSwitches);
 <li><a href="#runtimes-cucumber">4.4. Cucumber</a></li>
 <li><a href="#runtime-quarkus">4.5. QuarkusTest runtime</a></li>
 <li><a href="#runtime-main">4.6. Main CLI runtime</a></li>
+<li><a href="#runtime-sharded">4.7. Sharding Test Cases</a></li>
 </ul>
 </li>
 <li><a href="#run-java">5. Running tests in Java</a>
@@ -1148,7 +1149,7 @@ $(addBlockSwitches);
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Version: 4.1.1</strong></p>
+<p><strong>Version: 4.2.0</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1766,7 +1767,7 @@ parameter values as test variables in Citrus. See the next listing on how to use
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">DataProviderIT</span> <span class="directive">extends</span> TestNGCitrusSupport {
 
     <span class="annotation">@CitrusTest</span>
-    <span class="annotation">@CitrusParameters</span>( {<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">delay</span><span class="delimiter">&quot;</span></span>} )
+    <span class="annotation">@CitrusParameters</span>({<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">delay</span><span class="delimiter">&quot;</span></span>})
     <span class="annotation">@Test</span>(dataProvider = <span class="string"><span class="delimiter">&quot;</span><span class="content">messageDataProvider</span><span class="delimiter">&quot;</span></span>)
     <span class="directive">public</span> <span class="type">void</span> dataProvider(<span class="predefined-type">String</span> message, <span class="predefined-type">Long</span> sleep) {
         run(echo(message));
@@ -1794,6 +1795,51 @@ provided parameter list. Each execution is shipped with the respective parameter
 </div>
 <div class="paragraph">
 <p>According to the <strong>@CitrusParameter</strong> annotation the test will have test variables called <code>message</code> and <code>delay</code>.</p>
+</div>
+<div class="sect4">
+<h5 id="testng-dataproviders-sharded"><a class="anchor" href="#testng-dataproviders-sharded"></a><a class="link" href="#testng-dataproviders-sharded">With Sharding</a></h5>
+<div class="paragraph">
+<p>TestNG data provider based tests can additionally be run in a distributed manner, facilitating test sharding.
+The following snipped showcases you how to get started within a Spring test case environment.</p>
+</div>
+<div class="listingblock">
+<div class="title">Sharded TestNG Citrus data provider test</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.citrusframework.common.TestLoader.SPRING</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.citrusframework.sharding.Shard.createShard</span>;
+
+<span class="keyword">import</span> <span class="include">org.citrusframework.annotations.CitrusTestSource</span>;
+<span class="keyword">import</span> <span class="include">org.citrusframework.testng.CitrusParameters</span>;
+<span class="keyword">import</span> <span class="include">org.citrusframework.testng.spring.TestNGCitrusSpringSupport</span>;
+<span class="keyword">import</span> <span class="include">org.testng.annotations.DataProvider</span>;
+<span class="keyword">import</span> <span class="include">org.testng.annotations.Test</span>;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">DataProviderIT</span> <span class="directive">extends</span> TestNGCitrusSupport {
+
+    <span class="annotation">@CitrusParameters</span>({<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">delay</span><span class="delimiter">&quot;</span></span>})
+    <span class="annotation">@Test</span>(dataProvider = <span class="string"><span class="delimiter">&quot;</span><span class="content">messageDataProvider</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@CitrusTestSource</span>(type = SPRING, name = <span class="string"><span class="delimiter">&quot;</span><span class="content">DataProviderIT</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="type">void</span> dataProvider(<span class="predefined-type">String</span> message, <span class="predefined-type">Long</span> sleep) {
+        run(echo(message));
+        run(sleep().milliseconds(sleep));
+    }
+
+    <span class="annotation">@DataProvider</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">messageDataProvider</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">public</span> <span class="predefined-type">Object</span><span class="type">[]</span><span class="type">[]</span> messageDataProvider() {
+        <span class="keyword">return</span> createShard(
+            <span class="keyword">new</span> <span class="predefined-type">Object</span><span class="type">[]</span><span class="type">[]</span> {
+                { <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello World!</span><span class="delimiter">&quot;</span></span>, <span class="integer">300L</span> },
+                { <span class="string"><span class="delimiter">&quot;</span><span class="content">Citrus rocks!</span><span class="delimiter">&quot;</span></span>, <span class="integer">1000L</span> },
+                { <span class="string"><span class="delimiter">&quot;</span><span class="content">Hi from Citrus!</span><span class="delimiter">&quot;</span></span>, <span class="integer">500L</span> },
+            }
+        );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All the available configuration options are documented withing the chapter <a href="runtimes-sharded.adoc">Sharding Test Cases</a></p>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -2027,8 +2073,8 @@ and <code>@ExtendWith(SpringExtension.class)</code> annotation. This way the tes
 the Citrus Java DSL functionality.</p>
 </div>
 <div class="paragraph">
-<p>You can load Spring beans with <code>@Autowired</code> into your test. Also you can use the <code>@CitrusResource</code> annotations to inject
-the test action runner fluent Java API.</p>
+<p>You can load Spring beans with <code>@Autowired</code> into your test.
+Also, you can use the <code>@CitrusResource</code> annotations to inject the test action runner fluent Java API.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -2037,11 +2083,46 @@ the test action runner fluent Java API.</p>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-The Spring application context should use the basic <code>CitrusSpringConfig</code> configuration class to load all Citrus
-components as Spring beans. You can customize the Spring application context by adding more configuration classes.
+The Spring application context should use the basic <code>CitrusSpringConfig</code> configuration class to load all Citrus components as Spring beans.
+You can customize the Spring application context by adding more configuration classes.
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="junit5-test-sharding"><a class="anchor" href="#junit5-test-sharding"></a><a class="link" href="#junit5-test-sharding">4.2.4. Test Sharding</a></h4>
+<div class="paragraph">
+<p>You can run your JUnit5 test cases in order in a distributed manner, facilitating test sharding.
+The following snipped showcases you how to get started within a Spring/XML test case environment.
+Note that sharding is available with all kind of <code>Stream</code>-sources.</p>
+</div>
+<div class="listingblock">
+<div class="title">Sharded JUnit5 Spring/XML test</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.citrusframework.junit.jupiter.CitrusTestFactorySupport.springXml</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.citrusframework.sharding.Shard.createShard</span>;
+
+<span class="keyword">import</span> <span class="include">org.citrusframework.config.CitrusSpringConfig</span>;
+<span class="keyword">import</span> <span class="include">org.citrusframework.junit.jupiter.spring.CitrusSpringSupport</span>;
+<span class="keyword">import</span> <span class="include">org.citrusframework.junit.jupiter.spring.CitrusSpringXmlTestFactory</span>;
+<span class="keyword">import</span> <span class="include">org.springframework.test.context.ContextConfiguration</span>;
+
+<span class="annotation">@CitrusSpringSupport</span>
+<span class="annotation">@ContextConfiguration</span>(classes = {CitrusSpringConfig.class})
+<span class="type">class</span> <span class="class">SpringBeanXml_IT</span> {
+
+    <span class="annotation">@CitrusSpringXmlTestFactory</span>
+    Stream&lt;DynamicTest&gt; shardedSpringBeanXml_IT() {
+        <span class="keyword">return</span> createShard(
+            springXml().packageScan(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.citrusframework.junit.jupiter.simple</span><span class="delimiter">&quot;</span></span>)
+        );
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All the available configuration options are documented withing the chapter <a href="runtimes-sharded.adoc">Sharding Test Cases</a></p>
 </div>
 </div>
 </div>
@@ -2904,6 +2985,74 @@ project.
 <div class="title">Run Citrus main</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="bash"></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="runtime-sharded"><a class="anchor" href="#runtime-sharded"></a><a class="link" href="#runtime-sharded">4.7. Sharding Test Cases</a></h3>
+<div class="paragraph">
+<p>Sharding is a powerful option within the Citrus framework designed to facilitate the loading and execution of test cases in a distributed manner.
+Sharding test execution is expected to save roughly <code>[TIME] * 1 / 2</code> of execution time per runner.</p>
+</div>
+<div class="paragraph">
+<p>This chapter provides an overview of the available functionality and guides you through the process of configuring and using test loaders with sharding.</p>
+</div>
+<div class="sect3">
+<h4 id="runtime-sharded-configuration"><a class="anchor" href="#runtime-sharded-configuration"></a><a class="link" href="#runtime-sharded-configuration">4.7.1. Configuration</a></h4>
+<div class="paragraph">
+<p>First of all, you need to wrap your test case loading with the <code>org.citrusframework.sharding.Shard#createShard(Stream&lt;T&gt; items)</code> method.
+Have a look at the previous runtime chapters to get to know how to do this with the test framework of your choice.</p>
+</div>
+<div class="paragraph">
+<p>Once you&#8217;re done doing so, the sharding can be configured using environment variables or system properties.
+The following two key configuration parameters are required for sharded test loading:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Total number of shards</strong>: Defines how many shards the test cases should be divided into.</p>
+</li>
+<li>
+<p><strong>Shard number</strong>: Specifies the specific shard number that this loader instance will handle.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following table summarizes the full configuration options:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Configuration</th>
+<th class="tableblock halign-left valign-top">Environment Variable</th>
+<th class="tableblock halign-left valign-top">System Property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of shards</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CITRUS_SHARDING_TOTAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>citrus.sharding.total</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shard number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CITRUS_SHARDING_NUMBER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>citrus.sharding.number</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shard seed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CITRUS_SHARDING_SEED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>citrus.sharding.seed</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When writing test cases in Java, additional constructors exist, such that the total number of shards, as well as the current shard number can be programmatically configured.</p>
 </div>
 </div>
 </div>
@@ -30449,16 +30598,14 @@ by giving a <code>.yml</code> file holding all information how to create the new
 <pre class="CodeRay highlight"><code>kind: Pod
 apiVersion: v1
 metadata:
-  name: hello-jetty-${randomId}
+  name: hello-netty-${randomId}
   namespace: default
-  selfLink: /api/v1/namespaces/default/pods/hello-jetty-${randomId}
-  uid: citrus:randomUUID()
   labels:
-    server: hello-jetty
+    server: hello-netty
 spec:
   containers:
-    - name: hello-jetty
-      image: jetty:9.3
+    - name: hello-netty
+      image: netty
       imagePullPolicy: IfNotPresent
       ports:
         - containerPort: 8080
@@ -30481,12 +30628,10 @@ port to clients as Kubernetes service.</p>
 <pre class="CodeRay highlight"><code>kind: Service
 apiVersion: v1
 metadata:
-  name: hello-jetty
+  name: hello-netty
   namespace: default
-  selfLink: /api/v1/namespaces/default/services/hello-jetty
-  uid: citrus:randomUUID()
   labels:
-    service: hello-jetty
+    service: hello-netty
 spec:
   ports:
     - protocol: TCP
@@ -30494,13 +30639,13 @@ spec:
       targetPort: 8080
       nodePort: 31citrus:randomNumber(3)
   selector:
-    server: hello-jetty
+    server: hello-netty
   type: NodePort
   sessionAffinity: None</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The service resource maps the port <em>8080</em> and selects all pods with label <em>server=hello-jetty</em>. This makes the jetty container available to clients. The service type is <em>NodePort</em> which means
+<p>The service resource maps the port <em>8080</em> and selects all pods with label <em>server=hello-netty</em>. This makes the jetty container available to clients. The service type is <em>NodePort</em> which means
 that clients outside of Kubernetes are also able to access the service by using the dynamic port <em>nodePort=31xxx</em>. We can use Citrus functions such as <em>randomNumber</em> in the YAML files.</p>
 </div>
 <div class="paragraph">
@@ -30510,11 +30655,11 @@ that clients outside of Kubernetes are also able to access the service by using 
 <div class="title">XML DSL</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;k8s:create-pod</span> <span class="attribute-name">namespace</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">default</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="tag">&lt;k8s:template</span> <span class="attribute-name">file</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:templates/hello-jetty-pod.yml</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;k8s:template</span> <span class="attribute-name">file</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:templates/hello-netty-pod.yml</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
 <span class="tag">&lt;/k8s:create-pod&gt;</span>
 
 <span class="tag">&lt;k8s:create-service</span> <span class="attribute-name">namespace</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">default</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="tag">&lt;k8s:template</span> <span class="attribute-name">file</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:templates/hello-jetty-service.yml</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;k8s:template</span> <span class="attribute-name">file</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">classpath:templates/hello-service.yml</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
 <span class="tag">&lt;/k8s:create-service&gt;</span></code></pre>
 </div>
 </div>
@@ -30525,12 +30670,12 @@ that clients outside of Kubernetes are also able to access the service by using 
 <span class="directive">public</span> <span class="type">void</span> createPodsTest() {
     kubernetes()
         .pods()
-        .create(<span class="keyword">new</span> ClassPathResource(<span class="string"><span class="delimiter">&quot;</span><span class="content">templates/hello-jetty-pod.yml</span><span class="delimiter">&quot;</span></span>))
+        .create(<span class="keyword">new</span> ClassPathResource(<span class="string"><span class="delimiter">&quot;</span><span class="content">templates/hello-netty-pod.yml</span><span class="delimiter">&quot;</span></span>))
         .namespace(<span class="string"><span class="delimiter">&quot;</span><span class="content">default</span><span class="delimiter">&quot;</span></span>);
 
     kubernetes()
         .services()
-        .create(<span class="keyword">new</span> ClassPathResource(<span class="string"><span class="delimiter">&quot;</span><span class="content">templates/hello-jetty-service.yml</span><span class="delimiter">&quot;</span></span>))
+        .create(<span class="keyword">new</span> ClassPathResource(<span class="string"><span class="delimiter">&quot;</span><span class="content">templates/hello-service.yml</span><span class="delimiter">&quot;</span></span>))
         .namespace(<span class="string"><span class="delimiter">&quot;</span><span class="content">default</span><span class="delimiter">&quot;</span></span>);
 }</code></pre>
 </div>
@@ -30541,8 +30686,8 @@ Therefore we might add a list-pods action that waits for the new resources to ap
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;repeat-onerror-until-true</span> <span class="attribute-name">condition</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">@assertThat('greaterThan(9)')@</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">auto-sleep</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1000</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-  <span class="tag">&lt;k8s:list-pods</span> <span class="attribute-name">label</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">server=hello-jetty</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;repeat-onerror-until-true</span> <span class="attribute-name">condition</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">@assertThat(greaterThan(9))@</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">auto-sleep</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1000</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;k8s:list-pods</span> <span class="attribute-name">label</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">server=hello-netty</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
     <span class="tag">&lt;k8s:validate&gt;</span>
       <span class="tag">&lt;k8s:element</span> <span class="attribute-name">path</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">$.result.items.size()</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">1</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
       <span class="tag">&lt;k8s:element</span> <span class="attribute-name">path</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">$..status.phase</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Running</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
@@ -30552,7 +30697,7 @@ Therefore we might add a list-pods action that waits for the new resources to ap
 </div>
 </div>
 <div class="paragraph">
-<p>With this repeat on error action we wait for the new <em>server=hello-jetty</em> labeled pod to be in state <em>Running</em>.</p>
+<p>With this repeat on error action we wait for the new <em>server=hello-netty</em> labeled pod to be in state <em>Running</em>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -38435,8 +38580,8 @@ If you need additional assistance in setting up a Citrus Maven project please vi
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.1.1<br>
-Last updated 2024-01-25 16:56:07 +0100
+Version 4.2.0<br>
+Last updated 2024-03-25 21:12:48 +0100
 </div>
 </div>
 <style>
