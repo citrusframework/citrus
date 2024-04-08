@@ -78,8 +78,7 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         server.shutdown();
 
         try {
-            client.send(new HttpMessage()
-                    .method(HttpMethod.GET), context);
+            client.send(new HttpMessage().method(HttpMethod.GET), context);
 
             Assert.fail("Server supposed to be in shutdown state, but was accessible via client request");
         } catch (ResourceAccessException e) {

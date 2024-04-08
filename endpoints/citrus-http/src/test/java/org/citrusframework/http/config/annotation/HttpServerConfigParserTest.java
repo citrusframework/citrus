@@ -183,7 +183,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(httpServer1.getName(), "httpServer1");
         assertEquals(httpServer1.getPort(), 8081);
         assertEquals(httpServer1.getContextConfigLocation(), "classpath:org/citrusframework/http/citrus-servlet-context.xml");
-        assertEquals(httpServer1.getResourceBase(), "src/main/resources");
+        assertNull(httpServer1.getResourceBase());
         assertFalse(httpServer1.isHandleAttributeHeaders());
         assertFalse(httpServer1.isHandleCookies());
         assertFalse(httpServer1.isAutoStart());
@@ -229,7 +229,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(httpServer3.getName(), "httpServer3");
         assertEquals(httpServer3.getPort(), 8083);
         assertEquals(httpServer3.getContextConfigLocation(), "classpath:org/citrusframework/http/citrus-servlet-context.xml");
-        assertEquals(httpServer3.getResourceBase(), "src/main/resources");
+        assertNull(httpServer3.getResourceBase());
         assertFalse(httpServer3.isAutoStart());
         assertFalse(httpServer3.isUseRootContextAsParent());
         assertEquals(httpServer3.getServletName(), "httpServer3-servlet");
@@ -241,7 +241,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(httpServer4.getName(), "httpServer4");
         assertEquals(httpServer4.getPort(), 8084);
         assertEquals(httpServer4.getContextConfigLocation(), "classpath:org/citrusframework/http/citrus-servlet-context.xml");
-        assertEquals(httpServer4.getResourceBase(), "src/main/resources");
+        assertNull(httpServer4.getResourceBase());
         assertFalse(httpServer4.isAutoStart());
         assertFalse(httpServer4.isUseRootContextAsParent());
         assertEquals(httpServer4.getServletName(), "httpServer4-servlet");
@@ -255,7 +255,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(httpServer5.getName(), "httpServer5");
         assertEquals(httpServer5.getPort(), 8085);
         assertEquals(httpServer5.getContextConfigLocation(), "classpath:org/citrusframework/http/citrus-servlet-context.xml");
-        assertEquals(httpServer5.getResourceBase(), "src/main/resources");
+        assertNull(httpServer5.getResourceBase());
         assertFalse(httpServer5.isAutoStart());
         assertFalse(httpServer5.isUseRootContextAsParent());
         assertEquals(httpServer5.getServletName(), "httpServer5-servlet");
@@ -269,7 +269,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         assertEquals(httpServer6.getName(), "httpServer6");
         assertEquals(httpServer6.getPort(), 8086);
         assertEquals(httpServer6.getContextConfigLocation(), "classpath:org/citrusframework/http/citrus-servlet-context.xml");
-        assertEquals(httpServer6.getResourceBase(), "src/main/resources");
+        assertNull(httpServer6.getResourceBase());
         assertFalse(httpServer6.isAutoStart());
         assertFalse(httpServer6.isUseRootContextAsParent());
         assertEquals(httpServer6.getServletName(), "httpServer6-servlet");

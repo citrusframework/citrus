@@ -64,7 +64,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         assertEquals(server.getName(), "httpServer1");
         assertEquals(server.getPort(), 8081);
         assertEquals(server.getContextConfigLocation(), "classpath:org/citrusframework/http/citrus-servlet-context.xml");
-        assertEquals(server.getResourceBase(), "src/main/resources");
+        assertNull(server.getResourceBase());
         assertFalse(server.isAutoStart());
         assertFalse(server.isDebugLogging());
         assertFalse(server.isUseRootContextAsParent());
@@ -112,7 +112,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         assertEquals(server.getName(), "httpServer3");
         assertEquals(server.getPort(), 8083);
         assertEquals(server.getContextConfigLocation(), "classpath:org/citrusframework/http/citrus-servlet-context.xml");
-        assertEquals(server.getResourceBase(), "src/main/resources");
+        assertNull(server.getResourceBase());
         assertFalse(server.isAutoStart());
         assertFalse(server.isUseRootContextAsParent());
         assertEquals(server.getServletName(), "httpServer3-servlet");
@@ -125,7 +125,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         assertEquals(server.getName(), "httpServer4");
         assertEquals(server.getPort(), 8084);
         assertEquals(server.getContextConfigLocation(), "classpath:org/citrusframework/http/citrus-servlet-context.xml");
-        assertEquals(server.getResourceBase(), "src/main/resources");
+        assertNull(server.getResourceBase());
         assertFalse(server.isAutoStart());
         assertFalse(server.isUseRootContextAsParent());
         assertEquals(server.getServletName(), "httpServer4-servlet");
@@ -140,7 +140,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         assertEquals(server.getName(), "httpServer5");
         assertEquals(server.getPort(), 8085);
         assertEquals(server.getContextConfigLocation(), "classpath:org/citrusframework/http/citrus-servlet-context.xml");
-        assertEquals(server.getResourceBase(), "src/main/resources");
+        assertNull(server.getResourceBase());
         assertFalse(server.isAutoStart());
         assertFalse(server.isUseRootContextAsParent());
         assertEquals(server.getServletName(), "httpServer5-servlet");
