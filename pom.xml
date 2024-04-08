@@ -239,8 +239,8 @@
     <junit.platform.version>1.10.2</junit.platform.version>
     <junit.version>4.13.2</junit.version>
     <junixsocket.version>2.9.0</junixsocket.version>
-    <k8s.client.version>6.10.0</k8s.client.version>
-    <k8s.model.version>6.10.0</k8s.model.version>
+    <k8s.client.version>6.11.0</k8s.client.version>
+    <k8s.model.version>6.11.0</k8s.model.version>
     <kafka.version>3.7.0</kafka.version>
     <log4j2.version>2.22.1</log4j2.version>
     <mockito.version>5.11.0</mockito.version>
