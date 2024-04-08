@@ -46,10 +46,10 @@
           <data>{
             "command": "info",
             "result": {
-                "clientVersion": "6.10.0",
+                "clientVersion": "6.11.0",
                 "apiVersion": "${apiVersion}",
                 "kind":"Info",
-                "masterUrl": "@matches('http://localhost:[0-9]+/')@",
+                "masterUrl": "@matches('http://(kubernetes\\.docker\\.internal|localhost):[0-9]+/')@",
                 "namespace": "${namespace}"
               }
             }</data>
