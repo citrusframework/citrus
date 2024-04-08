@@ -212,7 +212,7 @@
     <greenmail.version>2.0.1</greenmail.version>
     <hamcrest.version>2.2</hamcrest.version>
     <htmlunit.version>4.13.0</htmlunit.version>
-    <httpclient.version>5.3</httpclient.version>
+    <httpclient.version>5.3.1</httpclient.version>
     <hsqldb.version>2.7.2</hsqldb.version>
     <jackson.version>2.17.0</jackson.version>
     <jakarta.activation.api.version>2.1.3</jakarta.activation.api.version>
