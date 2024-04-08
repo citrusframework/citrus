@@ -195,7 +195,7 @@
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.25.1</assertj.version>
     <bouncycastle.version>1.78</bouncycastle.version>
-    <byte.buddy.version>1.14.12</byte.buddy.version>
+    <byte.buddy.version>1.14.13</byte.buddy.version>
     <citrus.db.version>0.1.4</citrus.db.version>
     <commons.dbcp2.version>2.12.0</commons.dbcp2.version>
     <commons.cli.version>1.6.0</commons.cli.version>
