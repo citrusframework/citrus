@@ -85,5 +85,4 @@ public class JmsSyncEndpoint extends JmsEndpoint implements ShutdownPhase {
             jmsSyncMessageProducer.destroy();
         }
     }
-
 }

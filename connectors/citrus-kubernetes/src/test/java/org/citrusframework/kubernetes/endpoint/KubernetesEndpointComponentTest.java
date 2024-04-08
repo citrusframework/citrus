@@ -85,5 +85,4 @@ public class KubernetesEndpointComponentTest {
     public void testLookupByQualifier() {
         Assert.assertTrue(EndpointComponent.lookup("k8s").isPresent());
     }
-
 }

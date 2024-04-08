@@ -76,5 +76,4 @@ public class ObjectFactory {
     public AcceptRequest createAcceptRequest() {
         return new AcceptRequest();
     }
-
 }

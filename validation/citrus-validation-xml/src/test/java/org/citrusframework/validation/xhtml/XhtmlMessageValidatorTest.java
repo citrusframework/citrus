@@ -142,5 +142,4 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
                 .build();
         receiveAction.execute(context);
     }
-
 }

@@ -159,5 +159,4 @@ public class ConditionalTest extends UnitTestSupport {
 
         verify(action1).execute(this.context);
     }
-
 }

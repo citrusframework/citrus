@@ -38,5 +38,4 @@ public final class SshEndpoints extends ClientServerEndpointBuilder<SshClientBui
     public static SshEndpoints ssh() {
         return new SshEndpoints();
     }
-
 }

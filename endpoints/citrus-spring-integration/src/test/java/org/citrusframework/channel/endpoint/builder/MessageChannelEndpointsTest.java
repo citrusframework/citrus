@@ -43,5 +43,4 @@ public class MessageChannelEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("channel.async").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("channel.async").get().getClass(), ChannelEndpointBuilder.class);
     }
-
 }

@@ -65,5 +65,4 @@ public class SshMessageConverter implements MessageConverter<SshMessage, SshMess
 
         return new DefaultMessage(payload.toString());
     }
-
 }

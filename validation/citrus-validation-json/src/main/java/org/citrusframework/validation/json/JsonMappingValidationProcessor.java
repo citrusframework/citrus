@@ -68,7 +68,7 @@ public abstract class JsonMappingValidationProcessor<T> extends AbstractValidati
 
         validate(readJson(message), message.getHeaders(), context);
 
-        logger.info("JSON object validation successful: All values OK");
+        logger.debug("JSON object validation successful: All values OK");
     }
 
     private T readJson(Message message) {

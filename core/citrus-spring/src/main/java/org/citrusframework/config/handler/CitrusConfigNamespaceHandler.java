@@ -94,5 +94,4 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
             }
         });
     }
-
 }

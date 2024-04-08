@@ -112,8 +112,8 @@ public class AssertSoapFault extends AbstractActionContainer {
 
             validator.validateSoapFault(SoapFault.from(soapFaultException.getSoapFault()), controlFault, context, validationContext);
 
-            logger.debug("Asserted SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
-            logger.info("Assert SOAP fault validation successful");
+            logger.debug("Asserted SOAP fault as expected: {}: {}", soapFaultException.getFaultCode(), soapFaultException.getFaultStringOrReason());
+            logger.debug("Assert SOAP fault validation successful");
 
             return;
         } catch (Exception e) {
@@ -471,8 +471,8 @@ public class AssertSoapFault extends AbstractActionContainer {
             if (validator == null) {
                 validator = new SimpleSoapFaultValidator();
             }
+
             return new AssertSoapFault(this);
         }
     }
-
 }

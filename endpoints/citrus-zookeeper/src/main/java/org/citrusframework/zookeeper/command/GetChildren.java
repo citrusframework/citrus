@@ -70,5 +70,4 @@ public class GetChildren extends AbstractZooCommand<ZooResponse> {
         getParameters().put(PATH, path);
         return this;
     }
-
 }

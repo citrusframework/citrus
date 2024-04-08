@@ -107,5 +107,4 @@ public class CustomMessageValidatorIT extends TestNGCitrusSpringSupport {
                 .validate(xpath()
                         .expression("//doc/@text", "nothello"))));
     }
-
 }

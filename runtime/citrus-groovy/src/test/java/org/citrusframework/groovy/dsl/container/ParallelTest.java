@@ -55,5 +55,4 @@ public class ParallelTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(action.getActions().get(1).getClass(), EchoAction.class);
         Assert.assertEquals(action.getActions().get(2).getClass(), EchoAction.class);
     }
-
 }

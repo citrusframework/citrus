@@ -164,5 +164,4 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     public void testLookupByQualifier() {
         Assert.assertTrue(AnnotationConfigParser.lookup("selenium.browser").isPresent());
     }
-
 }

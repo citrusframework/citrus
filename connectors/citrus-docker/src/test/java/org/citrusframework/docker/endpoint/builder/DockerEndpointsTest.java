@@ -39,5 +39,4 @@ public class DockerEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("docker.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("docker.client").get().getClass(), DockerClientBuilder.class);
     }
-
 }

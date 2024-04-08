@@ -82,5 +82,4 @@ public class ChannelEndpoint extends AbstractEndpoint implements BeanFactoryAwar
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         getEndpointConfiguration().setBeanFactory(beanFactory);
     }
-
 }

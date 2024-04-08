@@ -110,13 +110,13 @@ public class ZooExecuteAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         try {
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Executing zookeeper command '%s'", command.getName()));
+                logger.debug("Executing zookeeper command '{}'", command.getName());
             }
             command.execute(zookeeperClient, context);
 
             validateCommandResult(command, context);
 
-            logger.info(String.format("Zookeeper command execution successful: '%s'", command.getName()));
+            logger.info("Zookeeper command execution successful: '{}'", command.getName());
         } catch (CitrusRuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -137,12 +137,12 @@ public class ZooExecuteAction extends AbstractTestAction {
         // try to find json message validator in registry
         Optional<MessageValidator<? extends ValidationContext>> defaultJsonMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_JSON_MESSAGE_VALIDATOR);
 
-        if (!defaultJsonMessageValidator.isPresent()
+        if (defaultJsonMessageValidator.isEmpty()
                 && context.getReferenceResolver().isResolvable(DEFAULT_JSON_MESSAGE_VALIDATOR)) {
             defaultJsonMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_JSON_MESSAGE_VALIDATOR, MessageValidator.class));
         }
 
-        if (!defaultJsonMessageValidator.isPresent()) {
+        if (defaultJsonMessageValidator.isEmpty()) {
             // try to find json message validator via resource path lookup
             defaultJsonMessageValidator = MessageValidator.lookup("json");
         }
@@ -167,12 +167,12 @@ public class ZooExecuteAction extends AbstractTestAction {
         // try to find json message validator in registry
         Optional<MessageValidator<? extends ValidationContext>> defaultJsonMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR);
 
-        if (!defaultJsonMessageValidator.isPresent()
+        if (defaultJsonMessageValidator.isEmpty()
                 && context.getReferenceResolver().isResolvable(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR)) {
             defaultJsonMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR, MessageValidator.class));
         }
 
-        if (!defaultJsonMessageValidator.isPresent()) {
+        if (defaultJsonMessageValidator.isEmpty()) {
             // try to find json message validator via resource path lookup
             defaultJsonMessageValidator = MessageValidator.lookup("json-path");
         }
@@ -196,9 +196,7 @@ public class ZooExecuteAction extends AbstractTestAction {
             processor.process(commandResult, context);
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating Zookeeper response");
-        }
+        logger.debug("Validating Zookeeper response");
 
         if (StringUtils.hasText(expectedCommandResult)) {
             assertResultExists(commandResult);
@@ -211,7 +209,7 @@ public class ZooExecuteAction extends AbstractTestAction {
             getPathValidator(context).validateMessage(commandResult, null, context, Collections.singletonList(jsonPathMessageValidationContext));
         }
 
-        logger.info("Zookeeper command result validation successful - all values OK!");
+        logger.debug("Zookeeper command result validation successful - all values OK!");
 
         if (command.getResultCallback() != null) {
             command.getResultCallback().doWithCommandResult(command.getCommandResult(), context);
@@ -511,5 +509,4 @@ public class ZooExecuteAction extends AbstractTestAction {
             return new ZooExecuteAction(this);
         }
     }
-
 }

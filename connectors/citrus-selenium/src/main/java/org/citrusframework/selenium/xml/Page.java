@@ -172,5 +172,4 @@ public class Page extends AbstractSeleniumAction.Builder<PageAction, Page> imple
             this.arguments = arguments;
         }
     }
-
 }

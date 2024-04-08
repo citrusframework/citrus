@@ -60,5 +60,4 @@ public class XPathPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor
     public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
         this.namespaceContextBuilder = namespaceContextBuilder;
     }
-
 }

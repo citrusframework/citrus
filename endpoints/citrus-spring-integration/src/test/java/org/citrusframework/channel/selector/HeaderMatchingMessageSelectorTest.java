@@ -112,5 +112,4 @@ public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
     }
-
 }

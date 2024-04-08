@@ -65,5 +65,4 @@ public class RepeatTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
         Assert.assertEquals(action.getTestAction(1).getClass(), EchoAction.class);
     }
-
 }

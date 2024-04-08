@@ -290,5 +290,4 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
     }
-
 }

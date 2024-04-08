@@ -49,5 +49,4 @@ public class ObjectFactory {
     public Soap createSoap() {
         return new Soap();
     }
-
 }

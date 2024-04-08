@@ -116,12 +116,10 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
             //do the validation of actual and expected value for element
             ValidationUtils.validateValues(xPathResult, expectedValue, xPathExpression, context);
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");
-            }
+            logger.debug("Validating element: {}='{}': OK", xPathExpression, expectedValue);
         }
 
-        logger.info("XPath element validation successful: All elements OK");
+        logger.debug("XPath element validation successful: All elements OK");
     }
 
     @Override
@@ -134,9 +132,9 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
         List<XpathMessageValidationContext> xpathMessageValidationContexts = validationContexts.stream()
                 .filter(XpathMessageValidationContext.class::isInstance)
                 .map(XpathMessageValidationContext.class::cast)
-                .collect(Collectors.toList());
+                .toList();
 
-        if (xpathMessageValidationContexts.size() > 1) {
+        if (!xpathMessageValidationContexts.isEmpty()) {
             XpathMessageValidationContext xpathMessageValidationContext = xpathMessageValidationContexts.get(0);
 
             // Collect all xpath expressions and combine into one single validation context

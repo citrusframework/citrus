@@ -74,5 +74,4 @@ public class ChannelSyncEndpoint extends ChannelEndpoint {
 
         return messageChannelSyncProducer;
     }
-
 }

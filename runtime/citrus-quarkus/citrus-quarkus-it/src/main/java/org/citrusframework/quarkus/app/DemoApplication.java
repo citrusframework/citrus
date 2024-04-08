@@ -29,5 +29,4 @@ public class DemoApplication {
     void onStart(@Observes StartupEvent ev) {
         logger.info("Demo application started!");
     }
-
 }

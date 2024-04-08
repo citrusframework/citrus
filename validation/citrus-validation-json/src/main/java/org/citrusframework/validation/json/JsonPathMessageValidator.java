@@ -76,12 +76,10 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                 //do the validation of actual and expected value for element
                 ValidationUtils.validateValues(jsonPathResult, expectedValue, jsonPathExpression, context);
 
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Validating element: " + jsonPathExpression + "='" + expectedValue + "': OK.");
-                }
+                logger.debug("Validating element: {}='{}': OK", jsonPathExpression, expectedValue);
             }
 
-            logger.info("JSONPath element validation successful: All values OK");
+            logger.debug("JSONPath element validation successful: All values OK");
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }
@@ -97,7 +95,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
         List<JsonPathMessageValidationContext> jsonPathMessageValidationContexts = validationContexts.stream()
                 .filter(JsonPathMessageValidationContext.class::isInstance)
                 .map(JsonPathMessageValidationContext.class::cast)
-                .collect(Collectors.toList());
+                .toList();
 
         if (jsonPathMessageValidationContexts.size() > 1) {
             // Collect all jsonPath expressions and combine into one single validation context

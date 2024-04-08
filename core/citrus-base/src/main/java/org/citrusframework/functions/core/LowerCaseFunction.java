@@ -40,5 +40,4 @@ public class LowerCaseFunction implements Function {
 
         return (parameterList.get(0)).toLowerCase();
     }
-
 }

@@ -42,5 +42,4 @@ class ReceiveCodeProviderTest {
         //THEN
         assertEquals(expectedString, code.toString());
     }
-
 }

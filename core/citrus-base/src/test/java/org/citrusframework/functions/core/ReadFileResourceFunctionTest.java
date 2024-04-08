@@ -83,5 +83,4 @@ public class ReadFileResourceFunctionTest extends UnitTestSupport {
     public void testInvalidFunctionUsage() {
         function.execute(Collections.emptyList(), context);
     }
-
 }

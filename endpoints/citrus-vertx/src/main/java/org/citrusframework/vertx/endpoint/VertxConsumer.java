@@ -126,5 +126,4 @@ public class VertxConsumer extends AbstractMessageConsumer {
             return message;
         }
     }
-
 }

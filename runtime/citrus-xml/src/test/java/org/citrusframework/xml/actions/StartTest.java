@@ -74,5 +74,4 @@ public class StartTest extends AbstractXmlActionTest {
         verify(myFooServer).start();
         verify(myBarServer).start();
     }
-
 }

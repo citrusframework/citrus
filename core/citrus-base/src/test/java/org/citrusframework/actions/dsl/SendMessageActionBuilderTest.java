@@ -715,5 +715,4 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getDataDictionary(), dictionary);
     }
-
 }

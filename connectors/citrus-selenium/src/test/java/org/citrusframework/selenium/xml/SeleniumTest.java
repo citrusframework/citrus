@@ -297,5 +297,4 @@ public class SeleniumTest extends AbstractXmlActionTest {
         Assert.assertTrue(XmlTestActionBuilder.lookup("selenium").isPresent());
         Assert.assertEquals(XmlTestActionBuilder.lookup("selenium").get().getClass(), Selenium.class);
     }
-
 }

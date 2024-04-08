@@ -1090,5 +1090,4 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
     public void testTestLookup() {
         Assert.assertTrue(SchemaValidator.lookup("xml").isPresent());
     }
-
 }

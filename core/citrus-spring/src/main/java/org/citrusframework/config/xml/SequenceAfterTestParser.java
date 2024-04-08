@@ -28,5 +28,4 @@ public class SequenceAfterTestParser extends AbstractTestBoundaryActionContainer
     protected Class<? extends AbstractTestBoundaryActionContainer> getContainerClass() {
         return SequenceAfterTest.class;
     }
-
 }

@@ -51,5 +51,4 @@ public class ConditionalTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(((Conditional) result.getTestAction(1)).getActionCount(), 1L);
         Assert.assertEquals(((Conditional) result.getTestAction(1)).getTestAction(0).getClass(), FailAction.class);
     }
-
 }

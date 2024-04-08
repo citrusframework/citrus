@@ -134,5 +134,4 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
 
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
-
 }

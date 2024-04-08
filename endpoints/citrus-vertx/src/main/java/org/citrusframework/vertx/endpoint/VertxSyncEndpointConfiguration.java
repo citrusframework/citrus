@@ -43,5 +43,4 @@ public class VertxSyncEndpointConfiguration extends VertxEndpointConfiguration {
     public MessageCorrelator getCorrelator() {
         return correlator;
     }
-
 }

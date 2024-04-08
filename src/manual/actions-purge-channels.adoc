@@ -115,7 +115,6 @@ public class TimeBasedMessageSelector implements MessageSelector {
             return true;
         }
     }
-
 }
 ----
 

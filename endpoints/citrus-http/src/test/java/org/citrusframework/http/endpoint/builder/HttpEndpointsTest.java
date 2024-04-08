@@ -43,5 +43,4 @@ public class HttpEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("http.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("http.server").get().getClass(), HttpServerBuilder.class);
     }
-
 }

@@ -75,5 +75,4 @@ public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("sshServerAdapter"));
         Assert.assertNull(server.getActor());
     }
-
 }

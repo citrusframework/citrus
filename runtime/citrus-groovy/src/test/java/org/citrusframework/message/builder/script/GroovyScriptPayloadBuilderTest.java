@@ -30,5 +30,4 @@ public class GroovyScriptPayloadBuilderTest {
         Assert.assertTrue(ScriptPayloadBuilder.lookup("groovy").isPresent());
         Assert.assertEquals(ScriptPayloadBuilder.lookup("groovy").get().getClass(), GroovyScriptPayloadBuilder.class);
     }
-
 }

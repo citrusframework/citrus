@@ -98,5 +98,4 @@ public class PurgeEndpointTest extends AbstractYamlActionTest {
         Assert.assertEquals(action.getEndpointNames().size(), 1);
         Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint1");
     }
-
 }

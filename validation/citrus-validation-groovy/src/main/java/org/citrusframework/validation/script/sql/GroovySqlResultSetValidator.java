@@ -89,7 +89,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                     GroovyObject groovyObject = (GroovyObject) groovyClass.getDeclaredConstructor().newInstance();
                     ((SqlResultSetScriptExecutor) groovyObject).validate(resultSet, context);
 
-                    logger.info("Groovy SQL result set validation successful: All values OK");
+                    logger.debug("Groovy SQL result set validation successful: All values OK");
                 }
             } catch (CompilationFailedException | InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
                 throw new CitrusRuntimeException(e);

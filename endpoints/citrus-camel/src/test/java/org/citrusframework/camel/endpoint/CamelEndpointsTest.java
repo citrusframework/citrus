@@ -47,5 +47,4 @@ public class CamelEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("camel.inOnly").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("camel.inOnly").get().getClass(), CamelEndpointBuilder.class);
     }
-
 }

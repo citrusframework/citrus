@@ -191,5 +191,4 @@ public class SqlTest extends AbstractYamlActionTest {
         Assert.assertTrue(YamlTestActionBuilder.lookup("plsql").isPresent());
         Assert.assertEquals(YamlTestActionBuilder.lookup("plsql").get().getClass(), Plsql.class);
     }
-
 }

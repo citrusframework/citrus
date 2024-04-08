@@ -29,5 +29,4 @@ public class CreateRoutes implements CamelRouteActionBuilderWrapper<CreateCamelR
     public CreateCamelRouteAction.Builder getBuilder() {
         return builder;
     }
-
 }

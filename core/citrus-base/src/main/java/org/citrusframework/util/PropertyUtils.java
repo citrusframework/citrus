@@ -116,5 +116,4 @@ public final class PropertyUtils {
 
         return newStr.toString();
     }
-
 }

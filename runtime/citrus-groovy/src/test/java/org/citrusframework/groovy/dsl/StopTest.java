@@ -83,5 +83,4 @@ public class StopTest extends AbstractGroovyActionDslTest {
         verify(myFooServer).stop();
         verify(myBarServer).stop();
     }
-
 }

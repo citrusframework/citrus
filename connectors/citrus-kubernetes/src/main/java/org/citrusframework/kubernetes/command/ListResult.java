@@ -126,5 +126,4 @@ public class ListResult<T> {
     public void setKind(String kind) {
         this.kind = kind;
     }
-
 }

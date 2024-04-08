@@ -59,5 +59,4 @@ public class ObjectFactory {
     public Template createTemplate() {
         return new Template();
     }
-
 }

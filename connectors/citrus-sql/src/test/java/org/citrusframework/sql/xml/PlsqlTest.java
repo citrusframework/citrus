@@ -83,5 +83,4 @@ public class PlsqlTest extends AbstractXmlActionTest {
         Assert.assertEquals(action.getTransactionTimeout(), "5000");
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
     }
-
 }

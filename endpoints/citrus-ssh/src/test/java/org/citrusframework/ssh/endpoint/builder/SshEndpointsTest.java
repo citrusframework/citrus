@@ -43,5 +43,4 @@ public class SshEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("ssh.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("ssh.server").get().getClass(), SshServerBuilder.class);
     }
-
 }

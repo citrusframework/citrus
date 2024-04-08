@@ -63,5 +63,4 @@ public class JsonPayloadMappingKeyExtractorTest {
             Assert.assertEquals(e.getMessage(), "Failed to evaluate JSON path expression: $.I_DO_NOT_EXIST");
         }
     }
-
 }

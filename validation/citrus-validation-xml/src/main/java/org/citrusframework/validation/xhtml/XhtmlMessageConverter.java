@@ -110,5 +110,4 @@ public class XhtmlMessageConverter implements InitializingPhase {
     public void setTidyConfiguration(Resource tidyConfiguration) {
         this.tidyConfiguration = tidyConfiguration;
     }
-
 }

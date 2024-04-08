@@ -67,5 +67,4 @@ public class Exists extends AbstractZooCommand<ZooResponse> {
         getParameters().put(PATH, path);
         return this;
     }
-
 }

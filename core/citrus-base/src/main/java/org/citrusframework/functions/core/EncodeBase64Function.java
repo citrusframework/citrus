@@ -49,5 +49,4 @@ public class EncodeBase64Function implements Function {
             throw new CitrusRuntimeException("Unsupported character encoding", e);
         }
     }
-
 }

@@ -105,5 +105,4 @@ public class CitrusRuntimeException extends RuntimeException {
 
         return stack;
     }
-
 }

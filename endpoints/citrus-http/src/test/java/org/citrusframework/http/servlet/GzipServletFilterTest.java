@@ -121,5 +121,4 @@ public class GzipServletFilterTest {
         String unzipped = new String(response.getContentAsByteArray());
         Assert.assertEquals(unzipped, "Should not be compressed");
     }
-
 }

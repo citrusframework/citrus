@@ -103,5 +103,4 @@ public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
 
         Assert.fail("Missing " + CitrusRuntimeException.class + " because no message was received");
     }
-
 }

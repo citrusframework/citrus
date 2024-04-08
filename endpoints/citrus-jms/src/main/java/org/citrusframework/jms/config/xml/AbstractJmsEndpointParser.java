@@ -85,5 +85,4 @@ public abstract class AbstractJmsEndpointParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration,
                 element.getAttribute("polling-interval"), "pollingInterval");
     }
-
 }

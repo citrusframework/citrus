@@ -43,5 +43,4 @@ public class MailEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("mail.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("mail.server").get().getClass(), MailServerBuilder.class);
     }
-
 }

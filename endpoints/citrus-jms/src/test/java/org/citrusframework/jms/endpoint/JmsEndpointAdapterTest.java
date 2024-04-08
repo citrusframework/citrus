@@ -124,5 +124,4 @@ public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
         verify(connection).start();
         verify(tempReplyQueue).delete();
     }
-
 }

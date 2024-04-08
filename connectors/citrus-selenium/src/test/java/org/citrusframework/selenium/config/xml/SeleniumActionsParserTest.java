@@ -180,5 +180,4 @@ public class SeleniumActionsParserTest extends AbstractActionParserTest<Abstract
         Assert.assertNotNull(stopAction.getBrowser());
         Assert.assertEquals(stopAction.getName(), "selenium:stop");
     }
-
 }

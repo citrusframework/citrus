@@ -59,5 +59,4 @@ public abstract class AbstractMappingKeyExtractor implements MappingKeyExtractor
     public void setMappingKeySuffix(String mappingKeySuffix) {
         this.mappingKeySuffix = mappingKeySuffix;
     }
-
 }

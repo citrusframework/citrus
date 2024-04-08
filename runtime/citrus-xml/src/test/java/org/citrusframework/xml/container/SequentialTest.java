@@ -43,5 +43,4 @@ public class SequentialTest extends AbstractXmlActionTest {
         Assert.assertEquals(result.getTestAction(0).getClass(), Sequence.class);
         Assert.assertEquals(((Sequence) result.getTestAction(0)).getActionCount(), 2L);
     }
-
 }

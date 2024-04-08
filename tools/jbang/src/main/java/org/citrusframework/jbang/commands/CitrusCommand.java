@@ -76,5 +76,4 @@ public abstract class CitrusCommand implements Callable<Integer> {
 
         protected abstract void doConsumeParameters(Stack<String> args, T cmd);
     }
-
 }

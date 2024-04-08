@@ -73,5 +73,4 @@ public class CamelTransformIT extends TestNGCitrusSpringSupport {
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
     }
-
 }

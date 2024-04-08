@@ -76,5 +76,4 @@ public class RootQNameMessageSelectorTest extends UnitTestSupport {
             Assert.assertTrue(e.getMessage().startsWith("Invalid root QName"));
         }
     }
-
 }

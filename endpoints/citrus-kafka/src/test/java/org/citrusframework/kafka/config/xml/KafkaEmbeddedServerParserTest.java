@@ -56,5 +56,4 @@ public class KafkaEmbeddedServerParserTest extends AbstractBeanDefinitionParserT
         Assert.assertEquals(kafkaServer.getBrokerProperties().size(), 1L);
         Assert.assertEquals(kafkaServer.getBrokerProperties().get("broker.id"), "1");
     }
-
 }

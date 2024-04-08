@@ -120,5 +120,4 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
-
 }

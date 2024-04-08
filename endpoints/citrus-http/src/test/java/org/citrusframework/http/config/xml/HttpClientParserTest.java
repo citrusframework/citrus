@@ -117,5 +117,4 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
             Assert.assertTrue(ObjectHelper.assertNotNull(e.getMessage()).contains("One of the properties 'request-url' or 'endpoint-resolver' is required"));
         }
     }
-
 }

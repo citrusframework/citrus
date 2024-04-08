@@ -111,5 +111,4 @@ public class DigestAuthHeaderFunction implements Function {
     public void setNonceValidity(Long nonceValidity) {
         this.nonceValidity = nonceValidity;
     }
-
 }

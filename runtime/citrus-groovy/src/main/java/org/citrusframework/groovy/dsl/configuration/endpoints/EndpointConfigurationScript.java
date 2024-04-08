@@ -57,5 +57,4 @@ public class EndpointConfigurationScript {
      */
     protected void onCreate(Endpoint endpoint) {
     }
-
 }

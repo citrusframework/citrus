@@ -35,5 +35,4 @@ public class HttpActionBuilderTest {
         Assert.assertTrue(TestActionBuilder.lookup("http").isPresent());
         Assert.assertEquals(TestActionBuilder.lookup("http").get().getClass(), HttpActionBuilder.class);
     }
-
 }

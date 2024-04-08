@@ -348,5 +348,4 @@ public class AntRunAction extends AbstractTestAction {
             return new AntRunAction(this);
         }
     }
-
 }

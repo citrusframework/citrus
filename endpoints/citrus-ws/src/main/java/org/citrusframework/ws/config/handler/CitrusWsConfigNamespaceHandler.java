@@ -32,5 +32,4 @@ public class CitrusWsConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("jetty-server", new WebServiceServerParser());
         registerBeanDefinitionParser("client", new WebServiceClientParser());
     }
-
 }

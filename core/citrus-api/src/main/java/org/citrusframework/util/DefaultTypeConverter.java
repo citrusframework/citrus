@@ -195,7 +195,7 @@ public class DefaultTypeConverter implements TypeConverter {
             return convertAfter(target, type);
         } catch (Exception e) {
             if (String.class.equals(type)) {
-                logger.warn(String.format("Using default toString representation because object type conversion failed with: %s", e.getMessage()));
+                logger.warn("Using default toString representation because object type conversion failed with: {}", e.getMessage());
                 return (T) target.toString();
             }
 
@@ -240,7 +240,7 @@ public class DefaultTypeConverter implements TypeConverter {
      */
     protected <T> T convertAfter(Object target, Class<T> type) {
         if (String.class.equals(type)) {
-            logger.warn(String.format("Using default toString representation for object type %s", target.getClass()));
+            logger.warn("Using default toString representation for object type {}", target.getClass());
             return (T) target.toString();
         }
 

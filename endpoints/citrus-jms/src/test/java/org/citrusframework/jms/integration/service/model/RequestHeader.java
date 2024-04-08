@@ -99,5 +99,4 @@ public class RequestHeader {
     public void setOperation(String value) {
         this.operation = value;
     }
-
 }

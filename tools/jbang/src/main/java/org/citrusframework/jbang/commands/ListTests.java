@@ -154,5 +154,4 @@ public class ListTests extends CitrusCommand {
         String ago;
         long uptime;
     }
-
 }

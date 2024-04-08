@@ -43,5 +43,4 @@ public class SftpEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("sftp.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("sftp.server").get().getClass(), SftpServerBuilder.class);
     }
-
 }

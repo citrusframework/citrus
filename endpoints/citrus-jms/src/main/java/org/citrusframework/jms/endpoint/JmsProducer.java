@@ -118,5 +118,4 @@ public class JmsProducer implements Producer {
     public String getName() {
         return name;
     }
-
 }

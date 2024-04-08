@@ -89,7 +89,6 @@ public class SpecialDatabaseCleanupAction extends AbstractTestAction {
 
         jdbcTemplate.execute("...");
     }
-
 }
 ----
 

@@ -254,5 +254,4 @@ public class SftpClientTest extends AbstractFtpClientTest {
             writer.write(fileContent, 0, fileContent.length());
         }
     }
-
 }

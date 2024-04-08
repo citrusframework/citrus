@@ -79,5 +79,4 @@ public class SftpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("sftpServerAdapter"));
         Assert.assertNull(server.getActor());
     }
-
 }

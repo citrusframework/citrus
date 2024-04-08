@@ -88,5 +88,4 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
 
         verify(option).click();
     }
-
 }

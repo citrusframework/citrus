@@ -66,5 +66,4 @@ public class GetData extends AbstractZooCommand<ZooResponse> {
         getParameters().put(PATH, path);
         return this;
     }
-
 }

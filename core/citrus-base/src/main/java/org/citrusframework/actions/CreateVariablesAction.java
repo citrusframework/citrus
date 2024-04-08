@@ -106,5 +106,4 @@ public class CreateVariablesAction extends AbstractTestAction {
             return new CreateVariablesAction(this);
         }
     }
-
 }

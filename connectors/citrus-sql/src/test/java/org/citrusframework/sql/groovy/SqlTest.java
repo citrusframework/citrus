@@ -178,5 +178,4 @@ public class SqlTest extends AbstractGroovyActionDslTest {
         Assert.assertNotNull(queryAction.getScriptValidationContext());
         Assert.assertEquals(queryAction.getScriptValidationContext().getValidationScriptResourcePath(), "classpath:org/citrusframework/sql/validate.groovy");
     }
-
 }

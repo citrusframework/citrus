@@ -70,5 +70,4 @@ public class GroovyTest extends AbstractYamlActionTest {
         Assert.assertTrue(YamlTestActionBuilder.lookup("groovy").isPresent());
         Assert.assertEquals(YamlTestActionBuilder.lookup("groovy").get().getClass(), Groovy.class);
     }
-
 }

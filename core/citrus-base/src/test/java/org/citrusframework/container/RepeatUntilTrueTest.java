@@ -93,5 +93,4 @@ public class RepeatUntilTrueTest extends UnitTestSupport {
 
         verify(action, times(4)).execute(context);
     }
-
 }

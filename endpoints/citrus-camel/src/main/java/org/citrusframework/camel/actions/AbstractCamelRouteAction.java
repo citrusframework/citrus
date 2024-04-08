@@ -127,5 +127,4 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
             this.referenceResolver = referenceResolver;
         }
     }
-
 }

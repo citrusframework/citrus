@@ -69,5 +69,4 @@ public class IterateTest extends AbstractYamlActionTest {
         Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
         Assert.assertEquals(action.getTestAction(1).getClass(), EchoAction.class);
     }
-
 }

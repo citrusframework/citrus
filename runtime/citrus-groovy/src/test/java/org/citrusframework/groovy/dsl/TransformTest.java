@@ -63,5 +63,4 @@ public class TransformTest extends AbstractGroovyActionDslTest {
 
         Assert.assertTrue(context.getVariable("transform-result").contains("<p>Message: Hello World!</p>"));
     }
-
 }

@@ -35,5 +35,4 @@ public class OpenApiActionBuilderTest {
         Assert.assertTrue(TestActionBuilder.lookup("openapi").isPresent());
         Assert.assertEquals(TestActionBuilder.lookup("openapi").get().getClass(), OpenApiActionBuilder.class);
     }
-
 }

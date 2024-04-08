@@ -84,7 +84,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         elementValidatorProvider.getValidator(strict, context, validationContext).validate(
                 parseJson(permissiveMode, receivedJsonText, controlJsonText)
         );
-        logger.info("JSON message validation successful: All values OK");
+        logger.debug("JSON message validation successful: All values OK");
     }
 
     @Override
@@ -165,5 +165,4 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         setPermissiveMode(permissiveMode);
         return this;
     }
-
 }

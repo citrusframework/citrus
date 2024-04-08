@@ -37,5 +37,4 @@ public class CitrusJBang {
     public static void main(String... args) {
         CitrusJBangMain.run(args);
     }
-
 }

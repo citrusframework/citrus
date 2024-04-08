@@ -43,5 +43,4 @@ public class JarWSDLLocatorTest {
         JarWSDLLocator locator = new JarWSDLLocator(wsdl);
         locator.getImportInputSource(locator.getBaseURI(), "invalid.xsd");
     }
-
 }

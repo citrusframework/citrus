@@ -32,5 +32,4 @@ public class RandomUUIDFunctionTest extends UnitTestSupport {
     public void testFunction() {
         Assert.assertNotNull(function.execute(Collections.<String>emptyList(), context));
     }
-
 }

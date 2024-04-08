@@ -84,5 +84,4 @@ public class SwaggerJavaTestGeneratorTest {
         Assert.assertTrue(javaContent.contains("package org.citrusframework;"));
         Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
     }
-
 }

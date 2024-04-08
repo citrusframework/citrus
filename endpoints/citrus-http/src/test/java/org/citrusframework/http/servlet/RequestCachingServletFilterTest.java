@@ -110,5 +110,4 @@ public class RequestCachingServletFilterTest {
         });
         filterChain.doFilter(request, response);
     }
-
 }

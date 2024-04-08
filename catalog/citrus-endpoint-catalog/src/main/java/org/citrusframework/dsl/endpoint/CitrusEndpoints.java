@@ -200,5 +200,4 @@ public abstract class CitrusEndpoints {
     public static CamelEndpointCatalog camel() {
         return CamelEndpointCatalog.camel();
     }
-
 }

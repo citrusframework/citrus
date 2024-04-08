@@ -360,5 +360,4 @@ public class MessageValidatorRegistryTest {
         Assert.assertTrue(jsonSchema.isPresent());
         Assert.assertEquals(jsonSchema.get(), jsonSchemaValidator);
     }
-
 }

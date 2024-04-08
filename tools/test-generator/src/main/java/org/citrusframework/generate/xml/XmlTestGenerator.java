@@ -182,5 +182,4 @@ public class XmlTestGenerator<T extends XmlTestGenerator> extends AbstractTempla
     public void setMode(GeneratorMode mode) {
         this.mode = mode;
     }
-
 }

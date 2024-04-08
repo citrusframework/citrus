@@ -106,5 +106,4 @@ public class JmsSyncEndpointConfiguration extends JmsEndpointConfiguration imple
     public void setPollingInterval(long pollingInterval) {
         this.pollingInterval = pollingInterval;
     }
-
 }

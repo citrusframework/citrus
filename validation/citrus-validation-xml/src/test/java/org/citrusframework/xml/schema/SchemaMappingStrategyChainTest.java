@@ -102,5 +102,4 @@ public class SchemaMappingStrategyChainTest {
         Assert.assertEquals(strategy.getSchema(schemas, doc), schemaMock);
 
     }
-
 }

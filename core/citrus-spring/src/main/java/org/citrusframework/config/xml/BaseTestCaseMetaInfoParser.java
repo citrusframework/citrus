@@ -97,5 +97,4 @@ public abstract class BaseTestCaseMetaInfoParser<T extends TestCaseMetaInfo> imp
      */
     protected void parseAdditionalProperties(Element metaInfoElement, BeanDefinitionBuilder metaInfoBuilder) {
     }
-
 }

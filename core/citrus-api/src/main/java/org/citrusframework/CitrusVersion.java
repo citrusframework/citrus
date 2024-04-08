@@ -65,5 +65,4 @@ public final class CitrusVersion {
     public static String version() {
         return version;
     }
-
 }

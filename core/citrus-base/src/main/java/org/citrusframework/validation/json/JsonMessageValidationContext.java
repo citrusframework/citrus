@@ -173,5 +173,4 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
     public String getSchema() {
         return schema;
     }
-
 }

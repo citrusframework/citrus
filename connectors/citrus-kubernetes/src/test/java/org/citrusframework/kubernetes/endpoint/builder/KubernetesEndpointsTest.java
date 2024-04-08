@@ -42,5 +42,4 @@ public class KubernetesEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("k8s.client").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("k8s.client").get().getClass(), KubernetesClientBuilder.class);
     }
-
 }

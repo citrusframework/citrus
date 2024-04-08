@@ -39,5 +39,4 @@ public class EscapeXmlFunction implements Function {
 
         return escapeXml(parameterList.get(0));
     }
-
 }

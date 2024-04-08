@@ -214,5 +214,4 @@ public class ScriptValidationContext extends DefaultValidationContext {
     public String getValidationScriptResourceCharset() {
         return validationScriptResourceCharset;
     }
-
 }

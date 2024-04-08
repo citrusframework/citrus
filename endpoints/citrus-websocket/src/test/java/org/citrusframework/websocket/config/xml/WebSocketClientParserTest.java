@@ -67,5 +67,4 @@ public class WebSocketClientParserTest extends AbstractBeanDefinitionParserTest 
             Assert.assertTrue(e.getMessage().contains("One of the properties 'url' or 'endpoint-resolver' is required"));
         }
     }
-
 }

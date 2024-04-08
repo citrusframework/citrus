@@ -94,5 +94,4 @@ public class RootQNameMessageSelector extends AbstractMessageSelector {
             return new RootQNameMessageSelector(key, value, context);
         }
     }
-
 }

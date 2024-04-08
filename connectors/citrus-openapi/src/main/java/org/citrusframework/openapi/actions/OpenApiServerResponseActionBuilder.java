@@ -131,5 +131,4 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             return super.build(context, messageType);
         }
     }
-
 }

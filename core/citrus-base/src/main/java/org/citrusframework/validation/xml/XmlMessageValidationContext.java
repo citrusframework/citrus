@@ -276,5 +276,4 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
     public String getSchema() {
         return schema;
     }
-
 }

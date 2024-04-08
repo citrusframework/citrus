@@ -66,5 +66,4 @@ public class ActionsScript {
                 script.startsWith("$finally {") || script.startsWith("$finally{") ||
                 script.startsWith("$(");
     }
-
 }

@@ -126,5 +126,4 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
     public void setCorrelationManager(CorrelationManager<MessageChannel> correlationManager) {
         this.correlationManager = correlationManager;
     }
-
 }

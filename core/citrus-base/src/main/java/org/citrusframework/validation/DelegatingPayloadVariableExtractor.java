@@ -194,5 +194,4 @@ public class DelegatingPayloadVariableExtractor implements VariableExtractor {
     public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
     }
-
 }

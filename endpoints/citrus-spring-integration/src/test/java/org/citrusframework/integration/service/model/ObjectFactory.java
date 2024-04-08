@@ -75,5 +75,4 @@ public class ObjectFactory {
     public HelloRequest createHelloRequest() {
         return new HelloRequest();
     }
-
 }

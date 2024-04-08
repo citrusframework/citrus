@@ -101,11 +101,11 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             }
 
-            logger.info("XML message validation successful: All values OK");
+            logger.debug("XML message validation successful: All values OK");
         } catch (ClassCastException | DOMException | LSException e) {
             throw new CitrusRuntimeException(e);
         } catch (ValidationException ex) {
-            logger.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
+            logger.error("Failed to validate:\n{}", XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
             throw ex;
         }
     }
@@ -150,9 +150,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                             "' expected '" + url + "' in reference node " +
                             XMLUtils.getNodesPathName(received.getFirstChild()));
                 } else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Validating namespace " + namespace + " value as expected " + url + " - value OK");
-                    }
+                    logger.debug("Validating namespace {} value as expected {} - value OK", namespace, url);
                 }
             } else {
                 throw new ValidationException("Missing namespace " + namespace + "(" + url + ") in node " +
@@ -160,14 +158,12 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
         }
 
-        logger.info("XML namespace validation successful: All values OK");
+        logger.debug("XML namespace validation successful: All values OK");
     }
 
     private void doElementNameValidation(Node received, Node source) {
         //validate element name
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating element: " + received.getLocalName() + " (" + received.getNamespaceURI() + ")");
-        }
+        logger.debug("Validating element: {} ({})", received.getLocalName(), received.getNamespaceURI());
 
         if (!received.getLocalName().equals(source.getLocalName())) {
             throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Element names not equal", source.getLocalName(), received.getLocalName()));
@@ -176,9 +172,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
     private void doElementNamespaceValidation(Node received, Node source) {
         //validate element namespace
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating namespace for element: " + received.getLocalName());
-        }
+        logger.debug("Validating namespace for element: {}", received.getLocalName());
 
         if (received.getNamespaceURI() != null) {
             if (source.getNamespaceURI() == null) {
@@ -257,10 +251,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         XMLUtils.stripWhitespaceNodes(received);
         XMLUtils.stripWhitespaceNodes(source);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Received header data:\n" + XMLUtils.serialize(received));
-            logger.debug("Control header data:\n" + XMLUtils.serialize(source));
-        }
+        logger.debug("Received header data:\n{}", XMLUtils.serialize(received));
+        logger.debug("Control header data:\n{}", XMLUtils.serialize(source));
 
         validateXmlTree(received, source, validationContext,
                 getNamespaceContextBuilder(context)
@@ -316,10 +308,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         DocumentType receivedDTD = (DocumentType) received;
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating document type definition: " +
-                    receivedDTD.getPublicId() + " (" + receivedDTD.getSystemId() + ")");
-        }
+        logger.debug("Validating document type definition: {} ({})", receivedDTD.getPublicId(), receivedDTD.getSystemId());
 
         if (!hasText(sourceDTD.getPublicId())) {
             if (receivedDTD.getPublicId() != null) {
@@ -327,10 +316,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                         sourceDTD.getPublicId(), receivedDTD.getPublicId()));
             }
         } else if (sourceDTD.getPublicId().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Document type public id: '" + receivedDTD.getPublicId() +
-                        "' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'");
-            }
+            logger.debug("Document type public id: '{}' is ignored by placeholder '{}'", receivedDTD.getPublicId(), CitrusSettings.IGNORE_PLACEHOLDER);
         } else if (!hasText(receivedDTD.getPublicId()) || !receivedDTD.getPublicId().equals(sourceDTD.getPublicId())) {
             throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
                     sourceDTD.getPublicId(), receivedDTD.getPublicId()));
@@ -342,10 +328,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                         sourceDTD.getSystemId(), receivedDTD.getSystemId()));
             }
         } else if (sourceDTD.getSystemId().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Document type system id: '" + receivedDTD.getSystemId() +
-                        "' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'");
-            }
+            logger.debug("Document type system id: '{} ' is ignored by placeholder '{}'", receivedDTD.getSystemId(), CitrusSettings.IGNORE_PLACEHOLDER);
         } else if (!hasText(receivedDTD.getSystemId()) || !receivedDTD.getSystemId().equals(sourceDTD.getSystemId())) {
             throw new ValidationException(ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
                     sourceDTD.getSystemId(), receivedDTD.getSystemId()));
@@ -375,9 +358,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         }
 
         //work on attributes
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating attributes for element: " + received.getLocalName());
-        }
+        logger.debug("Validating attributes for element: {}", received.getLocalName());
         NamedNodeMap receivedAttr = received.getAttributes();
         NamedNodeMap sourceAttr = source.getAttributes();
 
@@ -415,10 +396,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                     validationContext, namespaceContext, context);
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validation successful for element: " + received.getLocalName() +
-                    " (" + received.getNamespaceURI() + ")");
-        }
+        logger.debug("Validation successful for element: {} ({})", received.getLocalName(), received.getNamespaceURI());
     }
 
     /**
@@ -428,9 +406,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param source
      */
     private void doText(Element received, Element source) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating node value for element: " + received.getLocalName());
-        }
+        logger.debug("Validating node value for element: {}", received.getLocalName());
 
         String receivedText = DomUtils.getTextValue(received);
         String sourceText = DomUtils.getTextValue(source);
@@ -440,9 +416,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                         + received.getLocalName() + "'", sourceText.trim(), receivedText.trim()));
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Node value '" + receivedText.trim() + "': OK");
-        }
+        logger.debug("Node value '{}': OK", receivedText.trim());
     }
 
     /**
@@ -459,9 +433,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         String receivedAttributeName = receivedAttribute.getLocalName();
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating attribute: " + receivedAttributeName + " (" + receivedAttribute.getNamespaceURI() + ")");
-        }
+        logger.debug("Validating attribute: {} ({})", receivedAttributeName, receivedAttribute.getNamespaceURI());
 
         NamedNodeMap sourceAttributes = sourceElement.getAttributes();
         Node sourceAttribute = sourceAttributes.getNamedItemNS(receivedAttribute.getNamespaceURI(), receivedAttributeName);
@@ -492,9 +464,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Attribute '" + receivedAttributeName + "'='" + receivedValue + "': OK");
-        }
+        logger.debug("Attribute '{}'='{}': OK", receivedAttributeName, receivedValue);
     }
 
     /**
@@ -549,9 +519,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param received
      */
     private void doPI(Node received) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Ignored processing instruction (" + received.getLocalName() + "=" + received.getNodeValue() + ")");
-        }
+        logger.debug("Ignored processing instruction ({}={})", received.getLocalName(), received.getNodeValue());
     }
 
     /**

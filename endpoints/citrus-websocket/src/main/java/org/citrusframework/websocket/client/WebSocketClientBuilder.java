@@ -83,5 +83,4 @@ public class WebSocketClientBuilder extends AbstractEndpointBuilder<WebSocketCli
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
     }
-
 }

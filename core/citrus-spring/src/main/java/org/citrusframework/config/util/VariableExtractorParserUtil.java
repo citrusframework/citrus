@@ -69,5 +69,4 @@ public class VariableExtractorParserUtil {
 
         variableExtractors.add(payloadVariableExtractor);
     }
-
 }

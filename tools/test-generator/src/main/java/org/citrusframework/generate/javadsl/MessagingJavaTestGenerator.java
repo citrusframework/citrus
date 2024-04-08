@@ -205,5 +205,4 @@ public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator<T>>
     public String getEndpoint() {
         return endpoint;
     }
-
 }

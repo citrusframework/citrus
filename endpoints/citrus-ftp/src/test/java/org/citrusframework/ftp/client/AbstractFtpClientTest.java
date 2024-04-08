@@ -113,5 +113,4 @@ public abstract class AbstractFtpClientTest extends AbstractTestNGUnitTest {
                         new CitrusRuntimeException(String.format("File '%s' could not be found in the specified list of files.", fileName))
                 );
     }
-
 }

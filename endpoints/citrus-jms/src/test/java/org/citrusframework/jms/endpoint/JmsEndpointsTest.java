@@ -41,5 +41,4 @@ public class JmsEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("jms.async").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("jms.async").get().getClass(), JmsEndpointBuilder.class);
     }
-
 }

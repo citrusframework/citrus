@@ -76,5 +76,4 @@ public class HttpSendResponseActionParserTest extends AbstractActionParserTest<S
         Assert.assertNull(action.getEndpointUri());
         Assert.assertEquals(action.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
-
 }

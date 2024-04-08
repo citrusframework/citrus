@@ -44,5 +44,4 @@ public class NamespaceContextParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(namespaceContextBean.getNamespaceMappings().get("ns1"), "http://citrusframework.org/schemas/2");
         Assert.assertEquals(namespaceContextBean.getNamespaceMappings().get("ns2"), "http://citrusframework.org/schemas/3");
     }
-
 }

@@ -55,5 +55,4 @@ public class TraceVariablesTest extends AbstractXmlActionTest {
         Assert.assertEquals(action.getVariableNames().get(0), "foo");
         Assert.assertEquals(action.getVariableNames().get(1), "bar");
     }
-
 }

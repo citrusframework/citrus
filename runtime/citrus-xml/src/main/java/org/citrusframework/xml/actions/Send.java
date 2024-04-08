@@ -111,5 +111,4 @@ public class Send implements TestActionBuilder<SendMessageAction>, ReferenceReso
         builder.setReferenceResolver(referenceResolver);
         this.referenceResolver = referenceResolver;
     }
-
 }

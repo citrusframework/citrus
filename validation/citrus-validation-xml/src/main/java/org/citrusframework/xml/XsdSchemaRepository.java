@@ -215,5 +215,4 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
     public void setLocations(List<String> locations) {
         this.locations = locations;
     }
-
 }

@@ -83,5 +83,4 @@ public class PlsqlTest extends AbstractYamlActionTest {
         Assert.assertEquals(action.getTransactionTimeout(), "5000");
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
     }
-
 }

@@ -42,16 +42,14 @@ public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
         String receivedDetail = received.replaceAll("\\s", "");
         String controlDetail = control.replaceAll("\\s", "");
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Received fault detail:\n" + received.strip());
-            logger.debug("Control fault detail:\n" + control.strip());
-        }
+        logger.debug("Received fault detail:\n{}", received.strip());
+        logger.debug("Control fault detail:\n{}", control.strip());
 
         if (!receivedDetail.equals(controlDetail)) {
             throw new ValidationException("SOAP fault validation failed! Fault detail does not match: expected \n'" +
                     controlDetail + "' \n received \n'" + receivedDetail + "'");
         }
 
-        logger.info("SOAP fault detail validation successful: All values OK");
+        logger.debug("SOAP fault detail validation successful: All values OK");
     }
 }

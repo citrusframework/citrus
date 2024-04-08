@@ -112,5 +112,4 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
-
 }

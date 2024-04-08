@@ -601,5 +601,4 @@ public class OpenApi implements TestActionBuilder<TestAction>, ReferenceResolver
             this.extract = extract;
         }
     }
-
 }

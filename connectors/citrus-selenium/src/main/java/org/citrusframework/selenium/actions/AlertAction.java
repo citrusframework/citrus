@@ -76,7 +76,7 @@ public class AlertAction extends AbstractSeleniumAction {
                 }
 
             }
-            logger.info("Alert text validation successful - All values Ok");
+            logger.debug("Alert text validation successful - All values Ok");
         }
 
         context.setVariable(SeleniumHeaders.SELENIUM_ALERT_TEXT, alert.getText());

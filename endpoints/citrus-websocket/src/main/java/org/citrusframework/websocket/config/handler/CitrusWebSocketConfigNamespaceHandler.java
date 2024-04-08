@@ -31,5 +31,4 @@ public class CitrusWebSocketConfigNamespaceHandler extends NamespaceHandlerSuppo
         registerBeanDefinitionParser("endpoint", new WebSocketEndpointParser());
         registerBeanDefinitionParser("client", new WebSocketClientParser());
     }
-
 }

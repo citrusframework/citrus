@@ -49,5 +49,4 @@ public class ObjectFactory {
     public PurgeChannels createPurgeChannels() {
         return new PurgeChannels();
     }
-
 }

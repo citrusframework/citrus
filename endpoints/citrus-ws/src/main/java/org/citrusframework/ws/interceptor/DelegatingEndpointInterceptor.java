@@ -119,5 +119,4 @@ public class DelegatingEndpointInterceptor implements SmartEndpointInterceptor, 
     public void setInterceptors(List<EndpointInterceptor> interceptors) {
         this.interceptors = interceptors;
     }
-
 }

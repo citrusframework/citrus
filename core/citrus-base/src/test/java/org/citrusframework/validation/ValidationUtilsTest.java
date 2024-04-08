@@ -140,5 +140,4 @@ public class ValidationUtilsTest extends UnitTestSupport {
             }
         }
     }
-
 }

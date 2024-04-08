@@ -97,5 +97,4 @@ public class AssertExceptionTestActionBuilderTest extends UnitTestSupport {
         assertEquals(container.getException(), CitrusRuntimeException.class);
         assertEquals(container.getMessage(), "Unknown variable 'foo'");
     }
-
 }

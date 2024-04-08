@@ -88,5 +88,4 @@ public class MailMarshallerTest {
             new Object[] { "org/citrusframework/mail/server/accept-request.json", "org/citrusframework/mail/server/accept-response.json" }
         };
     }
-
 }

@@ -98,5 +98,4 @@ public class FaultType {
     public void setMessage(String value) {
         this.message = value;
     }
-
 }

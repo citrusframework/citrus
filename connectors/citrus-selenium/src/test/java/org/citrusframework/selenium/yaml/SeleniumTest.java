@@ -298,5 +298,4 @@ public class SeleniumTest extends AbstractYamlActionTest {
         Assert.assertTrue(YamlTestActionBuilder.lookup("selenium").isPresent());
         Assert.assertEquals(YamlTestActionBuilder.lookup("selenium").get().getClass(), Selenium.class);
     }
-
 }

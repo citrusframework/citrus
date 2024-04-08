@@ -56,5 +56,4 @@ public interface TestAction {
     default TestActor getActor() {
         return null;
     }
-
 }

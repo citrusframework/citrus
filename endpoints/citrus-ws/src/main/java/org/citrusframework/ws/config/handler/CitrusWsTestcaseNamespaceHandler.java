@@ -33,5 +33,4 @@ public class CitrusWsTestcaseNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("send-fault", new SendSoapFaultActionParser());
         registerBeanDefinitionParser("receive", new ReceiveSoapMessageActionParser());
     }
-
 }

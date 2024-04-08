@@ -35,5 +35,4 @@ public class CamelActionBuilderTest {
         Assert.assertTrue(TestActionBuilder.lookup("camel").isPresent());
         Assert.assertEquals(TestActionBuilder.lookup("camel").get().getClass(), CamelActionBuilder.class);
     }
-
 }

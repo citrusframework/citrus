@@ -356,5 +356,4 @@ public class SshServer extends AbstractServer {
         this.messageConverter = messageConverter;
         this.endpointConfiguration.setMessageConverter(messageConverter);
     }
-
 }

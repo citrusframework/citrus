@@ -62,5 +62,4 @@ public class CamelRouteIT extends TestNGCitrusSupport {
                 .type(MessageType.PLAINTEXT)
                 .body("<News><Message>Citrus rocks!</Message></News>"));
     }
-
 }

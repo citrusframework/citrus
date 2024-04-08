@@ -121,5 +121,4 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     public void setCorrelationManager(CorrelationManager<Message> correlationManager) {
         this.correlationManager = correlationManager;
     }
-
 }

@@ -112,5 +112,4 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(TestActionBuilder.lookup("purgeChannels").isPresent());
         Assert.assertEquals(TestActionBuilder.lookup("purgeChannels").get().getClass(), PurgeMessageChannelAction.Builder.class);
     }
-
 }

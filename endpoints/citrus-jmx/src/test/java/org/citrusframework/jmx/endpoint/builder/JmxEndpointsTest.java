@@ -43,5 +43,4 @@ public class JmxEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("jmx.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("jmx.server").get().getClass(), JmxServerBuilder.class);
     }
-
 }

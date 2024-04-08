@@ -96,11 +96,9 @@ public class Assert extends AbstractActionContainer {
                 }
             }
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Asserted exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
-            }
+            logger.debug("Asserted exception is as expected ({}): {}", e.getClass(), e.getLocalizedMessage());
 
-            logger.info("Assert exception validation successful: All values OK");
+            logger.debug("Assert exception validation successful: All values OK");
 
             return;
         }

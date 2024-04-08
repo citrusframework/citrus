@@ -102,5 +102,4 @@ public class PurgeEndpointTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(action.getEndpointNames().size(), 1);
         Assert.assertEquals(action.getEndpointNames().get(0), "testEndpoint");
     }
-
 }

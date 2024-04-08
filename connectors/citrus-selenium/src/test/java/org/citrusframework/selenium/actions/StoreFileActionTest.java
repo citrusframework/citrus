@@ -65,5 +65,4 @@ public class StoreFileActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(seleniumBrowser.getStoredFile("file.xml"));
     }
-
 }

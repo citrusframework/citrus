@@ -56,5 +56,4 @@ class MessageCodeProviderTest {
         //THEN
         assertEquals(expectedCode, code.build().toString());
     }
-
 }

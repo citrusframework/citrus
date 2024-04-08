@@ -63,5 +63,4 @@ public class TransformTest extends AbstractYamlActionTest {
 
         Assert.assertTrue(context.getVariable("transform-result").contains("<p>Message: Hello World!</p>"));
     }
-
 }

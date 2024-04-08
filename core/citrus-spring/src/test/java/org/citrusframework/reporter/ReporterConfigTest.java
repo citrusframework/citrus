@@ -43,5 +43,4 @@ public class ReporterConfigTest extends UnitTestSupport {
     public void testDefaultHtmlReporter() {
         Assert.assertTrue(applicationContext.getBean(CITRUS_HTML_REPORTER) instanceof  HtmlReporter);
     }
-
 }
