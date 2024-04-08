@@ -143,5 +143,4 @@ public class RmiClientTest extends AbstractTestNGUnitTest {
                 responseBody.replaceAll("\\s", "")
         );
     }
-
 }

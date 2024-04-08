@@ -40,5 +40,4 @@ public class RequestCachingServletFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
         filterChain.doFilter(new CachingHttpServletRequestWrapper(request), response);
     }
-
 }

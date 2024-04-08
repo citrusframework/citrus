@@ -124,5 +124,4 @@ public class CamelConsumer implements Consumer {
     public String getName() {
         return name;
     }
-
 }

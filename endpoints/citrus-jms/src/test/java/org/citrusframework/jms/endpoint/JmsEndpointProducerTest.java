@@ -129,5 +129,4 @@ public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setDestination(destination);
         endpoint.createProducer().send(null, context);
     }
-
 }

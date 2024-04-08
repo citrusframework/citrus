@@ -109,5 +109,4 @@ public class IterateTestActionBuilderTest extends UnitTestSupport {
         assertEquals(container.getStep(), 1);
         assertEquals(container.getStart(), 0);
     }
-
 }

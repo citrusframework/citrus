@@ -93,5 +93,4 @@ public class SwaggerXmlTestGeneratorTest {
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
         Assert.assertTrue(xmlContent.contains("<testcase name=\"" + name + "\">"));
     }
-
 }

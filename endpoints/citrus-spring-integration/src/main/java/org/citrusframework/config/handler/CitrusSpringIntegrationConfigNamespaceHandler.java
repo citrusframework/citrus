@@ -37,5 +37,4 @@ public class CitrusSpringIntegrationConfigNamespaceHandler extends NamespaceHand
         registerBeanDefinitionParser("channel-sync-endpoint", new ChannelSyncEndpointParser());
         registerBeanDefinitionParser("channel-endpoint-adapter", new ChannelEndpointAdapterParser());
     }
-
 }

@@ -40,5 +40,4 @@ public class HelloServiceImpl extends AbstractMarshallingHelloService {
 
         return builder.build();
     }
-
 }

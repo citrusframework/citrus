@@ -189,5 +189,4 @@ public class MessagingXmlTestGenerator<T extends MessagingXmlTestGenerator> exte
     public String getEndpoint() {
         return endpoint;
     }
-
 }

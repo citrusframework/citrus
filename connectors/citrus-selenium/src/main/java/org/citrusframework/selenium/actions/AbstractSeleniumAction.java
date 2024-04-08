@@ -90,5 +90,4 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
         }
 
     }
-
 }

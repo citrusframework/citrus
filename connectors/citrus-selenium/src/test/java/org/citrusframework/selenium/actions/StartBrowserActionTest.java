@@ -119,5 +119,4 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
         verify(seleniumBrowser).stop();
         verify(seleniumBrowser).start();
     }
-
 }

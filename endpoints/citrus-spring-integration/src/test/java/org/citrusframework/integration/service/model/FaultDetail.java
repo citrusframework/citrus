@@ -155,5 +155,4 @@ public class FaultDetail {
     public void setText(String value) {
         this.text = value;
     }
-
 }

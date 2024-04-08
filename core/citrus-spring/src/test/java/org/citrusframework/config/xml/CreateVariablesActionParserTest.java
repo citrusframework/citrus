@@ -38,5 +38,4 @@ public class CreateVariablesActionParserTest extends AbstractActionParserTest<Cr
         Assert.assertEquals(action.getVariables().get("sum"), "script:<groovy>(1+2+3+4+5)");
         Assert.assertEquals(action.getVariables().get("embeddedXml"), "<embeddedXml>This is an embedded Xml variable value</embeddedXml>");
     }
-
 }

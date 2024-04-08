@@ -132,5 +132,4 @@ public enum MessageHeaderType {
     public Class<?> getHeaderClass() {
         return clazz;
     }
-
 }

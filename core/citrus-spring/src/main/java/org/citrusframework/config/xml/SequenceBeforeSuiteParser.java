@@ -29,5 +29,4 @@ public class SequenceBeforeSuiteParser  extends AbstractSuiteActionContainerPars
     protected Class<? extends AbstractSuiteActionContainer> getContainerClass() {
         return SequenceBeforeSuite.class;
     }
-
 }

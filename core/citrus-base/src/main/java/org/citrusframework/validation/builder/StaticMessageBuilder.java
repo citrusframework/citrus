@@ -100,5 +100,4 @@ public class StaticMessageBuilder extends DefaultMessageBuilder {
     public Message getMessage() {
         return message;
     }
-
 }

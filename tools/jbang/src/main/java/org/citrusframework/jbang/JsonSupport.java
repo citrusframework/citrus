@@ -40,5 +40,4 @@ public class JsonSupport {
     public static ObjectMapper json() {
         return OBJECT_MAPPER;
     }
-
 }

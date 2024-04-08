@@ -139,5 +139,4 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
 
         endpoint.createProducer().send(null, context);
     }
-
 }

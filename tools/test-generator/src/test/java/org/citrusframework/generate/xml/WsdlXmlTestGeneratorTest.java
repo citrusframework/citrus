@@ -72,5 +72,4 @@ public class WsdlXmlTestGeneratorTest {
         Assert.assertTrue(xmlContent.contains("<data>&lt;" + requestName));
         Assert.assertTrue(xmlContent.contains("<data>&lt;" + responseName));
     }
-
 }

@@ -136,5 +136,4 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     private String getDestinationNameWithSelector(String destinationName, String selector) {
         return destinationName + (StringUtils.hasText(selector) ? "(" + selector + ")" : "");
     }
-
 }

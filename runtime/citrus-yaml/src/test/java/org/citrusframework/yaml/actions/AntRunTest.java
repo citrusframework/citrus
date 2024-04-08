@@ -74,5 +74,4 @@ public class AntRunTest extends AbstractYamlActionTest {
         Assert.assertNotNull(action.getBuildListener());
         Assert.assertEquals(action.getBuildListener().getClass(), DefaultLogger.class);
     }
-
 }

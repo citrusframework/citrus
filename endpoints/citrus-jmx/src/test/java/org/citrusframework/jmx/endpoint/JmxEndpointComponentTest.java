@@ -87,5 +87,4 @@ public class JmxEndpointComponentTest {
     public void testLookupByQualifier() {
         Assert.assertTrue(EndpointComponent.lookup("jmx").isPresent());
     }
-
 }

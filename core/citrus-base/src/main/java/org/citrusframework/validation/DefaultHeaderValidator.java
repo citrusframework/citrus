@@ -75,7 +75,7 @@ public class DefaultHeaderValidator implements HeaderValidator {
         }
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Validating header element: " + headerName + "='" + expectedValue + "': OK.");
+            logger.debug("Validating header element: " + headerName + "='" + expectedValue + "': OK");
         }
     }
 

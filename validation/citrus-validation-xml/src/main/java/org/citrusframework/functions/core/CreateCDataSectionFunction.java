@@ -44,5 +44,4 @@ public class CreateCDataSectionFunction implements Function {
 
         return CDATA_START + parameterList.get(0) + CDATA_END;
     }
-
 }

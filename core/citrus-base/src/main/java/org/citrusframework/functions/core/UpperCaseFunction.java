@@ -40,5 +40,4 @@ public class UpperCaseFunction implements Function {
 
         return (parameterList.get(0)).toUpperCase();
     }
-
 }

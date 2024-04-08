@@ -141,5 +141,4 @@ public class TimerTest extends UnitTestSupport {
     private void assertTimerIndex(int expectedValue, Timer timer) {
         assertEquals(context.getVariable(timer.getTimerId() + Timer.INDEX_SUFFIX), String.valueOf(expectedValue));
     }
-
 }

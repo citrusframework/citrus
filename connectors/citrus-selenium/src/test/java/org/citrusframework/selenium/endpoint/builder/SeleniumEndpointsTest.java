@@ -39,5 +39,4 @@ public class SeleniumEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("selenium.browser").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("selenium.browser").get().getClass(), SeleniumBrowserBuilder.class);
     }
-
 }

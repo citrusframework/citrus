@@ -198,5 +198,4 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
-
 }

@@ -130,5 +130,4 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
 
         verify(navigation).refresh();
     }
-
 }

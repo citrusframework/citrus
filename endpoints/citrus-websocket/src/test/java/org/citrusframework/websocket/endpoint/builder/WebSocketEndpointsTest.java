@@ -43,5 +43,4 @@ public class WebSocketEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("websocket.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("websocket.server").get().getClass(), WebSocketServerBuilder.class);
     }
-
 }

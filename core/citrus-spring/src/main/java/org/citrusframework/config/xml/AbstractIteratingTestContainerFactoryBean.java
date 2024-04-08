@@ -56,5 +56,4 @@ public abstract class AbstractIteratingTestContainerFactoryBean<T extends Abstra
     public void setStart(int start) {
         getBuilder().startsWith(start);
     }
-
 }

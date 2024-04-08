@@ -77,5 +77,4 @@ public class StopTest extends AbstractYamlActionTest {
         verify(myFooServer).stop();
         verify(myBarServer).stop();
     }
-
 }

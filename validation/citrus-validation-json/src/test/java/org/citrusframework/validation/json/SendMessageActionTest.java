@@ -145,5 +145,4 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
         validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext());
     }
-
 }

@@ -31,5 +31,4 @@ public class GroovyScriptMessageBuilderParserTest {
 
         Assert.assertTrue(CitrusXmlConfigParser.lookup("script", "groovy").isPresent());
     }
-
 }

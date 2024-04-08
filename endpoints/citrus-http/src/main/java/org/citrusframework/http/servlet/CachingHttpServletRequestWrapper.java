@@ -170,5 +170,4 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
             return is.read();
         }
     }
-
 }

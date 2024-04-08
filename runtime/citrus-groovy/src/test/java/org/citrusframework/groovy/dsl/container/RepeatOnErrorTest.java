@@ -76,5 +76,4 @@ public class RepeatOnErrorTest extends AbstractGroovyActionDslTest {
         Assert.assertEquals(action.getActionCount(), 1);
         Assert.assertEquals(action.getTestAction(0).getClass(), EchoAction.class);
     }
-
 }

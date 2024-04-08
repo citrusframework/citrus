@@ -181,5 +181,4 @@ public class CloseWindowActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
-
 }

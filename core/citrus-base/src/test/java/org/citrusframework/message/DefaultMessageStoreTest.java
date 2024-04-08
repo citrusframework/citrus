@@ -44,5 +44,4 @@ public class DefaultMessageStoreTest extends UnitTestSupport {
         endpoint.setName("testEndpoint");
         Assert.assertEquals(messageStore.constructMessageName(new SendMessageAction.Builder().build(), endpoint), "send(testEndpoint)");
     }
-
 }

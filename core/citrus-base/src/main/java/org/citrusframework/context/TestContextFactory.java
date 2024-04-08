@@ -414,5 +414,4 @@ public class TestContextFactory implements ReferenceResolverAware {
     public void setSegmentVariableExtractorRegistry(SegmentVariableExtractorRegistry segmentVariableExtractorRegistry) {
         this.segmentVariableExtractorRegistry = segmentVariableExtractorRegistry;
     }
-
 }

@@ -50,5 +50,4 @@ public class ReplyMessageTimeoutException extends MessageTimeoutException {
 
         return String.format("Failed to receive synchronous reply message on endpoint: '%s'", endpoint);
     }
-
 }

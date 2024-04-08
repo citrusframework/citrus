@@ -404,5 +404,4 @@ public class HtmlReporter extends AbstractOutputFileReporter implements TestList
             this.description = description;
         }
     }
-
 }

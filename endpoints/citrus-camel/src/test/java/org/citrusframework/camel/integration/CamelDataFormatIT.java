@@ -57,5 +57,4 @@ public class CamelDataFormatIT extends TestNGCitrusSpringSupport {
                 .type(MessageType.PLAINTEXT)
                 .body("Citrus rocks!"));
     }
-
 }

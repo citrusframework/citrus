@@ -61,5 +61,4 @@ public class WebSocketEndpointParserTest extends AbstractBeanDefinitionParserTes
         Assert.assertEquals(webSocketEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
 
     }
-
 }

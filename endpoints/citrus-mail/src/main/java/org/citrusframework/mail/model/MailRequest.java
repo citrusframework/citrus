@@ -163,5 +163,4 @@ public class MailRequest {
     public void setBody(BodyPart body) {
         this.body = body;
     }
-
 }

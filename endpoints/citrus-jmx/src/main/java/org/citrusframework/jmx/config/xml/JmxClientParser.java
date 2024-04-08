@@ -62,5 +62,4 @@ public class JmxClientParser extends AbstractEndpointParser {
     protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
         return JmxEndpointConfiguration.class;
     }
-
 }

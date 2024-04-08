@@ -100,5 +100,4 @@ public class DispatchingMessageSelector implements MessageSelector {
 
         this.factories.add(factory);
     }
-
 }

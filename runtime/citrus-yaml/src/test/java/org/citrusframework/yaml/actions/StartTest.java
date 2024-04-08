@@ -74,5 +74,4 @@ public class StartTest extends AbstractYamlActionTest {
         verify(myFooServer).start();
         verify(myBarServer).start();
     }
-
 }

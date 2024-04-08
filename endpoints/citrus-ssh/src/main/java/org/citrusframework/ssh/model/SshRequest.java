@@ -68,5 +68,4 @@ public class SshRequest implements SshMessage {
     public String getStdin() {
         return stdin;
     }
-
 }

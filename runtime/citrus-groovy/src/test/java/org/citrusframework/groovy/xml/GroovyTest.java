@@ -69,5 +69,4 @@ public class GroovyTest extends AbstractXmlActionTest {
         Assert.assertTrue(XmlTestActionBuilder.lookup("groovy").isPresent());
         Assert.assertEquals(XmlTestActionBuilder.lookup("groovy").get().getClass(), Groovy.class);
     }
-
 }

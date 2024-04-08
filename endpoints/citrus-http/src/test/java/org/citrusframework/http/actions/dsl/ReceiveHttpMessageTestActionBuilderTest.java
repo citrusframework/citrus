@@ -195,5 +195,4 @@ public class ReceiveHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
     }
-
 }

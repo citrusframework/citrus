@@ -43,5 +43,4 @@ public class WebServiceEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("soap.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("soap.server").get().getClass(), WebServiceServerBuilder.class);
     }
-
 }

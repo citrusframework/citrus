@@ -78,5 +78,4 @@ public class SpringBeanReferenceResolverTest extends UnitTestSupport {
         Assert.assertEquals(resolver.resolve(unmarshallerName, Unmarshaller.class).getClass(), MarshallerAdapter.class);
         Assert.assertEquals(resolver.resolveAll(Unmarshaller.class).size(), 1L);
     }
-
 }

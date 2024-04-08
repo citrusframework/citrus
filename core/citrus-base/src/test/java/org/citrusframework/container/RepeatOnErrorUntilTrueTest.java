@@ -83,5 +83,4 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
         repeat.execute(context);
         verify(action, times(4)).execute(context);
     }
-
 }

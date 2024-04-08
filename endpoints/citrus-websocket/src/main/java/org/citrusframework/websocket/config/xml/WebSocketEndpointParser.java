@@ -51,5 +51,4 @@ public class WebSocketEndpointParser extends AbstractEndpointParser {
     protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
         return WebSocketServerEndpointConfiguration.class;
     }
-
 }

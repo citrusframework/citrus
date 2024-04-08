@@ -49,5 +49,4 @@ public class ObjectFactory {
     public OpenApi createOpenApi() {
         return new OpenApi();
     }
-
 }

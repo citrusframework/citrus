@@ -349,5 +349,4 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
     public void setCorrelationManager(CorrelationManager<Message> correlationManager) {
         this.correlationManager = correlationManager;
     }
-
 }

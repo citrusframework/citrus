@@ -103,5 +103,4 @@ public class SeleniumEndpointComponentTest {
     public void testLookupByQualifier() {
         Assert.assertTrue(EndpointComponent.lookup("selenium").isPresent());
     }
-
 }

@@ -46,5 +46,4 @@ public class SumFunction implements Function {
 
         return Double.valueOf(result).toString();
     }
-
 }

@@ -65,5 +65,4 @@ public class ObjectFactory {
     public ManagedBeanResult.Object createManagedBeanResultObject() {
         return new ManagedBeanResult.Object();
     }
-
 }

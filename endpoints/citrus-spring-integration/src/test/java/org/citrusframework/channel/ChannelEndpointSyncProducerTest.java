@@ -244,5 +244,4 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(channelSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
     }
-
 }

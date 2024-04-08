@@ -58,5 +58,4 @@ public class AsyncTest extends AbstractYamlActionTest {
         Assert.assertEquals(((EchoAction)action.getErrorActions().get(0)).getMessage(), "Failed!");
 
     }
-
 }

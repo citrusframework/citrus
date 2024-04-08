@@ -106,5 +106,4 @@ public class DirectEndpointProducerTest {
 
         Assert.fail("Missing " + CitrusRuntimeException.class + " because no message was received");
     }
-
 }

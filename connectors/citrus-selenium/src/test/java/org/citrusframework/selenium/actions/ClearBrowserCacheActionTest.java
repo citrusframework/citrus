@@ -53,5 +53,4 @@ public class ClearBrowserCacheActionTest extends AbstractTestNGUnitTest {
 
         verify(webDriverOptions).deleteAllCookies();
     }
-
 }

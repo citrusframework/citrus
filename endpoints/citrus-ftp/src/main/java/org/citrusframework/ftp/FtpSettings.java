@@ -43,5 +43,4 @@ public class FtpSettings {
         return System.getProperty(MARSHALLER_TYPE_PROPERTY,
                 System.getenv(MARSHALLER_TYPE_ENV) != null ? System.getenv(MARSHALLER_TYPE_ENV) : MARSHALLER_TYPE_DEFAULT);
     }
-
 }

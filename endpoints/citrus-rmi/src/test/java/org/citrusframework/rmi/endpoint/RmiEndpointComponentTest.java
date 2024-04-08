@@ -119,5 +119,4 @@ public class RmiEndpointComponentTest {
     public void testLookupByQualifier() {
         Assert.assertTrue(EndpointComponent.lookup("rmi").isPresent());
     }
-
 }

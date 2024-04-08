@@ -49,5 +49,4 @@ public class ObjectFactory {
     public Sql createSql() {
         return new Sql();
     }
-
 }

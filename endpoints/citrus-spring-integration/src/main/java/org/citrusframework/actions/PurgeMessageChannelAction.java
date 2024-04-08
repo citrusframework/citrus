@@ -296,5 +296,4 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
             return new PurgeMessageChannelAction(this);
         }
     }
-
 }

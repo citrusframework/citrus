@@ -67,5 +67,4 @@ public class ObjectFactory {
     public RmiServiceResult.Object createRmiServiceResultObject() {
         return new RmiServiceResult.Object();
     }
-
 }

@@ -44,5 +44,4 @@ public class CeilingFunction implements Function {
 
         return String.valueOf(ceil(parseDouble(parameterList.get(0))));
     }
-
 }

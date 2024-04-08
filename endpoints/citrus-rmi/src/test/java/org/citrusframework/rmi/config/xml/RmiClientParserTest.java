@@ -61,5 +61,4 @@ public class RmiClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNull(rmiClient.getEndpointConfiguration().getMethod());
         Assert.assertEquals(rmiClient.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
-
 }

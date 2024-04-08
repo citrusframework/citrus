@@ -43,5 +43,4 @@ public class RmiEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("rmi.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("rmi.server").get().getClass(), RmiServerBuilder.class);
     }
-
 }

@@ -63,5 +63,4 @@ public class MessageUtils {
                 .map(payload->IsJsonPredicate.getInstance().test(payload))
                 .orElse(true);
     }
-
 }

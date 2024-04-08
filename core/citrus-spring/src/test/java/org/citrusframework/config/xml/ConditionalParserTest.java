@@ -37,5 +37,4 @@ public class ConditionalParserTest extends AbstractActionParserTest<Conditional>
         final Conditional action = this.getNextTestActionFromTest();
         Assert.assertEquals(action.getActionCount(), 2);
     }
-
 }

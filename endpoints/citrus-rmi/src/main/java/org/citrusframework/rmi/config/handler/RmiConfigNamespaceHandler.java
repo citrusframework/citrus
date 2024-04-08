@@ -30,5 +30,4 @@ public class RmiConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("client", new RmiClientParser());
         registerBeanDefinitionParser("server", new RmiServerParser());
     }
-
 }

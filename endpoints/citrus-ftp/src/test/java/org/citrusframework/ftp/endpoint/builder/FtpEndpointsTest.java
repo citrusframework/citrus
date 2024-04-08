@@ -43,5 +43,4 @@ public class FtpEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("ftp.server").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("ftp.server").get().getClass(), FtpServerBuilder.class);
     }
-
 }

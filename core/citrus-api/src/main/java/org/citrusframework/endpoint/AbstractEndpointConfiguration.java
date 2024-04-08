@@ -41,5 +41,4 @@ public abstract class AbstractEndpointConfiguration implements EndpointConfigura
     public void setTimeout(long timeout) {
         this.timeout = timeout;
     }
-
 }

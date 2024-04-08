@@ -79,5 +79,4 @@ public class ReporterConfig {
             return "true".equals(context.getEnvironment().getProperty(DEFAULT_HTML_REPORTER_ENABLED_PROPERTY, "true"));
         }
     }
-
 }

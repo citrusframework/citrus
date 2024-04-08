@@ -128,5 +128,4 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     public void setCorrelationManager(CorrelationManager<Destination> correlationManager) {
         this.correlationManager = correlationManager;
     }
-
 }

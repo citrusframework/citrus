@@ -83,5 +83,4 @@ public class DelegatingMessageSelector implements MessageSelector {
     public void addMessageSelectorFactory(MessageSelectorFactory factory) {
         this.factories.add(factory);
     }
-
 }

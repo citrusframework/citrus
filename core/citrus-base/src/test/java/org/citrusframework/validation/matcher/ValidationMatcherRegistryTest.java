@@ -66,5 +66,4 @@ public class ValidationMatcherRegistryTest extends UnitTestSupport {
             Assert.assertTrue(e.getMessage().contains("unknown:"));
         }
     }
-
 }

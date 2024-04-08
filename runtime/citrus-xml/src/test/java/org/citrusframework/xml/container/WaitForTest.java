@@ -146,5 +146,4 @@ public class WaitForTest extends AbstractXmlActionTest {
             Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage());
         }
     }
-
 }

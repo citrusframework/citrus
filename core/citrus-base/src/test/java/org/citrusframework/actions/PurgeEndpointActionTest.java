@@ -120,5 +120,4 @@ public class PurgeEndpointActionTest extends UnitTestSupport {
                 .build();
         purgeEndpointAction.execute(context);
     }
-
 }

@@ -290,5 +290,4 @@ public class SeleniumTest extends AbstractGroovyActionDslTest {
         Assert.assertNotNull(stopAction.getBrowser());
         Assert.assertEquals(stopAction.getName(), "selenium:stop");
     }
-
 }

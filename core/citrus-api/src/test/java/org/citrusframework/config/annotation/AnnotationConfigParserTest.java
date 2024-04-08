@@ -31,5 +31,4 @@ public class AnnotationConfigParserTest {
         Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
         Assert.assertEquals(validators.size(), 0L);
     }
-
 }

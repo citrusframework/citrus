@@ -285,5 +285,4 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getSchema(), "fooSchema");
         Assert.assertEquals(action.getSchemaRepository(), "fooRepository");
     }
-
 }

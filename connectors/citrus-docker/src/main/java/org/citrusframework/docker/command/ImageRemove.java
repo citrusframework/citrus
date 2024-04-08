@@ -99,5 +99,4 @@ public class ImageRemove extends AbstractDockerCommand<ResponseItem> {
             return this;
         }
     }
-
 }

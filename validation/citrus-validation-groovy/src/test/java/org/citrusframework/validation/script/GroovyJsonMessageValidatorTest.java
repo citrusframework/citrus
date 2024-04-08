@@ -90,5 +90,4 @@ public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
     }
-
 }

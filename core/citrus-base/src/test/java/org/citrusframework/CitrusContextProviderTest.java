@@ -34,5 +34,4 @@ public class CitrusContextProviderTest {
     public void testTestLookup() {
         Assert.assertFalse(CitrusContextProvider.lookup(CitrusContextProvider.SPRING).isPresent());
     }
-
 }

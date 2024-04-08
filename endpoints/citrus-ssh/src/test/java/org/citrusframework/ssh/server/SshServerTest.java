@@ -172,5 +172,4 @@ public class SshServerTest {
 
         throw new IllegalStateException("No free port between 2234 and 3000 found");
     }
-
 }

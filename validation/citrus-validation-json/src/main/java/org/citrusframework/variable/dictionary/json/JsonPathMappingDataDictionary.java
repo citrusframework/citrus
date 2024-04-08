@@ -67,5 +67,4 @@ public class JsonPathMappingDataDictionary extends AbstractJsonDataDictionary {
 
         super.initialize();
     }
-
 }

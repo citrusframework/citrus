@@ -65,5 +65,4 @@ public class GetStoredFileActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
-
 }

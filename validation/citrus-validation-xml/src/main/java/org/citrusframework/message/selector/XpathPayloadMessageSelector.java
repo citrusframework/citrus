@@ -102,5 +102,4 @@ public class XpathPayloadMessageSelector extends AbstractMessageSelector {
             return new XpathPayloadMessageSelector(key, value, context);
         }
     }
-
 }

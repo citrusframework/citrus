@@ -42,5 +42,4 @@ public class CitrusTestCaseNamespaceHandler extends NamespaceHandlerSupport {
             registerBeanDefinitionParser(actionParserEntry.getKey(), actionParserEntry.getValue());
         }
     }
-
 }

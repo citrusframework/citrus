@@ -103,5 +103,4 @@ public class VertxProducer implements Producer {
     public String getName() {
         return name;
     }
-
 }

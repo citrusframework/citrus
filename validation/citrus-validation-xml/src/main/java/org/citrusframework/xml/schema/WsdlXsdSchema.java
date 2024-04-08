@@ -226,5 +226,4 @@ public class WsdlXsdSchema extends AbstractSchemaCollection {
     public void setWsdl(Resource wsdl) {
         this.wsdl = wsdl;
     }
-
 }

@@ -55,5 +55,4 @@ public class DataProviderIT extends TestNGCitrusSpringSupport {
             { "Hallo Citrus!" },
         };
     }
-
 }

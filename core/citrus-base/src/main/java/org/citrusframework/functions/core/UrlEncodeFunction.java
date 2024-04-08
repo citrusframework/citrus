@@ -49,5 +49,4 @@ public class UrlEncodeFunction implements Function {
             throw new CitrusRuntimeException("Unsupported character encoding", e);
         }
     }
-
 }

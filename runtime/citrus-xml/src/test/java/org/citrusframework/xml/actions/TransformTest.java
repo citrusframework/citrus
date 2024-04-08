@@ -63,5 +63,4 @@ public class TransformTest extends AbstractXmlActionTest {
 
         Assert.assertTrue(context.getVariable("transform-result").contains("<p>Message: Hello World!</p>"));
     }
-
 }

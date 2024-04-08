@@ -75,7 +75,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
             throw new ValidationException("Failed to validate text content", e);
         }
 
-        logger.info("Text validation successful: All values OK");
+        logger.debug("Text validation successful: All values OK");
     }
 
     /**

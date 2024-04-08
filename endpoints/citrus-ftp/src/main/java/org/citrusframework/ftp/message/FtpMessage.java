@@ -498,5 +498,4 @@ public class FtpMessage extends DefaultMessage {
         this.marshaller = marshaller;
         return this;
     }
-
 }

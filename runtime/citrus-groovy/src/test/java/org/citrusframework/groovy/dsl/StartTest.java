@@ -80,5 +80,4 @@ public class StartTest extends AbstractGroovyActionDslTest {
         verify(myFooServer).start();
         verify(myBarServer).start();
     }
-
 }

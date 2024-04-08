@@ -358,5 +358,4 @@ public class ReceiveSoapMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
     }
-
 }

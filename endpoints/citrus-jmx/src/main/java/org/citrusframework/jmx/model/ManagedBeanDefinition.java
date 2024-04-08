@@ -324,5 +324,4 @@ public class ManagedBeanDefinition {
     public void setObjectName(String objectName) {
         this.objectName = objectName;
     }
-
 }

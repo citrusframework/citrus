@@ -44,5 +44,4 @@ public class ReporterConfigDisabledTest extends UnitTestSupport {
     public void testDefaultHtmlReporter() {
         Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(CITRUS_HTML_REPORTER));
     }
-
 }

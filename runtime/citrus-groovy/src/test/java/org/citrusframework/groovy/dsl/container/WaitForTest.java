@@ -146,5 +146,4 @@ public class WaitForTest extends AbstractGroovyActionDslTest {
             Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage());
         }
     }
-
 }

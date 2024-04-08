@@ -79,5 +79,4 @@ public class FtpServerFtpLetTest {
         result = ftpLet.beforeCommand(ftpSession, ftpRequest);
         Assert.assertEquals(result, FtpletResult.DEFAULT);
     }
-
 }

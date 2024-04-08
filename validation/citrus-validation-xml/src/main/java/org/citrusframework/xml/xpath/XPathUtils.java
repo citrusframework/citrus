@@ -348,5 +348,4 @@ public abstract class XPathUtils {
 
         return factory;
     }
-
 }

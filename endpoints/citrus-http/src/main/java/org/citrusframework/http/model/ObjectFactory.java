@@ -40,5 +40,4 @@ public class ObjectFactory {
     public Control createControl() {
         return new Control();
     }
-
 }

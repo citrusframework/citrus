@@ -77,5 +77,4 @@ public class DefaultTypeConverterTest {
         Assert.assertEquals(converter.convertIfNecessary(payload.getBytes(), String.class), Arrays.toString(payload.getBytes()));
         Assert.assertEquals(converter.convertIfNecessary(ByteBuffer.wrap(payload.getBytes()), String.class), payload);
     }
-
 }

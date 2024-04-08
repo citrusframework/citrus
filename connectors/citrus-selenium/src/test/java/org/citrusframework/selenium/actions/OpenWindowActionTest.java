@@ -92,5 +92,4 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
-
 }

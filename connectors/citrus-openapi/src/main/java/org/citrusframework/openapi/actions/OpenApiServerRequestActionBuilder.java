@@ -146,5 +146,4 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
             return super.build(context, messageType);
         }
     }
-
 }

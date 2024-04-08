@@ -59,5 +59,4 @@ public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {
 
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
-
 }

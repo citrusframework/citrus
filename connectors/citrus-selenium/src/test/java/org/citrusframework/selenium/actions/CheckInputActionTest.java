@@ -96,5 +96,4 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
 
         verify(element, times(0)).click();
     }
-
 }

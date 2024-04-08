@@ -89,5 +89,4 @@ public abstract class AbstractDateFunction implements Function {
     protected SimpleDateFormat getDefaultDateFormat() {
         return new SimpleDateFormat("dd.MM.yyyy");
     }
-
 }

@@ -43,5 +43,4 @@ public class VertxEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("vertx.async").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("vertx.async").get().getClass(), VertxEndpointBuilder.class);
     }
-
 }

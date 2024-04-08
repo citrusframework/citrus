@@ -117,5 +117,4 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
             Assert.assertTrue(e.getCause().getMessage().startsWith("Neither http request uri nor http client endpoint reference is given"));
         }
     }
-
 }

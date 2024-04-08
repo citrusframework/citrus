@@ -56,5 +56,4 @@ public class MissingExpectedMessageException extends CitrusRuntimeException {
     public MissingExpectedMessageException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }

@@ -42,5 +42,4 @@ public class KafkaEndpointsTest {
         Assert.assertTrue(EndpointBuilder.lookup("kafka.async").isPresent());
         Assert.assertEquals(EndpointBuilder.lookup("kafka.async").get().getClass(), KafkaEndpointBuilder.class);
     }
-
 }

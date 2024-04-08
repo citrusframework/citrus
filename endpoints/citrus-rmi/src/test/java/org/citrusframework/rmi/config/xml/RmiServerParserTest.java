@@ -68,5 +68,4 @@ public class RmiServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(rmiServer.getRemoteInterfaces().get(0), HelloService.class);
         Assert.assertEquals(rmiServer.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
-
 }

@@ -43,5 +43,4 @@ public class ObjectFactory {
     public SshResponse createSshResponse() {
         return new SshResponse();
     }
-
 }

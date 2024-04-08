@@ -357,5 +357,4 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     public SegmentVariableExtractorRegistry getSegmentVariableExtractorRegistry() {
         return delegate.getSegmentVariableExtractorRegistry();
     }
-
 }

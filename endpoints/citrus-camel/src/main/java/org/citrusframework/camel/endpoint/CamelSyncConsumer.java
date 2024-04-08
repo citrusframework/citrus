@@ -164,5 +164,4 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     public void setCorrelationManager(CorrelationManager<Exchange> correlationManager) {
         this.correlationManager = correlationManager;
     }
-
 }

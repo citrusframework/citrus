@@ -47,6 +47,5 @@ public class LocalHostAddressFunction implements Function {
             throw new CitrusRuntimeException("Unable to locate local host address", e);
         }
     }
-
 }
 

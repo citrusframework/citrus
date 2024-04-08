@@ -74,5 +74,4 @@ public class WsdlJavaTestGeneratorTest {
         Assert.assertTrue(javaContent.contains(requestName));
         Assert.assertTrue(javaContent.contains(responseName));
     }
-
 }

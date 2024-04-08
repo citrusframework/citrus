@@ -57,6 +57,7 @@ import static java.lang.Integer.parseInt;
  * @since 2008
  */
 public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction {
+
     /** Map holding all column values to be validated, keys represent the column names */
     protected final Map<String, List<String>> controlResultSet;
 
@@ -105,9 +106,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             final List<Map<String, Object>> allResultRows = new ArrayList<>();
 
             if (getTransactionManager() != null) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Using transaction manager: " + getTransactionManager().getClass().getName());
-                }
+                logger.debug("Using transaction manager: {}", getTransactionManager().getClass().getName());
 
                 TransactionTemplate transactionTemplate = new TransactionTemplate(getTransactionManager());
                 transactionTemplate.setTimeout(parseInt(context.replaceDynamicContentInString(getTransactionTimeout())));
@@ -153,13 +152,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 toExecute = context.replaceDynamicContentInString(statement.trim());
             }
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Executing SQL query: " + toExecute);
-            }
+            logger.debug("Executing SQL query: {}", toExecute);
 
             List<Map<String, Object>> results = getJdbcTemplate().queryForList(toExecute);
 
-            logger.info("SQL query execution successful");
+            logger.debug("SQL query execution successful");
 
             allResultRows.addAll(results);
             fillColumnValuesMap(results, columnValuesMap);
@@ -265,7 +262,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             result.append(it.next());
             while (it.hasNext()) {
                 String nextValue = it.next();
-                result.append(";" + (nextValue == null ? NULL_VALUE : nextValue));
+                result.append(";").append(nextValue == null ? NULL_VALUE : nextValue);
             }
 
             return result.toString();
@@ -295,7 +292,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             return;
         }
         performControlResultSetValidation(columnValuesMap, context);
-        logger.info("SQL query validation successful: All values OK");
+        logger.debug("SQL query validation successful: All values OK");
     }
 
     private void performControlResultSetValidation(final Map<String, List<String>> columnValuesMap, TestContext context)
@@ -345,9 +342,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     protected void validateSingleValue(String columnName, String controlValue, String resultValue, TestContext context) {
         // check if value is ignored
         if (controlValue.equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Ignoring column value '" + columnName + "(resultValue)'");
-            }
+            logger.debug("Ignoring column value '{} (resultValue)'", columnName);
             return;
         }
 
@@ -358,10 +353,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
         if (resultValue == null) {
             if (isCitrusNullValue(controlValue)) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Validating database value for column: ''" +
-                            columnName + "'' value as expected: NULL - value OK");
-                }
+                logger.debug("Validating database value for column: '{}' value as expected: NULL - value OK", columnName);
                 return;
             } else {
                 throw new ValidationException("Validation failed for column: '" +  columnName + "'"
@@ -370,16 +362,13 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         }
 
         if (resultValue.equals(controlValue)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Validation successful for column: '" + columnName +
-                        "' expected value: " + controlValue + " - value OK");
-            }
+            logger.debug("Validation successful for column: '{}' expected value: {} - value OK", columnName, controlValue);
         } else {
             throw new ValidationException("Validation failed for column: '" +  columnName + "'"
                     + " found value: '"
                     + resultValue
                     + "' expected value: "
-                    + ((controlValue.length()==0) ? NULL_VALUE : controlValue));
+                    + (controlValue.isEmpty() ? NULL_VALUE : controlValue));
         }
     }
 
@@ -389,7 +378,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * @return
      */
     private boolean isCitrusNullValue(String controlValue) {
-        return controlValue.equalsIgnoreCase(NULL_VALUE) || controlValue.length() == 0;
+        return controlValue.equalsIgnoreCase(NULL_VALUE) || controlValue.isEmpty();
     }
 
     /**

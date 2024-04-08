@@ -280,5 +280,4 @@ public class SendHttpMessageTestActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
         Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
     }
-
 }

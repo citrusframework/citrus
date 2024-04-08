@@ -128,5 +128,4 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
             return super.build(context, messageType);
         }
     }
-
 }

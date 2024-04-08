@@ -108,5 +108,4 @@ public class XmlValidationMatcher implements ValidationMatcher {
 
         return data;
     }
-
 }

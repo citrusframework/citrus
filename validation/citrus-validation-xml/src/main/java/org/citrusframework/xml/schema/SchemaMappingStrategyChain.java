@@ -56,5 +56,4 @@ public class SchemaMappingStrategyChain implements XsdSchemaMappingStrategy {
     public void setStrategies(List<XsdSchemaMappingStrategy> strategies) {
         this.strategies = strategies;
     }
-
 }

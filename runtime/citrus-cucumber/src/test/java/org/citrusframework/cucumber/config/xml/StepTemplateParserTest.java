@@ -68,5 +68,4 @@ public class StepTemplateParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(template.getActions().size(), 1L);
         Assert.assertEquals(((EchoAction)template.getActions().get(0)).getMessage(), "You just said: ${body}");
     }
-
 }

@@ -659,5 +659,4 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         soapMessageAction.execute(context);
     }
-
 }

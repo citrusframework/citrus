@@ -40,5 +40,4 @@ public class StringLengthFunction implements Function {
 
         return String.valueOf((parameterList.get(0)).length());
     }
-
 }

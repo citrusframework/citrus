@@ -49,5 +49,4 @@ public class ObjectFactory {
     public Camel createCamel() {
         return new Camel();
     }
-
 }

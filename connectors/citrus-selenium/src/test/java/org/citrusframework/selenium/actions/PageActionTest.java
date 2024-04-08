@@ -222,5 +222,4 @@ public class PageActionTest extends AbstractTestNGUnitTest {
             form.submit();
         }
     }
-
 }

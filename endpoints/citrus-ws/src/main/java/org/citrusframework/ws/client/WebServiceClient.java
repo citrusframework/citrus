@@ -272,5 +272,4 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     public void setCorrelationManager(CorrelationManager<Message> correlationManager) {
         this.correlationManager = correlationManager;
     }
-
 }

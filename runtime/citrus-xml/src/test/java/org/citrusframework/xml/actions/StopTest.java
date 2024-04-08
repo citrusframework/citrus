@@ -77,5 +77,4 @@ public class StopTest extends AbstractXmlActionTest {
         verify(myFooServer).stop();
         verify(myBarServer).stop();
     }
-
 }

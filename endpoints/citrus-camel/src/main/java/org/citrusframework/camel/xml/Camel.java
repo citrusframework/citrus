@@ -160,5 +160,4 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }
-
 }

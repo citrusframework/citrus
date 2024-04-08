@@ -170,5 +170,4 @@ public class JmsMessageConverter implements MessageConverter<jakarta.jms.Message
             throw new CitrusRuntimeException("Failed to convert jms message", e);
         }
     }
-
 }

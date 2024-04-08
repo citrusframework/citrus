@@ -84,5 +84,4 @@ public class AbstractAsyncTestActionTest extends UnitTestSupport {
 
         Assert.assertTrue(result.get(1000, TimeUnit.MILLISECONDS));
     }
-
 }

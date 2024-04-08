@@ -49,5 +49,4 @@ public class ObjectFactory {
     public PurgeQueues createPurgeQueues() {
         return new PurgeQueues();
     }
-
 }

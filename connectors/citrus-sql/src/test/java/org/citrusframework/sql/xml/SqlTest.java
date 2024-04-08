@@ -188,5 +188,4 @@ public class SqlTest extends AbstractXmlActionTest {
         Assert.assertTrue(XmlTestActionBuilder.lookup("plsql").isPresent());
         Assert.assertEquals(XmlTestActionBuilder.lookup("plsql").get().getClass(), Plsql.class);
     }
-
 }

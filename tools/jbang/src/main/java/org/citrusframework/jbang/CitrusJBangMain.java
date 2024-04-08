@@ -48,5 +48,4 @@ public class CitrusJBangMain implements Callable<Integer> {
         commandLine.execute("--help");
         return 0;
     }
-
 }

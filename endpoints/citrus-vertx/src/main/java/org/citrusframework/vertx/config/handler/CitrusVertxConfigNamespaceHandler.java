@@ -30,5 +30,4 @@ public class CitrusVertxConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("endpoint", new VertxEndpointParser());
         registerBeanDefinitionParser("sync-endpoint", new VertxSyncEndpointParser());
     }
-
 }

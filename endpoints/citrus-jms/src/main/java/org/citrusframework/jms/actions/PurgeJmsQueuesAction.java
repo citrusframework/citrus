@@ -379,5 +379,4 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             this.referenceResolver = referenceResolver;
         }
     }
-
 }

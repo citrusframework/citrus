@@ -42,5 +42,4 @@ public class Complete extends CitrusCommand {
         out.flush();
         return 0;
     }
-
 }

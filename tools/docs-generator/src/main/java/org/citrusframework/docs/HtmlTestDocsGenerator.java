@@ -213,5 +213,4 @@ public class HtmlTestDocsGenerator extends AbstractTestDocsGenerator {
     public String getPageTitle() {
         return pageTitle;
     }
-
 }

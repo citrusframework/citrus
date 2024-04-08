@@ -68,5 +68,4 @@ public class MessagePayloadUtilsTest {
         Assert.assertEquals(MessagePayloadUtils.prettyPrint(String.format("<root><text language=\"eng\" important=\"true\"><![CDATA[%n  Citrus rocks!%n  ]]></text></root>")),
                 String.format("<root>%n  <text language=\"eng\" important=\"true\">%n    <![CDATA[%n  Citrus rocks!%n  ]]>%n  </text>%n</root>%n"));
     }
-
 }

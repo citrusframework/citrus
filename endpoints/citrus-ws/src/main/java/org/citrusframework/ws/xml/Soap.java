@@ -1228,5 +1228,4 @@ public class Soap implements TestActionBuilder<TestAction>, ReferenceResolverAwa
             }
         }
     }
-
 }

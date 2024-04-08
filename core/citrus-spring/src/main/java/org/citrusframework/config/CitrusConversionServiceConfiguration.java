@@ -39,5 +39,4 @@ public class CitrusConversionServiceConfiguration {
         conversionServiceFactoryBean.setConverters(converters);
         return conversionServiceFactoryBean;
     }
-
 }

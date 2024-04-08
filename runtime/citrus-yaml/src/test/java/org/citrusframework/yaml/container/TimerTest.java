@@ -69,5 +69,4 @@ public class TimerTest extends AbstractYamlActionTest {
         Assert.assertEquals(action.getInterval(), defaultInterval);
         Assert.assertEquals(action.getActionCount(), 1);
     }
-
 }

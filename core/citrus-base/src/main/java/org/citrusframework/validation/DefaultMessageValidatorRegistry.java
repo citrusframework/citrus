@@ -31,5 +31,4 @@ public class DefaultMessageValidatorRegistry extends MessageValidatorRegistry {
         MessageValidator.lookup().forEach(this::addMessageValidator);
         SchemaValidator.lookup().forEach(this::addSchemaValidator);
     }
-
 }

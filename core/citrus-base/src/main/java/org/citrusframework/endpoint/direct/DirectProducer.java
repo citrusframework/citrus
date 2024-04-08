@@ -29,6 +29,7 @@ import org.citrusframework.util.StringUtils;
  * @author Christoph Deppisch
  */
 public class DirectProducer implements Producer {
+
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(DirectProducer.class);
 
@@ -52,13 +53,8 @@ public class DirectProducer implements Producer {
     public void send(Message message, TestContext context) {
         String destinationQueueName = getDestinationQueueName();
 
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Sending message to queue: '%s'", destinationQueueName));
-        }
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Message to send is:" + System.getProperty("line.separator") + message.toString());
-        }
+        logger.debug("Sending message to queue: '{}'", destinationQueueName);
+        logger.debug("Message to send is:\n{}", message);
 
         try {
             getDestinationQueue(context).send(message);
@@ -66,7 +62,7 @@ public class DirectProducer implements Producer {
             throw new CitrusRuntimeException(String.format("Failed to send message to queue: '%s'", destinationQueueName), e);
         }
 
-        logger.info(String.format("Message was sent to queue: '%s'", destinationQueueName));
+        logger.info("Message was sent to queue: '{}'", destinationQueueName);
     }
 
     /**

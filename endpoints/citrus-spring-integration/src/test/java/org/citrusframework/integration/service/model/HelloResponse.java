@@ -183,5 +183,4 @@ public class HelloResponse {
     public void setFault(FaultType value) {
         this.fault = value;
     }
-
 }

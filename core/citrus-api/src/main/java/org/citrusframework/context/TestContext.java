@@ -1075,5 +1075,4 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
             return this.getClass();
         }
     }
-
 }

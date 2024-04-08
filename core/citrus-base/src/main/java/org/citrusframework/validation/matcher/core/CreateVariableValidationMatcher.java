@@ -39,11 +39,11 @@ public class CreateVariableValidationMatcher implements ValidationMatcher {
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
         String name = fieldName;
 
-        if (controlParameters != null && controlParameters.size() > 0) {
+        if (controlParameters != null && !controlParameters.isEmpty()) {
             name = controlParameters.get(0);
         }
 
-        logger.info("Setting variable: " + name + " to value: " + value);
+        logger.debug("Setting variable: " + name + " to value: " + value);
 
         context.setVariable(name, value);
     }

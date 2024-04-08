@@ -122,5 +122,4 @@ public class FillFormActionTest extends AbstractTestNGUnitTest {
         verify(element).sendKeys("secret");
         verify(element).click();
     }
-
 }

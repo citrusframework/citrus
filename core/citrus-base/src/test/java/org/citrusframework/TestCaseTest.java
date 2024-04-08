@@ -222,5 +222,4 @@ public class TestCaseTest extends UnitTestSupport {
 
         waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread.toString())));
     }
-
 }

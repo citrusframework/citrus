@@ -149,5 +149,4 @@ public class ManagedBeanDefinitionTest {
         Assert.assertEquals(info.getOperations()[0].getSignature()[0].getName(), "p1");
         Assert.assertNull(info.getOperations()[0].getReturnType());
     }
-
 }

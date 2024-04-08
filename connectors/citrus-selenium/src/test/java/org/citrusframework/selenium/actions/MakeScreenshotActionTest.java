@@ -78,5 +78,4 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
         File stored = new File("target/MyTest_screenshot.png");
         Assert.assertTrue(stored.exists());
     }
-
 }

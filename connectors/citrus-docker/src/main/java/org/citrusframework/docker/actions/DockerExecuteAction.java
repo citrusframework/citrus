@@ -101,9 +101,7 @@ public class DockerExecuteAction extends AbstractTestAction {
      * @param context
      */
     private void validateCommandResult(DockerCommand command, TestContext context) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Starting Docker command result validation");
-        }
+        logger.debug("Starting Docker command result validation");
 
         if (StringUtils.hasText(expectedCommandResult)) {
             if (command.getCommandResult() == null) {
@@ -114,7 +112,7 @@ public class DockerExecuteAction extends AbstractTestAction {
                 String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
                 JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
                 getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, Collections.singletonList(validationContext));
-                logger.info("Docker command result validation successful - all values OK!");
+                logger.debug("Docker command result validation successful - all values OK!");
             } catch (JsonProcessingException e) {
                 throw new CitrusRuntimeException(e);
             }
@@ -138,12 +136,12 @@ public class DockerExecuteAction extends AbstractTestAction {
         // try to find json message validator in registry
         Optional<MessageValidator<? extends ValidationContext>> defaultJsonMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_JSON_MESSAGE_VALIDATOR);
 
-        if (!defaultJsonMessageValidator.isPresent()
+        if (defaultJsonMessageValidator.isEmpty()
                 && context.getReferenceResolver().isResolvable(DEFAULT_JSON_MESSAGE_VALIDATOR)) {
             defaultJsonMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_JSON_MESSAGE_VALIDATOR, MessageValidator.class));
         }
 
-        if (!defaultJsonMessageValidator.isPresent()) {
+        if (defaultJsonMessageValidator.isEmpty()) {
             // try to find json message validator via resource path lookup
             defaultJsonMessageValidator = MessageValidator.lookup("json");
         }

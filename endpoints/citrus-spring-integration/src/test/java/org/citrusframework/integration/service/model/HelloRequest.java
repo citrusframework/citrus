@@ -155,5 +155,4 @@ public class HelloRequest {
     public void setText(String value) {
         this.text = value;
     }
-
 }

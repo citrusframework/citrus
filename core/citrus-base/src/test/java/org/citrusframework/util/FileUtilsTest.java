@@ -71,5 +71,4 @@ public class FileUtilsTest extends UnitTestSupport {
         Assert.assertEquals(FileUtils.getFileName("foo.bar.java"), "foo.bar.java");
         Assert.assertEquals(FileUtils.getFileName("/path/to/some/foo.bar.java"), "foo.bar.java");
     }
-
 }

@@ -265,5 +265,4 @@ public class DirectEndpointSyncProducerTest {
 
         Assert.assertEquals(channelSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
     }
-
 }

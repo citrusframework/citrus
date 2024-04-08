@@ -67,5 +67,4 @@ public class EchoSteps {
             .type(MessageType.PLAINTEXT)
             .body("You just said: " + body));
     }
-
 }

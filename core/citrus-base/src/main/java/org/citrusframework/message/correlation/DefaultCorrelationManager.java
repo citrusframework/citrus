@@ -90,5 +90,4 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
     public ObjectStore<T> getObjectStore() {
         return this.objectStore;
     }
-
 }

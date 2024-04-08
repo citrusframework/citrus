@@ -149,5 +149,4 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
-
 }

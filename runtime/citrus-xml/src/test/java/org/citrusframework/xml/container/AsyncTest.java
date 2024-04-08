@@ -58,5 +58,4 @@ public class AsyncTest extends AbstractXmlActionTest {
         Assert.assertEquals(((EchoAction)action.getErrorActions().get(0)).getMessage(), "Failed!");
 
     }
-
 }

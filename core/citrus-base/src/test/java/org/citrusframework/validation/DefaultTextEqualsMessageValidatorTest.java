@@ -96,5 +96,4 @@ public class DefaultTextEqualsMessageValidatorTest extends UnitTestSupport {
            new Object[]{ "Hello!", "Hi!" },
         };
     }
-
 }

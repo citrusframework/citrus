@@ -77,5 +77,4 @@ public class HoverActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
     }
-
 }
