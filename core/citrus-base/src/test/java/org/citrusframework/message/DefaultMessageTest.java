@@ -16,8 +16,11 @@
 
 package org.citrusframework.message;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+
+import java.util.Map;
 import org.citrusframework.UnitTestSupport;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -33,7 +36,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("password", "foo");
 
         String output = message.print();
-        Assert.assertEquals(output, String.format("DEFAULTMESSAGE [" +
+        assertEquals(output, String.format("DEFAULTMESSAGE [" +
                     "id: %s, " +
                     "payload: <credentials>%n  <password>foo</password>%n</credentials>%n" +
                 "][headers: {" +
@@ -50,7 +53,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("secret", "bar");
 
         String output = message.print(context);
-        Assert.assertEquals(output, String.format("DEFAULTMESSAGE [" +
+        assertEquals(output, String.format("DEFAULTMESSAGE [" +
                     "id: %s, " +
                     "payload: password=****,secret=****" +
                 "][headers: {" +
@@ -67,7 +70,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("secret", "bar");
 
         String output = message.print(context);
-        Assert.assertEquals(output, String.format("DEFAULTMESSAGE [" +
+        assertEquals(output, String.format("DEFAULTMESSAGE [" +
                     "id: %s, " +
                     "payload: password=****&secret=****" +
                 "][headers: {" +
@@ -83,7 +86,7 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("password", "foo");
 
         String output = message.print(context);
-        Assert.assertEquals(output, String.format("DEFAULTMESSAGE [" +
+        assertEquals(output, String.format("DEFAULTMESSAGE [" +
                     "id: %s, " +
                     "payload: <credentials>%n  <password>****</password>%n</credentials>%n" +
                 "][headers: {" +
@@ -100,11 +103,46 @@ public class DefaultMessageTest extends UnitTestSupport {
         message.setHeader("secretKey", "bar");
 
         String output = message.print(context);
-        Assert.assertEquals(output, String.format("DEFAULTMESSAGE [" +
+        assertEquals(output, String.format("DEFAULTMESSAGE [" +
                     "id: %s, " +
                     "payload: {%n  \"credentials\": {%n    \"password\": \"****\",%n    \"secretKey\": \"****\"%n  }%n}" +
                 "][headers: {" +
                     "citrus_message_id=%s, citrus_message_timestamp=%s, operation=getCredentials, password=****, secretKey=****" +
                 "}]", message.getId(), message.getId(), message.getTimestamp()));
+    }
+
+    @Test
+    public void testCopyConstructorPreservesIdAndTimestamp() {
+
+        // Given
+        DefaultMessage originalMessage = new DefaultMessage("myPayload", Map.of("k1","v1"));
+
+        // When
+        DefaultMessage copiedMessage = new DefaultMessage(originalMessage);
+
+        // Then
+        assertEquals(originalMessage.getHeader(MessageHeaders.ID), copiedMessage.getHeader(MessageHeaders.ID));
+        assertEquals(originalMessage.getHeader(MessageHeaders.TIMESTAMP), copiedMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(originalMessage.getHeader("k1"), copiedMessage.getHeader("k1"));
+        assertEquals(originalMessage.getPayload(), copiedMessage.getPayload());
+
+    }
+
+    @Test
+    public void testCopyConstructorWithCitrusOverwriteDoesNotPreserveIdAndTimestamp() {
+
+        // Given
+        DefaultMessage originalMessage = new DefaultMessage("myPayload", Map.of("k1","v1"));
+        originalMessage.setHeader(MessageHeaders.TIMESTAMP, System.currentTimeMillis() - 1);
+
+        // When
+        DefaultMessage copiedMessage = new DefaultMessage(originalMessage, true);
+
+        // Then
+        assertNotEquals(originalMessage.getHeader(MessageHeaders.ID), copiedMessage.getHeader(MessageHeaders.ID));
+        assertNotEquals(originalMessage.getHeader(MessageHeaders.TIMESTAMP), copiedMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(originalMessage.getHeader("k1"), copiedMessage.getHeader("k1"));
+        assertEquals(originalMessage.getPayload(), copiedMessage.getPayload());
+
     }
 }

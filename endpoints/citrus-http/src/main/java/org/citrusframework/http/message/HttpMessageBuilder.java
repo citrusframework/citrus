@@ -16,15 +16,20 @@
 
 package org.citrusframework.http.message;
 
+import static org.citrusframework.CitrusSettings.isHttpMessageBuilderForceCitrusHeaderUpdateEnabled;
+
 import jakarta.servlet.http.Cookie;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
 import org.citrusframework.validation.builder.StaticMessageBuilder;
 
+/**
+ * Builder class for creating HTTP messages with default settings, ensuring that each message has a unique
+ * ID and a timestamp that corresponds to the time, the build method was called.
+ */
 public class HttpMessageBuilder extends StaticMessageBuilder {
 
     private final CookieEnricher cookieEnricher;
@@ -52,7 +57,7 @@ public class HttpMessageBuilder extends StaticMessageBuilder {
     @Override
     public Message build(final TestContext context, final String messageType) {
         //Copy the initial message, so that it is not manipulated during the test.
-        final HttpMessage message = new HttpMessage(super.getMessage());
+        final HttpMessage message = new HttpMessage(super.getMessage(), isHttpMessageBuilderForceCitrusHeaderUpdateEnabled());
 
         final Message constructed = super.build(context, messageType);
 
@@ -92,6 +97,7 @@ public class HttpMessageBuilder extends StaticMessageBuilder {
         return cookies.toArray(new Cookie[0]);
     }
 
+    @Override
     public HttpMessage getMessage() {
         return (HttpMessage) super.getMessage();
     }

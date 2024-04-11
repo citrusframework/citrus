@@ -16,18 +16,20 @@
 
 package org.citrusframework.http.message;
 
+import jakarta.servlet.http.Cookie;
 import org.citrusframework.endpoint.resolver.EndpointUriResolver;
+import org.citrusframework.message.MessageHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import jakarta.servlet.http.Cookie;
 import java.util.Collection;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
@@ -36,13 +38,12 @@ public class HttpMessageTest {
     private HttpMessage httpMessage;
 
     @BeforeMethod
-    public void setUp(){
+    public void setUp() {
         httpMessage = new HttpMessage();
     }
 
     @Test
     public void testSetCookies() {
-
         //GIVEN
         final Cookie cookie = mock(Cookie.class);
         final Cookie[] cookies = new Cookie[]{cookie};
@@ -55,11 +56,10 @@ public class HttpMessageTest {
     }
 
     /**
-     * Required by https://tools.ietf.org/html/rfc6265#section-4.1.1
+     * Required by <a href="https://tools.ietf.org/html/rfc6265#section-4.1.1">rfc6265-section-4.1.1</a>
      */
     @Test
     public void testCookiesWithSameNamesAreOverwritten() {
-
         //GIVEN
         final Cookie cookie = new Cookie("foo", "bar");
         httpMessage.cookie(cookie);
@@ -76,7 +76,6 @@ public class HttpMessageTest {
 
     @Test
     public void testSetCookiesOverwritesOldCookies() {
-
         //GIVEN
         httpMessage.setCookies(new Cookie[]{
                 mock(Cookie.class),
@@ -95,7 +94,6 @@ public class HttpMessageTest {
 
     @Test
     public void testCopyConstructorPreservesCookies() {
-
         //GIVEN
         final Cookie expectedCookie = mock(Cookie.class);
         final HttpMessage originalMessage = new HttpMessage();
@@ -110,7 +108,6 @@ public class HttpMessageTest {
 
     @Test
     public void testParseQueryParamsAreParsedCorrectly() {
-
         //GIVEN
         final String queryParamString = "foo=foobar,bar=barbar";
 
@@ -125,7 +122,6 @@ public class HttpMessageTest {
 
     @Test
     public void testParseQueryParamsSetsQueryParamsHeader() {
-
         //GIVEN
         final String queryParamString = "foo=foobar,bar=barbar";
 
@@ -138,7 +134,6 @@ public class HttpMessageTest {
 
     @Test
     public void testParseQueryParamsSetsQueryParamHeaderName() {
-
         //GIVEN
         final String queryParamString = "foo=foobar,bar=barbar";
 
@@ -151,7 +146,6 @@ public class HttpMessageTest {
 
     @Test
     public void testQueryParamWithoutValueContainsNull() {
-
         //GIVEN
         final String queryParam = "foo";
 
@@ -164,7 +158,6 @@ public class HttpMessageTest {
 
     @Test
     public void testQueryParamWithValueIsSetCorrectly() {
-
         //GIVEN
         final String key = "foo";
         final String value = "foo";
@@ -178,7 +171,6 @@ public class HttpMessageTest {
 
     @Test
     public void testNewQueryParamIsAddedToExistingParams() {
-
         //GIVEN
         final String existingKey = "foo";
         final String existingValue = "foobar";
@@ -197,7 +189,6 @@ public class HttpMessageTest {
 
     @Test
     public void testNewQueryParamIsAddedQueryParamsHeader() {
-
         //GIVEN
         httpMessage.queryParam("foo", "foobar");
 
@@ -212,7 +203,6 @@ public class HttpMessageTest {
 
     @Test
     public void testNewQueryParamIsAddedQueryParamHeaderName() {
-
         //GIVEN
         httpMessage.queryParam("foo", "foobar");
 
@@ -227,9 +217,7 @@ public class HttpMessageTest {
 
     @Test
     public void testDefaultStatusCodeIsNull() {
-
         //GIVEN
-
 
         //WHEN
         final HttpStatusCode statusCode = httpMessage.getStatusCode();
@@ -240,7 +228,6 @@ public class HttpMessageTest {
 
     @Test
     public void testStringStatusCodeIsParsed() {
-
         //GIVEN
         httpMessage.header(HttpMessageHeaders.HTTP_STATUS_CODE, "404");
 
@@ -253,7 +240,6 @@ public class HttpMessageTest {
 
     @Test
     public void testIntegerStatusCodeIsParsed() {
-
         //GIVEN
         httpMessage.header(HttpMessageHeaders.HTTP_STATUS_CODE, 403);
 
@@ -266,7 +252,6 @@ public class HttpMessageTest {
 
     @Test
     public void testStatusCodeObjectIsPreserved() {
-
         //GIVEN
         httpMessage.header(HttpMessageHeaders.HTTP_STATUS_CODE, HttpStatus.I_AM_A_TEAPOT);
 
@@ -279,7 +264,6 @@ public class HttpMessageTest {
 
     @Test
     public void testCanHandleCustomStatusCode() {
-
         //GIVEN
         httpMessage.header(HttpMessageHeaders.HTTP_STATUS_CODE, 555);
 
@@ -292,16 +276,49 @@ public class HttpMessageTest {
 
     @Test
     public void testQueryParamWithMultipleParams() {
-
         //GIVEN
         httpMessage.queryParam("foo", "bar");
 
         final String expectedHeaderValue = "foo=bar,foo=foobar";
 
         //WHEN
-        final HttpMessage resultMessage= httpMessage.queryParam("foo", "foobar");
+        final HttpMessage resultMessage = httpMessage.queryParam("foo", "foobar");
 
         //THEN
         assertEquals(resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), expectedHeaderValue);
+    }
+
+    @Test
+    public void testCopyConstructorPreservesIdAndTimestamp() {
+        // Given
+        httpMessage.setPayload("myPayload");
+        httpMessage.setHeader("k1", "v1");
+
+        // When
+        HttpMessage copiedMessage = new HttpMessage(httpMessage);
+
+        // Then
+        assertEquals(httpMessage.getHeader(MessageHeaders.ID), copiedMessage.getHeader(MessageHeaders.ID));
+        assertEquals(httpMessage.getHeader(MessageHeaders.TIMESTAMP), copiedMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(httpMessage.getHeader("k1"), copiedMessage.getHeader("k1"));
+        assertEquals(httpMessage.getPayload(), copiedMessage.getPayload());
+
+    }
+
+    @Test
+    public void testCopyConstructorWithCitrusOverwriteDoesNotPreserveIdAndTimestamp() {
+        // Given
+        httpMessage.setPayload("myPayload");
+        httpMessage.setHeader("k1", "v1");
+        httpMessage.setHeader(MessageHeaders.TIMESTAMP, System.currentTimeMillis() - 1);
+
+        // When
+        HttpMessage copiedMessage = new HttpMessage(httpMessage, true);
+
+        // Then
+        assertNotEquals(httpMessage.getHeader(MessageHeaders.ID), copiedMessage.getHeader(MessageHeaders.ID));
+        assertNotEquals(httpMessage.getHeader(MessageHeaders.TIMESTAMP), copiedMessage.getHeader(MessageHeaders.TIMESTAMP));
+        assertEquals(httpMessage.getHeader("k1"), copiedMessage.getHeader("k1"));
+        assertEquals(httpMessage.getPayload(), copiedMessage.getPayload());
     }
 }
