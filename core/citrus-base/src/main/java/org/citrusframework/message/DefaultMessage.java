@@ -16,16 +16,18 @@
 
 package org.citrusframework.message;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.MessageUtils;
 import org.citrusframework.util.TypeConversionUtils;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.lang.System.currentTimeMillis;
+import static java.util.UUID.randomUUID;
 
 /**
  * Default message implementation holds message payload and message headers. Also provides access methods for special
@@ -74,6 +76,22 @@ public class DefaultMessage implements Message {
     }
 
     /**
+     * Constructs a new DefaultMessage based on the provided Message object, with an option to force Citrus header update.
+     * If forceCitrusHeaderUpdate is true, it overwrites existing values for ID and TIMESTAMP headers with new values.
+     * If forceCitrusHeaderUpdate is false, it updates the ID and TIMESTAMP headers only if they are absent in the provided headers.
+     *
+     * @param message the Message object to copy
+     * @param forceCitrusHeaderUpdate flag indicating whether to force Citrus header update
+     */
+    public DefaultMessage(Message message, boolean forceCitrusHeaderUpdate) {
+        this(message.getPayload(), message.getHeaders(), forceCitrusHeaderUpdate);
+
+        this.setName(message.getName());
+        this.setType(message.getType());
+        this.headerData.addAll(message.getHeaderData());
+    }
+
+    /**
      * Default constructor using just message payload.
      * @param payload
      */
@@ -87,11 +105,29 @@ public class DefaultMessage implements Message {
      * @param headers
      */
     public DefaultMessage(Object payload, Map<String, Object> headers) {
+        this(payload, headers, false);
+    }
+
+    /**
+     * Constructs a new DefaultMessage with the given payload, headers, and an option to force Citrus header update.
+     * If forceCitrusHeaderUpdate is true, it updates the ID and TIMESTAMP headers with new values.
+     * If forceCitrusHeaderUpdate is false, it updates the ID and TIMESTAMP headers only if they are absent in the provided headers.
+     *
+     * @param payload the message payload
+     * @param headers the message headers
+     * @param forceCitrusHeaderUpdate flag indicating whether to force Citrus header update
+     */
+    private DefaultMessage(Object payload, Map<String, Object> headers, boolean forceCitrusHeaderUpdate) {
         this.payload = payload;
         this.headers.putAll(headers);
 
-        this.headers.putIfAbsent(MessageHeaders.ID, UUID.randomUUID().toString());
-        this.headers.putIfAbsent(MessageHeaders.TIMESTAMP, System.currentTimeMillis());
+        if (forceCitrusHeaderUpdate) {
+            this.headers.put(MessageHeaders.ID, randomUUID().toString());
+            this.headers.put(MessageHeaders.TIMESTAMP, currentTimeMillis());
+        } else {
+            this.headers.putIfAbsent(MessageHeaders.ID, randomUUID().toString());
+            this.headers.putIfAbsent(MessageHeaders.TIMESTAMP, currentTimeMillis());
+        }
     }
 
     @Override
