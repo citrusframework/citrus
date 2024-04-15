@@ -16,11 +16,6 @@
 
 package com.consol.citrus.testng;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Optional;
-
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.CitrusSpringContextProvider;
@@ -44,11 +39,19 @@ import org.springframework.util.StringUtils;
 import org.testng.IHookCallBack;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Abstract base test implementation for testng test cases. Providing test listener support and
@@ -58,14 +61,18 @@ import org.testng.annotations.Test;
  * @deprecated in favor of using {@link com.consol.citrus.testng.spring.TestNGCitrusSpringSupport}
  */
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-@Listeners( { TestNGCitrusMethodInterceptor.class } )
+@Listeners({TestNGCitrusMethodInterceptor.class})
 @Deprecated
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    /** Citrus instance */
+    /**
+     * Citrus instance
+     */
     protected Citrus citrus;
 
     private TestCase testCase;
@@ -103,6 +110,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
     /**
      * Run method prepares and executes test case.
+     *
      * @param testResult
      * @param method
      * @param testLoader
@@ -202,34 +210,29 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         }
     }
 
-    /**
-     * Runs tasks before test suite.
-     * @param testContext the test context.
-     * @throws Exception on error.
-     */
     @BeforeSuite(alwaysRun = true)
-    public void beforeSuite(ITestContext testContext) throws Exception {
+    public void beforeSuite() throws Exception {
         springTestContextPrepareTestInstance();
         Assert.notNull(applicationContext, "Missing proper application context in before suite initialization");
 
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
-        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+        citrus.beforeSuite(
+                Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
     }
 
-    /**
-     * Runs tasks after test suite.
-     * @param testContext the test context.
-     */
     @AfterSuite(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
-        if (citrus != null) {
-            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+    public void afterSuite() {
+        if (nonNull(citrus)) {
+            citrus.afterSuite(
+                    Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
         }
     }
 
     /**
      * Prepares the test context.
-     *
+     * <p>
      * Provides a hook for test context modifications before the test gets executed.
      *
      * @param testContext the test context.
@@ -243,6 +246,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * Creates new test loader which has TestNG test annotations set for test execution. Only
      * suitable for tests that get created at runtime through factory method. Subclasses
      * may overwrite this in order to provide custom test loader with custom test annotations set.
+     *
      * @param testName
      * @param packageName
      * @return
@@ -257,14 +261,15 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         testLoader.setPackageName(packageName);
 
         CitrusAnnotations.injectCitrusContext(testLoader, Optional.ofNullable(citrus)
-                        .map(Citrus::getCitrusContext)
-                        .orElseGet(() -> CitrusSpringContext.create(applicationContext)));
+                .map(Citrus::getCitrusContext)
+                .orElseGet(() -> CitrusSpringContext.create(applicationContext)));
         testLoader.configureTestCase(t -> testCase = t);
         return testLoader;
     }
 
     /**
      * Constructs the test case to execute.
+     *
      * @return
      */
     protected TestCase getTestCase() {

@@ -19,10 +19,6 @@
 
 package com.consol.citrus.testng;
 
-import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.List;
-
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusContext;
 import com.consol.citrus.GherkinTestActionRunner;
@@ -45,13 +41,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.IHookable;
-import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
+
+import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.List;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Basic Citrus TestNG support base class automatically handles test case runner creation. Also provides method parameter resolution
@@ -60,16 +62,22 @@ import org.testng.annotations.Listeners;
  *
  * @author Christoph Deppisch
  */
-@Listeners( { TestNGCitrusMethodInterceptor.class } )
+@Listeners({TestNGCitrusMethodInterceptor.class})
 public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    /** Citrus instance */
+    /**
+     * Citrus instance
+     */
     protected Citrus citrus;
 
-    /** Test builder delegate */
+    /**
+     * Test builder delegate
+     */
     private TestCaseRunner delegate;
 
     @Override
@@ -108,6 +116,7 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
     /**
      * Run method prepares and executes test case.
+     *
      * @param testResult
      * @param method
      * @param methodTestLoaders
@@ -172,6 +181,7 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
     /**
      * Subclasses may add before test actions on the provided context.
+     *
      * @param context the Citrus context.
      */
     protected void before(CitrusContext context) {
@@ -186,36 +196,41 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
     /**
      * Subclasses may add after test actions on the provided context.
+     *
      * @param context the Citrus context.
      */
     protected void after(CitrusContext context) {
     }
 
     @BeforeSuite(alwaysRun = true)
-    public final void beforeSuite(ITestContext testContext) {
+    public final void beforeSuite() {
         citrus = Citrus.newInstance();
         CitrusAnnotations.injectCitrusFramework(this, citrus);
         beforeSuite(citrus.getCitrusContext());
-        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+        citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
     }
 
     /**
      * Subclasses may add before suite actions on the provided context.
+     *
      * @param context the Citrus context.
      */
     protected void beforeSuite(CitrusContext context) {
     }
 
     @AfterSuite(alwaysRun = true)
-    public final void afterSuite(ITestContext testContext) {
-        if (citrus != null) {
+    public final void afterSuite() {
+        if (nonNull(citrus)) {
             afterSuite(citrus.getCitrusContext());
-            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+            citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
         }
     }
 
     /**
      * Subclasses may add after suite actions on the provided context.
+     *
      * @param context the Citrus context.
      */
     protected void afterSuite(CitrusContext context) {
@@ -223,7 +238,7 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
 
     /**
      * Prepares the test context.
-     *
+     * <p>
      * Provides a hook for test context modifications before the test gets executed.
      *
      * @param testContext the test context.
@@ -237,6 +252,7 @@ public class TestNGCitrusSupport implements IHookable, GherkinTestActionRunner {
      * Creates new test loader which has TestNG test annotations set for test execution. Only
      * suitable for tests that get created at runtime through factory method. Subclasses
      * may overwrite this in order to provide custom test loader with custom test annotations set.
+     *
      * @param testName
      * @param packageName
      * @return
