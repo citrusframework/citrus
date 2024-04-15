@@ -19,11 +19,6 @@
 
 package com.consol.citrus.testng.spring;
 
-import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusContext;
 import com.consol.citrus.CitrusSpringContext;
@@ -53,13 +48,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
 import org.testng.IHookCallBack;
-import org.testng.ITestContext;
 import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
+
+import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Basic Citrus TestNG support base class with Spring support automatically handles test case runner creation. Also provides method parameter resolution
@@ -70,17 +72,22 @@ import org.testng.annotations.Listeners;
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-@Listeners( { TestNGCitrusSpringMethodInterceptor.class } )
-public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
-        implements GherkinTestActionRunner {
+@Listeners({TestNGCitrusSpringMethodInterceptor.class})
+public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests implements GherkinTestActionRunner {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    /** Citrus instance */
+    /**
+     * Citrus instance
+     */
     protected Citrus citrus;
 
-    /** Test builder delegate */
+    /**
+     * Test builder delegate
+     */
     private TestCaseRunner delegate;
     private TestCase testCase;
 
@@ -121,6 +128,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
     /**
      * Run method prepares and executes test case.
+     *
      * @param testResult
      * @param method
      * @param methodTestLoaders
@@ -159,7 +167,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
                 CitrusAnnotations.injectAll(this, citrus, ctx);
 
-                TestLoader testLoader ;
+                TestLoader testLoader;
                 if (method.getAnnotation(CitrusTestSource.class) != null && !methodTestLoaders.isEmpty()) {
                     testLoader = methodTestLoaders.get(invocationCount % methodTestLoaders.size());
 
@@ -201,6 +209,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
     /**
      * Subclasses may add before test actions on the provided context.
+     *
      * @param context the Citrus context.
      */
     protected void before(CitrusContext context) {
@@ -215,13 +224,14 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
     /**
      * Subclasses may add after test actions on the provided context.
+     *
      * @param context the Citrus context.
      */
     protected void after(CitrusContext context) {
     }
 
     @BeforeSuite(alwaysRun = true)
-    public final void beforeSuite(ITestContext testContext) {
+    public final void beforeSuite() {
         try {
             springTestContextPrepareTestInstance();
         } catch (Exception e) {
@@ -232,26 +242,30 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         CitrusAnnotations.injectCitrusFramework(this, citrus);
         beforeSuite(citrus.getCitrusContext());
-        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+        citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
     }
 
     /**
      * Subclasses may add before suite actions on the provided context.
+     *
      * @param context the Citrus context.
      */
     protected void beforeSuite(CitrusContext context) {
     }
 
     @AfterSuite(alwaysRun = true)
-    public final void afterSuite(ITestContext testContext) {
-        if (citrus != null) {
+    public final void afterSuite() {
+        if (nonNull(citrus)) {
             afterSuite(citrus.getCitrusContext());
-            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+            citrus.afterSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
         }
     }
 
     /**
      * Subclasses may add after suite actions on the provided context.
+     *
      * @param context the Citrus context.
      */
     protected void afterSuite(CitrusContext context) {
@@ -259,7 +273,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
     /**
      * Prepares the test context.
-     *
+     * <p>
      * Provides a hook for test context modifications before the test gets executed.
      *
      * @param testContext the test context.
@@ -273,6 +287,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
      * Creates new test loader which has TestNG test annotations set for test execution. Only
      * suitable for tests that get created at runtime through factory method. Subclasses
      * may overwrite this in order to provide custom test loader with custom test annotations set.
+     *
      * @param testName
      * @param packageName
      * @return
@@ -293,6 +308,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
     /**
      * Constructs the test case to execute.
+     *
      * @return
      */
     protected TestCase getTestCase() {

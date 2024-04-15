@@ -13,10 +13,12 @@ import com.consol.citrus.report.JUnitReporter;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.testng.ITestContext;
+import org.testng.Reporter;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
+
+import static java.util.Objects.nonNull;
 
 /**
  * @author Christoph Deppisch
@@ -41,23 +43,23 @@ public class UnitTestSupport extends AbstractTestNGUnitTest {
     /** Citrus instance */
     protected Citrus citrus;
 
-    @BeforeSuite(alwaysRun = true)
     @Override
-    public void beforeSuite(ITestContext testContext) throws Exception {
-        super.beforeSuite(testContext);
+    @BeforeSuite(alwaysRun = true)
+    public void beforeSuite() throws Exception {
+        super.beforeSuite();
 
         citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
-        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+        citrus.beforeSuite(
+                Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
     }
 
-    /**
-     * Runs tasks after test suite.
-     * @param testContext the test context.
-     */
     @AfterSuite(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
-        if (citrus != null) {
-            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+    public void afterSuite() {
+        if (nonNull(citrus)) {
+            citrus.afterSuite(
+                    Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
+                    Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
         }
     }
 
