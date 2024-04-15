@@ -21,14 +21,14 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - support/3.0.0
     paths:
       - '.github/project.yml'
 
 jobs:
   release:
     runs-on: ubuntu-20.04
-    if: github.ref == 'refs/heads/main' && github.repository == 'citrusframework/citrus'
+    if: github.ref == 'refs/heads/support/3.0.0' && github.repository == 'citrusframework/citrus'
 
     steps:
     - name: Checkout code
