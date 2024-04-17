@@ -260,7 +260,7 @@
     <sshd.version>2.12.1</sshd.version>
     <swagger.version>1.6.9</swagger.version>
     <swagger.parser.version>2.1.21</swagger.parser.version>
-    <testng.version>7.10.0</testng.version>
+    <testng.version>7.10.1</testng.version>
     <vertx.version>4.5.7</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
     <xbean-spring.version>4.24</xbean-spring.version>
