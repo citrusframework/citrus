@@ -238,7 +238,7 @@
     <junit.jupiter.version>5.10.2</junit.jupiter.version>
     <junit.platform.version>1.10.2</junit.platform.version>
     <junit.version>4.13.2</junit.version>
-    <junixsocket.version>2.9.0</junixsocket.version>
+    <junixsocket.version>2.9.1</junixsocket.version>
     <k8s.client.version>6.12.0</k8s.client.version>
     <k8s.model.version>6.12.0</k8s.model.version>
     <kafka.version>3.7.0</kafka.version>
