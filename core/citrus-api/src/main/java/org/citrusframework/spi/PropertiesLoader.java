@@ -17,12 +17,16 @@
 package org.citrusframework.spi;
 
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public final class PropertiesLoader {
+
+    private static final Logger logger = LoggerFactory.getLogger(PropertiesLoader.class);
 
     private PropertiesLoader() {
         // Not intended for instantiation
@@ -31,7 +35,7 @@ public final class PropertiesLoader {
     public static Properties loadProperties(Resource resource) {
         Properties properties = new Properties();
         try (InputStream inputStream = resource.getInputStream()) {
-            System.out.println("Resource: " + resource);
+            logger.debug("Loading properties resource: {}", resource);
             loadProperties(resource.getLocation(), properties, inputStream);
         } catch (IOException e) {
             throwPropertiesLoadingFailedException(resource.getLocation(), e);

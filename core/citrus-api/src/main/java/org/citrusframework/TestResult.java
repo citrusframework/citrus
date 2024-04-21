@@ -16,12 +16,19 @@
 
 package org.citrusframework;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-import static java.lang.Math.max;
+import static java.util.Objects.nonNull;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
+import static org.citrusframework.TestResult.RESULT.FAILURE;
+import static org.citrusframework.TestResult.RESULT.SKIP;
+import static org.citrusframework.TestResult.RESULT.SUCCESS;
 
 /**
  * Class representing test results (failed, successful, skipped)
@@ -30,339 +37,217 @@ import static java.util.stream.Collectors.joining;
  */
 public final class TestResult {
 
-    /** Possible test results */
-    private enum RESULT {SUCCESS, FAILURE, SKIP}
-
-    /** Actual result */
+    /**
+     * Actual result
+     */
     private final RESULT result;
 
-    /** Name of the test */
+    /**
+     * Name of the test
+     */
     private final String testName;
 
-    /** Fully qualified class name of the test */
+    /**
+     * Fully qualified class name of the test
+     */
     private final String className;
 
-    /** Optional test parameters */
-    private final Map<String, Object> parameters;
+    /**
+     * Optional test parameters
+     */
+    private final Map<String, Object> parameters = new HashMap<>();
 
-    /** Failure cause */
-    private final Throwable cause;
+    /**
+     * Failure cause
+     */
+    private @Nullable Throwable cause;
 
-    /** Error message */
-    private final String errorMessage;
+    /**
+     * Error message
+     */
+    private @Nullable String errorMessage;
 
-    /** Failure stack trace */
-    private String failureStack;
+    /**
+     * Failure stack trace
+     */
+    private @Nullable String failureStack;
 
-    /** Failure type information */
-    private String failureType;
+    /**
+     * Failure type information
+     */
+    private @Nullable String failureType;
+
+    /**
+     * Execution duration
+     */
+    private @Nullable Duration duration;
 
     /**
      * Create new test result for successful execution.
-     * @param name
-     * @param className
-     * @return
      */
     public static TestResult success(String name, String className) {
-        return new TestResult(name, className, RESULT.SUCCESS);
+        return new TestResult(SUCCESS, name, className);
     }
 
     /**
      * Create new test result with parameters for successful execution.
-     * @param name
-     * @param className
-     * @param parameters
-     * @return
      */
     public static TestResult success(String name, String className, Map<String, Object> parameters) {
-        return new TestResult(name, className, RESULT.SUCCESS, parameters);
+        return new TestResult(SUCCESS, name, className)
+                .withParameters(parameters);
     }
 
     /**
      * Create new test result for skipped test.
-     * @param name
-     * @param className
-     * @return
      */
     public static TestResult skipped(String name, String className) {
-        return new TestResult(name, className, RESULT.SKIP);
+        return new TestResult(SKIP, name, className);
     }
 
     /**
      * Create new test result with parameters for skipped test.
-     * @param name
-     * @param className
-     * @param parameters
-     * @return
      */
-    public static TestResult skipped(String name, String className, Map<String, Object> parameters) {
-        return new TestResult(name, className, RESULT.SKIP, parameters);
+    public static TestResult skipped(String name, String className, @Nonnull Map<String, Object> parameters) {
+        return new TestResult(SKIP, name, className)
+                .withParameters(parameters);
     }
 
     /**
      * Create new test result for failed execution.
-     * @param name
-     * @param className
-     * @param cause
-     * @return
      */
-    public static TestResult failed(String name, String className, Throwable cause) {
-        return new TestResult(name, className, RESULT.FAILURE, cause);
+    public static TestResult failed(String name, String className, @Nullable Throwable cause) {
+        return new TestResult(FAILURE, name, className)
+                .withCause(cause)
+                .withErrorMessage(ofNullable(cause).map(Throwable::getMessage).orElse(""));
     }
 
     /**
      * Create new test result for failed execution.
-     * @param name
-     * @param className
-     * @param errorMessage
-     * @return
      */
-    public static TestResult failed(String name, String className, String errorMessage) {
-        return new TestResult(name, className, RESULT.FAILURE, null, errorMessage);
+    public static TestResult failed(String name, String className, @Nonnull String errorMessage) {
+        return new TestResult(FAILURE, name, className)
+                .withErrorMessage(errorMessage);
     }
 
     /**
      * Create new test result with parameters for failed execution.
-     * @param name
-     * @param className
-     * @param cause
-     * @param parameters
-     * @return
      */
-    public static TestResult failed(String name, String className, Throwable cause, Map<String, Object> parameters) {
-        return new TestResult(name, className, RESULT.FAILURE, cause, parameters);
+    public static TestResult failed(String name, String className, @Nonnull Map<String, Object> parameters, @Nullable Throwable cause) {
+        return new TestResult(FAILURE, name, className)
+                .withParameters(parameters)
+                .withCause(cause)
+                .withErrorMessage(ofNullable(cause).map(Throwable::getMessage).orElse(""));
     }
 
     /**
-     * Constructor using fields.
-     * @param name
-     * @param className
-     * @param result
+     * Constructor with only the required arguments.
      */
-    private TestResult(String name, String className, RESULT result) {
-        this(name, className, result, new HashMap<>());
-    }
-
-    /**
-     * Constructor using fields.
-     * @param name
-     * @param className
-     * @param result
-     * @param parameters
-     */
-    private TestResult(String name, String className, RESULT result, Map<String, Object> parameters) {
-        this(name, className, result, null, parameters);
-    }
-
-    /**
-     * Constructor using fields.
-     * @param name
-     * @param className
-     * @param result
-     * @param cause
-     */
-    private TestResult(String name, String className, RESULT result, Throwable cause) {
-        this(name, className, result, cause, new HashMap<>());
-    }
-
-    /**
-     * Constructor using fields.
-     * @param name
-     * @param className
-     * @param result
-     * @param errorMessage
-     */
-    private TestResult(String name, String className, RESULT result, Throwable cause, String errorMessage) {
-        this(name, className, result, cause, errorMessage, new HashMap<>());
-    }
-
-    /**
-     * Constructor using fields.
-     * @param name
-     * @param className
-     * @param result
-     * @param parameters
-     */
-    private TestResult(String name, String className, RESULT result, Throwable cause, Map<String, Object> parameters) {
-        this(name, className, result, cause, Optional.ofNullable(cause).map(Throwable::getMessage).orElse(""), parameters);
-    }
-
-    /**
-     * Constructor using fields.
-     * @param name
-     * @param className
-     * @param result
-     * @param cause
-     * @param parameters
-     */
-    private TestResult(String name, String className, RESULT result, Throwable cause, String errorMessage, Map<String, Object> parameters) {
-        this.testName = name;
-        this.className = className;
+    TestResult(RESULT result, String testName, String className) {
         this.result = result;
-        this.cause = cause;
-        this.parameters = parameters;
-        this.errorMessage = errorMessage;
+        this.testName = testName;
+        this.className = className;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-
-        if (parameters != null && !parameters.isEmpty()) {
-            builder.append(" ")
-                    .append(testName)
-                    .append("(")
-                    .append(parameters.values().stream().map(Object::toString).collect(joining(",")))
-                    .append(") ");
-        } else {
-            builder.append(" ").append(testName).append(" ");
-        }
-
-        int spaces = 65 - builder.length();
-        builder.append(".".repeat(max(0, spaces)));
-
-        switch (result) {
-            case SUCCESS:
-                builder.append(" SUCCESS");
-                break;
-            case SKIP:
-                builder.append(" SKIPPED");
-                break;
-            case FAILURE:
-                builder.append(" FAILED");
-                break;
-            default:
-                break;
-        }
-
-        return builder.toString();
-    }
-
-    /**
-     * Checks successful result state.
-     * @return
-     */
     public boolean isSuccess() {
-        return !isSkipped() && result != null && result.equals(RESULT.SUCCESS);
+        return SUCCESS.equals(result);
     }
 
-    /**
-     * Checks failed result state.
-     * @return
-     */
     public boolean isFailed() {
-        return !isSkipped() && result != null && result.equals(RESULT.FAILURE);
+        return FAILURE.equals(result);
     }
 
-    /**
-     * Checks skipped result state.
-     * @return
-     */
     public boolean isSkipped() {
-        return result != null && result.equals(RESULT.SKIP);
+        return SKIP.equals(result);
     }
 
-    /**
-     * Getter for the failure cause.
-     * @return the cause
-     */
-    public Throwable getCause() {
-        return cause;
-    }
-
-    /**
-     * Getter for the test name.
-     * @return the testName
-     */
-    public String getTestName() {
-        return testName;
-    }
-
-    /**
-     * Gets the className.
-     *
-     * @return
-     */
-    public String getClassName() {
-        return className;
-    }
-
-    /**
-     * Getter for test result.
-     * @return the result
-     */
     public String getResult() {
         return result.name();
     }
 
-    /**
-     * Gets the parameters.
-     * @return the parameters
-     */
+    public String getTestName() {
+        return testName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
     public Map<String, Object> getParameters() {
         return parameters;
     }
 
-    /**
-     * Gets the errorMessage.
-     *
-     * @return
-     */
+    @Nullable
+    public Throwable getCause() {
+        return cause;
+    }
+
+    @Nullable
     public String getErrorMessage() {
         return errorMessage;
     }
 
-    /**
-     * Gets the failureType.
-     *
-     * @return
-     */
-    public String getFailureType() {
-        return failureType;
-    }
-
-    /**
-     * Sets the failureType.
-     *
-     * @param failureType
-     */
-    public void setFailureType(String failureType) {
-        this.failureType = failureType;
-    }
-
-    /**
-     * Sets failure type information in fluent API.
-     * @return
-     */
-    public TestResult withFailureType(String failureType) {
-        setFailureType(failureType);
-        return this;
-    }
-
-    /**
-     * Gets the failureStack.
-     *
-     * @return
-     */
+    @Nullable
     public String getFailureStack() {
         return failureStack;
     }
 
-    /**
-     * Sets the failureStack.
-     *
-     * @param failureStack
-     */
-    public void setFailureStack(String failureStack) {
-        this.failureStack = failureStack;
+    @Nullable
+    public String getFailureType() {
+        return failureType;
+    }
+
+    @Nullable
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public TestResult withDuration(Duration duration) {
+        this.duration = duration;
+        return this;
+    }
+
+    private TestResult withParameters(Map<String, Object> parameters) {
+        this.parameters.putAll(parameters);
+        return this;
+    }
+
+    private TestResult withCause(Throwable cause) {
+        this.cause = cause;
+        return this;
+    }
+
+    private TestResult withErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        var stringBuilder = new StringBuilder()
+                .append(getClass().getSimpleName())
+                .append("[")
+                .append("testName=").append(testName);
+
+        if (!parameters.isEmpty()) {
+            stringBuilder.append(", parameters=[")
+                    .append(parameters.entrySet().stream()
+                            .map(entry -> entry.getKey() + "=" + entry.getValue())
+                            .collect(joining(", ")))
+                    .append("]");
+        }
+
+        stringBuilder.append(", result=").append(result);
+
+        if (nonNull(duration)) {
+            stringBuilder.append(", durationMs=").append(duration.toMillis());
+        }
+
+        return stringBuilder.append("]")
+                .toString();
     }
 
     /**
-     * Sets failure stack trace information in fluent API.
-     * @return
+     * Possible test results
      */
-    public TestResult withFailureStack(String failureStack) {
-        setFailureStack(failureStack);
-        return this;
-    }
+    public enum RESULT {SUCCESS, FAILURE, SKIP}
 }

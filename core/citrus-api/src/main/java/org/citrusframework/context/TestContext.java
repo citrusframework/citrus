@@ -16,17 +16,6 @@
 
 package org.citrusframework.context;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
@@ -68,6 +57,17 @@ import org.citrusframework.variable.VariableUtils;
 import org.citrusframework.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * Class holding and managing test variables. The test context also provides utility methods
@@ -605,6 +605,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Obtains the testActionListeners.
+     *
      * @return
      */
     public TestActionListeners getTestActionListeners() {
@@ -613,6 +614,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Specifies the testActionListeners.
+     *
      * @param testActionListeners
      */
     public void setTestActionListeners(TestActionListeners testActionListeners) {
@@ -626,6 +628,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Obtains the beforeTest.
+     *
      * @return
      */
     public List<BeforeTest> getBeforeTest() {
@@ -634,6 +637,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Specifies the beforeTest.
+     *
      * @param beforeTest
      */
     public void setBeforeTest(List<BeforeTest> beforeTest) {
@@ -642,6 +646,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Obtains the afterTest.
+     *
      * @return
      */
     public List<AfterTest> getAfterTest() {
@@ -650,6 +655,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Specifies the afterTest.
+     *
      * @param afterTest
      */
     public void setAfterTest(List<AfterTest> afterTest) {
@@ -658,6 +664,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Obtains the segmentVariableExtractorRegistry
+     *
      * @return
      */
     public SegmentVariableExtractorRegistry getSegmentVariableExtractorRegistry() {
@@ -666,6 +673,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Specifies the segmentVariableExtractorRegistry
+     *
      * @param segmentVariableExtractorRegistry
      */
     public void setSegmentVariableExtractorRegistry(SegmentVariableExtractorRegistry segmentVariableExtractorRegistry) {
@@ -674,6 +682,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Gets the global message processors for given direction.
+     *
      * @return
      */
     public List<MessageProcessor> getMessageProcessors(MessageDirection direction) {
@@ -693,6 +702,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Gets the global message processors.
+     *
      * @return
      */
     public MessageProcessors getMessageProcessors() {
@@ -760,6 +770,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Obtains the typeConverter.
+     *
      * @return
      */
     public TypeConverter getTypeConverter() {
@@ -768,6 +779,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Specifies the typeConverter.
+     *
      * @param typeConverter
      */
     public void setTypeConverter(TypeConverter typeConverter) {
@@ -776,6 +788,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Gets the logModifier.
+     *
      * @return
      */
     public LogModifier getLogModifier() {
@@ -784,6 +797,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
 
     /**
      * Sets the logModifier.
+     *
      * @param logModifier
      */
     public void setLogModifier(LogModifier logModifier) {
@@ -1073,6 +1087,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         @Override
         public Class<?> getTestClass() {
             return this.getClass();
+        }
+
+        @Override
+        public void fail(Throwable throwable) {
+            // do nothing
         }
     }
 }

@@ -17,14 +17,14 @@
 package org.citrusframework.cucumber;
 
 import org.citrusframework.Citrus;
-import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestResult;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.cucumber.backend.Scenario;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+
+import static java.lang.String.format;
 
 /**
  * @author Christoph Deppisch
@@ -52,11 +52,10 @@ public class CitrusLifecycleHooks {
     public void after(Scenario scenario) {
         if (runner != null) {
             if (context != null && scenario.isFailed()) {
-                TestCase testCase = runner.getTestCase();
-                TestResult testResult = testCase.getTestResult();
+                var testCase = runner.getTestCase();
+                var testResult = testCase.getTestResult();
                 if (testResult == null || !testResult.isFailed()) {
-                    runner.getTestCase().setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(),
-                            new CitrusRuntimeException(String.format("Scenario '%s' (%s) status %s", scenario.getName(), scenario.getId(), scenario.getStatus().name()))));
+                    testCase.fail(new CitrusRuntimeException(format("Scenario '%s' (%s) status %s", scenario.getName(), scenario.getId(), scenario.getStatus().name())));
                 }
             }
 

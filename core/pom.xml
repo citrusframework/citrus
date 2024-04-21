@@ -19,5 +19,4 @@
     <module>citrus-base</module>
     <module>citrus-spring</module>
   </modules>
-
 </project>

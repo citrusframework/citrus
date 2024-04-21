@@ -18,58 +18,131 @@ package org.citrusframework.report;
 
 import org.citrusframework.TestResult;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.time.Duration;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+
+import static java.lang.Thread.currentThread;
+import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.citrusframework.TestResult.failed;
+import static org.citrusframework.TestResult.skipped;
+import static org.citrusframework.TestResult.success;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 /**
  * @author Christoph Deppisch
  */
 public class TestResultsTest {
 
-    @Test
-    public void testSuccessResults() throws Exception {
-        TestResults results = new TestResults();
+    private TestResults fixture;
 
-        results.addResult(TestResult.success("OkTest", TestResultsTest.class.getName()));
-        results.addResult(TestResult.success("OkTest2", TestResultsTest.class.getName()));
-
-        Assert.assertEquals(results.getSuccess(), 2);
-        Assert.assertEquals(results.getSuccessPercentage(), "100.0");
-        Assert.assertEquals(results.getFailed(), 0);
-        Assert.assertEquals(results.getFailedPercentage(), "0.0");
-        Assert.assertEquals(results.getSkipped(), 0);
-        Assert.assertEquals(results.getSkippedPercentage(), "0.0");
+    @BeforeMethod
+    public void beforeMethodSetup() {
+        fixture = new TestResults();
     }
 
     @Test
-    public void testFailedResults() throws Exception {
-        TestResults results = new TestResults();
+    public void addResultIsThreadSafe() throws InterruptedException {
+        var numberOfThreads = 10;
+        var executorService = newFixedThreadPool(numberOfThreads);
+        var barrier = new CyclicBarrier(numberOfThreads);
+        var durationToAdd = Duration.ofMillis(100);
 
-        results.addResult(TestResult.success("OkTest", TestResultsTest.class.getName()));
-        results.addResult(TestResult.failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
-        results.addResult(TestResult.success("OkTest2", TestResultsTest.class.getName()));
+        try {
+            sumDurations(numberOfThreads, executorService, barrier, durationToAdd);
+        } catch (Exception e) {
+            fail("Exception occurred while adding up durations!", e);
+        } finally {
+            executorService.shutdown();
+            assertTrue(executorService.awaitTermination(5, SECONDS), "Tasks did not complete in time");
+        }
 
-        Assert.assertEquals(results.getSuccess(), 2);
-        Assert.assertEquals(results.getSuccessPercentage(), "66.7");
-        Assert.assertEquals(results.getFailed(), 1);
-        Assert.assertEquals(results.getFailedPercentage(), "33.3");
-        Assert.assertEquals(results.getSkipped(), 0);
-        Assert.assertEquals(results.getSkippedPercentage(), "0.0");
+        var expectedDuration = durationToAdd.multipliedBy(numberOfThreads);
+        assertEquals(expectedDuration, fixture.getTotalDuration(), "Total duration is incorrect");
+    }
+
+    private void sumDurations(int numberOfThreads, ExecutorService executorService, CyclicBarrier barrier, Duration durationToAdd) {
+        for (int i = 0; i < numberOfThreads; i++) {
+            executorService.submit(() -> {
+                try {
+                    // Ensure all threads start at the same time
+                    barrier.await();
+
+                    var testResult = mock(TestResult.class);
+
+                    doAnswer((invocation) -> durationToAdd).when(testResult).getDuration();
+
+                    fixture.addResult(testResult);
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    currentThread().interrupt();
+                    fail("Thread was interrupted while executing test");
+                }
+            });
+        }
     }
 
     @Test
-    public void testSkippedResults() throws Exception {
-        TestResults results = new TestResults();
+    public void testSuccessResults() {
+        fixture.addResult(success("OkTest", TestResultsTest.class.getName()));
+        fixture.addResult(success("OkTest2", TestResultsTest.class.getName()));
 
-        results.addResult(TestResult.success("OkTest", TestResultsTest.class.getName()));
-        results.addResult(TestResult.failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
-        results.addResult(TestResult.skipped("SkippedTest", TestResultsTest.class.getName()));
+        assertEquals(fixture.getSuccess(), 2);
+        assertEquals(fixture.getSuccessPercentageFormatted(), "100.0");
+        assertEquals(fixture.getFailed(), 0);
+        assertEquals(fixture.getFailedPercentageFormatted(), "0.0");
+        assertEquals(fixture.getSkipped(), 0);
+        assertEquals(fixture.getSkippedPercentageFormatted(), "0.0");
+    }
 
-        Assert.assertEquals(results.getSuccess(), 1);
-        Assert.assertEquals(results.getSuccessPercentage(), "50.0");
-        Assert.assertEquals(results.getFailed(), 1);
-        Assert.assertEquals(results.getFailedPercentage(), "50.0");
-        Assert.assertEquals(results.getSkipped(), 1);
-        Assert.assertEquals(results.getSkippedPercentage(), "33.3");
+    @Test
+    public void testFailedResults() {
+        fixture.addResult(success("OkTest", TestResultsTest.class.getName()));
+        fixture.addResult(failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
+        fixture.addResult(success("OkTest2", TestResultsTest.class.getName()));
+
+        assertEquals(fixture.getSuccess(), 2);
+        assertEquals(fixture.getSuccessPercentageFormatted(), "66.7");
+        assertEquals(fixture.getFailed(), 1);
+        assertEquals(fixture.getFailedPercentageFormatted(), "33.3");
+        assertEquals(fixture.getSkipped(), 0);
+        assertEquals(fixture.getSkippedPercentageFormatted(), "0.0");
+    }
+
+    @Test
+    public void testSkippedResults() {
+        fixture.addResult(success("OkTest", TestResultsTest.class.getName()));
+        fixture.addResult(failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
+        fixture.addResult(skipped("SkippedTest", TestResultsTest.class.getName()));
+
+        assertEquals(fixture.getSuccess(), 1);
+        assertEquals(fixture.getSuccessPercentageFormatted(), "50.0");
+        assertEquals(fixture.getFailed(), 1);
+        assertEquals(fixture.getFailedPercentageFormatted(), "50.0");
+        assertEquals(fixture.getSkipped(), 1);
+        assertEquals(fixture.getSkippedPercentageFormatted(), "33.3");
+    }
+
+    @Test
+    void getTotalDurationCalculatesTotal() {
+        fixture.addResult(success("OkTest", TestResultsTest.class.getName()).withDuration(Duration.ofMillis(150)));
+        fixture.addResult(success("OkTest2", TestResultsTest.class.getName()).withDuration(Duration.ofMillis(150)));
+        fixture.addResult(failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")).withDuration(Duration.ofMillis(300)));
+        fixture.addResult(skipped("SkippedTest", TestResultsTest.class.getName()));
+
+        assertEquals(fixture.getTotalDuration(), Duration.ofMillis(600));
+    }
+
+    @Test
+    void getTotalDurationReturnsZeroByDefault() {
+        assertEquals(fixture.getTotalDuration(), Duration.ZERO);
     }
 }

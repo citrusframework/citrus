@@ -16,14 +16,11 @@
 
 package org.citrusframework.junit.jupiter;
 
-import java.lang.reflect.Method;
-
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.CitrusInstanceManager;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
-import org.citrusframework.TestResult;
 import org.citrusframework.annotations.CitrusAnnotations;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.common.TestLoader;
@@ -41,22 +38,35 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
+import java.lang.reflect.Method;
+
+import static org.citrusframework.annotations.CitrusAnnotations.injectCitrusFramework;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getBaseKey;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getCitrus;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestCase;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestContext;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestLoader;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.getTestRunner;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.requiresCitrus;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.setCitrus;
+
 /**
  * JUnit5 extension adding {@link TestCaseRunner} support as well as Citrus annotation based resource injection
  * and lifecycle management such as before/after suite.
- *
+ * <p>
  * Extension resolves method parameter of type {@link org.citrusframework.context.TestContext}, {@link TestCaseRunner}
  * or {@link org.citrusframework.TestActionRunner} and injects endpoints and resources coming from Citrus Spring application context that
  * is automatically loaded at suite start up. After suite automatically includes Citrus report generation.
- *
+ * <p>
  * Extension is based on Citrus Xml test extension that also allows to load test cases from external Spring configuration files.
  *
  * @author Christoph Deppisch
  */
-public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor,
-        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback {
+public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor, AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback {
 
-    /** Test suite name */
+    /**
+     * Test suite name
+     */
     private static final String SUITE_NAME = "citrus-junit5-suite";
 
     private static boolean beforeSuite = true;
@@ -67,10 +77,19 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
      */
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CitrusExtension.class);
 
+    private static void failTestCaseIfNotDoneYet(ExtensionContext extensionContext, Throwable throwable) {
+        var testCase = getTestCase(extensionContext);
+        var testResult = testCase.getTestResult();
+
+        if (testResult == null || !testResult.isFailed()) {
+            testCase.fail(throwable);
+        }
+    }
+
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-        if (CitrusExtensionHelper.requiresCitrus(extensionContext)) {
-            CitrusExtensionHelper.setCitrus(CitrusInstanceManager.getOrDefault(), extensionContext);
+        if (requiresCitrus(extensionContext)) {
+            setCitrus(CitrusInstanceManager.getOrDefault(), extensionContext);
         }
 
         if (beforeSuite) {
@@ -81,46 +100,36 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
             // all groups / tags will run anyway.
 
             //initialize "after all test run hook"
-            String[] tags = extensionContext.getTags().toArray(new String[0]);
+            String[] tags = extensionContext.getTags().toArray(String[]::new);
             String suiteName = extensionContext.getTestClass()
                     .map(Class::getName)
-                    .orElseGet(() ->
-                        extensionContext.getTestMethod()
-                                .map(meth -> meth.getDeclaringClass().getName()+ ":" + meth.getName())
-                                .orElse(SUITE_NAME)
-                    );
+                    .orElseGet(() -> extensionContext.getTestMethod()
+                            .map(meth -> meth.getDeclaringClass().getName() + ":" + meth.getName())
+                            .orElse(SUITE_NAME));
 
-            extensionContext.getRoot().getStore(ExtensionContext.Namespace.GLOBAL).put("afterSuiteCallback",
-                            new AfterSuiteCallback(extensionContext, suiteName, tags));
+            extensionContext.getRoot().getStore(ExtensionContext.Namespace.GLOBAL).put("afterSuiteCallback", new AfterSuiteCallback(extensionContext, suiteName, tags));
 
-            CitrusExtensionHelper.getCitrus(extensionContext).beforeSuite(suiteName, tags);
+            getCitrus(extensionContext).beforeSuite(suiteName, tags);
         }
     }
 
     @Override
     public void handleTestExecutionException(ExtensionContext extensionContext, Throwable throwable) throws Throwable {
-        TestCase testCase = CitrusExtensionHelper.getTestCase(extensionContext);
-        if (testCase.getTestResult() == null || testCase.getTestResult().isSuccess()) {
-            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), throwable));
-        }
-
+        failTestCaseIfNotDoneYet(extensionContext, throwable);
         throw throwable;
     }
 
     @Override
     public void afterTestExecution(ExtensionContext extensionContext) {
         extensionContext.getExecutionException()
-                .ifPresent(e -> {
-                    TestCase testCase = CitrusExtensionHelper.getTestCase(extensionContext);
-                    testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-                });
+                .ifPresent(e -> failTestCaseIfNotDoneYet(extensionContext, e));
 
-        extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestContext.class.getSimpleName());
-        extensionContext.getRoot().getStore(NAMESPACE).remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCase.class.getSimpleName());
+        extensionContext.getRoot().getStore(NAMESPACE).remove(getBaseKey(extensionContext) + TestContext.class.getSimpleName());
+        extensionContext.getRoot().getStore(NAMESPACE).remove(getBaseKey(extensionContext) + TestCase.class.getSimpleName());
 
         Object testInstance = extensionContext.getRequiredTestInstance();
-        if (testInstance instanceof TestListener) {
-            ((TestListener) testInstance).after(CitrusExtensionHelper.getCitrus(extensionContext).getCitrusContext());
+        if (testInstance instanceof TestListener testListener) {
+            testListener.after(getCitrus(extensionContext).getCitrusContext());
         }
     }
 
@@ -128,22 +137,22 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) {
         Object testInstance = extensionContext.getRequiredTestInstance();
-        Citrus citrus = CitrusExtensionHelper.getCitrus(extensionContext);
-        TestContext context = CitrusExtensionHelper.getTestContext(extensionContext);
+        Citrus citrus = getCitrus(extensionContext);
+        TestContext context = getTestContext(extensionContext);
 
-        TestCaseRunner testRunner = CitrusExtensionHelper.getTestRunner(extensionContext);
+        TestCaseRunner testRunner = getTestRunner(extensionContext);
         CitrusAnnotations.injectAll(testInstance, citrus, context);
         CitrusAnnotations.injectTestRunner(testInstance, testRunner);
 
-        if (testInstance instanceof TestListener) {
-            ((TestListener) testInstance).before(citrus.getCitrusContext());
+        if (testInstance instanceof TestListener testListener) {
+            testListener.before(citrus.getCitrusContext());
         }
 
-        TestLoader testLoader = CitrusExtensionHelper.getTestLoader(extensionContext);
+        TestLoader testLoader = getTestLoader(extensionContext);
         CitrusAnnotations.injectAll(testLoader, citrus, context);
         CitrusAnnotations.injectTestRunner(testLoader, testRunner);
 
-        testLoader.doWithTestCase(t -> {
+        testLoader.doWithTestCase(testCase -> {
             try {
                 invocation.proceed();
             } catch (RuntimeException e) {
@@ -159,12 +168,12 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
     @Override
     public void afterEach(ExtensionContext extensionContext) throws Exception {
         extensionContext.getRoot().getStore(CitrusExtension.NAMESPACE)
-                .remove(CitrusExtensionHelper.getBaseKey(extensionContext) + TestCaseRunner.class.getSimpleName());
+                .remove(getBaseKey(extensionContext) + TestCaseRunner.class.getSimpleName());
     }
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
-        CitrusAnnotations.injectCitrusFramework(testInstance, CitrusExtensionHelper.getCitrus(extensionContext));
+        injectCitrusFramework(testInstance, getCitrus(extensionContext));
     }
 
     @Override
@@ -211,7 +220,7 @@ public class CitrusExtension implements BeforeAllCallback, InvocationInterceptor
         public void close() throws Throwable {
             if (afterSuite) {
                 afterSuite = false;
-                CitrusExtensionHelper.getCitrus(extensionContext).afterSuite(suiteName, tags);
+                getCitrus(extensionContext).afterSuite(suiteName, tags);
             }
         }
     }

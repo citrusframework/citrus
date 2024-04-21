@@ -16,22 +16,23 @@
 
 package org.citrusframework.common;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusContext;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.TestCaseRunnerFactory;
-import org.citrusframework.TestResult;
 import org.citrusframework.annotations.CitrusFramework;
 import org.citrusframework.annotations.CitrusResource;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.exceptions.TestCaseFailedException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import static org.citrusframework.TestResult.failed;
 
 /**
  * Default test loader implementation takes case on test names/packages and initializes the test runner if applicable.
@@ -98,7 +99,7 @@ public class DefaultTestLoader implements TestLoader {
                 testCase = runner.getTestCase();
             }
 
-            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
+            testCase.setTestResult(failed(testCase.getName(), testCase.getTestClass().getName(), e));
             throw new TestCaseFailedException(e);
         }  finally {
             runner.stop();

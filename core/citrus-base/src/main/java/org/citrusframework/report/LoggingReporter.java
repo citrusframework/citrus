@@ -16,8 +16,6 @@
 
 package org.citrusframework.report;
 
-import java.util.Optional;
-
 import org.citrusframework.CitrusVersion;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
@@ -25,10 +23,15 @@ import org.citrusframework.common.Described;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.message.Message;
-import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
+
+import java.util.Optional;
+
+import static java.lang.String.format;
+import static java.util.Objects.nonNull;
+import static org.citrusframework.util.StringUtils.hasText;
 
 /**
  * Simple logging reporter printing test start and ending to the console/logger.
@@ -45,26 +48,44 @@ import org.slf4j.helpers.NOPLoggerFactory;
  */
 public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener {
 
-    /** Inbound message logger */
-    private static Logger inboundMessageLogger = LoggerFactory.getLogger("Logger.Message_IN");
-
-    /** The inbound message logger used when the reporter is enabled */
-    private static final Logger enabledInboundMessageLogger = inboundMessageLogger;
-
-    /** Outbound message logger */
-    private static Logger outboundMessageLogger = LoggerFactory.getLogger("Logger.Message_OUT");
-
-    /** The inbound message logger used when the reporter is enabled */
-    private static final Logger enabledOutboundMessageLogger = outboundMessageLogger;
-
-    /** Logger */
+    /**
+     * Logger
+     */
     private static Logger logger = LoggerFactory.getLogger(LoggingReporter.class);
 
-    /** The standard logger used when the reporter is enabled */
+    /**
+     * Inbound message logger
+     */
+    private static Logger inboundMessageLogger = LoggerFactory.getLogger("Logger.Message_IN");
+
+    /**
+     * The inbound message logger used when the reporter is enabled
+     */
+    private static final Logger enabledInboundMessageLogger = inboundMessageLogger;
+
+    /**
+     * Outbound message logger
+     */
+    private static Logger outboundMessageLogger = LoggerFactory.getLogger("Logger.Message_OUT");
+
+    /**
+     * The inbound message logger used when the reporter is enabled
+     */
+    private static final Logger enabledOutboundMessageLogger = outboundMessageLogger;
+
+    /**
+     * The standard logger used when the reporter is enabled
+     */
     private static final Logger enabledLog = logger;
 
-    /** A {@link org.slf4j.helpers.NOPLogger} used in case the reporter is not enabled. */
+    /**
+     * A {@link org.slf4j.helpers.NOPLogger} used in case the reporter is not enabled.
+     */
     private static final Logger noOpLogger = new NOPLoggerFactory().getLogger(LoggingReporter.class.getName());
+
+    private static String formatDurationString(TestCase test) {
+        return nonNull(test.getTestResult()) && nonNull(test.getTestResult().getDuration()) ? " (" + test.getTestResult().getDuration().toString() + ") " : "";
+    }
 
     @Override
     public void generate(TestResults testResults) {
@@ -78,29 +99,32 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
             if (testResult.isFailed()) {
                 info(Optional.ofNullable(testResult.getCause())
-                        .filter(cause -> StringUtils.hasText(cause.getMessage()))
-                        .map(cause -> " FAILURE: Caused by: " + cause.getClass().getSimpleName() + ": " +  cause.getMessage())
+                        .filter(cause -> hasText(cause.getMessage()))
+                        .map(cause -> " FAILURE: Caused by: " + cause.getClass().getSimpleName() + ": " + cause.getMessage())
                         .orElse(" FAILURE: Caused by: " + Optional.ofNullable(testResult.getErrorMessage()).orElse("Unknown error")));
             }
         });
 
         newLine();
 
-        info("TOTAL:\t" + (testResults.getFailed() + testResults.getSuccess()));
+        info(format("TOTAL:\t\t\t%s", testResults.getFailed() + testResults.getSuccess()));
+        info(format("SUCCESS:\t\t%s (%s%%)", testResults.getSuccess(), testResults.getSuccessPercentage()));
+        info(format("FAILED:\t\t%s (%s%%)", testResults.getFailed(), testResults.getFailedPercentage()));
+        debug(format("SKIPPED:\t\t%s (%s%%)", testResults.getSkipped(), testResults.getSkippedPercentage()));
+        info(format("PERFORMANCE:\t%s ms", testResults.getTotalDuration().toMillis()));
 
-        debug("SKIPPED:\t" + testResults.getSkipped() + " (" + testResults.getSkippedPercentage() + "%)");
-
-        info("FAILED:\t" + testResults.getFailed() + " (" + testResults.getFailedPercentage() + "%)");
-        info("SUCCESS:\t" + testResults.getSuccess() + " (" + testResults.getSuccessPercentage() + "%)");
         newLine();
 
         separator();
     }
 
     @Override
-    public void onTestFailure(TestCase test, Throwable cause) {
+    public void onTestFailure(TestCase testCase, Throwable cause) {
         newLine();
-        error("TEST FAILED " + test.getName() + " <" + test.getPackageName() + "> Nested exception is: ", cause);
+
+        var duration = formatDurationString(testCase);
+        error("TEST FAILED " + testCase.getName() + " <" + testCase.getPackageName() + ">" + duration + " Nested exception is: ", cause);
+
         separator();
         newLine();
     }
@@ -134,7 +158,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     @Override
     public void onTestSuccess(TestCase test) {
         newLine();
-        info("TEST SUCCESS " + test.getName() + " (" + test.getPackageName() + ")");
+
+        var duration = formatDurationString(test);
+        info("TEST SUCCESS " + test.getName() + " (" + test.getPackageName() + ")" + duration);
+
         separator();
         newLine();
     }
@@ -209,14 +236,13 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
                 debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
             }
 
-            if (testAction instanceof TestActionContainer) {
-                debug("TEST ACTION CONTAINER with " + ((TestActionContainer)testAction).getActionCount() + " embedded actions");
+            if (testAction instanceof TestActionContainer container) {
+                debug("TEST ACTION CONTAINER with " + container.getActionCount() + " embedded actions");
             }
 
-            if (testAction instanceof Described &&
-                    StringUtils.hasText(((Described) testAction).getDescription())) {
+            if (testAction instanceof Described described && hasText(described.getDescription())) {
                 debug("");
-                debug(((Described) testAction).getDescription());
+                debug(described.getDescription());
                 debug("");
             }
         }
@@ -226,10 +252,12 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         if (isDebugEnabled()) {
             newLine();
+
+            var duration = formatDurationString(testCase);
             if (testCase.isIncremental()) {
-                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + " SUCCESS");
+                debug("TEST STEP " + (testCase.getExecutedActions().size() + 1) + " SUCCESS" + duration);
             } else {
-                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
+                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS" + duration);
             }
         }
     }
@@ -273,6 +301,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     /**
      * Write info level output.
+     *
      * @param line
      */
     protected void info(String line) {
@@ -281,6 +310,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     /**
      * Write error level output.
+     *
      * @param line
      * @param cause
      */
@@ -290,6 +320,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     /**
      * Write debug level output.
+     *
      * @param line
      */
     protected void debug(String line) {
@@ -300,6 +331,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     /**
      * Is debug level enabled.
+     *
      * @return
      */
     protected boolean isDebugEnabled() {
