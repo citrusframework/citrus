@@ -13,6 +13,13 @@
   <name>Citrus :: Core :: API</name>
   <description>Citrus API and basic interfaces</description>
 
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>

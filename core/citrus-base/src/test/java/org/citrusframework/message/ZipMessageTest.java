@@ -123,8 +123,6 @@ public class ZipMessageTest {
     private Path createTempDir() throws IOException {
         Path tempDir = Files.createTempDirectory("citrus-core-");
         tempDir.toFile().deleteOnExit();
-
-        System.out.println(tempDir.toAbsolutePath());
         return tempDir;
     }
 }

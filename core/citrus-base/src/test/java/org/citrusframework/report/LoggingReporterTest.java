@@ -19,107 +19,201 @@ package org.citrusframework.report;
 import org.citrusframework.DefaultTestCase;
 import org.citrusframework.actions.EchoAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.testng.annotations.BeforeClass;
+import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.time.Duration;
+
+import static java.lang.String.format;
+import static org.citrusframework.TestResult.failed;
+import static org.citrusframework.TestResult.skipped;
+import static org.citrusframework.TestResult.success;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.openMocks;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 /**
  * @author Christoph Deppisch
  */
 public class LoggingReporterTest {
 
-    private DefaultTestCase test = new DefaultTestCase();
+    @Mock
+    private Logger logger;
 
-    private EchoAction echo = new EchoAction.Builder().build();
+    private DefaultTestCase test;
 
-    @BeforeClass
-    public void setupSampleIT() {
+    private EchoAction echo;
+
+    private LoggingReporter fixture;
+
+    private AutoCloseable mocks;
+
+    @BeforeMethod
+    public void beforeMethod() {
+        mocks = openMocks(this);
+
+        test = new DefaultTestCase();
         test.setName("SampleIT");
         test.setPackageName("org.citrusframework.sample");
 
+        echo = new EchoAction.Builder().build();
         echo.setDescription("Test echo action");
         test.addTestAction(echo);
+
+        fixture = new LoggingReporter();
+
+        // Comment this line if you want to see the logs in stdout
+        setField(fixture, "logger", logger, Logger.class);
     }
 
     @Test
     public void testLoggingReporterSuccess() {
-        LoggingReporter reporter = new LoggingReporter();
+        fixture.onStart();
+        fixture.onStartSuccess();
+        fixture.onTestStart(test);
+        fixture.onTestActionStart(test, echo);
+        fixture.onTestActionFinish(test, echo);
+        fixture.onTestFinish(test);
+        fixture.onTestSuccess(test);
+        fixture.onFinish();
+        fixture.onFinishSuccess();
 
-        reporter.onStart();
-        reporter.onStartSuccess();
-        reporter.onTestStart(test);
-        reporter.onTestActionStart(test, echo);
-        reporter.onTestActionFinish(test, echo);
-        reporter.onTestFinish(test);
-        reporter.onTestSuccess(test);
-        reporter.onFinish();
-        reporter.onFinishSuccess();
+        verify(logger).info("TEST SUCCESS SampleIT (org.citrusframework.sample)");
 
         TestResults testResults = new TestResults();
-        reporter.generate(testResults);
+        testResults.addResult(success("testLoggingReporterSuccess-1", getClass().getSimpleName()).withDuration(Duration.ofMillis(111)));
+        testResults.addResult(success("testLoggingReporterSuccess-2", getClass().getSimpleName()).withDuration(Duration.ofMillis(222)));
+
+        fixture.generate(testResults);
+
+        verify(logger).info("TestResult[testName=testLoggingReporterSuccess-1, result=SUCCESS, durationMs=111]");
+        verify(logger).info("TestResult[testName=testLoggingReporterSuccess-2, result=SUCCESS, durationMs=222]");
+
+        verifyResultSummaryLog(2, 2, 0, 333);
+
+        verify(logger, never()).debug(anyString());
     }
 
     @Test
     public void testLoggingReporterFailed() {
-        LoggingReporter reporter = new LoggingReporter();
+        var cause = new CitrusRuntimeException("Failed!");
 
-        reporter.onStart();
-        reporter.onStartSuccess();
-        reporter.onTestStart(test);
-        reporter.onTestActionStart(test, echo);
-        reporter.onTestFinish(test);
-        reporter.onTestFailure(test, new CitrusRuntimeException("Failed!"));
-        reporter.onFinish();
-        reporter.onFinishSuccess();
+        fixture.onStart();
+        fixture.onStartSuccess();
+        fixture.onTestStart(test);
+        fixture.onTestActionStart(test, echo);
+        fixture.onTestFinish(test);
+        fixture.onTestFailure(test, cause);
+        fixture.onFinish();
+        fixture.onFinishSuccess();
+
+        verify(logger).error("TEST FAILED SampleIT <org.citrusframework.sample> Nested exception is: ", cause);
 
         TestResults testResults = new TestResults();
-        reporter.generate(testResults);
+        testResults.addResult(failed("testLoggingReporterFailed-1", getClass().getSimpleName(), cause).withDuration(Duration.ofMillis(1234)));
+        testResults.addResult(failed("testLoggingReporterFailed-2", getClass().getSimpleName(), cause).withDuration(Duration.ofMillis(2345)));
+
+        fixture.generate(testResults);
+
+        verify(logger).info("TestResult[testName=testLoggingReporterFailed-1, result=FAILURE, durationMs=1234]");
+        verify(logger).info("TestResult[testName=testLoggingReporterFailed-2, result=FAILURE, durationMs=2345]");
+
+        verifyResultSummaryLog(2, 0, 2, 3579);
+
+        verify(logger, never()).debug(anyString());
+    }
+
+    @Test
+    public void testLoggingReporterMiscellaneous() {
+        var cause = new CitrusRuntimeException("Failed!");
+
+        TestResults testResults = new TestResults();
+        testResults.addResult(success("testLoggingReporterMiscellaneous-1", getClass().getSimpleName()).withDuration(Duration.ofSeconds(1)));
+        testResults.addResult(failed("testLoggingReporterMiscellaneous-2", getClass().getSimpleName(), cause).withDuration(Duration.ofNanos(22848329)));
+
+        fixture.generate(testResults);
+
+        verify(logger).info("TestResult[testName=testLoggingReporterMiscellaneous-1, result=SUCCESS, durationMs=1000]");
+        verify(logger).info("TestResult[testName=testLoggingReporterMiscellaneous-2, result=FAILURE, durationMs=22]");
+
+        verifyResultSummaryLog(2, 1, 1, 1022);
+
+        verify(logger, never()).debug(anyString());
     }
 
     @Test
     public void testLoggingReporterSkipped() {
-        LoggingReporter reporter = new LoggingReporter();
-
-        reporter.onStart();
-        reporter.onStartSuccess();
-        reporter.onTestStart(test);
-        reporter.onTestFinish(test);
-        reporter.onTestSuccess(test);
-        reporter.onTestSkipped(new DefaultTestCase());
-        reporter.onFinish();
-        reporter.onFinishSuccess();
+        fixture.onStart();
+        fixture.onStartSuccess();
+        fixture.onTestStart(test);
+        fixture.onTestFinish(test);
+        fixture.onTestSuccess(test);
+        fixture.onTestSkipped(new DefaultTestCase());
+        fixture.onFinish();
+        fixture.onFinishSuccess();
 
         TestResults testResults = new TestResults();
-        reporter.generate(testResults);
+        testResults.addResult(skipped("testLoggingReporterSkipped", getClass().getSimpleName()));
+
+        fixture.generate(testResults);
+
+        verify(logger).info("TestResult[testName=testLoggingReporterSkipped, result=SKIP]");
+
+        verifyResultSummaryLog(0, 0, 0, 0);
+
+        verify(logger, never()).debug(anyString());
     }
 
     @Test
     public void testLoggingReporterBeforeSuiteFailed() {
-        LoggingReporter reporter = new LoggingReporter();
-
-        reporter.onStart();
-        reporter.onStartFailure(new CitrusRuntimeException("Failed!"));
-        reporter.onFinish();
-        reporter.onFinishSuccess();
+        fixture.onStart();
+        fixture.onStartFailure(new CitrusRuntimeException("Failed!"));
+        fixture.onFinish();
+        fixture.onFinishSuccess();
 
         TestResults testResults = new TestResults();
-        reporter.generate(testResults);
+        fixture.generate(testResults);
     }
 
     @Test
     public void testLoggingReporterAfterSuiteFailed() {
-        LoggingReporter reporter = new LoggingReporter();
-
-        reporter.onStart();
-        reporter.onStartSuccess();
-        reporter.onTestStart(test);
-        reporter.onTestActionStart(test, echo);
-        reporter.onTestActionFinish(test, echo);
-        reporter.onTestFinish(test);
-        reporter.onTestSuccess(test);
-        reporter.onFinish();
-        reporter.onFinishFailure(new CitrusRuntimeException("Failed!"));
+        fixture.onStart();
+        fixture.onStartSuccess();
+        fixture.onTestStart(test);
+        fixture.onTestActionStart(test, echo);
+        fixture.onTestActionFinish(test, echo);
+        fixture.onTestFinish(test);
+        fixture.onTestSuccess(test);
+        fixture.onFinish();
+        fixture.onFinishFailure(new CitrusRuntimeException("Failed!"));
 
         TestResults testResults = new TestResults();
-        reporter.generate(testResults);
+        fixture.generate(testResults);
+    }
+
+    @AfterMethod
+    void afterMethodTeardown() throws Exception {
+        mocks.close();
+    }
+
+    private void verifyResultSummaryLog(int total, int success, int failed, long performance) {
+        verify(logger).info("TOTAL:\t\t\t" + total);
+        verify(logger).info("SUCCESS:\t\t" + success + " (" + calculatePercentage(total, success) + "%)");
+        verify(logger).info("FAILED:\t\t" + failed + " (" + calculatePercentage(total, failed) + "%)");
+        verify(logger).info("PERFORMANCE:\t" + performance + " ms");
+    }
+
+    private String calculatePercentage(int total, int success) {
+        if (total == 0) {
+            return "0.0";
+        }
+
+        double percentage = (double) success / total * 100;
+        return format("%3.1f", percentage);
     }
 }

@@ -16,8 +16,6 @@
 
 package org.citrusframework.junit.jupiter.spring;
 
-import java.lang.reflect.Method;
-
 import org.citrusframework.Citrus;
 import org.citrusframework.CitrusSpringContext;
 import org.citrusframework.CitrusSpringContextProvider;
@@ -37,22 +35,26 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.lang.reflect.Method;
+
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.requiresCitrus;
+import static org.citrusframework.junit.jupiter.CitrusExtensionHelper.setCitrus;
+import static org.springframework.test.context.junit.jupiter.SpringExtension.getApplicationContext;
 
 /**
  * JUnit5 extension adding {@link TestCaseRunner} support as well as Citrus annotation based resource injection
  * and lifecycle management such as before/after suite.
- *
+ * <p>
  * Extension resolves method parameter of type {@link org.citrusframework.context.TestContext}, {@link TestCaseRunner}
  * or {@link org.citrusframework.TestActionRunner} and injects endpoints and resources coming from Citrus Spring application context that
  * is automatically loaded at suite start up. After suite automatically includes Citrus report generation.
- *
+ * <p>
  * Extension is based on Citrus Xml test extension that also allows to load test cases from external Spring configuration files.
  *
  * @author Christoph Deppisch
  */
-public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecutionCallback, InvocationInterceptor,
-        AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback {
+public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecutionCallback, InvocationInterceptor, AfterTestExecutionCallback, ParameterResolver, TestInstancePostProcessor, TestExecutionExceptionHandler, AfterEachCallback {
 
     private Citrus citrus;
     private ApplicationContext applicationContext;
@@ -60,7 +62,7 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-        CitrusExtensionHelper.setCitrus(getCitrus(extensionContext), extensionContext);
+        setCitrus(getCitrus(extensionContext), extensionContext);
         delegate.beforeAll(extensionContext);
     }
 
@@ -76,7 +78,7 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
 
     @Override
     public void beforeTestExecution(ExtensionContext extensionContext) {
-        CitrusExtensionHelper.setCitrus(getCitrus(extensionContext), extensionContext);
+        setCitrus(getCitrus(extensionContext), extensionContext);
     }
 
     @Override
@@ -106,13 +108,15 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
 
     /**
      * Create Citrus instance if not set already. Use SpringExtension to load application context.
+     *
      * @param extensionContext
      * @return
      */
     protected Citrus getCitrus(ExtensionContext extensionContext) {
-        ApplicationContext ctx = SpringExtension.getApplicationContext(extensionContext);
+        ApplicationContext ctx = getApplicationContext(extensionContext);
+
         Citrus existing = null;
-        if (!CitrusExtensionHelper.requiresCitrus(extensionContext)) {
+        if (!requiresCitrus(extensionContext)) {
             existing = CitrusExtensionHelper.getCitrus(extensionContext);
         }
 
@@ -121,8 +125,8 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
         }
 
         if (citrus == null) {
-            if (existing != null && existing.getCitrusContext() instanceof CitrusSpringContext  &&
-                    ((CitrusSpringContext) existing.getCitrusContext()).getApplicationContext().equals(applicationContext)) {
+            if (existing != null && existing.getCitrusContext() instanceof CitrusSpringContext citrusSpringContext
+                    && citrusSpringContext.getApplicationContext().equals(applicationContext)) {
                 citrus = existing;
             } else {
                 citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
@@ -131,9 +135,9 @@ public class CitrusSpringExtension implements BeforeAllCallback, BeforeTestExecu
                     citrus.getCitrusContext().handleTestResults(existing.getCitrusContext().getTestResults());
                 }
             }
-        } else if (existing == null ||
-                !(existing.getCitrusContext() instanceof CitrusSpringContext) ||
-                !((CitrusSpringContext) existing.getCitrusContext()).getApplicationContext().equals(applicationContext)) {
+        } else if (existing == null
+                || !(existing.getCitrusContext() instanceof CitrusSpringContext citrusSpringContext)
+                || !citrusSpringContext.getApplicationContext().equals(applicationContext)) {
             citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
         }
 

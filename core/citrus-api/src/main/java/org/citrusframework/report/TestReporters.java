@@ -16,35 +16,33 @@
 
 package org.citrusframework.report;
 
+import org.citrusframework.TestCase;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.citrusframework.TestCase;
-import org.citrusframework.TestResult;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.nonNull;
 
 /**
  * @author Christoph Deppisch
  */
 public class TestReporters implements TestListener, TestSuiteListener, TestReporterAware {
 
-    /** Should clear test results for each test suite */
+    /**
+     * Should clear test results for each test suite
+     */
     private boolean autoClear = TestReporterSettings.isAutoClear();
 
-    /** List of test listeners **/
+    /**
+     * List of test listeners
+     **/
     private final List<TestReporter> testReporters = new ArrayList<>();
 
-    /** Collect test results for overall result overview at the very end of test execution */
-    private TestResults testResults = new TestResults();
-
     /**
-     * Call each reporter to generate its reports. Ignore errors according to global setting.
+     * Collect test results for overall result overview at the very end of test execution
      */
-    private void generateReports() {
-        for (TestReporter reporter : testReporters) {
-            reporter.generateReport(testResults);
-        }
-    }
+    private TestResults testResults = new TestResults();
 
     @Override
     public void onStart() {
@@ -62,14 +60,6 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
     @Override
     public void onFinishSuccess() {
         generateReports();
-    }
-
-    /**
-     * Gets the testResults.
-     * @return
-     */
-    public TestResults getTestResults() {
-        return testResults;
     }
 
     @Override
@@ -94,22 +84,24 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
 
     @Override
     public void onTestFinish(TestCase test) {
-        // do nothing
+        if (nonNull(test.getTestResult())) {
+            testResults.addResult(test.getTestResult());
+        }
     }
 
     @Override
     public void onTestSuccess(TestCase test) {
-        testResults.addResult(TestResult.success(test.getName(), test.getTestClass().getName()));
+        // do nothing
     }
 
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
-        testResults.addResult(TestResult.failed(test.getName(), test.getTestClass().getName(), cause));
+        // do nothing
     }
 
     @Override
     public void onTestSkipped(TestCase test) {
-        testResults.addResult(TestResult.skipped(test.getName(), test.getTestClass().getName()));
+        // do nothing
     }
 
     @Override
@@ -119,14 +111,16 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
 
     /**
      * Obtains the testReporters.
+     *
      * @return
      */
     public List<TestReporter> getTestReporters() {
-        return Collections.unmodifiableList(testReporters);
+        return unmodifiableList(testReporters);
     }
 
     /**
      * Obtains the autoClear.
+     *
      * @return
      */
     public boolean isAutoClear() {
@@ -135,9 +129,28 @@ public class TestReporters implements TestListener, TestSuiteListener, TestRepor
 
     /**
      * Specifies the autoClear.
+     *
      * @param autoClear
      */
     public void setAutoClear(boolean autoClear) {
         this.autoClear = autoClear;
+    }
+
+    /**
+     * Gets the testResults.
+     *
+     * @return
+     */
+    public TestResults getTestResults() {
+        return testResults;
+    }
+
+    /**
+     * Call each reporter to generate its reports. Ignore errors according to global setting.
+     */
+    private void generateReports() {
+        for (TestReporter reporter : testReporters) {
+            reporter.generateReport(testResults);
+        }
     }
 }

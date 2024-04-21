@@ -16,6 +16,7 @@
 
 package org.citrusframework.report;
 
+import jakarta.annotation.Nullable;
 import org.citrusframework.TestResult;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.FileUtils;
@@ -30,6 +31,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.DecimalFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +41,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
+import static java.lang.String.format;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
 
 /**
@@ -46,8 +52,9 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
  */
 public class JUnitReporter extends AbstractTestReporter {
 
-    /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(JUnitReporter.class);
+
+    private static final DecimalFormat TIME_FORMAT = new DecimalFormat("0.0##");
 
     /** Output directory */
     private String outputDirectory = JUnitReporterSettings.getReportDirectory();
@@ -79,7 +86,7 @@ public class JUnitReporter extends AbstractTestReporter {
 
             try {
                 List<TestResult> results = testResults.asList();
-                createReportFile(String.format(reportFileNamePattern, suiteName), createReportContent(suiteName, results, reportTemplates), new File(getReportDirectory()));
+                createReportFile(format(reportFileNamePattern, suiteName), createReportContent(suiteName, results, reportTemplates), new File(getReportDirectory()));
 
                 Map<String, List<TestResult>> groupedResults = new HashMap<>();
                 for(TestResult result : results) {
@@ -92,7 +99,7 @@ public class JUnitReporter extends AbstractTestReporter {
 
                 File targetDirectory = new File(getReportDirectory() + (StringUtils.hasText(outputDirectory) ? File.separator + outputDirectory : ""));
                 for (Map.Entry<String, List<TestResult>> resultEntry : groupedResults.entrySet()) {
-                    createReportFile(String.format(reportFileNamePattern, resultEntry.getKey()), createReportContent(resultEntry.getKey(), resultEntry.getValue(), reportTemplates), targetDirectory);
+                    createReportFile(format(reportFileNamePattern, resultEntry.getKey()), createReportContent(resultEntry.getKey(), resultEntry.getValue(), reportTemplates), targetDirectory);
                 }
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to generate JUnit test report", e);
@@ -102,23 +109,29 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Create report file for test class.
-     * @param suiteName
-     * @param results
-     * @param templates
-     * @return
      */
     private String createReportContent(String suiteName, List<TestResult> results, ReportTemplates templates) throws IOException {
         final StringBuilder reportDetails = new StringBuilder();
+        Duration suiteDuration = Duration.ofSeconds(0);
 
         for (TestResult result: results) {
             Properties detailProps = new Properties();
             detailProps.put("test.class", result.getClassName());
             detailProps.put("test.name", escapeXml(result.getTestName()));
-            detailProps.put("test.duration", "0.0");
+            detailProps.put("test.duration", toFormattedTimeString(result.getDuration()));
+
+            if (nonNull(result.getDuration())) {
+                suiteDuration = suiteDuration.plus(result.getDuration());
+            }
 
             if (result.isFailed()) {
                 detailProps.put("test.error.cause", Optional.ofNullable(result.getCause()).map(Object::getClass).map(Class::getName).orElseGet(() -> Objects.toString(result.getFailureType(), "")));
-                detailProps.put("test.error.msg", escapeXml(result.getErrorMessage()));
+
+                if (nonNull(result.getErrorMessage())) {
+                    String escapedErrorMessage = escapeXml(result.getErrorMessage());
+                    detailProps.put("test.error.msg", escapedErrorMessage);
+                }
+
                 detailProps.put("test.error.stackTrace", Optional.ofNullable(result.getCause()).map(cause -> {
                     StringWriter writer = new StringWriter();
                     cause.printStackTrace(new PrintWriter(writer));
@@ -141,7 +154,7 @@ public class JUnitReporter extends AbstractTestReporter {
         reportProps.put("test.failed.cnt", Long.toString(results.stream().filter(TestResult::isFailed).count()));
         reportProps.put("test.success.cnt", Long.toString(results.stream().filter(TestResult::isSuccess).count()));
         reportProps.put("test.error.cnt", "0");
-        reportProps.put("test.duration", "0.0");
+        reportProps.put("test.duration", toFormattedTimeString(suiteDuration));
         reportProps.put("tests", reportDetails.toString());
         return PropertyUtils.replacePropertiesInString(templates.getReportTemplate(), reportProps);
     }
@@ -174,8 +187,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
         /**
          * Gets the reportTemplateContent.
-         *
-         * @return
          */
         public String getReportTemplate() throws IOException {
             if (reportTemplateContent == null) {
@@ -187,8 +198,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
         /**
          * Gets the successTemplateContent.
-         *
-         * @return
          */
         public String getSuccessTemplate() throws IOException {
             if (successTemplateContent == null) {
@@ -200,8 +209,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
         /**
          * Gets the failedTemplateContent.
-         *
-         * @return
          */
         public String getFailedTemplate() throws IOException {
             if (failedTemplateContent == null) {
@@ -212,10 +219,13 @@ public class JUnitReporter extends AbstractTestReporter {
         }
     }
 
+    private String toFormattedTimeString(@Nullable Duration duration) {
+        double seconds = isNull(duration) ? 0.0 : (duration.toNanos() / 1e9); // Convert to seconds with double precision
+        return format("%.3f", seconds); // Format with 3 decimal places
+    }
+
     /**
      * Gets the outputDirectory.
-     *
-     * @return
      */
     public String getOutputDirectory() {
         return outputDirectory;
@@ -223,8 +233,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Sets the outputDirectory.
-     *
-     * @param outputDirectory
      */
     public void setOutputDirectory(String outputDirectory) {
         this.outputDirectory = outputDirectory;
@@ -232,8 +240,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Gets the reportFileNamePattern.
-     *
-     * @return
      */
     public String getReportFileNamePattern() {
         return reportFileNamePattern;
@@ -241,8 +247,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Sets the reportFileNamePattern.
-     *
-     * @param reportFileNamePattern
      */
     public void setReportFileNamePattern(String reportFileNamePattern) {
         this.reportFileNamePattern = reportFileNamePattern;
@@ -250,8 +254,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Gets the reportTemplate.
-     *
-     * @return
      */
     public String getReportTemplate() {
         return reportTemplate;
@@ -259,8 +261,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Sets the reportTemplate.
-     *
-     * @param reportTemplate
      */
     public void setReportTemplate(String reportTemplate) {
         this.reportTemplate = reportTemplate;
@@ -268,8 +268,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Gets the suiteName.
-     *
-     * @return
      */
     public String getSuiteName() {
         return suiteName;
@@ -277,8 +275,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Sets the suiteName.
-     *
-     * @param suiteName
      */
     public void setSuiteName(String suiteName) {
         this.suiteName = suiteName;
@@ -286,8 +282,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Gets the successTemplate.
-     *
-     * @return
      */
     public String getSuccessTemplate() {
         return successTemplate;
@@ -295,8 +289,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Sets the successTemplate.
-     *
-     * @param successTemplate
      */
     public void setSuccessTemplate(String successTemplate) {
         this.successTemplate = successTemplate;
@@ -304,8 +296,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Gets the failedTemplate.
-     *
-     * @return
      */
     public String getFailedTemplate() {
         return failedTemplate;
@@ -313,8 +303,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Sets the failedTemplate.
-     *
-     * @param failedTemplate
      */
     public void setFailedTemplate(String failedTemplate) {
         this.failedTemplate = failedTemplate;
@@ -322,8 +310,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Gets the enabled.
-     *
-     * @return
      */
     public boolean isEnabled() {
         return enabled;
@@ -331,8 +317,6 @@ public class JUnitReporter extends AbstractTestReporter {
 
     /**
      * Sets the enabled.
-     *
-     * @param enabled
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
