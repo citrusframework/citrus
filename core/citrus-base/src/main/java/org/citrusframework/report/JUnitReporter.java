@@ -16,6 +16,22 @@
 
 package org.citrusframework.report;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
+
 import jakarta.annotation.Nullable;
 import org.citrusframework.TestResult;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -24,22 +40,6 @@ import org.citrusframework.util.PropertyUtils;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.text.DecimalFormat;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
 
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
@@ -53,8 +53,6 @@ import static org.apache.commons.lang3.StringEscapeUtils.escapeXml;
 public class JUnitReporter extends AbstractTestReporter {
 
     private static final Logger logger = LoggerFactory.getLogger(JUnitReporter.class);
-
-    private static final DecimalFormat TIME_FORMAT = new DecimalFormat("0.0##");
 
     /** Output directory */
     private String outputDirectory = JUnitReporterSettings.getReportDirectory();
@@ -221,7 +219,7 @@ public class JUnitReporter extends AbstractTestReporter {
 
     private String toFormattedTimeString(@Nullable Duration duration) {
         double seconds = isNull(duration) ? 0.0 : (duration.toNanos() / 1e9); // Convert to seconds with double precision
-        return format("%.3f", seconds); // Format with 3 decimal places
+        return format(Locale.US, "%.3f", seconds); // Format with 3 decimal places
     }
 
     /**

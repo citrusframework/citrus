@@ -16,10 +16,10 @@
 
 package org.citrusframework.report;
 
-import org.testng.annotations.Test;
-
 import java.io.File;
 import java.time.Duration;
+
+import org.testng.annotations.Test;
 
 import static java.lang.String.format;
 import static org.citrusframework.TestResult.failed;
@@ -36,7 +36,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class JUnitReporterTest {
 
-    private JUnitReporter reporter = new JUnitReporter();
+    private final JUnitReporter reporter = new JUnitReporter();
 
     @Test
     public void testGenerateTestResults() throws Exception {
