@@ -30,7 +30,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.repository == 'citrusframework/citrus'
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Retrieve project metadata
       id: metadata
       uses: radcortez/project-metadata-action@main
