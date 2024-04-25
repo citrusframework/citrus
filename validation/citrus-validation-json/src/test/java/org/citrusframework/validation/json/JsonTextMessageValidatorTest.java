@@ -16,7 +16,6 @@
 
 package org.citrusframework.validation.json;
 
-import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -36,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static net.minidev.json.parser.JSONParser.MODE_JSON_SIMPLE;
+import static net.minidev.json.parser.JSONParser.MODE_RFC4627;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -92,7 +93,7 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
 
         JsonSchemaValidation jsonSchemaValidation = mock(JsonSchemaValidation.class);
         when(jsonSchemaValidation.validate(any(), anyList(), any(), any())).thenReturn(new GraciousProcessingReport((true)));
-        fixture.setJsonSchemaValidation(jsonSchemaValidation);
+        fixture.jsonSchemaValidation(jsonSchemaValidation);
 
         JsonSchemaRepository jsonSchemaRepository = mock(JsonSchemaRepository.class);
         context.getReferenceResolver().bind("jsonSchemaRepository", jsonSchemaRepository);
@@ -124,7 +125,7 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
 
     @Test
     public void testPermissiveModeSimple() {
-        fixture.setPermissiveMode(JSONParser.MODE_JSON_SIMPLE);
+        fixture.permissiveMode(MODE_JSON_SIMPLE);
 
         var actualMessage = new DefaultMessage("{\"text\":\"Hello World!\",, \"index\":5, \"id\":\"x123456789x\",}");
         var expectedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
@@ -152,7 +153,7 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
 
     @Test
     public void testPermissiveModeStrict() {
-        fixture.setPermissiveMode(JSONParser.MODE_RFC4627);
+        fixture.permissiveMode(MODE_RFC4627);
 
         var actualMessage = new DefaultMessage("{\"text\":\"Hello World!\",, \"index\":5, \"id\":\"x123456789x\",}");
         var expectedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
