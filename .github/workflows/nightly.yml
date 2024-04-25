@@ -14,28 +14,15 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-name: main
+name: nightly
 
 on:
-  pull_request:
-    paths-ignore:
-      - '**.adoc'
-      - '**.md'
-      - 'KEYS'
-      - 'LICENSE'
-      - 'NOTICE'
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '**.adoc'
-      - '**.md'
-      - 'KEYS'
-      - 'LICENSE'
-      - 'NOTICE'
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
-  build:
+  nightly:
     runs-on: ubuntu-latest
     steps:
       - name: Set up JDK
@@ -55,6 +42,6 @@ jobs:
         run: |
           java -version
           ./mvnw -version
-      - name: Build Citrus
+      - name: Citrus Dependency Report
         run: |
-          ./mvnw --no-transfer-progress install
+          ./mvnw --no-transfer-progress versions:display-dependency-updates
