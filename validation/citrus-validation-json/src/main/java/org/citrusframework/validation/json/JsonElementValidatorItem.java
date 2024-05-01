@@ -19,6 +19,7 @@ package org.citrusframework.validation.json;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.JsonPathException;
+import net.minidev.json.JSONArray;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -32,9 +33,9 @@ import static org.citrusframework.validation.ValidationUtils.buildValueMismatchE
 
 /**
  * Wraps all needed data to validate an actual json with an expected json-template.
- * @see JsonElementValidator for usage
  *
  * @param <T> the type of the actual and expected json
+ * @see JsonElementValidator for usage
  */
 public class JsonElementValidatorItem<T> {
     private final String name;
@@ -47,8 +48,8 @@ public class JsonElementValidatorItem<T> {
      * Parses and wraps the given json's.
      *
      * @param permissiveMode see {@code JSONParser#MODE_*} or {@link JSONParser#DEFAULT_PERMISSIVE_MODE}
-     * @param actualJson as string
-     * @param expectedJson as string
+     * @param actualJson     as string
+     * @param expectedJson   as string
      * @return the two json's wrapped in a {@link JsonElementValidatorItem<Object>}
      */
     public static JsonElementValidatorItem<Object> parseJson(int permissiveMode, String actualJson, String expectedJson) {
@@ -73,7 +74,7 @@ public class JsonElementValidatorItem<T> {
     }
 
     /**
-     * For array-items.
+     * For object-items.
      *
      * @param name/key of the json value in the {@link JsonElementValidatorItem#parent}-element
      */
@@ -99,13 +100,12 @@ public class JsonElementValidatorItem<T> {
     }
 
     /**
-     * @throws ValidationException if either {@link JsonElementValidatorItem#expected}
-     *         or {@link JsonElementValidatorItem#expected} is not of the given {@code type}
      * @param type to cast the values to
      * @return {@link this} as {@link JsonElementValidatorItem<O>}
+     * @throws ValidationException if either {@link JsonElementValidatorItem#expected}
+     *                             or {@link JsonElementValidatorItem#expected} is not of the given {@code type}
      */
     public <O> JsonElementValidatorItem<O> ensureType(Class<O> type) {
-        JsonElementValidatorItem<?> self = this;
         if (((actual != null) && !type.isInstance(actual)) || ((expected != null) && !type.isInstance(expected))) {
             throw new ValidationException(buildValueMismatchErrorMessage(
                     "Type mismatch for JSON entry '" + name + "'",
@@ -113,7 +113,7 @@ public class JsonElementValidatorItem<T> {
                     actual == null ? null : actual.getClass().getSimpleName()
             ));
         }
-        return (JsonElementValidatorItem<O>) self;
+        return (JsonElementValidatorItem<O>) this;
     }
 
     /**
@@ -145,8 +145,6 @@ public class JsonElementValidatorItem<T> {
      *     <li>{@link JsonElementValidatorItem#name} for an entry in a json map</li>
      *     <li>{@link JsonElementValidatorItem#index} in square brackets for an item in a json array, i.e. {@code "[2]"}</li>
      * </ul>
-     *
-     * @return
      */
     public String getName() {
         if (index != null) return "[%s]".formatted(index);
@@ -159,14 +157,15 @@ public class JsonElementValidatorItem<T> {
     }
 
     public boolean isPathIgnoredBy(String jsonPathExpression) {
-        String currentPath = getJsonPath();
-        return Stream.concat(
-                getAllMatchedPathsInJson(jsonPathExpression, getRoot().expected),
-                getAllMatchedPathsInJson(jsonPathExpression, getRoot().actual)
-        ).anyMatch(currentPath::equals);
+        return isPathIgnoredBy(jsonPathExpression, getJsonPath(), getRoot().actual)
+                || isPathIgnoredBy(jsonPathExpression, getJsonPath(), getRoot().expected);
     }
 
-    private Stream<String> getAllMatchedPathsInJson(String jsonPathExpression, Object json) {
+    public static boolean isPathIgnoredBy(String jsonPathExpression, String currentPath, Object json) {
+        return getAllMatchedPathsInJson(jsonPathExpression, json).anyMatch(currentPath::equals);
+    }
+
+    private static Stream<String> getAllMatchedPathsInJson(String jsonPathExpression, Object json) {
         Configuration config = Configuration.builder().options(AS_PATH_LIST).build();
         List<String> foundJsonPaths;
         try {
@@ -175,5 +174,15 @@ public class JsonElementValidatorItem<T> {
             return Stream.of();
         }
         return foundJsonPaths.stream();
+    }
+
+    public JsonElementValidatorItem<Object> child(int expectedIndex, Object other) {
+        var arrayControl = this.ensureType(JSONArray.class);
+
+        return new JsonElementValidatorItem<>(
+                expectedIndex,
+                other,
+                arrayControl.expected.get(expectedIndex)
+        ).parent(arrayControl);
     }
 }

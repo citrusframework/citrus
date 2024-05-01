@@ -96,21 +96,28 @@ public class JsonElementValidator {
             return true;
         }
 
-        if (ignoreExpressions.stream().anyMatch(controlEntry::isPathIgnoredBy)) {
-            return true;
-        }
-
-        return false;
+        return ignoreExpressions.stream().anyMatch(controlEntry::isPathIgnoredBy);
     }
-
 
     private void validateJSONArray(JsonElementValidator validator, JsonElementValidatorItem<?> control) {
         var arrayControl = control.ensureType(JSONArray.class);
         if (strict) {
             validateSameSize(control.getJsonPath(), arrayControl.expected, arrayControl.actual);
         }
+        int actualIndex = 0;
         for (int i = 0; i < arrayControl.expected.size(); i++) {
-            if (!isAnyValidItemInActualArray(validator, arrayControl, i)) {
+            if (isIgnoredByPlaceholderOrExpressionList(ignoreExpressions, arrayControl.child(i, i))) {
+                continue;
+            }
+            boolean isValid = false;
+
+            while (!isValid && actualIndex < arrayControl.actual.size()) {
+                JsonElementValidatorItem<Object> item = arrayControl.child(i, arrayControl.actual.get(actualIndex));
+                isValid = isValidItem(item, validator);
+                actualIndex++;
+            }
+
+            if (!isValid) {
                 throw new ValidationException(buildValueToBeInCollectionErrorMessage(
                         "An item in '%s' is missing".formatted(arrayControl.getJsonPath()),
                         arrayControl.expected.get(i),
@@ -120,17 +127,13 @@ public class JsonElementValidator {
         }
     }
 
-    private boolean isAnyValidItemInActualArray(JsonElementValidator validator, JsonElementValidatorItem<JSONArray> control, int index) {
-        Object expectedItem = control.expected.get(index);
-        return control.actual.stream().map(recivedItem -> {
-            try {
-                var itemControl = new JsonElementValidatorItem<>(index, recivedItem, expectedItem).parent(control);
-                validator.validate(itemControl);
-                return null;
-            } catch (ValidationException e) {
-                return e;
-            }
-        }).anyMatch(Objects::isNull);
+    private static boolean isValidItem(JsonElementValidatorItem<Object> validatorItem, JsonElementValidator validator) {
+        try {
+            validator.validate(validatorItem);
+            return true;
+        } catch (ValidationException e) {
+            return false;
+        }
     }
 
     private void validateSameSize(String path, Collection<?> expected, Collection<?> actual) {

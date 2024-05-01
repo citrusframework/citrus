@@ -1,16 +1,16 @@
 [[json-message-validation]]
 == Json validation
 
-Message formats such as Json have become very popular, in particular when dealing with RESTful services. Citrus is able to
-expect and validate Json messages with a powerful comparison of Json structures.
+Message formats such as Json have become very popular, in particular when dealing with RESTful services.
+Citrus is able to expect and validate Json messages with a powerful comparison of Json structures.
 
-IMPORTANT: By default, Citrus will use XML message formats when sending and receiving messages. This also reflects to the
-message validation logic Citrus uses for incoming messages. So by default Citrus will try to parse the incoming message as
-XML DOM element tree. In case we would like to enable Json message validation we have to tell Citrus that we expect a Json
-message right now.
+IMPORTANT: By default, Citrus will use XML message formats when sending and receiving messages.
+This also reflects to the message validation logic Citrus uses for incoming messages.
+So by default Citrus will try to parse the incoming message as XML DOM element tree.
+In case we would like to enable Json message validation we have to tell Citrus that we expect a Json message right now.
 
-Json message validation is not enabled by default in your project. You need to add the validation module to your project
-as a Maven dependency.
+Json message validation is not enabled by default in your project.
+You need to add the validation module to your project as a Maven dependency.
 
 .Json validation module dependency
 [source,xml]
@@ -25,23 +25,25 @@ as a Maven dependency.
 Citrus provides several default message validator implementations for Json messages:
 
 [horizontal]
-JsonTextMessageValidator:: Basic Json message validator implementation compares Json objects (expected and received). The
-order of Json entries can differ. Tester defines an expected control Json object with test variables and ignored entries.
-JsonArray as well as nested JsonObjects are supported, too.
-GroovyJsonMessageValidator:: Extended groovy message validator provides specific Json slurper support. With Json slurper
-the tester can validate the Json message body with closures for instance.
+JsonTextMessageValidator:: Basic Json message validator implementation compares Json objects/arrays (expected and received).
+- The order of Json object properties can differ, whereas array order is always validated.
+- Test variables and ignored-placeholders (`@ignore@`) can be used.
+- JsonArray as well as nested JsonObjects are supported.
+GroovyJsonMessageValidator:: Extended groovy message validator provides specific Json slurper support.
+With Json slurper the tester can validate the Json message body with closures for instance.
 
-IMPORTANT: The Json validator offers two different modes to operate. By default, *strict* mode is enabled and the validator
-will also check the exact amount of object fields to match in received and control message. No additional fields in received
-Json data structure will be accepted then. In *soft* mode the validator allows additional fields in received Json data structure
-so the control Json object can be a partial subset in which case only the control fields are validated. Additional fields in
-the received Json data structure are ignored then.
+IMPORTANT: The Json validator offers two different modes to operate.
+By default, *strict* mode is enabled and the validator will also check the exact amount of entries (object properties / array items) to match in received and control message.
+No additional fields in received Json data structure will be accepted.
+In *soft* mode the validator allows additional entries (object properties / array items) in received Json, so the control Json can be a subset of the recieved.
+Additional entries in the received Json data structure are ignored.
 
-TIP: The Json validation mode (strict or soft) is settable via environment variable `CITRUS_JSON_MESSAGE_VALIDATION_STRICT` or
-system property `citrus.json.message.validation.strict=false`. This will set soft mode to all Json text message validators.
+TIP: The Json validation mode (strict or soft) is settable via environment variable `CITRUS_JSON_MESSAGE_VALIDATION_STRICT` or system property `citrus.json.message.validation.strict=false`.
+This will set soft mode to all Json text message validators.
 
-You can also overwrite these default message validators for Json by placing a bean into the Spring Application context. The
-bean uses a default name as identifier. Then your custom bean will overwrite the default validator:
+You can also overwrite these default message validators for Json by placing a bean into the Spring Application context.
+The bean uses a default name as identifier.
+Then your custom bean will overwrite the default validator:
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -77,8 +79,8 @@ public GroovyJsonMessageValidator defaultGroovyJsonMessageValidator() {
 
 This is how you can customize the message validators used for Json message data.
 
-When a message has been received in Citrus the message validation will try to find a matching message validator according to
-the message content. You can also specify the Json message format on a receive action in order to force Json message validation.
+When a message has been received in Citrus the message validation will try to find a matching message validator according to the message content.
+You can also specify the Json message format on a receive action in order to force Json message validation.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -115,18 +117,14 @@ receive(someEndpoint)
 </receive>
 ----
 
-The message receiving action in our test case specifies a message format type `type="json"` . This tells Citrus to look
-for some message validator implementation capable of validating Json messages. As we have added the proper message validator
-to the Spring application context Citrus will pick the right validator and Json message validation is performed on this message.
+The message receiving action in our test case specifies a message format type `type="json"` . This tells Citrus to look for some message validator implementation capable of validating Json messages.
+As we have added the proper message validator to the Spring application context Citrus will pick the right validator and Json message validation is performed on this message.
 
-As you can see you can use test variables as well as ignore element syntax here, too. Citrus is able to handle
-different Json element orders when comparing received and expected Json object. We can also use Json arrays and nested objects.
-The default Json message validator implementation in Citrus is very powerful in comparing Json objects.
-
-Instead of defining an expected message body template we can also use Groovy validation scripts. Let's have a look at
-the Groovy Json message validator example. As usual the default Groovy Json message validator is active by default. But
-the special Groovy message validator implementation will only jump in when we used a validation script in our receive
-message definition. Let's have an example for that.
+Instead of defining an expected message body template we can also use Groovy validation scripts.
+Let's have a look at the Groovy Json message validator example.
+As usual the default Groovy Json message validator is active by default.
+But the special Groovy message validator implementation will only jump in when we used a validation script in our receive message definition.
+Let's have an example for that.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -160,17 +158,19 @@ receive(someEndpoint)
 </receive>
 ----
 
-Again the message type tells Citrus that we expect a message of type *json*. The action uses a validation script written
-in Groovy to verify the incoming message. Citrus will automatically activate the special message validator that executes
-our Groovy script.
+Again the message type tells Citrus that we expect a message of type *json*.
+The action uses a validation script written in Groovy to verify the incoming message.
+Citrus will automatically activate the special message validator that executes our Groovy script.
 
-The script validation is very powerful as we can use the full power of the Groovy language. The validation script automatically
-has access to the incoming Json message object *json*. We can use the Groovy Json dot notated syntax in order to navigate
-through the Json structure. The Groovy Json slurper object *json* is automatically injected in the validation script. This
-way you can access the Json object elements in your code doing some assertions.
+The script validation is very powerful as we can use the full power of the Groovy language.
+The validation script automatically has access to the incoming Json message object *json*.
+We can use the Groovy Json dot notated syntax in order to navigate through the Json structure.
+The Groovy Json slurper object *json* is automatically injected in the validation script.
+This way you can access the Json object elements in your code doing some assertions.
 
-There is even more object injection for the validation script. With the automatically added object *_receivedMessage_* you
-have access to the Citrus message object for this receive action. This enables you to do whatever you want with the message body or header.
+There is even more object injection for the validation script.
+With the automatically added object *_receivedMessage_* you have access to the Citrus message object for this receive action.
+This enables you to do whatever you want with the message body or header.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -201,8 +201,9 @@ receive(someEndpoint)
 </receive>
 ----
 
-The listing above shows some power of the validation script. We can access the message body, we can access the message
-header. With test context access we can also save the whole message body as a new test variable for later usage in the test.
+The listing above shows some power of the validation script.
+We can access the message body, we can access the message header.
+With test context access we can also save the whole message body as a new test variable for later usage in the test.
 
 In general Groovy code inside the XML test case definition or as part of the Java DSL code is not very comfortable to maintain.
 Neither you do have code syntax assist nor code completion when using inline Groovy scripts.
@@ -231,16 +232,15 @@ receive(someEndpoint)
 </receive>
 ----
 
-We referenced some external file resource *_validationScript.groovy_* . This file content is loaded at runtime and is used
-as script body. Now that we have a normal groovy file we can use the code completion and syntax highlighting of our favorite
-Groovy editor.
+We referenced some external file resource *_validationScript.groovy_* . This file content is loaded at runtime and is used as script body.
+Now that we have a normal groovy file we can use the code completion and syntax highlighting of our favorite Groovy editor.
 
-IMPORTANT: Using several message validator implementations at the same time in the Spring application context is also no
-problem. Citrus automatically searches for all available message validators applicable for the given message format and
-executes these validators in sequence. This means that multiple message validators can coexist in a Citrus project.
+IMPORTANT: Using several message validator implementations at the same time in the Spring application context is also no problem.
+Citrus automatically searches for all available message validators applicable for the given message format and executes these validators in sequence.
+This means that multiple message validators can coexist in a Citrus project.
 
-Multiple message validators that all apply to the message content format will run in sequence. In case you need to explicitly
-choose a message validator implementation you can do so in the receive action:
+Multiple message validators that all apply to the message content format will run in sequence.
+In case you need to explicitly choose a message validator implementation you can do so in the receive action:
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -265,23 +265,24 @@ receive(someEndpoint)
 </receive>
 ----
 
-In this example we use the *groovyJsonMessageValidator* explicitly in the receive test action. The message validator
-implementation was added as Spring bean with id *groovyJsonMessageValidator* to the Spring application context before. Now
-Citrus will only execute the explicit message validator. Other implementations that might also apply are skipped.
+In this example we use the *groovyJsonMessageValidator* explicitly in the receive test action.
+The message validator implementation was added as Spring bean with id *groovyJsonMessageValidator* to the Spring application context before.
+Now Citrus will only execute the explicit message validator.
+Other implementations that might also apply are skipped.
 
-TIP: By default, Citrus consolidates all available message validators. You can explicitly pick a special message validator
-in the receive message action as shown in the example above. In this case all other validators will not take part in this
-special message validation. But be careful: When picking a message validator explicitly you are of course limited to this
-message validator capabilities. Validation features of other validators are not valid in this case (e.g. message header
-validation, XPath validation, etc.)
+TIP: By default, Citrus consolidates all available message validators.
+You can explicitly pick a special message validator in the receive message action as shown in the example above.
+In this case all other validators will not take part in this special message validation.
+But be careful: When picking a message validator explicitly you are of course limited to this message validator capabilities.
+Validation features of other validators are not valid in this case (e.g. message header validation, XPath validation, etc.)
 
 [[json-ignore-validation]]
 === Ignore with JsonPath
 
-The next usage scenario for JsonPath expressions in Citrus is the ignoring of elements during message validation. As you
-already know Citrus provides powerful validation mechanisms for XML and Json message format. The framework is able to compare
-received and expected message contents with powerful validator implementations. You can use a JsonPath expression for ignoring
-a very specific entry in the Json object structure.
+The next usage scenario for JsonPath expressions in Citrus is the ignoring of elements during message validation.
+As you already know Citrus provides powerful validation mechanisms for XML and Json message format.
+The framework is able to compare received and expected message contents with powerful validator implementations.
+You can use a JsonPath expression for ignoring a very specific entry in the Json object structure.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -342,13 +343,13 @@ receive(someEndpoint)
 </receive>
 ----
 
-This time we add JsonPath expressions as ignore statements. This means that we explicitly leave out the evaluated elements
-from validation. Obviously this mechanism is a good thing to do when dynamic message data simply is not deterministic such
-as timestamps and dynamic identifiers. In the example above we explicitly skip the *token* entry and all *lastLogin* values
-that are obviously timestamp values in milliseconds.
+This time we add JsonPath expressions as ignore statements.
+This means that we explicitly leave out the evaluated elements from validation.
+Obviously this mechanism is a good thing to do when dynamic message data simply is not deterministic such as timestamps and dynamic identifiers.
+In the example above we explicitly skip the *token* entry and all *lastLogin* values that are obviously timestamp values in milliseconds.
 
-The JsonPath evaluation is very powerful when it comes to select a set of Json objects and elements. This is how we can ignore
-several elements with one single JsonPath expression which is very powerful.
+The JsonPath evaluation is very powerful when it comes to select a set of Json objects and elements.
+This is how we can ignore several elements with one single JsonPath expression which is very powerful.
 
 [[json-path-validation]]
 === JsonPath validation
@@ -402,24 +403,26 @@ receive(someEndpoint)
     .validate(jsonPath().expressions(validationMap));
 ----
 
-The above JsonPath expressions will be evaluated when Citrus validates the received message. The expression result is compared
-to the expected value where expectations can be static values as well as test variables and validation matcher expressions.
+The above JsonPath expressions will be evaluated when Citrus validates the received message.
+The expression result is compared to the expected value where expectations can be static values as well as test variables and validation matcher expressions.
 In case a JsonPath expression should not be able to find any elements the test case will also fail.
 
-Json is a pretty simple yet powerful message format. Simply put, a Json message just knows JsonObject, JsonArray and JsonValue
-items. The handling of JsonObject and JsonValue items in JsonPath expressions is straight forward. We just use a dot notated
-syntax for walking through the JsonObject hierarchy. The handling of JsonArray items is also not very difficult either. Citrus
-will try the best to convert JsonArray items to String representation values for comparison.
+Json is a pretty simple yet powerful message format.
+Simply put, a Json message just knows JsonObject, JsonArray and JsonValue items.
+The handling of JsonObject and JsonValue items in JsonPath expressions is straight forward.
+We just use a dot notated syntax for walking through the JsonObject hierarchy.
+The handling of JsonArray items is also not very difficult either.
+Citrus will try the best to convert JsonArray items to String representation values for comparison.
 
-IMPORTANT: JsonPath expressions will only work on Json message formats. This is why we have to tell Citrus the correct message
-format. By default, Citrus is working with XML message data and therefore the XML validation mechanisms do apply by default.
-With the message type attribute set to *json* we make sure that Citrus enables Json specific features on the message validation
-such as JsonPath support.
+IMPORTANT: JsonPath expressions will only work on Json message formats.
+This is why we have to tell Citrus the correct message format.
+By default, Citrus is working with XML message data and therefore the XML validation mechanisms do apply by default.
+With the message type attribute set to *json* we make sure that Citrus enables Json specific features on the message validation such as JsonPath support.
 
-Now let's get a bit more complex with validation matchers and Json object functions. Citrus tries to give you the most comfortable
-validation capabilities when comparing Json object values and Json arrays. One first thing you can use is object functions
-like *keySet()* or *size()* . This functionality is not covered by JsonPath out of the box but added by Citrus. See the following
-example on how to use it:
+Now let's get a bit more complex with validation matchers and Json object functions.
+Citrus tries to give you the most comfortable validation capabilities when comparing Json object values and Json arrays.
+One first thing you can use is object functions like *keySet()* or *size()* . This functionality is not covered by JsonPath out of the box but added by Citrus.
+See the following example on how to use it:
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -445,11 +448,11 @@ receive(someEndpoint)
 </receive>
 ----
 
-The object functions do return special Json object related properties such as the set of *keys* for an object or the size
-of a Json array.
+The object functions do return special Json object related properties such as the set of *keys* for an object or the size of a Json array.
 
-Now let's get even more comfortable validation capabilities with matchers. Citrus supports Hamcrest matchers which gives
-us a very powerful way of validating Json object elements and arrays. See the following examples that demonstrate how this works:
+Now let's get even more comfortable validation capabilities with matchers.
+Citrus supports Hamcrest matchers which gives us a very powerful way of validating Json object elements and arrays.
+See the following examples that demonstrate how this works:
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -475,9 +478,10 @@ receive(someEndpoint)
 </receive>
 ----
 
-When using the XML DSL we have to use the *assertThat* validation matcher syntax for defining the Hamcrest matchers. You
-can combine matcher implementation as seen in the *allOf(greaterThan(0), lessThan(5))* expression. When using the Java DSL
-you can just add the matcher as expected result object. Citrus evaluates the matchers and makes sure everything is as expected.
+When using the XML DSL we have to use the *assertThat* validation matcher syntax for defining the Hamcrest matchers.
+You can combine matcher implementation as seen in the *allOf(greaterThan(0), lessThan(5))* expression.
+When using the Java DSL you can just add the matcher as expected result object.
+Citrus evaluates the matchers and makes sure everything is as expected.
 This is a very powerful validation mechanism as it combines the Hamcrest matcher capabilities with Json message validation.
 
 [[json-schema-validation]]
@@ -486,8 +490,8 @@ This is a very powerful validation mechanism as it combines the Hamcrest matcher
 The Json schema validation in Citrus is based on the drafts provided by http://json-schema.org/[json-schema.org].
 Because Json schema is a fast evolving project, only Json schema V3 and V4 are currently supported.
 
-IMPORTANT: In contrast to the XML validation, the Json validation is an optional feature. You have to activate it
-within every receive-message action by setting `schema-validation="true"`
+IMPORTANT: In contrast to the XML validation, the Json validation is an optional feature.
+You have to activate it within every receive-message action by setting `schema-validation="true"`
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -517,17 +521,17 @@ receive(someEndpoint)
 </receive>
 ----
 
-Json schema validation in Citrus is optional and disabled by default. This is why the action required to explicitly enable
-the schema validation with `schemaValidation(true)`. The schema references a bean in the Citrus context (e.g. a Spring bean in
-the application context). Read more about how to declare schemas in link:#schema-definition[schema validation].
+Json schema validation in Citrus is optional and disabled by default.
+This is why the action required to explicitly enable the schema validation with `schemaValidation(true)`.
+The schema references a bean in the Citrus context (e.g. a Spring bean in the application context).
+Read more about how to declare schemas in link:#schema-definition[schema validation].
 
-We encourage you to add Json schema validation to your test cases as soon as possible, because we think that message validation
-is an important part of integration testing.
+We encourage you to add Json schema validation to your test cases as soon as possible, because we think that message validation is an important part of integration testing.
 
 === Json schema repositories
 
-Because Citrus supports different types of schema repositories, it is necessary to declare a Json schema repository
-as `type="json"`. This allows Citrus to collect all Json schema files for the message validation.
+Because Citrus supports different types of schema repositories, it is necessary to declare a Json schema repository as `type="json"`.
+This allows Citrus to collect all Json schema files for the message validation.
 
 .Java
 [source,java,indent=0,role="primary"]
@@ -570,9 +574,8 @@ public SimpleJsonSchema productSchema() {
 
 === Json schema filtering and validation strategy
 
-In reference to the current Json schema definition, it is not possible to create a direct reference between a Json
-message and a set of schemas, as it would be possible with XML namespaces. Because of that, Citrus follows a rule set
-for choosing the relevant schemas based on the configuration within the test case in relation to the given context.
+In reference to the current Json schema definition, it is not possible to create a direct reference between a Json message and a set of schemas, as it would be possible with XML namespaces.
+Because of that, Citrus follows a rule set for choosing the relevant schemas based on the configuration within the test case in relation to the given context.
 The following table assumes that the Json schema validation is activated for the test action.
 
 |===
