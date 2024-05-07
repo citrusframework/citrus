@@ -16,37 +16,52 @@
 
 package org.citrusframework.validation.json;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import jakarta.annotation.Nullable;
 import org.citrusframework.validation.context.DefaultValidationContext;
 import org.citrusframework.validation.context.SchemaValidationContext;
 import org.citrusframework.validation.context.ValidationContext;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Validation context holding JSON specific validation information.
+ *
  * @author Christoph Deppisch
  * @since 2.3
  */
 public class JsonMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
 
-    /** Map holding xpath expressions to identify the ignored message elements */
+    /**
+     * Map holding xpath expressions to identify the ignored message elements
+     */
     private final Set<String> ignoreExpressions;
 
     /**
      * Should message be validated with its schema definition
-     *
+     * <p>
      * This is currently disabled by default, because old json tests would fail with a validation exception
      * as soon as a json schema repository is specified and the schema validation is activated.
      */
     private final boolean schemaValidation;
 
-    /** Explicit schema repository to use for this validation */
+    /**
+     * Explicit schema repository to use for this validation
+     */
     private final String schemaRepository;
 
-    /** Explicit schema instance to use for this validation */
+    /**
+     * Explicit schema instance to use for this validation
+     */
     private final String schema;
+
+    /**
+     * Whether the ordering of arrays should be validated or not. If this property is not explicitly set, then
+     * {@code true} will be assumed if the system-wide validation mode is {@code strict}, and {@code false} if otherwise.
+     */
+    @Nullable
+    private final Boolean checkArrayOrder;
 
     /**
      * Default constructor.
@@ -57,6 +72,7 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
 
     /**
      * Constructor using fluent builder.
+     *
      * @param builder
      */
     public JsonMessageValidationContext(Builder builder) {
@@ -64,6 +80,7 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
         this.schemaValidation = builder.schemaValidation;
         this.schemaRepository = builder.schemaRepository;
         this.schema = builder.schema;
+        this.checkArrayOrder = builder.checkArrayOrder;
     }
 
     /**
@@ -76,6 +93,7 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
         private boolean schemaValidation = true;
         private String schemaRepository;
         private String schema;
+        private Boolean checkArrayOrder;
 
         public static Builder json() {
             return new Builder();
@@ -145,6 +163,17 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
             return this;
         }
 
+        /**
+         * Sets whether array order should be validated for this message.
+         *
+         * @param checkArrayOrder whether array order is checked
+         * @return this builder for chaining
+         */
+        public Builder checkArrayOrder(final boolean checkArrayOrder) {
+            this.checkArrayOrder = checkArrayOrder;
+            return this;
+        }
+
         @Override
         public JsonMessageValidationContext build() {
             return new JsonMessageValidationContext(this);
@@ -153,6 +182,7 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
 
     /**
      * Get ignored message elements.
+     *
      * @return the ignoreExpressions
      */
     public Set<String> getIgnoreExpressions() {
@@ -172,5 +202,15 @@ public class JsonMessageValidationContext extends DefaultValidationContext imple
     @Override
     public String getSchema() {
         return schema;
+    }
+
+    /**
+     * Get whether the array order should be considered in validation.
+     *
+     * @return whether the array order is checked
+     */
+    @Nullable
+    public Boolean shouldCheckArrayOrder() {
+        return checkArrayOrder;
     }
 }

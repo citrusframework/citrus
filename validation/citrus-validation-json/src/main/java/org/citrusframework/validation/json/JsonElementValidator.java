@@ -35,15 +35,26 @@ public class JsonElementValidator {
     private final boolean strict;
     private final TestContext context;
     private final Collection<String> ignoreExpressions;
+    private final Boolean checkArrayOrder;
 
     public JsonElementValidator(
             boolean strict,
             TestContext context,
             Collection<String> ignoreExpressions
     ) {
+        this(strict, context, ignoreExpressions, null);
+    }
+
+    public JsonElementValidator(
+            boolean strict,
+            TestContext context,
+            Collection<String> ignoreExpressions,
+            Boolean checkArrayOrder
+    ) {
         this.strict = strict;
         this.context = context;
         this.ignoreExpressions = ignoreExpressions;
+        this.checkArrayOrder = checkArrayOrder;
     }
 
     public void validate(JsonElementValidatorItem<?> control) {
@@ -96,11 +107,7 @@ public class JsonElementValidator {
             return true;
         }
 
-        if (ignoreExpressions.stream().anyMatch(controlEntry::isPathIgnoredBy)) {
-            return true;
-        }
-
-        return false;
+        return ignoreExpressions.stream().anyMatch(controlEntry::isPathIgnoredBy);
     }
 
 
@@ -109,14 +116,37 @@ public class JsonElementValidator {
         if (strict) {
             validateSameSize(control.getJsonPath(), arrayControl.expected, arrayControl.actual);
         }
+
+        boolean doCheckArrayOrder = requireNonNullElse(checkArrayOrder, strict);
         for (int i = 0; i < arrayControl.expected.size(); i++) {
-            if (!isAnyValidItemInActualArray(validator, arrayControl, i)) {
-                throw new ValidationException(buildValueToBeInCollectionErrorMessage(
-                        "An item in '%s' is missing".formatted(arrayControl.getJsonPath()),
-                        arrayControl.expected.get(i),
-                        arrayControl.actual
-                ));
+            if (doCheckArrayOrder) {
+                checkExactArrayElementPosition(validator, arrayControl, i);
+            } else {
+                if (!isAnyValidItemInActualArray(validator, arrayControl, i)) { //TODO ignores element count - intended?
+                    throw new ValidationException(buildValueToBeInCollectionErrorMessage(
+                            "An item in '%s' is missing".formatted(arrayControl.getJsonPath()),
+                            arrayControl.expected.get(i),
+                            arrayControl.actual
+                    ));
+                }
             }
+        }
+    }
+
+    private void checkExactArrayElementPosition(JsonElementValidator validator, JsonElementValidatorItem<JSONArray> control, int index) {
+        try {
+            var itemControl = new JsonElementValidatorItem<>(
+                    index,
+                    control.actual.get(index),
+                    control.expected.get(index)
+            ).parent(control);
+            validator.validate(itemControl);
+        } catch (ValidationException e) {
+            throw new ValidationException(buildValueMismatchErrorMessage(
+                    "Elements not equal for array '%s' at position %d".formatted(control.getJsonPath(), index),
+                    control.expected.get(index),
+                    control.actual.get(index)
+            ));
         }
     }
 

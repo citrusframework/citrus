@@ -16,7 +16,6 @@
 
 package org.citrusframework.validation.json;
 
-import org.assertj.core.api.AbstractThrowableAssert;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.ValidationException;
 import org.testng.annotations.DataProvider;
@@ -33,6 +32,9 @@ public class JsonElementValidatorTest extends UnitTestSupport {
 
     public static final boolean NOT_STRICT = false;
     public static final boolean STRICT = true;
+
+    public static final boolean CHECK_ARRAY_ORDER = true;
+    public static final boolean DO_NOT_CHECK_ARRAY_ORDER = false;
 
     JsonElementValidator fixture;
 
@@ -128,10 +130,10 @@ public class JsonElementValidatorTest extends UnitTestSupport {
                 ),
                 new JsonAssertion(
                         "[1, 2, 3]",
-                        "[3, 2, 1]"
+                        "[1, 2, 3]"
                 ),
                 new JsonAssertion(
-                        "{ \"books\": [\"book-c\", \"book-b\", \"book-a\"] }",
+                        "{ \"books\": [\"book-a\", \"book-b\", \"book-c\"] }",
                         "{ \"books\": [\"book-a\", \"book-b\", \"book-c\"] }"
                 )
         ).toArray(new JsonAssertion[0]);
@@ -139,10 +141,12 @@ public class JsonElementValidatorTest extends UnitTestSupport {
 
 
     @Test(dataProvider = "invalidJsonPairs")
-    public AbstractThrowableAssert<?, ? extends Throwable> shouldBeInvalid(JsonAssertion jsonAssertion) {
+    public void shouldBeInvalid(JsonAssertion jsonAssertion) {
         var validationItem = toValidationItem(jsonAssertion);
         fixture = new JsonElementValidator(STRICT, context, Set.of());
-        return assertThatThrownBy(() -> fixture.validate(validationItem)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> fixture.validate(validationItem))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContainingAll(jsonAssertion.messageContains());
     }
 
     @DataProvider
@@ -151,70 +155,58 @@ public class JsonElementValidatorTest extends UnitTestSupport {
                 new JsonAssertion(
                         "{\"myNumbers\": [11, 22, 44]}",
                         "{\"myNumbers\": [11, 22, 33]}",
-                        "An item in '$['myNumbers']' is missing, expected '33' to be in '[11,22,44]'"
-                ),
+                        "Elements not equal for array '$['myNumbers']' at position 2, expected '33' but was '44'"),
                 new JsonAssertion(
                         "{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}",
                         "{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\", \"missing\":\"this is missing\"}",
                         "Number of entries is not equal in element: '$'",
-                        "expected '[missing, index, text, id]' but was '[index, text, id]'"
-                ),
+                        "expected '[missing, index, text, id]' but was '[index, text, id]'"),
                 new JsonAssertion(
                         "{\"greetings\":[{\"text\":\"Hello World!\", \"index\":1}, {\"text\":\"Hallo Welt!\", \"index\":0}, {\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}",
                         "{\"greetings\":[{\"text\":\"Hello World!\", \"index\":1}, {\"text\":\"Hallo Welt!\", \"index\":2}, {\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}",
-                        "An item in '$['greetings']' is missing, expected '{\"index\":2,\"text\":\"Hallo Welt!\"}' to be in '[{\"index\":1,\"text\":\"Hello World!\"},{\"index\":0,\"text\":\"Hallo Welt!\"},{\"index\":3,\"text\":\"Hola del mundo!\"}]'"
-                ),
+                        "Elements not equal for array '$['greetings']' at position 1, expected '{\"index\":2,\"text\":\"Hallo Welt!\"}' but was '{\"index\":0,\"text\":\"Hallo Welt!\"}'"),
                 new JsonAssertion(
                         "{\"numbers\":[101, 42]}",
                         "{\"numbers\":[101, 42, 9000]}",
                         "Number of entries is not equal in element: '$['numbers']'",
-                        "expected '[101,42,9000]' but was '[101,42]'"
-                ),
+                        "expected '[101,42,9000]' but was '[101,42]'"),
                 new JsonAssertion(
                         "{\"test\": \"Lorem\"}",
                         "{\"test\": \"@equalsIgnoreCase('lorem ipsum')@\"}",
-                        "EqualsIgnoreCaseValidationMatcher failed for field 'test'",
-                        "Received value is 'Lorem', control value is 'lorem ipsum'"
-                ),
+                        "EqualsIgnoreCaseValidationMatcher failed for field '$['test']'",
+                        "Received value is 'Lorem'", "control value is 'lorem ipsum'."),
                 new JsonAssertion(
                         "{\"not-test\": \"lorem\"}",
                         "{\"test\": \"lorem\"}",
-                        "Missing JSON entry, expected 'test' to be in '[not-test]'"
-                ),
+                        "Missing JSON entry, expected 'test' to be in '[not-test]'"),
                 new JsonAssertion(
                         "{\"greetings\":[{\"text\":\"Hello World!\", \"index\":1}, {\"text\":\"Hallo Welt!\", \"index\":2}, {\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}",
                         "{\"greetings\":{\"text\":\"Hello World!\", \"index\":1}, \"id\":\"x123456789x\"}",
                         "expected 'JSONObject'",
-                        "but was 'JSONArray'"
-                ),
+                        "but was 'JSONArray'"),
                 new JsonAssertion(
                         "{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}",
                         "{\"text\":\"Hello World!\", \"index\":5, \"id\":null}",
-                        "expected 'null' but was 'x123456789x'"
-                ),
+                        "expected 'null' but was 'x123456789x'"),
                 new JsonAssertion(
                         "{\"text\":\"Hello World!\", \"index\":5, \"id\":\"wrong\"}",
                         "{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}",
                         "expected 'x123456789x'",
-                        "but was 'wrong'"
-                ),
+                        "but was 'wrong'"),
                 new JsonAssertion(
                         "{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"wrong\"}, \"index\":5, \"id\":\"x123456789x\"}",
                         "{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}",
                         "expected 'Doe'",
-                        "but was 'wrong'"
-                ),
+                        "but was 'wrong'"),
                 new JsonAssertion(
                         "{\"greetings\":{\"text\":\"Hello World!\", \"index\":1}, \"id\":\"x123456789x\"}",
                         "{\"greetings\":[{\"text\":\"Hello World!\", \"index\":1}, {\"text\":\"Hallo Welt!\", \"index\":2}, {\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}",
                         "expected 'JSONArray'",
-                        "but was 'JSONObject'"
-                ),
+                        "but was 'JSONObject'"),
                 new JsonAssertion(
-                        "",
-                        "{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}",
-                        "expected message contents, but received empty message"
-                )
+                        "[\"a\", \"c\", \"b\"]",
+                        "[\"a\", \"b\", \"c\"]",
+                        "Elements not equal for array '$' at position 1, expected 'b' but was 'c'")
         ).toArray(new JsonAssertion[0]);
     }
 
@@ -258,6 +250,64 @@ public class JsonElementValidatorTest extends UnitTestSupport {
         ).toArray(new JsonAssertion[0]);
     }
 
+    @Test
+    void validate_shouldCheckArrayOrder_whenPropertyTrue() {
+        var validItem = toValidationItem(new JsonAssertion(
+                "[\"a\", \"b\", \"c\"]",
+                "[\"a\", \"b\", \"c\"]"));
+
+        fixture = new JsonElementValidator(STRICT, context, Set.of(), true);
+        assertThatNoException().isThrownBy(() -> fixture.validate(validItem));
+
+        var invalidItem = toValidationItem(new JsonAssertion(
+                "[\"a\", \"b\", \"c\"]",
+                "[\"c\", \"a\", \"b\"]"));
+
+        fixture = new JsonElementValidator(STRICT, context, Set.of(), true);
+        assertThatThrownBy(() -> fixture.validate(invalidItem))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("Elements not equal for array");
+    }
+
+    @Test
+    void validate_shouldNotCheckArrayOrder_whenPropertyFalse() {
+        var invalidItem = toValidationItem(new JsonAssertion(
+                "[\"a\", \"b\", \"c\"]",
+                "[\"c\", \"a\", \"b\"]"));
+
+        fixture = new JsonElementValidator(STRICT, context, Set.of(), false);
+        assertThatNoException().isThrownBy(() -> fixture.validate(invalidItem));
+    }
+
+    @Test
+    void validate_shouldCheckArrayOrder_whenPropertyNotSet_andStrict() {
+        var validItem = toValidationItem(new JsonAssertion(
+                "[\"a\", \"b\", \"c\"]",
+                "[\"a\", \"b\", \"c\"]"));
+
+        fixture = new JsonElementValidator(STRICT, context, Set.of());
+        assertThatNoException().isThrownBy(() -> fixture.validate(validItem));
+
+        var invalidItem = toValidationItem(new JsonAssertion(
+                "[\"a\", \"b\", \"c\"]",
+                "[\"c\", \"a\", \"b\"]"));
+
+        fixture = new JsonElementValidator(STRICT, context, Set.of());
+        assertThatThrownBy(() -> fixture.validate(invalidItem))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("Elements not equal for array");
+    }
+
+    @Test
+    void validate_shouldNotCheckArrayOrder_whenPropertyNotSet_andNotStrict() {
+        var validationItem = toValidationItem(new JsonAssertion(
+                "[\"a\", \"b\", \"c\"]",
+                "[\"c\", \"a\", \"b\"]"));
+
+        fixture = new JsonElementValidator(NOT_STRICT, context, Set.of());
+        assertThatNoException().isThrownBy(() -> fixture.validate(validationItem));
+    }
+
     private static JsonElementValidatorItem<Object> toValidationItem(JsonAssertion jsonAssertion) {
         return JsonElementValidatorItem.parseJson(DEFAULT_PERMISSIVE_MODE, jsonAssertion.actual, jsonAssertion.expected);
     }
@@ -268,6 +318,10 @@ public class JsonElementValidatorTest extends UnitTestSupport {
             Set<String> ignoreExpressions,
             String... messageContains
     ) {
+        public JsonAssertion(String actual, String expected) {
+            this(actual, expected, (String[]) null);
+        }
+
         public JsonAssertion(String actual, String expected, String... messageContains) {
             this(actual, expected, Set.of(), messageContains);
         }
