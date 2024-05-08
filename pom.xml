@@ -247,7 +247,7 @@
     <mockftpserver.version>3.1.0</mockftpserver.version>
     <netty.version>4.1.105.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
-    <picoli-version>4.7.5</picoli-version>
+    <picoli-version>4.7.6</picoli-version>
     <saaj.version>3.0.3</saaj.version>
     <selenium.version>4.19.1</selenium.version>
     <slf4j.version>2.0.11</slf4j.version>
