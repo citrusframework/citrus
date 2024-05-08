@@ -263,7 +263,7 @@
     <testng.version>7.10.1</testng.version>
     <vertx.version>4.5.7</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
-    <xbean-spring.version>4.24</xbean-spring.version>
+    <xbean-spring.version>4.25</xbean-spring.version>
     <xmlbeans.version>3.0.0</xmlbeans.version>
     <xmlbeans-xpath.version>2.6.0</xmlbeans-xpath.version>
     <xerces.version>2.12.2</xerces.version>
