@@ -24,7 +24,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.util.StringUtils;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 /**
  * Action executes http client operations such as sending requests and receiving responses.
@@ -250,7 +250,7 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
          * Generic response builder for expecting response messages on client with response status code.
          * @return
          */
-        public HttpClientResponseActionBuilder response(HttpStatus status) {
+        public HttpClientResponseActionBuilder response(HttpStatusCode status) {
             HttpClientResponseActionBuilder builder = new HttpClientResponseActionBuilder();
             if (httpClient != null) {
                 builder.endpoint(httpClient);
