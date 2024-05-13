@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="{{{targetXmlnsNamespace}}}"
+           targetNamespace="{{{targetXmlnsNamespace}}}"
+           elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xs:complexType name="AbstractTestRequestType">
+        <xs:sequence>
+            <xs:element name="cookie" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="value" type="xs:string" use="required"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="value" type="xs:string" use="required"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="resource" type="xs:string"/>
+        <xs:attribute name="schema" type="xs:string" use="optional" default="oas3"/>
+        <xs:attribute name="schema-validation" type="xs:boolean" default="true"/>
+        <xs:attribute name="script" type="xs:string"/>
+        <xs:attribute name="type" default="groovy">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="groovy"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:element name="abstract-body" abstract="true" />
+    <xs:element name="body" substitutionGroup="abstract-body">
+        <xs:complexType>
+            <xs:attribute name="content-type" type="xs:string" default="application/json"/>
+            <xs:attribute name="file" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="bodyLiteral" substitutionGroup="abstract-body">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="content-type" type="xs:string" default="application/json"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="ResponseOutputType">
+        <xs:sequence minOccurs="0">
+            <xs:choice minOccurs="0">
+                <xs:element name="resource" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:attribute name="file" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="script" maxOccurs="1">
+                    <xs:complexType mixed="true">
+                        <xs:attribute name="type" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="json-path" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="expression" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="accept-type" type="xs:string" default="*/*"/>
+        <xs:attribute name="status" type="xs:int" default="200"/>
+        <xs:attribute name="reason-phrase" type="xs:string" default="OK"/>
+        <xs:attribute name="version" type="xs:string" default="HTTP/1.1"/>
+        <xs:attribute name="type" default="json">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="xml"/>
+                    <xs:enumeration value="xhtml"/>
+                    <xs:enumeration value="csv"/>
+                    <xs:enumeration value="json"/>
+                    <xs:enumeration value="plaintext"/>
+                    <xs:enumeration value="binary"/>
+                    <xs:enumeration value="binary_base64"/>
+                    <xs:enumeration value="gzip" />
+                    <xs:enumeration value="gzip_base64" />
+                    <xs:enumeration value="mscons" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    {{#apiInfo}}
+    {{#apis}}
+    {{#operations}}
+    {{#operation}}
+
+    {{#isMultipart}}
+    <xs:complexType name="{{operationId}}MultipartBodyType">
+        <xs:sequence>
+            {{#formParams}}
+            <xs:element name="{{paramName}}" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        <b>{{^required}}Optional {{/required}}{{#required}}Required{{/required}} - must either be set as attribute or element: </b>{{#description}}
+                        <p>{{description}}</p>{{/description}}
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            {{/formParams}}
+        </xs:sequence>
+    </xs:complexType>
+    {{/isMultipart}}
+
+    <xs:complexType name="{{operationId}}RequestType">
+        <xs:annotation>
+            <xs:documentation>
+                <b>{{operationId}}</b>
+                <p>{{httpMethod}} {{httpPathPrefix}}{{{path}}}</p>
+                <ul>
+                {{#queryParams}}
+                    <li><emph>{{paramName}}</emph> {{description}}</li>
+                {{/queryParams}}
+                {{#pathParams}}
+                    <li><emph>{{baseName}}</emph> {{description}}</li>
+                {{/pathParams}}
+                {{#bodyParams}}
+                    <li><emph>Body:</emph> {{description}}</li>
+                {{/bodyParams}}
+                {{#authMethods}}{{#isBasic}}
+                    <li><emph>basicUsername</emph> http basic authentication username</li>
+                    <li><emph>basicPassword</emph> http basic authentication password</li>
+                {{/isBasic}}{{/authMethods}}
+                {{#isMultipart}}
+                {{#formParams}}
+                    <li><emph>{{paramName}}</emph> {{description}}</li>
+                {{/formParams}}
+                {{/isMultipart}}
+                </ul>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AbstractTestRequestType">
+                <xs:sequence>
+                    {{#isMultipart}}
+                    <xs:element name="multipartBody" type="{{operationId}}MultipartBodyType" minOccurs="0" maxOccurs="1"/>
+                    {{/isMultipart}}
+                    {{^isMultipart}}
+                    {{#bodyParams}}
+                    <xs:element ref="abstract-body" minOccurs="{{#required}}1{{/required}}{{^required}}0{{/required}}">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <b>{{^required}}Optional {{/required}}Body - {{summary}}</b>{{#description}}
+                                <p>{{description}}</p>{{/description}}
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    {{/bodyParams}}
+                    {{/isMultipart}}
+                    <xs:element name="response" minOccurs="0" maxOccurs="1" type="ResponseOutputType" />
+                </xs:sequence>
+                {{#queryParams}}
+                <xs:attribute name="{{paramName}}" type="xs:string"
+                              use="{{#required}}required{{/required}}{{^required}}optional{{/required}}">
+                    <xs:annotation>
+                        <xs:documentation>{{description}}</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                {{/queryParams}}
+                {{#pathParams}}
+                <xs:attribute name="{{paramName}}" type="xs:string"
+                    use="{{#required}}required{{/required}}{{^required}}optional{{/required}}">
+                    <xs:annotation>
+                        <xs:documentation>{{description}}</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                {{/pathParams}}
+                {{#isMultipart}}
+                {{#formParams}}
+<!--            Note we explicitly do set set the required attribute, to allow for an extra xml element with name "paramName".
+                So attribute or element can both be used, thus we cannot check the 'required' attribute.
+ -->
+                <xs:attribute name="{{paramName}}" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>The filename of the {{paramName}} to upload</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                {{/formParams}}
+                {{/isMultipart}}
+                {{#authMethods}}{{#isBasic}}
+                <xs:attribute name="basicUsername" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>http basic authentication username</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="basicPassword" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>http basic authentication password</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                {{/isBasic}}{{/authMethods}}
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    {{/operation}}
+    {{/operations}}
+    {{/apis}}
+    {{#apis}}
+    {{#operations}}
+    {{#operation}}
+
+    <xs:element name="{{operationId}}Request" type="{{operationId}}RequestType"/>
+    {{/operation}}
+    {{/operations}}
+    {{/apis}}
+    {{/apiInfo}}
+</xs:schema>
