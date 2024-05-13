@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="{{{targetXmlnsNamespace}}}"
+           targetNamespace="{{{targetXmlnsNamespace}}}"
+           elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xs:complexType name="AbstractTestRequestType">
+        <xs:sequence>
+            <xs:element name="soapHeader" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string"/>
+                    <xs:attribute name="value" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="mimeHeader" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="value" type="xs:string" use="required"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="abstract-body" abstract="true" />
+    <xs:element name="body" substitutionGroup="abstract-body">
+        <xs:complexType>
+            <xs:attribute name="content-type" type="xs:string" default="application/soap+xml; charset=UTF-8"/>
+            <xs:attribute name="file" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="bodyLiteral" substitutionGroup="abstract-body">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="content-type" type="xs:string" default="application/soap+xml; charset=UTF-8"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="ResponseOutputType">
+        <xs:sequence minOccurs="0">
+            <xs:choice minOccurs="0">
+                <xs:element name="resource" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:attribute name="file" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="script" maxOccurs="1">
+                    <xs:complexType mixed="true">
+                        <xs:attribute name="type" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="xpath" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="expression" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    {{#apiInfo}}
+    {{#apis}}
+    {{#operations}}
+        {{#operation}}
+                <xs:complexType name="{{operationId}}RequestType">
+                    <xs:annotation>
+                        <xs:documentation>
+                            <b>{{operationId}}</b>
+                            <p>{{{path}}}</p>
+                            <ul>    <li>
+                                        <emph>Body:</emph> {{description}}</li>
+                            </ul>
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexContent>
+                        <xs:extension base="AbstractTestRequestType">
+                            <xs:sequence>
+                                <xs:element ref="abstract-body" minOccurs="{{#required}}1{{/required}}{{^required}}0{{/required}}">
+                                    <xs:annotation>
+                                        <xs:documentation>
+                                            <b>{{^required}}SOAP {{/required}}Body{{summary}}</b>{{#description}}
+                                            <p>{{description}}</p>{{/description}}
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                                <xs:element name="response" minOccurs="0" maxOccurs="1" type="ResponseOutputType" />
+                            </xs:sequence>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+
+        {{/operation}}
+    {{/operations}}
+    {{/apis}}
+    {{#apis}}
+    {{#operations}}
+    {{#operation}}
+        <xs:element name="{{operationId}}Request"
+                    type="{{operationId}}RequestType"/>
+
+    {{/operation}}
+    {{/operations}}
+    {{/apis}}
+    {{/apiInfo}}
+</xs:schema>

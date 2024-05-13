@@ -1,0 +1,249 @@
+openapi: 3.0.3
+info:
+    title: multiparttest API
+    version: 2.0.0
+    description: |
+        The service to test mutlipart
+    x-citrus-app: MPT
+    x-citrus-api-name: multiparttest-rest-resource
+    contact:
+        name: IT-Services-CI TAuBE
+        email: IT-Serv-CI-ETAdl@post.ch
+        url: https://confluence.pnet.ch/pages/viewpage.action?pageId=314828825
+tags:
+    - name: multiparttest-controller
+paths:
+    /api/v2/multitest-file/{bucket}/{filename}/random:
+        post:
+            tags:
+                - multiparttest-controller
+            operationId: postRandom
+            summary: Uploads random file.
+            parameters:
+                - name: bucket
+                  description: The name of an existing s3 bucket.
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: filename
+                  description: The name under which to store the random file.
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PutObjectResult'
+                500:
+                    description: Internal Server Error
+    /api/v2/multitest-file/{bucket}/{filename}:
+        post:
+            tags:
+                - multiparttest-controller
+            operationId: postFile
+            summary: Uploads file.
+            parameters:
+                - name: bucket
+                  description: The name of an existing s3 bucket.
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: filename
+                  description: The name of the file which should be uploaded. It may override any existing file with the same name.
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                multipartFile:
+                                    type: string
+                                    format: binary
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PutObjectResult'
+                500:
+                    description: Internal Server Error
+        delete:
+            tags:
+                - multiparttest-controller
+            operationId: deleteObject
+            summary: Delete file.
+            parameters:
+                - name: bucket
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                  description: The name of an existing s3 bucket.
+                - name: filename
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                  description: The name of the file which should be deleted.
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: boolean
+                500:
+                    description: Internal Server Error
+    /api/v2/multitest-reportgeneration:
+        post:
+            tags:
+                - multiparttest-controller
+            operationId: generateReport
+            summary: summary
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            required: ['template']
+                            properties:
+                                template:
+                                    description: |
+                                        Content of the template.
+                                    type: string
+                                additionalData:
+                                    $ref: '#/components/schemas/AdditionalData'
+                                schema:
+                                    description: |
+                                        An optional JSON schema to validate the created report against.
+                                    type: string
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PutObjectResult'
+                500:
+                    description: Internal Server Error
+    /api/v2/multitest-multipledatatypes:
+        post:
+            tags:
+                - multiparttest-controller
+            operationId: multipleDatatypes
+            summary: summary
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                stringData:
+                                    type: string
+                                booleanData:
+                                    type: boolean
+                                integerData:
+                                    type: integer
+
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PutObjectResult'
+                500:
+                    description: Internal Server Error
+    /api/v2/multitest-file/{bucket}/{filename}/exists:
+        get:
+            tags:
+                - multiparttest-controller
+            operationId: fileExists
+            summary: Checks if file exist.
+            parameters:
+                - name: bucket
+                  description: The name of an existing s3 bucket.
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: filename
+                  description: The name of the file on which the status should be checked.
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: boolean
+                500:
+                    description: Internal Server Error
+components:
+    schemas:
+        Metadata:
+            type: object
+            properties:
+                userMetadata:
+                    type: object
+                    additionalProperties:
+                        type: string
+                rawMetadata:
+                    type: object
+                    additionalProperties:
+                        type: string
+                httpExpiresDate:
+                    type: string
+                    format: date-time
+                expirationTime:
+                    type: string
+                    format: date-time
+                expirationTimeRuleId:
+                    type: string
+                ongoingRestore:
+                    type: boolean
+                restoreExpirationTime:
+                    type: string
+                    format: date-time
+                bucketKeyEnabled:
+                    type: boolean
+        PutObjectResult:
+            type: object
+            properties:
+                versionId:
+                    type: string
+                eTag:
+                    type: string
+                expirationTime:
+                    type: string
+                    format: date-time
+                expirationTimeRuleId:
+                    type: string
+                contentMd5:
+                    type: string
+                metadata:
+                    $ref: '#/components/schemas/Metadata'
+                isRequesterCharged:
+                    type: boolean
+        AdditionalData:
+            description: |
+                Additional data provided to the report. For each dataset requested, provide a json
+                object with the name of the dataset.
+            type: string
