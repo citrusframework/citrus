@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<template exportFormat="JSON">
+    <property path="amount" mandatory="true" value="${dataset.jsonPath($.amount)}" />
+</template>

@@ -16,9 +16,12 @@
 
 package org.citrusframework.validation.text;
 
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static org.citrusframework.message.MessagePayloadUtils.normalizeWhitespace;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.ValidationException;
@@ -28,9 +31,6 @@ import org.citrusframework.util.StringUtils;
 import org.citrusframework.validation.DefaultMessageValidator;
 import org.citrusframework.validation.context.ValidationContext;
 import org.citrusframework.validation.matcher.ValidationMatcherUtils;
-
-import static java.lang.Boolean.parseBoolean;
-import static java.lang.Integer.parseInt;
 
 /**
  * Plain text validator using simple String comparison.
@@ -58,8 +58,8 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         logger.debug("Start text message validation");
 
         try {
-            String resultValue = normalizeWhitespace(receivedMessage.getPayload(String.class).trim());
-            String controlValue = normalizeWhitespace(context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()));
+            String resultValue = normalizeWhitespace(receivedMessage.getPayload(String.class).trim(), ignoreWhitespace, ignoreNewLineType);
+            String controlValue = normalizeWhitespace(context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()), ignoreWhitespace, ignoreNewLineType);
 
             controlValue = processIgnoreStatements(controlValue, resultValue);
             controlValue = processVariableStatements(controlValue, resultValue, context);
@@ -180,38 +180,6 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         }
     }
 
-    /**
-     * Normalize whitespace characters if appropriate. Based on system property settings this method normalizes
-     * new line characters exclusively or filters all whitespaces such as double whitespaces and new lines.
-     *
-     * @param payload
-     * @return
-     */
-    private String normalizeWhitespace(String payload) {
-        if (ignoreWhitespace) {
-            StringBuilder result = new StringBuilder();
-            boolean lastWasSpace = true;
-            for (int i = 0; i < payload.length(); i++) {
-                char c = payload.charAt(i);
-                if (Character.isWhitespace(c)) {
-                    if (!lastWasSpace) {
-                        result.append(' ');
-                    }
-                    lastWasSpace = true;
-                } else {
-                    result.append(c);
-                    lastWasSpace = false;
-                }
-            }
-            return result.toString().trim();
-        }
-
-        if (ignoreNewLineType) {
-            return payload.replaceAll("\\r(\\n)?", "\n");
-        }
-
-        return payload;
-    }
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
