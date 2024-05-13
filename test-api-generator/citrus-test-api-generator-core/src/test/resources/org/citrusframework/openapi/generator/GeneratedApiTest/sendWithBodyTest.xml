@@ -1,0 +1,20 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd"
+>
+    <testcase name="sendWithBodyTest">
+        <actions>
+            <petstore:addPetRequest>
+                <petstore:body content-type="json" file="org/citrusframework/openapi/generator/GeneratedApiTest/payloads/addPetMessage.json" />
+            </petstore:addPetRequest>
+        </actions>
+    </testcase>
+</spring:beans>

@@ -1,0 +1,3 @@
+http\://www.citrusframework.org/citrus-test-schema/multiparttest-api/multiparttest-api.xsd=schema/xsd/multiparttest-api.xsd
+http\://www.citrusframework.org/citrus-test-schema/openapifromwsdl-api/openapifromwsdl-api.xsd=schema/xsd/openapifromwsdl-api.xsd
+http\://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd=schema/xsd/petstore-api.xsd

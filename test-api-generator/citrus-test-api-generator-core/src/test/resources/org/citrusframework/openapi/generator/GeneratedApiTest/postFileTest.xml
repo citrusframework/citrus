@@ -1,0 +1,22 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:multiparttest="http://www.citrusframework.org/citrus-test-schema/multiparttest-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/multiparttest-api
+    http://www.citrusframework.org/citrus-test-schema/multiparttest-api/multiparttest-api.xsd"
+>
+    <testcase name="postFileTest">
+        <actions>
+            <multiparttest:postFileRequest
+                bucket="bucket"
+                filename="filename"
+                multipartFile="org/citrusframework/openapi/generator/GeneratedApiTest/payloads/getPetByIdControlMessage1.json"
+            />
+        </actions>
+    </testcase>
+</spring:beans>

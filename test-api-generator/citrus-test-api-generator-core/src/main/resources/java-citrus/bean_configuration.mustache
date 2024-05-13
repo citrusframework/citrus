@@ -1,0 +1,38 @@
+/** 
+ * ==================================================
+ * GENERATED CLASS, ALL CHANGES WILL BE LOST
+ * ==================================================
+ */
+
+package {{invokerPackage}}.spring;
+
+import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE;
+
+{{#apiInfo}}
+{{#apis}}
+import {{package}}.{{classname}};
+{{/apis}}
+{{/apiInfo}}
+import javax.annotation.processing.Generated;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+
+@Configuration
+@Generated(value = "org.citrusframework.openapi.generator.JavaCitrusCodegen")
+public class {{prefix}}BeanConfiguration {
+{{#apiInfo}}
+    {{#apis}}
+        {{#operations}}
+            {{#operation}}
+
+    @Bean
+    @Scope(SCOPE_PROTOTYPE)
+    public {{classname}}.{{operationIdCamelCase}}Request {{operationId}}Request() {
+        return new {{classname}}.{{operationIdCamelCase}}Request();
+    }
+            {{/operation}}
+        {{/operations}}
+    {{/apis}}
+{{/apiInfo}}
+}
