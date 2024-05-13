@@ -175,6 +175,7 @@
     <maven.nexus-staging.plugin.version>1.6.13</maven.nexus-staging.plugin.version>
     <maven.plugin.plugin.version>3.9.0</maven.plugin.plugin.version>
     <maven.plugin.annotations.version>3.13.1</maven.plugin.annotations.version>
+    <maven.plugin.testing.harness.version>3.3.0</maven.plugin.testing.harness.version>
     <maven.release.plugin.version>3.0.1</maven.release.plugin.version>
     <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
     <maven.scm.plugin.version>1.11.2</maven.scm.plugin.version>
@@ -249,6 +250,7 @@
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.1.105.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
+    <openapi-generator-maven-plugin>7.5.0</openapi-generator-maven-plugin>
     <picoli-version>4.7.6</picoli-version>
     <saaj.version>3.0.4</saaj.version>
     <selenium.version>4.25.0</selenium.version>
@@ -518,6 +520,19 @@
         <groupId>org.awaitility</groupId>
         <artifactId>awaitility</artifactId>
         <version>${awaitility.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator</artifactId>
+        <version>${openapi-generator-maven-plugin}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.version}</version>
       </dependency>
       <dependency>
         <groupId>org.testng</groupId>
@@ -888,6 +903,11 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <artifactId>jackson-dataformat-yaml</artifactId>
         <version>${jackson.version}</version>
       </dependency>
       <dependency>

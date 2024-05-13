@@ -1,0 +1,36 @@
+/** 
+ * ==================================================
+ * GENERATED CLASS, ALL CHANGES WILL BE LOST
+ * ==================================================
+ */
+
+package {{invokerPackage}}.citrus.extension;
+
+{{#apiInfo}}
+{{#apis}}
+import {{package}}.{{classname}};
+{{/apis}}
+{{/apiInfo}}
+import {{invokerPackage}}.citrus.{{prefix}}BeanDefinitionParser;
+
+import javax.annotation.processing.Generated;
+
+import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+
+
+@Generated(value = "org.citrusframework.openapi.generator.JavaCitrusCodegen")
+public class {{prefix}}NamespaceHandler extends NamespaceHandlerSupport {
+
+    @Override
+    public void init() {
+        {{#apiInfo}}
+        {{#apis}}
+        {{#operations}}
+        {{#operation}}
+        registerBeanDefinitionParser("{{operationId}}Request", new {{prefix}}BeanDefinitionParser({{classname}}.{{operationIdCamelCase}}Request.class));
+        {{/operation}}
+        {{/operations}}
+        {{/apis}}
+        {{/apiInfo}}
+    }
+}
