@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.citrusframework.org/datatype"
+    targetNamespace="http://www.citrusframework.org/datatype"
+>
+    <!--
+        The `types` element defines the data types (XML elements)
+        that are used by the web service.
+     -->
+    <xsd:element name="Book">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="ID" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="Title" type="xsd:string"/>
+                <xsd:element name="Author" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="Books">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Book" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="GetBook">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="ID" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="GetBookResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Book" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="AddBook">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Book" minOccurs="1" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="AddBookResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Book" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="GetAllBooks">
+        <xsd:complexType/>
+    </xsd:element>
+    <xsd:element name="GetAllBooksResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="Book" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

@@ -1,0 +1,25 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd"
+>
+    <testcase name="scriptValidationTest">
+        <actions>
+            <petstore:getPetByIdRequest petId="1234">
+                <petstore:response>
+                    <petstore:script type="groovy">
+                        assert json.id == 12
+                    assert json.name == 'Snoopy'
+                    </petstore:script>
+                </petstore:response>
+            </petstore:getPetByIdRequest>
+        </actions>
+    </testcase>
+</spring:beans>
