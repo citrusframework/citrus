@@ -1,0 +1,33 @@
+---
+info:
+    contact:
+        name: "org.citrusframework.openapi.generator.SimpleWsdlToOpenApiTransformer"
+    description: "This api has been generated from the following wsdl 'BookService.wsdl'.\
+    \ It's purpose is solely to serve as input for SOAP API generation. Note that\
+    \ only operations are extracted from the WSDL. No schema information whatsoever\
+    \ is generated!"
+    title: "Generated api from wsdl"
+    version: "1.0.0"
+openapi: "3.0.1"
+paths:
+    /GetBook:
+        post:
+            description: ""
+            operationId: "GetBook"
+            responses: {}
+            tags:
+                - "BookServiceSOAP"
+    /AddBook:
+        post:
+            description: ""
+            operationId: "AddBook"
+            responses: {}
+            tags:
+                - "BookServiceSOAP"
+    /GetAllBooks:
+        post:
+            description: ""
+            operationId: "GetAllBooks"
+            responses: {}
+            tags:
+                - "BookServiceSOAP"
