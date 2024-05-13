@@ -1,0 +1,125 @@
+openapi: 3.0.3
+info:
+    title: Schema Test API
+    version: 1.0.0
+    description: |
+        A very simple test OpenAPI specification that is compliant with the random response generator (e.g. only contains responses of
+        media-type `application/json`).
+
+servers:
+    - url: http://localhost:9000/services/rest/ping/v1
+    - url: http://localhost:9000/ping/v1
+
+paths:
+    /ping/{id}:
+        put:
+            tags:
+                - ping
+            summary: Do the ping
+            operationId: doPing
+            parameters:
+                - name: id
+                  in: path
+                  description: Id to ping
+                  required: true
+                  explode: true
+                  schema:
+                      type: integer
+                      format: int64
+                - name: q1
+                  in: query
+                  description: Some queryParameter
+                  required: true
+                  explode: true
+                  schema:
+                      type: integer
+                      format: int64
+                - name: api_key
+                  in: header
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                description: ping data
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PingReqType'
+                required: true
+            responses:
+                200:
+                    description: successful operation
+                    headers:
+                        Ping-Time:
+                            required: false
+                            description: response time
+                            schema:
+                                type: integer
+                                format: int64
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PingRespType'
+                201:
+                    description: successful operation
+                    headers:
+                        Ping-Time:
+                            required: false
+                            description: response time
+                            schema:
+                                type: integer
+                                format: int64
+                    content:
+                        application/xml:
+                            schema:
+                                $ref: '#/components/schemas/PingRespType'
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PingRespType'
+                400:
+                    description: Some error
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+    /pung/{id}:
+        get:
+            tags:
+                - pung
+            summary: Do the pung
+            operationId: doPung
+            parameters:
+                - name: id
+                  in: path
+                  description: Id to pung
+                  required: true
+                  explode: true
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                200:
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PingRespType'
+                400:
+                    description: Invalid status value
+                    content: {}
+components:
+    schemas:
+        PingReqType:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+        PingRespType:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                value:
+                    type: string
