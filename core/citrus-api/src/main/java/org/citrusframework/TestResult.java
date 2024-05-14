@@ -132,7 +132,7 @@ public final class TestResult {
     /**
      * Create new test result with parameters for failed execution.
      */
-    public static TestResult failed(String name, String className, @Nonnull Map<String, Object> parameters, @Nullable Throwable cause) {
+    public static TestResult failed(String name, String className, @Nullable Throwable cause, @Nonnull Map<String, Object> parameters) {
         return new TestResult(FAILURE, name, className)
                 .withParameters(parameters)
                 .withCause(cause)
@@ -194,6 +194,11 @@ public final class TestResult {
     @Nullable
     public String getFailureType() {
         return failureType;
+    }
+
+    public TestResult withFailureType(String failureType) {
+        this.failureType = failureType;
+        return this;
     }
 
     @Nullable
