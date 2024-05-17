@@ -18,13 +18,13 @@
 
 //JAVA 17+
 //REPOS mavencentral
-//DEPS org.citrusframework:citrus:${citrus.jbang.version:4.2.0}@pom
-//DEPS org.citrusframework:citrus-base:${citrus.jbang.version:4.2.0}
-//DEPS org.citrusframework:citrus-main:${citrus.jbang.version:4.2.0}
-//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.2.0}
-//DEPS org.citrusframework:citrus-groovy:${citrus.jbang.version:4.2.0}
-//DEPS org.citrusframework:citrus-xml:${citrus.jbang.version:4.2.0}
-//DEPS org.citrusframework:citrus-yaml:${citrus.jbang.version:4.2.0}
+//DEPS org.citrusframework:citrus:${citrus.jbang.version:4.2.1}@pom
+//DEPS org.citrusframework:citrus-base:${citrus.jbang.version:4.2.1}
+//DEPS org.citrusframework:citrus-main:${citrus.jbang.version:4.2.1}
+//DEPS org.citrusframework:citrus-jbang:${citrus.jbang.version:4.2.1}
+//DEPS org.citrusframework:citrus-groovy:${citrus.jbang.version:4.2.1}
+//DEPS org.citrusframework:citrus-xml:${citrus.jbang.version:4.2.1}
+//DEPS org.citrusframework:citrus-yaml:${citrus.jbang.version:4.2.1}
 package main;
 
 import org.citrusframework.jbang.CitrusJBangMain;
