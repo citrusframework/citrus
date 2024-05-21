@@ -39,7 +39,6 @@ import java.util.*;
  *   <li>the third element of the <b>persons</b> property of the variable retrieved in the previous step</li>
  *   <li>the first element of the <b>firstnames</b> property of the property retrieved in the previous step</li>
  * </ol>
- *
  */
 public class VariableExpressionIterator implements Iterator<VariableSegment> {
 
