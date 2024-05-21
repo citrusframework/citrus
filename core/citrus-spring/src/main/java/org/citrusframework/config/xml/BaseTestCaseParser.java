@@ -35,10 +35,7 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
- * Base test case for parsing the test case
- *
- *  @param <T>
- *
+ * Base test case for parsing the test case.
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class BaseTestCaseParser<T extends TestCase> implements BeanDefinitionParser {
