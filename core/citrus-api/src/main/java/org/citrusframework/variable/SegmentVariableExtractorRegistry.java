@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
  * the extractors managed by this registry in order to access variable content from the TestContext expressed by variable expressions.
  * <p>
  * Registry provides all known {@link SegmentVariableExtractor}s.
- *
  */
 public class SegmentVariableExtractorRegistry {
 

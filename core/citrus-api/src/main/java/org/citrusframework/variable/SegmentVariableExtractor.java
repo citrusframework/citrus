@@ -20,7 +20,6 @@ import org.citrusframework.context.TestContext;
 
 /**
  * Class extracting values of segments of VariableExpressions.
- *
  */
 public interface SegmentVariableExtractor {
 
