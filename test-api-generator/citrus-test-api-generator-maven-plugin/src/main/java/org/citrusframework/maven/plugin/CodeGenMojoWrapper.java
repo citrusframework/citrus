@@ -14,8 +14,6 @@ import org.openapitools.codegen.plugin.CodeGenMojo;
 
 /**
  * Wrapper class that uses reflection to expose several properties of the {@link CodeGenMojo} for explicit assignment.
- *
- * @author Thorsten Schlathoelter
  */
 public class CodeGenMojoWrapper extends CodeGenMojo {
 

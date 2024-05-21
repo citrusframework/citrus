@@ -26,7 +26,6 @@ package org.citrusframework.common;
  * loading SpringXmlTest.
  *
  *
- * @author Thorsten Schlathoelter
  * @since 4.0
  * @see SpringXmlTestLoader
  */
