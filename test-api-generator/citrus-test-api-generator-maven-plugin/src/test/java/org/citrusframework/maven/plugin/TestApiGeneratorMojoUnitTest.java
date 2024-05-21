@@ -42,9 +42,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.codegen.plugin.CodeGenMojo;
 
 
-/**
- * @author Thorsten Schlathoelter
- */
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings({"JUnitMalformedDeclaration", "JUnitMixedFramework"})
 class TestApiGeneratorMojoUnitTest extends AbstractMojoTestCase {

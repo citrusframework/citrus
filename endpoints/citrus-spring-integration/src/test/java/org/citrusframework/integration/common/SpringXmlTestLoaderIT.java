@@ -32,9 +32,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.w3c.dom.Element;
 
-/**
- * @author Thorsten Schlathoelter
- */
 @SpringXmlTestLoaderConfiguration(
         parserConfigurations = {
                 @BeanDefinitionParserConfiguration(name = "testcase", parser = SpringXmlTestLoaderIT.CustomTestCaseParser.class),
