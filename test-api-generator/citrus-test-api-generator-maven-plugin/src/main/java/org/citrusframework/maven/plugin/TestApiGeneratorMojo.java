@@ -36,8 +36,6 @@ import org.sonatype.plexus.build.incremental.DefaultBuildContext;
  *   of creating robust integration tests.
  * </p>
  *
- * @author Thorsten Schlathoelter
- *
  */
 @Mojo(
     name = "create-test-api",

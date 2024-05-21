@@ -26,8 +26,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
  * {@link TestApiGeneratorMojo#CITRUS_TEST_SCHEMA}.
  * </p>
  *
- * @author Thorsten Schlathoelter
- *
  */
 public class SpringMetaFileGenerator {
 
