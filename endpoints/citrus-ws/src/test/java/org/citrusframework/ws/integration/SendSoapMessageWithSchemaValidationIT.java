@@ -22,7 +22,6 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.testng.annotations.Test;
 
 /**
- * @author Thorsten Schlathoelter
  * @since 3.1.3
  */
 public class SendSoapMessageWithSchemaValidationIT extends TestNGCitrusSpringSupport {

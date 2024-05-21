@@ -18,9 +18,6 @@ package org.citrusframework.testng;
 
 import org.testng.SkipException;
 
-/**
- * @author Thorsten Schlathoelter
- */
 public class TestNGUtils {
 
     /**
