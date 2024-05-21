@@ -17,9 +17,6 @@ import org.openapitools.codegen.languages.AbstractJavaCodegen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Thorsten Schlathoelter
- */
 public class JavaCitrusCodegen extends AbstractJavaCodegen {
 
     private static final Logger logger = LoggerFactory.getLogger(JavaCitrusCodegen.class);
