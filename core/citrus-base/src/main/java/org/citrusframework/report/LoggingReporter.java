@@ -16,9 +16,11 @@
 
 package org.citrusframework.report;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.citrusframework.CitrusVersion;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestCase;
+import org.citrusframework.TestResult;
 import org.citrusframework.common.Described;
 import org.citrusframework.container.TestActionContainer;
 import org.citrusframework.context.TestContext;
@@ -30,6 +32,7 @@ import org.slf4j.helpers.NOPLoggerFactory;
 import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.time.Duration.ZERO;
 import static java.util.Objects.nonNull;
 import static org.citrusframework.util.StringUtils.hasText;
 
@@ -83,39 +86,49 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
      */
     private static final Logger noOpLogger = new NOPLoggerFactory().getLogger(LoggingReporter.class.getName());
 
+    private static boolean isInitialized = false;
+
     private static String formatDurationString(TestCase test) {
         return nonNull(test.getTestResult()) && nonNull(test.getTestResult().getDuration()) ? " (" + test.getTestResult().getDuration().toString() + ") " : "";
     }
 
     @Override
     public void generate(TestResults testResults) {
-        separator();
         newLine();
         info("CITRUS TEST RESULTS");
         newLine();
 
         testResults.doWithResults(testResult -> {
-            info(testResult.toString());
+            info(toFormattedTestResult(testResult));
 
             if (testResult.isFailed()) {
-                info(Optional.ofNullable(testResult.getCause())
-                        .filter(cause -> hasText(cause.getMessage()))
-                        .map(cause -> " FAILURE: Caused by: " + cause.getClass().getSimpleName() + ": " + cause.getMessage())
-                        .orElse(" FAILURE: Caused by: " + Optional.ofNullable(testResult.getErrorMessage()).orElse("Unknown error")));
+                info(
+                        Optional.ofNullable(testResult.getCause())
+                                .filter(cause -> hasText(cause.getMessage()))
+                                .map(ExceptionUtils::getRootCause)
+                                .map(cause -> "\tCaused by: " + cause.getClass().getSimpleName() + ": " + cause.getMessage())
+                                .orElse("\tCaused by: " + Optional.ofNullable(testResult.getErrorMessage()).orElse("Unknown error")));
             }
         });
 
         newLine();
 
-        info(format("TOTAL:\t\t\t%s", testResults.getFailed() + testResults.getSuccess()));
-        info(format("SUCCESS:\t\t%s (%s%%)", testResults.getSuccess(), testResults.getSuccessPercentage()));
-        info(format("FAILED:\t\t%s (%s%%)", testResults.getFailed(), testResults.getFailedPercentage()));
-        debug(format("SKIPPED:\t\t%s (%s%%)", testResults.getSkipped(), testResults.getSkippedPercentage()));
+        info(format("TOTAL:\t\t%s", testResults.getFailed() + testResults.getSuccess()));
+        info(format("SUCCESS:\t\t%s (%s%%)", testResults.getSuccess(), testResults.getSuccessPercentageFormatted()));
+        info(format("FAILED:\t\t%s (%s%%)", testResults.getFailed(), testResults.getFailedPercentageFormatted()));
+        debug(format("SKIPPED:\t\t%s (%s%%)", testResults.getSkipped(), testResults.getSkippedPercentageFormatted()));
         info(format("PERFORMANCE:\t%s ms", testResults.getTotalDuration().toMillis()));
 
         newLine();
 
         separator();
+    }
+
+    private String toFormattedTestResult(TestResult testResult) {
+        return format("%s (%6d ms) %s",
+                testResult.getResult(),
+                Optional.ofNullable(testResult.getDuration()).orElse(ZERO).toMillis(),
+                testResult.getTestName());
     }
 
     @Override
@@ -135,7 +148,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
             newLine();
             separator();
             debug("SKIPPING TEST: " + test.getName());
-            separator();
             newLine();
         }
     }
@@ -168,16 +180,31 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onFinish() {
-        newLine();
-        separator();
-        debug("AFTER TEST SUITE");
-        newLine();
+        if (isDebugEnabled()) {
+            newLine();
+            separator();
+            debug("AFTER TEST SUITE");
+            newLine();
+        }
     }
 
     @Override
     public void onStart() {
-        newLine();
+        if (!isInitialized) {
+            printBanner();
+
+            isInitialized = true;
+        }
+
         separator();
+
+        if (isDebugEnabled()) {
+            debug("BEFORE TEST SUITE");
+            newLine();
+        }
+    }
+
+    private void printBanner() {
         info("       .__  __                       ");
         info("  ____ |__|/  |________ __ __  ______");
         info("_/ ___\\|  \\   __\\_  __ \\  |  \\/  ___/");
@@ -188,42 +215,42 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         newLine();
         info("C I T R U S  T E S T S  " + CitrusVersion.version());
         newLine();
-
-        separator();
-        debug("BEFORE TEST SUITE");
-        newLine();
     }
 
     @Override
     public void onFinishFailure(Throwable cause) {
         newLine();
-        info("AFTER TEST SUITE: FAILED");
+        error("AFTER TEST SUITE: FAILED");
         separator();
         newLine();
     }
 
     @Override
     public void onFinishSuccess() {
-        newLine();
-        info("AFTER TEST SUITE: SUCCESS");
-        separator();
-        newLine();
+        if (isDebugEnabled()) {
+            newLine();
+            debug("AFTER TEST SUITE: SUCCESS");
+            separator();
+            newLine();
+        }
     }
 
     @Override
     public void onStartFailure(Throwable cause) {
         newLine();
-        info("BEFORE TEST SUITE: FAILED");
+        error("BEFORE TEST SUITE: FAILED");
         separator();
         newLine();
     }
 
     @Override
     public void onStartSuccess() {
-        newLine();
-        info("BEFORE TEST SUITE: SUCCESS");
-        separator();
-        newLine();
+        if (isDebugEnabled()) {
+            newLine();
+            debug("BEFORE TEST SUITE: SUCCESS");
+            separator();
+            newLine();
+        }
     }
 
     @Override
@@ -306,6 +333,15 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
      */
     protected void info(String line) {
         logger.info(line);
+    }
+
+    /**
+     * Write error level output.
+     *
+     * @param line
+     */
+    protected void error(String line) {
+        logger.error(line);
     }
 
     /**
