@@ -254,7 +254,7 @@
     <snakeyaml.version>2.2</snakeyaml.version>
     <spring.version>6.1.8</spring.version>
     <spring.ws.version>4.0.10</spring.ws.version>
-    <spring.integration.version>6.2.4</spring.integration.version>
+    <spring.integration.version>6.3.0</spring.integration.version>
     <spring.restdocs.version>3.0.1</spring.restdocs.version>
     <sshd.version>2.12.1</sshd.version>
     <swagger.version>1.6.9</swagger.version>
