@@ -243,7 +243,7 @@
     <kafka.version>3.7.0</kafka.version>
     <log4j2.version>2.22.1</log4j2.version>
     <mockito.version>5.12.0</mockito.version>
-    <mockftpserver.version>3.1.0</mockftpserver.version>
+    <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.1.105.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
     <picoli-version>4.7.6</picoli-version>
