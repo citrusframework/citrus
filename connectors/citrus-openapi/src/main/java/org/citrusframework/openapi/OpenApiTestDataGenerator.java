@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
  * enforce the specification rules.
  *
  * @author Christoph Deppisch
+ * @author Ralf Ueberfuhr
  */
 public class OpenApiTestDataGenerator {
 
@@ -119,7 +120,7 @@ public class OpenApiTestDataGenerator {
             }
 
             if (schema.format != null && schema.format.equals("date")) {
-                payload.append("citrus:currentDate()");
+                payload.append("citrus:currentDate('yyyy-MM-dd')");
             } else if (schema.format != null && schema.format.equals("date-time")) {
                 payload.append("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')");
             } else if (StringUtils.hasText(schema.pattern)) {
