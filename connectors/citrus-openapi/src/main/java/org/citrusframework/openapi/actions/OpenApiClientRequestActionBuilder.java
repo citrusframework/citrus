@@ -121,7 +121,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                         });
             }
 
-            if(httpMessage.getPayload() == null) {
+            if(httpMessage.getPayload() == null || (httpMessage.getPayload() instanceof String p && p.isEmpty())) {
                 Optional<OasSchema> body = OasModelHelper.getRequestBodySchema(oasDocument, operation);
                 body.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema,
                         OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec)));
