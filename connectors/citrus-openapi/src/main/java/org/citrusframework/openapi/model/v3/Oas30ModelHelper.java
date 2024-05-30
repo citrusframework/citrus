@@ -42,7 +42,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
- * @author Ralf Ueberfuhr
  */
 public final class Oas30ModelHelper {
 
