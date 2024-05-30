@@ -219,7 +219,7 @@ public final class Oas30ModelHelper {
 
         return response.headers.entrySet()
                 .stream()
-                .filter(entry -> entry.getValue().required)
+                .filter(entry -> Boolean.TRUE.equals(entry.getValue().required))
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
     }
 
