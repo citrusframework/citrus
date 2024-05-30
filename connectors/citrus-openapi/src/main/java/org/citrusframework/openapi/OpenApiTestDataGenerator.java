@@ -32,7 +32,6 @@ import org.springframework.util.StringUtils;
  * enforce the specification rules.
  *
  * @author Christoph Deppisch
- * @author Ralf Ueberfuhr
  */
 public class OpenApiTestDataGenerator {
 
