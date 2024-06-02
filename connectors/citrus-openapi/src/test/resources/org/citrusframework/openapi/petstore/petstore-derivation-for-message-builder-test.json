@@ -1,0 +1,164 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Swagger Petstore",
+        "version": "1.0.1",
+        "description": "This is a sample server Petstore server.",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost/petstore/v3"
+        }
+    ],
+    "paths": {
+        "/pet": {
+            "post": {
+                "requestBody": {
+                    "description": "Pet object that needs to be added to the store",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pet"
+                            }
+                        },
+                        "application/xml": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pet"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "name": "X-SAMPLE-HEADER",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sample-param",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "tags": [
+                    "pet"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                },
+                "operationId": "addPet",
+                "summary": "Add a new pet to the store",
+                "description": ""
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Category": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "xml": {
+                    "name": "Category"
+                }
+            },
+            "Tag": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "xml": {
+                    "name": "Tag"
+                }
+            },
+            "Pet": {
+                "required": [
+                    "category",
+                    "name",
+                    "status"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "format": "int64",
+                        "type": "integer"
+                    },
+                    "category": {
+                        "$ref": "#/components/schemas/Category"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "doggie"
+                    },
+                    "photoUrls": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "xml": {
+                            "name": "photoUrl",
+                            "wrapped": true
+                        }
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Tag"
+                        },
+                        "xml": {
+                            "name": "tag",
+                            "wrapped": true
+                        }
+                    },
+                    "status": {
+                        "description": "pet status in the store",
+                        "enum": [
+                            "available",
+                            "pending",
+                            "sold"
+                        ],
+                        "type": "string"
+                    }
+                },
+                "xml": {
+                    "name": "Pet"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "pet",
+            "description": "Everything about your Pets"
+        }
+    ]
+}

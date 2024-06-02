@@ -42,7 +42,6 @@ import org.springframework.http.HttpMethod;
 
 /**
  * @author Christoph Deppisch
- * @author Ralf Ueberfuhr
  * @since 4.1
  */
 public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder {
@@ -99,11 +98,15 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
             }
 
             if (operation.parameters != null) {
+                List<String> configuredHeaders = getHeaderBuilders()
+                        .stream()
+                        .flatMap(b -> b.builderHeaders(context).keySet().stream())
+                        .toList();
                 operation.parameters.stream()
                         .filter(param -> "header".equals(param.in))
                         .filter(param -> (param.required != null && param.required) || context.getVariables().containsKey(param.getName()))
                         .forEach(param -> {
-                            if(httpMessage.getHeader(param.getName()) == null) {
+                            if(httpMessage.getHeader(param.getName()) == null && !configuredHeaders.contains(param.getName())) {
                                 httpMessage.setHeader(param.getName(),
                                         OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema,
                                                 OasModelHelper.getSchemaDefinitions(oasDocument), false, openApiSpec, context));
