@@ -98,23 +98,37 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
             }
 
             if (operation.parameters != null) {
+                List<String> configuredHeaders = getHeaderBuilders()
+                        .stream()
+                        .flatMap(b -> b.builderHeaders(context).keySet().stream())
+                        .toList();
                 operation.parameters.stream()
                         .filter(param -> "header".equals(param.in))
                         .filter(param -> (param.required != null && param.required) || context.getVariables().containsKey(param.getName()))
-                        .forEach(param -> httpMessage.setHeader(param.getName(),
-                                OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema,
-                                        OasModelHelper.getSchemaDefinitions(oasDocument), false, openApiSpec, context)));
+                        .forEach(param -> {
+                            if(httpMessage.getHeader(param.getName()) == null && !configuredHeaders.contains(param.getName())) {
+                                httpMessage.setHeader(param.getName(),
+                                        OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema,
+                                                OasModelHelper.getSchemaDefinitions(oasDocument), false, openApiSpec, context));
+                            }
+                        });
 
                 operation.parameters.stream()
                         .filter(param -> "query".equals(param.in))
                         .filter(param -> (param.required != null && param.required) || context.getVariables().containsKey(param.getName()))
-                        .forEach(param -> httpMessage.queryParam(param.getName(),
-                                OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema, context)));
+                        .forEach(param -> {
+                            if(!httpMessage.getQueryParams().containsKey(param.getName())) {
+                                httpMessage.queryParam(param.getName(),
+                                        OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema, context));
+                            }
+                        });
             }
 
-            Optional<OasSchema> body = OasModelHelper.getRequestBodySchema(oasDocument, operation);
-            body.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema,
-                    OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec)));
+            if(httpMessage.getPayload() == null || (httpMessage.getPayload() instanceof String p && p.isEmpty())) {
+                Optional<OasSchema> body = OasModelHelper.getRequestBodySchema(oasDocument, operation);
+                body.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema,
+                        OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec)));
+            }
 
             String randomizedPath = pathItem.getPath();
             if (operation.parameters != null) {
