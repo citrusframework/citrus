@@ -130,6 +130,9 @@ private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
 
 @CitrusTest
 public void openApiClientTest() {
+    // Define variables to set request parameters.
+    // Note that the path-param in `petstore-v3.yaml` is named `petId`
+    variable("petId", "1001");
     when(openapi(petstoreSpec)
                 .client(httpClient)
                 .send("getPetById"));
@@ -146,6 +149,9 @@ public void openApiClientTest() {
 <test name="OpenApiClientTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <variables>
         <variable name="petstoreSpec" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+        <!-- Define variables to set request parameters.
+             Note that the path-param in `petstore-v3.yaml` is named `petId` -->
+        <variable name="petId" value="1001"/>
     </variables>
     <actions>
         <openapi specification="${petstoreSpec}" client="httpClient">
@@ -241,6 +247,9 @@ private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
 
 @CitrusTest
 public void openApiClientTest() {
+    // Define variables to set request parameters.
+    // Note that the path-param in `petstore-v3.yaml` is named `petId`
+    variable("petId", "1001");
     when(openapi(petstoreSpec)
                 .server(httpServer)
                 .receive("addPet"));
@@ -257,6 +266,9 @@ public void openApiClientTest() {
 <test name="OpenApiClientTest" xmlns="http://citrusframework.org/schema/xml/testcase">
     <variables>
         <variable name="petstoreSpec" value="classpath:org/citrusframework/openapi/petstore/petstore-v3.json"/>
+        <!-- Define variables to set request parameters.
+             Note that the path-param in `petstore-v3.yaml` is named `petId` -->
+        <variable name="petId" value="1001"/>
     </variables>
     <actions>
         <openapi specification="${petstoreSpec}" server="httpServer">
