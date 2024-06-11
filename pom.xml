@@ -187,7 +187,7 @@
     <asciidoctor.maven.plugin.version>2.2.4</asciidoctor.maven.plugin.version>
     <jaxb.maven.plugin.version>3.1.0</jaxb.maven.plugin.version>
 
-    <activemq.artemis.version>2.33.0</activemq.artemis.version>
+    <activemq.artemis.version>2.34.0</activemq.artemis.version>
     <angus-mail.version>2.0.2</angus-mail.version>
     <apache.ant.version>1.10.14</apache.ant.version>
     <apache.camel.version>4.6.0</apache.camel.version>
