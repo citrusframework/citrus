@@ -17,20 +17,14 @@
 package org.citrusframework.xml;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.common.Named;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.ClasspathResourceResolver;
+import org.citrusframework.repository.BaseRepository;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.FileUtils;
-import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.schema.TargetNamespaceSchemaMappingStrategy;
 import org.citrusframework.xml.schema.WsdlXsdSchema;
 import org.citrusframework.xml.schema.XsdSchemaMappingStrategy;
@@ -47,21 +41,22 @@ import org.xml.sax.SAXException;
  *
  */
 @SuppressWarnings("unused")
-public class XsdSchemaRepository implements Named, InitializingPhase {
-    /** The name of the repository */
-    private String name = "schemaRepository";
+public class XsdSchemaRepository extends BaseRepository {
+
+    private static final String DEFAULT_NAME = "schemaRepository";
 
     /** List of schema resources */
     private List<XsdSchema> schemas = new ArrayList<>();
-
-    /** List of location patterns that will be translated to schema resources */
-    private List<String> locations = new ArrayList<>();
 
     /** Mapping strategy */
     private XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
 
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(XsdSchemaRepository.class);
+
+    public XsdSchemaRepository() {
+        super(DEFAULT_NAME);
+    }
 
     /**
      * Find the matching schema for document using given schema mapping strategy.
@@ -75,28 +70,8 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
 
     @Override
     public void initialize() {
+        super.initialize();
         try {
-            ClasspathResourceResolver resourceResolver = new ClasspathResourceResolver();
-            for (String location : locations) {
-                Resource found = Resources.create(location);
-                if (found.exists()) {
-                    addSchemas(found);
-                } else {
-                    Set<Path> findings;
-                    if (StringUtils.hasText(FileUtils.getFileExtension(location))) {
-                        String fileNamePattern = FileUtils.getFileName(location).replace(".", "\\.").replace("*", ".*");
-                        String basePath = FileUtils.getBasePath(location);
-                        findings = resourceResolver.getResources(basePath, fileNamePattern);
-                    } else {
-                        findings = resourceResolver.getResources(location);
-                    }
-
-                    for (Path resource : findings) {
-                        addSchemas(Resources.fromClasspath(resource.toString()));
-                    }
-                }
-            }
-
             // Add default Citrus message schemas if available on classpath
             addCitrusSchema("citrus-http-message");
             addCitrusSchema("citrus-mail-message");
@@ -104,7 +79,7 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
             addCitrusSchema("citrus-ssh-message");
             addCitrusSchema("citrus-rmi-message");
             addCitrusSchema("citrus-jmx-message");
-        } catch (SAXException | ParserConfigurationException | IOException e) {
+        } catch (SAXException | ParserConfigurationException e) {
             throw new CitrusRuntimeException("Failed to initialize Xsd schema repository", e);
         }
     }
@@ -113,26 +88,26 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
      * Adds Citrus message schema to repository if available on classpath.
      * @param schemaName The name of the schema within the citrus schema package
      */
-    protected void addCitrusSchema(String schemaName) throws IOException, SAXException, ParserConfigurationException {
+    protected void addCitrusSchema(String schemaName) throws SAXException, ParserConfigurationException {
         Resource resource = Resources.fromClasspath("classpath:org/citrusframework/schema/" + schemaName + ".xsd");
         if (resource.exists()) {
             addXsdSchema(resource);
         }
     }
 
-    private void addSchemas(Resource resource) {
+    protected void addRepository(Resource resource) {
         if (resource.getLocation().endsWith(".xsd")) {
             addXsdSchema(resource);
         } else if (resource.getLocation().endsWith(".wsdl")) {
             addWsdlSchema(resource);
         } else {
-            logger.warn("Skipped resource other than XSD schema for repository (" + resource.getLocation() + ")");
+            logger.warn("Skipped resource other than XSD schema for repository '{}'", resource.getLocation());
         }
     }
 
     private void addWsdlSchema(Resource resource) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Loading WSDL schema resource " + resource.getLocation());
+            logger.debug("Loading WSDL schema resource '{}'", resource.getLocation());
         }
 
         WsdlXsdSchema wsdl = new WsdlXsdSchema(resource);
@@ -142,7 +117,7 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
 
     private void addXsdSchema(Resource resource) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Loading XSD schema resource " + resource.getLocation());
+            logger.debug("Loading XSD schema resource '{}'", resource.getLocation());
         }
 
         SimpleXsdSchema schema = new SimpleXsdSchema(new ByteArrayResource(FileUtils.copyToByteArray(resource)));
@@ -184,34 +159,5 @@ public class XsdSchemaRepository implements Named, InitializingPhase {
      */
     public XsdSchemaMappingStrategy getSchemaMappingStrategy() {
         return schemaMappingStrategy;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets the name.
-     * @return the name to get.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Gets the locations.
-     * @return the locations to get.
-     */
-    public List<String> getLocations() {
-        return locations;
-    }
-
-    /**
-     * Sets the locations.
-     * @param locations the locations to set
-     */
-    public void setLocations(List<String> locations) {
-        this.locations = locations;
     }
 }

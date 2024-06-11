@@ -16,12 +16,12 @@
 
 package org.citrusframework.openapi;
 
+import io.apicurio.datamodels.openapi.models.OasSchema;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import io.apicurio.datamodels.openapi.models.OasSchema;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -348,4 +348,52 @@ public class OpenApiTestDataGenerator {
                 return "";
         }
     }
+
+    /**
+     * Create validation expression using regex according to schema type and format.
+     * @param name
+     * @param oasSchema
+     * @return
+     */
+    public static String createValidationRegex(String name, OasSchema oasSchema) {
+
+        if (oasSchema != null && (OasModelHelper.isReferenceType(oasSchema) || OasModelHelper.isObjectType(oasSchema))) {
+            throw new CitrusRuntimeException(String.format("Unable to create a validation regex for an reference of object schema '%s'!", name));
+        }
+
+        return createValidationRegex(oasSchema);
+    }
+
+    public static String createValidationRegex(OasSchema schema) {
+
+        if (schema == null) {
+            return "";
+        }
+
+        switch (schema.type) {
+            case "string":
+                if (schema.format != null && schema.format.equals("date")) {
+                    return "\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])";
+                } else if (schema.format != null && schema.format.equals("date-time")) {
+                    return "\\d{4}-\\d{2}-\\d{2}T[01]\\d:[0-5]\\d:[0-5]\\d";
+                } else if (StringUtils.hasText(schema.pattern)) {
+                    return schema.pattern;
+                } else if (!CollectionUtils.isEmpty(schema.enum_)) {
+                    return "(" + (String.join("|", schema.enum_)) + ")";
+                } else if (schema.format != null && schema.format.equals("uuid")){
+                    return "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
+                } else {
+                    return ".*";
+                }
+            case "number":
+                return "[0-9]+\\.?[0-9]*";
+            case "integer":
+                return "[0-9]+";
+            case "boolean":
+                return "(true|false)";
+            default:
+                return "";
+        }
+    }
+
 }
