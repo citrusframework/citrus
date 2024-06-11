@@ -53,12 +53,12 @@ public final class Oas20ModelHelper {
 
     public static String getBasePath(Oas20Document openApiDoc) {
         return Optional.ofNullable(openApiDoc.basePath)
-                .map(basePath -> basePath.startsWith("/") ? basePath : "/" + basePath).orElse("/");
+            .map(basePath -> basePath.startsWith("/") ? basePath : "/" + basePath).orElse("/");
     }
 
     public static Map<String, OasSchema> getSchemaDefinitions(Oas20Document openApiDoc) {
         if (openApiDoc == null
-                || openApiDoc.definitions == null) {
+            || openApiDoc.definitions == null) {
             return Collections.emptyMap();
         }
 
@@ -69,7 +69,7 @@ public final class Oas20ModelHelper {
         return Optional.ofNullable(response.schema);
     }
 
-    public static Optional<OasSchema> getRequestBodySchema(Oas20Document openApiDoc, Oas20Operation operation) {
+    public static Optional<OasSchema> getRequestBodySchema(@Nullable Oas20Document ignoredOpenApiDoc, Oas20Operation operation) {
         if (operation.parameters == null) {
             return Optional.empty();
         }
@@ -77,8 +77,8 @@ public final class Oas20ModelHelper {
         final List<OasParameter> operationParameters = operation.parameters;
 
         Optional<OasParameter> body = operationParameters.stream()
-                .filter(p -> "body".equals(p.in) && p.schema != null)
-                .findFirst();
+            .filter(p -> "body".equals(p.in) && p.schema != null)
+            .findFirst();
 
         return body.map(oasParameter -> (OasSchema) oasParameter.schema);
     }
@@ -91,7 +91,7 @@ public final class Oas20ModelHelper {
         return Optional.empty();
     }
 
-    public static Collection<String> getResponseTypes(Oas20Operation operation, @Nullable Oas20Response response) {
+    public static Collection<String> getResponseTypes(Oas20Operation operation,@Nullable Oas20Response ignoredResponse) {
         if (operation == null) {
             return Collections.emptyList();
         }
@@ -102,11 +102,11 @@ public final class Oas20ModelHelper {
      * Returns the response content for random response generation. Note that this implementation currently only returns {@link MediaType#APPLICATION_JSON_VALUE},
      * if this type exists. Otherwise, it will return an empty Optional. The reason for this is, that we cannot safely guess the type other than for JSON.
      *
-     * @param openApiDoc
+     * @param ignoredOpenApiDoc required to implement quasi interface but ignored in this implementation.
      * @param operation
      * @return
      */
-    public static Optional<String> getResponseContentTypeForRandomGeneration(@Nullable Oas20Document openApiDoc, Oas20Operation operation) {
+    public static Optional<String> getResponseContentTypeForRandomGeneration(@Nullable Oas20Document ignoredOpenApiDoc, Oas20Operation operation) {
         if (operation.produces != null) {
             for (String mediaType : operation.produces) {
                 if (MediaType.APPLICATION_JSON_VALUE.equals(mediaType)) {
@@ -151,7 +151,7 @@ public final class Oas20ModelHelper {
         }
 
         return response.headers.getHeaders().stream()
-                .collect(Collectors.toMap(OasHeader::getName, Oas20ModelHelper::getHeaderSchema));
+            .collect(Collectors.toMap(OasHeader::getName, Oas20ModelHelper::getHeaderSchema));
     }
 
     /**
