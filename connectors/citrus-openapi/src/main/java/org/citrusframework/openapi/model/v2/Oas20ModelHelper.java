@@ -16,21 +16,26 @@
 
 package org.citrusframework.openapi.model.v2;
 
+import io.apicurio.datamodels.openapi.models.OasHeader;
+import io.apicurio.datamodels.openapi.models.OasParameter;
+import io.apicurio.datamodels.openapi.models.OasResponse;
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Header;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
+import jakarta.annotation.Nullable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import io.apicurio.datamodels.openapi.models.OasHeader;
-import io.apicurio.datamodels.openapi.models.OasParameter;
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Header;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
+import org.citrusframework.openapi.model.OasModelHelper;
+import org.springframework.http.MediaType;
 
 public final class Oas20ModelHelper {
 
@@ -86,12 +91,58 @@ public final class Oas20ModelHelper {
         return Optional.empty();
     }
 
-    public static Optional<String> getResponseContentType(Oas20Document openApiDoc, Oas20Operation operation) {
+    public static Collection<String> getResponseTypes(Oas20Operation operation, @Nullable Oas20Response response) {
+        if (operation == null) {
+            return Collections.emptyList();
+        }
+        return operation.produces;
+    }
+
+    /**
+     * Returns the response content for random response generation. Note that this implementation currently only returns {@link MediaType#APPLICATION_JSON_VALUE},
+     * if this type exists. Otherwise, it will return an empty Optional. The reason for this is, that we cannot safely guess the type other than for JSON.
+     *
+     * @param openApiDoc
+     * @param operation
+     * @return
+     */
+    public static Optional<String> getResponseContentTypeForRandomGeneration(@Nullable Oas20Document openApiDoc, Oas20Operation operation) {
         if (operation.produces != null) {
-            return Optional.of(operation.produces.get(0));
+            for (String mediaType : operation.produces) {
+                if (MediaType.APPLICATION_JSON_VALUE.equals(mediaType)) {
+                    return Optional.of(mediaType);
+                }
+            }
         }
 
         return Optional.empty();
+    }
+
+    public static Optional<OasResponse> getResponseForRandomGeneration(Oas20Document openApiDoc, Oas20Operation operation) {
+
+        if (operation.responses == null) {
+            return Optional.empty();
+        }
+
+        List<OasResponse> responses = OasModelHelper.resolveResponses(operation.responses,
+            responseRef -> openApiDoc.responses.getResponse(OasModelHelper.getReferenceName(responseRef)));
+
+        // Pick the response object related to the first 2xx return code found
+        Optional<OasResponse> response = responses.stream()
+            .filter(Oas20Response.class::isInstance)
+            .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
+            .map(OasResponse.class::cast)
+            .filter(res -> OasModelHelper.getSchema(res).isPresent())
+            .findFirst();
+
+        if (response.isEmpty()) {
+            // TODO: Although the Swagger specification states that at least one successful response SHOULD be specified in the responses,
+            // the Petstore API does not. It only specifies error responses. As a result, we currently only return a successful response if one is found.
+            // If no successful response is specified, we return an empty response instead, to be backwards compatible.
+            response = Optional.empty();
+        }
+
+        return response;
     }
 
     public static Map<String, OasSchema> getHeaders(Oas20Response response) {
@@ -103,6 +154,13 @@ public final class Oas20ModelHelper {
                 .collect(Collectors.toMap(OasHeader::getName, Oas20ModelHelper::getHeaderSchema));
     }
 
+    /**
+     * If the header already contains a schema (and it is an instance of {@link Oas20Header}), this schema is returned.
+     * Otherwise, a new {@link Oas20Header} is created based on the properties of the parameter and returned.
+     *
+     * @param header the {@link Oas20Header} from which to extract or create the schema
+     * @return an {@link Optional} containing the extracted or newly created {@link OasSchema}
+     */
     private static OasSchema getHeaderSchema(Oas20Header header) {
         Oas20Schema schema = new Oas20Schema();
         schema.title = header.getName();
@@ -128,5 +186,44 @@ public final class Oas20ModelHelper {
         schema.minLength = header.minLength;
         schema.exclusiveMinimum = header.exclusiveMinimum;
         return schema;
+    }
+
+    /**
+     * If the parameter already contains a schema (and it is an instance of {@link Oas20Schema}), this schema is returned.
+     * Otherwise, a new {@link Oas20Schema} is created based on the properties of the parameter and returned.
+     *
+     * @param parameter the {@link Oas20Parameter} from which to extract or create the schema
+     * @return an {@link Optional} containing the extracted or newly created {@link OasSchema}
+     */
+    public static Optional<OasSchema> getParameterSchema(Oas20Parameter parameter) {
+        if (parameter.schema instanceof Oas20Schema oasSchema) {
+            return Optional.of(oasSchema);
+        }
+
+        Oas20Schema schema = new Oas20Schema();
+        schema.title = parameter.getName();
+        schema.type = parameter.type;
+        schema.format = parameter.format;
+        schema.items = parameter.items;
+        schema.multipleOf = parameter.multipleOf;
+
+        schema.default_ = parameter.default_;
+        schema.enum_ = parameter.enum_;
+
+        schema.pattern = parameter.pattern;
+        schema.description = parameter.description;
+        schema.uniqueItems = parameter.uniqueItems;
+
+        schema.maximum = parameter.maximum;
+        schema.maxItems = parameter.maxItems;
+        schema.maxLength = parameter.maxLength;
+        schema.exclusiveMaximum = parameter.exclusiveMaximum;
+
+        schema.minimum = parameter.minimum;
+        schema.minItems = parameter.minItems;
+        schema.minLength = parameter.minLength;
+        schema.exclusiveMinimum = parameter.exclusiveMinimum;
+
+        return Optional.of(schema);
     }
 }
