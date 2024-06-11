@@ -16,6 +16,7 @@
 
 package org.citrusframework.openapi.actions;
 
+import jakarta.annotation.Nullable;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
@@ -135,12 +136,12 @@ public class OpenApiClientActionBuilder implements TestActionBuilder.DelegatingT
      * @param referenceResolver
      */
     @Override
-    public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        if (referenceResolver == null) {
+    public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
+        if (referenceResolver != null) {
             this.referenceResolver = referenceResolver;
 
-            if (delegate instanceof ReferenceResolverAware) {
-                ((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
+            if (delegate instanceof ReferenceResolverAware referenceResolverAware) {
+                referenceResolverAware.setReferenceResolver(referenceResolver);
             }
         }
     }
