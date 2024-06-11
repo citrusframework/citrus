@@ -94,40 +94,48 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             }
 
             if (operation.responses != null) {
-                OasResponse response = Optional.ofNullable(operation.responses.getItem(statusCode))
-                        .orElse(operation.responses.default_);
-
-                if (response != null) {
-                    Map<String, OasSchema> requiredHeaders = OasModelHelper.getRequiredHeaders(response);
-                    for (Map.Entry<String, OasSchema> header : requiredHeaders.entrySet()) {
-                        httpMessage.setHeader(header.getKey(),
-                                OpenApiTestDataGenerator.createRandomValueExpression(header.getKey(), header.getValue(),
-                                        OasModelHelper.getSchemaDefinitions(oasDocument), false, openApiSpec, context));
-                    }
-
-                    Map<String, OasSchema> headers = OasModelHelper.getHeaders(response);
-                    for (Map.Entry<String, OasSchema> header : headers.entrySet()) {
-                        if (!requiredHeaders.containsKey(header.getKey()) && context.getVariables().containsKey(header.getKey())) {
-                            httpMessage.setHeader(header.getKey(), CitrusSettings.VARIABLE_PREFIX + header.getKey() + CitrusSettings.VARIABLE_SUFFIX);
-                        }
-                    }
-
-                    Optional<OasSchema> responseSchema = OasModelHelper.getSchema(response);
-                    responseSchema.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema,
-                            OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec)));
-                }
+                buildResponse(context, operation, oasDocument);
             }
 
-            OasModelHelper.getResponseContentType(oasDocument, operation)
+            OasModelHelper.getResponseContentTypeForRandomGeneration(oasDocument, operation)
                     .ifPresent(contentType -> httpMessage.setHeader(HttpHeaders.CONTENT_TYPE, contentType));
 
-            if (Pattern.compile("[0-9]+").matcher(statusCode).matches()) {
+            if (Pattern.compile("\\d+").matcher(statusCode).matches()) {
                 httpMessage.status(HttpStatus.valueOf(Integer.parseInt(statusCode)));
             } else {
                 httpMessage.status(HttpStatus.OK);
             }
 
             return super.build(context, messageType);
+        }
+
+        private void buildResponse(TestContext context, OasOperation operation,
+            OasDocument oasDocument) {
+            OasResponse response = Optional.ofNullable(operation.responses.getItem(statusCode))
+                    .orElse(operation.responses.default_);
+
+            if (response != null) {
+                Map<String, OasSchema> requiredHeaders = OasModelHelper.getRequiredHeaders(response);
+                for (Map.Entry<String, OasSchema> header : requiredHeaders.entrySet()) {
+                    httpMessage.setHeader(header.getKey(),
+                            OpenApiTestDataGenerator.createRandomValueExpression(header.getKey(), header.getValue(),
+                                    OasModelHelper.getSchemaDefinitions(oasDocument), false, openApiSpec,
+                                context));
+                }
+
+                Map<String, OasSchema> headers = OasModelHelper.getHeaders(response);
+                for (Map.Entry<String, OasSchema> header : headers.entrySet()) {
+                    if (!requiredHeaders.containsKey(header.getKey()) &&
+                        context.getVariables().containsKey(header.getKey())) {
+                        httpMessage.setHeader(header.getKey(),
+                            CitrusSettings.VARIABLE_PREFIX + header.getKey() + CitrusSettings.VARIABLE_SUFFIX);
+                    }
+                }
+
+                Optional<OasSchema> responseSchema = OasModelHelper.getSchema(response);
+                responseSchema.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema,
+                        OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec)));
+            }
         }
     }
 }
