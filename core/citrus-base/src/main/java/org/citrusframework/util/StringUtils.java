@@ -38,4 +38,25 @@ public class StringUtils {
     public static boolean isEmpty(String str) {
         return str == null || str.isEmpty();
     }
+
+    public static String appendSegmentToPath(String path, String segment) {
+
+        if (path == null) {
+            return segment;
+        }
+
+        if (segment == null) {
+            return path;
+        }
+
+        if (!path.endsWith("/")) {
+            path = path +"/";
+        }
+
+        if (segment.startsWith("/")) {
+            segment = segment.substring(1);
+        }
+
+        return path+segment;
+    }
 }
