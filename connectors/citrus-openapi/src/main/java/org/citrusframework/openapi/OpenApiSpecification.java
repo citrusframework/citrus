@@ -34,11 +34,20 @@ import org.citrusframework.spi.Resources;
  */
 public class OpenApiSpecification {
 
+    public static final String HTTPS = "https";
+    public static final String HTTP = "http";
     /** URL to load the OpenAPI specification */
     private String specUrl;
 
     private String httpClient;
     private String requestUrl;
+
+    /**
+     * The optional root context path to which the OpenAPI is hooked.
+     * This path is prepended to the base path specified in the OpenAPI configuration.
+     * If no root context path is specified, only the base path and additional segments are used.
+     */
+    private String rootContextPath;
 
     private OasDocument openApiDoc;
 
@@ -56,7 +65,7 @@ public class OpenApiSpecification {
     public static OpenApiSpecification from(URL specUrl) {
         OpenApiSpecification specification = new OpenApiSpecification();
         OasDocument openApiDoc;
-        if (specUrl.getProtocol().startsWith("https")) {
+        if (specUrl.getProtocol().startsWith(HTTPS)) {
             openApiDoc = OpenApiResourceLoader.fromSecuredWebResource(specUrl);
         } else {
             openApiDoc = OpenApiResourceLoader.fromWebResource(specUrl);
@@ -76,11 +85,11 @@ public class OpenApiSpecification {
         specification.setOpenApiDoc(openApiDoc);
 
         String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
-                .orElse(Collections.singletonList("http"))
+                .orElse(Collections.singletonList(HTTP))
                 .stream()
-                .filter(s -> s.equals("http") || s.equals("https"))
+                .filter(s -> s.equals(HTTP) || s.equals(HTTPS))
                 .findFirst()
-                .orElse("http");
+                .orElse(HTTP);
 
         specification.setSpecUrl(resource.getLocation());
         specification.setRequestUrl(String.format("%s://%s%s", schemeToUse, OasModelHelper.getHost(openApiDoc), OasModelHelper.getBasePath(openApiDoc)));
@@ -102,17 +111,17 @@ public class OpenApiSpecification {
                     resolvedSpecUrl = requestUrl.endsWith("/") ? requestUrl + resolvedSpecUrl.substring(1) : requestUrl + resolvedSpecUrl;
                 } else if (httpClient != null && context.getReferenceResolver().isResolvable(httpClient, HttpClient.class)) {
                     String baseUrl = context.getReferenceResolver().resolve(httpClient, HttpClient.class).getEndpointConfiguration().getRequestUrl();
-                    resolvedSpecUrl = baseUrl.endsWith("/") ? baseUrl + resolvedSpecUrl.substring(1) : baseUrl + resolvedSpecUrl;;
+                    resolvedSpecUrl = baseUrl.endsWith("/") ? baseUrl + resolvedSpecUrl.substring(1) : baseUrl + resolvedSpecUrl;
                 } else {
                     throw new CitrusRuntimeException(("Failed to resolve OpenAPI spec URL from relative path %s - " +
                             "make sure to provide a proper base URL when using relative paths").formatted(resolvedSpecUrl));
                 }
             }
 
-            if (resolvedSpecUrl.startsWith("http")) {
+            if (resolvedSpecUrl.startsWith(HTTP)) {
                 try {
                     URL specWebResource = new URL(resolvedSpecUrl);
-                    if (resolvedSpecUrl.startsWith("https")) {
+                    if (resolvedSpecUrl.startsWith(HTTPS)) {
                         openApiDoc = OpenApiResourceLoader.fromSecuredWebResource(specWebResource);
                     } else {
                         openApiDoc = OpenApiResourceLoader.fromWebResource(specWebResource);
@@ -129,11 +138,11 @@ public class OpenApiSpecification {
 
                 if (requestUrl == null) {
                     String schemeToUse = Optional.ofNullable(OasModelHelper.getSchemes(openApiDoc))
-                            .orElse(Collections.singletonList("http"))
+                            .orElse(Collections.singletonList(HTTP))
                             .stream()
-                            .filter(s -> s.equals("http") || s.equals("https"))
+                            .filter(s -> s.equals(HTTP) || s.equals(HTTPS))
                             .findFirst()
-                            .orElse("http");
+                            .orElse(HTTP);
 
                     setRequestUrl(String.format("%s://%s%s", schemeToUse, OasModelHelper.getHost(openApiDoc), OasModelHelper.getBasePath(openApiDoc)));
                 }
@@ -190,4 +199,14 @@ public class OpenApiSpecification {
     public void setValidateOptionalFields(boolean validateOptionalFields) {
         this.validateOptionalFields = validateOptionalFields;
     }
+
+    public String getRootContextPath() {
+        return rootContextPath;
+    }
+
+    public void setRootContextPath(String rootContextPath) {
+        this.rootContextPath = rootContextPath;
+    }
+
+
 }

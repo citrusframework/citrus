@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package org.citrusframework.spi;
+package org.citrusframework.openapi;
 
-import jakarta.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * @author Christoph Deppisch
- */
-@FunctionalInterface
-public interface ReferenceResolverAware {
+public class SampleOpenApiProcessor implements OpenApiSpecificationProcessor {
 
-    /**
-     * Sets the reference resolver.
-     * @param referenceResolver
-     */
-    void setReferenceResolver(@Nullable ReferenceResolver referenceResolver);
+    public static List<OpenApiSpecification> processedSpecifications = new ArrayList<>();
+
+    @Override
+    public void process(OpenApiSpecification openApiSpecification) {
+        processedSpecifications.add(openApiSpecification);
+    }
 }
