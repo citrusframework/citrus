@@ -55,7 +55,7 @@ public final class OasModelHelper {
      * @param schema to check
      * @return true if given schema is an object.
      */
-    public static boolean isObjectType(OasSchema schema) {
+    public static boolean isObjectType(@Nullable OasSchema schema) {
         return schema != null && "object".equals(schema.type);
     }
 
@@ -64,8 +64,8 @@ public final class OasModelHelper {
      * @param schema to check
      * @return true if given schema is an array.
      */
-    public static boolean isArrayType(OasSchema schema) {
-        return "array".equals(schema.type);
+    public static boolean isArrayType(@Nullable OasSchema schema) {
+        return schema != null && "array".equals(schema.type);
     }
 
     /**
@@ -73,14 +73,14 @@ public final class OasModelHelper {
      * @param schema to check
      * @return true if given schema is an object array.
      */
-    public static boolean isObjectArrayType(OasSchema schema) {
-        if (schema == null ||  !"array".equals(schema.type)) {
+    public static boolean isObjectArrayType(@Nullable OasSchema schema) {
+        if (schema == null || !"array".equals(schema.type)) {
             return false;
         }
         Object items = schema.items;
-        if (items instanceof OasSchema oasSchema) {
+        if (items instanceof  OasSchema oasSchema) {
             return isObjectType(oasSchema);
-        } else if (items instanceof List<?> list) {
+        } else if (items instanceof  List<?> list) {
             return list.stream().allMatch(item -> item instanceof OasSchema oasSchema && isObjectType(oasSchema));
         }
 
@@ -92,7 +92,7 @@ public final class OasModelHelper {
      * @param schema to check
      * @return true if given schema has a reference.
      */
-    public static boolean isReferenceType(OasSchema schema) {
+    public static boolean isReferenceType(@Nullable OasSchema schema) {
         return schema != null && schema.$ref != null;
     }
 
@@ -191,7 +191,6 @@ public final class OasModelHelper {
     public static Optional<OasSchema> getSchema(OasResponse response) {
         return delegate(response, Oas20ModelHelper::getSchema, Oas30ModelHelper::getSchema);
     }
-
     public static Optional<OasSchema> getParameterSchema(OasParameter parameter) {
         return delegate(parameter, Oas20ModelHelper::getParameterSchema, Oas30ModelHelper::getParameterSchema);
     }

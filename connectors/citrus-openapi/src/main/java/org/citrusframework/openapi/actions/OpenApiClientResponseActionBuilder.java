@@ -96,6 +96,7 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
                 }
             }
         );
+
     }
 
     private static void fillRequiredHeaders(
