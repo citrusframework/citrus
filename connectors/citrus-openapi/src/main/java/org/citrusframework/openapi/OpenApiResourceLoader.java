@@ -16,6 +16,11 @@
 
 package org.citrusframework.openapi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.models.OasDocument;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -25,14 +30,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import io.apicurio.datamodels.Library;
-import io.apicurio.datamodels.openapi.models.OasDocument;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.ssl.SSLContexts;
+import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.Resource;
 import org.citrusframework.util.FileUtils;
 import org.springframework.http.HttpMethod;
@@ -42,6 +44,11 @@ import org.springframework.http.MediaType;
  * Loads Open API specifications from different locations like file resource or web resource.
  */
 public final class OpenApiResourceLoader {
+
+    static final RawResolver RAW_RESOLVER = new RawResolver();
+
+
+    static final OasResolver OAS_RESOLVER = new OasResolver();
 
     /**
      * Prevent instantiation of utility class.
@@ -56,17 +63,40 @@ public final class OpenApiResourceLoader {
      * @return
      */
     public static OasDocument fromFile(String resource) {
-        return fromFile(FileUtils.getFileResource(resource));
+        return fromFile(FileUtils.getFileResource(resource), OAS_RESOLVER);
     }
 
     /**
-     * Loads the specification from a file resource. Either classpath or file system resource path is supported.
+     * Loads the raw specification from a file resource. Either classpath or file system resource path is supported.
+     * @param resource
+     * @return
+     */
+    public static String rawFromFile(String resource) {
+        return fromFile(FileUtils.getFileResource(resource),
+            RAW_RESOLVER);
+    }
+
+    /**
+     * Loads the specification from a resource.
      * @param resource
      * @return
      */
     public static OasDocument fromFile(Resource resource) {
+        return fromFile(resource, OAS_RESOLVER);
+    }
+
+    /**
+     * Loads the raw specification from a resource.
+     * @param resource
+     * @return
+     */
+    public static String rawFromFile(Resource resource) {
+        return fromFile(resource, RAW_RESOLVER);
+    }
+
+    private static <T> T fromFile(Resource resource, Resolver<T> resolver) {
         try {
-            return resolve(FileUtils.readToString(resource));
+            return resolve(FileUtils.readToString(resource), resolver);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to parse Open API specification: " + resource, e);
         }
@@ -78,6 +108,19 @@ public final class OpenApiResourceLoader {
      * @return
      */
     public static OasDocument fromWebResource(URL url) {
+        return fromWebResource(url, OAS_RESOLVER);
+    }
+
+    /**
+     * Loads raw specification from given web URL location.
+     * @param url
+     * @return
+     */
+    public static String rawFromWebResource(URL url) {
+        return fromWebResource(url, RAW_RESOLVER);
+    }
+
+    private static <T> T fromWebResource(URL url, Resolver<T> resolver) {
         HttpURLConnection con = null;
         try {
             con = (HttpURLConnection) url.openConnection();
@@ -87,9 +130,9 @@ public final class OpenApiResourceLoader {
             int status = con.getResponseCode();
             if (status > 299) {
                 throw new IllegalStateException("Failed to retrieve Open API specification: " + url.toString(),
-                        new IOException(FileUtils.readToString(con.getErrorStream())));
+                    new IOException(FileUtils.readToString(con.getErrorStream())));
             } else {
-                return resolve(FileUtils.readToString(con.getInputStream()));
+                return resolve(FileUtils.readToString(con.getInputStream()), resolver);
             }
         } catch (IOException e) {
             throw new IllegalStateException("Failed to retrieve Open API specification: " + url.toString(), e);
@@ -106,14 +149,27 @@ public final class OpenApiResourceLoader {
      * @return
      */
     public static OasDocument fromSecuredWebResource(URL url) {
+        return fromSecuredWebResource(url, OAS_RESOLVER);
+    }
+
+    /**
+     * Loads raw specification from given web URL location using secured Http connection.
+     * @param url
+     * @return
+     */
+    public static String rawFromSecuredWebResource(URL url) {
+        return fromSecuredWebResource(url, RAW_RESOLVER);
+    }
+
+    private static <T> T fromSecuredWebResource(URL url, Resolver<T> resolver) {
         Objects.requireNonNull(url);
 
         HttpsURLConnection con = null;
         try {
             SSLContext sslcontext = SSLContexts
-                    .custom()
-                    .loadTrustMaterial(TrustAllStrategy.INSTANCE)
-                    .build();
+                .custom()
+                .loadTrustMaterial(TrustAllStrategy.INSTANCE)
+                .build();
 
             HttpsURLConnection.setDefaultSSLSocketFactory(sslcontext.getSocketFactory());
             HttpsURLConnection.setDefaultHostnameVerifier(NoopHostnameVerifier.INSTANCE);
@@ -125,9 +181,9 @@ public final class OpenApiResourceLoader {
             int status = con.getResponseCode();
             if (status > 299) {
                 throw new IllegalStateException("Failed to retrieve Open API specification: " + url.toString(),
-                        new IOException(FileUtils.readToString(con.getErrorStream())));
+                    new IOException(FileUtils.readToString(con.getErrorStream())));
             } else {
-                return resolve(FileUtils.readToString(con.getInputStream()));
+                return resolve(FileUtils.readToString(con.getInputStream()), resolver);
             }
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             throw new IllegalStateException("Failed to create https client for ssl connection", e);
@@ -140,16 +196,64 @@ public final class OpenApiResourceLoader {
         }
     }
 
-    private static OasDocument resolve(String specification) {
+    private static <T> T resolve(String specification, Resolver<T> resolver) {
         if (isJsonSpec(specification)) {
-            return (OasDocument) Library.readDocumentFromJSONString(specification);
+            return resolver.resolveFromString(specification);
         }
 
         final JsonNode node = OpenApiSupport.json().convertValue(OpenApiSupport.yaml().load(specification), JsonNode.class);
-        return (OasDocument) Library.readDocument(node);
+        return resolver.resolveFromNode(node);
     }
 
     private static boolean isJsonSpec(final String specification) {
         return specification.trim().startsWith("{");
     }
+
+    private interface Resolver<T> {
+
+        T resolveFromString(String specification);
+
+        T resolveFromNode(JsonNode node);
+
+    }
+
+    /**
+     * {@link Resolver} implementation, that resolves to {@link OasDocument}.
+     */
+    private static class OasResolver implements Resolver<OasDocument> {
+
+        @Override
+        public OasDocument resolveFromString(String specification) {
+            return (OasDocument) Library.readDocumentFromJSONString(specification);
+        }
+
+        @Override
+        public OasDocument resolveFromNode(JsonNode node) {
+            return (OasDocument) Library.readDocument(node);
+        }
+    }
+
+    /**
+     * {@link Resolver} implementation, that resolves to {@link String}.
+     */
+    private static class RawResolver implements Resolver<String> {
+
+        private static final ObjectMapper mapper = new ObjectMapper();
+
+        @Override
+        public String resolveFromString(String specification) {
+            return specification;
+        }
+
+        @Override
+        public String resolveFromNode(JsonNode node) {
+
+            try {
+                return mapper.writeValueAsString(node);
+            } catch (JsonProcessingException e) {
+                throw new CitrusRuntimeException("Unable to write OpenApi specification node to string!", e);
+            }
+        }
+    }
+
 }
