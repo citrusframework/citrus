@@ -368,7 +368,11 @@ public class HttpMessage extends DefaultMessage {
      * @return The accept header value
      */
     public String getAccept() {
-        final Object accept = getHeader("Accept");
+        Object accept = getHeader("Accept");
+
+        if (accept == null) {
+            accept = getHeader("accept");
+        }
 
         if (accept != null) {
             return accept.toString();

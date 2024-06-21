@@ -17,6 +17,7 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import org.citrusframework.openapi.model.OasModelHelper;
 import org.springframework.http.MediaType;
 import org.testng.annotations.Test;
 
@@ -26,7 +27,7 @@ public class Oas30ModelHelperTest {
     public void shouldNotFindRequiredHeadersWithoutRequiredAttribute() {
         var header = new Oas30Header("X-TEST");
         header.schema = new Oas30Schema();
-        header.required = null; // explicitly assigned because this is test case
+        header.required = null;
         var response = new Oas30Response("200");
         response.headers.put(header.getName(), header);
 
@@ -39,7 +40,7 @@ public class Oas30ModelHelperTest {
     public void shouldFindRequiredHeaders() {
         var header = new Oas30Header("X-TEST");
         header.schema = new Oas30Schema();
-        header.required = Boolean.TRUE; // explicitly assigned because this is test case
+        header.required = Boolean.TRUE;
         var response = new Oas30Response("200");
         response.headers.put(header.getName(), header);
 
@@ -53,7 +54,7 @@ public class Oas30ModelHelperTest {
     public void shouldNotFindOptionalHeaders() {
         var header = new Oas30Header("X-TEST");
         header.schema = new Oas30Schema();
-        header.required = Boolean.FALSE; // explicitly assigned because this is test case
+        header.required = Boolean.FALSE;
         var response = new Oas30Response("200");
         response.headers.put(header.getName(), header);
 
@@ -83,7 +84,7 @@ public class Oas30ModelHelperTest {
     }
 
     @Test
-    public void shouldFindRandomResponse() {
+    public void shouldFindRandomResponseWithGoodStatusCode() {
         Oas30Document document = new Oas30Document();
         Oas30Operation operation = new Oas30Operation("GET");
 
@@ -108,14 +109,14 @@ public class Oas30ModelHelperTest {
         operation.responses.addResponse("403", nokResponse);
         operation.responses.addResponse("200", okResponse);
 
-        Optional<OasResponse> responseForRandomGeneration = Oas30ModelHelper.getResponseForRandomGeneration(
-            document, operation);
+        Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
+            document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
         assertEquals(okResponse, responseForRandomGeneration.get());
     }
 
     @Test
-    public void shouldFindAnyResponse() {
+    public void shouldFindFirstResponseInAbsenceOfAGoodOne() {
         Oas30Document document = new Oas30Document();
         Oas30Operation operation = new Oas30Operation("GET");
 
@@ -133,10 +134,37 @@ public class Oas30ModelHelperTest {
         operation.responses.addResponse("403", nokResponse403);
         operation.responses.addResponse("407", nokResponse407);
 
-        Optional<OasResponse> responseForRandomGeneration = Oas30ModelHelper.getResponseForRandomGeneration(
-            document, operation);
+        Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
+            document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
-        assertEquals(nokResponse403, responseForRandomGeneration.get());
+        assertEquals(responseForRandomGeneration.get().getStatusCode(), "403");
+
+    }
+
+    @Test
+    public void shouldFindDefaultResponseInAbsenceOfAGoodOne() {
+        Oas30Document document = new Oas30Document();
+        Oas30Operation operation = new Oas30Operation("GET");
+
+        operation.responses = new Oas30Responses();
+
+        Oas30Response nokResponse403 = new Oas30Response("403");
+        Oas30MediaType plainTextMediaType = new Oas30MediaType(MediaType.TEXT_PLAIN_VALUE);
+        plainTextMediaType.schema = new Oas30Schema();
+        nokResponse403.content = Map.of(MediaType.TEXT_PLAIN_VALUE, plainTextMediaType);
+
+        Oas30Response nokResponse407 = new Oas30Response("407");
+        nokResponse407.content = Map.of(MediaType.TEXT_PLAIN_VALUE, plainTextMediaType);
+
+        operation.responses = new Oas30Responses();
+        operation.responses.default_ = nokResponse407;
+        operation.responses.addResponse("403", nokResponse403);
+        operation.responses.addResponse("407", nokResponse407);
+
+        Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
+            document, operation, null, null);
+        assertTrue(responseForRandomGeneration.isPresent());
+        assertEquals(responseForRandomGeneration.get().getStatusCode(), "407");
     }
 
     @Test
