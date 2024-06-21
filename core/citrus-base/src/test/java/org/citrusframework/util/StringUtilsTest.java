@@ -23,14 +23,14 @@ public class StringUtilsTest {
 
     @Test
     public void appendSegmentToPath() {
-        Assert.assertEquals(StringUtils.appendSegmentToPath("s1","s2"), "s1/s2");
-        Assert.assertEquals(StringUtils.appendSegmentToPath("s1/","s2"), "s1/s2");
-        Assert.assertEquals(StringUtils.appendSegmentToPath("s1/","/s2"), "s1/s2");
-        Assert.assertEquals(StringUtils.appendSegmentToPath("/s1","/s2"), "/s1/s2");
-        Assert.assertEquals(StringUtils.appendSegmentToPath("/s1/","/s2"), "/s1/s2");
-        Assert.assertEquals(StringUtils.appendSegmentToPath("/s1/","/s2/"), "/s1/s2/");
-        Assert.assertEquals(StringUtils.appendSegmentToPath("/s1/",null), "/s1/");
-        Assert.assertEquals(StringUtils.appendSegmentToPath(null,"/s2/"), "/s2/");
-        Assert.assertNull(StringUtils.appendSegmentToPath(null,null));
+        Assert.assertEquals(StringUtils.appendSegmentToUrlPath("s1","s2"), "s1/s2");
+        Assert.assertEquals(StringUtils.appendSegmentToUrlPath("s1/","s2"), "s1/s2");
+        Assert.assertEquals(StringUtils.appendSegmentToUrlPath("s1/","/s2"), "s1/s2");
+        Assert.assertEquals(StringUtils.appendSegmentToUrlPath("/s1","/s2"), "/s1/s2");
+        Assert.assertEquals(StringUtils.appendSegmentToUrlPath("/s1/","/s2"), "/s1/s2");
+        Assert.assertEquals(StringUtils.appendSegmentToUrlPath("/s1/","/s2/"), "/s1/s2/");
+        Assert.assertEquals(StringUtils.appendSegmentToUrlPath("/s1/",null), "/s1/");
+        Assert.assertEquals(StringUtils.appendSegmentToUrlPath(null,"/s2/"), "/s2/");
+        Assert.assertNull(StringUtils.appendSegmentToUrlPath(null,null));
     }
 }

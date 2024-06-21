@@ -192,6 +192,7 @@
     <apache.ant.version>1.10.14</apache.ant.version>
     <apache.camel.version>4.7.0</apache.camel.version>
     <apicurio.data-models.version>1.1.27</apicurio.data-models.version>
+    <swagger-request-validator.version>com.atlassian.oai</swagger-request-validator.version>
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.25.1</assertj.version>
     <bouncycastle.version>1.78.1</bouncycastle.version>
@@ -579,6 +580,18 @@
         <groupId>io.apicurio</groupId>
         <artifactId>apicurio-data-models</artifactId>
         <version>${apicurio.data-models.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.atlassian.oai</groupId>
+        <artifactId>swagger-request-validator-core</artifactId>
+        <version>${swagger-request-validator.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Jetty -->
@@ -1181,6 +1194,12 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>uk.org.webcompere</groupId>
+      <artifactId>system-stubs-core</artifactId>
+      <version>2.1.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
