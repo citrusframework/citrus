@@ -89,8 +89,22 @@ public class OpenApiServerActionBuilder extends AbstractReferenceResolverAwareTe
     /**
      * Send Http response messages as server to client.
      */
+    public OpenApiServerResponseActionBuilder send(String operationId, HttpStatus status, String accept) {
+        return send(operationId, String.valueOf(status.value()), accept);
+    }
+
+    /**
+     * Send Http response messages as server to client.
+     */
     public OpenApiServerResponseActionBuilder send(String operationId, String statusCode) {
-        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(specification, operationId, statusCode);
+        return send(operationId, statusCode, null);
+    }
+
+    /**
+     * Send Http response messages as server to client.
+     */
+    public OpenApiServerResponseActionBuilder send(String operationId, String statusCode, String accept) {
+        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(specification, operationId, statusCode, accept);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {

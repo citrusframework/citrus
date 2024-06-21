@@ -1,0 +1,244 @@
+openapi: 3.0.1
+info:
+    title: Ping API
+    description: 'A simple OpenApi defining  schemas for testing purposes'
+    version: 1.0
+
+servers:
+    - url: http://localhost:9000/services/rest/ping/v1
+    - url: http://localhost:9000/ping/v1
+
+paths:
+    /ping/{id}:
+        put:
+            tags:
+                - ping
+            summary: Do the ping
+            operationId: doPing
+            parameters:
+                - name: id
+                  in: path
+                  description: Id to ping
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+                - name: q1
+                  in: query
+                  description: Some queryParameter
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+                - name: api-key
+                  in: header
+                  description: Some header
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                description: Ping data
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PingReqType'
+                required: true
+            responses:
+                200:
+                    description: successful operation
+                    headers:
+                        ping-time:
+                            required: false
+                            description: response time
+                            schema:
+                                type: integer
+                                format: int64
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PingRespType'
+                        plain/text:
+                            schema:
+                                type: string
+                405:
+                    description: Some error
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+    /pong/{id}:
+        get:
+            tags:
+                - pong
+            summary: Do the pong
+            operationId: doPong
+            parameters:
+                - name: id
+                  in: path
+                  description: Id to pong
+                  required: true
+                  explode: true
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                200:
+                    description: successful operation without a response
+components:
+    schemas:
+        Ipv6Type:
+            required:
+                - ipv6
+            type: object
+            properties:
+                ipv6:
+                    type: string
+                    format: ipv6
+        Ipv4Type:
+            required:
+                - ipv4
+            type: object
+            properties:
+                ipv4:
+                    type: string
+                    format: ipv4
+        DateType:
+            required:
+                - date
+            type: object
+            properties:
+                date:
+                    type: string
+                    format: date
+        DateTimeType:
+            required:
+                - dateTime
+            type: object
+            properties:
+                dateTime:
+                    type: string
+                    format: date-time
+        EmailType:
+            required:
+                - email
+            type: object
+            properties:
+                email:
+                    type: string
+                    format: email
+        ByteType:
+            required:
+                - byte
+            type: object
+            properties:
+                byte:
+                    type: string
+                    format: byte
+        BinaryType:
+            required:
+                - binary
+            type: object
+            properties:
+                binary:
+                    type: string
+                    format: binary
+        UriType:
+            required:
+                - uri
+            type: object
+            properties:
+                uri:
+                    type: string
+                    format: uri
+        UriReferenceType:
+            required:
+                - uriReference
+            type: object
+            properties:
+                uriReference:
+                    type: string
+                    format: uri-refence
+        HostnameType:
+            required:
+                - hostname
+            type: object
+            properties:
+                hostname:
+                    type: string
+                    format: hostname
+        AllTypes:
+            required:
+                - email
+                - ipv6
+                - ipv4
+                - date
+                - dateTime
+                - binary
+                - byte
+                - uri
+                - uriReference
+                - hostname
+            type: object
+            properties:
+                ipv6:
+                    type: string
+                    format: ipv6
+                ipv4:
+                    type: string
+                    format: ipv4
+                date:
+                    type: string
+                    format: date
+                dateTime:
+                    type: string
+                    format: date-time
+                email:
+                    type: string
+                    format: email
+                binary:
+                    type: string
+                    format: binary
+                byte:
+                    type: string
+                    format: byte
+                uri:
+                    type: string
+                    format: uri
+                uriReference:
+                    type: string
+                    format: uri-reference
+                hostname:
+                    type: string
+                    format: hostname
+        PingReqType:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+        Detail1:
+            type: object
+            properties:
+                host:
+                    $ref: '#/components/schemas/HostnameType'
+                uri:
+                    $ref: '#/components/schemas/UriType'
+        Detail2:
+            type: object
+            properties:
+                ipv4:
+                    $ref: '#/components/schemas/Ipv4Type'
+                uriReference:
+                    $ref: '#/components/schemas/UriReferenceType'
+        PingRespType:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                value:
+                    type: string
+                other:
+                    anyOf:
+                        -   $ref: '#/components/schemas/Detail1'
+                        -   $ref: '#/components/schemas/Detail2'
