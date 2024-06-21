@@ -17,7 +17,6 @@
 package org.citrusframework.openapi.actions;
 
 import java.net.URL;
-
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
@@ -167,11 +166,11 @@ public class OpenApiActionBuilder implements TestActionBuilder.DelegatingTestAct
 	 */
 	@Override
 	public void setReferenceResolver(ReferenceResolver referenceResolver) {
-		if (referenceResolver == null) {
+		if (referenceResolver != null) {
 			this.referenceResolver = referenceResolver;
 
-			if (delegate instanceof ReferenceResolverAware) {
-				((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
+			if (delegate instanceof ReferenceResolverAware referenceResolverAware) {
+				referenceResolverAware.setReferenceResolver(referenceResolver);
 			}
 		}
 	}
