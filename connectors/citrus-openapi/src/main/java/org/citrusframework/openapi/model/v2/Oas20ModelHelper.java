@@ -18,7 +18,6 @@ package org.citrusframework.openapi.model.v2;
 
 import io.apicurio.datamodels.openapi.models.OasHeader;
 import io.apicurio.datamodels.openapi.models.OasParameter;
-import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Header;
@@ -27,6 +26,7 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
+import java.util.Arrays;
 import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,8 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
-import org.springframework.http.MediaType;
 
 public final class Oas20ModelHelper {
 
@@ -53,12 +53,12 @@ public final class Oas20ModelHelper {
 
     public static String getBasePath(Oas20Document openApiDoc) {
         return Optional.ofNullable(openApiDoc.basePath)
-            .map(basePath -> basePath.startsWith("/") ? basePath : "/" + basePath).orElse("/");
+                .map(basePath -> basePath.startsWith("/") ? basePath : "/" + basePath).orElse("/");
     }
 
     public static Map<String, OasSchema> getSchemaDefinitions(Oas20Document openApiDoc) {
         if (openApiDoc == null
-            || openApiDoc.definitions == null) {
+                || openApiDoc.definitions == null) {
             return Collections.emptyMap();
         }
 
@@ -69,6 +69,23 @@ public final class Oas20ModelHelper {
         return Optional.ofNullable(response.schema);
     }
 
+    public static Optional<OasAdapter<OasSchema, String>> getSchema(Oas20Operation oas20Operation, Oas20Response response, List<String> acceptedMediaTypes) {
+
+        acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
+        acceptedMediaTypes = acceptedMediaTypes != null ? acceptedMediaTypes : OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
+
+        OasSchema selectedSchema = response.schema;
+        String selectedMediaType = null;
+        if (oas20Operation.produces != null && !oas20Operation.produces.isEmpty()) {
+            selectedMediaType = acceptedMediaTypes.stream()
+                .filter(type -> !isFormDataMediaType(type))
+                .filter(type -> oas20Operation.produces.contains(type)).findFirst()
+                .orElse(null);
+        }
+
+        return selectedSchema == null && selectedMediaType == null ? Optional.empty() : Optional.of(new OasAdapter<>(selectedSchema, selectedMediaType));
+    }
+
     public static Optional<OasSchema> getRequestBodySchema(@Nullable Oas20Document ignoredOpenApiDoc, Oas20Operation operation) {
         if (operation.parameters == null) {
             return Optional.empty();
@@ -77,8 +94,8 @@ public final class Oas20ModelHelper {
         final List<OasParameter> operationParameters = operation.parameters;
 
         Optional<OasParameter> body = operationParameters.stream()
-            .filter(p -> "body".equals(p.in) && p.schema != null)
-            .findFirst();
+                .filter(p -> "body".equals(p.in) && p.schema != null)
+                .findFirst();
 
         return body.map(oasParameter -> (OasSchema) oasParameter.schema);
     }
@@ -91,58 +108,11 @@ public final class Oas20ModelHelper {
         return Optional.empty();
     }
 
-    public static Collection<String> getResponseTypes(Oas20Operation operation,@Nullable Oas20Response ignoredResponse) {
+    public static Collection<String> getResponseTypes(Oas20Operation operation, @Nullable Oas20Response ignoredResponse) {
         if (operation == null) {
             return Collections.emptyList();
         }
         return operation.produces;
-    }
-
-    /**
-     * Returns the response content for random response generation. Note that this implementation currently only returns {@link MediaType#APPLICATION_JSON_VALUE},
-     * if this type exists. Otherwise, it will return an empty Optional. The reason for this is, that we cannot safely guess the type other than for JSON.
-     *
-     * @param ignoredOpenApiDoc required to implement quasi interface but ignored in this implementation.
-     * @param operation
-     * @return
-     */
-    public static Optional<String> getResponseContentTypeForRandomGeneration(@Nullable Oas20Document ignoredOpenApiDoc, Oas20Operation operation) {
-        if (operation.produces != null) {
-            for (String mediaType : operation.produces) {
-                if (MediaType.APPLICATION_JSON_VALUE.equals(mediaType)) {
-                    return Optional.of(mediaType);
-                }
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    public static Optional<OasResponse> getResponseForRandomGeneration(Oas20Document openApiDoc, Oas20Operation operation) {
-
-        if (operation.responses == null) {
-            return Optional.empty();
-        }
-
-        List<OasResponse> responses = OasModelHelper.resolveResponses(operation.responses,
-            responseRef -> openApiDoc.responses.getResponse(OasModelHelper.getReferenceName(responseRef)));
-
-        // Pick the response object related to the first 2xx return code found
-        Optional<OasResponse> response = responses.stream()
-            .filter(Oas20Response.class::isInstance)
-            .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
-            .map(OasResponse.class::cast)
-            .filter(res -> OasModelHelper.getSchema(res).isPresent())
-            .findFirst();
-
-        if (response.isEmpty()) {
-            // TODO: Although the Swagger specification states that at least one successful response SHOULD be specified in the responses,
-            // the Petstore API does not. It only specifies error responses. As a result, we currently only return a successful response if one is found.
-            // If no successful response is specified, we return an empty response instead, to be backwards compatible.
-            response = Optional.empty();
-        }
-
-        return response;
     }
 
     public static Map<String, OasSchema> getHeaders(Oas20Response response) {
@@ -151,7 +121,11 @@ public final class Oas20ModelHelper {
         }
 
         return response.headers.getHeaders().stream()
-            .collect(Collectors.toMap(OasHeader::getName, Oas20ModelHelper::getHeaderSchema));
+                .collect(Collectors.toMap(OasHeader::getName, Oas20ModelHelper::getHeaderSchema));
+    }
+
+    private static boolean isFormDataMediaType(String type) {
+        return Arrays.asList("application/x-www-form-urlencoded", "multipart/form-data").contains(type);
     }
 
     /**

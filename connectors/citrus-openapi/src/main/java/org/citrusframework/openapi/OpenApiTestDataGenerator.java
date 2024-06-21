@@ -95,6 +95,15 @@ public class OpenApiTestDataGenerator {
         return createRandomValueExpression(schema, definitions, quotes, specification);
     }
 
+    public static <T> T createRawRandomValueExpression(String name, OasSchema schema, Map<String, OasSchema> definitions,
+        boolean quotes, OpenApiSpecification specification, TestContext context) {
+        if (context.getVariables().containsKey(name)) {
+            return (T)context.getVariables().get(CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX);
+        }
+
+        return createRawRandomValueExpression(schema, definitions, quotes, specification, context);
+    }
+
     /**
      * Create payload from schema with random values.
      * @param schema
@@ -120,7 +129,7 @@ public class OpenApiTestDataGenerator {
             if (schema.format != null && schema.format.equals("date")) {
                 payload.append("citrus:currentDate('yyyy-MM-dd')");
             } else if (schema.format != null && schema.format.equals("date-time")) {
-                payload.append("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')");
+                payload.append("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ssZ')");
             } else if (StringUtils.hasText(schema.pattern)) {
                 payload.append("citrus:randomValue(").append(schema.pattern).append(")");
             } else if (!CollectionUtils.isEmpty(schema.enum_)) {
@@ -143,6 +152,29 @@ public class OpenApiTestDataGenerator {
         }
 
         return payload.toString();
+    }
+
+    public static <T> T createRawRandomValueExpression(OasSchema schema, Map<String, OasSchema> definitions, boolean quotes,
+        OpenApiSpecification specification, TestContext context) {
+        if (OasModelHelper.isReferenceType(schema)) {
+            OasSchema resolved = definitions.get(OasModelHelper.getReferenceName(schema.$ref));
+            return createRawRandomValueExpression(resolved, definitions, quotes, specification, context);
+        }
+
+        StringBuilder payload = new StringBuilder();
+        if ("string".equals(schema.type) || OasModelHelper.isObjectType(schema) || OasModelHelper.isArrayType(schema)) {
+            return (T)createRandomValueExpression(schema, definitions, quotes, specification);
+        } else if ("number".equals(schema.type)) {
+            return (T)Double.valueOf(context.replaceDynamicContentInString("citrus:randomNumber(8,2)"));
+        } else if ("integer".equals(schema.type)) {
+            return (T)Double.valueOf(context.replaceDynamicContentInString("citrus:randomNumber(8)"));
+        } else if ("boolean".equals(schema.type)) {
+            return (T)Boolean.valueOf(context.replaceDynamicContentInString("citrus:randomEnumValue('true', 'false')"));
+        } else if (quotes) {
+            payload.append("\"\"");
+        }
+
+        return (T)payload.toString();
     }
 
     /**
@@ -284,7 +316,7 @@ public class OpenApiTestDataGenerator {
                 if (schema.format != null && schema.format.equals("date")) {
                     return "@matchesDatePattern('yyyy-MM-dd')@";
                 } else if (schema.format != null && schema.format.equals("date-time")) {
-                    return "@matchesDatePattern('yyyy-MM-dd'T'hh:mm:ss')@";
+                    return "@matchesDatePattern('yyyy-MM-dd'T'hh:mm:ssZ')@";
                 } else if (StringUtils.hasText(schema.pattern)) {
                     return String.format("@matches(%s)@", schema.pattern);
                 } else if (!CollectionUtils.isEmpty(schema.enum_)) {
@@ -329,7 +361,7 @@ public class OpenApiTestDataGenerator {
                 if (schema.format != null && schema.format.equals("date")) {
                     return "\"citrus:currentDate('yyyy-MM-dd')\"";
                 } else if (schema.format != null && schema.format.equals("date-time")) {
-                    return "\"citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')\"";
+                    return "\"citrus:currentDate('yyyy-MM-dd'T'hh:mm:ssZ')\"";
                 } else if (StringUtils.hasText(schema.pattern)) {
                     return "\"citrus:randomValue(" + schema.pattern + ")\"";
                 } else if (!CollectionUtils.isEmpty(schema.enum_)) {
@@ -375,7 +407,7 @@ public class OpenApiTestDataGenerator {
                 if (schema.format != null && schema.format.equals("date")) {
                     return "\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])";
                 } else if (schema.format != null && schema.format.equals("date-time")) {
-                    return "\\d{4}-\\d{2}-\\d{2}T[01]\\d:[0-5]\\d:[0-5]\\d";
+                    return "\\d{4}-\\d{2}-\\d{2}T[01]\\d:[0-5]\\d:[0-5]\\dZ";
                 } else if (StringUtils.hasText(schema.pattern)) {
                     return schema.pattern;
                 } else if (!CollectionUtils.isEmpty(schema.enum_)) {

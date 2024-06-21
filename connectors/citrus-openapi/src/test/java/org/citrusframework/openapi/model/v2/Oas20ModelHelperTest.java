@@ -14,12 +14,13 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Responses;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import java.util.List;
 import java.util.Optional;
+import org.citrusframework.openapi.model.OasModelHelper;
 import org.testng.annotations.Test;
 
 public class Oas20ModelHelperTest {
 
     @Test
-    public void shouldFindRandomResponse() {
+    public void shouldFindRandomResponseWithGoodStatusCode() {
         Oas20Document document = new Oas20Document();
         Oas20Operation operation = new Oas20Operation("GET");
 
@@ -35,29 +36,55 @@ public class Oas20ModelHelperTest {
         operation.responses.addResponse("403", nokResponse);
         operation.responses.addResponse("200", okResponse);
 
-        Optional<OasResponse> responseForRandomGeneration = Oas20ModelHelper.getResponseForRandomGeneration(
-            document, operation);
+        Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
+            document, operation, null, null);
         assertTrue(responseForRandomGeneration.isPresent());
         assertEquals(okResponse, responseForRandomGeneration.get());
     }
 
     @Test
-    public void shouldNotFindAnyResponse() {
+    public void shouldFindFirstResponseInAbsenceOfAGoodOne() {
         Oas20Document document = new Oas20Document();
         Oas20Operation operation = new Oas20Operation("GET");
 
         operation.responses = new Oas20Responses();
 
         Oas20Response nokResponse403 = new Oas20Response("403");
+        nokResponse403.schema = new Oas20Schema();
         Oas20Response nokResponse407 = new Oas20Response("407");
+        nokResponse407.schema = new Oas20Schema();
 
         operation.responses = new Oas20Responses();
         operation.responses.addResponse("403", nokResponse403);
         operation.responses.addResponse("407", nokResponse407);
 
-        Optional<OasResponse> responseForRandomGeneration = Oas20ModelHelper.getResponseForRandomGeneration(
-            document, operation);
-        assertTrue(responseForRandomGeneration.isEmpty());
+        Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
+            document, operation, null, null);
+        assertTrue(responseForRandomGeneration.isPresent());
+        assertEquals(responseForRandomGeneration.get().getStatusCode(), "403");
+    }
+
+    @Test
+    public void shouldFindDefaultResponseInAbsenceOfAGoodOne() {
+        Oas20Document document = new Oas20Document();
+        Oas20Operation operation = new Oas20Operation("GET");
+
+        operation.responses = new Oas20Responses();
+
+        Oas20Response nokResponse403 = new Oas20Response("403");
+        nokResponse403.schema = new Oas20Schema();
+        Oas20Response nokResponse407 = new Oas20Response("407");
+        nokResponse407.schema = new Oas20Schema();
+
+        operation.responses = new Oas20Responses();
+        operation.responses.default_ = nokResponse407;
+        operation.responses.addResponse("403", nokResponse403);
+        operation.responses.addResponse("407", nokResponse407);
+
+        Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
+            document, operation, null, null);
+        assertTrue(responseForRandomGeneration.isPresent());
+        assertEquals(responseForRandomGeneration.get().getStatusCode(), "407");
     }
 
     @Test

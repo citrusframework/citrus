@@ -192,6 +192,7 @@
     <apache.ant.version>1.10.15</apache.ant.version>
     <apache.camel.version>4.8.0</apache.camel.version>
     <apicurio.data-models.version>1.1.27</apicurio.data-models.version>
+    <swagger-request-validator.version>com.atlassian.oai</swagger-request-validator.version>
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.26.3</assertj.version>
     <awaitility.version>4.2.2</awaitility.version>
@@ -514,15 +515,21 @@
       </dependency>
 
       <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${spring.version}</version>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${awaitility.version}</version>
       </dependency>
       <dependency>
         <groupId>org.testng</groupId>
         <artifactId>testng</artifactId>
         <version>${testng.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+
       <dependency>
         <!-- Required for the core module as the vintage engine does not provide a Junit4 compile scope -->
         <groupId>junit</groupId>
@@ -584,9 +591,15 @@
       </dependency>
 
       <dependency>
-        <groupId>org.awaitility</groupId>
-        <artifactId>awaitility</artifactId>
-        <version>${awaitility.version}</version>
+        <groupId>com.atlassian.oai</groupId>
+        <artifactId>swagger-request-validator-core</artifactId>
+        <version>${swagger-request-validator.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Jetty -->
@@ -1210,6 +1223,12 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>uk.org.webcompere</groupId>
+      <artifactId>system-stubs-core</artifactId>
+      <version>2.1.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

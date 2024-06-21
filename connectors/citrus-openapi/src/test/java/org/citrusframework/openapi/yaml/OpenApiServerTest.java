@@ -156,9 +156,10 @@ public class OpenApiServerTest extends AbstractYamlActionTest {
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/json");
+
         Assert.assertNull(sendMessageAction.getEndpoint());
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpServer");
-        Assert.assertEquals(sendMessageAction.getMessageProcessors().size(), 0);
+        Assert.assertEquals(sendMessageAction.getMessageProcessors().size(), 1);
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
         Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
