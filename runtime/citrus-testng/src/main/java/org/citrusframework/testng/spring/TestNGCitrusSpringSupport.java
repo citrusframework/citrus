@@ -115,7 +115,8 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
      * @param methodTestLoaders
      * @param invocationCount
      */
-    protected void run(ITestResult testResult, Method method, List<TestLoader> methodTestLoaders, int invocationCount) {
+    protected void run(ITestResult testResult, Method method, List<TestLoader> methodTestLoaders,
+        int invocationCount) {
         if (citrus == null) {
             citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
             CitrusAnnotations.injectCitrusFramework(this, citrus);
@@ -163,6 +164,9 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
 
     @BeforeClass(alwaysRun = true)
     public final void before() {
+        // We need to consider the possibility, that one test has meanwhile modified the current citrus instance,
+        // as there can be plenty of tests running between @BeforeSuite and the execution of an actual subclass of
+        // this support. The citrus instance may even have a mocked context.
         if (citrus == null) {
             citrus = Citrus.newInstance(new CitrusSpringContextProvider(applicationContext));
             CitrusAnnotations.injectCitrusFramework(this, citrus);
@@ -205,7 +209,7 @@ public class TestNGCitrusSpringSupport extends AbstractTestNGSpringContextTests
         CitrusAnnotations.injectCitrusFramework(this, citrus);
         beforeSuite(citrus.getCitrusContext());
         citrus.beforeSuite(Reporter.getCurrentTestResult().getTestContext().getSuite().getName(),
-                Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
+            Reporter.getCurrentTestResult().getTestContext().getIncludedGroups());
     }
 
     /**

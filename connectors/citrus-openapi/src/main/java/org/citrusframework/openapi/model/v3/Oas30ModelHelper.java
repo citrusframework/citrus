@@ -18,7 +18,6 @@ package org.citrusframework.openapi.model.v3;
 
 import io.apicurio.datamodels.core.models.common.Server;
 import io.apicurio.datamodels.core.models.common.ServerVariable;
-import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
@@ -26,6 +25,7 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -37,10 +37,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 
 public final class Oas30ModelHelper {
 
@@ -75,17 +75,17 @@ public final class Oas30ModelHelper {
         }
 
         return openApiDoc.servers.stream()
-            .map(Oas30ModelHelper::resolveUrl)
-            .map(serverUrl -> {
-                try {
-                    return new URL(serverUrl).getProtocol();
-                } catch (MalformedURLException e) {
-                    LOG.warn(String.format(NO_URL_ERROR_MESSAGE, serverUrl));
-                    return null;
-                }
-            })
-            .filter(Objects::nonNull)
-            .toList();
+                .map(Oas30ModelHelper::resolveUrl)
+                .map(serverUrl -> {
+                    try {
+                        return new URL(serverUrl).getProtocol();
+                    } catch (MalformedURLException e) {
+                        LOG.warn(String.format(NO_URL_ERROR_MESSAGE, serverUrl));
+                        return null;
+                    }
+                })
+        .filter(Objects::nonNull)
+        .toList();
     }
 
     public static String getBasePath(Oas30Document openApiDoc) {
@@ -116,8 +116,8 @@ public final class Oas30ModelHelper {
         }
 
         return openApiDoc.components.schemas.entrySet()
-            .stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, Entry::getValue));
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, Entry::getValue));
     }
 
     public static Optional<OasSchema> getSchema(Oas30Response response) {
@@ -127,11 +127,38 @@ public final class Oas30ModelHelper {
         }
 
         return content.entrySet()
-            .stream()
-            .filter(entry -> !isFormDataMediaType(entry.getKey()))
-            .filter(entry -> entry.getValue().schema != null)
-            .map(entry -> (OasSchema) entry.getValue().schema)
-            .findFirst();
+                .stream()
+                .filter(entry -> !isFormDataMediaType(entry.getKey()))
+                .filter(entry -> entry.getValue().schema != null)
+                .map(entry -> (OasSchema) entry.getValue().schema)
+                .findFirst();
+    }
+
+    public static Optional<OasAdapter<OasSchema, String>> getSchema(
+        Oas30Operation ignoredOas30Operation, Oas30Response response, List<String> acceptedMediaTypes) {
+
+        acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
+        acceptedMediaTypes = acceptedMediaTypes != null ? acceptedMediaTypes : OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
+
+        Map<String, Oas30MediaType> content = response.content;
+        if (content == null) {
+            return Optional.empty();
+        }
+
+        String selectedMediaType = null;
+        Oas30Schema selectedSchema = null;
+        for (String type : acceptedMediaTypes) {
+            if (!isFormDataMediaType(type)) {
+                Oas30MediaType oas30MediaType = content.get(type);
+                if (oas30MediaType != null) {
+                    selectedMediaType = type;
+                    selectedSchema = oas30MediaType.schema;
+                    break;
+                }
+            }
+        }
+
+        return selectedSchema == null && selectedMediaType == null ? Optional.empty() : Optional.of(new OasAdapter<>(selectedSchema, selectedMediaType));
     }
 
     public static Optional<OasSchema> getRequestBodySchema(Oas30Document openApiDoc, Oas30Operation operation) {
@@ -142,8 +169,8 @@ public final class Oas30ModelHelper {
         Oas30RequestBody bodyToUse = operation.requestBody;
 
         if (openApiDoc.components != null
-            && openApiDoc.components.requestBodies != null
-            && bodyToUse.$ref != null) {
+                && openApiDoc.components.requestBodies != null
+                && bodyToUse.$ref != null) {
             bodyToUse = openApiDoc.components.requestBodies.get(OasModelHelper.getReferenceName(bodyToUse.$ref));
         }
 
@@ -152,12 +179,12 @@ public final class Oas30ModelHelper {
         }
 
         return bodyToUse.content.entrySet()
-            .stream()
-            .filter(entry -> !isFormDataMediaType(entry.getKey()))
-            .filter(entry -> entry.getValue().schema != null)
-            .findFirst()
-            .map(Map.Entry::getValue)
-            .map(oas30MediaType -> oas30MediaType.schema);
+                .stream()
+                .filter(entry -> !isFormDataMediaType(entry.getKey()))
+                .filter(entry -> entry.getValue().schema != null)
+                .findFirst()
+                .map(Map.Entry::getValue)
+                .map(oas30MediaType -> oas30MediaType.schema);
     }
 
     public static Optional<String> getRequestContentType(Oas30Operation operation) {
@@ -166,10 +193,10 @@ public final class Oas30ModelHelper {
         }
 
         return operation.requestBody.content.entrySet()
-            .stream()
-            .filter(entry -> entry.getValue().schema != null)
-            .map(Map.Entry::getKey)
-            .findFirst();
+                .stream()
+                .filter(entry -> entry.getValue().schema != null)
+                .map(Map.Entry::getKey)
+                .findFirst();
     }
 
     public static Collection<String> getResponseTypes(Oas30Operation operation, Oas30Response response) {
@@ -179,73 +206,15 @@ public final class Oas30ModelHelper {
         return response.content != null ? response.content.keySet() : Collections.emptyList();
     }
 
-    /**
-     * Returns the response content for random response generation. Note that this implementation currently only returns {@link MediaType#APPLICATION_JSON_VALUE},
-     * if this type exists. Otherwise, it will return an empty Optional. The reason for this is, that we cannot safely guess the type other than for JSON.
-     *
-     * @param openApiDoc
-     * @param operation
-     * @return
-     */
-    public static Optional<String> getResponseContentTypeForRandomGeneration(Oas30Document openApiDoc, Oas30Operation operation) {
-        Optional<OasResponse> responseForRandomGeneration = getResponseForRandomGeneration(
-            openApiDoc, operation);
-        return responseForRandomGeneration.map(
-            Oas30Response.class::cast).flatMap(res -> res.content.entrySet()
-            .stream()
-            .filter(entry -> MediaType.APPLICATION_JSON_VALUE.equals(entry.getKey()))
-            .filter(entry -> entry.getValue().schema != null)
-            .map(Map.Entry::getKey)
-            .findFirst());
-    }
-
-    public static Optional<OasResponse> getResponseForRandomGeneration(Oas30Document openApiDoc, Oas30Operation operation) {
-        if (operation.responses == null) {
-            return Optional.empty();
-        }
-
-        List<OasResponse> responses = OasModelHelper.resolveResponses(operation.responses,
-            responseRef -> openApiDoc.components.responses.get(OasModelHelper.getReferenceName(responseRef)));
-
-        // Pick the response object related to the first 2xx return code found
-        Optional<OasResponse> response = responses.stream()
-            .filter(Oas30Response.class::isInstance)
-            .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
-            .map(OasResponse.class::cast)
-            .filter(res -> OasModelHelper.getSchema(res).isPresent())
-            .findFirst();
-
-        // No 2xx response given so pick the first one no matter what status code
-        if (response.isEmpty()) {
-            // TODO: This behavior differs from OAS2 and is very likely a bug because it may result in returning error messages.
-            // According to the specification, there MUST be at least one response, which SHOULD be a successful response.
-            // If the response is NOT A SUCCESSFUL one, we encounter an error case, which is likely not the intended behavior.
-            // The specification likely does not intend to define operations that always fail. On the other hand, it is not
-            // against the spec to NOT document an OK response that is empty.
-            // For testing purposes, note that the difference between OAS2 and OAS3 is evident in the Petstore API.
-            // The Petstore API specifies successful response codes for OAS3 but lacks these definitions for OAS2.
-            // Therefore, while tests pass for OAS3, they fail for OAS2.
-            // I would suggest to return an empty response in case we fail to resolve a good response, as in Oas2.
-            // In case of absence of a response an OK response will be sent as default.
-            response = responses.stream()
-                .filter(Oas30Response.class::isInstance)
-                .map(OasResponse.class::cast)
-                .filter(res -> OasModelHelper.getSchema(res).isPresent())
-                .findFirst();
-        }
-
-        return response;
-    }
-
     public static Map<String, OasSchema> getRequiredHeaders(Oas30Response response) {
         if (response.headers == null) {
             return Collections.emptyMap();
         }
 
         return response.headers.entrySet()
-            .stream()
-            .filter(entry -> Boolean.TRUE.equals(entry.getValue().required))
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
+                .stream()
+                .filter(entry -> Boolean.TRUE.equals(entry.getValue().required))
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
     }
 
     public static Map<String, OasSchema> getHeaders(Oas30Response response) {
@@ -254,8 +223,8 @@ public final class Oas30ModelHelper {
         }
 
         return response.headers.entrySet()
-            .stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
+                                .stream()
+                                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().schema));
     }
 
     private static boolean isFormDataMediaType(String type) {

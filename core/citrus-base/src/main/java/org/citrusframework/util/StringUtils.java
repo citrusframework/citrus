@@ -21,6 +21,8 @@ package org.citrusframework.util;
  */
 public class StringUtils {
 
+    public static final String URL_PATH_SEPARATOR = "/";
+
     private StringUtils() {
         //prevent instantiation of utility class
     }
@@ -39,7 +41,7 @@ public class StringUtils {
         return str == null || str.isEmpty();
     }
 
-    public static String appendSegmentToPath(String path, String segment) {
+    public static String appendSegmentToUrlPath(String path, String segment) {
 
         if (path == null) {
             return segment;
@@ -49,14 +51,14 @@ public class StringUtils {
             return path;
         }
 
-        if (!path.endsWith("/")) {
-            path = path +"/";
+        if (!path.endsWith(URL_PATH_SEPARATOR)) {
+            path = path + URL_PATH_SEPARATOR;
         }
 
-        if (segment.startsWith("/")) {
+        if (segment.startsWith(URL_PATH_SEPARATOR)) {
             segment = segment.substring(1);
         }
 
-        return path+segment;
+        return path + segment;
     }
 }

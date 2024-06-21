@@ -16,9 +16,7 @@
 
 package org.citrusframework.openapi.actions;
 
-import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nullable;
@@ -37,7 +35,8 @@ import org.citrusframework.message.MessageType;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.OpenApiTestDataGenerator;
 import org.citrusframework.openapi.model.OasModelHelper;
-import org.citrusframework.util.StringUtils;
+import org.citrusframework.openapi.model.OperationPathAdapter;
+import org.citrusframework.openapi.validation.OpenApiResponseValidationProcessor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,6 +46,7 @@ import org.springframework.http.MediaType;
  */
 public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder {
 
+    private final OpenApiResponseValidationProcessor openApiResponseValidationProcessor;
     /**
      * Default constructor initializes http response message builder.
      */
@@ -60,6 +60,16 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         String operationId, String statusCode) {
         super(new OpenApiClientResponseMessageBuilder(httpMessage, openApiSpec, operationId,
             statusCode), httpMessage);
+
+        openApiResponseValidationProcessor = new OpenApiResponseValidationProcessor(openApiSpec, operationId);
+        validate(openApiResponseValidationProcessor);
+    }
+
+    public OpenApiClientResponseActionBuilder disableOasValidation(boolean b) {
+        if (openApiResponseValidationProcessor != null) {
+            openApiResponseValidationProcessor.setEnabled(!b);
+        }
+        return this;
     }
 
     public static void fillMessageFromResponse(OpenApiSpecification openApiSpecification,
@@ -145,40 +155,25 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
 
         @Override
         public Message build(TestContext context, String messageType) {
-            OasOperation operation = null;
-            OasDocument oasDocument = openApiSpec.getOpenApiDoc(context);
 
-            for (OasPathItem path : OasModelHelper.getPathItems(oasDocument.paths)) {
-                Optional<Map.Entry<String, OasOperation>> operationEntry = OasModelHelper.getOperationMap(
-                        path).entrySet().stream()
-                    .filter(op -> operationId.equals(op.getValue().operationId))
-                    .findFirst();
+            openApiSpec.getOperation(operationId, context).ifPresentOrElse(operationPathAdapter ->
+                buildMessageFromOperation(operationPathAdapter, context), () -> {
+                throw new CitrusRuntimeException("Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(operationId, openApiSpec.getSpecUrl()));
+            });
 
-                if (operationEntry.isPresent()) {
-                    operation = operationEntry.get().getValue();
-                    break;
-                }
-            }
+            return super.build(context, messageType);
+        }
 
-            if (operation == null) {
-                throw new CitrusRuntimeException(
-                    "Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(
-                        operationId, openApiSpec.getSpecUrl()));
-            }
+        private void buildMessageFromOperation(OperationPathAdapter operationPathAdapter, TestContext context) {
+            OasOperation operation = operationPathAdapter.operation();
 
             if (operation.responses != null) {
-                OasResponse response;
+                Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
+                    openApiSpec.getOpenApiDoc(context), operation, statusCode, null);
 
-                if (StringUtils.hasText(statusCode)) {
-                    response = Optional.ofNullable(operation.responses.getItem(statusCode))
-                        .orElse(operation.responses.default_);
-                } else {
-                    response = OasModelHelper.getResponseForRandomGeneration(
-                            openApiSpec.getOpenApiDoc(null), operation)
-                        .orElse(operation.responses.default_);
-                }
-
-                fillMessageFromResponse(openApiSpec, context, httpMessage, operation, response);
+                responseForRandomGeneration.ifPresent(
+                    oasResponse -> fillMessageFromResponse(openApiSpec, context, httpMessage,
+                        operation, oasResponse));
             }
 
             if (Pattern.compile("\\d+").matcher(statusCode).matches()) {
@@ -186,8 +181,6 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
             } else {
                 httpMessage.status(HttpStatus.OK);
             }
-
-            return super.build(context, messageType);
         }
     }
 }
