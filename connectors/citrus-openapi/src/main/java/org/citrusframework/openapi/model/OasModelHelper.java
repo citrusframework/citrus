@@ -16,6 +16,9 @@
 
 package org.citrusframework.openapi.model;
 
+import static java.util.Collections.singletonList;
+
+import io.apicurio.datamodels.combined.visitors.CombinedVisitorAdapter;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
@@ -32,19 +35,33 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
-import java.util.ArrayList;
+import jakarta.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
 import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
+import org.citrusframework.util.StringUtils;
+import org.springframework.http.MediaType;
 
 public final class OasModelHelper {
+
+    public static final String DEFAULT_ = "default_";
+
+    /**
+     * List of preferred media types in the order of priority,
+     * used when no specific 'Accept' header is provided to determine the default response type.
+     */
+    public static final List<String> DEFAULT_ACCEPTED_MEDIA_TYPES = List.of(MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE);
 
     private OasModelHelper() {
         // utility class
@@ -74,9 +91,11 @@ public final class OasModelHelper {
      * @return true if given schema is an object array.
      */
     public static boolean isObjectArrayType(@Nullable OasSchema schema) {
+
         if (schema == null || !"array".equals(schema.type)) {
             return false;
         }
+
         Object items = schema.items;
         if (items instanceof  OasSchema oasSchema) {
             return isObjectType(oasSchema);
@@ -106,7 +125,7 @@ public final class OasModelHelper {
 
     public static OasSchema resolveSchema(OasDocument oasDocument, OasSchema schema) {
         if (isReferenceType(schema)) {
-            return getSchemaDefinitions(oasDocument).get(schema.$ref);
+            return getSchemaDefinitions(oasDocument).get(getReferenceName(schema.$ref));
         }
 
         return schema;
@@ -191,6 +210,16 @@ public final class OasModelHelper {
     public static Optional<OasSchema> getSchema(OasResponse response) {
         return delegate(response, Oas20ModelHelper::getSchema, Oas30ModelHelper::getSchema);
     }
+
+    public static Optional<OasAdapter<OasSchema, String>> getSchema(OasOperation oasOperation, OasResponse response, List<String> acceptedMediaTypes) {
+        if (oasOperation instanceof  Oas20Operation oas20Operation && response instanceof Oas20Response oas20Response) {
+            return Oas20ModelHelper.getSchema(oas20Operation, oas20Response, acceptedMediaTypes);
+        } else if (oasOperation instanceof Oas30Operation oas30Operation && response instanceof Oas30Response oas30Response) {
+            return Oas30ModelHelper.getSchema(oas30Operation, oas30Response, acceptedMediaTypes);
+        }
+        throw new IllegalArgumentException(String.format("Unsupported operation response type: %s", response.getClass()));
+    }
+
     public static Optional<OasSchema> getParameterSchema(OasParameter parameter) {
         return delegate(parameter, Oas20ModelHelper::getParameterSchema, Oas30ModelHelper::getParameterSchema);
     }
@@ -216,22 +245,71 @@ public final class OasModelHelper {
     }
 
     /**
-     * Determines the appropriate response from an OAS (OpenAPI Specification) operation.
-     * The method looks for the response status code within the range 200 to 299 and returns
-     * the corresponding response if one is found. The first response in the list of responses,
-     * that satisfies the constraint will be returned. (TODO: see comment in Oas30ModelHelper) If none of the responses has a 2xx status code,
-     * the first response in the list will be returned.
+     * Determines the appropriate random response from an OpenAPI Specification operation based on the given status code.
+     * If a status code is specified, return the response for the specified status code. May be empty.
+     * <p>
+     * If no exact match is found:
+     * <ul>
+     *     <li>Fallback 1: Returns the 'default_' response if it exists.</li>
+     *     <li>Fallback 2: Returns the first response object related to a 2xx status code that contains an acceptable schema for random message generation.</li>
+     *     <li>Fallback 3: Returns the first response object related to a 2xx status code even without a schema. This is for operations that simply do not return anything else than a status code.</li>
+     *     <li>Fallback 4: Returns the first response in the list of responses, no matter which schema.</li>
+     * </ul>
      *
+     * Note that for Fallback 3 and 4, it is very likely, that there is no schema specified. It is expected, that an empty response is a viable response in these cases.
+     *
+     * @param openApiDoc The OpenAPI document containing the API specifications.
+     * @param operation The OAS operation for which to determine the response.
+     * @param statusCode The specific status code to match against responses, or {@code null} to search for any acceptable response.
+     * @param accept The mediatype accepted by the request
+     * @return An {@link Optional} containing the resolved {@link OasResponse} if found, or {@link Optional#empty()} otherwise.
      */
-    public static Optional<OasResponse> getResponseForRandomGeneration(OasDocument openApiDoc, OasOperation operation) {
-        return delegate(openApiDoc, operation, Oas20ModelHelper::getResponseForRandomGeneration, Oas30ModelHelper::getResponseForRandomGeneration);
-    }
+    public static Optional<OasResponse> getResponseForRandomGeneration(OasDocument openApiDoc, OasOperation operation, @Nullable String statusCode, @Nullable String accept) {
 
-    /**
-     * Returns the response type used for random response generation. See specific helper implementations for detail.
-     */
-    public static Optional<String> getResponseContentTypeForRandomGeneration(OasDocument openApiDoc, OasOperation operation) {
-        return delegate(openApiDoc, operation, Oas20ModelHelper::getResponseContentTypeForRandomGeneration, Oas30ModelHelper::getResponseContentTypeForRandomGeneration);
+        if (operation.responses == null || operation.responses.getResponses().isEmpty()) {
+            return Optional.empty();
+        }
+
+        // Resolve all references
+        Map<String, OasResponse> responseMap = OasModelHelper.resolveResponses(openApiDoc,
+            operation.responses);
+
+        // For a given status code, do not fall back
+        if (statusCode != null) {
+            return Optional.ofNullable(responseMap.get(statusCode));
+        }
+
+        // Only accept responses that provide a schema for which we can actually provide a random message
+        Predicate<OasResponse> acceptedSchemas = resp -> getSchema(operation, resp, accept != null ? singletonList(accept) : DEFAULT_ACCEPTED_MEDIA_TYPES).isPresent();
+
+        // Fallback 1: Pick the default if it exists
+        Optional<OasResponse> response = Optional.ofNullable(responseMap.get(DEFAULT_));
+
+        if (response.isEmpty()) {
+            // Fallback 2: Pick the response object related to the first 2xx, providing an accepted schema
+            response = responseMap.values().stream()
+                .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
+                .map(OasResponse.class::cast)
+                .filter(acceptedSchemas)
+                .findFirst();
+        }
+
+        if (response.isEmpty()) {
+            // Fallback 3: Pick the response object related to the first 2xx (even without schema)
+            response = responseMap.values().stream()
+                .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
+                .map(OasResponse.class::cast)
+                .findFirst();
+        }
+
+        if (response.isEmpty()) {
+            // Fallback 4: Pick the first response no matter which schema
+            response = operation.responses.getResponses().stream()
+                .map(resp -> responseMap.get(resp.getStatusCode()))
+                .filter(Objects::nonNull).findFirst();
+        }
+
+        return response;
     }
 
     /**
@@ -326,6 +404,8 @@ public final class OasModelHelper {
 
     /**
      * Delegate method to version specific model helpers for Open API v2 or v3.
+     *
+     * @param openApiDoc
      * @param operation
      * @param oas20Function function to apply in case of v2
      * @param oas30Function function to apply in case of v3
@@ -351,30 +431,105 @@ public final class OasModelHelper {
     }
 
     /**
-     * Resolves all responses in the given {@link OasResponses} instance using the provided {@code responseResolver} function.
+     * Resolves all responses in the given {@link OasResponses} instance.
      *
-     * <p>This method iterates over the responses contained in the {@link OasResponses} object. If a response has a reference
-     * (indicated by a non-null {@code $ref} field), the reference is resolved using the {@code responseResolver} function. Other responses
-     * will be added to the result list as is.</p>
+     * <p>
+     * This method iterates over the responses contained in the {@link OasResponses} object. If a response has a reference
+     * (indicated by a non-null {@code $ref} field), it resolves the reference and adds the resolved response to the result list.
+     * Non-referenced responses are added to the result list as-is. The resulting map includes the default response under
+     * the key {@link OasModelHelper#DEFAULT_}, if it exists.
+     * </p>
      *
-     * @param responses        the {@link OasResponses} instance containing the responses to be resolved.
-     * @param responseResolver a {@link Function} that takes a reference string and returns the corresponding {@link OasResponse}.
+     * @param responses the {@link OasResponses} instance containing the responses to be resolved.
      * @return a {@link List} of {@link OasResponse} instances, where all references have been resolved.
      */
-    public static List<OasResponse> resolveResponses(OasResponses responses, Function<String, OasResponse> responseResolver) {
+    private static Map<String, OasResponse> resolveResponses(OasDocument openApiDoc, OasResponses responses) {
 
-        List<OasResponse> responseList = new ArrayList<>();
+        Function<String, OasResponse> responseResolver = getResponseResolver(
+            openApiDoc);
+
+        Map<String, OasResponse> responseMap = new HashMap<>();
         for (OasResponse response : responses.getResponses()) {
             if (response.$ref != null) {
                 OasResponse resolved = responseResolver.apply(getReferenceName(response.$ref));
                 if (resolved != null) {
-                    responseList.add(resolved);
+                    // Note that we need to get the statusCode from the ref, as the referenced does not know about it.
+                    responseMap.put(response.getStatusCode(), resolved);
                 }
             } else {
-                responseList.add(response);
+                responseMap.put(response.getStatusCode(), response);
             }
         }
 
-        return responseList;
+        if (responses.default_ != null) {
+            if (responses.default_.$ref != null) {
+                OasResponse resolved = responseResolver.apply(responses.default_.$ref);
+                if (resolved != null) {
+                    responseMap.put(DEFAULT_, resolved);
+                }
+            } else {
+                responseMap.put(DEFAULT_, responses.default_);
+            }
+        }
+
+        return responseMap;
+    }
+
+    private static Function<String, OasResponse> getResponseResolver(
+        OasDocument openApiDoc) {
+        return delegate(openApiDoc,
+            (Function<Oas20Document, Function<String, OasResponse>>) doc -> (responseRef -> doc.responses.getResponse(OasModelHelper.getReferenceName(responseRef))),
+            (Function<Oas30Document, Function<String, OasResponse>>) doc -> (responseRef -> doc.components.responses.get(OasModelHelper.getReferenceName(responseRef))));
+    }
+
+    /**
+     * Traverses the OAS document and applies the given visitor to each OAS operation found.
+     * This method uses the provided {@link OasOperationVisitor} to process each operation within the paths of the OAS document.
+     *
+     * @param oasDocument the OAS document to traverse
+     * @param visitor the visitor to apply to each OAS operation
+     */
+    public static void visitOasOperations(OasDocument oasDocument, OasOperationVisitor visitor) {
+        if (oasDocument == null || visitor == null) {
+            return;
+        }
+
+        oasDocument.paths.accept(new CombinedVisitorAdapter() {
+
+            @Override
+            public void visitPaths(OasPaths oasPaths) {
+                oasPaths.getPathItems().forEach(oasPathItem -> oasPathItem.accept(this));
+            }
+
+            @Override
+            public void visitPathItem(OasPathItem oasPathItem) {
+                String path = oasPathItem.getPath();
+
+                if (StringUtils.isEmpty(path)) {
+                    return;
+                }
+
+                getOperationMap(oasPathItem).values()
+                    .forEach(oasOperation -> visitor.visit(oasPathItem, oasOperation));
+
+            }
+        });
+    }
+
+    /**
+     * Resolves and normalizes a list of accepted media types. If the input list is null,
+     * returns null. Otherwise, splits each media type string by comma, trims whitespace,
+     * and collects them into a list of normalized types.
+     *
+     * @param acceptedMediaTypes List of accepted media types, may be null.
+     * @return Normalized list of media types, or null if input is null.
+     */
+    public static List<String> resolveAllTypes(@Nullable List<String> acceptedMediaTypes) {
+        if (acceptedMediaTypes == null) {
+            return acceptedMediaTypes;
+        }
+
+        return acceptedMediaTypes.stream()
+            .flatMap(types -> Arrays.stream(types.split(","))).map(String::trim).toList();
     }
 }

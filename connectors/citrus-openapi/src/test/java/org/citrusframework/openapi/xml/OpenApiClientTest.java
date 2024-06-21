@@ -124,7 +124,9 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         context.getReferenceResolver().bind("httpClient", httpClient);
         context.getReferenceResolver().bind("httpServer", httpServer);
 
-        responses.add(new HttpMessage(FileUtils.readToString(Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml"))));
+        String apiAsString = FileUtils.readToString(Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.yaml"));
+        responses.add(new HttpMessage(apiAsString));
+        responses.add(new HttpMessage(apiAsString));
         responses.add(new HttpMessage("""
                 {
                   "id": 1000,
