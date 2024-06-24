@@ -16,11 +16,6 @@
 
 package org.citrusframework.openapi.integration;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.fail;
-
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder.HttpMessageBuilderSupport;
@@ -37,6 +32,11 @@ import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
+
+import static org.citrusframework.http.actions.HttpActionBuilder.http;
+import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
+import static org.testng.Assert.assertThrows;
+import static org.testng.Assert.fail;
 
 /**
  * @author Christoph Deppisch
