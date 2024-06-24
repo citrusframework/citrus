@@ -16,10 +16,10 @@
 
 package org.citrusframework.openapi.model;
 
-import static java.lang.String.format;
-
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import org.citrusframework.openapi.OpenApiUtils;
+
+import static java.lang.String.format;
 
 /**
  * Adapts the different paths associated with an OpenAPI operation to the {@link OasOperation}.

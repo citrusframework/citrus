@@ -16,16 +16,17 @@
 
 package org.citrusframework.openapi;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import java.util.Map;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.spi.Resources;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Map;
+
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 
 // TODO: Add more tests
 public class OpenApiTestDataGeneratorTest {

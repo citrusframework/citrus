@@ -16,6 +16,11 @@
 
 package org.citrusframework.openapi;
 
+import org.citrusframework.repository.BaseRepository;
+import org.citrusframework.spi.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,10 +29,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.citrusframework.repository.BaseRepository;
-import org.citrusframework.spi.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * OpenApi repository holding a set of {@link OpenApiSpecification} known in the test scope.
@@ -140,7 +141,4 @@ public class OpenApiRepository extends BaseRepository {
     public List<OpenApiSpecification> getOpenApiSpecifications() {
         return openApiSpecifications;
     }
-
-
-
 }

@@ -16,8 +16,6 @@
 
 package org.citrusframework.openapi.groovy;
 
-import java.util.Map;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -44,6 +42,8 @@ import org.springframework.http.HttpMethod;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 import static org.citrusframework.endpoint.direct.DirectEndpoints.direct;
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;

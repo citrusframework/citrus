@@ -16,21 +16,12 @@
 
 package org.citrusframework.openapi.integration;
 
-import static org.citrusframework.http.actions.HttpActionBuilder.http;
-import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.fail;
-
-import java.util.List;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
-import org.citrusframework.exceptions.ValidationException;
-import org.citrusframework.http.actions.HttpServerResponseActionBuilder.HttpMessageBuilderSupport;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
-import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerRequestActionBuilder;
@@ -40,8 +31,12 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.citrusframework.http.actions.HttpActionBuilder.http;
+import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
+import static org.testng.Assert.assertThrows;
+import static org.testng.Assert.fail;
 
 /**
  * @author Christoph Deppisch
@@ -173,7 +168,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         assertThrows(TestCaseFailedException.class, () -> then(addPetBuilder));
     }
 
-        @CitrusTest
+    @CitrusTest
     public void shouldSucceedOnWrongQueryIdTypeWithOasDisabled() {
         variable("petId", "xxx");
 
