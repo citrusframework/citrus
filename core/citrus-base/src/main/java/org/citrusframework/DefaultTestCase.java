@@ -16,23 +16,6 @@
 
 package org.citrusframework;
 
-import org.apache.commons.lang3.time.StopWatch;
-import org.citrusframework.container.AbstractActionContainer;
-import org.citrusframework.container.AfterTest;
-import org.citrusframework.container.BeforeTest;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.exceptions.TestCaseFailedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -40,6 +23,23 @@ import static org.citrusframework.TestResult.failed;
 import static org.citrusframework.TestResult.skipped;
 import static org.citrusframework.TestResult.success;
 import static org.citrusframework.util.TestUtils.waitForCompletion;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.time.StopWatch;
+import org.citrusframework.container.AbstractActionContainer;
+import org.citrusframework.container.AfterTest;
+import org.citrusframework.container.BeforeTest;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.spi.ReferenceResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default test case implementation holding a list of test actions to execute. Test case also holds variable definitions and
@@ -50,6 +50,8 @@ import static org.citrusframework.util.TestUtils.waitForCompletion;
 public class DefaultTestCase extends AbstractActionContainer implements TestCase, TestGroupAware, TestParameterAware {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultTestCase.class);
+
+    private static final TestResultInstanceProvider DEFAULT_TEST_RESULT_INSTANCE_PROVIDER = new DefaultTestResultInstanceProvider();
 
     /**
      * Further chain of test actions to be executed in any case (success, error)
@@ -114,16 +116,16 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                     executeAction(actionBuilder.build(), context);
                 }
 
-                testResult = success(getName(), testClass.getName());
+                testResult = getTestResultInstanceProvider(context).createSuccess(this);
             } catch (final TestCaseFailedException e) {
                 gracefullyStopTimer();
                 throw e;
             } catch (final Exception | AssertionError e) {
-                testResult = failed(getName(), testClass.getName(), e);
+                testResult = getTestResultInstanceProvider(context).createFailed(this, e);
                 throw new TestCaseFailedException(e);
             }
         } else {
-            testResult = skipped(getName(), testClass.getName());
+            testResult = getTestResultInstanceProvider(context).createSkipped(this);
             context.getTestListeners().onTestSkipped(this);
         }
     }
@@ -142,7 +144,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
             beforeTest(context);
         } catch (final Exception | AssertionError e) {
-            testResult = failed(getName(), testClass.getName(), e);
+            testResult = getTestResultInstanceProvider(context).createFailed(this, e);
             throw new TestCaseFailedException(e);
         }
     }
@@ -193,7 +195,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 context.getTestActionListeners().onTestActionSkipped(this, action);
             }
         } catch (final Exception | AssertionError e) {
-            testResult = failed(getName(), testClass.getName(), e);
+            testResult = getTestResultInstanceProvider(context).createFailed(this, e);
             throw new TestCaseFailedException(e);
         } finally {
             setExecutedAction(action);
@@ -219,9 +221,9 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             if (isNull(testResult)) {
                 if (context.hasExceptions()) {
                     contextException = context.getExceptions().remove(0);
-                    testResult = failed(getName(), testClass.getName(), contextException);
+                    testResult = getTestResultInstanceProvider(context).createFailed(this, contextException);
                 } else {
-                    testResult = success(getName(), testClass.getName());
+                    testResult = getTestResultInstanceProvider(context).createSuccess(this);
                 }
             }
 
@@ -238,7 +240,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         } catch (final TestCaseFailedException e) {
             throw e;
         } catch (final Exception | AssertionError e) {
-            testResult = failed(getName(), testClass.getName(), e);
+            testResult = getTestResultInstanceProvider(context).createFailed(this, e);
             throw new TestCaseFailedException(e);
         } finally {
             if (testResult != null) {
@@ -298,7 +300,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
         if (testResult.isSuccess() && context.hasExceptions()) {
             CitrusRuntimeException contextException = context.getExceptions().remove(0);
-            testResult = failed(getName(), testClass.getName(), contextException);
+            testResult = getTestResultInstanceProvider(context).createFailed(this, contextException);
             throw new TestCaseFailedException(contextException);
         }
     }
@@ -379,6 +381,16 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      */
     public void setFinalActions(final List<TestAction> finalActions) {
         this.finalActions = finalActions.stream().map(action -> (TestActionBuilder<?>) () -> action).collect(Collectors.toList());
+    }
+
+    private TestResultInstanceProvider getTestResultInstanceProvider(TestContext context) {
+
+        ReferenceResolver referenceResolver = context.getReferenceResolver();
+        if (referenceResolver != null && referenceResolver.isResolvable(TestResultInstanceProvider.class)) {
+            return referenceResolver.resolve(TestResultInstanceProvider.class);
+        }
+
+        return DEFAULT_TEST_RESULT_INSTANCE_PROVIDER;
     }
 
     @Override
@@ -526,5 +538,27 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      */
     public long getTimeout() {
         return timeout;
+    }
+
+    /**
+     * Default implementation of {@link TestResultInstanceProvider} that provides simple TestResults
+     * without any parameters.
+     */
+    private static final class DefaultTestResultInstanceProvider implements TestResultInstanceProvider {
+
+        @Override
+        public TestResult createSuccess(TestCase testCase) {
+            return success(testCase.getName(), testCase.getTestClass().getName());
+        }
+
+        @Override
+        public TestResult createFailed(TestCase testCase, Throwable throwable) {
+            return failed(testCase.getName(), testCase.getTestClass().getName(), throwable);
+        }
+
+        @Override
+        public TestResult createSkipped(TestCase testCase) {
+            return skipped(testCase.getName(), testCase.getTestClass().getName());
+        }
     }
 }
