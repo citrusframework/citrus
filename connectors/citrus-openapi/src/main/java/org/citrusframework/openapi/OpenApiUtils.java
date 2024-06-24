@@ -16,13 +16,13 @@
 
 package org.citrusframework.openapi;
 
-import static java.lang.String.format;
-
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import jakarta.annotation.Nonnull;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.util.StringUtils;
+
+import static java.lang.String.format;
 
 public class OpenApiUtils {
 
@@ -42,7 +42,7 @@ public class OpenApiUtils {
         if (StringUtils.hasText(path) && path.startsWith("/")) {
             path = path.substring(1);
         }
-        return String.format("/%s/%s", method.toLowerCase(), path);
+        return format("/%s/%s", method.toLowerCase(), path);
     }
 
     /**

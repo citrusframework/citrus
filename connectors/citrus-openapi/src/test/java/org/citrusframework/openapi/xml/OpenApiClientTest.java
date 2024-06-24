@@ -16,11 +16,6 @@
 
 package org.citrusframework.openapi.xml;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
@@ -59,6 +54,11 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import static org.citrusframework.http.endpoint.builder.HttpEndpoints.http;
 

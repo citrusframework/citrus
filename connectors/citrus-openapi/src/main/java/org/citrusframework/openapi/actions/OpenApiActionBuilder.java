@@ -47,7 +47,6 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
 
 	/**
 	 * Static entrance method for the OpenApi fluent action builder.
-	 * @return
 	 */
 	public static OpenApiActionBuilder openapi() {
 		return new OpenApiActionBuilder();
@@ -137,7 +136,6 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
 
 	/**
 	 * Sets the bean reference resolver.
-	 * @param referenceResolver
 	 */
 	public OpenApiActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
 		this.referenceResolver = referenceResolver;

@@ -1,12 +1,7 @@
 package org.citrusframework.openapi;
 
 import io.apicurio.datamodels.openapi.models.OasDocument;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import javax.net.ssl.HttpsURLConnection;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
@@ -23,12 +18,23 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static org.citrusframework.util.FileUtils.readToString;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 public class OpenApiSpecificationTest {
 
@@ -211,30 +217,27 @@ public class OpenApiSpecificationTest {
     }
 
     @Test(dataProvider = "lazyInitializationDataprovider")
-    public void shouldDisableEnableRequestValidationWhenSet(String requestUrl, String specSource) throws IOException {
+    public void shouldDisableEnableRequestValidationWhenSet(String requestUrl, String specSource) {
 
         // Given
         OpenApiSpecification specification = new OpenApiSpecification() {
+
             @Override
             URL toSpecUrl(String resolvedSpecUrl) {
                 return mockUrlConnection(resolvedSpecUrl);
             }
         };
+
         specification.setRequestUrl(requestUrl);
         specification.setHttpClient("sampleHttpClient");
         specification.setSpecUrl(specSource);
-        when(testContextMock.replaceDynamicContentInString(isA(String.class))).thenAnswer(answer->
-            answer.getArgument(0)
-        );
+        when(testContextMock.replaceDynamicContentInString(isA(String.class))).thenAnswer(returnsFirstArg());
 
         when(testContextMock.getReferenceResolver()).thenReturn(referenceResolverMock);
         when(referenceResolverMock.isResolvable("sampleHttpClient", HttpClient.class)).thenReturn(true);
         when(referenceResolverMock.resolve("sampleHttpClient", HttpClient.class)).thenReturn(httpClient);
         when(httpClient.getEndpointConfiguration()).thenReturn(endpointConfigurationMock);
         when(endpointConfigurationMock.getRequestUrl()).thenReturn("http://org.citrus.sample");
-
-        boolean sampleHttpCient = testContextMock.getReferenceResolver()
-            .isResolvable("sampleHttpClient", HttpClient.class);
 
         // When
         specification.setRequestValidationEnabled(false);
@@ -383,5 +386,4 @@ public class OpenApiSpecificationTest {
         assertEquals(openApiSpecification.getRequestUrl(), "http://or.citrus.sample");
 
     }
-
 }
