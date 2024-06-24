@@ -18,8 +18,10 @@ package org.citrusframework.http.actions;
 
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.http.message.HttpMessage;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -64,6 +66,11 @@ public class HttpServerActionBuilderTest {
     public void sendOkJsonFromObject() {
         HttpServerResponseActionBuilder.HttpMessageBuilderSupport httpMessageBuilderSupport = fixture.respondOkJson(JSON_OBJECT_REPRESENTATION);
         verifyOkJsonResponse(httpMessageBuilderSupport);
+    }
+
+    @Test
+    public void isReferenceResolverAwareTestActionBuilder() {
+        Assert.assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
     }
 
     private record TestJsonObject(String property) {

@@ -16,23 +16,39 @@
 
 package org.citrusframework.http.actions;
 
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import java.util.Map;
 
-import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Christoph Deppisch
  */
 public class HttpActionBuilderTest {
 
+    private HttpActionBuilder fixture;
+
+    @BeforeMethod
+    public void beforeMethod() {
+        fixture = new HttpActionBuilder();
+    }
+
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("http"));
+        assertTrue(endpointBuilders.containsKey("http"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("http").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("http").get().getClass(), HttpActionBuilder.class);
+        assertTrue(TestActionBuilder.lookup("http").isPresent());
+        assertEquals(TestActionBuilder.lookup("http").get().getClass(), HttpActionBuilder.class);
+    }
+
+    @Test
+    public void isReferenceResolverAwareTestActionBuilder() {
+        assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
     }
 }

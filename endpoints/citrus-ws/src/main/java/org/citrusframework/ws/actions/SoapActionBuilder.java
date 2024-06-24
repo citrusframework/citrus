@@ -17,9 +17,8 @@
 package org.citrusframework.ws.actions;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 import org.citrusframework.ws.client.WebServiceClient;
 import org.citrusframework.ws.server.WebServiceServer;
@@ -30,12 +29,7 @@ import org.citrusframework.ws.server.WebServiceServer;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class SoapActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
-
-	/** Bean reference resolver */
-	private ReferenceResolver referenceResolver;
-
-	private TestActionBuilder<?> delegate;
+public class SoapActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
 
 	/**
 	 * Static entrance method for the SOAP fluent action builder.
@@ -98,25 +92,5 @@ public class SoapActionBuilder implements TestActionBuilder.DelegatingTestAction
 	public TestAction build() {
 		ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
 		return delegate.build();
-	}
-
-	@Override
-	public TestActionBuilder<?> getDelegate() {
-		return delegate;
-	}
-
-	/**
-	 * Specifies the referenceResolver.
-	 * @param referenceResolver
-	 */
-	@Override
-	public void setReferenceResolver(ReferenceResolver referenceResolver) {
-		if (referenceResolver == null) {
-			this.referenceResolver = referenceResolver;
-
-			if (delegate instanceof ReferenceResolverAware) {
-				((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
-			}
-		}
 	}
 }

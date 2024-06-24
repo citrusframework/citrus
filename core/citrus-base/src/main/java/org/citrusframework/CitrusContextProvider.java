@@ -63,15 +63,15 @@ public interface CitrusContextProvider {
         }
 
         if (provider.size() > 1) {
-            logger.warn(String.format("Found %d Citrus context provider implementations. Please choose one of them.", provider.size()));
+            logger.warn("Found {} Citrus context provider implementations. Please choose one of them.", provider.size());
         }
 
         if (logger.isDebugEnabled()) {
-            provider.forEach((k, v) -> logger.debug(String.format("Found Citrus context provider '%s' as %s", k, v.getClass())));
+            provider.forEach((k, v) -> logger.debug("Found Citrus context provider '{}' as {}", k, v.getClass()));
         }
 
         CitrusContextProvider contextProvider = provider.values().iterator().next();
-        logger.debug(String.format("Using Citrus context provider '%s' as %s", provider.keySet().iterator().next(), contextProvider));
+        logger.debug("Using Citrus context provider '{}' as {}", provider.keySet().iterator().next(), contextProvider);
         return contextProvider;
     }
 
