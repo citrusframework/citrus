@@ -1,5 +1,10 @@
 package org.citrusframework.openapi;
 
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
+
 import static org.citrusframework.openapi.OpenApiSettings.GENERATE_OPTIONAL_FIELDS_PROPERTY;
 import static org.citrusframework.openapi.OpenApiSettings.REQUEST_VALIDATION_ENABLED_PROPERTY;
 import static org.citrusframework.openapi.OpenApiSettings.RESPONSE_VALIDATION_ENABLED_PROPERTY;
@@ -7,11 +12,6 @@ import static org.citrusframework.openapi.OpenApiSettings.VALIDATE_OPTIONAL_FIEL
 import static org.citrusframework.openapi.OpenApiSettings.VALIDATE_OPTIONAL_FIELDS_PROPERTY;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 
 public class OpenApiSettingsTest {
 

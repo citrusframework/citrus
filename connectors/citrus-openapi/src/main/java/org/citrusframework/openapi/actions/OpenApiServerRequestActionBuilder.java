@@ -16,21 +16,9 @@
 
 package org.citrusframework.openapi.actions;
 
-import static java.lang.String.format;
-import static org.citrusframework.message.MessageType.JSON;
-import static org.citrusframework.message.MessageType.PLAINTEXT;
-import static org.citrusframework.message.MessageType.XML;
-import static org.citrusframework.openapi.model.OasModelHelper.getRequestContentType;
-import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
-
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -45,6 +33,19 @@ import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiRequestValidationProcessor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+import static java.lang.String.format;
+import static org.citrusframework.message.MessageType.JSON;
+import static org.citrusframework.message.MessageType.PLAINTEXT;
+import static org.citrusframework.message.MessageType.XML;
+import static org.citrusframework.openapi.model.OasModelHelper.getRequestContentType;
+import static org.citrusframework.util.StringUtils.appendSegmentToUrlPath;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
 /**
  * @since 4.1
@@ -232,8 +233,5 @@ public class OpenApiServerRequestActionBuilder extends HttpServerRequestActionBu
         private void setSpecifiedMethod(OperationPathAdapter operationPathAdapter) {
             httpMessage.method(HttpMethod.valueOf(operationPathAdapter.operation().getMethod().toUpperCase()));
         }
-
     }
-
-
 }
