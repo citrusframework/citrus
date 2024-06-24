@@ -22,22 +22,6 @@ package org.citrusframework.openapi;
  *
  * @param <T> the type to which the specification is adapted.
  */
-public class OpenApiSpecificationAdapter<T> {
-    
-    private final OpenApiSpecification openApiSpecification;
+public record OpenApiSpecificationAdapter<T>(OpenApiSpecification openApiSpecification, T entity) {
 
-    private final T entity;
-
-    public OpenApiSpecificationAdapter(OpenApiSpecification openApiSpecification, T entity) {
-        this.openApiSpecification = openApiSpecification;
-        this.entity = entity;
-    }
-
-    public OpenApiSpecification getOpenApiSpecification() {
-        return openApiSpecification;
-    }
-
-    public T getEntity() {
-        return entity;
-    }
 }

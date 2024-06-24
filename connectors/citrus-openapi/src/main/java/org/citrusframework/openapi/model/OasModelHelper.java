@@ -16,8 +16,6 @@
 
 package org.citrusframework.openapi.model;
 
-import static java.util.Collections.singletonList;
-
 import io.apicurio.datamodels.combined.visitors.CombinedVisitorAdapter;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
@@ -36,6 +34,11 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import jakarta.annotation.Nullable;
+import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
+import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
+import org.citrusframework.util.StringUtils;
+import org.springframework.http.MediaType;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,10 +51,8 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
-import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
-import org.citrusframework.util.StringUtils;
-import org.springframework.http.MediaType;
+
+import static java.util.Collections.singletonList;
 
 public final class OasModelHelper {
 
@@ -306,7 +307,8 @@ public final class OasModelHelper {
             // Fallback 4: Pick the first response no matter which schema
             response = operation.responses.getResponses().stream()
                 .map(resp -> responseMap.get(resp.getStatusCode()))
-                .filter(Objects::nonNull).findFirst();
+                .filter(Objects::nonNull)
+                    .findFirst();
         }
 
         return response;

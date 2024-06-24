@@ -17,14 +17,16 @@
 package org.citrusframework.openapi;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import java.util.Map;
-import java.util.stream.Collectors;
+import jakarta.annotation.Nullable;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Generates proper payloads and validation expressions based on Open API specification rules. Creates outbound payloads
@@ -36,9 +38,6 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Creates payload from schema for outbound message.
-     * @param schema
-     * @param definitions
-     * @return
      */
     public static String createOutboundPayload(OasSchema schema, Map<String, OasSchema> definitions,
                                                OpenApiSpecification specification) {
@@ -81,10 +80,6 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Use test variable with given name if present or create value from schema with random values
-     * @param schema
-     * @param definitions
-     * @param quotes
-     * @return
      */
     public static String createRandomValueExpression(String name, OasSchema schema, Map<String, OasSchema> definitions,
                                                      boolean quotes, OpenApiSpecification specification, TestContext context) {
@@ -106,10 +101,6 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Create payload from schema with random values.
-     * @param schema
-     * @param definitions
-     * @param quotes
-     * @return
      */
     public static String createRandomValueExpression(OasSchema schema, Map<String, OasSchema> definitions, boolean quotes,
                                                      OpenApiSpecification specification) {
@@ -179,9 +170,6 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Creates control payload from schema for validation.
-     * @param schema
-     * @param definitions
-     * @return
      */
     public static String createInboundPayload(OasSchema schema, Map<String, OasSchema> definitions,
                                               OpenApiSpecification specification) {
@@ -224,9 +212,6 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Checks if given field name is in list of required fields for this schema.
-     * @param schema
-     * @param field
-     * @return
      */
     private static boolean isRequired(OasSchema schema, String field) {
         if (schema.required == null) {
@@ -238,12 +223,6 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Use test variable with given name if present or create validation expression using functions according to schema type and format.
-     * @param name
-     * @param schema
-     * @param definitions
-     * @param quotes
-     * @param context
-     * @return
      */
     public static String createValidationExpression(String name, OasSchema schema, Map<String, OasSchema> definitions,
                                                     boolean quotes, OpenApiSpecification specification,
@@ -257,10 +236,6 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Create validation expression using functions according to schema type and format.
-     * @param schema
-     * @param definitions
-     * @param quotes
-     * @return
      */
     public static String createValidationExpression(OasSchema schema, Map<String, OasSchema> definitions, boolean quotes,
                                                     OpenApiSpecification specification) {
@@ -307,8 +282,6 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Create validation expression using functions according to schema type and format.
-     * @param schema
-     * @return
      */
     private static String createValidationExpression(OasSchema schema) {
         switch (schema.type) {
@@ -337,10 +310,6 @@ public class OpenApiTestDataGenerator {
     /**
      * Use test variable with given name (if present) or create random value expression using functions according to
      * schema type and format.
-     * @param name
-     * @param schema
-     * @param context
-     * @return
      */
     public static String createRandomValueExpression(String name, OasSchema schema, TestContext context) {
         if (context.getVariables().containsKey(name)) {
@@ -352,8 +321,6 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Create random value expression using functions according to schema type and format.
-     * @param schema
-     * @return
      */
     public static String createRandomValueExpression(OasSchema schema) {
         switch (schema.type) {
@@ -383,11 +350,8 @@ public class OpenApiTestDataGenerator {
 
     /**
      * Create validation expression using regex according to schema type and format.
-     * @param name
-     * @param oasSchema
-     * @return
      */
-    public static String createValidationRegex(String name, OasSchema oasSchema) {
+    public static String createValidationRegex(String name, @Nullable OasSchema oasSchema) {
 
         if (oasSchema != null && (OasModelHelper.isReferenceType(oasSchema) || OasModelHelper.isObjectType(oasSchema))) {
             throw new CitrusRuntimeException(String.format("Unable to create a validation regex for an reference of object schema '%s'!", name));
@@ -396,7 +360,7 @@ public class OpenApiTestDataGenerator {
         return createValidationRegex(oasSchema);
     }
 
-    public static String createValidationRegex(OasSchema schema) {
+    public static String createValidationRegex(@Nullable OasSchema schema) {
 
         if (schema == null) {
             return "";
@@ -427,5 +391,4 @@ public class OpenApiTestDataGenerator {
                 return "";
         }
     }
-
 }
