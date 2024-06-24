@@ -16,6 +16,15 @@
 
 package org.citrusframework.openapi;
 
+import org.citrusframework.spi.Resource;
+import org.testng.annotations.Test;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -23,14 +32,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import org.citrusframework.spi.Resource;
-import org.testng.annotations.Test;
 
 public class OpenApiRepositoryTest {
 

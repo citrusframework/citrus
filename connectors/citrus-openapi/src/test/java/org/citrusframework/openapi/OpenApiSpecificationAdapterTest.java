@@ -1,13 +1,13 @@
 package org.citrusframework.openapi;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class OpenApiSpecificationAdapterTest {
 
@@ -34,14 +34,14 @@ public class OpenApiSpecificationAdapterTest {
 
     @Test
     public void shouldProvideOpenApiSpecification() {
-        OpenApiSpecification specification = openApiSpecificationAdapter.getOpenApiSpecification();
+        OpenApiSpecification specification = openApiSpecificationAdapter.openApiSpecification();
         assertNotNull(specification, "OpenApiSpecification should not be null");
         assertEquals(specification, openApiSpecificationMock, "OpenApiSpecification should match the mock");
     }
 
     @Test
     public void shouldProvideEntity() {
-        Object entity = openApiSpecificationAdapter.getEntity();
+        Object entity = openApiSpecificationAdapter.entity();
         assertNotNull(entity, "Entity should not be null");
         assertEquals(entity, entityMock, "Entity should match the mock");
     }

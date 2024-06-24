@@ -1,8 +1,5 @@
 package org.citrusframework.openapi.model.v2;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
@@ -12,10 +9,14 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Responses;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
-import java.util.List;
-import java.util.Optional;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.testng.annotations.Test;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class Oas20ModelHelperTest {
 

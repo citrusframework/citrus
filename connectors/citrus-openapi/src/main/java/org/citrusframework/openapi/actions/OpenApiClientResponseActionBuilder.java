@@ -20,10 +20,6 @@ import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nullable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -41,12 +37,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
 /**
  * @since 4.1
  */
 public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder {
 
     private final OpenApiResponseValidationProcessor openApiResponseValidationProcessor;
+
     /**
      * Default constructor initializes http response message builder.
      */

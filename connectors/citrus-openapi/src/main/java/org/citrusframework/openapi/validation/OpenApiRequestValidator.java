@@ -16,18 +16,19 @@
 
 package org.citrusframework.openapi.validation;
 
-import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledlobally;
-
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.Request;
 import com.atlassian.oai.validator.model.SimpleRequest;
 import com.atlassian.oai.validator.report.ValidationReport;
-import java.util.ArrayList;
-import java.util.Collection;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.openapi.model.OperationPathAdapter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledlobally;
 
 /**
  * Specific validator that uses atlassian and is responsible for validating HTTP requests
@@ -83,8 +84,8 @@ public class OpenApiRequestValidator extends OpenApiValidator {
                 value)));
 
         httpMessage.getHeaders().forEach((key, value) -> {
-            if (value instanceof Collection<?>) {
-                ((Collection<?>) value).forEach( v -> finalRequestBuilder.withHeader(key, v != null ? v.toString() : null));
+            if (value instanceof Collection<?> collection) {
+                collection.forEach( v -> finalRequestBuilder.withHeader(key, v != null ? v.toString() : null));
             } else {
                 finalRequestBuilder.withHeader(key,
                     value != null ? value.toString() : null);

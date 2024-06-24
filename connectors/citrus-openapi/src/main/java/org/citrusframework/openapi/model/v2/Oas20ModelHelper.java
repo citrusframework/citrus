@@ -26,16 +26,17 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
-import java.util.Arrays;
 import jakarta.annotation.Nullable;
+import org.citrusframework.openapi.model.OasAdapter;
+import org.citrusframework.openapi.model.OasModelHelper;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.citrusframework.openapi.model.OasAdapter;
-import org.citrusframework.openapi.model.OasModelHelper;
 
 public final class Oas20ModelHelper {
 

@@ -1,9 +1,5 @@
 package org.citrusframework.openapi.model.v3;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
-
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
@@ -14,12 +10,17 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Responses;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.springframework.http.MediaType;
 import org.testng.annotations.Test;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 public class Oas30ModelHelperTest {
 
