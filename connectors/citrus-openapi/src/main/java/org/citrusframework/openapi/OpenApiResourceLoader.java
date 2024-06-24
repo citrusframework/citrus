@@ -21,15 +21,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.models.OasDocument;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.hc.core5.http.HttpHeaders;
@@ -40,13 +31,22 @@ import org.citrusframework.util.FileUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
+
 /**
  * Loads Open API specifications from different locations like file resource or web resource.
  */
 public final class OpenApiResourceLoader {
 
     static final RawResolver RAW_RESOLVER = new RawResolver();
-
 
     static final OasResolver OAS_RESOLVER = new OasResolver();
 
@@ -59,8 +59,6 @@ public final class OpenApiResourceLoader {
 
     /**
      * Loads the specification from a file resource. Either classpath or file system resource path is supported.
-     * @param resource
-     * @return
      */
     public static OasDocument fromFile(String resource) {
         return fromFile(FileUtils.getFileResource(resource), OAS_RESOLVER);
@@ -68,8 +66,6 @@ public final class OpenApiResourceLoader {
 
     /**
      * Loads the raw specification from a file resource. Either classpath or file system resource path is supported.
-     * @param resource
-     * @return
      */
     public static String rawFromFile(String resource) {
         return fromFile(FileUtils.getFileResource(resource),
@@ -78,8 +74,6 @@ public final class OpenApiResourceLoader {
 
     /**
      * Loads the specification from a resource.
-     * @param resource
-     * @return
      */
     public static OasDocument fromFile(Resource resource) {
         return fromFile(resource, OAS_RESOLVER);
@@ -87,8 +81,6 @@ public final class OpenApiResourceLoader {
 
     /**
      * Loads the raw specification from a resource.
-     * @param resource
-     * @return
      */
     public static String rawFromFile(Resource resource) {
         return fromFile(resource, RAW_RESOLVER);
@@ -104,8 +96,6 @@ public final class OpenApiResourceLoader {
 
     /**
      * Loads specification from given web URL location.
-     * @param url
-     * @return
      */
     public static OasDocument fromWebResource(URL url) {
         return fromWebResource(url, OAS_RESOLVER);
@@ -113,8 +103,6 @@ public final class OpenApiResourceLoader {
 
     /**
      * Loads raw specification from given web URL location.
-     * @param url
-     * @return
      */
     public static String rawFromWebResource(URL url) {
         return fromWebResource(url, RAW_RESOLVER);
@@ -129,13 +117,13 @@ public final class OpenApiResourceLoader {
 
             int status = con.getResponseCode();
             if (status > 299) {
-                throw new IllegalStateException("Failed to retrieve Open API specification: " + url.toString(),
+                throw new IllegalStateException("Failed to retrieve Open API specification: " + url,
                     new IOException(FileUtils.readToString(con.getErrorStream())));
             } else {
                 return resolve(FileUtils.readToString(con.getInputStream()), resolver);
             }
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to retrieve Open API specification: " + url.toString(), e);
+            throw new IllegalStateException("Failed to retrieve Open API specification: " + url, e);
         } finally {
             if (con != null) {
                 con.disconnect();
@@ -145,8 +133,6 @@ public final class OpenApiResourceLoader {
 
     /**
      * Loads specification from given web URL location using secured Http connection.
-     * @param url
-     * @return
      */
     public static OasDocument fromSecuredWebResource(URL url) {
         return fromSecuredWebResource(url, OAS_RESOLVER);
@@ -154,8 +140,6 @@ public final class OpenApiResourceLoader {
 
     /**
      * Loads raw specification from given web URL location using secured Http connection.
-     * @param url
-     * @return
      */
     public static String rawFromSecuredWebResource(URL url) {
         return fromSecuredWebResource(url, RAW_RESOLVER);
@@ -180,7 +164,7 @@ public final class OpenApiResourceLoader {
 
             int status = con.getResponseCode();
             if (status > 299) {
-                throw new IllegalStateException("Failed to retrieve Open API specification: " + url.toString(),
+                throw new IllegalStateException("Failed to retrieve Open API specification: " + url,
                     new IOException(FileUtils.readToString(con.getErrorStream())));
             } else {
                 return resolve(FileUtils.readToString(con.getInputStream()), resolver);
@@ -188,7 +172,7 @@ public final class OpenApiResourceLoader {
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             throw new IllegalStateException("Failed to create https client for ssl connection", e);
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to retrieve Open API specification: " + url.toString(), e);
+            throw new IllegalStateException("Failed to retrieve Open API specification: " + url, e);
         } finally {
             if (con != null) {
                 con.disconnect();
@@ -255,5 +239,4 @@ public final class OpenApiResourceLoader {
             }
         }
     }
-
 }

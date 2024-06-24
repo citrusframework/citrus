@@ -16,27 +16,10 @@
 
 package org.citrusframework.openapi.actions;
 
-import static java.lang.Integer.parseInt;
-import static java.util.Collections.singletonMap;
-import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
-import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
-
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -53,6 +36,24 @@ import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiResponseValidationProcessor;
 import org.springframework.http.HttpStatus;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+
+import static java.lang.Integer.parseInt;
+import static java.util.Collections.singletonMap;
+import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
+import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 /**
  * @since 4.1
@@ -218,26 +219,26 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
 
                 // If we have a schema and a media type and the content type has not yet been set, do it.
                 // If schema is null, we do not set the content type, as there is no content.
-                if (!getMessage().getHeaders().containsKey(HttpMessageHeaders.HTTP_CONTENT_TYPE) && schemaForMediaType.getAdapted() != null && schemaForMediaType.getNode() != null) {
-                    addHeaderBuilder(new DefaultHeaderBuilder(singletonMap(HttpMessageHeaders.HTTP_CONTENT_TYPE, schemaForMediaType.getAdapted())));
+                if (!getMessage().getHeaders().containsKey(HttpMessageHeaders.HTTP_CONTENT_TYPE) && schemaForMediaType.adapted() != null && schemaForMediaType.node() != null) {
+                    addHeaderBuilder(new DefaultHeaderBuilder(singletonMap(HttpMessageHeaders.HTTP_CONTENT_TYPE, schemaForMediaType.adapted())));
                 }
             }
         }
 
         private void createRandomPayload(HttpMessage message, OasDocument oasDocument, OasAdapter<OasSchema, String> schemaForMediaType) {
 
-            if (schemaForMediaType.getNode() == null) {
+            if (schemaForMediaType.node() == null) {
                 // No schema means no payload, no type
                 message.setPayload(null);
             } else {
-                if (TEXT_PLAIN_VALUE.equals(schemaForMediaType.getAdapted())) {
+                if (TEXT_PLAIN_VALUE.equals(schemaForMediaType.adapted())) {
                     // Schema but plain text
-                    message.setPayload(createOutboundPayload(schemaForMediaType.getNode(),
+                    message.setPayload(createOutboundPayload(schemaForMediaType.node(),
                         OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec));
                     message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, TEXT_PLAIN_VALUE);
-                } else if (APPLICATION_JSON_VALUE.equals(schemaForMediaType.getAdapted())) {
+                } else if (APPLICATION_JSON_VALUE.equals(schemaForMediaType.adapted())) {
                     // Json Schema
-                    message.setPayload(createOutboundPayload(schemaForMediaType.getNode(),
+                    message.setPayload(createOutboundPayload(schemaForMediaType.node(),
                         OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec));
                     message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, APPLICATION_JSON_VALUE);
                 }

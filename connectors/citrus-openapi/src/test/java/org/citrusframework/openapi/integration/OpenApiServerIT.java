@@ -165,7 +165,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         assertThrows(TestCaseFailedException.class, () -> then(addPetBuilder));
     }
 
-        @CitrusTest
+    @CitrusTest
     public void shouldSucceedOnWrongQueryIdTypeWithOasDisabled() {
         variable("petId", "xxx");
 

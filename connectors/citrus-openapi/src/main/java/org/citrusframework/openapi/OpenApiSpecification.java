@@ -16,26 +16,11 @@
 
 package org.citrusframework.openapi;
 
-import static org.citrusframework.openapi.OpenApiSettings.isGenerateOptionalFieldsGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
-import static org.citrusframework.openapi.OpenApiSettings.isValidateOptionalFieldsGlobally;
-
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.OpenApiInteractionValidator.Builder;
 import io.apicurio.datamodels.core.models.common.Info;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.client.HttpClient;
@@ -48,6 +33,23 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
+
+import static org.citrusframework.openapi.OpenApiSettings.isGenerateOptionalFieldsGlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
+import static org.citrusframework.openapi.OpenApiSettings.isValidateOptionalFieldsGlobally;
 
 /**
  * OpenApi specification resolves URL or local file resources to a specification document.
@@ -209,7 +211,6 @@ public class OpenApiSpecification {
             }
 
             if (resolvedSpecUrl.startsWith(HTTP)) {
-
                 URL specWebResource = toSpecUrl(resolvedSpecUrl);
                 if (resolvedSpecUrl.startsWith(HTTPS)) {
                     initApiDoc(
@@ -257,10 +258,10 @@ public class OpenApiSpecification {
     // provided for testing
     URL toSpecUrl(String resolvedSpecUrl) {
         try {
-            return new URL(resolvedSpecUrl);
+            return URI.create(resolvedSpecUrl).toURL();
         } catch (MalformedURLException e) {
             throw new IllegalStateException(
-                "Failed to retrieve Open API specification as web resource: " + specUrl, e);
+                "Failed to retrieve Open API specification as web resource: " + resolvedSpecUrl, e);
         }
     }
 
