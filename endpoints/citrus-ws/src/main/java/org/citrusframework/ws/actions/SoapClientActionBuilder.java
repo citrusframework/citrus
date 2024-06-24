@@ -19,8 +19,8 @@ package org.citrusframework.ws.actions;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 
 /**
@@ -29,7 +29,7 @@ import org.citrusframework.util.ObjectHelper;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class SoapClientActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
+public class SoapClientActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
 
     /** Bean reference resolver */
     private ReferenceResolver referenceResolver;
@@ -121,25 +121,5 @@ public class SoapClientActionBuilder implements TestActionBuilder.DelegatingTest
     public TestAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         return delegate.build();
-    }
-
-    @Override
-    public TestActionBuilder<?> getDelegate() {
-        return delegate;
-    }
-
-    /**
-     * Specifies the referenceResolver.
-     * @param referenceResolver
-     */
-    @Override
-    public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        if (referenceResolver == null) {
-            this.referenceResolver = referenceResolver;
-
-            if (delegate instanceof ReferenceResolverAware) {
-                ((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
-            }
-        }
     }
 }

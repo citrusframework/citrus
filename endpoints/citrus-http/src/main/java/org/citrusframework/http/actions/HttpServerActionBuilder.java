@@ -18,10 +18,12 @@ package org.citrusframework.http.actions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.istack.NotNull;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
@@ -38,18 +40,13 @@ import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
+public class HttpServerActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().enable(INDENT_OUTPUT);
-
-    /** Bean reference resolver */
-    private ReferenceResolver referenceResolver;
 
     /** Target http client instance */
     private Endpoint httpServer;
     private String httpServerUri;
-
-    private TestActionBuilder<?> delegate;
 
     /**
      * Default constructor.
@@ -321,25 +318,5 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
     public TestAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         return delegate.build();
-    }
-
-    @Override
-    public TestActionBuilder<?> getDelegate() {
-        return delegate;
-    }
-
-    /**
-     * Specifies the referenceResolver.
-     * @param referenceResolver
-     */
-    @Override
-    public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        if (referenceResolver == null) {
-            this.referenceResolver = referenceResolver;
-
-            if (delegate instanceof ReferenceResolverAware) {
-                ((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
-            }
-        }
     }
 }

@@ -16,16 +16,27 @@
 
 package org.citrusframework.ws.actions;
 
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import java.util.Map;
 
-import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Christoph Deppisch
  */
 public class SoapActionBuilderTest {
+
+    private SoapActionBuilder fixture;
+
+    @BeforeMethod
+    void beforeMethod() {
+        fixture = new SoapActionBuilder();
+    }
 
     @Test
     public void shouldLookupTestActionBuilder() {
@@ -34,5 +45,10 @@ public class SoapActionBuilderTest {
 
         Assert.assertTrue(TestActionBuilder.lookup("soap").isPresent());
         Assert.assertEquals(TestActionBuilder.lookup("soap").get().getClass(), SoapActionBuilder.class);
+    }
+
+    @Test
+    public void isReferenceResolverAwareTestActionBuilder() {
+        assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
     }
 }

@@ -16,16 +16,27 @@
 
 package org.citrusframework.openapi.actions;
 
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import java.util.Map;
 
-import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Christoph Deppisch
  */
 public class OpenApiActionBuilderTest {
+
+    private OpenApiActionBuilder fixture;
+
+    @BeforeMethod
+    public void beforeMethod() {
+        fixture = new OpenApiActionBuilder();
+    }
 
     @Test
     public void shouldLookupTestActionBuilder() {
@@ -34,5 +45,10 @@ public class OpenApiActionBuilderTest {
 
         Assert.assertTrue(TestActionBuilder.lookup("openapi").isPresent());
         Assert.assertEquals(TestActionBuilder.lookup("openapi").get().getClass(), OpenApiActionBuilder.class);
+    }
+
+    @Test
+    public void isReferenceResolverAwareTestActionBuilder() {
+        assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
     }
 }
