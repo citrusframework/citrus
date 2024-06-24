@@ -16,11 +16,12 @@
 
 package org.citrusframework.openapi;
 
-import java.util.Map;
 import org.citrusframework.spi.ResourcePathTypeResolver;
 import org.citrusframework.spi.TypeResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * Interface for processing OpenAPI specifications.

@@ -16,8 +16,6 @@
 
 package org.citrusframework.openapi.validation;
 
-import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
-
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.Request.Method;
 import com.atlassian.oai.validator.model.Response;
@@ -27,6 +25,8 @@ import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.springframework.http.HttpStatusCode;
+
+import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
 
 /**
  * Specific validator, that facilitates the use of Atlassian's Swagger Request Validator,
