@@ -26,8 +26,13 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.citrusframework.openapi.model.OasAdapter;
+import org.citrusframework.openapi.model.OasModelHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,10 +42,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.citrusframework.openapi.model.OasAdapter;
-import org.citrusframework.openapi.model.OasModelHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class Oas30ModelHelper {
 
@@ -59,11 +60,7 @@ public final class Oas30ModelHelper {
 
         String serverUrl = resolveUrl(openApiDoc.servers.get(0));
         if (serverUrl.startsWith("http")) {
-            try {
-                return new URL(serverUrl).getHost();
-            } catch (MalformedURLException e) {
-                throw new IllegalStateException(String.format(NO_URL_ERROR_MESSAGE, serverUrl));
-            }
+            return URI.create(serverUrl).getHost();
         }
 
         return "localhost";
@@ -78,7 +75,7 @@ public final class Oas30ModelHelper {
                 .map(Oas30ModelHelper::resolveUrl)
                 .map(serverUrl -> {
                     try {
-                        return new URL(serverUrl).getProtocol();
+                        return URI.create(serverUrl).toURL().getProtocol();
                     } catch (MalformedURLException e) {
                         LOG.warn(String.format(NO_URL_ERROR_MESSAGE, serverUrl));
                         return null;
@@ -98,11 +95,7 @@ public final class Oas30ModelHelper {
 
         String serverUrl = resolveUrl(server);
         if (serverUrl.startsWith("http")) {
-            try {
-                basePath = new URL(serverUrl).getPath();
-            } catch (MalformedURLException e) {
-                throw new IllegalStateException(String.format(NO_URL_ERROR_MESSAGE, serverUrl));
-            }
+            basePath = URI.create(serverUrl).getPath();
         } else {
             basePath = serverUrl;
         }
