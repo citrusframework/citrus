@@ -16,23 +16,73 @@
 
 package org.citrusframework.camel.actions;
 
+import org.citrusframework.TestActionBuilder;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import java.util.Map;
 
-import org.citrusframework.TestActionBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Christoph Deppisch
  */
 public class CamelActionBuilderTest {
 
+    private CamelActionBuilder fixture;
+
+    @BeforeMethod
+    public void beforeMethod() {
+        fixture = new CamelActionBuilder();
+    }
+
     @Test
     public void shouldLookupTestActionBuilder() {
         Map<String, TestActionBuilder<?>> endpointBuilders = TestActionBuilder.lookup();
-        Assert.assertTrue(endpointBuilders.containsKey("camel"));
+        assertTrue(endpointBuilders.containsKey("camel"));
 
-        Assert.assertTrue(TestActionBuilder.lookup("camel").isPresent());
-        Assert.assertEquals(TestActionBuilder.lookup("camel").get().getClass(), CamelActionBuilder.class);
+        assertTrue(TestActionBuilder.lookup("camel").isPresent());
+        assertEquals(TestActionBuilder.lookup("camel").get().getClass(), CamelActionBuilder.class);
+    }
+
+    @Test
+    public void passReferenceResolverToDelegate() {
+        var referenceResolverAware = mock(TestReferenceResolver.class);
+        setField(fixture, "delegate", referenceResolverAware);
+
+        var referenceResolver = mock(ReferenceResolver.class);
+        fixture.setReferenceResolver(referenceResolver);
+
+        verify(referenceResolverAware).setReferenceResolver(referenceResolver);
+    }
+
+    @Test
+    public void setReferenceResolver_ignoresNonReferenceResolverAware() {
+        var referenceResolverAware = mock(TestActionBuilder.class);
+        setField(fixture, "delegate", referenceResolverAware);
+
+        fixture.setReferenceResolver(mock(ReferenceResolver.class));
+
+        verifyNoInteractions(referenceResolverAware);
+    }
+
+    @Test
+    public void setReferenceResolver_ignoresNullReferenceResolver() {
+        var referenceResolverAware = mock(TestReferenceResolver.class);
+        setField(fixture, "delegate", referenceResolverAware);
+
+        fixture.setReferenceResolver(null);
+
+        verifyNoInteractions(referenceResolverAware);
+    }
+
+    private abstract class TestReferenceResolver implements TestActionBuilder, ReferenceResolverAware {
     }
 }

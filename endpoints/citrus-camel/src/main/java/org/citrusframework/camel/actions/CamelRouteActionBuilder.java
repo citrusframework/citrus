@@ -19,23 +19,17 @@ package org.citrusframework.camel.actions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ModelCamelContext;
-import org.citrusframework.TestActionBuilder;
 import org.citrusframework.camel.message.CamelRouteProcessor;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 
 /**
  * Action builder.
  */
-public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<AbstractCamelRouteAction>, ReferenceResolverAware {
-
-    /** Bean reference resolver */
-    private ReferenceResolver referenceResolver;
+public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<AbstractCamelRouteAction> {
 
     private CamelContext camelContext;
-
-    private TestActionBuilder<? extends AbstractCamelRouteAction> delegate;
 
     /**
      * Fluent API action building entry method used in Java DSL.
@@ -168,25 +162,5 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     public AbstractCamelRouteAction build() {
         ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
         return delegate.build();
-    }
-
-    @Override
-    public TestActionBuilder<?> getDelegate() {
-        return delegate;
-    }
-
-    /**
-     * Specifies the referenceResolver.
-     * @param referenceResolver
-     */
-    @Override
-    public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        if (referenceResolver == null) {
-            this.referenceResolver = referenceResolver;
-
-            if (delegate instanceof ReferenceResolverAware) {
-                ((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
-            }
-        }
     }
 }

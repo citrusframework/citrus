@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.actions;
 
+import jakarta.annotation.Nullable;
 import org.apache.camel.CamelContext;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
@@ -93,14 +94,12 @@ public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActio
 
     /**
      * Specifies the referenceResolver.
-     * @param referenceResolver
      */
     @Override
-    public void setReferenceResolver(ReferenceResolver referenceResolver) {
-        if (referenceResolver == null) {
-            if (delegate instanceof ReferenceResolverAware) {
-                ((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
-            }
+    public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
+        if (referenceResolver != null
+                && delegate instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(referenceResolver);
         }
     }
 }

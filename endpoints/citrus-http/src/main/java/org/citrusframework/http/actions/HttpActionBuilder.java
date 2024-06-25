@@ -17,11 +17,10 @@
 package org.citrusframework.http.actions;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.http.client.HttpClient;
+import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
 
 /**
@@ -30,12 +29,7 @@ import org.citrusframework.util.ObjectHelper;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
-
-	/** Bean reference resolver */
-	private ReferenceResolver referenceResolver;
-
-	private TestActionBuilder<?> delegate;
+public class HttpActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
 
 	/**
 	 * Static entrance method for the Http fluent action builder.
@@ -98,25 +92,5 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
 	public TestAction build() {
 		ObjectHelper.assertNotNull(delegate, "Missing delegate action to build");
 		return delegate.build();
-	}
-
-	@Override
-	public TestActionBuilder<?> getDelegate() {
-		return delegate;
-	}
-
-	/**
-	 * Specifies the referenceResolver.
-	 * @param referenceResolver
-	 */
-	@Override
-	public void setReferenceResolver(ReferenceResolver referenceResolver) {
-		if (referenceResolver == null) {
-			this.referenceResolver = referenceResolver;
-
-			if (delegate instanceof ReferenceResolverAware) {
-				((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
-			}
-		}
 	}
 }
