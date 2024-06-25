@@ -46,9 +46,9 @@ import java.util.Objects;
  */
 public final class OpenApiResourceLoader {
 
-    static final RawResolver RAW_RESOLVER = new RawResolver();
+    private static final RawResolver RAW_RESOLVER = new RawResolver();
 
-    static final OasResolver OAS_RESOLVER = new OasResolver();
+    private static final OasResolver OAS_RESOLVER = new OasResolver();
 
     /**
      * Prevent instantiation of utility class.

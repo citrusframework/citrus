@@ -85,6 +85,10 @@ public final class Oas30ModelHelper {
         .toList();
     }
 
+    public static boolean isCompositeSchema(Oas30Schema schema) {
+        return schema.anyOf != null || schema.oneOf != null || schema.allOf != null;
+    }
+
     public static String getBasePath(Oas30Document openApiDoc) {
         if (openApiDoc.servers == null || openApiDoc.servers.isEmpty()) {
             return "/";
@@ -245,4 +249,5 @@ public final class Oas30ModelHelper {
     public static Optional<OasSchema> getParameterSchema(Oas30Parameter parameter) {
         return Optional.ofNullable((OasSchema) parameter.schema);
     }
+
 }
