@@ -284,6 +284,15 @@ public class OpenApiTestDataGenerator {
      * Create validation expression using functions according to schema type and format.
      */
     private static String createValidationExpression(OasSchema schema) {
+
+        if (OasModelHelper.isCompositeSchema(schema)) {
+            /*
+             * Currently these schemas are not supported by validation expressions. They are supported
+             * by {@link org.citrusframework.openapi.validation.OpenApiValidator} though.
+             */
+            return "@ignore@";
+        }
+
         switch (schema.type) {
             case "string":
                 if (schema.format != null && schema.format.equals("date")) {
