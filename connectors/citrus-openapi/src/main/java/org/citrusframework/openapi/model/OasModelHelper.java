@@ -29,10 +29,12 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import jakarta.annotation.Nullable;
 import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
 import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
@@ -114,6 +116,10 @@ public final class OasModelHelper {
      */
     public static boolean isReferenceType(@Nullable OasSchema schema) {
         return schema != null && schema.$ref != null;
+    }
+
+    public static boolean isCompositeSchema(OasSchema schema) {
+        return delegate(schema, Oas20ModelHelper::isCompositeSchema, Oas30ModelHelper::isCompositeSchema);
     }
 
     public static String getHost(OasDocument openApiDoc) {
@@ -388,6 +394,24 @@ public final class OasModelHelper {
 
     /**
      * Delegate method to version specific model helpers for Open API v2 or v3.
+     * @param schema
+     * @param oas20Function function to apply in case of v2
+     * @param oas30Function function to apply in case of v3
+     * @param <T> generic return value
+     * @return
+     */
+    private static <T> T delegate(OasSchema schema, Function<Oas20Schema, T> oas20Function, Function<Oas30Schema, T> oas30Function) {
+        if (schema instanceof Oas20Schema oas20Schema) {
+            return oas20Function.apply(oas20Schema);
+        } else if (schema instanceof Oas30Schema oas30Schema) {
+            return oas30Function.apply(oas30Schema);
+        }
+
+        throw new IllegalArgumentException(String.format("Unsupported operation parameter type: %s", schema.getClass()));
+    }
+
+    /**
+     * Delegate method to version specific model helpers for Open API v2 or v3.
      * @param operation
      * @param oas20Function function to apply in case of v2
      * @param oas30Function function to apply in case of v3
@@ -534,4 +558,5 @@ public final class OasModelHelper {
         return acceptedMediaTypes.stream()
             .flatMap(types -> Arrays.stream(types.split(","))).map(String::trim).toList();
     }
+
 }
