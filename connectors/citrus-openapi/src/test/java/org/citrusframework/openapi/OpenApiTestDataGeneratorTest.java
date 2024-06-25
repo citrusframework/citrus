@@ -16,35 +16,55 @@
 
 package org.citrusframework.openapi;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.apicurio.datamodels.openapi.models.OasSchema;
-import org.citrusframework.openapi.model.OasModelHelper;
-import org.citrusframework.spi.Resources;
-import org.testng.Assert;
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+
+import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Schema.Oas20AllOfSchema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import java.util.HashMap;
+import java.util.List;
 import org.testng.annotations.Test;
 
-import java.util.Map;
-
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-
-// TODO: Add more tests
 public class OpenApiTestDataGeneratorTest {
 
-    private final OpenApiSpecification pingSpec = OpenApiSpecification.from(
-        Resources.create("classpath:org/citrusframework/openapi/ping/ping-api.yaml"));
-
-    // TODO: fix this by introducing mature validation
     @Test
-    public void failsToValidateAnyOf() throws JsonProcessingException {
+    public void anyOfIsIgnoredForOas3() {
 
-        Map<String, OasSchema> schemaDefinitions = OasModelHelper.getSchemaDefinitions(
-            pingSpec.getOpenApiDoc(null));
-        assertNotNull(schemaDefinitions);
-        assertFalse(schemaDefinitions.isEmpty());
-        Assert.assertEquals(schemaDefinitions.size(), 15);
+        Oas30Schema anyOfSchema = new Oas30Schema();
+        anyOfSchema.anyOf = List.of(new Oas30Schema(), new Oas30Schema());
 
-        Assert.assertThrows(() -> OpenApiTestDataGenerator.createValidationExpression(
-            schemaDefinitions.get("PingRespType"), schemaDefinitions, true, pingSpec));
+        assertEquals(OpenApiTestDataGenerator.createValidationExpression(
+            anyOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
+    }
+
+    @Test
+    public void allOfIsIgnoredForOas3() {
+
+        Oas30Schema allOfSchema = new Oas30Schema();
+        allOfSchema.allOf = List.of(new Oas30Schema(), new Oas30Schema());
+
+        assertEquals(OpenApiTestDataGenerator.createValidationExpression(
+            allOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
+    }
+
+    @Test
+    public void oneOfIsIgnoredForOas3() {
+
+        Oas30Schema oneOfSchema = new Oas30Schema();
+        oneOfSchema.oneOf = List.of(new Oas30Schema(), new Oas30Schema());
+
+        assertEquals(OpenApiTestDataGenerator.createValidationExpression(
+            oneOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
+    }
+
+    @Test
+    public void allOfIsIgnoredForOas2() {
+
+        Oas20AllOfSchema allOfSchema = new Oas20AllOfSchema();
+        allOfSchema.allOf = List.of(new Oas20Schema(), new Oas20Schema());
+
+        assertEquals(OpenApiTestDataGenerator.createValidationExpression(
+            allOfSchema, new HashMap<>(), true, mock()), "\"@ignore@\"");
     }
 }
