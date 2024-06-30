@@ -16,11 +16,11 @@
 
 package org.citrusframework.openapi.actions;
 
-import java.util.Map;
-
 import org.citrusframework.TestActionBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch

@@ -16,6 +16,8 @@
 
 package org.citrusframework.spi;
 
+import jakarta.annotation.Nullable;
+
 /**
  * @author Christoph Deppisch
  */
@@ -26,5 +28,5 @@ public interface ReferenceResolverAware {
      * Sets the reference resolver.
      * @param referenceResolver
      */
-    void setReferenceResolver(ReferenceResolver referenceResolver);
+    void setReferenceResolver(@Nullable ReferenceResolver referenceResolver);
 }

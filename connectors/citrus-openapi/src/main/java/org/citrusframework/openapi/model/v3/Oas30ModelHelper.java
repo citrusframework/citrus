@@ -16,29 +16,32 @@
 
 package org.citrusframework.openapi.model.v3;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import io.apicurio.datamodels.core.models.common.Server;
 import io.apicurio.datamodels.core.models.common.ServerVariable;
-import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -47,6 +50,7 @@ public final class Oas30ModelHelper {
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(Oas30ModelHelper.class);
+    public static final String NO_URL_ERROR_MESSAGE = "Unable to determine base path from server URL: %s";
 
     private Oas30ModelHelper() {
         // utility class
@@ -59,11 +63,7 @@ public final class Oas30ModelHelper {
 
         String serverUrl = resolveUrl(openApiDoc.servers.get(0));
         if (serverUrl.startsWith("http")) {
-            try {
-                return new URL(serverUrl).getHost();
-            } catch (MalformedURLException e) {
-                throw new IllegalStateException(String.format("Unable to determine base path from server URL: %s", serverUrl));
-            }
+            return URI.create(serverUrl).getHost();
         }
 
         return "localhost";
@@ -78,14 +78,18 @@ public final class Oas30ModelHelper {
                 .map(Oas30ModelHelper::resolveUrl)
                 .map(serverUrl -> {
                     try {
-                        return new URL(serverUrl).getProtocol();
+                        return URI.create(serverUrl).toURL().getProtocol();
                     } catch (MalformedURLException e) {
-                        LOG.warn(String.format("Unable to determine base path from server URL: %s", serverUrl));
+                        LOG.warn(String.format(NO_URL_ERROR_MESSAGE, serverUrl));
                         return null;
                     }
                 })
         .filter(Objects::nonNull)
-        .collect(Collectors.toList());
+        .toList();
+    }
+
+    public static boolean isCompositeSchema(Oas30Schema schema) {
+        return schema.anyOf != null || schema.oneOf != null || schema.allOf != null;
     }
 
     public static String getBasePath(Oas30Document openApiDoc) {
@@ -98,11 +102,7 @@ public final class Oas30ModelHelper {
 
         String serverUrl = resolveUrl(server);
         if (serverUrl.startsWith("http")) {
-            try {
-                basePath = new URL(serverUrl).getPath();
-            } catch (MalformedURLException e) {
-                throw new IllegalStateException(String.format("Unable to determine base path from server URL: %s", serverUrl));
-            }
+            basePath = URI.create(serverUrl).getPath();
         } else {
             basePath = serverUrl;
         }
@@ -117,7 +117,7 @@ public final class Oas30ModelHelper {
 
         return openApiDoc.components.schemas.entrySet()
                 .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> (OasSchema) entry.getValue()));
+                .collect(Collectors.toMap(Map.Entry::getKey, Entry::getValue));
     }
 
     public static Optional<OasSchema> getSchema(Oas30Response response) {
@@ -132,6 +132,33 @@ public final class Oas30ModelHelper {
                 .filter(entry -> entry.getValue().schema != null)
                 .map(entry -> (OasSchema) entry.getValue().schema)
                 .findFirst();
+    }
+
+    public static Optional<OasAdapter<OasSchema, String>> getSchema(
+        Oas30Operation ignoredOas30Operation, Oas30Response response, List<String> acceptedMediaTypes) {
+
+        acceptedMediaTypes = OasModelHelper.resolveAllTypes(acceptedMediaTypes);
+        acceptedMediaTypes = acceptedMediaTypes != null ? acceptedMediaTypes : OasModelHelper.DEFAULT_ACCEPTED_MEDIA_TYPES;
+
+        Map<String, Oas30MediaType> content = response.content;
+        if (content == null) {
+            return Optional.empty();
+        }
+
+        String selectedMediaType = null;
+        Oas30Schema selectedSchema = null;
+        for (String type : acceptedMediaTypes) {
+            if (!isFormDataMediaType(type)) {
+                Oas30MediaType oas30MediaType = content.get(type);
+                if (oas30MediaType != null) {
+                    selectedMediaType = type;
+                    selectedSchema = oas30MediaType.schema;
+                    break;
+                }
+            }
+        }
+
+        return selectedSchema == null && selectedMediaType == null ? Optional.empty() : Optional.of(new OasAdapter<>(selectedSchema, selectedMediaType));
     }
 
     public static Optional<OasSchema> getRequestBodySchema(Oas30Document openApiDoc, Oas30Operation operation) {
@@ -172,44 +199,11 @@ public final class Oas30ModelHelper {
                 .findFirst();
     }
 
-    public static Optional<String> getResponseContentType(Oas30Document openApiDoc, Oas30Operation operation) {
-        if (operation.responses == null) {
-            return Optional.empty();
+    public static Collection<String> getResponseTypes(Oas30Operation operation, Oas30Response response) {
+        if (operation == null) {
+            return Collections.emptySet();
         }
-
-        List<OasResponse> responses = new ArrayList<>();
-
-        for (OasResponse response : operation.responses.getResponses()) {
-            if (response.$ref != null) {
-                responses.add(openApiDoc.components.responses.get(OasModelHelper.getReferenceName(response.$ref)));
-            } else {
-                responses.add(response);
-            }
-        }
-
-        // Pick the response object related to the first 2xx return code found
-        Optional<Oas30Response> response = responses.stream()
-                .filter(Oas30Response.class::isInstance)
-                .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
-                .map(Oas30Response.class::cast)
-                .filter(res -> Oas30ModelHelper.getSchema(res).isPresent())
-                .findFirst();
-
-        // No 2xx response given so pick the first one no matter what status code
-        if (!response.isPresent()) {
-            response = responses.stream()
-                    .filter(Oas30Response.class::isInstance)
-                    .map(Oas30Response.class::cast)
-                    .filter(res -> Oas30ModelHelper.getSchema(res).isPresent())
-                    .findFirst();
-        }
-
-        return response.flatMap(res -> res.content.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().schema != null)
-                .map(Map.Entry::getKey)
-                .findFirst());
-
+        return response.content != null ? response.content.keySet() : Collections.emptyList();
     }
 
     public static Map<String, OasSchema> getRequiredHeaders(Oas30Response response) {
@@ -254,4 +248,9 @@ public final class Oas30ModelHelper {
 
         return url;
     }
+
+    public static Optional<OasSchema> getParameterSchema(Oas30Parameter parameter) {
+        return Optional.ofNullable((OasSchema) parameter.schema);
+    }
+
 }

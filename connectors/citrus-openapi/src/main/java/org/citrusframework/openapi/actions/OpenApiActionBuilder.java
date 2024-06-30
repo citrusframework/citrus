@@ -16,8 +16,7 @@
 
 package org.citrusframework.openapi.actions;
 
-import java.net.URL;
-
+import jakarta.annotation.Nullable;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
@@ -27,6 +26,8 @@ import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
+
+import java.net.URL;
 
 /**
  * Action executes client and server operations using given OpenApi specification.
@@ -53,7 +54,6 @@ public class OpenApiActionBuilder implements TestActionBuilder.DelegatingTestAct
 
 	/**
 	 * Static entrance method for the OpenApi fluent action builder.
-	 * @return
 	 */
 	public static OpenApiActionBuilder openapi() {
 		return new OpenApiActionBuilder();
@@ -143,7 +143,6 @@ public class OpenApiActionBuilder implements TestActionBuilder.DelegatingTestAct
 
 	/**
 	 * Sets the bean reference resolver.
-	 * @param referenceResolver
 	 */
 	public OpenApiActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
 		this.referenceResolver = referenceResolver;
@@ -163,15 +162,14 @@ public class OpenApiActionBuilder implements TestActionBuilder.DelegatingTestAct
 
 	/**
 	 * Specifies the referenceResolver.
-	 * @param referenceResolver
 	 */
 	@Override
-	public void setReferenceResolver(ReferenceResolver referenceResolver) {
-		if (referenceResolver == null) {
+	public void setReferenceResolver(@Nullable ReferenceResolver referenceResolver) {
+		if (referenceResolver != null) {
 			this.referenceResolver = referenceResolver;
 
-			if (delegate instanceof ReferenceResolverAware) {
-				((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
+			if (delegate instanceof ReferenceResolverAware referenceResolverAware) {
+				referenceResolverAware.setReferenceResolver(referenceResolver);
 			}
 		}
 	}
