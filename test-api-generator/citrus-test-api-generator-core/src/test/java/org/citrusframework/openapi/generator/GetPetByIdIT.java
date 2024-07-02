@@ -24,7 +24,7 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
-import org.citrusframework.openapi.generator.GetPetByIdTest.Config;
+import org.citrusframework.openapi.generator.GetPetByIdIT.Config;
 import org.citrusframework.openapi.generator.rest.petstore.request.PetApi.GetPetByIdRequest;
 import org.citrusframework.openapi.generator.rest.petstore.spring.PetStoreBeanConfiguration;
 import org.citrusframework.spi.Resources;
@@ -40,7 +40,7 @@ import org.springframework.http.HttpStatus;
 
 @ExtendWith(CitrusSpringExtension.class)
 @SpringBootTest(classes = {PetStoreBeanConfiguration.class, CitrusSpringConfig.class, Config.class})
-class GetPetByIdTest {
+class GetPetByIdIT {
 
     @Autowired
     private GetPetByIdRequest getPetByIdRequest;

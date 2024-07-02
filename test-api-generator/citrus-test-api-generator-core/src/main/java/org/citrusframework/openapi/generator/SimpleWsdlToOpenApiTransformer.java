@@ -86,9 +86,6 @@ public class SimpleWsdlToOpenApiTransformer {
 
     /**
      * Performs the actual transformation from bindings into OpenApi operations.
-     *
-     * @param bindings
-     * @return
      */
     private OpenAPI transformToOpenApi(Map<?, ?> bindings) {
         OpenAPI openAPI = new OpenAPI();
@@ -100,10 +97,11 @@ public class SimpleWsdlToOpenApiTransformer {
             Object key = entry.getKey();
             Object value = entry.getValue();
 
-            if (key instanceof QName && value instanceof Binding) {
-                addOperations(openAPI, (QName) key, (Binding) value);
+            if (key instanceof QName qName && value instanceof Binding binding) {
+                addOperations(openAPI, qName, binding);
             }
         }
+
         return openAPI;
     }
 
@@ -138,6 +136,7 @@ public class SimpleWsdlToOpenApiTransformer {
         Contact contact = new Contact();
         contact.setName("org.citrusframework.openapi.generator.SimpleWsdlToOpenApiTransformer");
         info.setContact(contact);
+
         return info;
     }
 
