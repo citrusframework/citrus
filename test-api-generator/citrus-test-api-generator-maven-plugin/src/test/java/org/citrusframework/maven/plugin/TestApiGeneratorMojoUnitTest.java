@@ -1,5 +1,7 @@
 package org.citrusframework.maven.plugin;
 
+import static java.lang.Boolean.TRUE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_API_PACKAGE;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_API_TYPE;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_INVOKER_PACKAGE;
@@ -11,16 +13,11 @@ import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_SOUR
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.DEFAULT_TARGET_NAMESPACE_TEMPLATE;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVars;
 import static org.citrusframework.maven.plugin.TestApiGeneratorMojo.replaceDynamicVarsToLowerCase;
-import static java.lang.Boolean.TRUE;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 import jakarta.validation.constraints.NotNull;
-import org.citrusframework.maven.plugin.TestApiGeneratorMojo;
-import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
-import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiType;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +27,8 @@ import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.project.MavenProject;
+import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
+import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
