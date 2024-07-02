@@ -1,7 +1,6 @@
 package org.citrusframework.openapi.generator.util;
 
 import org.citrusframework.TestAction;
-import org.citrusframework.TestActionBuilder;
 import org.citrusframework.actions.SendMessageAction.SendMessageActionBuilder;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.testapi.ApiActionBuilderCustomizerService;

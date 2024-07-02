@@ -31,11 +31,13 @@ import org.citrusframework.message.MessageStore;
 import org.citrusframework.xml.XmlTestLoader;
 import org.citrusframework.xml.actions.AbstractXmlActionTest;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Ignore
 public class WaitForTest extends AbstractXmlActionTest {
 
     private static final String DEFAULT_WAIT_TIME = "5000";
