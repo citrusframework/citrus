@@ -50,14 +50,15 @@
   </ciManagement>
 
   <modules>
-    <module>core</module>
-    <module>utils</module>
-    <module>runtime</module>
-    <module>validation</module>
-    <module>endpoints</module>
-    <module>connectors</module>
-    <module>tools</module>
     <module>catalog</module>
+    <module>connectors</module>
+    <module>core</module>
+    <module>endpoints</module>
+    <module>runtime</module>
+    <module>test-api-generator</module>
+    <module>tools</module>
+    <module>utils</module>
+    <module>validation</module>
   </modules>
 
   <developers>
@@ -255,6 +256,7 @@
     <snappy.version>1.1.10.5</snappy.version>
     <snakeyaml.version>2.2</snakeyaml.version>
     <spring.version>6.1.8</spring.version>
+    <spring.boot.version>3.3.1</spring.boot.version>
     <spring.ws.version>4.0.11</spring.ws.version>
     <spring.integration.version>6.3.0</spring.integration.version>
     <spring.restdocs.version>3.0.1</spring.restdocs.version>
