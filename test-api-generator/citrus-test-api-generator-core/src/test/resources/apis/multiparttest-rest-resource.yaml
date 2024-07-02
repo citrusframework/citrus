@@ -7,9 +7,9 @@ info:
     x-citrus-app: MPT
     x-citrus-api-name: multiparttest-rest-resource
     contact:
-        name: IT-Services-CI TAuBE
-        email: IT-Serv-CI-ETAdl@post.ch
-        url: https://confluence.pnet.ch/pages/viewpage.action?pageId=314828825
+        name: Citrusframework Authors
+        email: citrus-dev@googlegroups.com
+        url: https://citrusframework.org
 tags:
     - name: multiparttest-controller
 paths:
