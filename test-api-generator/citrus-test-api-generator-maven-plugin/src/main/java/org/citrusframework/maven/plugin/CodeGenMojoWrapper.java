@@ -16,16 +16,16 @@
 
 package org.citrusframework.maven.plugin;
 
-import static org.citrusframework.openapi.generator.JavaCitrusCodegen.CODEGEN_NAME;
 import static java.lang.String.format;
+import static org.citrusframework.openapi.generator.JavaCitrusCodegen.CODEGEN_NAME;
 
-import org.citrusframework.openapi.generator.JavaCitrusCodegen;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.citrusframework.openapi.generator.JavaCitrusCodegen;
 import org.openapitools.codegen.plugin.CodeGenMojo;
 
 /**
@@ -96,5 +96,4 @@ public class CodeGenMojoWrapper extends CodeGenMojo {
                 format("Could not reflectively set field value '%s' for field '%s'", fieldValue, fieldName));
         }
     }
-
 }

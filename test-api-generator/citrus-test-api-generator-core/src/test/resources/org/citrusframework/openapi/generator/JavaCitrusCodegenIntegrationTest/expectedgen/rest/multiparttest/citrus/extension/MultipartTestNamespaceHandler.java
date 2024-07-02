@@ -29,7 +29,6 @@ import javax.annotation.processing.Generated;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-
 @Generated(value = "org.citrusframework.openapi.generator.JavaCitrusCodegen")
 public class MultipartTestNamespaceHandler extends NamespaceHandlerSupport {
 

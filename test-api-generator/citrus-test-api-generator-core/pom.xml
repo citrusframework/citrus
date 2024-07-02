@@ -18,7 +18,6 @@
     <description>Generates a Citrus Test-API for OpenAPI and WSDL specifications.</description>
 
     <dependencies>
-
         <dependency>
             <groupId>org.citrusframework</groupId>
             <artifactId>citrus-api</artifactId>
@@ -54,6 +53,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>openapi-generator</artifactId>
+            <version>${org.openapitools.version}</version>
         </dependency>
         <dependency>
             <groupId>wsdl4j</groupId>
@@ -68,15 +68,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-test</artifactId>
-            <version>${spring.boot.test.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.citrusframework</groupId>
             <artifactId>citrus-validation-json</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -121,6 +121,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${org.openapitools.version}</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.citrusframework</groupId>
