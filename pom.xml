@@ -50,14 +50,16 @@
   </ciManagement>
 
   <modules>
-    <module>core</module>
-    <module>utils</module>
-    <module>runtime</module>
-    <module>validation</module>
-    <module>connectors</module>
-    <module>endpoints</module>
-    <module>tools</module>
     <module>catalog</module>
+    <module>connectors</module>
+    <module>core</module>
+    <module>endpoints</module>
+    <module>runtime</module>
+    <module>test-api-generator</module>
+    <module>tools</module>
+    <module>utils</module>
+    <module>utils</module>
+    <module>validation</module>
   </modules>
 
   <developers>
@@ -250,7 +252,7 @@
     <mockftpserver.version>3.2.0</mockftpserver.version>
     <netty.version>4.1.105.Final</netty.version>
     <okhttp.version>4.12.0</okhttp.version>
-    <openapi-generator-maven-plugin>7.5.0</openapi-generator-maven-plugin>
+    <org.openapitools.version>7.5.0</org.openapitools.version>
     <picoli-version>4.7.6</picoli-version>
     <saaj.version>3.0.4</saaj.version>
     <selenium.version>4.25.0</selenium.version>
@@ -525,7 +527,7 @@
       <dependency>
         <groupId>org.openapitools</groupId>
         <artifactId>openapi-generator</artifactId>
-        <version>${openapi-generator-maven-plugin}</version>
+        <version>${org.openapitools.version}</version>
         <scope>provided</scope>
       </dependency>
 
