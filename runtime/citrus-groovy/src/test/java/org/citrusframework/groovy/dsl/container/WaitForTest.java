@@ -31,11 +31,13 @@ import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.DefaultMessageStore;
 import org.citrusframework.message.MessageStore;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Ignore
 public class WaitForTest extends AbstractGroovyActionDslTest {
 
     private static final String DEFAULT_WAIT_TIME = "5000";

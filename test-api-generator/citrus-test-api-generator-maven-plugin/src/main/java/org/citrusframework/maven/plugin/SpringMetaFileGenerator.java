@@ -19,7 +19,6 @@ package org.citrusframework.maven.plugin;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 
-import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -30,6 +29,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.maven.plugin.TestApiGeneratorMojo.ApiConfig;
 
 /**
  * Utility class responsible for generating the Spring meta files 'spring.handlers' and 'spring.schemas', used
@@ -52,9 +52,7 @@ public class SpringMetaFileGenerator {
     }
 
     public void generateSpringIntegrationMetaFiles() throws MojoExecutionException {
-
-        String springMetafileDirectory = format("%s/%s", testApiGeneratorMojo.getMavenProject().getBasedir(),
-            testApiGeneratorMojo.metaInfFolder());
+        String springMetafileDirectory = format("%s/%s", testApiGeneratorMojo.getMavenProject().getBasedir(), testApiGeneratorMojo.metaInfFolder());
         File metaFolder = new File(springMetafileDirectory);
         if (!metaFolder.exists() && !metaFolder.mkdirs()) {
             throw new CitrusRuntimeException(
@@ -70,7 +68,6 @@ public class SpringMetaFileGenerator {
     }
 
     private void writeSpringSchemaMetaFile(File springMetafileDirectory) throws MojoExecutionException {
-
         String filename = "spring.schemas";
         writeSpringMetaFile(springMetafileDirectory, filename, (fileWriter, apiConfig) -> {
             String targetXmlnsNamespace = TestApiGeneratorMojo.replaceDynamicVarsToLowerCase(apiConfig.getTargetXmlnsNamespace(), apiConfig.getPrefix(),
@@ -94,14 +91,11 @@ public class SpringMetaFileGenerator {
         });
     }
 
-    private void writeSpringMetaFile(File springMetafileDirectory, String filename, BiConsumer<FileWriter, ApiConfig> contentFormatter)
-        throws MojoExecutionException {
-
+    private void writeSpringMetaFile(File springMetafileDirectory, String filename, BiConsumer<FileWriter, ApiConfig> contentFormatter) throws MojoExecutionException {
         File handlerFile = new File(format("%s/%s", springMetafileDirectory.getPath(), filename));
         List<String> filteredLines = readAndFilterLines(handlerFile);
 
         try (FileWriter fileWriter = new FileWriter(handlerFile)) {
-
             for (String line : filteredLines) {
                 fileWriter.write(format("%s%n", line));
             }
@@ -109,7 +103,6 @@ public class SpringMetaFileGenerator {
             for (ApiConfig apiConfig : testApiGeneratorMojo.getApiConfigs()) {
                 contentFormatter.accept(fileWriter, apiConfig);
             }
-
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to write spring meta file!", e);
         }
@@ -133,7 +126,6 @@ public class SpringMetaFileGenerator {
      * @throws CitrusRuntimeException if an error occurs while reading the file
      */
     private static List<String> readAndFilterLines(File file) {
-
         if (!file.exists()) {
             return emptyList();
         }
