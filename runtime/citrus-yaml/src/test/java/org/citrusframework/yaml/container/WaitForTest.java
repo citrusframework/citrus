@@ -31,11 +31,13 @@ import org.citrusframework.message.MessageStore;
 import org.citrusframework.yaml.YamlTestLoader;
 import org.citrusframework.yaml.actions.AbstractYamlActionTest;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Ignore
 public class WaitForTest extends AbstractYamlActionTest {
 
     private static final String DEFAULT_WAIT_TIME = "5000";

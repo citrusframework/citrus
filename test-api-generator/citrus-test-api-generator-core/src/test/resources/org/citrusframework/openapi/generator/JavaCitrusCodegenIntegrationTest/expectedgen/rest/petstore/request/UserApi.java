@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 @Generated(value = "org.citrusframework.openapi.generator.JavaCitrusCodegen")
 public class UserApi implements GeneratedApi
 {
