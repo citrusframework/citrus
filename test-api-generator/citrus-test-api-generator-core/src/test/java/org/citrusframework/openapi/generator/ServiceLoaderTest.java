@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.ServiceLoader.Provider;
-import org.citrusframework.testapi.ApiActionBuilderCustomizerService;
 import org.citrusframework.openapi.generator.util.TestApiActionBuilderCustomizer;
+import org.citrusframework.testapi.ApiActionBuilderCustomizerService;
 import org.junit.jupiter.api.Test;
 
 class ServiceLoaderTest {
