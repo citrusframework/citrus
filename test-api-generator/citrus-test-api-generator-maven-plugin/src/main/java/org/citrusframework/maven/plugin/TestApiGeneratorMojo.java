@@ -332,7 +332,6 @@ public class TestApiGeneratorMojo extends AbstractMojo {
         }
 
         Map<String, Object> toConfigOptionsProperties() {
-
             Map<String, Object> configOptionsProperties = new HashMap<>();
             configOptionsProperties.put(PREFIX, prefix);
             configOptionsProperties.put(API_ENDPOINT, qualifiedEndpoint());
