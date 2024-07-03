@@ -1,6 +1,20 @@
-{{>licenseInfo}}
+/*
+* Copyright the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-package {{invokerPackage}}.citrus;
+package org.citrusframework.openapi.generator.rest.petstore.citrus;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -30,13 +44,13 @@ import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-{{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
-public abstract class {{prefix}}AbstractTestRequest extends AbstractTestAction {
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.JavaCitrusCodegen", date = "2024-07-03T15:24:45.610010900+02:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+public abstract class PetStoreAbstractTestRequest extends AbstractTestAction {
 
-    protected final Marker coverageMarker = MarkerFactory.getMarker("{{#lambda.uppercase}}{{prefix}}{{/lambda.uppercase}}-API-COVERAGE");
+    protected final Marker coverageMarker = MarkerFactory.getMarker("PETSTORE-API-COVERAGE");
 
     @Autowired
-    @Qualifier("{{apiEndpoint}}")
+    @Qualifier("petStoreEndpoint")
     protected HttpClient httpClient;
 
     @Autowired(required = false)
@@ -76,7 +90,7 @@ public abstract class {{prefix}}AbstractTestRequest extends AbstractTestAction {
     /**
     * This method receives the HTTP-Response.
     *
-    * @deprecated use {@link {{prefix}}AbstractTestRequest#receiveResponse(TestContext)} instead.
+    * @deprecated use {@link PetStoreAbstractTestRequest#receiveResponse(TestContext)} instead.
     */
     public ReceiveMessageAction recieveResponse(TestContext context) {
 
