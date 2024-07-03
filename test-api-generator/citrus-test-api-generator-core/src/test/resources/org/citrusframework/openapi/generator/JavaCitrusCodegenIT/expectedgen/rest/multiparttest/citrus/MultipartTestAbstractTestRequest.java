@@ -1,6 +1,20 @@
-{{>licenseInfo}}
+/*
+* Copyright the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-package {{invokerPackage}}.citrus;
+package org.citrusframework.openapi.generator.rest.multiparttest.citrus;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -30,13 +44,13 @@ import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-{{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
-public abstract class {{prefix}}AbstractTestRequest extends AbstractTestAction {
+@jakarta.annotation.Generated(value = "org.citrusframework.openapi.generator.JavaCitrusCodegen", date = "2024-07-03T15:24:46.388350800+02:00[Europe/Zurich]", comments = "Generator version: 7.5.0")
+public abstract class MultipartTestAbstractTestRequest extends AbstractTestAction {
 
-    protected final Marker coverageMarker = MarkerFactory.getMarker("{{#lambda.uppercase}}{{prefix}}{{/lambda.uppercase}}-API-COVERAGE");
+    protected final Marker coverageMarker = MarkerFactory.getMarker("MULTIPARTTEST-API-COVERAGE");
 
     @Autowired
-    @Qualifier("{{apiEndpoint}}")
+    @Qualifier("multipartTestEndpoint")
     protected HttpClient httpClient;
 
     @Autowired(required = false)
@@ -76,7 +90,7 @@ public abstract class {{prefix}}AbstractTestRequest extends AbstractTestAction {
     /**
     * This method receives the HTTP-Response.
     *
-    * @deprecated use {@link {{prefix}}AbstractTestRequest#receiveResponse(TestContext)} instead.
+    * @deprecated use {@link MultipartTestAbstractTestRequest#receiveResponse(TestContext)} instead.
     */
     public ReceiveMessageAction recieveResponse(TestContext context) {
 

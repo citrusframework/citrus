@@ -17,6 +17,10 @@
     <name>Citrus :: Test API Generator :: Core</name>
     <description>Generates a Citrus Test-API for OpenAPI and WSDL specifications.</description>
 
+    <properties>
+        <openapi-java-folder>${project.build.directory}/openapi-java-resources</openapi-java-folder>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.citrusframework</groupId>
@@ -113,6 +117,64 @@
                             <sources>
                                 <source>${project.build.directory}/generated-test-sources</source>
                             </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.7.1</version>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>org.openapitools</groupId>
+                            <artifactId>openapi-generator</artifactId>
+                            <version>${org.openapitools.version}</version>
+                            <includes>Java/*Annotation*.mustache,Java/*Model*.mustache,Java/model*.mustache,Java/pojo*.mustache</includes>
+                        </artifactItem>
+                    </artifactItems>
+                    <outputDirectory>
+                        ${openapi-java-folder}
+                    </outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>unpack-java-templates</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>prepare-java-templates</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/java-citrus</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${openapi-java-folder}/Java
+                                    </directory>
+                                    <includes>
+                                        <include>
+                                            *.mustache
+                                        </include>
+                                    </includes>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
