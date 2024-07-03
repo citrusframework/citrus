@@ -85,6 +85,7 @@ public class JavaCitrusCodegen extends AbstractJavaCodegen {
 
         // set default
         additionalProperties.put(API_TYPE, API_TYPE_REST);
+        additionalProperties.put("useJakartaEe", true);
 
         // add additional reserved words used in CitrusAbstractTestRequest and its base class to prevent name collisions
         Set<String> reservedWordsTemp = reservedWords();
@@ -119,8 +120,7 @@ public class JavaCitrusCodegen extends AbstractJavaCodegen {
             newString(API_ENDPOINT,
             "Which http client should be used (default " + httpClient + ")."));
         cliOptions.add(
-            newString(
-                API_TYPE,
+            newString(API_TYPE,
                 "Specifies the type of API to be generated specify SOAP to generate a SOAP API. By default a REST API will be generated"
             )
         );
@@ -135,10 +135,8 @@ public class JavaCitrusCodegen extends AbstractJavaCodegen {
             newString(OPENAPI_SCHEMA,
             "Which OpenAPI schema should be used (default " + openapiSchema + ")."));
         cliOptions.add(
-            newString(
-                PREFIX,
-                "Add a prefix before the name of the files. First character should be upper case (default "
-                    + apiPrefix + ")."
+            newString(PREFIX,
+                "Add a prefix before the name of the files. First character should be upper case (default " + apiPrefix + ")."
             )
         );
         cliOptions.add(newString(PREFIX, "The api prefix (default " + apiPrefix + ")."));

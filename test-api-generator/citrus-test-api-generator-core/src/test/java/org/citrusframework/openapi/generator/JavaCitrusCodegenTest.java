@@ -39,8 +39,8 @@ class JavaCitrusCodegenTest {
      * @param pathToFileInTestResources The file within {@code src/test/resources} to look for
      * @return the absolute path to the file
      */
-    private String getTestResource(String pathToFileInTestResources) {
-        URL resourceUrl = getClass().getClassLoader().getResource(pathToFileInTestResources);
+    static String getAbsoluteTestResourcePath(String pathToFileInTestResources) {
+        URL resourceUrl = JavaCitrusCodegenTest.class.getClassLoader().getResource(pathToFileInTestResources);
         assert resourceUrl != null;
         File inputSpecFile = new File(resourceUrl.getFile());
         return inputSpecFile.getAbsolutePath();
@@ -52,7 +52,7 @@ class JavaCitrusCodegenTest {
      * @param pathToFileInTargetDirectory The file within {@code target} to look for
      * @return the absolute path to the file
      */
-    private static String getAbsoluteTargetDirectoryPath(String pathToFileInTargetDirectory) {
+    static String getAbsoluteTargetDirectoryPath(String pathToFileInTargetDirectory) {
         String projectBaseDir = System.getProperty("user.dir"); // Base directory of the project
         File outputDirFile = new File(projectBaseDir, "target/" + pathToFileInTargetDirectory);
         return outputDirFile.getAbsolutePath();
@@ -109,7 +109,7 @@ class JavaCitrusCodegenTest {
 
     @Test
     void areReservedWordsEscapedTest() throws IOException {
-        String absoluteInputSpecPath = getTestResource("apis/petstore_reservedWords.yaml");
+        String absoluteInputSpecPath = getAbsoluteTestResourcePath("apis/petstore_reservedWords.yaml");
         String absoluteOutputDirPath = getAbsoluteTargetDirectoryPath("JavaCitrusCodegenTest/petstore_escapedWords");
 
         final CodegenConfigurator configurator = new CodegenConfigurator()
@@ -121,7 +121,8 @@ class JavaCitrusCodegenTest {
         DefaultGenerator generator = new DefaultGenerator();
         List<File> outputFiles = generator.opts(clientOptInput).generate();
 
-        Optional<File> file = outputFiles.stream().filter(x -> "PetApi.java".equals(x.getName()))
+        Optional<File> file = outputFiles.stream()
+            .filter(x -> "PetApi.java".equals(x.getName()))
             .findFirst();
 
         assertThat(file).isPresent();
@@ -129,12 +130,16 @@ class JavaCitrusCodegenTest {
         List<String> lines = Files.readAllLines(file.get().toPath(), StandardCharsets.UTF_8);
 
         // "name" is a reserved word, so it should be escaped with an underline for the second parameter
-        assertThat(lines.stream().filter(x -> x.contains("\"name\", this._name")).count()).isEqualTo(1L);
+        assertThat(
+            lines.stream()
+                .filter(x -> x.contains("\"name\", this._name"))
+                .count())
+            .isEqualTo(1L);
     }
 
     @Test
     void arePathParamsFieldsPresent() throws IOException {
-        String absoluteInputSpecPath = getTestResource("apis/petstore.yaml");
+        String absoluteInputSpecPath = getAbsoluteTestResourcePath("apis/petstore.yaml");
         String absoluteOutputDirPath = getAbsoluteTargetDirectoryPath("JavaCitrusCodegenTest/petstore");
 
         final CodegenConfigurator configurator = new CodegenConfigurator()
@@ -146,7 +151,8 @@ class JavaCitrusCodegenTest {
         DefaultGenerator generator = new DefaultGenerator();
         List<File> outputFiles = generator.opts(clientOptInput).generate();
 
-        Optional<File> file = outputFiles.stream().filter(x -> "PetApi.java".equals(x.getName()))
+        Optional<File> file = outputFiles.stream()
+            .filter(x -> "PetApi.java".equals(x.getName()))
             .findFirst();
 
         assertThat(file).isPresent();
@@ -154,15 +160,22 @@ class JavaCitrusCodegenTest {
         List<String> lines = Files.readAllLines(file.get().toPath(), StandardCharsets.UTF_8);
 
         // "name" is a reserved word, so it should be escaped with an underline for the second parameter
-        assertThat(lines.stream().filter(x -> x.contains("private String petId;")).count()).isEqualTo(4L);
-        assertThat(lines.stream().filter(
-                x -> x.contains("endpoint = endpoint.replace(\"{\" + \"petId\" + \"}\", petId);"))
-            .count()).isEqualTo(4L);
+        assertThat(
+            lines.stream()
+                .filter(x -> x.contains("private String petId;"))
+                .count())
+            .isEqualTo(4L);
+        assertThat(
+            lines.stream()
+                .filter(x -> x.contains(
+                    "endpoint = endpoint.replace(\"{\" + \"petId\" + \"}\", petId);"))
+                .count())
+            .isEqualTo(4L);
     }
 
     @Test
     void areBasicAuthFieldsPresent() throws IOException {
-        String absoluteInputSpecPath = getTestResource("apis/petstore.yaml");
+        String absoluteInputSpecPath = getAbsoluteTestResourcePath("apis/petstore.yaml");
         String absoluteOutputDirPath = getAbsoluteTargetDirectoryPath("JavaCitrusCodegenTest/petstore");
 
         final CodegenConfigurator configurator = new CodegenConfigurator()
@@ -174,7 +187,8 @@ class JavaCitrusCodegenTest {
         DefaultGenerator generator = new DefaultGenerator();
         List<File> outputFiles = generator.opts(clientOptInput).generate();
 
-        Optional<File> file = outputFiles.stream().filter(x -> "PetApi.java".equals(x.getName()))
+        Optional<File> file = outputFiles.stream()
+            .filter(x -> "PetApi.java".equals(x.getName()))
             .findFirst();
 
         assertThat(file).isPresent();
@@ -182,20 +196,24 @@ class JavaCitrusCodegenTest {
         List<String> lines = Files.readAllLines(file.get().toPath(), StandardCharsets.UTF_8);
 
         // "name" is a reserved word, so it should be escaped with an underline for the second parameter
-        assertThat(lines.stream()
-            .filter(x -> x.contains("@Value(\"${\" + \"apiEndpoint.basic.username:#{null}}\")"))
-            .count()).isEqualTo(1L);
         assertThat(
-            lines.stream().filter(x -> x.contains("private String basicUsername;")).count()).isEqualTo(1L);
+            lines.stream()
+                .filter(x -> x.contains("@Value(\"${\" + \"apiEndpoint.basic.username:#{null}}\")"))
+                .count())
+            .isEqualTo(1L);
         assertThat(
-            lines
-                .stream()
+            lines.stream()
+                .filter(x -> x.contains("private String basicUsername;"))
+                .count())
+            .isEqualTo(1L);
+        assertThat(
+            lines.stream()
                 .filter(x ->
                     x.contains(
                         "messageBuilderSupport.header(\"Authorization\", \"Basic \" + Base64.getEncoder().encodeToString((context.replaceDynamicContentInString(basicUsername)+\":\"+context.replaceDynamicContentInString(basicPassword)).getBytes()));"
                     )
                 )
-                .count()
-        ).isEqualTo(1L);
+                .count())
+            .isEqualTo(1L);
     }
 }

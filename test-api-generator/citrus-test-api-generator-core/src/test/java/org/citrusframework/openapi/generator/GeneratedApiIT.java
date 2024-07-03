@@ -77,8 +77,10 @@ import org.springframework.util.MultiValueMap;
 @ExtendWith({CitrusSpringExtension.class})
 @SpringBootTest(classes = {CitrusSpringConfig.class, GeneratedApiIT.Config.class})
 @TestPropertySource(
-    properties = {"applicationServiceClient.basic.username=Max Mustermann",
-        "applicationServiceClient.basic.password=Top secret"}
+    properties = {
+        "applicationServiceClient.basic.username=Max Mustermann",
+        "applicationServiceClient.basic.password=Top secret"
+    }
 )
 class GeneratedApiIT {
 
