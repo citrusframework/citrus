@@ -18,6 +18,7 @@ package org.citrusframework.openapi.integration;
 
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
+import org.citrusframework.http.actions.HttpServerResponseActionBuilder.HttpMessageBuilderSupport;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
@@ -67,11 +68,6 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void shouldExecuteGetPetById() {
-        shouldExecuteGetPetById(openapi(petstoreSpec));
-    }
-
-
-    private void shouldExecuteGetPetById(OpenApiActionBuilder openapi) {
         variable("petId", "1001");
 
         when(http()
@@ -82,11 +78,11 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
                 .accept("application/json")
                 .fork(true));
 
-        then(openapi
+        then(openapi(petstoreSpec)
                 .server(httpServer)
                 .receive("getPetById"));
 
-        then(openapi
+        then(openapi(petstoreSpec)
                 .server(httpServer)
                 .send("getPetById", HttpStatus.OK));
 
@@ -106,6 +102,96 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
                           "photoUrls": "@notEmpty()@",
                           "tags":  "@ignore@",
                           "status": "@matches(sold|pending|available)@"
+                        }
+                """));
+    }
+
+    @CitrusTest
+    public void executeGetPetByIdShouldFailOnInvalidResponse() {
+        variable("petId", "1001");
+
+        when(http()
+            .client(httpClient)
+            .send()
+            .get("/pet/${petId}")
+            .message()
+            .accept("application/json")
+            .fork(true));
+
+        then(openapi(petstoreSpec)
+            .server(httpServer)
+            .receive("getPetById"));
+
+        HttpMessageBuilderSupport getPetByIdResponseBuilder = openapi(petstoreSpec)
+            .server(httpServer)
+            .send("getPetById", HttpStatus.OK)
+            .message().body("""
+                        {
+                          "id": "xxxx",
+                          "name": "Garfield",
+                          "category": {
+                            "id": 111,
+                            "name": "Comic"
+                          },
+                          "photoUrls": [],
+                          "tags":  [],
+                          "status": "available"
+                        }
+                """);
+        assertThrows(TestCaseFailedException.class, () ->then(getPetByIdResponseBuilder));
+    }
+
+    @CitrusTest
+    public void executeGetPetByIdShouldSucceedOnInvalidResponseWithValidationDisabled() {
+        variable("petId", "1001");
+
+        when(http()
+            .client(httpClient)
+            .send()
+            .get("/pet/${petId}")
+            .message()
+            .accept("application/json")
+            .fork(true));
+
+        then(openapi(petstoreSpec)
+            .server(httpServer)
+            .receive("getPetById"));
+
+        HttpMessageBuilderSupport getPetByIdResponseBuilder = openapi(petstoreSpec)
+            .server(httpServer)
+            .send("getPetById", HttpStatus.OK)
+            .disableOasValidation(true)
+            .message().body("""
+                        {
+                          "id": "xxxx",
+                          "name": "Garfield",
+                          "category": {
+                            "id": 111,
+                            "name": "Comic"
+                          },
+                          "photoUrls": [],
+                          "tags":  [],
+                          "status": "available"
+                        }
+                """);
+        then(getPetByIdResponseBuilder);
+
+        then(http()
+            .client(httpClient)
+            .receive()
+            .response(HttpStatus.OK)
+            .message()
+            .body("""
+                        {
+                          "id": "xxxx",
+                          "name": "Garfield",
+                          "category": {
+                            "id": 111,
+                            "name": "Comic"
+                          },
+                          "photoUrls": [],
+                          "tags":  [],
+                          "status": "available"
                         }
                 """));
     }
@@ -167,7 +253,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void shouldSucceedOnWrongQueryIdTypeWithOasDisabled() {
-        variable("petId", "xxx");
+        variable("petId", -1);
 
         when(http()
             .client(httpClient)
@@ -181,7 +267,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
         OpenApiServerRequestActionBuilder addPetBuilder = openapi(petstoreSpec)
             .server(httpServer)
             .receive("addPet")
-            .disableOasValidation(true);
+            .disableOasValidation(false);
 
         try {
             when(addPetBuilder);
@@ -220,4 +306,5 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
                 .receive()
                 .response(HttpStatus.CREATED));
     }
+
 }

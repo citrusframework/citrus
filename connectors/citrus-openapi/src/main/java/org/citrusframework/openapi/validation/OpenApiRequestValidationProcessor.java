@@ -33,28 +33,25 @@ public class OpenApiRequestValidationProcessor implements
 
     private final String operationId;
 
-    private boolean enabled = true;
+    private final OpenApiRequestValidator openApiRequestValidator;
 
     public OpenApiRequestValidationProcessor(OpenApiSpecification openApiSpecification,
         String operationId) {
-        this.operationId = operationId;
         this.openApiSpecification = openApiSpecification;
+        this.operationId = operationId;
+        this.openApiRequestValidator = new OpenApiRequestValidator(openApiSpecification);
     }
-
 
     @Override
     public void validate(Message message, TestContext context) {
 
-        if (!enabled || !(message instanceof HttpMessage httpMessage)) {
+        if (!(message instanceof HttpMessage httpMessage)) {
             return;
         }
+
         openApiSpecification.getOperation(
             operationId, context).ifPresent(operationPathAdapter ->
-            openApiSpecification.getRequestValidator().ifPresent(openApiRequestValidator ->
-                openApiRequestValidator.validateRequest(operationPathAdapter, httpMessage)));
+            openApiRequestValidator.validateRequest(operationPathAdapter, httpMessage));
     }
 
-    public void setEnabled(boolean b) {
-        this.enabled = b;
-    }
 }

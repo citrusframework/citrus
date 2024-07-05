@@ -32,8 +32,10 @@ import org.citrusframework.functions.core.LocalHostAddressFunction;
 import org.citrusframework.functions.core.LowerCaseFunction;
 import org.citrusframework.functions.core.MaxFunction;
 import org.citrusframework.functions.core.MinFunction;
+import org.citrusframework.functions.core.AdvancedRandomNumberFunction;
 import org.citrusframework.functions.core.RandomEnumValueFunction;
 import org.citrusframework.functions.core.RandomNumberFunction;
+import org.citrusframework.functions.core.RandomPatternFunction;
 import org.citrusframework.functions.core.RandomStringFunction;
 import org.citrusframework.functions.core.RandomUUIDFunction;
 import org.citrusframework.functions.core.ReadFileResourceFunction;
@@ -64,7 +66,9 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
         setName("citrusFunctionLibrary");
 
         getMembers().put("randomNumber", new RandomNumberFunction());
+        getMembers().put("randomNumberGenerator", new AdvancedRandomNumberFunction());
         getMembers().put("randomString", new RandomStringFunction());
+        getMembers().put("randomValue", new RandomPatternFunction());
         getMembers().put("concat", new ConcatFunction());
         getMembers().put("currentDate", new CurrentDateFunction());
         getMembers().put("substring", new SubstringFunction());

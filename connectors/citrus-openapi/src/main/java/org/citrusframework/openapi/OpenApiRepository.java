@@ -94,8 +94,8 @@ public class OpenApiRepository extends BaseRepository {
     public void addRepository(Resource openApiResource) {
         OpenApiSpecification openApiSpecification = OpenApiSpecification.from(openApiResource);
         determineResourceAlias(openApiResource).ifPresent(openApiSpecification::addAlias);
-        openApiSpecification.setRequestValidationEnabled(requestValidationEnabled);
-        openApiSpecification.setResponseValidationEnabled(responseValidationEnabled);
+        openApiSpecification.setApiRequestValidationEnabled(requestValidationEnabled);
+        openApiSpecification.setApiResponseValidationEnabled(responseValidationEnabled);
         openApiSpecification.setRootContextPath(rootContextPath);
 
         this.openApiSpecifications.add(openApiSpecification);

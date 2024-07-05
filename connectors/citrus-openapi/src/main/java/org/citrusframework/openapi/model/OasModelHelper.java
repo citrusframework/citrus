@@ -16,6 +16,10 @@
 
 package org.citrusframework.openapi.model;
 
+import static java.util.Collections.singletonList;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_ARRAY;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_OBJECT;
+
 import io.apicurio.datamodels.combined.visitors.CombinedVisitorAdapter;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
@@ -36,11 +40,6 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import jakarta.annotation.Nullable;
-import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
-import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
-import org.citrusframework.util.StringUtils;
-import org.springframework.http.MediaType;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,12 +52,14 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import static java.util.Collections.singletonList;
+import org.citrusframework.openapi.model.v2.Oas20ModelHelper;
+import org.citrusframework.openapi.model.v3.Oas30ModelHelper;
+import org.citrusframework.util.StringUtils;
+import org.springframework.http.MediaType;
 
 public final class OasModelHelper {
 
-    public static final String DEFAULT_ = "default_";
+    public static final String DEFAULT = "default_";
 
     /**
      * List of preferred media types in the order of priority,
@@ -76,7 +77,7 @@ public final class OasModelHelper {
      * @return true if given schema is an object.
      */
     public static boolean isObjectType(@Nullable OasSchema schema) {
-        return schema != null && "object".equals(schema.type);
+        return schema != null && TYPE_OBJECT.equals(schema.type);
     }
 
     /**
@@ -85,7 +86,7 @@ public final class OasModelHelper {
      * @return true if given schema is an array.
      */
     public static boolean isArrayType(@Nullable OasSchema schema) {
-        return schema != null && "array".equals(schema.type);
+        return schema != null && TYPE_ARRAY.equals(schema.type);
     }
 
     /**
@@ -95,7 +96,7 @@ public final class OasModelHelper {
      */
     public static boolean isObjectArrayType(@Nullable OasSchema schema) {
 
-        if (schema == null || !"array".equals(schema.type)) {
+        if (schema == null || !TYPE_ARRAY.equals(schema.type)) {
             return false;
         }
 
@@ -290,7 +291,7 @@ public final class OasModelHelper {
         Predicate<OasResponse> acceptedSchemas = resp -> getSchema(operation, resp, accept != null ? singletonList(accept) : DEFAULT_ACCEPTED_MEDIA_TYPES).isPresent();
 
         // Fallback 1: Pick the default if it exists
-        Optional<OasResponse> response = Optional.ofNullable(responseMap.get(DEFAULT_));
+        Optional<OasResponse> response = Optional.ofNullable(responseMap.get(DEFAULT));
 
         if (response.isEmpty()) {
             // Fallback 2: Pick the response object related to the first 2xx, providing an accepted schema
@@ -463,7 +464,7 @@ public final class OasModelHelper {
      * This method iterates over the responses contained in the {@link OasResponses} object. If a response has a reference
      * (indicated by a non-null {@code $ref} field), it resolves the reference and adds the resolved response to the result list.
      * Non-referenced responses are added to the result list as-is. The resulting map includes the default response under
-     * the key {@link OasModelHelper#DEFAULT_}, if it exists.
+     * the key {@link OasModelHelper#DEFAULT}, if it exists.
      * </p>
      *
      * @param responses the {@link OasResponses} instance containing the responses to be resolved.
@@ -491,10 +492,10 @@ public final class OasModelHelper {
             if (responses.default_.$ref != null) {
                 OasResponse resolved = responseResolver.apply(responses.default_.$ref);
                 if (resolved != null) {
-                    responseMap.put(DEFAULT_, resolved);
+                    responseMap.put(DEFAULT, resolved);
                 }
             } else {
-                responseMap.put(DEFAULT_, responses.default_);
+                responseMap.put(DEFAULT, responses.default_);
             }
         }
 
@@ -504,8 +505,8 @@ public final class OasModelHelper {
     private static Function<String, OasResponse> getResponseResolver(
         OasDocument openApiDoc) {
         return delegate(openApiDoc,
-            (Function<Oas20Document, Function<String, OasResponse>>) doc -> (responseRef -> doc.responses.getResponse(OasModelHelper.getReferenceName(responseRef))),
-            (Function<Oas30Document, Function<String, OasResponse>>) doc -> (responseRef -> doc.components.responses.get(OasModelHelper.getReferenceName(responseRef))));
+             doc -> (responseRef -> doc.responses.getResponse(OasModelHelper.getReferenceName(responseRef))),
+             doc -> (responseRef -> doc.components.responses.get(OasModelHelper.getReferenceName(responseRef))));
     }
 
     /**
