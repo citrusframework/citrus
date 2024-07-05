@@ -31,6 +31,8 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
@@ -59,25 +61,39 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .requestUrl("http://localhost:%d".formatted(port))
             .build();
 
-    /**
-     * Directly loaded open api.
-     */
     private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
             Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+
+    private final OpenApiSpecification pingSpec = OpenApiSpecification.from(
+        Resources.create("classpath:org/citrusframework/openapi/ping/ping-api.yaml"));
 
     @CitrusTest
     @Test
     public void shouldExecuteGetPetByIdFromDirectSpec() {
-        shouldExecuteGetPetById(openapi(petstoreSpec), VALID_PET_PATH, true);
+        shouldExecuteGetPetById(openapi(petstoreSpec), VALID_PET_PATH, true, false);
     }
 
-    private void shouldExecuteGetPetById(OpenApiActionBuilder openapi, String responseFile, boolean valid) {
+    @CitrusTest
+    @Test
+    public void shouldFailOnMissingNameInResponse() {
+        shouldExecuteGetPetById(openapi(petstoreSpec), INVALID_PET_PATH, false, false);
+    }
+
+    @CitrusTest
+    @Test
+    public void shouldSucceedOnMissingNameInResponseWithValidationDisabled() {
+        shouldExecuteGetPetById(openapi(petstoreSpec), INVALID_PET_PATH, true, true);
+    }
+
+    private void shouldExecuteGetPetById(OpenApiActionBuilder openapi, String responseFile,
+        boolean valid, boolean disableValidation) {
 
         variable("petId", "1001");
 
         when(openapi
                 .client(httpClient)
                 .send("getPetById")
+                .message()
                 .fork(true));
 
         then(http().server(httpServer)
@@ -94,7 +110,9 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
                 .contentType("application/json"));
 
         OpenApiClientResponseActionBuilder clientResponseActionBuilder = openapi
-            .client(httpClient).receive("getPetById", HttpStatus.OK);
+            .client(httpClient).receive("getPetById", HttpStatus.OK)
+            .disableOasValidation(disableValidation);
+
         if (valid) {
             then(clientResponseActionBuilder);
         } else {
@@ -112,12 +130,6 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
     @Test
     public void shouldProperlyExecuteGetAndAddPetFromRepository() {
         shouldExecuteGetAndAddPet(openapi(petstoreSpec));
-    }
-
-    @CitrusTest
-    @Test
-    public void shouldFailOnMissingNameInResponse() {
-        shouldExecuteGetPetById(openapi(petstoreSpec), INVALID_PET_PATH, false);
     }
 
     @CitrusTest
@@ -202,5 +214,38 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         then(openapi
                 .client(httpClient)
                 .receive("addPet", HttpStatus.CREATED));
+    }
+
+    @DataProvider(name="pingApiOperationDataprovider")
+    public static Object[][] pingApiOperationDataprovider() {
+        return new Object[][]{{"doPing"}, {"doPong"}, {"doPung"}};
+    }
+
+    @Test(dataProvider = "pingApiOperationDataprovider")
+    @CitrusTest
+    @Ignore  // Solve issue with composite schemes
+    public void shouldPerformRoundtripPingOperation(String pingApiOperation) {
+
+        variable("id", 2001);
+        when(openapi(pingSpec)
+            .client(httpClient)
+            .send(pingApiOperation)
+            .message()
+            .fork(true));
+
+        then(openapi(pingSpec).server(httpServer)
+            .receive(pingApiOperation)
+            .message()
+            .accept("@contains('application/json')@"));
+
+        then(openapi(pingSpec).server(httpServer)
+            .send(pingApiOperation)
+            .message()
+            .contentType("application/json"));
+
+        OpenApiClientResponseActionBuilder clientResponseActionBuilder = openapi(pingSpec)
+            .client(httpClient).receive(pingApiOperation, HttpStatus.OK);
+
+       then(clientResponseActionBuilder);
     }
 }

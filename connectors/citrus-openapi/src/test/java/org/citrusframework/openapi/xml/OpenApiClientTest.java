@@ -249,4 +249,5 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         Assert.assertTrue(XmlTestActionBuilder.lookup("openapi").isPresent());
         Assert.assertEquals(XmlTestActionBuilder.lookup("openapi").get().getClass(), OpenApi.class);
     }
+
 }

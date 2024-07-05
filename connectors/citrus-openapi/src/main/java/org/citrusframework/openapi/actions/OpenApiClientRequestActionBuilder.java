@@ -19,7 +19,12 @@ package org.citrusframework.openapi.actions;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
@@ -34,17 +39,18 @@ import org.citrusframework.openapi.validation.OpenApiRequestValidationProcessor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
 /**
  * @since 4.1
  */
 public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder {
 
-    private final OpenApiRequestValidationProcessor openApiRequestValidationProcessor;
+    private final OpenApiSpecification openApiSpec;
+
+    private final String operationId;
+
+    private boolean oasValidationEnabled = true;
+
+    private OpenApiRequestValidationProcessor openApiRequestValidationProcessor;
 
     /**
      * Default constructor initializes http request message builder.
@@ -57,14 +63,23 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                                              String operationId) {
         super(new OpenApiClientRequestMessageBuilder(httpMessage, openApiSpec, operationId), httpMessage);
 
-        openApiRequestValidationProcessor = new OpenApiRequestValidationProcessor(openApiSpec, operationId);
-        process(openApiRequestValidationProcessor);
+        this.openApiSpec = openApiSpec;
+        this.operationId = operationId;
+   }
+
+    @Override
+    public SendMessageAction doBuild() {
+
+        if (oasValidationEnabled && !messageProcessors.contains(openApiRequestValidationProcessor)) {
+            openApiRequestValidationProcessor = new OpenApiRequestValidationProcessor(openApiSpec, operationId);
+            process(openApiRequestValidationProcessor);
+        }
+
+        return super.doBuild();
     }
 
-    public OpenApiClientRequestActionBuilder disableOasValidation(boolean b) {
-        if (openApiRequestValidationProcessor != null) {
-            openApiRequestValidationProcessor.setEnabled(!b);
-        }
+    public OpenApiClientRequestActionBuilder disableOasValidation(boolean disabled) {
+        oasValidationEnabled = !disabled;
         return this;
     }
 
@@ -117,7 +132,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                     if (context.getVariables().containsKey(parameter.getName())) {
                         parameterValue = "\\" + CitrusSettings.VARIABLE_PREFIX + parameter.getName() + CitrusSettings.VARIABLE_SUFFIX;
                     } else {
-                        parameterValue = OpenApiTestDataGenerator.createRandomValueExpression((OasSchema) parameter.schema);
+                        parameterValue = OpenApiTestDataGenerator.createRandomValueExpression((OasSchema) parameter.schema, false);
                     }
                     randomizedPath = Pattern.compile("\\{" + parameter.getName() + "}")
                         .matcher(randomizedPath)
@@ -171,4 +186,5 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                 });
         }
     }
+
 }
