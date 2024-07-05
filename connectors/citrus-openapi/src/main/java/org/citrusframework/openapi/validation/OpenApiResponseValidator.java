@@ -16,17 +16,15 @@
 
 package org.citrusframework.openapi.validation;
 
-import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.Request.Method;
 import com.atlassian.oai.validator.model.Response;
 import com.atlassian.oai.validator.model.SimpleResponse;
 import com.atlassian.oai.validator.report.ValidationReport;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
+import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.springframework.http.HttpStatusCode;
-
-import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEnabledGlobally;
 
 /**
  * Specific validator, that facilitates the use of Atlassian's Swagger Request Validator,
@@ -34,8 +32,9 @@ import static org.citrusframework.openapi.OpenApiSettings.isResponseValidationEn
  */
 public class OpenApiResponseValidator extends OpenApiValidator {
 
-    public OpenApiResponseValidator(OpenApiInteractionValidator openApiInteractionValidator) {
-        super(openApiInteractionValidator, isResponseValidationEnabledGlobally());
+    public OpenApiResponseValidator(OpenApiSpecification openApiSpecification) {
+        super(openApiSpecification);
+        setEnabled(openApiSpecification.getSwaggerOpenApiValidationContext() != null && openApiSpecification.getSwaggerOpenApiValidationContext().isResponseValidationEnabled());
     }
 
     @Override

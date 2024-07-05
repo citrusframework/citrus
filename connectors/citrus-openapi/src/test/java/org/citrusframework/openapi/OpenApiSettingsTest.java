@@ -1,3 +1,19 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.citrusframework.openapi;
 
 import org.testng.annotations.AfterMethod;
@@ -17,7 +33,7 @@ public class OpenApiSettingsTest {
 
     private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
 
-    private static final boolean REQUEST_VALIDATION_ENABLED_GLOBALLY = OpenApiSettings.isRequestValidationEnabledlobally();
+    private static final boolean REQUEST_VALIDATION_ENABLED_GLOBALLY = OpenApiSettings.isRequestValidationEnabledGlobally();
 
     private static final boolean RESPONSE_VALIDATION_ENABLED_GLOBALLY = OpenApiSettings.isResponseValidationEnabledGlobally();
 
@@ -66,33 +82,33 @@ public class OpenApiSettingsTest {
     public void testRequestValidationEnabledByProperty() throws Exception {
         environmentVariables.setup();
         System.setProperty(REQUEST_VALIDATION_ENABLED_PROPERTY, "true");
-        assertTrue(OpenApiSettings.isRequestValidationEnabledlobally());
+        assertTrue(OpenApiSettings.isRequestValidationEnabledGlobally());
     }
 
     @Test
     public void testRequestValidationDisabledByProperty() throws Exception {
         environmentVariables.setup();
         System.setProperty(REQUEST_VALIDATION_ENABLED_PROPERTY, "false");
-        assertFalse(OpenApiSettings.isRequestValidationEnabledlobally());
+        assertFalse(OpenApiSettings.isRequestValidationEnabledGlobally());
     }
 
     @Test
     public void testRequestValidationEnabledByEnvVar() throws Exception {
         environmentVariables.set(OpenApiSettings.REQUEST_VALIDATION_ENABLED_ENV, "true");
         environmentVariables.setup();
-        assertTrue(OpenApiSettings.isRequestValidationEnabledlobally());
+        assertTrue(OpenApiSettings.isRequestValidationEnabledGlobally());
     }
 
     @Test
     public void testRequestValidationDisabledByEnvVar() throws Exception {
         environmentVariables.set(OpenApiSettings.REQUEST_VALIDATION_ENABLED_ENV, "false");
         environmentVariables.setup();
-        assertFalse(OpenApiSettings.isRequestValidationEnabledlobally());
+        assertFalse(OpenApiSettings.isRequestValidationEnabledGlobally());
     }
 
     @Test
     public void testRequestValidationEnabledByDefault()  {
-        assertTrue(OpenApiSettings.isRequestValidationEnabledlobally());
+        assertTrue(OpenApiSettings.isRequestValidationEnabledGlobally());
     }
 
     @Test
