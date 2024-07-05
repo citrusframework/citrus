@@ -1,3 +1,19 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.citrusframework.openapi;
 
 import io.apicurio.datamodels.openapi.models.OasDocument;
@@ -37,7 +53,6 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 public class OpenApiSpecificationTest {
-
 
     private static final String PING_API_HTTP_URL_STRING = "http://org.citrus.example.com/ping-api.yaml";
 
@@ -85,27 +100,13 @@ public class OpenApiSpecificationTest {
         mockCloseable.close();
     }
 
-    @Test
-    public void shouldInitializeFromSpecUrl() {
-
-        // When
-        OpenApiSpecification specification = OpenApiSpecification.from(PING_API_HTTP_URL_STRING);
-
-        // Then
-        assertNotNull(specification);
-        assertEquals(specification.getSpecUrl(), PING_API_HTTP_URL_STRING);
-        assertTrue(specification.getRequestValidator().isEmpty());
-        assertTrue(specification.getResponseValidator().isEmpty());
-
-    }
-
     @DataProvider(name = "protocollDataProvider")
     public static Object[][] protocolls() {
         return new Object[][] {{PING_API_HTTP_URL_STRING}, {PING_API_HTTPS_URL_STRING}};
     }
 
     @Test(dataProvider = "protocollDataProvider")
-    public void shouldInitializeFromUrl(String urlString) throws Exception {
+    public void shouldInitializeFromUrl(String urlString) {
         // Given
         URL urlMock = mockUrlConnection(urlString);
 
@@ -119,8 +120,7 @@ public class OpenApiSpecificationTest {
 
     private void assertPingApi(OpenApiSpecification specification) {
         assertNotNull(specification);
-        assertTrue(specification.getRequestValidator().isPresent());
-        assertTrue(specification.getResponseValidator().isPresent());
+        assertNotNull(specification.getSwaggerOpenApiValidationContext());
         Optional<OperationPathAdapter> pingOperationPathAdapter = specification.getOperation(
             PING_OPERATION_ID,
             testContextMock);
@@ -240,27 +240,25 @@ public class OpenApiSpecificationTest {
         when(endpointConfigurationMock.getRequestUrl()).thenReturn("http://org.citrus.sample");
 
         // When
-        specification.setRequestValidationEnabled(false);
+        specification.setApiRequestValidationEnabled(false);
 
         // Then (not yet initialized)
-        assertFalse(specification.isRequestValidationEnabled());
-        assertFalse(specification.getRequestValidator().isPresent());
+        assertFalse(specification.isApiRequestValidationEnabled());
+        assertNull(specification.getSwaggerOpenApiValidationContext());
 
         // When (initialize)
         specification.getOpenApiDoc(testContextMock);
 
         // Then
-        assertFalse(specification.isRequestValidationEnabled());
-        assertTrue(specification.getRequestValidator().isPresent());
-        assertTrue(specification.getRequestValidator().isPresent());
+        assertFalse(specification.isApiRequestValidationEnabled());
+        assertNotNull(specification.getSwaggerOpenApiValidationContext());
 
         // When
-        specification.setRequestValidationEnabled(true);
+        specification.setApiRequestValidationEnabled(true);
 
         // Then
-        assertTrue(specification.isRequestValidationEnabled());
-        assertTrue(specification.getRequestValidator().isPresent());
-        assertTrue(specification.getRequestValidator().get().isEnabled());
+        assertTrue(specification.isApiRequestValidationEnabled());
+        assertTrue(specification.getSwaggerOpenApiValidationContext().isRequestValidationEnabled());
 
     }
 
@@ -288,20 +286,19 @@ public class OpenApiSpecificationTest {
         OpenApiSpecification specification = OpenApiSpecification.from(new ClasspathResource("classpath:org/citrusframework/openapi/ping/ping-api.yaml"));
 
         // When
-        specification.setResponseValidationEnabled(false);
+        specification.setApiResponseValidationEnabled(false);
 
         // Then
-        assertFalse(specification.isResponseValidationEnabled());
-        assertTrue(specification.getResponseValidator().isPresent());
-        assertFalse(specification.getResponseValidator().get().isEnabled());
+        assertFalse(specification.isApiResponseValidationEnabled());
+        assertNotNull(specification.getSwaggerOpenApiValidationContext());
+        assertFalse(specification.getSwaggerOpenApiValidationContext().isResponseValidationEnabled());
 
         // When
-        specification.setResponseValidationEnabled(true);
+        specification.setApiResponseValidationEnabled(true);
 
         // Then
-        assertTrue(specification.isResponseValidationEnabled());
-        assertTrue(specification.getResponseValidator().isPresent());
-        assertTrue(specification.getResponseValidator().get().isEnabled());
+        assertTrue(specification.isApiResponseValidationEnabled());
+        assertTrue(specification.getSwaggerOpenApiValidationContext().isResponseValidationEnabled());
 
     }
 

@@ -84,24 +84,33 @@ paths:
             responses:
                 200:
                     description: successful operation without a response
+    /pung/{id}:
+        get:
+            tags:
+                - pong
+            summary: Do the pung
+            operationId: doPung
+            parameters:
+                -   name: id
+                    in: path
+                    description: Id to pung
+                    required: true
+                    explode: true
+                    schema:
+                        type: integer
+                        format: int64
+            responses:
+                200:
+                    description: successful pung operation with all types
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StringsType'
+                        plain/text:
+                            schema:
+                                type: string
 components:
     schemas:
-        Ipv6Type:
-            required:
-                - ipv6
-            type: object
-            properties:
-                ipv6:
-                    type: string
-                    format: ipv6
-        Ipv4Type:
-            required:
-                - ipv4
-            type: object
-            properties:
-                ipv4:
-                    type: string
-                    format: ipv4
         DateType:
             required:
                 - date
@@ -118,98 +127,207 @@ components:
                 dateTime:
                     type: string
                     format: date-time
-        EmailType:
-            required:
-                - email
+        AllOfType:
+            allOf:
+                - $ref: '#/components/schemas/NumbersType'
+                - $ref: '#/components/schemas/StringsType'
+                - $ref: '#/components/schemas/MultipleOfType'
+                - $ref: '#/components/schemas/DatesType'
+            discriminator:
+                propertyName: type
+                mapping:
+                    NumbersType: '#/components/schemas/NumbersType'
+                    StringsType: '#/components/schemas/StringsType'
+                    MultipleOfType: '#/components/schemas/MultipleOfType'
+                    DatesType: '#/components/schemas/DatesType'
+        AnyOfType:
+            anyOf:
+                - $ref: '#/components/schemas/NumbersType'
+                - $ref: '#/components/schemas/StringsType'
+                - $ref: '#/components/schemas/MultipleOfType'
+                - $ref: '#/components/schemas/DatesType'
+            discriminator:
+                propertyName: type
+                mapping:
+                    NumbersType: '#/components/schemas/NumbersType'
+                    StringsType: '#/components/schemas/StringsType'
+                    MultipleOfType: '#/components/schemas/MultipleOfType'
+                    DatesType: '#/components/schemas/DatesType'
+        OneOfType:
+            oneOf:
+                - $ref: '#/components/schemas/NumbersType'
+                - $ref: '#/components/schemas/StringsType'
+                - $ref: '#/components/schemas/MultipleOfType'
+                - $ref: '#/components/schemas/DatesType'
+            discriminator:
+                propertyName: type
+                mapping:
+                    NumbersType: '#/components/schemas/NumbersType'
+                    StringsType: '#/components/schemas/StringsType'
+                    MultipleOfType: '#/components/schemas/MultipleOfType'
+                    DatesType: '#/components/schemas/DatesType'
+        MultipleOfType:
             type: object
-            properties:
-                email:
-                    type: string
-                    format: email
-        ByteType:
             required:
-                - byte
+                - type
+                - manyPi
+                - even
+            properties:
+                type:
+                    type: string
+                    enum: [ MultiplesType ]
+                manyPi:
+                    type: number
+                    format: double
+                    multipleOf: 3.14159
+                    minimum: 0
+                    maximum: 31459
+                even:
+                    type: integer
+                    format: int32
+                    multipleOf: 2
+                    minimum: -2000
+                    maximum: 2000
+        StringsType:
             type: object
-            properties:
-                byte:
-                    type: string
-                    format: byte
-        BinaryType:
             required:
-                - binary
+                - type
+            properties:
+                type:
+                    type: string
+                    enum: [ StringsType ]
+                smallString:
+                    type: string
+                    minLength: 0
+                    maxLength: 10
+                mediumString:
+                    type: string
+                    minLength: 0
+                    maxLength: 256
+                largeString:
+                    type: string
+                    minLength: 0
+                    maxLength: 1024
+                nonEmptyString:
+                    type: string
+                    minLength: 256
+                    maxLength: 512
+        NumbersType:
             type: object
-            properties:
-                binary:
-                    type: string
-                    format: binary
-        UriType:
             required:
-                - uri
-            type: object
+                - type
+                - integerInt32
+                - integerInt64
+                - numberFloat
+                - numberDouble
+                - positiveIntegerInt32
+                - negativeIntegerInt64
+                - positiveNumberFloat
+                - negativeNumberDouble
+                - betweenIntegerInt32
+                - betweenIntegerInt64
+                - betweenNumberFloat
+                - betweenNumberDouble
+                - betweenIntegerInt32Exclude
+                - betweenIntegerInt64Exclude
+                - betweenNumberFloatExclude
+                - betweenNumberDoubleExclude
             properties:
-                uri:
+                type:
                     type: string
-                    format: uri
-        UriReferenceType:
+                    enum: [ NumbersType ]
+                integerInt32:
+                    type: integer
+                    format: int32
+                integerInt64:
+                    type: integer
+                    format: int64
+                numberFloat:
+                    type: number
+                    format: float
+                numberDouble:
+                    type: number
+                    format: double
+                positiveIntegerInt32:
+                    type: integer
+                    format: int32
+                    minimum: 0
+                negativeIntegerInt64:
+                    type: integer
+                    format: int64
+                    maximum: 0
+                positiveNumberFloat:
+                    type: number
+                    format: float
+                    minimum: 0
+                negativeNumberDouble:
+                    type: number
+                    format: double
+                    maximum: 0
+                betweenIntegerInt32:
+                    type: integer
+                    format: int32
+                    minimum: 2
+                    maximum: 8
+                betweenIntegerInt64:
+                    type: integer
+                    format: int64
+                    minimum: 2
+                    maximum: 3
+                betweenNumberFloat:
+                    type: number
+                    format: float
+                    minimum: 2
+                    maximum: 3
+                betweenNumberDouble:
+                    type: number
+                    format: double
+                    minimum: 2
+                    maximum: 3
+                betweenIntegerInt32Exclude:
+                    type: integer
+                    format: int32
+                    minimum: 2
+                    maximum: 4
+                    exclusiveMinimum: true
+                    exclusiveMaximum: true
+                betweenIntegerInt64Exclude:
+                    type: integer
+                    format: int64
+                    minimum: 2
+                    maximum: 4
+                    exclusiveMinimum: true
+                    exclusiveMaximum: true
+                betweenNumberFloatExclude:
+                    type: number
+                    format: float
+                    minimum: 2
+                    maximum: 4
+                    exclusiveMinimum: true
+                    exclusiveMaximum: true
+                betweenNumberDoubleExclude:
+                    type: number
+                    format: double
+                    minimum: 2
+                    maximum: 4
+                    exclusiveMinimum: true
+                    exclusiveMaximum: true
+        DatesType:
             required:
-                - uriReference
-            type: object
-            properties:
-                uriReference:
-                    type: string
-                    format: uri-refence
-        HostnameType:
-            required:
-                - hostname
-            type: object
-            properties:
-                hostname:
-                    type: string
-                    format: hostname
-        AllTypes:
-            required:
-                - email
-                - ipv6
-                - ipv4
+                - type
                 - date
                 - dateTime
-                - binary
-                - byte
-                - uri
-                - uriReference
-                - hostname
             type: object
             properties:
-                ipv6:
+                type:
                     type: string
-                    format: ipv6
-                ipv4:
-                    type: string
-                    format: ipv4
+                    enum: [ DatesType ]
                 date:
                     type: string
                     format: date
                 dateTime:
                     type: string
                     format: date-time
-                email:
-                    type: string
-                    format: email
-                binary:
-                    type: string
-                    format: binary
-                byte:
-                    type: string
-                    format: byte
-                uri:
-                    type: string
-                    format: uri
-                uriReference:
-                    type: string
-                    format: uri-reference
-                hostname:
-                    type: string
-                    format: hostname
         PingReqType:
             type: object
             properties:
@@ -218,21 +336,34 @@ components:
                     format: int64
         Detail1:
             type: object
+            required:
+                - type
             properties:
-                host:
-                    $ref: '#/components/schemas/HostnameType'
-                uri:
-                    $ref: '#/components/schemas/UriType'
+                type:
+                    type: string
+                    enum: [ Detail1Type ]
+                allTypes:
+                    $ref: '#/components/schemas/NumbersType'
         Detail2:
             type: object
+            required:
+                - type
             properties:
-                ipv4:
-                    $ref: '#/components/schemas/Ipv4Type'
-                uriReference:
-                    $ref: '#/components/schemas/UriReferenceType'
+                type:
+                    type: string
+                    enum: [ Detail2Type ]
+                allString:
+                    $ref: '#/components/schemas/StringsType'
+                allDates:
+                    $ref: '#/components/schemas/DatesType'
         PingRespType:
             type: object
+            required:
+                - type
             properties:
+                type:
+                    type: string
+                    enum: [ PingRespType ]
                 id:
                     type: integer
                     format: int64
@@ -242,3 +373,95 @@ components:
                     anyOf:
                         -   $ref: '#/components/schemas/Detail1'
                         -   $ref: '#/components/schemas/Detail2'
+            discriminator:
+                propertyName: type
+                mapping:
+                    Detail1Type: '#/components/schemas/Detail1'
+                    Detail2Type: '#/components/schemas/Detail2'
+        BooleanType:
+            type: object
+            required:
+                - isActive
+                - isVerified
+            properties:
+                isActive:
+                    type: boolean
+                isVerified:
+                    type: boolean
+        EnumType:
+            type: object
+            required:
+                - status
+            properties:
+                status:
+                    type: string
+                    enum:
+                        - ACTIVE
+                        - INACTIVE
+                        - PENDING
+        NestedType:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                details:
+                    $ref: '#/components/schemas/Detail1'
+        SimpleArrayType:
+            type: object
+            properties:
+                stringItems:
+                    type: array
+                    items:
+                        type: string
+                        minLength: 2
+                        maxLength: 5
+                    minItems: 10
+                    maxItems: 20
+                numberItems:
+                    type: array
+                    items:
+                        type: integer
+                    minItems: 10
+                    maxItems: 20
+                booleanItems:
+                    type: array
+                    items:
+                        type: boolean
+                dateItems:
+                    type: array
+                    items:
+                        type: string
+                        format: date
+        ComplexArrayType:
+            type: object
+            properties:
+                stringItems:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/StringsType'
+                numberItems:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/NumbersType'
+        ArrayOfArraysType:
+            type: object
+            properties:
+                matrix:
+                    type: array
+                    items:
+                        type: array
+                        items:
+                            type: integer
+        NullableType:
+            type: object
+            properties:
+                nullableString:
+                    type: string
+                    nullable: true
+        DefaultValueType:
+            type: object
+            properties:
+                defaultValue:
+                    type: string
+                    default: "defaultValue"

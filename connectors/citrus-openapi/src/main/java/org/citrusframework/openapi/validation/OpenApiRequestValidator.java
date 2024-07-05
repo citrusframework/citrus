@@ -16,19 +16,17 @@
 
 package org.citrusframework.openapi.validation;
 
-import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.Request;
 import com.atlassian.oai.validator.model.SimpleRequest;
 import com.atlassian.oai.validator.report.ValidationReport;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageHeaders;
+import org.citrusframework.http.message.HttpMessageUtils;
+import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEnabledlobally;
 
 /**
  * Specific validator that uses atlassian and is responsible for validating HTTP requests
@@ -36,8 +34,9 @@ import static org.citrusframework.openapi.OpenApiSettings.isRequestValidationEna
  */
 public class OpenApiRequestValidator extends OpenApiValidator {
 
-    public OpenApiRequestValidator(OpenApiInteractionValidator openApiInteractionValidator) {
-        super(openApiInteractionValidator, isRequestValidationEnabledlobally());
+    public OpenApiRequestValidator(OpenApiSpecification openApiSpecification) {
+        super(openApiSpecification);
+        setEnabled(openApiSpecification.getSwaggerOpenApiValidationContext() != null && openApiSpecification.getSwaggerOpenApiValidationContext().isRequestValidationEnabled());
     }
 
     @Override
@@ -79,7 +78,7 @@ public class OpenApiRequestValidator extends OpenApiValidator {
         SimpleRequest.Builder finalRequestBuilder = requestBuilder;
         finalRequestBuilder.withAccept(httpMessage.getAccept());
 
-        httpMessage.getQueryParams()
+        HttpMessageUtils.getQueryParameterMap(httpMessage)
             .forEach((key, value) -> finalRequestBuilder.withQueryParam(key, new ArrayList<>(
                 value)));
 

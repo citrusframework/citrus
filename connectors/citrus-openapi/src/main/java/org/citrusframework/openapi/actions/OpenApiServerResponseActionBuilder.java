@@ -16,11 +16,29 @@
 
 package org.citrusframework.openapi.actions;
 
+import static java.lang.Integer.parseInt;
+import static java.util.Collections.singletonMap;
+import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
+import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpServerResponseActionBuilder;
@@ -37,30 +55,18 @@ import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiResponseValidationProcessor;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-
-import static java.lang.Integer.parseInt;
-import static java.util.Collections.singletonMap;
-import static org.citrusframework.openapi.OpenApiTestDataGenerator.createOutboundPayload;
-import static org.citrusframework.openapi.OpenApiTestDataGenerator.createRandomValueExpression;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
-
 /**
  * @since 4.1
  */
 public class OpenApiServerResponseActionBuilder extends HttpServerResponseActionBuilder {
 
-    private final OpenApiResponseValidationProcessor openApiResponseValidationProcessor;
+    private OpenApiResponseValidationProcessor openApiResponseValidationProcessor;
+
+    private final OpenApiSpecification openApiSpec;
+
+    private final String operationId;
+
+    private boolean oasValidationEnabled = true;
 
     /**
      * Default constructor initializes http response message builder.
@@ -75,16 +81,23 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         String operationId, String statusCode, String accept) {
         super(new OpenApiServerResponseMessageBuilder(httpMessage, openApiSpec, operationId,
             statusCode, accept), httpMessage);
-
-        openApiResponseValidationProcessor = new OpenApiResponseValidationProcessor(openApiSpec,
-            operationId);
-        process(openApiResponseValidationProcessor);
+        this.openApiSpec = openApiSpec;
+        this.operationId = operationId;
     }
 
-    public OpenApiServerResponseActionBuilder disableOasValidation(boolean b) {
-        if (openApiResponseValidationProcessor != null) {
-            openApiResponseValidationProcessor.setEnabled(!b);
+    @Override
+    public SendMessageAction doBuild() {
+
+        if (oasValidationEnabled && !messageProcessors.contains(openApiResponseValidationProcessor)) {
+            openApiResponseValidationProcessor = new OpenApiResponseValidationProcessor(openApiSpec, operationId);
+            process(openApiResponseValidationProcessor);
         }
+
+        return super.doBuild();
+    }
+
+    public OpenApiServerResponseActionBuilder disableOasValidation(boolean disable) {
+        oasValidationEnabled = !disable;
         return this;
     }
 
