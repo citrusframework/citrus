@@ -1,26 +1,44 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.citrusframework.openapi.validation;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertNotNull;
+
+import java.util.Optional;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class OpenApiRequestValidationProcessorTest {
 
@@ -28,12 +46,8 @@ public class OpenApiRequestValidationProcessorTest {
     private OpenApiSpecification openApiSpecificationMock;
 
     @Mock
-    private OpenApiRequestValidator requestValidatorMock;
-
-    @Mock
     private OperationPathAdapter operationPathAdapterMock;
 
-    @InjectMocks
     private OpenApiRequestValidationProcessor processor;
 
     private AutoCloseable mockCloseable;
@@ -50,70 +64,60 @@ public class OpenApiRequestValidationProcessorTest {
     }
 
     @Test
-    public void shouldNotValidateWhenDisabled() {
-        processor.setEnabled(false);
-        HttpMessage messageMock = mock();
-
-        processor.validate(messageMock, mock());
-
-        verify(openApiSpecificationMock, never()).getOperation(any(), any());
-    }
-
-    @Test
     public void shouldNotValidateNonHttpMessage() {
         Message messageMock = mock();
 
         processor.validate(messageMock, mock());
 
-        verify(openApiSpecificationMock, never()).getOperation(any(), any());
+        verify(openApiSpecificationMock,times(2)).getSwaggerOpenApiValidationContext();
+        verifyNoMoreInteractions(openApiSpecificationMock);
     }
 
     @Test
     public void shouldValidateHttpMessage() {
-        processor.setEnabled(true);
         HttpMessage httpMessageMock = mock();
         TestContext contextMock = mock();
 
+        OpenApiRequestValidator openApiRequestValidatorSpy = replaceValidatorWithSpy(httpMessageMock);
+
         when(openApiSpecificationMock.getOperation(anyString(), any(TestContext.class)))
             .thenReturn(Optional.of(operationPathAdapterMock));
-        when(openApiSpecificationMock.getRequestValidator())
-            .thenReturn(Optional.of(requestValidatorMock));
 
         processor.validate(httpMessageMock, contextMock);
 
-        verify(requestValidatorMock, times(1)).validateRequest(operationPathAdapterMock, httpMessageMock);
+        verify(openApiRequestValidatorSpy, times(1)).validateRequest(operationPathAdapterMock, httpMessageMock);
     }
 
     @Test
-    public void shouldNotValidateWhenNoOperation() {
-        processor.setEnabled(true);
-        HttpMessage httpMessage = mock(HttpMessage.class);
-        TestContext context = mock(TestContext.class);
+    public void shouldCallValidateRequest() {
+        HttpMessage httpMessageMock = mock();
+        TestContext contextMock = mock();
+
+        OpenApiRequestValidator openApiRequestValidatorSpy = replaceValidatorWithSpy(httpMessageMock);
 
         when(openApiSpecificationMock.getOperation(anyString(), any(TestContext.class)))
             .thenReturn(Optional.empty());
 
-        processor.validate(httpMessage, context);
+        processor.validate(httpMessageMock, contextMock);
 
-        verify(openApiSpecificationMock, times(1)).getOperation(anyString(), any(TestContext.class));
-        verify(openApiSpecificationMock, never()).getRequestValidator();
+        verify(openApiSpecificationMock, times(1)).getOperation(anyString(),
+            any(TestContext.class));
+        verify(openApiRequestValidatorSpy, times(0)).validateRequest(operationPathAdapterMock, httpMessageMock);
     }
 
-    @Test
-    public void shouldNotValidateWhenNoValidator() {
-        processor.setEnabled(true);
-        HttpMessage httpMessage = mock(HttpMessage.class);
-        TestContext context = mock(TestContext.class);
+    private OpenApiRequestValidator replaceValidatorWithSpy(HttpMessage httpMessage) {
+        OpenApiRequestValidator openApiRequestValidator = (OpenApiRequestValidator) ReflectionTestUtils.getField(
+            processor,
+            "openApiRequestValidator");
 
-        when(openApiSpecificationMock.getOperation(anyString(), any(TestContext.class)))
-            .thenReturn(Optional.of(operationPathAdapterMock));
-        when(openApiSpecificationMock.getRequestValidator())
-            .thenReturn(Optional.empty());
+        assertNotNull(openApiRequestValidator);
+        OpenApiRequestValidator openApiRequestValidatorSpy = spy(openApiRequestValidator);
+        ReflectionTestUtils.setField(processor, "openApiRequestValidator", openApiRequestValidatorSpy);
 
-        processor.validate(httpMessage, context);
+        doAnswer((invocation) -> null
+            // do nothing
+        ).when(openApiRequestValidatorSpy).validateRequest(operationPathAdapterMock, httpMessage);
 
-        verify(openApiSpecificationMock, times(1)).getOperation(anyString(), any(TestContext.class));
-        verify(openApiSpecificationMock, times(1)).getRequestValidator();
-        verify(requestValidatorMock, never()).validateRequest(any(), any());
+        return openApiRequestValidatorSpy;
     }
 }
