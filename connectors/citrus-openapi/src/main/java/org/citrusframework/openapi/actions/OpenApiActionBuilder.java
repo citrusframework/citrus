@@ -17,6 +17,7 @@
 package org.citrusframework.openapi.actions;
 
 import jakarta.annotation.Nullable;
+import java.net.URL;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
@@ -26,8 +27,6 @@ import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
-
-import java.net.URL;
 
 /**
  * Action executes client and server operations using given OpenApi specification.
