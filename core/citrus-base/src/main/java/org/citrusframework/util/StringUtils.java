@@ -61,4 +61,31 @@ public class StringUtils {
 
         return path + segment;
     }
+
+    public static String quote(String text, boolean quote) {
+        return quote ? String.format("\"%s\"", text) : text;
+    }
+
+    /**
+     * Trims trailing whitespace characters and the first trailing comma from the end of the given StringBuilder.
+     *
+     * This method removes all trailing whitespace characters (such as spaces, tabs, and newline characters)
+     * and the first trailing comma found from the end of the content in the provided StringBuilder.
+     * Any additional commas or whitespace characters after the first trailing comma are not removed.
+     *
+     * @param builder the StringBuilder whose trailing whitespace characters and first comma are to be removed
+     */
+    public static void trimTrailingComma(StringBuilder builder) {
+        int length = builder.length();
+        while (length > 0 && (builder.charAt(length - 1) == ',' || Character.isWhitespace(builder.charAt(length - 1)))) {
+            char c = builder.charAt(length - 1);
+            builder.deleteCharAt(length - 1);
+
+            if (c == ',') {
+                return;
+            }
+
+            length = builder.length();
+        }
+    }
 }
