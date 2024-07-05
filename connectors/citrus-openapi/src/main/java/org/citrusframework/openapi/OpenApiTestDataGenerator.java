@@ -17,72 +17,125 @@
 package org.citrusframework.openapi;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import jakarta.annotation.Nullable;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.openapi.model.OasModelHelper;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.citrusframework.openapi.util.OpenApiUtils;
+import org.citrusframework.openapi.util.RandomModelBuilder;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
+import static org.citrusframework.openapi.OpenApiConstants.TYPE_INTEGER;
+import static org.citrusframework.util.StringUtils.hasText;
+import static org.citrusframework.util.StringUtils.quote;
+import static org.springframework.util.CollectionUtils.isEmpty;
+
 /**
- * Generates proper payloads and validation expressions based on Open API specification rules. Creates outbound payloads
- * with generated random test data according to specification and creates inbound payloads with proper validation expressions to
- * enforce the specification rules.
- *
+ * Generates proper payloads and validation expressions based on Open API specification rules.
  */
-public class OpenApiTestDataGenerator {
+public abstract class OpenApiTestDataGenerator {
+
+    public static final BigDecimal THOUSAND = new BigDecimal(1000);
+    public static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+    public static final BigDecimal MINUS_THOUSAND = new BigDecimal(-1000);
+
+    private OpenApiTestDataGenerator() {
+        // Static access only
+    }
+
+    private static final Map<String, String> SPECIAL_FORMATS = Map.of(
+        "email", "[a-z]{5,15}\\.?[a-z]{5,15}\\@[a-z]{5,15}\\.[a-z]{2}",
+        "uri",
+        "((http|https)://[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+(/[a-zA-Z0-9-]+){1,6})|(file:///[a-zA-Z0-9-]+(/[a-zA-Z0-9-]+){1,6})",
+        "hostname",
+        "(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])",
+        "ipv4",
+        "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)",
+        "ipv6",
+        "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))");
+
+    /**
+     * Creates payload from schema for outbound message.
+     */
+    public static String createOutboundPayload(OasSchema schema,
+        OpenApiSpecification specification) {
+        return createOutboundPayload(schema,
+            OasModelHelper.getSchemaDefinitions(specification.getOpenApiDoc(null)), specification);
+    }
 
     /**
      * Creates payload from schema for outbound message.
      */
     public static String createOutboundPayload(OasSchema schema, Map<String, OasSchema> definitions,
-                                               OpenApiSpecification specification) {
+        OpenApiSpecification specification) {
+        return createOutboundPayload(schema, definitions, specification, new HashSet<>());
+    }
+
+    /**
+     * Creates payload from schema for outbound message.
+     */
+    private static String createOutboundPayload(OasSchema schema,
+        Map<String, OasSchema> definitions,
+        OpenApiSpecification specification, Set<OasSchema> visitedRefSchemas) {
+        RandomModelBuilder randomModelBuilder = new RandomModelBuilder();
+        createOutboundPayloadAsMap(randomModelBuilder, schema, definitions, specification,
+            visitedRefSchemas);
+        return randomModelBuilder.toString();
+    }
+
+    private static void createOutboundPayloadAsMap(RandomModelBuilder randomModelBuilder,
+        OasSchema schema,
+        Map<String, OasSchema> definitions,
+        OpenApiSpecification specification, Set<OasSchema> visitedRefSchemas) {
+
+        if (hasText(schema.$ref) && visitedRefSchemas.contains(schema)) {
+            // Avoid recursion
+            return;
+        }
+
         if (OasModelHelper.isReferenceType(schema)) {
             OasSchema resolved = definitions.get(OasModelHelper.getReferenceName(schema.$ref));
-            return createOutboundPayload(resolved, definitions, specification);
+            createOutboundPayloadAsMap(randomModelBuilder, resolved, definitions, specification,
+                visitedRefSchemas);
+            return;
         }
 
-        StringBuilder payload = new StringBuilder();
-        if (OasModelHelper.isObjectType(schema)) {
-            payload.append("{");
-
-            if (schema.properties != null) {
-                for (Map.Entry<String, OasSchema> entry : schema.properties.entrySet()) {
-                    if (specification.isGenerateOptionalFields() || isRequired(schema, entry.getKey())) {
-                        payload.append("\"")
-                                .append(entry.getKey())
-                                .append("\": ")
-                                .append(createRandomValueExpression(entry.getValue(), definitions, true, specification))
-                                .append(",");
-                    }
-                }
-            }
-
-            if (payload.toString().endsWith(",")) {
-                payload.replace(payload.length() - 1, payload.length(), "");
-            }
-
-            payload.append("}");
-        } else if (OasModelHelper.isArrayType(schema)) {
-            payload.append("[");
-            payload.append(createRandomValueExpression((OasSchema) schema.items, definitions, true, specification));
-            payload.append("]");
-        } else {
-            payload.append(createRandomValueExpression(schema, definitions, true, specification));
+        if (OasModelHelper.isCompositeSchema(schema)) {
+            createComposedSchema(randomModelBuilder, schema, true, specification,
+                visitedRefSchemas);
+            return;
         }
 
-        return payload.toString();
+        switch (schema.type) {
+            case OpenApiConstants.TYPE_OBJECT ->
+                createRandomObjectSchemeMap(randomModelBuilder, schema, specification,
+                    visitedRefSchemas);
+            case OpenApiConstants.TYPE_ARRAY ->
+                createRandomArrayValueMap(randomModelBuilder, schema, specification,
+                    visitedRefSchemas);
+            case OpenApiConstants.TYPE_STRING, TYPE_INTEGER, OpenApiConstants.TYPE_NUMBER, OpenApiConstants.TYPE_BOOLEAN ->
+                createRandomValueExpressionMap(randomModelBuilder, schema, true);
+            default -> randomModelBuilder.appendSimple("\"\"");
+        }
     }
 
     /**
      * Use test variable with given name if present or create value from schema with random values
      */
-    public static String createRandomValueExpression(String name, OasSchema schema, Map<String, OasSchema> definitions,
-                                                     boolean quotes, OpenApiSpecification specification, TestContext context) {
+    public static String createRandomValueExpression(String name, OasSchema schema,
+        Map<String, OasSchema> definitions,
+        boolean quotes, OpenApiSpecification specification, TestContext context) {
         if (context.getVariables().containsKey(name)) {
             return CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX;
         }
@@ -90,20 +143,12 @@ public class OpenApiTestDataGenerator {
         return createRandomValueExpression(schema, definitions, quotes, specification);
     }
 
-    public static <T> T createRawRandomValueExpression(String name, OasSchema schema, Map<String, OasSchema> definitions,
-        boolean quotes, OpenApiSpecification specification, TestContext context) {
-        if (context.getVariables().containsKey(name)) {
-            return (T)context.getVariables().get(CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX);
-        }
-
-        return createRawRandomValueExpression(schema, definitions, quotes, specification, context);
-    }
-
     /**
      * Create payload from schema with random values.
      */
-    public static String createRandomValueExpression(OasSchema schema, Map<String, OasSchema> definitions, boolean quotes,
-                                                     OpenApiSpecification specification) {
+    public static String createRandomValueExpression(OasSchema schema,
+        Map<String, OasSchema> definitions, boolean quotes,
+        OpenApiSpecification specification) {
         if (OasModelHelper.isReferenceType(schema)) {
             OasSchema resolved = definitions.get(OasModelHelper.getReferenceName(schema.$ref));
             return createRandomValueExpression(resolved, definitions, quotes, specification);
@@ -112,31 +157,44 @@ public class OpenApiTestDataGenerator {
         StringBuilder payload = new StringBuilder();
         if (OasModelHelper.isObjectType(schema) || OasModelHelper.isArrayType(schema)) {
             payload.append(createOutboundPayload(schema, definitions, specification));
-        } else if ("string".equals(schema.type)) {
+        } else if (OpenApiConstants.TYPE_STRING.equals(schema.type)) {
             if (quotes) {
                 payload.append("\"");
             }
-
-            if (schema.format != null && schema.format.equals("date")) {
+            if (OpenApiConstants.FORMAT_DATE.equals(schema.format)) {
                 payload.append("citrus:currentDate('yyyy-MM-dd')");
-            } else if (schema.format != null && schema.format.equals("date-time")) {
+            } else if (OpenApiConstants.FORMAT_DATE_TIME.equals(schema.format)) {
                 payload.append("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ssZ')");
-            } else if (StringUtils.hasText(schema.pattern)) {
+            } else if (hasText(schema.pattern)) {
                 payload.append("citrus:randomValue(").append(schema.pattern).append(")");
-            } else if (!CollectionUtils.isEmpty(schema.enum_)) {
-                payload.append("citrus:randomEnumValue(").append(schema.enum_.stream().map(value -> "'" + value + "'").collect(Collectors.joining(","))).append(")");
-            } else if (schema.format != null && schema.format.equals("uuid")) {
+            } else if (!isEmpty(schema.enum_)) {
+                payload.append("citrus:randomEnumValue(").append(
+                    schema.enum_.stream().map(value -> "'" + value + "'")
+                        .collect(Collectors.joining(","))).append(")");
+            } else if (OpenApiConstants.FORMAT_UUID.equals(schema.format)) {
                 payload.append("citrus:randomUUID()");
             } else {
-                payload.append("citrus:randomString(").append(schema.maxLength != null && schema.maxLength.intValue() > 0 ? schema.maxLength : (schema.minLength != null && schema.minLength.intValue() > 0 ? schema.minLength : 10)).append(")");
+                if (schema.format != null && SPECIAL_FORMATS.containsValue(schema.format)) {
+                    payload.append("citrus:randomValue('")
+                        .append(SPECIAL_FORMATS.get(schema.format)).append("')");
+                } else {
+                    int length = 10;
+                    if (schema.maxLength != null && schema.maxLength.intValue() > 0) {
+                        length = schema.maxLength.intValue();
+                    } else if (schema.minLength != null && schema.minLength.intValue() > 0) {
+                        length = schema.minLength.intValue();
+                    }
+
+                    payload.append("citrus:randomString(").append(length).append(")");
+                }
             }
 
             if (quotes) {
                 payload.append("\"");
             }
-        } else if ("integer".equals(schema.type) || "number".equals(schema.type)) {
+        } else if (OpenApiUtils.isAnyNumberScheme(schema)) {
             payload.append("citrus:randomNumber(8)");
-        } else if ("boolean".equals(schema.type)) {
+        } else if (OpenApiConstants.TYPE_BOOLEAN.equals(schema.type)) {
             payload.append("citrus:randomEnumValue('true', 'false')");
         } else if (quotes) {
             payload.append("\"\"");
@@ -145,69 +203,33 @@ public class OpenApiTestDataGenerator {
         return payload.toString();
     }
 
-    public static <T> T createRawRandomValueExpression(OasSchema schema, Map<String, OasSchema> definitions, boolean quotes,
+    public static <T> T createRawRandomValueExpression(OasSchema schema,
+        Map<String, OasSchema> definitions, boolean quotes,
         OpenApiSpecification specification, TestContext context) {
         if (OasModelHelper.isReferenceType(schema)) {
             OasSchema resolved = definitions.get(OasModelHelper.getReferenceName(schema.$ref));
-            return createRawRandomValueExpression(resolved, definitions, quotes, specification, context);
+            return createRawRandomValueExpression(resolved, definitions, quotes, specification,
+                context);
         }
 
         StringBuilder payload = new StringBuilder();
-        if ("string".equals(schema.type) || OasModelHelper.isObjectType(schema) || OasModelHelper.isArrayType(schema)) {
-            return (T)createRandomValueExpression(schema, definitions, quotes, specification);
-        } else if ("number".equals(schema.type)) {
-            return (T)Double.valueOf(context.replaceDynamicContentInString("citrus:randomNumber(8,2)"));
+        if (OpenApiConstants.TYPE_STRING.equals(schema.type) || OasModelHelper.isObjectType(schema)
+            || OasModelHelper.isArrayType(schema)) {
+            return (T) createRandomValueExpression(schema, definitions, quotes, specification);
+        } else if (OpenApiConstants.TYPE_NUMBER.equals(schema.type)) {
+            return (T) Double.valueOf(
+                context.replaceDynamicContentInString("citrus:randomNumber(8,2)"));
         } else if ("integer".equals(schema.type)) {
-            return (T)Double.valueOf(context.replaceDynamicContentInString("citrus:randomNumber(8)"));
+            return (T) Double.valueOf(
+                context.replaceDynamicContentInString("citrus:randomNumber(8)"));
         } else if ("boolean".equals(schema.type)) {
-            return (T)Boolean.valueOf(context.replaceDynamicContentInString("citrus:randomEnumValue('true', 'false')"));
+            return (T) Boolean.valueOf(
+                context.replaceDynamicContentInString("citrus:randomEnumValue('true', 'false')"));
         } else if (quotes) {
             payload.append("\"\"");
         }
 
-        return (T)payload.toString();
-    }
-
-    /**
-     * Creates control payload from schema for validation.
-     */
-    public static String createInboundPayload(OasSchema schema, Map<String, OasSchema> definitions,
-                                              OpenApiSpecification specification) {
-        if (OasModelHelper.isReferenceType(schema)) {
-            OasSchema resolved = definitions.get(OasModelHelper.getReferenceName(schema.$ref));
-            return createInboundPayload(resolved, definitions, specification);
-        }
-
-        StringBuilder payload = new StringBuilder();
-        if (OasModelHelper.isObjectType(schema)) {
-            payload.append("{");
-
-            if (schema.properties != null) {
-                for (Map.Entry<String, OasSchema> entry : schema.properties.entrySet()) {
-                    if (specification.isValidateOptionalFields() || isRequired(schema, entry.getKey())) {
-                        payload.append("\"")
-                                .append(entry.getKey())
-                                .append("\": ")
-                                .append(createValidationExpression(entry.getValue(), definitions, true, specification))
-                                .append(",");
-                    }
-                }
-            }
-
-            if (payload.toString().endsWith(",")) {
-                payload.replace(payload.length() - 1, payload.length(), "");
-            }
-
-            payload.append("}");
-        } else if (OasModelHelper.isArrayType(schema)) {
-            payload.append("[");
-            payload.append(createValidationExpression((OasSchema) schema.items, definitions, true, specification));
-            payload.append("]");
-        } else {
-            payload.append(createValidationExpression(schema, definitions, false, specification));
-        }
-
-        return payload.toString();
+        return (T) payload.toString();
     }
 
     /**
@@ -222,182 +244,403 @@ public class OpenApiTestDataGenerator {
     }
 
     /**
-     * Use test variable with given name if present or create validation expression using functions according to schema type and format.
+     * Use test variable with given name (if present) or create random value expression using
+     * functions according to schema type and format.
      */
-    public static String createValidationExpression(String name, OasSchema schema, Map<String, OasSchema> definitions,
-                                                    boolean quotes, OpenApiSpecification specification,
-                                                    TestContext context) {
+    public static String createRandomValueExpression(String name, OasSchema schema,
+        TestContext context) {
         if (context.getVariables().containsKey(name)) {
             return CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX;
         }
 
-        return createValidationExpression(schema, definitions, quotes, specification);
+        RandomModelBuilder randomModelBuilder = new RandomModelBuilder();
+        createRandomValueExpressionMap(randomModelBuilder, schema, false);
+        return randomModelBuilder.toString();
     }
 
-    /**
-     * Create validation expression using functions according to schema type and format.
-     */
-    public static String createValidationExpression(OasSchema schema, Map<String, OasSchema> definitions, boolean quotes,
-                                                    OpenApiSpecification specification) {
-        if (OasModelHelper.isReferenceType(schema)) {
-            OasSchema resolved = definitions.get(OasModelHelper.getReferenceName(schema.$ref));
-            return createValidationExpression(resolved, definitions, quotes, specification);
-        }
-
-        StringBuilder payload = new StringBuilder();
-        if (OasModelHelper.isObjectType(schema)) {
-            payload.append("{");
-
-            if (schema.properties != null) {
-                for (Map.Entry<String, OasSchema> entry : schema.properties.entrySet()) {
-                    if (specification.isValidateOptionalFields() || isRequired(schema, entry.getKey())) {
-                        payload.append("\"")
-                                .append(entry.getKey())
-                                .append("\": ")
-                                .append(createValidationExpression(entry.getValue(), definitions, quotes, specification))
-                                .append(",");
-                    }
-                }
-            }
-
-            if (payload.toString().endsWith(",")) {
-                payload.replace(payload.length() - 1, payload.length(), "");
-            }
-
-            payload.append("}");
-        } else {
-            if (quotes) {
-                payload.append("\"");
-            }
-
-            payload.append(createValidationExpression(schema));
-
-            if (quotes) {
-                payload.append("\"");
-            }
-        }
-
-        return payload.toString();
-    }
-
-    /**
-     * Create validation expression using functions according to schema type and format.
-     */
-    private static String createValidationExpression(OasSchema schema) {
-
-        if (OasModelHelper.isCompositeSchema(schema)) {
-            /*
-             * Currently these schemas are not supported by validation expressions. They are supported
-             * by {@link org.citrusframework.openapi.validation.OpenApiValidator} though.
-             */
-            return "@ignore@";
-        }
-
-        switch (schema.type) {
-            case "string":
-                if (schema.format != null && schema.format.equals("date")) {
-                    return "@matchesDatePattern('yyyy-MM-dd')@";
-                } else if (schema.format != null && schema.format.equals("date-time")) {
-                    return "@matchesDatePattern('yyyy-MM-dd'T'hh:mm:ssZ')@";
-                } else if (StringUtils.hasText(schema.pattern)) {
-                    return String.format("@matches(%s)@", schema.pattern);
-                } else if (!CollectionUtils.isEmpty(schema.enum_)) {
-                    return String.format("@matches(%s)@", String.join("|", schema.enum_));
-                } else {
-                    return "@notEmpty()@";
-                }
-            case "number":
-            case "integer":
-                return "@isNumber()@";
-            case "boolean":
-                return "@matches(true|false)@";
-            default:
-                return "@ignore@";
-        }
-    }
-
-    /**
-     * Use test variable with given name (if present) or create random value expression using functions according to
-     * schema type and format.
-     */
-    public static String createRandomValueExpression(String name, OasSchema schema, TestContext context) {
-        if (context.getVariables().containsKey(name)) {
-            return CitrusSettings.VARIABLE_PREFIX + name + CitrusSettings.VARIABLE_SUFFIX;
-        }
-
-        return createRandomValueExpression(schema);
+    public static String createRandomValueExpression(OasSchema schema, boolean quotes) {
+        RandomModelBuilder randomModelBuilder = new RandomModelBuilder();
+        createRandomValueExpressionMap(randomModelBuilder, schema, quotes);
+        return randomModelBuilder.toString();
     }
 
     /**
      * Create random value expression using functions according to schema type and format.
      */
-    public static String createRandomValueExpression(OasSchema schema) {
+    private static void createRandomValueExpressionMap(RandomModelBuilder randomModelBuilder,
+        OasSchema schema, boolean quotes) {
+
         switch (schema.type) {
-            case "string":
-                if (schema.format != null && schema.format.equals("date")) {
-                    return "\"citrus:currentDate('yyyy-MM-dd')\"";
-                } else if (schema.format != null && schema.format.equals("date-time")) {
-                    return "\"citrus:currentDate('yyyy-MM-dd'T'hh:mm:ssZ')\"";
-                } else if (StringUtils.hasText(schema.pattern)) {
-                    return "\"citrus:randomValue(" + schema.pattern + ")\"";
-                } else if (!CollectionUtils.isEmpty(schema.enum_)) {
-                    return "\"citrus:randomEnumValue(" + (String.join(",", schema.enum_)) + ")\"";
-                } else if (schema.format != null && schema.format.equals("uuid")){
-                    return "citrus:randomUUID()";
+            case OpenApiConstants.TYPE_STRING -> {
+                if (OpenApiConstants.FORMAT_DATE.equals(schema.format)) {
+                    randomModelBuilder.appendSimple(
+                        quote("citrus:currentDate('yyyy-MM-dd')", quotes));
+                } else if (OpenApiConstants.FORMAT_DATE_TIME.equals(schema.format)) {
+                    randomModelBuilder.appendSimple(
+                        quote("citrus:currentDate('yyyy-MM-dd'T'hh:mm:ssZ')", quotes));
+                } else if (hasText(schema.pattern)) {
+                    randomModelBuilder.appendSimple(
+                        quote("citrus:randomValue('" + schema.pattern + "')", quotes));
+                } else if (!isEmpty(schema.enum_)) {
+                    randomModelBuilder.appendSimple(
+                        quote("citrus:randomEnumValue(" + (java.lang.String.join(",", schema.enum_))
+                            + ")", quotes));
+                } else if (OpenApiConstants.FORMAT_UUID.equals(schema.format)) {
+                    randomModelBuilder.appendSimple(quote("citrus:randomUUID()", quotes));
                 } else {
-                    return "citrus:randomString(10)";
+
+                    if (schema.format != null && SPECIAL_FORMATS.containsKey(schema.format)) {
+                        randomModelBuilder.appendSimple(quote(
+                            "citrus:randomValue('" + SPECIAL_FORMATS.get(schema.format) + "')",
+                            quotes));
+                    } else {
+                        long minLength =
+                            schema.minLength != null && schema.minLength.longValue() > 0
+                                ? schema.minLength.longValue() : 10L;
+                        long maxLength =
+                            schema.maxLength != null && schema.maxLength.longValue() > 0
+                                ? schema.maxLength.longValue() : 10L;
+                        long length = ThreadLocalRandom.current()
+                            .nextLong(minLength, maxLength + 1);
+                        randomModelBuilder.appendSimple(
+                            quote("citrus:randomString(%s)".formatted(length), quotes));
+                    }
                 }
-            case "number":
-            case "integer":
-                return "citrus:randomNumber(8)";
-            case "boolean":
-                return "citrus:randomEnumValue('true', 'false')";
-            default:
-                return "";
+            }
+            case OpenApiConstants.TYPE_NUMBER, TYPE_INTEGER ->
+                // No quotes for numbers
+                randomModelBuilder.appendSimple(createRandomNumber(schema));
+            case OpenApiConstants.TYPE_BOOLEAN ->
+                // No quotes for boolean
+                randomModelBuilder.appendSimple("citrus:randomEnumValue('true', 'false')");
+            default -> randomModelBuilder.appendSimple("");
+        }
+    }
+
+    private static String createRandomNumber(OasSchema schema) {
+        Number multipleOf = schema.multipleOf;
+
+        boolean exclusiveMaximum = TRUE.equals(schema.exclusiveMaximum);
+        boolean exclusiveMinimum = TRUE.equals(schema.exclusiveMinimum);
+
+        BigDecimal[] bounds = determineBounds(schema);
+
+        BigDecimal minimum = bounds[0];
+        BigDecimal maximum = bounds[1];
+
+        if (multipleOf != null) {
+            minimum = exclusiveMinimum ? incrementToExclude(minimum) : minimum;
+            maximum = exclusiveMaximum ? decrementToExclude(maximum) : maximum;
+            return createMultipleOf(minimum, maximum, new BigDecimal(multipleOf.toString()));
+        }
+
+        return format(
+            "citrus:randomNumberGenerator('%d', '%s', '%s', '%s', '%s')",
+            determineDecimalPlaces(schema, minimum, maximum),
+            minimum,
+            maximum,
+            exclusiveMinimum,
+            exclusiveMaximum
+        );
+    }
+
+    /**
+     * Determines the number of decimal places to use based on the given schema and minimum/maximum values.
+     * For integer types, it returns 0. For other types, it returns the maximum number of decimal places
+     * found between the minimum and maximum values, with a minimum of 2 decimal places.
+     */
+    private static int determineDecimalPlaces(OasSchema schema, BigDecimal minimum,
+        BigDecimal maximum) {
+        if (TYPE_INTEGER.equals(schema.type)) {
+            return 0;
+        } else {
+            return
+                Math.max(2, Math.max(findLeastSignificantDecimalPlace(minimum),
+                    findLeastSignificantDecimalPlace(maximum)));
         }
     }
 
     /**
-     * Create validation expression using regex according to schema type and format.
+     * Determine some reasonable bounds for a random number
      */
-    public static String createValidationRegex(String name, @Nullable OasSchema oasSchema) {
+    private static BigDecimal[] determineBounds(OasSchema schema) {
+        Number maximum = schema.maximum;
+        Number minimum = schema.minimum;
+        Number multipleOf = schema.multipleOf;
 
-        if (oasSchema != null && (OasModelHelper.isReferenceType(oasSchema) || OasModelHelper.isObjectType(oasSchema))) {
-            throw new CitrusRuntimeException(String.format("Unable to create a validation regex for an reference of object schema '%s'!", name));
+        BigDecimal bdMinimum;
+        BigDecimal bdMaximum;
+        if (minimum == null && maximum == null) {
+            bdMinimum = MINUS_THOUSAND;
+            bdMaximum = THOUSAND;
+        } else if (minimum == null) {
+            // Determine min relative to max
+            bdMaximum = new BigDecimal(maximum.toString());
+
+            if (multipleOf != null) {
+                bdMinimum = bdMaximum.subtract(new BigDecimal(multipleOf.toString()).abs().multiply(
+                    HUNDRED));
+            } else {
+                bdMinimum = bdMaximum.subtract(bdMaximum.multiply(BigDecimal.valueOf(2)).max(
+                    THOUSAND));
+            }
+        } else if (maximum == null) {
+            // Determine max relative to min
+            bdMinimum = new BigDecimal(minimum.toString());
+            if (multipleOf != null) {
+                bdMaximum = bdMinimum.add(new BigDecimal(multipleOf.toString()).abs().multiply(
+                    HUNDRED));
+            } else {
+                bdMaximum = bdMinimum.add(bdMinimum.multiply(BigDecimal.valueOf(2)).max(THOUSAND));
+            }
+        } else {
+            bdMaximum = new BigDecimal(maximum.toString());
+            bdMinimum = new BigDecimal(minimum.toString());
         }
 
-        return createValidationRegex(oasSchema);
+        return new BigDecimal[]{bdMinimum, bdMaximum};
     }
 
-    public static String createValidationRegex(@Nullable OasSchema schema) {
+    /**
+     * Create a random schema value
+     *
+     * @param schema            the type to create
+     * @param visitedRefSchemas the schemas already created during descent, used to avoid recursion
+     */
+    private static void createRandomValue(RandomModelBuilder randomModelBuilder, OasSchema schema,
+        boolean quotes,
+        OpenApiSpecification specification, Set<OasSchema> visitedRefSchemas) {
+        if (hasText(schema.$ref) && visitedRefSchemas.contains(schema)) {
+            // Avoid recursion
+            return;
+        }
 
-        if (schema == null) {
-            return "";
+        if (OasModelHelper.isReferenceType(schema)) {
+            OasSchema resolved = OasModelHelper.getSchemaDefinitions(
+                    specification.getOpenApiDoc(null))
+                .get(OasModelHelper.getReferenceName(schema.$ref));
+            createRandomValue(randomModelBuilder, resolved, quotes, specification,
+                visitedRefSchemas);
+            return;
+        }
+
+        if (OasModelHelper.isCompositeSchema(schema)) {
+            createComposedSchema(randomModelBuilder, schema, quotes, specification,
+                visitedRefSchemas);
+            return;
         }
 
         switch (schema.type) {
-            case "string":
-                if (schema.format != null && schema.format.equals("date")) {
-                    return "\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])";
-                } else if (schema.format != null && schema.format.equals("date-time")) {
-                    return "\\d{4}-\\d{2}-\\d{2}T[01]\\d:[0-5]\\d:[0-5]\\dZ";
-                } else if (StringUtils.hasText(schema.pattern)) {
-                    return schema.pattern;
-                } else if (!CollectionUtils.isEmpty(schema.enum_)) {
-                    return "(" + (String.join("|", schema.enum_)) + ")";
-                } else if (schema.format != null && schema.format.equals("uuid")){
-                    return "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
+            case OpenApiConstants.TYPE_OBJECT ->
+                createRandomObjectSchemeMap(randomModelBuilder, schema, specification,
+                    visitedRefSchemas);
+            case OpenApiConstants.TYPE_ARRAY ->
+                createRandomArrayValueMap(randomModelBuilder, schema, specification,
+                    visitedRefSchemas);
+            case OpenApiConstants.TYPE_STRING, TYPE_INTEGER, OpenApiConstants.TYPE_NUMBER, OpenApiConstants.TYPE_BOOLEAN ->
+                createRandomValueExpressionMap(randomModelBuilder, schema, quotes);
+            default -> {
+                if (quotes) {
+                    randomModelBuilder.appendSimple("\"\"");
                 } else {
-                    return ".*";
+                    randomModelBuilder.appendSimple("");
                 }
-            case "number":
-                return "[0-9]+\\.?[0-9]*";
-            case "integer":
-                return "[0-9]+";
-            case "boolean":
-                return "(true|false)";
-            default:
-                return "";
+            }
         }
+    }
+
+    private static void createRandomObjectSchemeMap(RandomModelBuilder randomModelBuilder,
+        OasSchema objectSchema,
+        OpenApiSpecification specification, Set<OasSchema> visitedRefSchemas) {
+
+        randomModelBuilder.object(() -> {
+            if (objectSchema.properties != null) {
+                for (Map.Entry<String, OasSchema> entry : objectSchema.properties.entrySet()) {
+                    if (specification.isGenerateOptionalFields() || isRequired(objectSchema,
+                        entry.getKey())) {
+                        randomModelBuilder.property(entry.getKey(), () ->
+                            createRandomValue(randomModelBuilder, entry.getValue(), true,
+                                specification,
+                                visitedRefSchemas));
+                    }
+                }
+            }
+        });
+    }
+
+    private static void createComposedSchema(RandomModelBuilder randomModelBuilder,
+        OasSchema schema, boolean quotes,
+        OpenApiSpecification specification, Set<OasSchema> visitedRefSchemas) {
+
+        if (!isEmpty(schema.allOf)) {
+            createAllOff(randomModelBuilder, schema, quotes, specification, visitedRefSchemas);
+        } else if (schema instanceof Oas30Schema oas30Schema && !isEmpty(oas30Schema.anyOf)) {
+            createAnyOf(randomModelBuilder, oas30Schema, quotes, specification, visitedRefSchemas);
+        } else if (schema instanceof Oas30Schema oas30Schema && !isEmpty(oas30Schema.oneOf)) {
+            createOneOf(randomModelBuilder, oas30Schema.oneOf, quotes, specification,
+                visitedRefSchemas);
+        }
+    }
+
+    private static void createOneOf(RandomModelBuilder randomModelBuilder, List<OasSchema> schemas,
+        boolean quotes,
+        OpenApiSpecification specification, Set<OasSchema> visitedRefSchemas) {
+        int schemaIndex = ThreadLocalRandom.current().nextInt(schemas.size());
+        randomModelBuilder.object(() ->
+            createRandomValue(randomModelBuilder, schemas.get(schemaIndex), quotes, specification,
+                visitedRefSchemas));
+    }
+
+    private static void createAnyOf(RandomModelBuilder randomModelBuilder, Oas30Schema schema,
+        boolean quotes,
+        OpenApiSpecification specification, Set<OasSchema> visitedRefSchemas) {
+
+        randomModelBuilder.object(() -> {
+            boolean anyAdded = false;
+            for (OasSchema oneSchema : schema.anyOf) {
+                if (ThreadLocalRandom.current().nextBoolean()) {
+                    createRandomValue(randomModelBuilder, oneSchema, quotes, specification,
+                        visitedRefSchemas);
+                    anyAdded = true;
+                }
+            }
+
+            // Add at least one
+            if (!anyAdded) {
+                createOneOf(randomModelBuilder, schema.anyOf, quotes, specification,
+                    visitedRefSchemas);
+            }
+        });
+    }
+
+    private static Map<String, Object> createAllOff(RandomModelBuilder randomModelBuilder,
+        OasSchema schema, boolean quotes,
+        OpenApiSpecification specification, Set<OasSchema> visitedRefSchemas) {
+        Map<String, Object> allOf = new HashMap<>();
+
+        randomModelBuilder.object(() -> {
+            for (OasSchema oneSchema : schema.allOf) {
+                createRandomValue(randomModelBuilder, oneSchema, quotes, specification,
+                    visitedRefSchemas);
+            }
+        });
+
+        return allOf;
+    }
+
+    private static String createMultipleOf(
+        BigDecimal minimum,
+        BigDecimal maximum,
+        BigDecimal multipleOf
+    ) {
+
+        BigDecimal lowestMultiple = lowestMultipleOf(minimum, multipleOf);
+        BigDecimal largestMultiple = largestMultipleOf(maximum, multipleOf);
+
+        // Check if there are no valid multiples in the range
+        if (lowestMultiple.compareTo(largestMultiple) > 0) {
+            return null;
+        }
+
+        BigDecimal range = largestMultiple.subtract(lowestMultiple)
+            .divide(multipleOf, RoundingMode.DOWN);
+
+        // Don't go for incredible large numbers
+        if (range.compareTo(BigDecimal.valueOf(11)) > 0) {
+            range = BigDecimal.valueOf(10);
+        }
+
+        long factor = 0;
+        if (range.compareTo(BigDecimal.ZERO) != 0) {
+            factor = ThreadLocalRandom.current().nextLong(1, range.longValue() + 1);
+        }
+        BigDecimal randomMultiple = lowestMultiple.add(
+            multipleOf.multiply(BigDecimal.valueOf(factor)));
+        randomMultiple = randomMultiple.setScale(findLeastSignificantDecimalPlace(multipleOf),
+            RoundingMode.HALF_UP);
+
+        return randomMultiple.toString();
+    }
+
+    /**
+     * Create a random array value.
+     *
+     * @param schema            the type to create
+     * @param visitedRefSchemas the schemas already created during descent, used to avoid recursion
+     */
+    @SuppressWarnings("rawtypes")
+    private static void createRandomArrayValueMap(RandomModelBuilder randomModelBuilder,
+        OasSchema schema,
+        OpenApiSpecification specification, Set<OasSchema> visitedRefSchemas) {
+        Object items = schema.items;
+
+        if (items instanceof OasSchema itemsSchema) {
+            createRandomArrayValueWithSchemaItem(randomModelBuilder, schema, itemsSchema,
+                specification,
+                visitedRefSchemas);
+        } else {
+            throw new UnsupportedOperationException(
+                "Random array creation for an array with items having different schema is currently not supported!");
+        }
+    }
+
+    private static void createRandomArrayValueWithSchemaItem(RandomModelBuilder randomModelBuilder,
+        OasSchema schema,
+        OasSchema itemsSchema, OpenApiSpecification specification,
+        Set<OasSchema> visitedRefSchemas) {
+        Number minItems = schema.minItems;
+        minItems = minItems != null ? minItems : 1;
+        Number maxItems = schema.maxItems;
+        maxItems = maxItems != null ? maxItems : 9;
+
+        int nItems = ThreadLocalRandom.current()
+            .nextInt(minItems.intValue(), maxItems.intValue() + 1);
+
+        randomModelBuilder.array(() -> {
+            for (int i = 0; i < nItems; i++) {
+                createRandomValue(randomModelBuilder, itemsSchema, true, specification,
+                    visitedRefSchemas);
+            }
+        });
+    }
+
+    static BigDecimal largestMultipleOf(BigDecimal highest, BigDecimal multipleOf) {
+        RoundingMode roundingMode =
+            highest.compareTo(BigDecimal.ZERO) < 0 ? RoundingMode.UP : RoundingMode.DOWN;
+        BigDecimal factor = highest.divide(multipleOf, 0, roundingMode);
+        return multipleOf.multiply(factor);
+    }
+
+    static BigDecimal lowestMultipleOf(BigDecimal lowest, BigDecimal multipleOf) {
+        RoundingMode roundingMode =
+            lowest.compareTo(BigDecimal.ZERO) < 0 ? RoundingMode.DOWN : RoundingMode.UP;
+        BigDecimal factor = lowest.divide(multipleOf, 0, roundingMode);
+        return multipleOf.multiply(factor);
+    }
+
+    static BigDecimal incrementToExclude(BigDecimal val) {
+        return val.add(determineIncrement(val))
+            .setScale(findLeastSignificantDecimalPlace(val), RoundingMode.HALF_DOWN);
+    }
+
+    static BigDecimal decrementToExclude(BigDecimal val) {
+        return val.subtract(determineIncrement(val))
+            .setScale(findLeastSignificantDecimalPlace(val), RoundingMode.HALF_DOWN);
+    }
+
+    static BigDecimal determineIncrement(BigDecimal number) {
+        return BigDecimal.valueOf(1.0d / (Math.pow(10d, findLeastSignificantDecimalPlace(number))));
+    }
+
+    static int findLeastSignificantDecimalPlace(BigDecimal number) {
+        number = number.stripTrailingZeros();
+
+        String[] parts = number.toPlainString().split("\\.");
+
+        if (parts.length == 1) {
+            return 0;
+        }
+
+        return parts[1].length();
     }
 }

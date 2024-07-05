@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package org.citrusframework.openapi;
+package org.citrusframework.openapi.util;
+
+import static java.lang.String.format;
 
 import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nonnull;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageHeaders;
+import org.citrusframework.openapi.OpenApiConstants;
 import org.citrusframework.util.StringUtils;
-
-import static java.lang.String.format;
 
 public class OpenApiUtils {
 
@@ -35,7 +37,7 @@ public class OpenApiUtils {
         Object path = httpMessage.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI);
 
         return getMethodPath(methodHeader != null ? methodHeader.toString().toLowerCase() : "null",
-            path != null? path.toString() : "null");
+            path != null ? path.toString() : "null");
     }
 
     public static String getMethodPath(@Nonnull String method, @Nonnull String path) {
@@ -50,6 +52,14 @@ public class OpenApiUtils {
      */
     public static String createFullPathOperationIdentifier(String path, OasOperation oasOperation) {
         return format("%s_%s", oasOperation.getMethod().toUpperCase(), path);
+    }
+
+    public static boolean isAnyNumberScheme(OasSchema schema) {
+        return (
+            schema != null &&
+                (OpenApiConstants.TYPE_INTEGER.equalsIgnoreCase(schema.type) ||
+                    OpenApiConstants.TYPE_NUMBER.equalsIgnoreCase(schema.type))
+        );
     }
 
 }

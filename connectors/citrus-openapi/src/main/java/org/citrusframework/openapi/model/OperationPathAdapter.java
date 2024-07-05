@@ -17,7 +17,7 @@
 package org.citrusframework.openapi.model;
 
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import org.citrusframework.openapi.OpenApiUtils;
+import org.citrusframework.openapi.util.OpenApiUtils;
 
 import static java.lang.String.format;
 
