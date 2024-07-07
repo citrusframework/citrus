@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package org.citrusframework.openapi.util;
+package org.citrusframework.openapi.random;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import org.citrusframework.openapi.util.RandomElement.RandomList;
-import org.citrusframework.openapi.util.RandomElement.RandomObject;
-import org.citrusframework.openapi.util.RandomElement.RandomValue;
+import org.citrusframework.openapi.random.RandomElement.RandomList;
+import org.citrusframework.openapi.random.RandomElement.RandomObject;
+import org.citrusframework.openapi.random.RandomElement.RandomValue;
 
 /**
- * RandomModelBuilder is a class for building random JSON models. It supports adding
- * simple values, objects, properties, and arrays to the JSON structure. The final
- * model can be converted to a JSON string using the `writeToJson` method. I
+ * RandomModelBuilder is a class for building random JSON models. It supports adding simple values,
+ * objects, properties, and arrays to the JSON structure. The final model can be converted to a JSON
+ * string using the `writeToJson` method. I
  * <p>
- * The builder is able to build nested structures and can also handle native string,
- * number, and boolean elements, represented as functions for later dynamic string
- * conversion by Citrus.
+ * The builder is able to build nested structures and can also handle native string, number, and
+ * boolean elements, represented as functions for later dynamic string conversion by Citrus.
  * <p>
  * Example usage:
  * <pre>
@@ -48,20 +47,43 @@ public class RandomModelBuilder {
 
     final Deque<RandomElement> deque = new ArrayDeque<>();
 
-    public RandomModelBuilder() {
+    private final boolean quote;
+
+    /**
+     * Creates a {@link RandomModelBuilder} in respective quoting mode.
+     * Quoting should be activated in case an object is created by the builder. In this case,
+     * all properties added by respective "quoted" methods, will be quoted.
+     *
+     * @param quote whether to run the builder in quoting mode or not.
+     */
+    public RandomModelBuilder(boolean quote) {
         deque.push(new RandomValue());
+        this.quote = quote;
     }
 
-    public String toString() {
+    public String write() {
         return RandomModelWriter.toString(this);
     }
 
-    public void appendSimple(String nativeValue) {
+    /**
+     * Append the simpleValue as is, no quoting
+     */
+    public void appendSimple(String simpleValue) {
         if (deque.isEmpty()) {
-            deque.push(new RandomValue(nativeValue));
+            deque.push(new RandomValue(simpleValue));
         } else {
-            deque.peek().push(nativeValue);
+            deque.peek().push(simpleValue);
         }
+    }
+
+    /**
+     * If the builder is in quoting mode, the native value will be quoted, otherwise it will be
+     * added as ist.
+     *s
+     * @param simpleValue
+     */
+    public void appendSimpleQuoted(String simpleValue) {
+        appendSimple(quote(simpleValue));
     }
 
     public void object(Runnable objectBuilder) {
@@ -104,6 +126,10 @@ public class RandomModelBuilder {
         deque.push(randomList);
         arrayBuilder.run();
         deque.pop();
+    }
+
+    public String quote(String text) {
+        return quote ? String.format("\"%s\"", text) : text;
     }
 
 }
