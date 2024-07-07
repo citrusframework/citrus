@@ -67,7 +67,7 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
         getMembers().put("randomNumber", new RandomNumberFunction());
         getMembers().put("randomNumberGenerator", new AdvancedRandomNumberFunction());
         getMembers().put("randomString", new RandomStringFunction());
-        getMembers().put("randomValue", new RandomPatternFunction());
+        getMembers().put("randomPattern", new RandomPatternFunction());
         getMembers().put("concat", new ConcatFunction());
         getMembers().put("currentDate", new CurrentDateFunction());
         getMembers().put("substring", new SubstringFunction());

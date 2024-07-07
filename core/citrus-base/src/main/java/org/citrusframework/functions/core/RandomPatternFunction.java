@@ -25,9 +25,8 @@ import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.citrusframework.functions.Function;
 
 /**
- * The RandomPatternFunction class implements the Function interface. This function generates a
- * random string based on a provided regular expression pattern. It uses the Generex library to
- * generate the random string.
+ * The RandomPatternFunction generates a random string based on a provided regular expression pattern.
+ * It uses the Generex library to generate the random string.
  * <p>
  * Note: The Generex library has limitations in its ability to generate all possible expressions
  * from a given regular expression. It may not support certain complex regex features or produce all

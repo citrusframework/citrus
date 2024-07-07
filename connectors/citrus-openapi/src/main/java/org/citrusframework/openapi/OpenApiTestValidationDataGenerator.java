@@ -175,7 +175,7 @@ public abstract class OpenApiTestValidationDataGenerator {
         }
 
         switch (schema.type) {
-            case "string" :
+            case OpenApiConstants.TYPE_STRING :
                 if (schema.format != null && schema.format.equals("date")) {
                     return "@matchesDatePattern('yyyy-MM-dd')@";
                 } else if (schema.format != null && schema.format.equals("date-time")) {
@@ -190,7 +190,7 @@ public abstract class OpenApiTestValidationDataGenerator {
                 }
             case OpenApiConstants.TYPE_NUMBER, OpenApiConstants.TYPE_INTEGER:
                 return "@isNumber()@";
-            case "boolean" :
+            case OpenApiConstants.TYPE_BOOLEAN :
                 return "@matches(true|false)@";
             default:
                 return "@ignore@";
@@ -219,7 +219,7 @@ public abstract class OpenApiTestValidationDataGenerator {
         }
 
         switch (schema.type) {
-            case "string" :
+            case OpenApiConstants.TYPE_STRING:
                 if (schema.format != null && schema.format.equals("date")) {
                     return "\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])";
                 } else if (schema.format != null && schema.format.equals("date-time")) {
@@ -227,7 +227,7 @@ public abstract class OpenApiTestValidationDataGenerator {
                 } else if (hasText(schema.pattern)) {
                     return schema.pattern;
                 } else if (!isEmpty(schema.enum_)) {
-                    return "(" + (String.join("|", schema.enum_)) + ")";
+                    return "(" + String.join("|", schema.enum_) + ")";
                 } else if (schema.format != null && schema.format.equals("uuid")) {
                     return "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
                 } else {
@@ -235,9 +235,9 @@ public abstract class OpenApiTestValidationDataGenerator {
                 }
             case OpenApiConstants.TYPE_NUMBER:
                 return "[0-9]+\\.?[0-9]*";
-            case "integer" :
+            case OpenApiConstants.TYPE_INTEGER:
                 return "[0-9]+";
-            case "boolean" :
+            case OpenApiConstants.TYPE_BOOLEAN:
                 return "(true|false)";
             default:
                 return "";

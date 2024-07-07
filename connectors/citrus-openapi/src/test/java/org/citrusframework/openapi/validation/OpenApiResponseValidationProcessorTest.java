@@ -85,7 +85,7 @@ public class OpenApiResponseValidationProcessorTest {
 
         processor.validate(httpMessageMock, contextMock);
 
-        verify(openApiResponseValidatorSpy, times(1)).validateResponse(operationPathAdapterMock, httpMessageMock);
+        verify(openApiResponseValidatorSpy).validateResponse(operationPathAdapterMock, httpMessageMock);
     }
 
     @Test
@@ -100,7 +100,7 @@ public class OpenApiResponseValidationProcessorTest {
 
         processor.validate(httpMessageMock, contextMock);
 
-        verify(openApiSpecificationMock, times(1)).getOperation(anyString(),
+        verify(openApiSpecificationMock).getOperation(anyString(),
             any(TestContext.class));
         verify(openApiResponseValidatorSpy, times(0)).validateResponse(operationPathAdapterMock, httpMessageMock);
     }

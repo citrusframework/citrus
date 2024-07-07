@@ -17,8 +17,10 @@
 package org.citrusframework.functions.core;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import java.util.Set;
 import org.citrusframework.UnitTestSupport;
 import org.citrusframework.exceptions.InvalidFunctionUsageException;
 import org.testng.Assert;
@@ -28,7 +30,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 public class RandomStringFunctionTest extends UnitTestSupport {
-    private RandomStringFunction function = new RandomStringFunction();
+
+    private final RandomStringFunction function = new RandomStringFunction();
 
     @Test
     public void testFunction() {
@@ -110,8 +113,31 @@ public class RandomStringFunctionTest extends UnitTestSupport {
         params.add("3");
         params.add("UPPERCASE");
         params.add("true");
-        params.add("too much");
+        params.add("0");
+        params.add("too many");
 
         function.execute(params, context);
+    }
+
+    @Test
+    public void testRandomSize() {
+        List<String> params;
+        params = new ArrayList<>();
+        params.add("10");
+        params.add("UPPERCASE");
+        params.add("true");
+        params.add("8");
+
+        Set<Integer> sizes = new HashSet<>();
+
+        for (int i = 0; i < 1000; i++) {
+            String text = function.execute(params, context);
+            sizes.add(text.length());
+        }
+
+        Assert.assertTrue(sizes.contains(8));
+        Assert.assertTrue(sizes.contains(9));
+        Assert.assertTrue(sizes.contains(10));
+
     }
 }
