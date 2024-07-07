@@ -67,7 +67,7 @@ public class StringUtils {
     }
 
     public static String quote(String text, boolean quote) {
-        return quote ? String.format("\"%s\"", text) : text;
+        return quote ? "\"" + text + "\"" : text;
     }
 
     /**
