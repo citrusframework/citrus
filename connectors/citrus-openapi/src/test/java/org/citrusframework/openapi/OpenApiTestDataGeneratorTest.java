@@ -72,64 +72,13 @@ public class OpenApiTestDataGeneratorTest {
             .getSchemaValidator();
     }
 
-    @DataProvider(name = "findLeastSignificantDecimalPlace")
-    public static Object[][] findLeastSignificantDecimalPlace() {
-        return new Object[][]{
-            {new BigDecimal("1234.5678"), 4},
-            {new BigDecimal("123.567"), 3},
-            {new BigDecimal("123.56"), 2},
-            {new BigDecimal("123.5"), 1},
-            {new BigDecimal("123.0"), 0},
-            {new BigDecimal("123"), 0}
-        };
-    }
-
-    @Test(dataProvider = "findLeastSignificantDecimalPlace")
-    void findLeastSignificantDecimalPlace(BigDecimal number, int expectedSignificance) {
-        assertEquals(OpenApiTestDataGenerator.findLeastSignificantDecimalPlace(number),
-            expectedSignificance);
-    }
-
-    @DataProvider(name = "incrementToExclude")
-    public static Object[][] incrementToExclude() {
-        return new Object[][]{
-            {new BigDecimal("1234.678"), new BigDecimal("1234.679")},
-            {new BigDecimal("1234.78"), new BigDecimal("1234.79")},
-            {new BigDecimal("1234.8"), new BigDecimal("1234.9")},
-            {new BigDecimal("1234.0"), new BigDecimal("1235")},
-            {new BigDecimal("1234"), new BigDecimal("1235")},
-        };
-    }
-
-    @Test(dataProvider = "incrementToExclude")
-    void incrementToExclude(BigDecimal value, BigDecimal expectedValue) {
-        assertEquals(OpenApiTestDataGenerator.incrementToExclude(value), expectedValue);
-    }
-
-    @DataProvider(name = "decrementToExclude")
-    public static Object[][] decrementToExclude() {
-        return new Object[][]{
-            {new BigDecimal("1234.678"), new BigDecimal("1234.677")},
-            {new BigDecimal("1234.78"), new BigDecimal("1234.77")},
-            {new BigDecimal("1234.8"), new BigDecimal("1234.7")},
-            {new BigDecimal("1234.0"), new BigDecimal("1233")},
-            {new BigDecimal("1234"), new BigDecimal("1233")},
-        };
-    }
-
-    @Test(dataProvider = "decrementToExclude")
-    void decrementToExclude(BigDecimal value, BigDecimal expectedValue) {
-        assertEquals(OpenApiTestDataGenerator.decrementToExclude(value), expectedValue);
-    }
-
     @Test
     void testUuidFormat() {
         Oas30Schema stringSchema = new Oas30Schema();
         stringSchema.type = TYPE_STRING;
         stringSchema.format = FORMAT_UUID;
 
-        String uuidRandomValue = OpenApiTestDataGenerator.createRandomValueExpression(stringSchema,
-            false);
+        String uuidRandomValue = OpenApiTestDataGenerator.createRandomValueExpression(stringSchema);
         String finalUuidRandomValue = testContext.replaceDynamicContentInString(uuidRandomValue);
         Pattern uuidPattern = Pattern.compile(
             "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
@@ -300,8 +249,7 @@ public class OpenApiTestDataGeneratorTest {
         String exp = "[0-3]([a-c]|[e-g]{1,2})";
         stringSchema.pattern = exp;
 
-        String randomValue = OpenApiTestDataGenerator.createRandomValueExpression(stringSchema,
-            false);
+        String randomValue = OpenApiTestDataGenerator.createRandomValueExpression(stringSchema);
         String finalRandomValue = testContext.replaceDynamicContentInString(randomValue);
         assertTrue(finalRandomValue.matches(exp),
             "Value '%s' does not match expression '%s'".formatted(finalRandomValue, exp));
@@ -315,18 +263,17 @@ public class OpenApiTestDataGeneratorTest {
             //{"AnyOfType"},
             //{"AllOfType"},
             //{"PingRespType"},
-
             {"OneOfType"},
             {"StringsType"},
             {"DatesType"},
             {"NumbersType"},
-            {"MultipleOfType"},
             {"PingReqType"},
             {"Detail1"},
             {"Detail2"},
             {"BooleanType"},
             {"EnumType"},
             {"NestedType"},
+            {"MultipleOfType"},
             {"SimpleArrayType"},
             {"ComplexArrayType"},
             {"ArrayOfArraysType"},
@@ -354,13 +301,11 @@ public class OpenApiTestDataGeneratorTest {
             assertNotNull(randomValue);
 
             String finalJsonAsText = testContext.replaceDynamicContentInString(randomValue);
-
             try {
                 JsonNode valueNode = new ObjectMapper().readTree(
                     testContext.replaceDynamicContentInString(finalJsonAsText));
                 ValidationReport validationReport = schemaValidator.validate(() -> valueNode,
-                    swaggerValidationSchema,
-                    "response.body");
+                    swaggerValidationSchema, null);
 
                 String message = """
                 Json is invalid according to schema.
@@ -430,7 +375,7 @@ public class OpenApiTestDataGeneratorTest {
 
         arraySchema.items = stringSchema;
 
-        Pattern pattern = Pattern.compile("citrus:randomString\\(1[0-5]\\)");
+        Pattern pattern = Pattern.compile("citrus:randomString\\(1[0-5],MIXED,true,10\\)");
         for (int i = 0; i < 100; i++) {
             String randomArrayValue = OpenApiTestDataGenerator.createOutboundPayload(arraySchema,
                 openApiSpecification);
@@ -447,61 +392,4 @@ public class OpenApiTestDataGeneratorTest {
         }
     }
 
-    @Test
-    public void testLowestMultipleOf() {
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(10)), BigDecimal.valueOf(-1000));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(-10)), BigDecimal.valueOf(-1000));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(11)), BigDecimal.valueOf(-990));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(-11)), BigDecimal.valueOf(-990));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(11.1234)), BigDecimal.valueOf(-989.9826));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(-11.1234)), BigDecimal.valueOf(-989.9826));
-
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(10)), BigDecimal.valueOf(1000));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(-10)), BigDecimal.valueOf(1000));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(11)), BigDecimal.valueOf(1001));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(-11)), BigDecimal.valueOf(1001));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(11.1234)), new BigDecimal("1001.1060"));
-        assertEquals(OpenApiTestDataGenerator.lowestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(-11.1234)), new BigDecimal("1001.1060"));
-    }
-
-    @Test
-    public void testLargestMultipleOf() {
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(10)), BigDecimal.valueOf(-1000));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(-10)), BigDecimal.valueOf(-1000));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(11)), BigDecimal.valueOf(-1001));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(-11)), BigDecimal.valueOf(-1001));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(11.1234)), new BigDecimal("-1001.1060"));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(-1000),
-            BigDecimal.valueOf(-11.1234)), new BigDecimal("-1001.1060"));
-
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(10)), BigDecimal.valueOf(1000));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(-10)), BigDecimal.valueOf(1000));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(11)), BigDecimal.valueOf(990));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(-11)), BigDecimal.valueOf(990));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(11.1234)), new BigDecimal("989.9826"));
-        assertEquals(OpenApiTestDataGenerator.largestMultipleOf(BigDecimal.valueOf(1000),
-            BigDecimal.valueOf(-11.1234)), new BigDecimal("989.9826"));
-    }
 }
