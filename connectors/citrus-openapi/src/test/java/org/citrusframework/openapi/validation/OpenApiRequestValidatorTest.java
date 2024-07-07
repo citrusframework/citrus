@@ -19,7 +19,6 @@ package org.citrusframework.openapi.validation;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -113,8 +112,8 @@ public class OpenApiRequestValidatorTest {
         openApiRequestValidator.validateRequest(operationPathAdapterMock, httpMessageMock);
 
         // Then
-        verify(openApiInteractionValidatorMock, times(1)).validateRequest(any(Request.class));
-        verify(validationReportMock, times(1)).hasErrors();
+        verify(openApiInteractionValidatorMock).validateRequest(any(Request.class));
+        verify(validationReportMock).hasErrors();
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -131,8 +130,8 @@ public class OpenApiRequestValidatorTest {
         openApiRequestValidator.validateRequest(operationPathAdapterMock, httpMessageMock);
 
         // Then
-        verify(openApiInteractionValidatorMock, times(1)).validateRequest(any(Request.class));
-        verify(validationReportMock, times(1)).hasErrors();
+        verify(openApiInteractionValidatorMock).validateRequest(any(Request.class));
+        verify(validationReportMock).hasErrors();
     }
 
     @Test

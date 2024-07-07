@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.openapi.util;
+package org.citrusframework.openapi.random;
 
 import static org.citrusframework.util.StringUtils.trimTrailingComma;
 
@@ -22,7 +22,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.citrusframework.openapi.util.RandomElement.RandomValue;
+import org.citrusframework.openapi.random.RandomElement.RandomValue;
 
 /**
  * Utility class for converting a {@link RandomModelBuilder} to its string representation.
