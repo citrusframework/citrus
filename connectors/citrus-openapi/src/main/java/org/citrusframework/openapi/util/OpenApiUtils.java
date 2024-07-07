@@ -62,4 +62,15 @@ public class OpenApiUtils {
         );
     }
 
+    /**
+     * Checks if given field name is in list of required fields for this schema.
+     */
+    public static boolean isRequired(OasSchema schema, String field) {
+        if (schema.required == null) {
+            return true;
+        }
+
+        return schema.required.contains(field);
+    }
+
 }

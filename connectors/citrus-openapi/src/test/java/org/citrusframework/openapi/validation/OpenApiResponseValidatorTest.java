@@ -16,11 +16,24 @@
 
 package org.citrusframework.openapi.validation;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.Request.Method;
 import com.atlassian.oai.validator.model.Response;
 import com.atlassian.oai.validator.report.ValidationReport;
 import io.apicurio.datamodels.openapi.models.OasOperation;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import org.citrusframework.exceptions.ValidationException;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.openapi.OpenApiSpecification;
@@ -33,21 +46,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 public class OpenApiResponseValidatorTest {
 
@@ -120,8 +118,8 @@ public class OpenApiResponseValidatorTest {
         openApiResponseValidator.validateResponse(operationPathAdapterMock, httpMessageMock);
 
         // Then
-        verify(openApiInteractionValidatorMock, times(1)).validateResponse(anyString(), any(Method.class), any(Response.class));
-        verify(validationReportMock, times(1)).hasErrors();
+        verify(openApiInteractionValidatorMock).validateResponse(anyString(), any(Method.class), any(Response.class));
+        verify(validationReportMock).hasErrors();
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -141,8 +139,8 @@ public class OpenApiResponseValidatorTest {
         openApiResponseValidator.validateResponse(operationPathAdapterMock, httpMessageMock);
 
         // Then
-        verify(openApiInteractionValidatorMock, times(1)).validateResponse(anyString(), any(Method.class), any(Response.class));
-        verify(validationReportMock, times(1)).hasErrors();
+        verify(openApiInteractionValidatorMock).validateResponse(anyString(), any(Method.class), any(Response.class));
+        verify(validationReportMock).hasErrors();
     }
 
     @Test
