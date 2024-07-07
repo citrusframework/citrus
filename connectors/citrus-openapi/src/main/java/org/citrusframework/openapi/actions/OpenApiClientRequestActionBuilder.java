@@ -133,7 +133,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                     if (context.getVariables().containsKey(parameter.getName())) {
                         parameterValue = "\\" + CitrusSettings.VARIABLE_PREFIX + parameter.getName() + CitrusSettings.VARIABLE_SUFFIX;
                     } else {
-                        parameterValue = OpenApiTestDataGenerator.createRandomValueExpression((OasSchema) parameter.schema, false);
+                        parameterValue = OpenApiTestDataGenerator.createRandomValueExpression((OasSchema) parameter.schema);
                     }
                     randomizedPath = Pattern.compile("\\{" + parameter.getName() + "}")
                         .matcher(randomizedPath)
@@ -152,8 +152,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
         private void setSpecifiedBody(TestContext context, OasOperation operation) {
             Optional<OasSchema> body = OasModelHelper.getRequestBodySchema(
                 openApiSpec.getOpenApiDoc(context), operation);
-            body.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema,
-                OasModelHelper.getSchemaDefinitions(openApiSpec.getOpenApiDoc(context)), openApiSpec)));
+            body.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema, openApiSpec)));
         }
 
         private void setSpecifiedQueryParameters(TestContext context, OasOperation operation) {
@@ -180,9 +179,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                 .forEach(param -> {
                     if(httpMessage.getHeader(param.getName()) == null && !configuredHeaders.contains(param.getName())) {
                         httpMessage.setHeader(param.getName(),
-                            OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema,
-                                OasModelHelper.getSchemaDefinitions(openApiSpec.getOpenApiDoc(
-                                    context)), false, openApiSpec, context));
+                            OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema, openApiSpec, context));
                     }
                 });
         }
