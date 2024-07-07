@@ -24,7 +24,6 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
-import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
@@ -160,26 +159,24 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         }
 
         private void fillRandomData(OperationPathAdapter operationPathAdapter, TestContext context) {
-            OasDocument oasDocument = openApiSpec.getOpenApiDoc(context);
 
             if (operationPathAdapter.operation().responses != null) {
-                buildResponse(context, operationPathAdapter.operation(), oasDocument);
+                buildResponse(context, operationPathAdapter.operation());
             }
         }
 
-        private void buildResponse(TestContext context, OasOperation operation,
-            OasDocument oasDocument) {
+        private void buildResponse(TestContext context, OasOperation operation) {
 
             Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
                 openApiSpec.getOpenApiDoc(context), operation, statusCode, null);
 
             if (responseForRandomGeneration.isPresent()) {
-                buildRandomHeaders(context, oasDocument, responseForRandomGeneration.get());
-                buildRandomPayload(operation, oasDocument, responseForRandomGeneration.get());
+                buildRandomHeaders(context, responseForRandomGeneration.get());
+                buildRandomPayload(operation, responseForRandomGeneration.get());
             }
         }
 
-        private void buildRandomHeaders(TestContext context, OasDocument oasDocument, OasResponse response) {
+        private void buildRandomHeaders(TestContext context, OasResponse response) {
             Set<String> filteredHeaders = new HashSet<>(getMessage().getHeaders().keySet());
             Predicate<Entry<String, OasSchema>> filteredHeadersPredicate = entry -> !filteredHeaders.contains(
                 entry.getKey());
@@ -191,7 +188,6 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 .forEach(entry -> addHeaderBuilder(new DefaultHeaderBuilder(
                     singletonMap(entry.getKey(), createRandomValueExpression(entry.getKey(),
                         entry.getValue(),
-                        OasModelHelper.getSchemaDefinitions(oasDocument), false,
                         openApiSpec,
                         context))))
                 );
@@ -209,8 +205,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                             + CitrusSettings.VARIABLE_SUFFIX)))));
         }
 
-        private void buildRandomPayload(OasOperation operation, OasDocument oasDocument,
-            OasResponse response) {
+        private void buildRandomPayload(OasOperation operation, OasResponse response) {
 
             Optional<OasAdapter<OasSchema, String>> schemaForMediaTypeOptional;
             if (statusCode.startsWith("2")) {
@@ -227,7 +222,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 OasAdapter<OasSchema, String> schemaForMediaType = schemaForMediaTypeOptional.get();
                 if (getMessage().getPayload() == null || (
                     getMessage().getPayload() instanceof String string && string.isEmpty())) {
-                    createRandomPayload(getMessage(), oasDocument, schemaForMediaType);
+                    createRandomPayload(getMessage(), schemaForMediaType);
                 }
 
                 // If we have a schema and a media type and the content type has not yet been set, do it.
@@ -238,7 +233,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             }
         }
 
-        private void createRandomPayload(HttpMessage message, OasDocument oasDocument, OasAdapter<OasSchema, String> schemaForMediaType) {
+        private void createRandomPayload(HttpMessage message, OasAdapter<OasSchema, String> schemaForMediaType) {
 
             if (schemaForMediaType.node() == null) {
                 // No schema means no payload, no type
@@ -246,13 +241,11 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             } else {
                 if (TEXT_PLAIN_VALUE.equals(schemaForMediaType.adapted())) {
                     // Schema but plain text
-                    message.setPayload(createOutboundPayload(schemaForMediaType.node(),
-                        OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec));
+                    message.setPayload(createOutboundPayload(schemaForMediaType.node(), openApiSpec));
                     message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, TEXT_PLAIN_VALUE);
                 } else if (APPLICATION_JSON_VALUE.equals(schemaForMediaType.adapted())) {
                     // Json Schema
-                    message.setPayload(createOutboundPayload(schemaForMediaType.node(),
-                        OasModelHelper.getSchemaDefinitions(oasDocument), openApiSpec));
+                    message.setPayload(createOutboundPayload(schemaForMediaType.node(), openApiSpec));
                     message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, APPLICATION_JSON_VALUE);
                 }
             }

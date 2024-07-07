@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.citrusframework.openapi.util;
+package org.citrusframework.openapi.random;
 
 import static org.testng.Assert.assertEquals;
 
