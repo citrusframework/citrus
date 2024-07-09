@@ -1,0 +1,29 @@
+{{>licenseInfo}}
+
+package {{invokerPackage}}.citrus.extension;
+
+{{#apiInfo}}
+{{#apis}}
+import {{package}}.{{classname}};
+{{/apis}}
+{{/apiInfo}}
+import {{invokerPackage}}.citrus.{{prefix}}BeanDefinitionParser;
+
+import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+
+{{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
+public class {{prefix}}NamespaceHandler extends NamespaceHandlerSupport {
+
+    @Override
+    public void init() {
+        {{#apiInfo}}
+        {{#apis}}
+        {{#operations}}
+        {{#operation}}
+        registerBeanDefinitionParser("{{operationId}}Request", new {{prefix}}BeanDefinitionParser({{classname}}.{{operationIdCamelCase}}Request.class));
+        {{/operation}}
+        {{/operations}}
+        {{/apis}}
+        {{/apiInfo}}
+    }
+}

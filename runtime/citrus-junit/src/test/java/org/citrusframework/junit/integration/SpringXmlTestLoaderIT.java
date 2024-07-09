@@ -32,9 +32,6 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-/**
- * @author Thorsten Schlathoelter
- */
 @SpringXmlTestLoaderConfiguration(
         parserConfigurations = {
                 @BeanDefinitionParserConfiguration(name = "testcase", parser = SpringXmlTestLoaderIT.CustomTestCaseParser.class),

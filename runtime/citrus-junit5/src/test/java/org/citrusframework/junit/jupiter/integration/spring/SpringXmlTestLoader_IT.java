@@ -39,9 +39,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-/**
- * @author Thorsten Schlathoelter
- */
 @CitrusSpringSupport
 @ContextConfiguration(classes = {CitrusSpringConfig.class, CustomConfiguration.class})
 @SpringXmlTestLoaderConfiguration(

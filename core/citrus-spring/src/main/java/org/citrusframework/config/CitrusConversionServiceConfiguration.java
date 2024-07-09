@@ -27,7 +27,6 @@ import org.springframework.core.convert.converter.Converter;
  * This configuration is necessary only when using Spring without Spring Boot. Spring Boot includes a standard conversion service
  * that automatically detects and uses relevant converters by default.
  *
- * @author Thorsten Schlathoelter
  * @since 4.0
  */
 @Configuration

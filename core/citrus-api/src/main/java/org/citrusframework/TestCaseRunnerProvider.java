@@ -21,7 +21,6 @@ import org.citrusframework.context.TestContext;
 /**
  *  Interface for providing TestCaseRunner.
  *
- *  @author Thorsten Schlathoelter
  *  @since 4.0
  */
 public interface TestCaseRunnerProvider {
