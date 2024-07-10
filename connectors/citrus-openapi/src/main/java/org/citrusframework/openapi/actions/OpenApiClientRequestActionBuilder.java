@@ -19,7 +19,12 @@ package org.citrusframework.openapi.actions;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasSchema;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
@@ -34,18 +39,19 @@ import org.citrusframework.openapi.validation.OpenApiRequestValidationProcessor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
 /**
  * @author Christoph Deppisch
  * @since 4.1
  */
 public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBuilder {
 
-    private final OpenApiRequestValidationProcessor openApiRequestValidationProcessor;
+    private final OpenApiSpecification openApiSpec;
+
+    private final String operationId;
+
+    private boolean oasValidationEnabled = true;
+
+    private OpenApiRequestValidationProcessor openApiRequestValidationProcessor;
 
     /**
      * Default constructor initializes http request message builder.
@@ -58,14 +64,23 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                                              String operationId) {
         super(new OpenApiClientRequestMessageBuilder(httpMessage, openApiSpec, operationId), httpMessage);
 
-        openApiRequestValidationProcessor = new OpenApiRequestValidationProcessor(openApiSpec, operationId);
-        process(openApiRequestValidationProcessor);
+        this.openApiSpec = openApiSpec;
+        this.operationId = operationId;
+   }
+
+    @Override
+    public SendMessageAction doBuild() {
+
+        if (oasValidationEnabled && !messageProcessors.contains(openApiRequestValidationProcessor)) {
+            openApiRequestValidationProcessor = new OpenApiRequestValidationProcessor(openApiSpec, operationId);
+            process(openApiRequestValidationProcessor);
+        }
+
+        return super.doBuild();
     }
 
-    public OpenApiClientRequestActionBuilder disableOasValidation(boolean b) {
-        if (openApiRequestValidationProcessor != null) {
-            openApiRequestValidationProcessor.setEnabled(!b);
-        }
+    public OpenApiClientRequestActionBuilder disableOasValidation(boolean disabled) {
+        oasValidationEnabled = !disabled;
         return this;
     }
 
@@ -137,8 +152,7 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
         private void setSpecifiedBody(TestContext context, OasOperation operation) {
             Optional<OasSchema> body = OasModelHelper.getRequestBodySchema(
                 openApiSpec.getOpenApiDoc(context), operation);
-            body.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema,
-                OasModelHelper.getSchemaDefinitions(openApiSpec.getOpenApiDoc(context)), openApiSpec)));
+            body.ifPresent(oasSchema -> httpMessage.setPayload(OpenApiTestDataGenerator.createOutboundPayload(oasSchema, openApiSpec)));
         }
 
         private void setSpecifiedQueryParameters(TestContext context, OasOperation operation) {
@@ -165,11 +179,10 @@ public class OpenApiClientRequestActionBuilder extends HttpClientRequestActionBu
                 .forEach(param -> {
                     if(httpMessage.getHeader(param.getName()) == null && !configuredHeaders.contains(param.getName())) {
                         httpMessage.setHeader(param.getName(),
-                            OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema,
-                                OasModelHelper.getSchemaDefinitions(openApiSpec.getOpenApiDoc(
-                                    context)), false, openApiSpec, context));
+                            OpenApiTestDataGenerator.createRandomValueExpression(param.getName(), (OasSchema) param.schema, openApiSpec, context));
                     }
                 });
         }
     }
+
 }

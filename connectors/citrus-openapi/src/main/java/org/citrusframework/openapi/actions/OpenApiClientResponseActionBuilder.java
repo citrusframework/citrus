@@ -20,7 +20,12 @@ import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nullable;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.http.actions.HttpClientResponseActionBuilder;
@@ -29,7 +34,7 @@ import org.citrusframework.http.message.HttpMessageBuilder;
 import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageType;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.OpenApiTestDataGenerator;
+import org.citrusframework.openapi.OpenApiTestValidationDataGenerator;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 import org.citrusframework.openapi.validation.OpenApiResponseValidationProcessor;
@@ -37,18 +42,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
 /**
  * @author Christoph Deppisch
  * @since 4.1
  */
 public class OpenApiClientResponseActionBuilder extends HttpClientResponseActionBuilder {
 
-    private final OpenApiResponseValidationProcessor openApiResponseValidationProcessor;
+    private OpenApiResponseValidationProcessor openApiResponseValidationProcessor;
+
+    private final OpenApiSpecification openApiSpec;
+
+    private final String operationId;
+
+    private boolean oasValidationEnabled = true;
 
     /**
      * Default constructor initializes http response message builder.
@@ -63,15 +69,24 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         String operationId, String statusCode) {
         super(new OpenApiClientResponseMessageBuilder(httpMessage, openApiSpec, operationId,
             statusCode), httpMessage);
-
-        openApiResponseValidationProcessor = new OpenApiResponseValidationProcessor(openApiSpec, operationId);
-        validate(openApiResponseValidationProcessor);
+        this.openApiSpec = openApiSpec;
+        this.operationId = operationId;
     }
 
-    public OpenApiClientResponseActionBuilder disableOasValidation(boolean b) {
-        if (openApiResponseValidationProcessor != null) {
-            openApiResponseValidationProcessor.setEnabled(!b);
+    @Override
+    public ReceiveMessageAction doBuild() {
+
+        if (oasValidationEnabled && !messageProcessors.contains(openApiResponseValidationProcessor)) {
+            openApiResponseValidationProcessor = new OpenApiResponseValidationProcessor(openApiSpec, operationId);
+            validate(openApiResponseValidationProcessor);
         }
+
+        return super.doBuild();
+    }
+
+    public OpenApiClientResponseActionBuilder disableOasValidation(boolean disable) {
+        oasValidationEnabled = !disable;
+        ((OpenApiClientResponseMessageBuilder)getMessageBuilderSupport().getMessageBuilder()).setOasValidationEnabled(oasValidationEnabled);
         return this;
     }
 
@@ -89,12 +104,10 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         Optional<OasSchema> responseSchema = OasModelHelper.getSchema(response);
         responseSchema.ifPresent(oasSchema -> {
                 httpMessage.setPayload(
-                    OpenApiTestDataGenerator.createInboundPayload(oasSchema,
+                    OpenApiTestValidationDataGenerator.createInboundPayload(oasSchema,
                         OasModelHelper.getSchemaDefinitions(
                             openApiSpecification.getOpenApiDoc(context)), openApiSpecification));
 
-                // Best guess for the content type. Currently, we can only determine the content type
-                // for sure for json. Other content types will be neglected.
                 OasSchema resolvedSchema = OasModelHelper.resolveSchema(
                     openApiSpecification.getOpenApiDoc(null), oasSchema);
                 if (OasModelHelper.isObjectType(resolvedSchema) || OasModelHelper.isObjectArrayType(
@@ -109,7 +122,6 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
                 }
             }
         );
-
     }
 
     private static void fillRequiredHeaders(
@@ -119,7 +131,7 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         Map<String, OasSchema> requiredHeaders = OasModelHelper.getRequiredHeaders(response);
         for (Map.Entry<String, OasSchema> header : requiredHeaders.entrySet()) {
             httpMessage.setHeader(header.getKey(),
-                OpenApiTestDataGenerator.createValidationExpression(header.getKey(),
+                OpenApiTestValidationDataGenerator.createValidationExpression(header.getKey(),
                     header.getValue(),
                     OasModelHelper.getSchemaDefinitions(
                         openApiSpecification.getOpenApiDoc(context)), false,
@@ -146,6 +158,8 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
 
         private final HttpMessage httpMessage;
 
+        private boolean oasValidationEnabled = true;
+
         public OpenApiClientResponseMessageBuilder(HttpMessage httpMessage,
             OpenApiSpecification openApiSpec,
             String operationId, String statusCode) {
@@ -170,7 +184,7 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
         private void buildMessageFromOperation(OperationPathAdapter operationPathAdapter, TestContext context) {
             OasOperation operation = operationPathAdapter.operation();
 
-            if (operation.responses != null) {
+            if (oasValidationEnabled && operation.responses != null) {
                 Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
                     openApiSpec.getOpenApiDoc(context), operation, statusCode, null);
 
@@ -184,6 +198,10 @@ public class OpenApiClientResponseActionBuilder extends HttpClientResponseAction
             } else {
                 httpMessage.status(HttpStatus.OK);
             }
+        }
+
+        public void setOasValidationEnabled(boolean oasValidationEnabled) {
+            this.oasValidationEnabled = oasValidationEnabled;
         }
     }
 }

@@ -23,7 +23,8 @@ import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.validation.ValidationProcessor;
 
 /**
- * {@code ValidationProcessor} that delegates validation of OpenApi responses to instances of {@link OpenApiResponseValidator}.
+ * {@code ValidationProcessor} that delegates validation of OpenApi responses to instances of
+ * {@link OpenApiResponseValidator}.
  */
 public class OpenApiResponseValidationProcessor implements
     ValidationProcessor {
@@ -32,27 +33,25 @@ public class OpenApiResponseValidationProcessor implements
 
     private final String operationId;
 
-    private boolean enabled = true;
+    private final OpenApiResponseValidator openApiResponseValidator;
 
-    public OpenApiResponseValidationProcessor(OpenApiSpecification openApiSpecification, String operationId) {
+    public OpenApiResponseValidationProcessor(OpenApiSpecification openApiSpecification,
+        String operationId) {
         this.operationId = operationId;
         this.openApiSpecification = openApiSpecification;
+        this.openApiResponseValidator = new OpenApiResponseValidator(openApiSpecification);
     }
 
     @Override
     public void validate(Message message, TestContext context) {
 
-        if (!enabled || !(message instanceof HttpMessage httpMessage)) {
+        if (!(message instanceof HttpMessage httpMessage)) {
             return;
         }
 
         openApiSpecification.getOperation(
             operationId, context).ifPresent(operationPathAdapter ->
-            openApiSpecification.getResponseValidator().ifPresent(openApiResponseValidator ->
-                openApiResponseValidator.validateResponse(operationPathAdapter, httpMessage)));
+            openApiResponseValidator.validateResponse(operationPathAdapter, httpMessage));
     }
 
-    public void setEnabled(boolean b) {
-        this.enabled = b;
-    }
 }

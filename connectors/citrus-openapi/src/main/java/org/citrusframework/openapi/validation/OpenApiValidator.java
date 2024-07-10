@@ -18,6 +18,7 @@ package org.citrusframework.openapi.validation;
 
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.report.ValidationReport;
+import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OperationPathAdapter;
 
 public abstract class OpenApiValidator {
@@ -26,9 +27,14 @@ public abstract class OpenApiValidator {
 
     protected boolean enabled;
 
-    protected OpenApiValidator(OpenApiInteractionValidator openApiInteractionValidator, boolean enabled) {
-        this.openApiInteractionValidator = openApiInteractionValidator;
-        this.enabled = enabled;
+    protected OpenApiValidator(OpenApiSpecification openApiSpecification) {
+        SwaggerOpenApiValidationContext swaggerOpenApiValidationContext = openApiSpecification.getSwaggerOpenApiValidationContext();
+        if (swaggerOpenApiValidationContext != null) {
+            openApiInteractionValidator = openApiSpecification.getSwaggerOpenApiValidationContext()
+                .getOpenApiInteractionValidator();
+        } else {
+            openApiInteractionValidator = null;
+        }
     }
 
     public void setEnabled(boolean enabled) {
