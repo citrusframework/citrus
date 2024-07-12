@@ -16,8 +16,10 @@
 
 package org.citrusframework.main.scan;
 
+import java.util.Arrays;
+import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -27,6 +29,7 @@ public abstract class AbstractTestScanner implements TestScanner {
 
     /** Test name patterns to include */
     private final String[] includes;
+    private final Set<Pattern> includePatterns;
 
     public AbstractTestScanner(String... includes) {
         if (includes.length > 0) {
@@ -34,12 +37,14 @@ public abstract class AbstractTestScanner implements TestScanner {
         } else {
             this.includes = new String[] { "^.*IT$", "^.*ITCase$", "^IT.*$" };
         }
+        includePatterns = Arrays.stream(includes)
+            .map(Pattern::compile)
+            .collect(Collectors.toSet());
     }
 
     protected boolean isIncluded(String className) {
-        return Stream.of(getIncludes())
+        return getIncludePatterns().stream()
                 .parallel()
-                .map(Pattern::compile)
                 .anyMatch(pattern -> pattern.matcher(className).matches());
     }
 
@@ -50,5 +55,14 @@ public abstract class AbstractTestScanner implements TestScanner {
      */
     public String[] getIncludes() {
         return includes;
+    }
+
+    /**
+     * Gets the include patterns.
+     *
+     * @return
+     */
+    public Set<Pattern> getIncludePatterns() {
+        return includePatterns;
     }
 }

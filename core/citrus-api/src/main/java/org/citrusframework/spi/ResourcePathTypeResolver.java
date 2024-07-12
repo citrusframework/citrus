@@ -22,6 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -66,6 +68,16 @@ import static org.citrusframework.spi.PropertiesLoader.loadProperties;
  */
 public class ResourcePathTypeResolver implements TypeResolver {
 
+    public static final URL ROOT = ResourcePathTypeResolver.class
+        .getProtectionDomain()
+        .getCodeSource()
+        .getLocation();
+    public static final boolean ROOT_IS_CITRUS_API = ROOT.toString()
+        .replace("\\", "/")
+        .matches(".*/citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar");
+    public static final boolean ROOT_IS_JAR = ROOT.toString().matches(".*jar(!/)?");
+    private static FileSystem rootFs = null;
+
     /**
      * Logger
      */
@@ -100,6 +112,17 @@ public class ResourcePathTypeResolver implements TypeResolver {
      * Cached specific type names as resolved from classpath.
      */
     private final Map<String, Map<String, String>> typeCache = new ConcurrentHashMap<>();
+
+    static {
+        if (ROOT_IS_JAR) {
+            try {
+                rootFs = FileSystems.newFileSystem(
+                    Path.of(ROOT.toString().substring("file:".length())));
+            } catch (IOException e) {
+                logger.error(String.format("Failed to create File system from jar '%s'", ROOT), e);
+            }
+        }
+    }
 
     /**
      * Default constructor using META-INF resource base path.
@@ -205,25 +228,26 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     private Stream<Path> resolveAllFromJar(String path) {
-        String rootAsString = ResourcePathTypeResolver.class.getProtectionDomain().getCodeSource().getLocation().toString();
 
         ClassLoader classLoader = ObjectHelper.assertNotNull(ResourcePathTypeResolver.class.getClassLoader());
-        if (rootAsString.matches(".*jar(!/)?") &&
-            !rootAsString.replace("\\", "/")
-                .matches(".*/citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar")) {
+        if (ROOT_IS_JAR && !ROOT_IS_CITRUS_API) {
             return getZipEntries().stream()
-                    .filter(entry -> entry.startsWith(path))
-                    .map(classLoader::getResource)
-                    .filter(Objects::nonNull)
-                    .map(entry -> {
-                        try {
-                            return Paths.get(entry.toURI());
-                        } catch (URISyntaxException e) {
-                            logger.warn(String.format("Failed resolve resource from jar '%s'", entry), e);
-                            return null;
+                .filter(entry -> entry.startsWith(path))
+                .map(classLoader::getResource)
+                .filter(Objects::nonNull)
+                .map(entry -> {
+                    String[] split = entry.toString().split("!");
+                    try {
+                        if (split.length > 1) {
+                            return rootFs.getPath(split[1]);
                         }
-                    })
-                    .filter(Objects::nonNull);
+                        return Paths.get(entry.toURI());
+                    } catch (URISyntaxException e) {
+                        logger.warn(String.format("Failed resolve resource from jar '%s'", entry), e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull);
         }
         return Stream.of();
     }
