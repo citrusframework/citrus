@@ -49,14 +49,19 @@ public class JarFileTestScanner extends AbstractTestScanner {
 
     @Override
     public List<TestClass> findTestsInPackage(String packageToScan) {
+        boolean packageIsEmpty = packageToScan.isEmpty();
+        String packageAsPath = packageToScan.replace(".", "/");
         List<TestClass> testClasses = new ArrayList<>();
         if (artifact != null && artifact.isFile()) {
             try (JarFile jar = new JarFile(artifact)) {
                 for (Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements();) {
                     JarEntry entry = entries.nextElement();
                     String className = FileUtils.getBaseName(entry.getName()).replace( "/", "." );
-                    if (packageToScan.replace( ".", "/" ).startsWith(entry.getName()) && isIncluded(className)) {
-                        logger.info("Found test class candidate in test jar file: " +  entry.getName());
+                    boolean isTestClass = (packageIsEmpty || packageAsPath.startsWith(entry.getName()))
+                        && entry.getName().endsWith(".class")
+                        && isIncluded(className);
+                    if (isTestClass) {
+                        logger.info("Found test class candidate in test jar file: {}",  entry.getName());
                         testClasses.add(TestClass.fromString(className));
                     }
                 }
