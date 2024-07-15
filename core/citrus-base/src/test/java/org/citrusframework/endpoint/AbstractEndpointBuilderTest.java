@@ -94,14 +94,7 @@ public class AbstractEndpointBuilderTest extends UnitTestSupport {
             return this;
         }
 
-        private static class Person {
-            final String name;
-            final int age;
-
-            private Person(String name, int age) {
-                this.name = name;
-                this.age = age;
-            }
+        private record Person(String name, int age) {
         }
     }
 }
