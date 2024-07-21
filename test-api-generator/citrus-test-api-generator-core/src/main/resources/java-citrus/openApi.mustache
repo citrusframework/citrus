@@ -1,0 +1,83 @@
+{{>licenseInfo}}
+
+package {{package}};
+
+import java.util.HashMap;
+import java.util.Map;
+import org.citrusframework.http.client.HttpClient;
+import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.generator.rest.petstore.model.Pet;
+import org.citrusframework.testapi.GeneratedApi;
+
+import {{invokerPackage}}.citrus.{{prefix}}AbstractSendAction;
+
+{{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
+public class {{classname}} implements GeneratedApi
+{
+
+    public static final {{classname}} INSTANCE = new {{classname}}();
+
+    private OpenApiSpecification openApiSpecification = null;
+
+    public String getApiTitle() {
+        return "{{appName}}";
+    }
+
+    public String getApiVersion() {
+        return "{{appVersion}}";
+    }
+
+    public String getApiPrefix() {
+        return "{{prefix}}";
+    }
+
+    public Map<String,String> getApiInfoExtensions() {
+        Map<String, String> infoExtensionMap = new HashMap<>();
+        {{#infoExtensions}}
+            {{#entrySet}}
+                infoExtensionMap.put("{{key}}", "{{value}}");
+            {{/entrySet}}
+        {{/infoExtensions}}
+        return infoExtensionMap;
+    }
+
+    {{#operations}}
+        {{#operation}}
+    public {{operationIdCamelCase}}ActionBuilder {{operationId}}()  {
+        return new {{operationIdCamelCase}}ActionBuilder();
+    }
+        {{/operation}}
+    {{/operations}}
+
+    {{#operations}}
+        {{#operation}}
+    public class {{operationIdCamelCase}}ActionBuilder extends {{prefix}}AbstractSendAction.Builder {
+
+        private static final String METHOD = ""{{httpMethod}}";
+
+        private static final String ENDPOINT = "{{path}}";
+
+        private static final String OPERATION_NAME = "{{operationId}}";
+
+        public AddPetActionBuilder() {
+            super(openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+        }
+
+            {{#queryParams}}
+        public {{operationIdCamelCase}}ActionBuilder with{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(String {{paramName}}) {
+            queryParam("{{paramName}}", {{paramName}});
+            return this;
+        }
+        }
+    {{/queryParams}}
+
+//        public AddPetActionBuilder withPet(Pet pet) {
+//        // TODO: fix this
+//        getMessageBuilderSupport().body(pet.toString());
+//        return this;
+//        }
+
+    }
+       {{/operation}}
+    {{/operations}}
+}
