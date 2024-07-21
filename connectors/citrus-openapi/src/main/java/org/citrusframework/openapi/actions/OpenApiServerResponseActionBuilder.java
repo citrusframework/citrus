@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.citrusframework.CitrusSettings;
+import org.citrusframework.openapi.OpenApiMessageType;
 import org.citrusframework.actions.SendMessageAction;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -51,7 +52,7 @@ import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.model.OasAdapter;
 import org.citrusframework.openapi.model.OasModelHelper;
 import org.citrusframework.openapi.model.OperationPathAdapter;
-import org.citrusframework.openapi.validation.OpenApiResponseValidationProcessor;
+import org.citrusframework.openapi.validation.OpenApiMessageProcessor;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -59,9 +60,9 @@ import org.springframework.http.HttpStatus;
  */
 public class OpenApiServerResponseActionBuilder extends HttpServerResponseActionBuilder {
 
-    private OpenApiResponseValidationProcessor openApiResponseValidationProcessor;
+    private OpenApiMessageProcessor openApiMessageProcessor;
 
-    private final OpenApiSpecification openApiSpec;
+    private final OpenApiSpecificationSource openApiSpecificationSource;
 
     private final String operationId;
 
@@ -70,26 +71,27 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
     /**
      * Default constructor initializes http response message builder.
      */
-    public OpenApiServerResponseActionBuilder(OpenApiSpecification openApiSpec, String operationId,
+    public OpenApiServerResponseActionBuilder(OpenApiSpecificationSource openApiSpecificationSource, String operationId,
         String statusCode, String accept) {
-        this(new HttpMessage(), openApiSpec, operationId, statusCode, accept);
+        this(new HttpMessage(), openApiSpecificationSource, operationId, statusCode, accept);
     }
 
     public OpenApiServerResponseActionBuilder(HttpMessage httpMessage,
-        OpenApiSpecification openApiSpec,
+        OpenApiSpecificationSource openApiSpecificationSource,
         String operationId, String statusCode, String accept) {
-        super(new OpenApiServerResponseMessageBuilder(httpMessage, openApiSpec, operationId,
+        super(new OpenApiServerResponseMessageBuilder(httpMessage, openApiSpecificationSource, operationId,
             statusCode, accept), httpMessage);
-        this.openApiSpec = openApiSpec;
+        this.openApiSpecificationSource = openApiSpecificationSource;
         this.operationId = operationId;
     }
 
     @Override
     public SendMessageAction doBuild() {
-
-        if (oasValidationEnabled && !messageProcessors.contains(openApiResponseValidationProcessor)) {
-            openApiResponseValidationProcessor = new OpenApiResponseValidationProcessor(openApiSpec, operationId);
-            process(openApiResponseValidationProcessor);
+        OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(referenceResolver);
+        if (oasValidationEnabled && !messageProcessors.contains(openApiMessageProcessor)) {
+            openApiMessageProcessor = new OpenApiMessageProcessor(
+                openApiSpecification, operationId, OpenApiMessageType.RESPONSE);
+            process(openApiMessageProcessor);
         }
 
         return super.doBuild();
@@ -98,6 +100,16 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
     public OpenApiServerResponseActionBuilder disableOasValidation(boolean disable) {
         oasValidationEnabled = !disable;
         return this;
+    }
+
+    /**
+     * By default, enable schema validation as the OpenAPI is always available.
+     */
+    @Override
+    protected HttpMessageBuilderSupport createMessageBuilderSupport() {
+        HttpMessageBuilderSupport messageBuilderSupport = super.createMessageBuilderSupport();
+        messageBuilderSupport.schemaValidation(true);
+        return messageBuilderSupport;
     }
 
     public OpenApiServerResponseActionBuilder enableRandomGeneration(boolean enable) {
@@ -109,17 +121,17 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
 
         private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("\\d+");
 
-        private final OpenApiSpecification openApiSpec;
+        private final OpenApiSpecificationSource openApiSpecificationSource;
         private final String operationId;
         private final String statusCode;
         private final String accept;
         private boolean randomGenerationEnabled = true;
 
         public OpenApiServerResponseMessageBuilder(HttpMessage httpMessage,
-            OpenApiSpecification openApiSpec,
+            OpenApiSpecificationSource openApiSpecificationSource,
             String operationId, String statusCode, String accept) {
             super(httpMessage);
-            this.openApiSpec = openApiSpec;
+            this.openApiSpecificationSource = openApiSpecificationSource;
             this.operationId = operationId;
             this.statusCode = statusCode;
             this.accept = accept;
@@ -133,6 +145,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
         @Override
         public Message build(TestContext context, String messageType) {
 
+            OpenApiSpecification openApiSpecification = openApiSpecificationSource.resolve(context.getReferenceResolver());
             if (STATUS_CODE_PATTERN.matcher(statusCode).matches()) {
                 getMessage().status(HttpStatus.valueOf(parseInt(statusCode)));
             } else {
@@ -143,12 +156,12 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             getHeaderBuilders().clear();
 
             if (randomGenerationEnabled) {
-                openApiSpec.getOperation(operationId, context)
+                openApiSpecification.getOperation(operationId, context)
                     .ifPresentOrElse(operationPathAdapter ->
-                        fillRandomData(operationPathAdapter, context), () -> {
+                        fillRandomData(openApiSpecification, operationPathAdapter, context), () -> {
                         throw new CitrusRuntimeException(
                             "Unable to locate operation with id '%s' in OpenAPI specification %s".formatted(
-                                operationId, openApiSpec.getSpecUrl()));
+                                operationId, openApiSpecification.getSpecUrl()));
                     });
             }
 
@@ -158,25 +171,25 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             return super.build(context, messageType);
         }
 
-        private void fillRandomData(OperationPathAdapter operationPathAdapter, TestContext context) {
+        private void fillRandomData(OpenApiSpecification openApiSpecification, OperationPathAdapter operationPathAdapter, TestContext context) {
 
             if (operationPathAdapter.operation().responses != null) {
-                buildResponse(context, operationPathAdapter.operation());
+                buildResponse(context, openApiSpecification, operationPathAdapter.operation());
             }
         }
 
-        private void buildResponse(TestContext context, OasOperation operation) {
+        private void buildResponse(TestContext context, OpenApiSpecification openApiSpecification, OasOperation operation) {
 
             Optional<OasResponse> responseForRandomGeneration = OasModelHelper.getResponseForRandomGeneration(
-                openApiSpec.getOpenApiDoc(context), operation, statusCode, null);
+                openApiSpecification.getOpenApiDoc(context), operation, statusCode, null);
 
             if (responseForRandomGeneration.isPresent()) {
-                buildRandomHeaders(context, responseForRandomGeneration.get());
-                buildRandomPayload(operation, responseForRandomGeneration.get());
+                buildRandomHeaders(context, openApiSpecification, responseForRandomGeneration.get());
+                buildRandomPayload(openApiSpecification, operation, responseForRandomGeneration.get());
             }
         }
 
-        private void buildRandomHeaders(TestContext context, OasResponse response) {
+        private void buildRandomHeaders(TestContext context, OpenApiSpecification openApiSpecification, OasResponse response) {
             Set<String> filteredHeaders = new HashSet<>(getMessage().getHeaders().keySet());
             Predicate<Entry<String, OasSchema>> filteredHeadersPredicate = entry -> !filteredHeaders.contains(
                 entry.getKey());
@@ -188,7 +201,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 .forEach(entry -> addHeaderBuilder(new DefaultHeaderBuilder(
                     singletonMap(entry.getKey(), createRandomValueExpression(entry.getKey(),
                         entry.getValue(),
-                        openApiSpec,
+                        openApiSpecification,
                         context))))
                 );
 
@@ -205,7 +218,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                             + CitrusSettings.VARIABLE_SUFFIX)))));
         }
 
-        private void buildRandomPayload(OasOperation operation, OasResponse response) {
+        private void buildRandomPayload(OpenApiSpecification openApiSpecification, OasOperation operation, OasResponse response) {
 
             Optional<OasAdapter<OasSchema, String>> schemaForMediaTypeOptional;
             if (statusCode.startsWith("2")) {
@@ -222,7 +235,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
                 OasAdapter<OasSchema, String> schemaForMediaType = schemaForMediaTypeOptional.get();
                 if (getMessage().getPayload() == null || (
                     getMessage().getPayload() instanceof String string && string.isEmpty())) {
-                    createRandomPayload(getMessage(), schemaForMediaType);
+                    createRandomPayload(getMessage(), openApiSpecification, schemaForMediaType);
                 }
 
                 // If we have a schema and a media type and the content type has not yet been set, do it.
@@ -233,7 +246,7 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             }
         }
 
-        private void createRandomPayload(HttpMessage message, OasAdapter<OasSchema, String> schemaForMediaType) {
+        private void createRandomPayload(HttpMessage message, OpenApiSpecification openApiSpecification, OasAdapter<OasSchema, String> schemaForMediaType) {
 
             if (schemaForMediaType.node() == null) {
                 // No schema means no payload, no type
@@ -241,11 +254,13 @@ public class OpenApiServerResponseActionBuilder extends HttpServerResponseAction
             } else {
                 if (TEXT_PLAIN_VALUE.equals(schemaForMediaType.adapted())) {
                     // Schema but plain text
-                    message.setPayload(createOutboundPayload(schemaForMediaType.node(), openApiSpec));
+                    message.setPayload(createOutboundPayload(schemaForMediaType.node(),
+                        openApiSpecification));
                     message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, TEXT_PLAIN_VALUE);
                 } else if (APPLICATION_JSON_VALUE.equals(schemaForMediaType.adapted())) {
                     // Json Schema
-                    message.setPayload(createOutboundPayload(schemaForMediaType.node(), openApiSpec));
+                    message.setPayload(createOutboundPayload(schemaForMediaType.node(),
+                        openApiSpecification));
                     message.setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, APPLICATION_JSON_VALUE);
                 }
             }

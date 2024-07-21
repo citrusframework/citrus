@@ -16,7 +16,6 @@
 
 package org.citrusframework.actions;
 
-import org.citrusframework.CitrusSettings;
 import org.citrusframework.Completable;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
@@ -25,16 +24,9 @@ import org.citrusframework.message.Message;
 import org.citrusframework.message.MessageBuilder;
 import org.citrusframework.message.MessageDirection;
 import org.citrusframework.message.MessageProcessor;
-import org.citrusframework.message.MessageType;
 import org.citrusframework.message.builder.MessageBuilderSupport;
 import org.citrusframework.message.builder.SendMessageBuilderSupport;
-import org.citrusframework.util.IsJsonPredicate;
-import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
-import org.citrusframework.validation.SchemaValidator;
-import org.citrusframework.validation.context.SchemaValidationContext;
-import org.citrusframework.validation.json.JsonMessageValidationContext;
-import org.citrusframework.validation.xml.XmlMessageValidationContext;
 import org.citrusframework.variable.VariableExtractor;
 import org.citrusframework.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
@@ -128,7 +120,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         finished.whenComplete((ctx, ex) -> {
             if (ex != null) {
-                logger.warn("Failure in forked send action: " + ex.getMessage());
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Failure in forked send action: %s".formatted(ex.getMessage()));
+                }
             } else {
                 for (Exception ctxEx : ctx.getExceptions()) {
                     logger.warn(ctxEx.getMessage());
@@ -146,7 +140,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         if (StringUtils.hasText(message.getName())) {
             context.getMessageStore().storeMessage(message.getName(), message);
         } else {
-            context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, messageEndpoint), message);
+            context.getMessageStore()
+                .storeMessage(context.getMessageStore().constructMessageName(this, messageEndpoint),
+                    message);
         }
 
         if (forkMode) {
@@ -179,59 +175,14 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     }
 
     /**
-     * Validate the message against registered schemas.
-     * @param message
+     * Validate the message against registered schema validators.
      */
     protected void validateMessage(Message message, TestContext context) {
-        List<SchemaValidator<? extends SchemaValidationContext>> schemaValidators = null;
-        SchemaValidationContext validationContext = null;
-        String  payload = message.getPayload(String.class);
-
-        if ((isSchemaValidation() || isJsonSchemaValidationEnabled()) && IsJsonPredicate.getInstance().test(payload)) {
-            schemaValidators = context.getMessageValidatorRegistry()
-                    .findSchemaValidators(MessageType.JSON.name(), message);
-            validationContext = JsonMessageValidationContext.Builder.json()
-                    .schemaValidation(this.schemaValidation)
-                    .schema(this.schema)
-                    .schemaRepository(this.schemaRepository).build();
-        } else if ((isSchemaValidation() || isXmlSchemaValidationEnabled()) && IsXmlPredicate.getInstance().test(payload)) {
-            schemaValidators = context.getMessageValidatorRegistry()
-                    .findSchemaValidators(MessageType.XML.name(), message);
-            validationContext = XmlMessageValidationContext.Builder.xml()
-                    .schemaValidation(this.schemaValidation)
-                    .schema(this.schema)
-                    .schemaRepository(this.schemaRepository).build();
-        }
-
-        if (schemaValidators != null) {
-            for (SchemaValidator validator : schemaValidators) {
-                validator.validate(message, context, validationContext);
-            }
-        }
-
+            context.getMessageValidatorRegistry().getSchemaValidators().values().stream()
+                .filter(validator -> validator.canValidate(message, isSchemaValidation())).forEach(validator ->
+                    validator.validate(message, context, this.schemaRepository, this.schema));
     }
 
-    /**
-     * Get setting to determine if json schema validation is enabled by default.
-     * @return
-     */
-    private static boolean isJsonSchemaValidationEnabled() {
-        return Boolean.getBoolean(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY)
-                || Boolean.getBoolean(CitrusSettings.OUTBOUND_JSON_SCHEMA_VALIDATION_ENABLED_PROPERTY)
-                || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV))
-                || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_JSON_SCHEMA_VALIDATION_ENABLED_ENV));
-    }
-
-    /**
-     * Get setting to determine if xml schema validation is enabled by default.
-     * @return
-     */
-    private static boolean isXmlSchemaValidationEnabled() {
-        return Boolean.getBoolean(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY)
-                || Boolean.getBoolean(CitrusSettings.OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_PROPERTY)
-                || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV))
-                || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_ENV));
-    }
 
     /**
      * {@inheritDoc}
@@ -249,12 +200,13 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     @Override
     public boolean isDone(TestContext context) {
         return Optional.ofNullable(finished)
-                .map(future -> future.isDone() || isDisabled(context))
-                .orElseGet(() -> isDisabled(context));
+            .map(future -> future.isDone() || isDisabled(context))
+            .orElseGet(() -> isDisabled(context));
     }
 
     /**
      * Create message to be sent.
+     *
      * @param context
      * @param messageType
      * @return
@@ -264,7 +216,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         if (message.getPayload() != null) {
             context.getMessageProcessors(MessageDirection.OUTBOUND)
-                    .forEach(processor -> processor.process(message, context));
+                .forEach(processor -> processor.process(message, context));
 
             if (dataDictionary != null) {
                 dataDictionary.process(message, context);
@@ -278,6 +230,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Creates or gets the message endpoint instance.
+     *
      * @return the message endpoint
      */
     public Endpoint getOrCreateEndpoint(TestContext context) {
@@ -292,6 +245,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Gets the message endpoint.
+     *
      * @return
      */
     public Endpoint getEndpoint() {
@@ -300,6 +254,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Get
+     *
      * @return true if schema validation is active for this message
      */
     public boolean isSchemaValidation() {
@@ -308,6 +263,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Get the name of the schema repository used for validation
+     *
      * @return the schema repository name
      */
     public String getSchemaRepository() {
@@ -316,6 +272,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Get the name of the schema used for validation
+     *
      * @return the schema
      */
     public String getSchema() {
@@ -324,6 +281,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Get the variable extractors.
+     *
      * @return the variableExtractors
      */
     public List<VariableExtractor> getVariableExtractors() {
@@ -332,6 +290,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Obtains the message processors.
+     *
      * @return
      */
     public List<MessageProcessor> getMessageProcessors() {
@@ -340,6 +299,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Gets the messageBuilder.
+     *
      * @return the messageBuilder
      */
     public MessageBuilder getMessageBuilder() {
@@ -348,6 +308,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Gets the forkMode.
+     *
      * @return the forkMode the forkMode to get.
      */
     public boolean isForkMode() {
@@ -356,6 +317,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Gets the message type for this receive action.
+     *
      * @return the messageType
      */
     public String getMessageType() {
@@ -364,6 +326,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Gets the data dictionary.
+     *
      * @return
      */
     public DataDictionary<?> getDataDictionary() {
@@ -372,6 +335,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     /**
      * Gets the endpoint uri.
+     *
      * @return
      */
     public String getEndpointUri() {
@@ -381,10 +345,12 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /**
      * Action builder.
      */
-    public static class Builder extends SendMessageActionBuilder<SendMessageAction, SendMessageActionBuilderSupport, Builder> {
+    public static final class Builder extends
+        SendMessageActionBuilder<SendMessageAction, SendMessageActionBuilderSupport, Builder> {
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         *
          * @return
          */
         public static Builder send() {
@@ -393,6 +359,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         *
          * @param messageEndpoint
          * @return
          */
@@ -404,6 +371,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         *
          * @param messageEndpointUri
          * @return
          */
@@ -428,7 +396,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
     }
 
-    public static class SendMessageActionBuilderSupport extends SendMessageBuilderSupport<SendMessageAction, SendMessageAction.Builder, SendMessageAction.SendMessageActionBuilderSupport> {
+    public static class SendMessageActionBuilderSupport extends
+        SendMessageBuilderSupport<SendMessageAction, SendMessageAction.Builder, SendMessageAction.SendMessageActionBuilderSupport> {
 
         public SendMessageActionBuilderSupport(SendMessageAction.Builder delegate) {
             super(delegate);
@@ -438,14 +407,15 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /**
      * Base send message action builder also used by subclasses of base send message action.
      */
-    public static abstract class SendMessageActionBuilder<T extends SendMessageAction, M extends SendMessageBuilderSupport<T, B, M>, B extends SendMessageActionBuilder<T, M, B>>
-            extends MessageBuilderSupport.MessageActionBuilder<T, M, B> {
+    public abstract static class SendMessageActionBuilder<T extends SendMessageAction, M extends SendMessageBuilderSupport<T, B, M>, B extends SendMessageActionBuilder<T, M, B>>
+        extends MessageBuilderSupport.MessageActionBuilder<T, M, B> {
 
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;
 
         /**
          * Sets the fork mode for this send action builder.
+         *
          * @param forkMode
          * @return
          */
@@ -463,7 +433,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
             if (referenceResolver != null) {
                 if (messageBuilderSupport.getDataDictionaryName() != null) {
                     this.messageBuilderSupport.dictionary(
-                            referenceResolver.resolve(messageBuilderSupport.getDataDictionaryName(), DataDictionary.class));
+                        referenceResolver.resolve(messageBuilderSupport.getDataDictionaryName(),
+                            DataDictionary.class));
                 }
             }
 

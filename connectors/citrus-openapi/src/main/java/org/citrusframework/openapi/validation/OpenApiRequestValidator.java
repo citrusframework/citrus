@@ -57,6 +57,17 @@ public class OpenApiRequestValidator extends OpenApiValidator {
         }
     }
 
+    public ValidationReport validateRequestToReport(OperationPathAdapter operationPathAdapter,
+        HttpMessage requestMessage) {
+
+        if (enabled && openApiInteractionValidator != null) {
+            return openApiInteractionValidator.validateRequest(
+                createRequestFromMessage(operationPathAdapter, requestMessage));
+        }
+
+        return ValidationReport.empty();
+    }
+
     Request createRequestFromMessage(OperationPathAdapter operationPathAdapter,
         HttpMessage httpMessage) {
         var payload = httpMessage.getPayload();
