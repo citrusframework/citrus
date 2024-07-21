@@ -381,7 +381,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /**
      * Action builder.
      */
-    public static final class Builder extends SendMessageActionBuilder<SendMessageAction, SendMessageActionBuilderSupport, Builder> {
+    public static class Builder extends SendMessageActionBuilder<SendMessageAction, SendMessageActionBuilderSupport, Builder> {
 
         /**
          * Fluent API action building entry method used in Java DSL.
