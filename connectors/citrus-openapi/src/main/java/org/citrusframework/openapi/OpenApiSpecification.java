@@ -323,12 +323,12 @@ public class OpenApiSpecification {
         String basePath = OasModelHelper.getBasePath(openApiDoc);
         String fullOperationPath = StringUtils.appendSegmentToUrlPath(basePath, path);
 
-        OperationPathAdapter operationPathAdapter = new OperationPathAdapter(path, rootContextPath,
-            StringUtils.appendSegmentToUrlPath(rootContextPath, path), operation);
-
         String uniqueOperationId = OpenApiUtils.createFullPathOperationIdentifier(fullOperationPath,
             operation);
         operationToUniqueId.put(operation, uniqueOperationId);
+
+        OperationPathAdapter operationPathAdapter = new OperationPathAdapter(path, rootContextPath,
+            StringUtils.appendSegmentToUrlPath(rootContextPath, path), operation, uniqueOperationId);
 
         operationIdToOperationPathAdapter.put(uniqueOperationId, operationPathAdapter);
         if (StringUtils.hasText(operation.operationId)) {

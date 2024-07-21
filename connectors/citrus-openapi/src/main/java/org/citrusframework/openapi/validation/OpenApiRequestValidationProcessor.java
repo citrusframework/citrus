@@ -19,6 +19,7 @@ package org.citrusframework.openapi.validation;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.message.Message;
+import org.citrusframework.openapi.OpenApiMessageHeaders;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.validation.ValidationProcessor;
 
@@ -48,6 +49,8 @@ public class OpenApiRequestValidationProcessor implements
         if (!(message instanceof HttpMessage httpMessage)) {
             return;
         }
+
+        message.setHeader(OpenApiMessageHeaders.OAS_UNIQUE_OPERATION_ID, operationId);
 
         openApiSpecification.getOperation(
             operationId, context).ifPresent(operationPathAdapter ->

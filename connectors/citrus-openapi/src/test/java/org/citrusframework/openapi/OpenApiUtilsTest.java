@@ -16,17 +16,25 @@
 
 package org.citrusframework.openapi;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.openapi.util.OpenApiUtils;
+import org.citrusframework.openapi.validation.OpenApiMessageProcessor;
+import org.citrusframework.spi.ReferenceResolver;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.citrusframework.openapi.util.OpenApiUtils.getKnownOpenApiAliases;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class OpenApiUtilsTest {
 
@@ -93,5 +101,57 @@ public class OpenApiUtilsTest {
         String methodPath = OpenApiUtils.getMethodPath("", "");
         // Then
         assertEquals(methodPath, "//");
+    }
+
+    @Test
+    public void testGetKnownOpenApiAliases() {
+
+        ReferenceResolver resolver = mock();
+        OpenApiRepository repository1 = mock();
+        OpenApiRepository repository2 = mock();
+        OpenApiSpecification spec1 = mock();
+        OpenApiSpecification spec2 = mock();
+
+        when(resolver.resolveAll(OpenApiRepository.class)).thenReturn(
+            Map.of(
+                "repo1", repository1,
+                "repo2", repository2
+            )
+        );
+
+        when(repository1.getOpenApiSpecifications()).thenReturn(List.of(spec1));
+        when(repository2.getOpenApiSpecifications()).thenReturn(List.of(spec2));
+
+        when(spec1.getAliases()).thenReturn(Set.of("alias1", "alias2"));
+        when(spec2.getAliases()).thenReturn(Set.of("alias3"));
+
+        String result = getKnownOpenApiAliases(resolver);
+
+        assertTrue(result.contains("alias1"));
+        assertTrue(result.contains("alias2"));
+        assertTrue(result.contains("alias3"));
+    }
+
+    @Test
+    public void testGetKnownOpenApiAliasesNoAliases() {
+        ReferenceResolver resolver = mock();
+        OpenApiRepository repository1 = mock();
+        OpenApiRepository repository2 = mock();
+
+        when(resolver.resolveAll(OpenApiRepository.class)).thenReturn(
+            Map.of(
+                "repo1", repository1,
+                "repo2", repository2
+            )
+        );
+
+        when(repository1.getOpenApiSpecifications()).thenReturn(List.of());
+        when(repository2.getOpenApiSpecifications()).thenReturn(List.of());
+
+        // Call the method under test
+        String result = getKnownOpenApiAliases(resolver);
+
+        // Verify the result
+        assertEquals(result, "");
     }
 }
