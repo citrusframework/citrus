@@ -234,15 +234,14 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(schemaValidator.supportsMessageType(eq("XML"), any())).thenReturn(true);
         doAnswer(invocation-> {
 
-            Object argument = invocation.getArgument(2);
-
-            Assert.assertTrue(argument instanceof XmlMessageValidationContext);
-            Assert.assertEquals(((XmlMessageValidationContext)argument).getSchema(), "fooSchema");
-            Assert.assertEquals(((XmlMessageValidationContext)argument).getSchemaRepository(), "fooRepository");
+            Assert.assertEquals(invocation.getArgument(3, String.class), "fooSchema");
+            Assert.assertEquals(invocation.getArgument(2, String.class), "fooRepository");
 
             validated.set(true);
             return null;
-        }).when(schemaValidator).validate(any(), any(), any());
+        }).when(schemaValidator)
+            .validate(isA(Message.class), isA(TestContext.class), isA(String.class), isA(String.class));
+        doReturn(true).when(schemaValidator).canValidate(isA(Message.class), isA(Boolean.class));
 
         context.getMessageValidatorRegistry().addSchemaValidator("XML", schemaValidator);
 
