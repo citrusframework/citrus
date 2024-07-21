@@ -35,13 +35,17 @@ import java.net.URL;
  */
 public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActionBuilder<TestAction> {
 
-	private OpenApiSpecification specification;
+	private OpenApiSpecificationSource openApiSpecificationSource;
 
 	public OpenApiActionBuilder() {
 	}
 
 	public OpenApiActionBuilder(OpenApiSpecification specification) {
-		this.specification = specification;
+		this.openApiSpecificationSource = new OpenApiSpecificationSource(specification);
+	}
+
+	public OpenApiActionBuilder(String openApiAlias) {
+		this.openApiSpecificationSource = new OpenApiSpecificationSource(openApiAlias);
 	}
 
 	/**
@@ -55,8 +59,17 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
 		return new OpenApiActionBuilder(specification);
 	}
 
+	public static OpenApiActionBuilder openapi(String openApiAlias) {
+		return new OpenApiActionBuilder(openApiAlias);
+	}
+
 	public OpenApiActionBuilder specification(OpenApiSpecification specification) {
-		this.specification = specification;
+		this.openApiSpecificationSource = new OpenApiSpecificationSource(specification);
+		return this;
+	}
+
+	public OpenApiActionBuilder specificationByAlias(String openApiAlias) {
+		this.openApiSpecificationSource = new OpenApiSpecificationSource(openApiAlias);
 		return this;
 	}
 
@@ -70,7 +83,11 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
 
 	public OpenApiClientActionBuilder client() {
 		assertSpecification();
-		return client(specification.getRequestUrl());
+		OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(
+			openApiSpecificationSource)
+			.withReferenceResolver(referenceResolver);
+		this.delegate = clientActionBuilder;
+		return clientActionBuilder;
 	}
 
 	/**
@@ -80,10 +97,11 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
 		assertSpecification();
 
 		if (httpClient.getEndpointConfiguration().getRequestUrl() != null) {
-			specification.setRequestUrl(httpClient.getEndpointConfiguration().getRequestUrl());
+			openApiSpecificationSource.setHttpClient(httpClient.getEndpointConfiguration().getRequestUrl());
 		}
 
-		OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(httpClient, specification)
+		OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(httpClient,
+			openApiSpecificationSource)
 				.withReferenceResolver(referenceResolver);
 		this.delegate = clientActionBuilder;
 		return clientActionBuilder;
@@ -95,9 +113,10 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
 	public OpenApiClientActionBuilder client(String httpClient) {
 		assertSpecification();
 
-		specification.setHttpClient(httpClient);
+		openApiSpecificationSource.setHttpClient(httpClient);
 
-		OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(httpClient, specification)
+		OpenApiClientActionBuilder clientActionBuilder = new OpenApiClientActionBuilder(httpClient,
+			openApiSpecificationSource)
 				.withReferenceResolver(referenceResolver);
 		this.delegate = clientActionBuilder;
 		return clientActionBuilder;
@@ -109,15 +128,16 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
 	public OpenApiServerActionBuilder server(Endpoint endpoint) {
 		assertSpecification();
 
-		OpenApiServerActionBuilder serverActionBuilder = new OpenApiServerActionBuilder(endpoint, specification)
+		OpenApiServerActionBuilder serverActionBuilder = new OpenApiServerActionBuilder(endpoint,
+			openApiSpecificationSource)
 				.withReferenceResolver(referenceResolver);
 		this.delegate = serverActionBuilder;
 		return serverActionBuilder;
 	}
 
 	private void assertSpecification() {
-		if (specification == null) {
-			throw new CitrusRuntimeException("Invalid OpenApi specification - please set specification first");
+		if (openApiSpecificationSource == null) {
+			throw new CitrusRuntimeException("Invalid OpenApiSpecificationSource - please set specification first");
 		}
 	}
 
@@ -127,7 +147,8 @@ public class OpenApiActionBuilder extends AbstractReferenceResolverAwareTestActi
 	public OpenApiServerActionBuilder server(String httpServer) {
 		assertSpecification();
 
-		OpenApiServerActionBuilder serverActionBuilder = new OpenApiServerActionBuilder(httpServer, specification)
+		OpenApiServerActionBuilder serverActionBuilder = new OpenApiServerActionBuilder(httpServer,
+			openApiSpecificationSource)
 				.withReferenceResolver(referenceResolver);
 		this.delegate = serverActionBuilder;
 		return serverActionBuilder;

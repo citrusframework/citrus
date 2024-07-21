@@ -21,9 +21,12 @@ import static java.lang.String.format;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import jakarta.annotation.Nonnull;
+import java.util.stream.Collectors;
 import org.citrusframework.http.message.HttpMessage;
 import org.citrusframework.http.message.HttpMessageHeaders;
 import org.citrusframework.openapi.OpenApiConstants;
+import org.citrusframework.openapi.OpenApiRepository;
+import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
 
 public class OpenApiUtils {
@@ -73,4 +76,18 @@ public class OpenApiUtils {
         return schema.required.contains(field);
     }
 
+    /**
+     * Retrieves all known OpenAPI aliases from {@link org.citrusframework.openapi.OpenApiSpecification}s
+     * registered in {@link OpenApiRepository}s.
+     *
+     * @param resolver the {@code ReferenceResolver} to use for resolving {@code OpenApiRepository} instances.
+     * @return a comma-separated string of all known OpenAPI aliases.
+     */
+    public static String getKnownOpenApiAliases(ReferenceResolver resolver) {
+        return resolver.resolveAll(OpenApiRepository.class).values()
+            .stream().flatMap(
+                openApiRepository -> openApiRepository.getOpenApiSpecifications()
+                    .stream()).flatMap(spec -> spec.getAliases().stream()).collect(
+                Collectors.joining(", "));
+    }
 }
