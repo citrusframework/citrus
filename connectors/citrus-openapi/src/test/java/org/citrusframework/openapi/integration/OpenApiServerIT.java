@@ -18,9 +18,11 @@ package org.citrusframework.openapi.integration;
 
 import static org.citrusframework.http.actions.HttpActionBuilder.http;
 import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.fail;
 
+import java.util.List;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.http.actions.HttpServerResponseActionBuilder.HttpMessageBuilderSupport;
@@ -28,6 +30,7 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiServerRequestActionBuilder;
@@ -37,6 +40,8 @@ import org.citrusframework.spi.Resources;
 import org.citrusframework.testng.spring.TestNGCitrusSpringSupport;
 import org.citrusframework.util.SocketUtils;
 import org.springframework.http.HttpStatus;
+import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**
@@ -63,11 +68,10 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
             .requestUrl("http://localhost:%d/petstore/v3".formatted(port))
             .build();
 
-    /**
-     * Directly loaded open api.
-     */
-    private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
-        Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+    @BindToRegistry
+    private final OpenApiRepository openApiRepository = new OpenApiRepository()
+        .locations(List.of("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+
 
     @CitrusTest
     public void shouldExecuteGetPetById() {
@@ -81,11 +85,11 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
                 .accept("application/json")
                 .fork(true));
 
-        then(openapi(petstoreSpec)
+        then(openapi("petstore-v3")
                 .server(httpServer)
                 .receive("getPetById"));
 
-        then(openapi(petstoreSpec)
+        then(openapi("petstore-v3")
                 .server(httpServer)
                 .send("getPetById", HttpStatus.OK));
 
@@ -121,11 +125,11 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
             .accept("application/json")
             .fork(true));
 
-        then(openapi(petstoreSpec)
+        then(openapi("petstore-v3")
             .server(httpServer)
             .receive("getPetById"));
 
-        HttpMessageBuilderSupport getPetByIdResponseBuilder = openapi(petstoreSpec)
+        HttpMessageBuilderSupport getPetByIdResponseBuilder = openapi("petstore-v3")
             .server(httpServer)
             .send("getPetById", HttpStatus.OK)
             .message().body("""
@@ -156,11 +160,11 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
             .accept("application/json")
             .fork(true));
 
-        then(openapi(petstoreSpec)
+        then(openapi("petstore-v3")
             .server(httpServer)
             .receive("getPetById"));
 
-        HttpMessageBuilderSupport getPetByIdResponseBuilder = openapi(petstoreSpec)
+        HttpMessageBuilderSupport getPetByIdResponseBuilder = openapi("petstore-v3")
             .server(httpServer)
             .send("getPetById", HttpStatus.OK)
             .disableOasValidation(true)
@@ -201,12 +205,12 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
 
     @CitrusTest
     public void shouldExecuteAddPet() {
-        shouldExecuteAddPet(openapi(petstoreSpec), VALID_PET_PATH, true);
+        shouldExecuteAddPet(openapi("petstore-v3"), VALID_PET_PATH, true);
     }
 
     @CitrusTest
     public void shouldFailOnMissingNameInRequest() {
-        shouldExecuteAddPet(openapi(petstoreSpec), INVALID_PET_PATH, false);
+        shouldExecuteAddPet(openapi("petstore-v3"), INVALID_PET_PATH, false);
     }
 
     @CitrusTest
@@ -221,11 +225,11 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
             .accept("application/json")
             .fork(true));
 
-        then(openapi(petstoreSpec)
+        then(openapi("petstore-v3")
             .server(httpServer)
             .receive("getPetById"));
 
-        OpenApiServerResponseActionBuilder sendMessageActionBuilder = openapi(petstoreSpec)
+        OpenApiServerResponseActionBuilder sendMessageActionBuilder = openapi("petstore-v3")
             .server(httpServer)
             .send("getPetById", HttpStatus.OK);
         sendMessageActionBuilder.message().body(Resources.create(INVALID_PET_PATH));
@@ -247,7 +251,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
             .contentType("application/json")
             .fork(true));
 
-        OpenApiServerRequestActionBuilder addPetBuilder = openapi(petstoreSpec)
+        OpenApiServerRequestActionBuilder addPetBuilder = openapi("petstore-v3")
             .server(httpServer)
             .receive("addPet");
 
@@ -267,7 +271,7 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
             .contentType("application/json")
             .fork(true));
 
-        OpenApiServerRequestActionBuilder addPetBuilder = openapi(petstoreSpec)
+        OpenApiServerRequestActionBuilder addPetBuilder = openapi("petstore-v3")
             .server(httpServer)
             .receive("addPet")
             .disableOasValidation(false);
@@ -296,18 +300,21 @@ public class OpenApiServerIT extends TestNGCitrusSpringSupport {
             .receive("addPet");
         if (valid) {
             then(receiveActionBuilder);
+
+            then(openapi
+                .server(httpServer)
+                .send("addPet", HttpStatus.CREATED));
+
+            then(http()
+                .client(httpClient)
+                .receive()
+                .response(HttpStatus.CREATED));
+
         } else {
             assertThrows(() -> then(receiveActionBuilder));
         }
 
-        then(openapi
-                .server(httpServer)
-                .send("addPet", HttpStatus.CREATED));
 
-        then(http()
-                .client(httpClient)
-                .receive()
-                .response(HttpStatus.CREATED));
     }
 
 }

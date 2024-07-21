@@ -113,7 +113,11 @@ public class MessageValidatorRegistry {
 
         if (isEmptyOrDefault(matchingValidators)) {
             if (mustFindValidator) {
-                logger.warn(String.format("Unable to find proper message validator. Message type is '%s' and message payload is '%s'", messageType, message.getPayload(String.class)));
+                if (logger.isWarnEnabled()) {
+                    logger.warn(String.format(
+                        "Unable to find proper message validator. Message type is '%s' and message payload is '%s'",
+                        messageType, message.getPayload(String.class)));
+                }
                 throw new CitrusRuntimeException("Failed to find proper message validator for message");
             }
 
@@ -308,5 +312,12 @@ public class MessageValidatorRegistry {
      */
     public void setSchemaValidators(Map<String, SchemaValidator<? extends SchemaValidationContext>> schemaValidators) {
         this.schemaValidators = schemaValidators;
+    }
+
+    /**
+     * Return all schema validators.
+     */
+    public Map<String, SchemaValidator<? extends SchemaValidationContext>> getSchemaValidators() {
+        return schemaValidators;
     }
 }

@@ -19,7 +19,6 @@ package org.citrusframework.openapi.actions;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
 import org.citrusframework.util.ObjectHelper;
@@ -33,7 +32,7 @@ import org.springframework.http.HttpStatus;
  */
 public class OpenApiServerActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
 
-    private final OpenApiSpecification specification;
+    private final OpenApiSpecificationSource openApiSpecificationSource;
 
     /** Bean reference resolver */
     private ReferenceResolver referenceResolver;
@@ -47,24 +46,25 @@ public class OpenApiServerActionBuilder implements TestActionBuilder.DelegatingT
     /**
      * Default constructor.
      */
-    public OpenApiServerActionBuilder(Endpoint httpServer, OpenApiSpecification specification) {
+    public OpenApiServerActionBuilder(Endpoint httpServer, OpenApiSpecificationSource specification) {
         this.httpServer = httpServer;
-        this.specification = specification;
+        this.openApiSpecificationSource = specification;
     }
 
     /**
      * Default constructor.
      */
-    public OpenApiServerActionBuilder(String httpServerUri, OpenApiSpecification specification) {
+    public OpenApiServerActionBuilder(String httpServerUri, OpenApiSpecificationSource specification) {
         this.httpServerUri = httpServerUri;
-        this.specification = specification;
+        this.openApiSpecificationSource = specification;
     }
 
     /**
      * Receive Http requests as server.
      */
     public OpenApiServerRequestActionBuilder receive(String operationId) {
-        OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(specification, operationId);
+        OpenApiServerRequestActionBuilder builder = new OpenApiServerRequestActionBuilder(
+            openApiSpecificationSource, operationId);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {
@@ -111,7 +111,8 @@ public class OpenApiServerActionBuilder implements TestActionBuilder.DelegatingT
      * Send Http response messages as server to client.
      */
     public OpenApiServerResponseActionBuilder send(String operationId, String statusCode, String accept) {
-        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(specification, operationId, statusCode, accept);
+        OpenApiServerResponseActionBuilder builder = new OpenApiServerResponseActionBuilder(
+            openApiSpecificationSource, operationId, statusCode, accept);
         if (httpServer != null) {
             builder.endpoint(httpServer);
         } else {
