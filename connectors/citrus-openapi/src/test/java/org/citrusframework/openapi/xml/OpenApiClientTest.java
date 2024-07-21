@@ -184,7 +184,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         validator.validateMessage(request, controlMessage, context, new DefaultValidationContext());
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 4);
         Assert.assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
@@ -203,7 +203,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         Assert.assertEquals(httpMessageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/json");
         Assert.assertNull(receiveMessageAction.getEndpoint());
         Assert.assertEquals(receiveMessageAction.getEndpointUri(), "httpClient");
-        Assert.assertEquals(receiveMessageAction.getMessageProcessors().size(), 0);
+        Assert.assertEquals(receiveMessageAction.getMessageProcessors().size(), 1);
         Assert.assertEquals(receiveMessageAction.getControlMessageProcessors().size(), 0);
 
         sendMessageAction = (SendMessageAction) result.getTestAction(actionIndex++);
@@ -224,7 +224,7 @@ public class OpenApiClientTest extends AbstractXmlActionTest {
         Assert.assertEquals(sendMessageAction.getEndpointUri(), "httpClient");
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex);
-        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
+        Assert.assertEquals(receiveMessageAction.getValidationContexts().size(), 4);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof JsonMessageValidationContext);
         Assert.assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof HeaderValidationContext);

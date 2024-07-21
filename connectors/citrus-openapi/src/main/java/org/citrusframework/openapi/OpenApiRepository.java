@@ -115,7 +115,12 @@ public class OpenApiRepository extends BaseRepository {
         try {
             File file = openApiResource.getFile();
             if (file != null) {
-                return Optional.of(file.getName());
+                resourceAlias = file.getName();
+                int index = resourceAlias.lastIndexOf(".");
+                if (index != -1 && index != resourceAlias.length()-1) {
+                    resourceAlias = resourceAlias.substring(0, index);
+                }
+                return Optional.of(resourceAlias);
             }
         } catch (Exception e) {
             // Ignore and try with url
@@ -130,6 +135,11 @@ public class OpenApiRepository extends BaseRepository {
                 if (index != -1 && index != urlString.length()-1) {
                     resourceAlias = resourceAlias.substring(index+1);
                 }
+                index = resourceAlias.lastIndexOf(".");
+                if (index != -1 && index != resourceAlias.length()-1) {
+                    resourceAlias = resourceAlias.substring(0, index);
+                }
+
             }
         } catch (MalformedURLException e) {
             logger.error("Unable to determine resource alias from resource!", e);
@@ -140,5 +150,14 @@ public class OpenApiRepository extends BaseRepository {
 
     public List<OpenApiSpecification> getOpenApiSpecifications() {
         return openApiSpecifications;
+    }
+
+    public OpenApiRepository locations(List<String> locations) {
+        setLocations(locations);
+        return this;
+    }
+
+    public OpenApiSpecification openApi(String alias) {
+        return  getOpenApiSpecifications().stream().filter(spec -> spec.getAliases().contains(alias)).findFirst().orElse(null);
     }
 }
