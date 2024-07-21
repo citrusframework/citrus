@@ -2,34 +2,15 @@
 
 package {{package}};
 
-import org.citrusframework.testapi.GeneratedApi;
-import org.citrusframework.testapi.GeneratedApiRequest;
-import jakarta.servlet.http.Cookie;
-import org.apache.commons.lang3.StringUtils;
-import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.spi.Resources;
-import org.citrusframework.http.actions.HttpActionBuilder;
-import org.citrusframework.http.actions.HttpClientRequestActionBuilder;
-import org.citrusframework.http.actions.HttpClientRequestActionBuilder.HttpMessageBuilderSupport;
-import org.citrusframework.util.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-
-import {{invokerPackage}}.citrus.{{prefix}}AbstractTestRequest;
-
-import java.io.IOException;
-import java.util.Base64;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import org.citrusframework.http.client.HttpClient;
+import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.generator.TestApiClientRequestActionBuilder;
+import org.citrusframework.openapi.generator.rest.petstore.model.Pet;
+import org.citrusframework.testapi.GeneratedApi;
+
+import {{invokerPackage}}.citrus.{{prefix}}AbstractSendAction;
 
 {{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
 public class {{classname}} implements GeneratedApi
@@ -37,223 +18,67 @@ public class {{classname}} implements GeneratedApi
 
     public static final {{classname}} INSTANCE = new {{classname}}();
 
+    private OpenApiSpecification openApiSpecification = null;
+
     public String getApiTitle() {
-        return "{{appName}}";
+    return "{{appName}}";
     }
 
     public String getApiVersion() {
-        return "{{appVersion}}";
+    return "{{appVersion}}";
     }
 
     public String getApiPrefix() {
-        return "{{prefix}}";
+    return "{{prefix}}";
     }
 
     public Map<String,String> getApiInfoExtensions() {
         Map<String, String> infoExtensionMap = new HashMap<>();
         {{#infoExtensions}}
             {{#entrySet}}
-        infoExtensionMap.put("{{key}}", "{{value}}");
+            infoExtensionMap.put("{{key}}", "{{value}}");
             {{/entrySet}}
         {{/infoExtensions}}
         return infoExtensionMap;
     }
 
-    {{#operations}}
+{{#operations}}
     {{#operation}}
-    /** {{operationId}} ({{httpMethod}} {{httpPathPrefix}}{{{path}}})
-        {{summary}}
-        {{description}}
-    **/
-    public static class {{operationIdCamelCase}}Request extends {{prefix}}AbstractTestRequest implements GeneratedApiRequest {
-
-        private static final String ENDPOINT = "{{httpPathPrefix}}{{{path}}}";
-        private final Logger coverageLogger = LoggerFactory.getLogger({{operationIdCamelCase}}Request.class);
-
-        {{#queryParams}}
-        private String {{paramName}};
-
-        {{/queryParams}}
-        {{#pathParams}}
-        private String {{paramName}};
-
-        {{/pathParams}}
-        {{#isMultipart}}
-        {{#formParams}}
-        private String {{paramName}};
-
-        {{/formParams}}
-        {{/isMultipart}}
-        {{#authMethods}}{{#isBasic}}
-        @Value("${" + "{{apiEndpoint}}.basic.username:#{null}}")
-        private String basicUsername;
-        @Value("${" + "{{apiEndpoint}}.basic.password:#{null}}")
-        private String basicPassword;
-
-        {{/isBasic}}
-        {{/authMethods}}
-
-        public {{operationIdCamelCase}}Request() {
-            // The name will be overwritten with the tag name using the actual namespace as prefix, when the class is loaded from xml
-            setName("{{prefix}}".toLowerCase() + ":{{operationId}}RequestType");
+        public {{operationIdCamelCase}}ActionBuilder {{operationId}}()  {
+        return new {{operationIdCamelCase}}ActionBuilder();
         }
 
-        public String getOperationName() {
-            return "{{operationId}}";
-        }
+    {{/operation}}
+{{/operations}}
 
-        public String getMethod() {
-            return "{{httpMethod}}";
-        }
+{{#operations}}
+    {{#operation}}
+    public class {{operationIdCamelCase}}ActionBuilder extends TestApiClientRequestActionBuilder {
 
-        public String getPath() {
-            return "{{path}}";
-        }
+    private static final String METHOD = "{{httpMethod}}";
 
-        /**
-        * This method sends the HTTP-Request
-        */
-        public void sendRequest(TestContext context) {
-            HttpClientRequestActionBuilder httpClientRequestActionBuilder = new HttpActionBuilder().client(httpClient).send()
-                .{{#lambda.lowercase}}{{httpMethod}}{{/lambda.lowercase}}(replacePathParams(ENDPOINT));
+    private static final String ENDPOINT = "{{path}}";
 
-            HttpMessageBuilderSupport messageBuilderSupport = httpClientRequestActionBuilder.getMessageBuilderSupport();
-            messageBuilderSupport.accept(responseAcceptType);
+    private static final String OPERATION_NAME = "{{operationId}}";
 
-            if (cookies != null) {
-                cookies.forEach((k, v) -> messageBuilderSupport.cookie(new Cookie(k, v)));
-            }
+    public AddPetActionBuilder() {
+        super(openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+    }
 
-            if (headers != null) {
-                headers.forEach((k, v) -> messageBuilderSupport.cookie(new Cookie(k, v)));
-                headers.forEach(messageBuilderSupport::header);
-            }
+    {{#queryParams}}
+    public {{operationIdCamelCase}}ActionBuilder with{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(String {{paramName}}) {
+        queryParam("{{paramName}}", {{paramName}});
+        return this;
+    }
+    {{/queryParams}}
 
-            String bodyLog = "";
-            {{#isMultipart}}
-            MultiValueMap<String, Object> multiValues = new LinkedMultiValueMap<>();
-            {{#formParams}}
-            {{#required}}
-            if(StringUtils.isBlank({{paramName}})) {
-                throw new CitrusRuntimeException(String.format("Required attribute '%s' is not specified", "{{paramName}}"));
-            }
-            {{/required}}
-            {{#isBinary}}
-            if (StringUtils.isNotBlank({{paramName}})) {
-                multiValues.add("{{paramName}}", new ClassPathResource({{paramName}}));
-                bodyLog += {{paramName}}.replace("\n", "\\n").replace("\r", "\\r").replace("\"", "\"\"") +",";
-            }
-            {{/isBinary}}
-            {{^isBinary}}
-            if (StringUtils.isNotBlank({{paramName}})) {
-                // first try to load from resource
-                ClassPathResource resource = null;
-                try {
-                     resource = new ClassPathResource({{paramName}});
-                }
-                catch(Exception ignore) {
-                    // Use plain text instead of resource
-                }
+    //        public AddPetActionBuilder withPet(Pet pet) {
+    //        // TODO: fix this
+    //        getMessageBuilderSupport().body(pet.toString());
+    //        return this;
+    //        }
 
-                if(resource != null && resource.exists()){
-                    multiValues.add("{{paramName}}", resource);
-                } else {
-                    multiValues.add("{{paramName}}", {{paramName}});
-                }
-                bodyLog += {{paramName}}.replace("\n", "\\n").replace("\r", "\\r").replace("\"", "\"\"") +",";
-            }
-            {{/isBinary}}
-            {{/formParams}}
-
-            bodyLog +=  "\";\"" + MediaType.MULTIPART_FORM_DATA_VALUE + "\"";
-            messageBuilderSupport.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .body(multiValues);
-
-            {{/isMultipart}}
-            {{^isMultipart}}
-            String payload = null;
-            String payloadType = null;
-            if (StringUtils.isNotBlank(this.bodyFile)) {
-                try {
-                    payload = FileUtils.readToString(Resources.create(this.bodyFile), FileUtils.getDefaultCharset());
-                } catch (IOException e) {
-                    throw new CitrusRuntimeException("Failed to read payload resource", e);
-                }
-                payloadType = this.bodyContentType;
-            } else if (StringUtils.isNotBlank(this.bodyLiteral)) {
-                payload = this.bodyLiteral;
-                payloadType = this.bodyLiteralContentType;
-            }
-            String body = "";
-            String bodyType = "";
-            if(payload != null && payloadType != null) {
-                messageBuilderSupport.body(payload).contentType(payloadType);
-                body = context.replaceDynamicContentInString(payload);
-                bodyType = context.replaceDynamicContentInString(payloadType);
-            }
-
-            bodyLog = body.replace("\n", "\\n").replace("\r", "\\r").replace("\"", "\"\"") + "\";\"" + bodyType + "\"";
-            {{/isMultipart}}
-
-            Map<String, String> queryParams = new HashMap<>();
-            {{#allParams}}{{#isQueryParam}}
-
-            if (StringUtils.isNotBlank(this.{{paramName}})) {
-                queryParams.put("{{baseName}}", context.replaceDynamicContentInString(this.{{paramName}}));
-                httpClientRequestActionBuilder.queryParam("{{baseName}}", this.{{paramName}});
-            }
-            {{/isQueryParam}}{{/allParams}}
-            String query = queryParams.entrySet().stream().map(e -> "\"" + e.getKey() + "\":\"" + e.getValue() + "\"").collect(Collectors.joining(",", "{", "}"));
-            {{#authMethods}}{{#isBasic}}
-
-            if(basicUsername != null && basicPassword != null){
-                messageBuilderSupport.header("Authorization", "Basic " + Base64.getEncoder().encodeToString((context.replaceDynamicContentInString(basicUsername)+":"+context.replaceDynamicContentInString(basicPassword)).getBytes()));
-            }
-            {{/isBasic}}{{/authMethods}}
-            httpClientRequestActionBuilder.withReferenceResolver(context.getReferenceResolver());
-            httpClientRequestActionBuilder = customizeBuilder(INSTANCE, context, httpClientRequestActionBuilder);
-
-            httpClientRequestActionBuilder.build().execute(context);
-
-            coverageLogger.trace(coverageMarker, "{{operationId}};{{#lambda.uppercase}}{{httpMethod}}{{/lambda.uppercase}};\"" +
-                            query.replace("\n", "\\n").replace("\r", "\\r").replace("\"", "\"\"") + "\";\"" +
-                            bodyLog);
-        }
-        {{#queryParams}}
-
-        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(String {{paramName}}) {
-            this.{{paramName}} = {{paramName}};
-        }
-        {{/queryParams}}
-        {{#pathParams}}
-
-        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(String {{paramName}}) {
-            this.{{paramName}} = {{paramName}};
-        }
-        {{/pathParams}}
-        {{#isMultipart}}
-        {{#formParams}}
-
-        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(String {{paramName}}) {
-            this.{{paramName}} = {{paramName}};
-        }
-        {{/formParams}}
-        {{/isMultipart}}
-        {{#authMethods}}{{#isBasic}}
-
-        public void setBasicUsername(String basicUsername) {
-            this.basicUsername = basicUsername;
-        }
-
-        public void setBasicPassword(String basicPassword) {
-            this.basicPassword = basicPassword;
-        }
-        {{/isBasic}}{{/authMethods}}
-        private String replacePathParams(String endpoint) {
-            {{#pathParams}}endpoint = endpoint.replace("{" + "{{baseName}}" + "}", {{paramName}});{{/pathParams}}
-            return endpoint;
-        }
     }
     {{/operation}}
-    {{/operations}}
+{{/operations}}
 }
