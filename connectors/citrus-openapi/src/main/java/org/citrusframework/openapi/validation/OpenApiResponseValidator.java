@@ -59,7 +59,23 @@ public class OpenApiResponseValidator extends OpenApiValidator {
         }
     }
 
-     Response createResponseFromMessage(HttpMessage message, Integer statusCode) {
+    public ValidationReport validateResponseToReport(OperationPathAdapter operationPathAdapter, HttpMessage httpMessage) {
+
+        if (enabled && openApiInteractionValidator != null) {
+            HttpStatusCode statusCode = httpMessage.getStatusCode();
+            Response response = createResponseFromMessage(httpMessage,
+                statusCode != null ? statusCode.value() : null);
+
+            return openApiInteractionValidator.validateResponse(
+                operationPathAdapter.apiPath(),
+                Method.valueOf(operationPathAdapter.operation().getMethod().toUpperCase()),
+                response);
+
+        }
+        return ValidationReport.empty();
+    }
+
+    Response createResponseFromMessage(HttpMessage message, Integer statusCode) {
         var payload = message.getPayload();
         SimpleResponse.Builder responseBuilder = new SimpleResponse.Builder(statusCode);
 

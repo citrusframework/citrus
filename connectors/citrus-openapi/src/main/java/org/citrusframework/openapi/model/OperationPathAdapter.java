@@ -30,7 +30,7 @@ import static java.lang.String.format;
  * @param fullPath    The full path combining context path and API path.
  * @param operation   The {@link OasOperation} object representing the operation details.
  */
-public record OperationPathAdapter(String apiPath, String contextPath, String fullPath, OasOperation operation) {
+public record OperationPathAdapter(String apiPath, String contextPath, String fullPath, OasOperation operation, String uniqueOperationId) {
 
     @Override
     public String toString() {
