@@ -21,6 +21,7 @@ import static org.citrusframework.openapi.actions.OpenApiActionBuilder.openapi;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.fail;
 
+import java.util.List;
 import org.citrusframework.annotations.CitrusTest;
 import org.citrusframework.exceptions.TestCaseFailedException;
 import org.citrusframework.http.actions.HttpClientRequestActionBuilder.HttpMessageBuilderSupport;
@@ -28,6 +29,7 @@ import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpClientBuilder;
 import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.http.server.HttpServerBuilder;
+import org.citrusframework.openapi.OpenApiRepository;
 import org.citrusframework.openapi.OpenApiSpecification;
 import org.citrusframework.openapi.actions.OpenApiActionBuilder;
 import org.citrusframework.openapi.actions.OpenApiClientResponseActionBuilder;
@@ -63,8 +65,12 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .requestUrl("http://localhost:%d".formatted(port))
             .build();
 
+    @BindToRegistry
+    private final OpenApiRepository openApiRepository = new OpenApiRepository()
+        .locations(List.of("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+
     private final OpenApiSpecification petstoreSpec = OpenApiSpecification.from(
-            Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
+        Resources.create("classpath:org/citrusframework/openapi/petstore/petstore-v3.json"));
 
     private final OpenApiSpecification pingSpec = OpenApiSpecification.from(
         Resources.create("classpath:org/citrusframework/openapi/ping/ping-api.yaml"));
@@ -142,8 +148,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         HttpMessageBuilderSupport addPetBuilder = openapi(petstoreSpec)
             .client(httpClient)
             .send("addPet")
-            .message().body(Resources.create(INVALID_PET_PATH))
-            .fork(true);
+            .message().body(Resources.create(INVALID_PET_PATH));
 
         assertThrows(TestCaseFailedException.class, () ->when(addPetBuilder));
     }
@@ -155,9 +160,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
         HttpMessageBuilderSupport addPetBuilder = openapi(petstoreSpec)
             .client(httpClient)
             .send("addPet")
-            .message().body(Resources.create(VALID_PET_PATH))
-            .fork(true);
-
+            .message().body(Resources.create(VALID_PET_PATH));
         assertThrows(TestCaseFailedException.class, () ->when(addPetBuilder));
     }
 
@@ -169,8 +172,7 @@ public class OpenApiClientIT extends TestNGCitrusSpringSupport {
             .client(httpClient)
             .send("addPet")
             .disableOasValidation(true)
-            .message().body(Resources.create(VALID_PET_PATH))
-            .fork(true);
+            .message().body(Resources.create(VALID_PET_PATH));
 
         try {
             when(addPetBuilder);

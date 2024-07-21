@@ -16,6 +16,19 @@
 
 package org.citrusframework.validation.xml.schema;
 
+import static java.lang.String.format;
+import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.citrusframework.CitrusSettings;
 import org.citrusframework.XmlValidationHelper;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -29,6 +42,7 @@ import org.citrusframework.util.SystemProvider;
 import org.citrusframework.util.XMLUtils;
 import org.citrusframework.validation.SchemaValidator;
 import org.citrusframework.validation.xml.XmlMessageValidationContext;
+import org.citrusframework.validation.xml.XmlMessageValidationContext.Builder;
 import org.citrusframework.xml.XsdSchemaRepository;
 import org.citrusframework.xml.schema.AbstractSchemaCollection;
 import org.citrusframework.xml.schema.WsdlXsdSchema;
@@ -40,19 +54,6 @@ import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXParseException;
-
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static java.lang.String.format;
-import static org.citrusframework.validation.xml.schema.ValidationStrategy.FAIL;
 
 public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidationContext> {
 
@@ -221,5 +222,32 @@ public class XmlSchemaValidation implements SchemaValidator<XmlMessageValidation
     private static Optional<String> extractEnvOrProperty(SystemProvider systemProvider, String envVarName, String fallbackPropertyName) {
         return systemProvider.getEnv(envVarName)
                 .or(() -> systemProvider.getProperty(fallbackPropertyName));
+    }
+
+    @Override
+    public boolean canValidate(Message message, boolean schemaValidationEnabled) {
+        return (isXmlSchemaValidationEnabled() || schemaValidationEnabled)
+            && IsXmlPredicate.getInstance().test(message.getPayload(String.class));
+    }
+
+    /**
+     * Get setting to determine if xml schema validation is enabled by default.
+     * @return
+     */
+    private static boolean isXmlSchemaValidationEnabled() {
+        return Boolean.getBoolean(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_PROPERTY)
+            || Boolean.getBoolean(CitrusSettings.OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_PROPERTY)
+            || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_SCHEMA_VALIDATION_ENABLED_ENV))
+            || Boolean.parseBoolean(System.getenv(CitrusSettings.OUTBOUND_XML_SCHEMA_VALIDATION_ENABLED_ENV));
+    }
+
+    @Override
+    public void validate(Message message, TestContext context, String schemaRepository, String schema) {
+
+        XmlMessageValidationContext validationContext = Builder.xml()
+            .schemaValidation(true)
+            .schema(schema)
+            .schemaRepository(schemaRepository).build();
+        validate(message, context, validationContext);
     }
 }
