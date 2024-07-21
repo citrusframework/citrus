@@ -2,7 +2,15 @@ package org.citrusframework.openapi.generator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.citrusframework.container.Assert.Builder.assertException;
+import static org.citrusframework.http.actions.HttpActionBuilder.http;
+import static org.citrusframework.openapi.generator.sample.OpenApiPetStore.AddressEntityValidationContext.Builder.address;
+import static org.citrusframework.openapi.generator.sample.OpenApiPetStore.AggregateEntityValidationContext.Builder.allOf;
+import static org.citrusframework.openapi.generator.sample.OpenApiPetStore.AggregateEntityValidationContext.Builder.anyOf;
+import static org.citrusframework.openapi.generator.sample.OpenApiPetStore.AggregateEntityValidationContext.Builder.oneOf;
+import static org.citrusframework.openapi.generator.sample.OpenApiPetStore.PetEntityValidationContext.Builder.pet;
+import static org.citrusframework.openapi.generator.sample.OpenApiPetStore.openApiPetStore;
 import static org.citrusframework.util.FileUtils.readToString;
+import static org.citrusframework.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -10,6 +18,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import org.citrusframework.TestCaseRunner;
 import org.citrusframework.annotations.CitrusResource;
@@ -19,6 +28,8 @@ import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.EndpointConfiguration;
 import org.citrusframework.http.client.HttpClient;
 import org.citrusframework.http.client.HttpEndpointConfiguration;
+import org.citrusframework.http.server.HttpServer;
+import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.junit.jupiter.spring.CitrusSpringExtension;
 import org.citrusframework.message.DefaultMessage;
 import org.citrusframework.message.Message;
@@ -27,7 +38,13 @@ import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.openapi.generator.GetPetByIdIT.Config;
 import org.citrusframework.openapi.generator.rest.petstore.request.PetApi.GetPetByIdRequest;
 import org.citrusframework.openapi.generator.rest.petstore.spring.PetStoreBeanConfiguration;
+import org.citrusframework.openapi.generator.sample.OpenApiPetStore.AddressEntityValidationContext;
+import org.citrusframework.openapi.generator.sample.OpenApiPetStore.AggregateEntityValidationContext;
+import org.citrusframework.openapi.generator.sample.OpenApiPetStore.PetEntityValidationContext.Builder;
+import org.citrusframework.openapi.generator.sample.PetApi;
+import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spi.Resources;
+import org.citrusframework.util.SocketUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +58,16 @@ import org.springframework.http.HttpStatus;
 @ExtendWith(CitrusSpringExtension.class)
 @SpringBootTest(classes = {PetStoreBeanConfiguration.class, CitrusSpringConfig.class, Config.class})
 class GetPetByIdIT {
+
+    private final int port = SocketUtils.findAvailableTcpPort(8080);
+
+    @BindToRegistry
+    private final HttpServer httpServer = new HttpServerBuilder()
+        .port(port)
+        .timeout(5000L)
+        .autoStart(true)
+        .defaultStatus(HttpStatus.NO_CONTENT)
+        .build();
 
     @Autowired
     private GetPetByIdRequest getPetByIdRequest;
@@ -66,21 +93,144 @@ class GetPetByIdIT {
      */
     @Test
     @CitrusTest
+    void testByEntityMatcher(@CitrusResource TestCaseRunner runner) {
+
+        when(PetApi.openApiPetStore(httpClient)
+            .getPetById()
+                .withId("1234")
+                .fork(true));
+
+        runner.then(http().server(httpServer)
+            .receive()
+            .get("/pet/${petId}")
+            .message()
+            .accept("@contains('application/json')@"));
+
+        runner.then(http().server(httpServer)
+            .send()
+            .response(HttpStatus.OK)
+            .message()
+            .body(Resources.create("classpath:org/citrusframework/openapi/petstore/pet.json"))
+            .contentType("application/json"));
+
+        runner.then(openApiPetStore(httpClient)
+            .receivePetById(HttpStatus.OK)
+            .message()
+            .validate(pet().id("1234")
+                .name("Garfield")
+                .category("Cat")
+                .address(address -> address
+                    .street("Nina Hagen Hang")
+                    .zip("12345")
+                    .city("Hagen ATW"))
+                .owners(anyOf(List.of(
+                    owner -> owner.name("Peter Lustig"),
+                    owner -> owner.name("Hans Meier")
+                )))
+                .owners(oneOf(List.of(
+                    owner -> owner.name("Seppel Hinterhuber")
+                )))
+                .urls(0, "url1")
+                .urls(1, "url2")
+                .urls("@contains('url1', 'url2')")).
+            validate(jsonPath().expression("$.name", "Garfield")));
+
+        runner.then(openApiPetStore(httpClient)
+            .receivePetById200()
+                .withPet(validator -> validator.id("1234")
+                .name("Garfield")
+                .category("Cat")
+                .urls(0,"url1")
+                .urls(1,"url2")
+                .urls("@contains('url1', 'url2')")).
+            validate(jsonPath().expression("$.name", "Garfield"))
+        );
+    }
+
+    @Test
+    @CitrusTest
+    void testFindByStatus(@CitrusResource TestCaseRunner runner) {
+
+        when(openApiPetStore(httpClient)
+            .findByStatus()
+            .withStatus("SOLD")
+            .fork(true));
+
+        runner.then(http().server(httpServer)
+            .receive()
+            .get("/pet/${petId}")
+            .message()
+            .accept("@contains('application/json')@"));
+
+        runner.then(http().server(httpServer)
+            .send()
+            .response(HttpStatus.OK)
+            .message()
+            .body(Resources.create("classpath:org/citrusframework/openapi/petstore/pet.json"))
+            .contentType("application/json"));
+
+        runner.then(openApiPetStore(httpClient)
+            .receivePetById(HttpStatus.OK)
+            .message()
+            .validate(pet().id("1234")
+                .name("Garfield")
+                .category("Cat")
+                .address(address -> address
+                    .street("Nina Hagen Hang")
+                    .zip("12345")
+                    .city("Hagen ATW"))
+                .owners(anyOf(List.of(
+                    owner -> owner.name("Peter Lustig"),
+                    owner -> owner.name("Hans Meier")
+                )))
+                .owners(oneOf(List.of(
+                    owner -> owner.name("Seppel Hinterhuber")
+                )))
+                .urls(0, "url1")
+                .urls(1, "url2")
+                .urls("@contains('url1', 'url2')")).
+            validate(jsonPath().expression("$.name", "Garfield")));
+
+        runner.then(openApiPetStore(httpClient)
+            .receivePetById200()
+            .withPet(validator -> validator.id("1234")
+                .name("Garfield")
+                .category("Cat")
+                .urls(0,"url1")
+                .urls(1,"url2")
+                .urls("@contains('url1', 'url2')")).
+            validate(jsonPath().expression("$.name", "Garfield"))
+        );
+    }
+
+    @Test
+    @CitrusTest
     void testByJsonPath(@CitrusResource TestCaseRunner runner) {
 
-        // Given
-        getPetByIdRequest.setPetId("1234");
+        when(openApiPetStore(httpClient)
+            .getPetById()
+            .withPetId("1234")
+            .fork(true));
 
-        // Then
-        getPetByIdRequest.setResponseStatus(HttpStatus.OK.value());
-        getPetByIdRequest.setResponseReasonPhrase(HttpStatus.OK.getReasonPhrase());
+        runner.then(http().server(httpServer)
+            .receive()
+            .get("/pet/${petId}")
+            .message()
+            .accept("@contains('application/json')@"));
 
-        // Assert body by json path
-        getPetByIdRequest.setResponseValue(Map.of("$.name", "Snoopy"));
+        runner.then(http().server(httpServer)
+            .send()
+            .response(HttpStatus.OK)
+            .message()
+            .body(Resources.create("classpath:org/citrusframework/openapi/petstore/pet.json"))
+            .contentType("application/json"));
 
-        // When
-        runner.$(getPetByIdRequest);
+        runner.then(openApiPetStore(httpClient)
+            .receivePetById(HttpStatus.OK)
+                .message().validate(jsonPath().expression("$.name", "Garfield"))
+        );
     }
+
 
     /**
      * TODO #1161 - Improve with builder pattern
