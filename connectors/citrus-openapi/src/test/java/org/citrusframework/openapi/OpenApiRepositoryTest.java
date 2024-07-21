@@ -71,7 +71,7 @@ public class OpenApiRepositoryTest {
 
         Optional<String> alias = OpenApiRepository.determineResourceAlias(resourceMock);
         assertTrue(alias.isPresent());
-        assertEquals(alias.get(), "MyApi.json");
+        assertEquals(alias.get(), "MyApi");
     }
 
     @Test
@@ -84,7 +84,7 @@ public class OpenApiRepositoryTest {
 
         Optional<String> alias = OpenApiRepository.determineResourceAlias(resourceMock);
         assertTrue(alias.isPresent());
-        assertEquals(alias.get(), "MyApi.json");
+        assertEquals(alias.get(), "MyApi");
     }
 
     @Test
