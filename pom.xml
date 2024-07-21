@@ -195,7 +195,7 @@
     <apache.ant.version>1.10.15</apache.ant.version>
     <apache.camel.version>4.8.0</apache.camel.version>
     <apicurio.data-models.version>1.1.27</apicurio.data-models.version>
-    <swagger-request-validator.version>com.atlassian.oai</swagger-request-validator.version>
+    <swagger-request-validator.version>2.41.0</swagger-request-validator.version>
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.26.3</assertj.version>
     <awaitility.version>4.2.2</awaitility.version>
