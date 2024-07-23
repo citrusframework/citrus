@@ -36,12 +36,12 @@ import org.citrusframework.message.Message;
 import org.citrusframework.messaging.Producer;
 import org.citrusframework.messaging.SelectiveConsumer;
 import org.citrusframework.openapi.generator.GetPetByIdIT.Config;
+import org.citrusframework.openapi.generator.rest.petstore.request.PetApi;
 import org.citrusframework.openapi.generator.rest.petstore.request.PetApi.GetPetByIdRequest;
 import org.citrusframework.openapi.generator.rest.petstore.spring.PetStoreBeanConfiguration;
 import org.citrusframework.openapi.generator.sample.OpenApiPetStore.AddressEntityValidationContext;
 import org.citrusframework.openapi.generator.sample.OpenApiPetStore.AggregateEntityValidationContext;
 import org.citrusframework.openapi.generator.sample.OpenApiPetStore.PetEntityValidationContext.Builder;
-import org.citrusframework.openapi.generator.sample.PetApi;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.spi.Resources;
 import org.citrusframework.util.SocketUtils;
@@ -96,8 +96,7 @@ class GetPetByIdIT {
     void testByEntityMatcher(@CitrusResource TestCaseRunner runner) {
 
         when(PetApi.openApiPetStore(httpClient)
-            .getPetById()
-                .withId("1234")
+            .getPetById("1234")
                 .fork(true));
 
         runner.then(http().server(httpServer)

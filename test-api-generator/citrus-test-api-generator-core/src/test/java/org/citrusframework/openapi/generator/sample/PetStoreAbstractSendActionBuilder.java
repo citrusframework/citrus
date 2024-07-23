@@ -181,9 +181,9 @@ public abstract class PetStoreAbstractSendAction extends SendMessageAction {
 
         private final String path;
 
-        private final Map<String, String> pathParameters = new HashMap<>();
+        private final Map<String, String> pathParams = new HashMap<>();
 
-        private final MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        private final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<>();
 
         // TODO: can we just pass in the operation?
         public Builder(OpenApiSpecification openApiSpec, String method, String path, String operationName) {
@@ -197,18 +197,18 @@ public abstract class PetStoreAbstractSendAction extends SendMessageAction {
             this.path = path;
         }
 
-        protected void pathParameter(String name, String value) {
-            pathParameters.put(name, value);
+        protected void pathParam(String name, String value) {
+            pathParams.put(name, value);
         }
 
-        protected void formData(String name, String value) {
-            formData.add(name, value);
+        protected void formParam(String name, String value) {
+            formParams.add(name, value);
         }
 
         protected String qualifiedPath(String path) {
 
             String qualifiedPath = path;
-            for (Entry<String, String> entry : pathParameters.entrySet()) {
+            for (Entry<String, String> entry : pathParams.entrySet()) {
                 qualifiedPath = qualifiedPath.replace("{%s}".formatted(entry.getKey()), entry.getValue());
             }
             return qualifiedPath;
@@ -222,10 +222,10 @@ public abstract class PetStoreAbstractSendAction extends SendMessageAction {
         public SendMessageAction doBuild() {
             // TODO: register callback to modify builder
             path(qualifiedPath(path));
-            if (!formData.isEmpty()) {
+            if (!formParams.isEmpty()) {
                 // TODO: do we have to explicitly set the content type or is this done by citrus
                 messageBuilderSupport.contentType(MediaType.MULTIPART_FORM_DATA_VALUE);
-                getMessageBuilderSupport().body(formData);
+                getMessageBuilderSupport().body(formParams);
             }
             return super.doBuild();
         }

@@ -18,7 +18,9 @@ public class {{classname}} implements GeneratedApi
 
     public static final {{classname}} INSTANCE = new {{classname}}();
 
+    private HttpClient httpClient
     private OpenApiSpecification openApiSpecification = null;
+
 
     public String getApiTitle() {
     return "{{appName}}";
@@ -30,6 +32,10 @@ public class {{classname}} implements GeneratedApi
 
     public String getApiPrefix() {
     return "{{prefix}}";
+    }
+
+    public static PetApi openApiPetStore(HttpClient httpClient) {
+        return new PetApi();
     }
 
     public Map<String,String> getApiInfoExtensions() {
@@ -44,10 +50,12 @@ public class {{classname}} implements GeneratedApi
 
 {{#operations}}
     {{#operation}}
-        public {{operationIdCamelCase}}ActionBuilder {{operationId}}()  {
-        return new {{operationIdCamelCase}}ActionBuilder();
-        }
+    public {{operationIdCamelCase}}ActionBuilder {{operationId}}({{#requiredParams}}{{dataType}} {{paramName}}{{^-last}}, {{/-last}}{{/requiredParams}})   {
+        return new {{operationIdCamelCase}}ActionBuilder({{#requiredParams}}{{paramName}}{{^-last}}, {{/-last}}{{/requiredParams}});
+    }
+    {{^-last}}
 
+    {{/-last}}
     {{/operation}}
 {{/operations}}
 
@@ -55,30 +63,54 @@ public class {{classname}} implements GeneratedApi
     {{#operation}}
     public class {{operationIdCamelCase}}ActionBuilder extends TestApiClientRequestActionBuilder {
 
-    private static final String METHOD = "{{httpMethod}}";
+        private static final String METHOD = "{{httpMethod}}";
 
-    private static final String ENDPOINT = "{{path}}";
+        private static final String ENDPOINT = "{{path}}";
 
-    private static final String OPERATION_NAME = "{{operationId}}";
+        private static final String OPERATION_NAME = "{{operationId}}";
 
-    public AddPetActionBuilder() {
-        super(openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+        public {{operationIdCamelCase}}ActionBuilder({{#requiredParams}}{{dataType}} {{paramName}}{{^-last}}, {{/-last}}{{/requiredParams}}) {
+            super(openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            {{#requiredParams}}
+            {{#isQueryParam}}
+            queryParam("{{paramName}}", {{paramName}});
+            {{/isQueryParam}}
+            {{#isPathParam}}
+            pathParam("{{paramName}}", {{paramName}});
+            {{/isPathParam}}
+            {{#isHeaderParam}}
+            headerParam("{{paramName}}", {{paramName}});
+            {{/isHeaderParam}}
+            {{#isFormParam}}
+            formParam("{{paramName}}", {{paramName}});
+            {{/isFormParam}}
+            {{/requiredParams}}
+        }
+
+        {{#optionalParams}}
+        public {{operationIdCamelCase}}ActionBuilder with{{#lambda.titlecase}}{{baseName}}{{/lambda.titlecase}}(String {{paramName}}) {
+            {{#isQueryParam}}
+                queryParam("{{baseName}}", {{paramName}});
+            {{/isQueryParam}}
+            {{#isPathParam}}
+                pathParam("{{baseName}}", {{paramName}});
+            {{/isPathParam}}
+            {{#isHeaderParam}}
+                headerParam("{{baseName}}", {{paramName}});
+            {{/isHeaderParam}}
+            {{#isFormParam}}
+                formParam("{{baseName}}", {{paramName}});
+            {{/isFormParam}}
+            return this;
+        }
+        {{^-last}}
+
+        {{/-last}}
+        {{/optionalParams}}
     }
+    {{^-last}}
 
-    {{#queryParams}}
-    public {{operationIdCamelCase}}ActionBuilder with{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(String {{paramName}}) {
-        queryParam("{{paramName}}", {{paramName}});
-        return this;
-    }
-    {{/queryParams}}
-
-    //        public AddPetActionBuilder withPet(Pet pet) {
-    //        // TODO: fix this
-    //        getMessageBuilderSupport().body(pet.toString());
-    //        return this;
-    //        }
-
-    }
+    {{/-last}}
     {{/operation}}
 {{/operations}}
 }

@@ -180,7 +180,7 @@ public class PetApi implements GeneratedApi {
         }
 
         public GetPetByIdActionBuilder withId(String id) {
-            pathParameter("id", id);
+            pathParam("id", id);
             return this;
         }
 
@@ -211,7 +211,7 @@ public class PetApi implements GeneratedApi {
         }
 
         public UpdatePetActionBuilder withId(String id) {
-            pathParameter("id", id);
+            pathParam("id", id);
             return this;
         }
 
@@ -236,7 +236,7 @@ public class PetApi implements GeneratedApi {
         }
 
         public UpdatePetWithFormDataActionBuilder withId(String id) {
-            pathParameter("id", id);
+            pathParam("id", id);
             return this;
         }
 
@@ -256,14 +256,14 @@ public class PetApi implements GeneratedApi {
         }
 
         public UploadFileActionBuilder withId(String id) {
-            pathParameter("id", id);
+            pathParam("id", id);
             return this;
         }
 
         public UploadFileActionBuilder withAdditionalMetadata(String additionalMetadata) {
 
             // TODO: what is the magic about form data request?
-            formData("additionalMetadata", additionalMetadata);
+            formParam("additionalMetadata", additionalMetadata);
             return this;
         }
     }
