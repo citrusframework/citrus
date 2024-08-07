@@ -16,18 +16,6 @@
 
 package org.citrusframework.report;
 
-import org.citrusframework.DefaultTestCase;
-import org.citrusframework.actions.EchoAction;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.mockito.Mock;
-import org.slf4j.Logger;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import java.time.Duration;
-import java.util.Locale;
-
 import static java.lang.String.format;
 import static org.citrusframework.TestResult.failed;
 import static org.citrusframework.TestResult.skipped;
@@ -41,9 +29,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-/**
- * @author Christoph Deppisch
- */
+import java.time.Duration;
+import java.util.Locale;
+import org.citrusframework.DefaultTestCase;
+import org.citrusframework.actions.EchoAction;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 public class LoggingReporterTest {
 
     @Mock

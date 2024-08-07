@@ -16,6 +16,12 @@
 
 package org.citrusframework.report;
 
+import static java.lang.String.format;
+import static java.time.Duration.ZERO;
+import static java.util.Objects.nonNull;
+import static org.citrusframework.util.StringUtils.hasText;
+
+import java.util.Optional;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.citrusframework.CitrusVersion;
 import org.citrusframework.TestAction;
@@ -29,13 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
 
-import java.util.Optional;
-
-import static java.lang.String.format;
-import static java.time.Duration.ZERO;
-import static java.util.Objects.nonNull;
-import static org.citrusframework.util.StringUtils.hasText;
-
 /**
  * Simple logging reporter printing test start and ending to the console/logger.
  * <p/>
@@ -46,8 +45,6 @@ import static org.citrusframework.util.StringUtils.hasText;
  * <p/>
  * Implementation note: The disablement of the reporter is achieved by using a {@link org.slf4j.helpers.NOPLogger},
  * meaning that this class should primarily focus on logging operations and not extend beyond that functionality.
- *
- * @author Christoph Deppisch
  */
 public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener {
 
@@ -87,6 +84,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     private static final Logger noOpLogger = new NOPLoggerFactory().getLogger(LoggingReporter.class.getName());
 
     private static boolean isInitialized = false;
+
+    private static void initialized() {
+        LoggingReporter.isInitialized = true;
+    }
 
     private static String formatDurationString(TestCase test) {
         return nonNull(test.getTestResult()) && nonNull(test.getTestResult().getDuration()) ? " (" + test.getTestResult().getDuration().toString() + ") " : "";
@@ -192,8 +193,7 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     public void onStart() {
         if (!isInitialized) {
             printBanner();
-
-            isInitialized = true;
+            LoggingReporter.initialized();
         }
 
         separator();
@@ -293,43 +293,47 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         if (isDebugEnabled()) {
             newLine();
+
             if (testCase.isIncremental()) {
                 debug("SKIPPING TEST STEP " + (testCase.getExecutedActions().size() + 1));
             } else {
                 debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
             }
+
             debug("TEST ACTION " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + " SKIPPED");
         }
     }
 
     @Override
     public void onInboundMessage(Message message, TestContext context) {
-        inboundMessageLogger.debug(message.print(context));
+        if (outboundMessageLogger.isDebugEnabled()) {
+            inboundMessageLogger.debug(message.print(context));
+        }
     }
 
     @Override
     public void onOutboundMessage(Message message, TestContext context) {
-        outboundMessageLogger.debug(message.print(context));
+        if (outboundMessageLogger.isDebugEnabled()) {
+            outboundMessageLogger.debug(message.print(context));
+        }
     }
 
     /**
      * Helper method to build consistent separators
      */
-    private void separator() {
+    protected void separator() {
         info("------------------------------------------------------------------------");
     }
 
     /**
      * Adds new line to console logging output.
      */
-    private void newLine() {
+    protected void newLine() {
         info("");
     }
 
     /**
      * Write info level output.
-     *
-     * @param line
      */
     protected void info(String line) {
         logger.info(line);
@@ -337,8 +341,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     /**
      * Write error level output.
-     *
-     * @param line
      */
     protected void error(String line) {
         logger.error(line);
@@ -346,9 +348,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     /**
      * Write error level output.
-     *
-     * @param line
-     * @param cause
      */
     protected void error(String line, Throwable cause) {
         logger.error(line, cause);
@@ -356,8 +355,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     /**
      * Write debug level output.
-     *
-     * @param line
      */
     protected void debug(String line) {
         if (isDebugEnabled()) {
@@ -367,8 +364,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     /**
      * Is debug level enabled.
-     *
-     * @return
      */
     protected boolean isDebugEnabled() {
         return logger.isDebugEnabled();
