@@ -16,6 +16,35 @@
 
 package org.citrusframework.kafka.embedded;
 
+import kafka.server.KafkaConfig;
+import kafka.server.KafkaServer;
+import kafka.utils.CoreUtils;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.CreateTopicsResult;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.config.TopicConfig;
+import org.apache.kafka.common.network.ListenerName;
+import org.apache.kafka.common.security.auth.SecurityProtocol;
+import org.apache.kafka.common.utils.Time;
+import org.apache.kafka.coordinator.group.GroupCoordinatorConfig;
+import org.apache.kafka.metadata.BrokerState;
+import org.apache.kafka.network.SocketServerConfigs;
+import org.apache.kafka.server.config.ReplicationConfigs;
+import org.apache.kafka.server.config.ServerConfigs;
+import org.apache.kafka.server.config.ServerLogConfigs;
+import org.apache.kafka.server.config.ZkConfigs;
+import org.apache.kafka.storage.internals.log.CleanerConfig;
+import org.apache.zookeeper.server.NIOServerCnxnFactory;
+import org.apache.zookeeper.server.ServerCnxnFactory;
+import org.apache.zookeeper.server.ZooKeeperServer;
+import org.citrusframework.common.InitializingPhase;
+import org.citrusframework.common.ShutdownPhase;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.util.SocketUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -31,26 +60,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.citrusframework.common.InitializingPhase;
-import org.citrusframework.common.ShutdownPhase;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.SocketUtils;
-import kafka.server.KafkaConfig;
-import kafka.server.KafkaServer;
-import kafka.utils.CoreUtils;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.CreateTopicsResult;
-import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.network.ListenerName;
-import org.apache.kafka.common.security.auth.SecurityProtocol;
-import org.apache.kafka.common.utils.Time;
-import org.apache.kafka.metadata.BrokerState;
-import org.apache.zookeeper.server.NIOServerCnxnFactory;
-import org.apache.zookeeper.server.ServerCnxnFactory;
-import org.apache.zookeeper.server.ZooKeeperServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+;
 
 /**
  * Embedded Kafka server with reference to embedded Zookeeper cluster for testing purpose. Starts single Zookeeper instance with logs in Java temp directory. Starts single Kafka server
@@ -112,13 +122,13 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
         }
 
         Properties brokerConfigProperties = createBrokerProperties("localhost:" + zookeeperPort, kafkaServerPort, logDir);
-        brokerConfigProperties.setProperty(KafkaConfig.ReplicaSocketTimeoutMsProp(), "1000");
-        brokerConfigProperties.setProperty(KafkaConfig.ControllerSocketTimeoutMsProp(), "1000");
-        brokerConfigProperties.setProperty(KafkaConfig.OffsetsTopicReplicationFactorProp(), "1");
-        brokerConfigProperties.setProperty(KafkaConfig.ReplicaHighWatermarkCheckpointIntervalMsProp(), String.valueOf(Long.MAX_VALUE));
+        brokerConfigProperties.setProperty(ReplicationConfigs.REPLICA_SOCKET_TIMEOUT_MS_CONFIG, "1000");
+        brokerConfigProperties.setProperty(ReplicationConfigs.CONTROLLER_SOCKET_TIMEOUT_MS_CONFIG, "1000");
+        brokerConfigProperties.setProperty(GroupCoordinatorConfig.OFFSETS_TOPIC_REPLICATION_FACTOR_CONFIG, "1");
+        brokerConfigProperties.setProperty(ReplicationConfigs.REPLICA_HIGH_WATERMARK_CHECKPOINT_INTERVAL_MS_CONFIG, String.valueOf(Long.MAX_VALUE));
 
         if (brokerProperties != null) {
-            brokerProperties.forEach(brokerConfigProperties::put);
+            brokerConfigProperties.putAll(brokerProperties);
         }
 
         kafkaServer = new KafkaServer(new KafkaConfig(brokerConfigProperties),
@@ -256,23 +266,23 @@ public class EmbeddedKafkaServer implements InitializingPhase, ShutdownPhase {
     protected Properties createBrokerProperties(String zooKeeperConnect, int kafkaServerPort, File logDir) {
         Properties props = new Properties();
 
-        props.put(KafkaConfig.BrokerIdProp(), "0");
-        props.put(KafkaConfig.ZkConnectProp(), zooKeeperConnect);
-        props.put(KafkaConfig.ZkConnectionTimeoutMsProp(), "10000");
-        props.put(KafkaConfig.ReplicaSocketTimeoutMsProp(), "1500");
-        props.put(KafkaConfig.ControllerSocketTimeoutMsProp(), "1500");
-        props.put(KafkaConfig.ControlledShutdownEnableProp(), "false");
-        props.put(KafkaConfig.DeleteTopicEnableProp(), "true");
-        props.put(KafkaConfig.LogDeleteDelayMsProp(), "1000");
-        props.put(KafkaConfig.ControlledShutdownRetryBackoffMsProp(), "100");
-        props.put(KafkaConfig.LogCleanerDedupeBufferSizeProp(), "2097152");
-        props.put(KafkaConfig.LogMessageTimestampDifferenceMaxMsProp(), Long.MAX_VALUE);
-        props.put(KafkaConfig.OffsetsTopicReplicationFactorProp(), "1");
-        props.put(KafkaConfig.OffsetsTopicPartitionsProp(), "5");
-        props.put(KafkaConfig.GroupInitialRebalanceDelayMsProp(), "0");
-        props.put(KafkaConfig.LogDirProp(), logDir.getAbsolutePath());
+        props.put(ServerConfigs.BROKER_ID_CONFIG, "0");
+        props.put(ZkConfigs.ZK_CONNECT_CONFIG, zooKeeperConnect);
+        props.put(ZkConfigs.ZK_CONNECTION_TIMEOUT_MS_CONFIG, "10000");
+        props.put(ReplicationConfigs.REPLICA_SOCKET_TIMEOUT_MS_CONFIG, "1500");
+        props.put(ReplicationConfigs.CONTROLLER_SOCKET_TIMEOUT_MS_CONFIG, "1500");
+        props.put(ServerConfigs.CONTROLLED_SHUTDOWN_ENABLE_CONFIG, "false");
+        props.put(ServerConfigs.DELETE_TOPIC_ENABLE_CONFIG, "true");
+        props.put(ServerLogConfigs.LOG_DELETE_DELAY_MS_CONFIG, "1000");
+        props.put(ServerConfigs.CONTROLLED_SHUTDOWN_RETRY_BACKOFF_MS_CONFIG, "100");
+        props.put(CleanerConfig.LOG_CLEANER_DEDUPE_BUFFER_SIZE_PROP, "2097152");
+        props.put(TopicConfig.MESSAGE_TIMESTAMP_DIFFERENCE_MAX_MS_CONFIG, Long.MAX_VALUE);
+        props.put(GroupCoordinatorConfig.OFFSETS_TOPIC_REPLICATION_FACTOR_CONFIG, "1");
+        props.put(GroupCoordinatorConfig.OFFSETS_TOPIC_PARTITIONS_CONFIG, "5");
+        props.put(GroupCoordinatorConfig.GROUP_INITIAL_REBALANCE_DELAY_MS_CONFIG, "0");
+        props.put(ServerLogConfigs.LOG_DIR_CONFIG, logDir.getAbsolutePath());
 
-        props.put(KafkaConfig.ListenersProp(), SecurityProtocol.PLAINTEXT.name + "://localhost:" + kafkaServerPort);
+        props.put(SocketServerConfigs.LISTENERS_CONFIG, SecurityProtocol.PLAINTEXT.name + "://localhost:" + kafkaServerPort);
 
         if (logger.isDebugEnabled()) {
             props.forEach((key, value) -> logger.debug(String.format("Using default Kafka broker property %s='%s'", key, value)));

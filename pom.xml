@@ -187,7 +187,7 @@
     <asciidoctor.maven.plugin.version>2.2.4</asciidoctor.maven.plugin.version>
     <jaxb.maven.plugin.version>3.1.0</jaxb.maven.plugin.version>
 
-    <activemq.artemis.version>2.35.0</activemq.artemis.version>
+    <activemq.artemis.version>2.36.0</activemq.artemis.version>
     <angus-mail.version>2.0.2</angus-mail.version>
     <apache.ant.version>1.10.14</apache.ant.version>
     <apache.camel.version>4.7.0</apache.camel.version>
@@ -198,12 +198,12 @@
     <byte.buddy.version>1.14.18</byte.buddy.version>
     <commons.dbcp2.version>2.12.0</commons.dbcp2.version>
     <commons.cli.version>1.8.0</commons.cli.version>
-    <commons.codec.version>1.17.0</commons.codec.version>
+    <commons.codec.version>1.17.1</commons.codec.version>
     <commons.io.version>2.16.1</commons.io.version>
-    <commons.lang.version>3.14.0</commons.lang.version>
+    <commons.lang.version>3.15.0</commons.lang.version>
     <commons.logging.version>1.3.3</commons.logging.version>
     <commons.net.version>3.11.1</commons.net.version>
-    <cucumber.version>7.18.0</cucumber.version>
+    <cucumber.version>7.18.1</cucumber.version>
     <docker-java.version>3.4.0</docker-java.version>
     <dropwizard.metrics.version>4.2.26</dropwizard.metrics.version>
     <ftpserver.version>1.2.0</ftpserver.version>
@@ -227,11 +227,11 @@
     <jansi.version>2.4.1</jansi.version>
     <javapoet.version>1.13.0</javapoet.version>
     <jaxb.version>4.0.5</jaxb.version>
-    <jetty.version>12.0.11</jetty.version>
+    <jetty.version>12.0.12</jetty.version>
     <jetty.websocket-api.version>2.0.0</jetty.websocket-api.version>
     <jsch.version>0.1.55</jsch.version>
     <json-path.version>2.9.0</json-path.version>
-    <json-schema-validator.version>1.5.0</json-schema-validator.version>
+    <json-schema-validator.version>1.5.1</json-schema-validator.version>
     <json-smart.version>2.5.1</json-smart.version>
     <jtidy.version>r938</jtidy.version>
     <junit.jupiter.version>5.10.2</junit.jupiter.version>
@@ -240,7 +240,7 @@
     <junixsocket.version>2.10.0</junixsocket.version>
     <k8s.client.version>6.13.1</k8s.client.version>
     <k8s.model.version>6.13.1</k8s.model.version>
-    <kafka.version>3.7.1</kafka.version>
+    <kafka.version>3.8.0</kafka.version>
     <log4j2.version>2.22.1</log4j2.version>
     <mockito.version>5.12.0</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
@@ -248,19 +248,19 @@
     <okhttp.version>4.12.0</okhttp.version>
     <picoli-version>4.7.6</picoli-version>
     <saaj.version>3.0.4</saaj.version>
-    <selenium.version>4.22.0</selenium.version>
+    <selenium.version>4.23.0</selenium.version>
     <slf4j.version>2.0.11</slf4j.version>
-    <snappy.version>1.1.10.5</snappy.version>
+    <snappy.version>1.1.10.6</snappy.version>
     <snakeyaml.version>2.2</snakeyaml.version>
     <spring.version>6.1.11</spring.version>
     <spring.ws.version>4.0.11</spring.ws.version>
-    <spring.integration.version>6.3.1</spring.integration.version>
+    <spring.integration.version>6.3.2</spring.integration.version>
     <spring.restdocs.version>3.0.1</spring.restdocs.version>
-    <sshd.version>2.13.1</sshd.version>
+    <sshd.version>2.13.2</sshd.version>
     <swagger.version>1.6.9</swagger.version>
     <swagger.parser.version>2.1.21</swagger.parser.version>
     <testng.version>7.10.2</testng.version>
-    <vertx.version>4.5.8</vertx.version>
+    <vertx.version>4.5.9</vertx.version>
     <wsdl4j.version>1.6.3</wsdl4j.version>
     <xbean-spring.version>4.25</xbean-spring.version>
     <xmlbeans.version>5.2.0</xmlbeans.version>
@@ -679,7 +679,7 @@
       </dependency>
       <dependency>
         <groupId>org.apache.kafka</groupId>
-        <artifactId>kafka-clients</artifactId>
+        <artifactId>kafka-group-coordinator</artifactId>
         <version>${kafka.version}</version>
       </dependency>
       <dependency>
@@ -689,7 +689,17 @@
       </dependency>
       <dependency>
         <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-server</artifactId>
+        <version>${kafka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
         <artifactId>kafka-server-common</artifactId>
+        <version>${kafka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-storage</artifactId>
         <version>${kafka.version}</version>
       </dependency>
 
