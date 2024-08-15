@@ -16,6 +16,10 @@
 
 package org.citrusframework.spi;
 
+import static java.nio.file.FileSystems.newFileSystem;
+import static org.citrusframework.spi.PropertiesLoader.loadProperties;
+
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +27,6 @@ import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -43,8 +46,6 @@ import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.citrusframework.spi.PropertiesLoader.loadProperties;
 
 /**
  * Type resolver resolves references via resource path lookup. Provided resource paths should point
@@ -116,10 +117,10 @@ public class ResourcePathTypeResolver implements TypeResolver {
     static {
         if (ROOT_IS_JAR) {
             try {
-                rootFs = FileSystems.newFileSystem(
-                    Path.of(ROOT.toString().substring("file:".length())));
+                rootFs = newFileSystem(
+                    new File(ROOT.toString().substring("file:".length())).toPath());
             } catch (IOException e) {
-                logger.error(String.format("Failed to create File system from jar '%s'", ROOT), e);
+                logger.error("Failed to create File system from jar '{}'", ROOT, e);
             }
         }
     }
