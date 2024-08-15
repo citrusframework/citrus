@@ -16,8 +16,12 @@
 
 package org.citrusframework.spi;
 
+import static java.lang.String.format;
 import static java.nio.file.FileSystems.newFileSystem;
+import static java.util.Collections.singletonMap;
+import static java.util.Collections.synchronizedList;
 import static org.citrusframework.spi.PropertiesLoader.loadProperties;
+import static org.citrusframework.util.ObjectHelper.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,10 +35,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -43,7 +47,6 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +55,8 @@ import org.slf4j.LoggerFactory;
  * to a resource in classpath (e.g. META-INF/my/resource/path/file-name). The resolver will try to
  * locate the resource as classpath resource and read the file as property file. By default, the
  * resolver reads the default type resolver property {@link TypeResolver#DEFAULT_TYPE_PROPERTY} and
- * instantiates a new instance for the given type information. Note that, in order to reduce classpath
- * scanning, the resolver caches the results of specific classpath scans.
+ * instantiates a new instance for the given type information. Note that, in order to reduce
+ * classpath scanning, the resolver caches the results of specific classpath scans.
  * <p>
  * A possible property file content that represents the resource in classpath could look like this:
  * <pre>
@@ -63,9 +66,8 @@ import org.slf4j.LoggerFactory;
  * Users can define custom property names to read instead of the default
  * {@link TypeResolver#DEFAULT_TYPE_PROPERTY}.
  * <p>
- * Users can define custom property names to read instead of the default {@link TypeResolver#DEFAULT_TYPE_PROPERTY}.
- *
- * @author Christoph Deppisch
+ * Users can define custom property names to read instead of the default
+ * {@link TypeResolver#DEFAULT_TYPE_PROPERTY}.
  */
 public class ResourcePathTypeResolver implements TypeResolver {
 
@@ -102,7 +104,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
     /**
      * Zip entries as String, so the archive is read only once
      */
-    private final List<String> zipEntriesAsString = Collections.synchronizedList(new ArrayList<>());
+    private final List<String> zipEntriesAsString = synchronizedList(new ArrayList<>());
 
     /**
      * Cached properties loaded from classpath scans.
@@ -134,8 +136,6 @@ public class ResourcePathTypeResolver implements TypeResolver {
 
     /**
      * Default constructor initializes with given resource path.
-     *
-     * @param resourceBasePath
      */
     public ResourcePathTypeResolver(String resourceBasePath) {
         if (resourceBasePath.endsWith("/")) {
@@ -155,8 +155,8 @@ public class ResourcePathTypeResolver implements TypeResolver {
         String cacheKey = toCacheKey(resourcePath, property, "NO_KEY_PROPERTY");
 
         Map<String, String> map = typeCache.computeIfAbsent(
-                cacheKey,
-                key -> Collections.singletonMap(key, resolveProperty(resourcePath, property))
+            cacheKey,
+            key -> singletonMap(key, resolveProperty(resourcePath, property))
         );
 
         return (T) instantiateType(map.get(cacheKey), initargs);
@@ -165,8 +165,8 @@ public class ResourcePathTypeResolver implements TypeResolver {
     @Override
     public <T> Map<String, T> resolveAll(String path, String property, String keyProperty) {
         Map<String, String> typeLookup = typeCache.computeIfAbsent(
-                toCacheKey(path, property, keyProperty),
-                key -> determineTypeLookup(path, property, keyProperty)
+            toCacheKey(path, property, keyProperty),
+            key -> determineTypeLookup(path, property, keyProperty)
         );
 
         Map<String, T> resources = new HashMap<>();
@@ -178,59 +178,56 @@ public class ResourcePathTypeResolver implements TypeResolver {
     /**
      * Determine the type lookup by performing relevant classpath scans.
      */
-    private Map<String, String> determineTypeLookup(String path, String property, String keyProperty) {
+    private Map<String, String> determineTypeLookup(String path, String property,
+        String keyProperty) {
         String fullPath = getFullResourcePath(path);
         Map<String, String> typeLookup = new HashMap<>();
 
         try {
             Stream.concat(
-                            classpathResourceResolver.getResources(fullPath).stream().filter(Objects::nonNull),
-                            resolveAllFromJar(fullPath)
-                    )
-                    .forEach(resourcePath -> {
-                        Path fileName = resourcePath.getFileName();
-                        if (fileName == null) {
-                            logger.warn(String.format("Skip unsupported resource '%s' for resource lookup", resourcePath));
-                            return;
-                        }
+                    classpathResourceResolver.getResources(fullPath).stream().filter(Objects::nonNull),
+                    resolveAllFromJar(fullPath)
+                )
+                .forEach(resourcePath -> {
+                    Path fileName = resourcePath.getFileName();
+                    if (fileName == null) {
+                        logger.warn("Skip unsupported resource '{}' for resource lookup",
+                            resourcePath);
+                        return;
+                    }
 
-                        if (property.equals(TYPE_PROPERTY_WILDCARD)) {
-                            Properties properties = readAsProperties(fullPath + "/" + fileName);
-                            for (Map.Entry<Object, Object> prop : properties.entrySet()) {
-                                String type = resolveProperty(fullPath + "/" + fileName, prop.getKey().toString());
-                                typeLookup.put(fileName + "." + prop.getKey().toString(), type);
-                            }
-                        } else {
-                            String type = resolveProperty(fullPath + "/" + fileName, property);
-                            if (keyProperty != null) {
-                                typeLookup.put(
-                                        resolveProperty(fullPath + "/" + fileName, keyProperty),
-                                        type);
-                            } else {
-                                typeLookup.put(fileName.toString(), type);
-                            }
+                    if (property.equals(TYPE_PROPERTY_WILDCARD)) {
+                        Properties properties = readAsProperties(fullPath + "/" + fileName);
+                        for (Entry<Object, Object> prop : properties.entrySet()) {
+                            String type = resolveProperty(fullPath + "/" + fileName,
+                                prop.getKey().toString());
+                            typeLookup.put(fileName + "." + prop.getKey().toString(), type);
                         }
-                    });
+                    } else {
+                        String type = resolveProperty(fullPath + "/" + fileName, property);
+                        if (keyProperty != null) {
+                            typeLookup.put(
+                                resolveProperty(fullPath + "/" + fileName, keyProperty),
+                                type);
+                        } else {
+                            typeLookup.put(fileName.toString(), type);
+                        }
+                    }
+                });
         } catch (IOException e) {
-            logger.warn(String.format("Failed to resolve resources in '%s'", fullPath), e);
+            logger.warn("Failed to resolve resources in '{}'", fullPath, e);
         }
 
         return typeLookup;
     }
 
     private String toCacheKey(String path, String property, String keyProperty) {
-        return new StringBuilder()
-                .append(path)
-                .append("$$$")
-                .append(property)
-                .append("$$$")
-                .append(keyProperty)
-                .toString();
+        return path + "$$$" + property + "$$$" + keyProperty;
     }
 
     private Stream<Path> resolveAllFromJar(String path) {
+        ClassLoader classLoader = assertNotNull(ResourcePathTypeResolver.class.getClassLoader());
 
-        ClassLoader classLoader = ObjectHelper.assertNotNull(ResourcePathTypeResolver.class.getClassLoader());
         if (ROOT_IS_JAR && !ROOT_IS_CITRUS_API) {
             return getZipEntries().stream()
                 .filter(entry -> entry.startsWith(path))
@@ -244,12 +241,13 @@ public class ResourcePathTypeResolver implements TypeResolver {
                         }
                         return Paths.get(entry.toURI());
                     } catch (URISyntaxException e) {
-                        logger.warn(String.format("Failed resolve resource from jar '%s'", entry), e);
+                        logger.warn("Failed resolve resource from jar '{}'", entry, e);
                         return null;
                     }
                 })
                 .filter(Objects::nonNull);
         }
+
         return Stream.of();
     }
 
@@ -261,72 +259,66 @@ public class ResourcePathTypeResolver implements TypeResolver {
      */
     private synchronized List<String> getZipEntries() {
         if (zipEntriesAsString.isEmpty()) {
-            URL root = ResourcePathTypeResolver.class.getProtectionDomain().getCodeSource().getLocation();
-            try (ZipInputStream in = new ZipInputStream(root.openStream())) {
+            try (ZipInputStream in = new ZipInputStream(ROOT.openStream())) {
                 ZipEntry entry;
                 while ((entry = in.getNextEntry()) != null) {
                     zipEntriesAsString.add(entry.getName());
                 }
             } catch (IOException e) {
-                logger.warn(String.format("Failed to open '%s'", root), e);
+                logger.warn("Failed to open '{}}'", ROOT, e);
             }
         }
+
         return zipEntriesAsString;
     }
 
     /**
      * Gets the constructor best matching the given parameter types.
-     *
-     * @param type
-     * @param initargs
-     * @return
      */
     private Constructor<?> getConstructor(Class<?> type, Object[] initargs) {
         final Class<?>[] parameterTypes = getParameterTypes(initargs);
 
         Optional<Constructor<?>> exactMatch = Arrays.stream(type.getDeclaredConstructors())
-                .filter(constructor -> Arrays.equals(replacePrimitiveTypes(constructor), parameterTypes))
-                .findFirst();
+            .filter(
+                constructor -> Arrays.equals(replacePrimitiveTypes(constructor), parameterTypes))
+            .findFirst();
 
         if (exactMatch.isPresent()) {
             return exactMatch.get();
         }
 
         Optional<Constructor<?>> match = Arrays.stream(type.getDeclaredConstructors())
-                .filter(constructor -> {
-                    if (constructor.getParameterCount() != parameterTypes.length) {
+            .filter(constructor -> {
+                if (constructor.getParameterCount() != parameterTypes.length) {
+                    return false;
+                }
+
+                for (int i = 0; i < parameterTypes.length; i++) {
+                    if (!constructor.getParameterTypes()[i].isAssignableFrom(parameterTypes[i])) {
                         return false;
                     }
+                }
 
-                    for (int i = 0; i < parameterTypes.length; i++) {
-                        if (!constructor.getParameterTypes()[i].isAssignableFrom(parameterTypes[i])) {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                })
-                .findFirst();
+                return true;
+            })
+            .findFirst();
 
         if (match.isPresent()) {
             return match.get();
         }
 
         throw new IllegalArgumentException(
-                String.format(
-                        "No matching constructor found for type %s and parameters %s",
-                        type.getName(),
-                        Arrays.toString(parameterTypes)
-                )
+            format(
+                "No matching constructor found for type %s and parameters %s",
+                type.getName(),
+                Arrays.toString(parameterTypes)
+            )
         );
     }
 
     /**
-     * Read resource from classpath and load content as properties.
-     * The properties found on the classpath will be cached.
-     *
-     * @param resourcePath
-     * @return
+     * Read resource from classpath and load content as properties. The properties found on the
+     * classpath will be cached.
      */
     private Properties readAsProperties(String resourcePath) {
         return resourceProperties.computeIfAbsent(resourcePath, k -> {
@@ -337,9 +329,6 @@ public class ResourcePathTypeResolver implements TypeResolver {
 
     /**
      * Combine base resource path and given resource path to proper full resource path.
-     *
-     * @param resourcePath
-     * @return
      */
     private String getFullResourcePath(String resourcePath) {
         if (resourcePath == null || resourcePath.isEmpty()) {
@@ -353,12 +342,11 @@ public class ResourcePathTypeResolver implements TypeResolver {
 
     /**
      * Get types of init arguments.
-     *
-     * @param initargs
-     * @return
      */
     private Class<?>[] getParameterTypes(Object... initargs) {
-        return Arrays.stream(initargs).map(Object::getClass).toArray(Class[]::new);
+        return Arrays.stream(initargs)
+            .map(Object::getClass)
+            .toArray(Class[]::new);
     }
 
     /**
@@ -371,36 +359,35 @@ public class ResourcePathTypeResolver implements TypeResolver {
             } else {
                 return (T) getConstructor(Class.forName(type), initargs).newInstance(initargs);
             }
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
+                 NoSuchMethodException | InvocationTargetException e) {
             try {
                 if (
-                        Arrays.stream(Class.forName(type).getFields())
-                                .anyMatch(field -> field.getName().equals(INSTANCE) && Modifier.isStatic(field.getModifiers()))
+                    Arrays.stream(Class.forName(type).getFields())
+                        .anyMatch(field -> field.getName().equals(INSTANCE)
+                            && Modifier.isStatic(field.getModifiers()))
                 ) {
                     return (T) Class.forName(type).getField(INSTANCE).get(null);
                 }
             } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException e1) {
-                throw new CitrusRuntimeException(String.format("Failed to resolve classpath resource of type '%s'", type), e1);
+                throw new CitrusRuntimeException(
+                    format("Failed to resolve classpath resource of type '%s'", type), e1);
             }
 
             logger.warn(
-                    String.format(
-                            "Neither static instance nor accessible default constructor (%s) is given on type '%s'",
-                            Arrays.toString(getParameterTypes(initargs)),
-                            type
-                    )
+                "Neither static instance nor accessible default constructor ({}) is given on type '{}'",
+                Arrays.toString(getParameterTypes(initargs)),
+                type
             );
 
-            throw new CitrusRuntimeException(String.format("Failed to resolve classpath resource of type '%s'", type), e);
+            throw new CitrusRuntimeException(
+                format("Failed to resolve classpath resource of type '%s'", type), e);
         }
-
     }
 
     /**
-     * Get the types of a constructor. Primitive types are converted to their respective object type.
-     *
-     * @param constructor
-     * @return the types of the constructor (primitive types converted to object types)
+     * Get the types of a constructor. Primitive types are converted to their respective object
+     * type.
      */
     private static Class<?>[] replacePrimitiveTypes(Constructor<?> constructor) {
         Class<?>[] constructorParameters = constructor.getParameterTypes();
@@ -419,6 +406,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
                 constructorParameters[i] = Boolean.class;
             }
         }
+
         return constructorParameters;
     }
 }
