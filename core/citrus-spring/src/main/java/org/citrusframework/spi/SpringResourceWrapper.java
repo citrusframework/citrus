@@ -17,15 +17,11 @@
 package org.citrusframework.spi;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-
 import org.citrusframework.util.FileUtils;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalConverter;
@@ -68,11 +64,7 @@ public class SpringResourceWrapper implements org.springframework.core.io.Resour
         try {
             return delegate.getFile().length();
         } catch (Exception e) {
-            try {
-                return Files.size(Path.of(delegate.getLocation()));
-            } catch (NoSuchFileException ex) {
-                throw new FileNotFoundException(ex.getMessage());
-            }
+            return Files.size(new File(delegate.getLocation()).toPath());
         }
     }
 
