@@ -50,7 +50,7 @@
     <dependency>
       <groupId>org.citrusframework</groupId>
       <artifactId>citrus-testng</artifactId>
-      <version>${project.version}</version>
+      <version>${citrus.version}</version>
     </dependency>
 
     <dependency>
