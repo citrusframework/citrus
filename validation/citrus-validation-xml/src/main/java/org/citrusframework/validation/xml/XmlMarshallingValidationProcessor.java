@@ -151,7 +151,7 @@ public abstract class XmlMarshallingValidationProcessor<T> extends AbstractValid
                         "please add proper validation logic");
             }
 
-            return new XmlMarshallingValidationProcessor<>() {
+            return new XmlMarshallingValidationProcessor<>(unmarshaller) {
                 @Override
                 public void validate(T payload, Map<String, Object> headers, TestContext context) {
                     validationProcessor.validate(payload, headers, context);
