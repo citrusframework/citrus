@@ -20,6 +20,7 @@ import static java.lang.String.format;
 import static java.nio.file.FileSystems.newFileSystem;
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.synchronizedList;
+import static java.util.Objects.nonNull;
 import static org.citrusframework.spi.PropertiesLoader.loadProperties;
 import static org.citrusframework.util.ObjectHelper.assertNotNull;
 
@@ -117,14 +118,18 @@ public class ResourcePathTypeResolver implements TypeResolver {
     private final Map<String, Map<String, String>> typeCache = new ConcurrentHashMap<>();
 
     static {
-        if (ROOT_IS_JAR) {
+        if (rootIsNotCitrusApiJar()) {
             try {
                 rootFs = newFileSystem(
                     new File(ROOT.toString().substring("file:".length())).toPath());
             } catch (IOException e) {
-                logger.error("Failed to create File system from jar '{}'", ROOT, e);
+                logger.debug("Failed to create File system from jar '{}'", ROOT, e);
             }
         }
+    }
+
+    private static boolean rootIsNotCitrusApiJar() {
+        return ROOT_IS_JAR && !ROOT_IS_CITRUS_API;
     }
 
     /**
@@ -228,7 +233,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
     private Stream<Path> resolveAllFromJar(String path) {
         ClassLoader classLoader = assertNotNull(ResourcePathTypeResolver.class.getClassLoader());
 
-        if (ROOT_IS_JAR && !ROOT_IS_CITRUS_API) {
+        if (rootIsNotCitrusApiJar() && nonNull(rootFs)) {
             return getZipEntries().stream()
                 .filter(entry -> entry.startsWith(path))
                 .map(classLoader::getResource)
@@ -239,6 +244,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
                         if (split.length > 1) {
                             return rootFs.getPath(split[1]);
                         }
+
                         return Paths.get(entry.toURI());
                     } catch (URISyntaxException e) {
                         logger.warn("Failed resolve resource from jar '{}'", entry, e);
