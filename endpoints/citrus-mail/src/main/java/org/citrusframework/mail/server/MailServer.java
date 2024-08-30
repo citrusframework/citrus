@@ -16,14 +16,6 @@
 
 package org.citrusframework.mail.server;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Stack;
-import java.util.stream.Collectors;
-import javax.xml.transform.Source;
-
 import com.icegreen.greenmail.mail.MailAddress;
 import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.user.UserException;
@@ -38,17 +30,18 @@ import org.citrusframework.mail.client.MailEndpointConfiguration;
 import org.citrusframework.mail.message.CitrusMailMessageHeaders;
 import org.citrusframework.mail.message.MailMessage;
 import org.citrusframework.mail.message.MailMessageConverter;
-import org.citrusframework.mail.model.AcceptResponse;
-import org.citrusframework.mail.model.AttachmentPart;
-import org.citrusframework.mail.model.BodyPart;
-import org.citrusframework.mail.model.MailMarshaller;
-import org.citrusframework.mail.model.MailRequest;
-import org.citrusframework.mail.model.MailResponse;
+import org.citrusframework.mail.model.*;
 import org.citrusframework.message.Message;
 import org.citrusframework.server.AbstractServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.MimeMailMessage;
+
+import javax.xml.transform.Source;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 /**
  * Mail server implementation starts new SMTP server instance and listens for incoming mail messages. Incoming mail messages
@@ -66,41 +59,63 @@ import org.springframework.mail.javamail.MimeMailMessage;
  */
 public class MailServer extends AbstractServer {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger logger = LoggerFactory.getLogger(MailServer.class);
 
-    /** Server port */
+    /**
+     * Server port
+     */
     private int port = 25;
 
-    /** XML message mapper */
+    /**
+     * XML message mapper
+     */
     private MailMarshaller marshaller = new MailMarshaller();
 
-    /** Mail message converter */
+    /**
+     * Mail message converter
+     */
     private MailMessageConverter messageConverter = new MailMessageConverter();
 
-    /** Java mail session */
+    /**
+     * Java mail session
+     */
     private Session mailSession;
 
-    /** Java mail properties */
+    /**
+     * Java mail properties
+     */
     private Properties javaMailProperties = new Properties();
 
-    /** Should accept automatically or handled via test case */
+    /**
+     * Should accept automatically or handled via test case
+     */
     private boolean autoAccept = true;
 
-    /** Requires users to properly authenticate with the server */
+    /**
+     * Requires users to properly authenticate with the server
+     */
     private boolean authRequired = true;
 
-    /** Should split multipart messages for each mime part */
+    /**
+     * Should split multipart messages for each mime part
+     */
     private boolean splitMultipart = false;
 
     private final List<String> knownUsers = new ArrayList<>();
 
-    /** Smtp server instance */
+    /**
+     * Smtp server instance
+     */
     private GreenMail smtpServer;
 
     @Override
     protected void startup() {
-        smtpServer = new GreenMail(new ServerSetup(port, null, "smtp"));
+        if (isNull(smtpServer)) {
+            smtpServer = new GreenMail(new ServerSetup(port, null, "smtp"));
+        }
 
         if (!authRequired) {
             smtpServer.getManagers().getSmtpManager().getUserManager().setAuthRequired(false);
@@ -131,26 +146,26 @@ public class MailServer extends AbstractServer {
 
     private void addKnownUsers(UserManager userManager) {
         knownUsers.stream()
-            .map(userSpec -> userSpec.split(":"))
-            .map(credentials -> {
-                if (credentials.length > 3) {
-                    return new String[] { credentials[0], credentials[1], credentials[2] };
-                } else if (credentials.length == 2) {
-                    return new String[] { credentials[0], credentials[1], credentials[0] };
-                } else if (credentials.length == 1) {
-                    return new String[] { credentials[0], credentials[0], credentials[0] };
-                } else {
-                    return credentials;
-                }
-            })
-            .filter(credentials -> credentials.length == 3)
-            .forEach(credentials -> {
-                try {
-                    userManager.createUser(credentials[0], credentials[1], credentials[2]);
-                } catch (UserException e) {
-                    logger.warn(String.format("Failed to create known user: %s:%s:%s", credentials[0], credentials[1], credentials[2]));
-                }
-            });
+                .map(userSpec -> userSpec.split(":"))
+                .map(credentials -> {
+                    if (credentials.length > 3) {
+                        return new String[]{credentials[0], credentials[1], credentials[2]};
+                    } else if (credentials.length == 2) {
+                        return new String[]{credentials[0], credentials[1], credentials[0]};
+                    } else if (credentials.length == 1) {
+                        return new String[]{credentials[0], credentials[0], credentials[0]};
+                    } else {
+                        return credentials;
+                    }
+                })
+                .filter(credentials -> credentials.length == 3)
+                .forEach(credentials -> {
+                    try {
+                        userManager.createUser(credentials[0], credentials[1], credentials[2]);
+                    } catch (UserException e) {
+                        logger.warn(String.format("Failed to create known user: %s:%s:%s", credentials[0], credentials[1], credentials[2]));
+                    }
+                });
     }
 
     @Override
@@ -165,7 +180,7 @@ public class MailServer extends AbstractServer {
 
         Message response = getEndpointAdapter().handleMessage(
                 MailMessage.accept(from, recipients.stream().map(MailAddress::getEmail).collect(Collectors.joining(",")))
-                           .marshaller(marshaller));
+                        .marshaller(marshaller));
 
         if (response == null || response.getPayload() == null) {
             throw new CitrusRuntimeException("Did not receive accept response. Missing accept response because autoAccept is disabled.");
@@ -271,6 +286,7 @@ public class MailServer extends AbstractServer {
 
     /**
      * Users must authenticate properly with the server.
+     *
      * @return
      */
     public boolean isAuthRequired() {
@@ -279,6 +295,7 @@ public class MailServer extends AbstractServer {
 
     /**
      * Enable/disable the user authentication on this server.
+     *
      * @param authRequired
      */
     public void setAuthRequired(boolean authRequired) {
@@ -385,6 +402,7 @@ public class MailServer extends AbstractServer {
 
     /**
      * Gets the known users.
+     *
      * @return
      */
     public List<String> getKnownUsers() {
@@ -393,6 +411,7 @@ public class MailServer extends AbstractServer {
 
     /**
      * Sets the known users.
+     *
      * @param knownUsers
      */
     public void setKnownUsers(List<String> knownUsers) {
@@ -401,6 +420,7 @@ public class MailServer extends AbstractServer {
 
     /**
      * Adds a new user known to this mail server.
+     *
      * @param email
      * @param login
      * @param password
