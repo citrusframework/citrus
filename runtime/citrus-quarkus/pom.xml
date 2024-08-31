@@ -15,7 +15,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <quarkus.platform.version>3.13.1</quarkus.platform.version>
+    <quarkus.platform.version>3.14.1</quarkus.platform.version>
   </properties>
 
   <dependencyManagement>
@@ -35,10 +35,15 @@
         <artifactId>quarkus-junit5</artifactId>
         <version>${quarkus.platform.version}</version>
       </dependency>
-
       <dependency>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-test-common</artifactId>
+        <version>${quarkus.platform.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-jacoco</artifactId>
         <version>${quarkus.platform.version}</version>
       </dependency>
     </dependencies>
