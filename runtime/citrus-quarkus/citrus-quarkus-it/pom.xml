@@ -97,6 +97,13 @@
             <maven.home>${maven.home}</maven.home>
           </systemPropertyVariables>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-junit-platform</artifactId>
+            <version>${maven.surefire.plugin.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <!-- Do not deploy this module to Maven central -->
@@ -118,5 +125,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>
