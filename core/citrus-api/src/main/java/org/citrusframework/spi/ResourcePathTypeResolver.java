@@ -16,13 +16,10 @@
 
 package org.citrusframework.spi;
 
-import static java.lang.String.format;
-import static java.nio.file.FileSystems.newFileSystem;
-import static java.util.Collections.singletonMap;
-import static java.util.Collections.synchronizedList;
-import static java.util.Objects.nonNull;
-import static org.citrusframework.spi.PropertiesLoader.loadProperties;
-import static org.citrusframework.util.ObjectHelper.assertNotNull;
+import jakarta.annotation.Nullable;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,9 +44,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static java.lang.String.format;
+import static java.nio.file.FileSystems.newFileSystem;
+import static java.util.Collections.singletonMap;
+import static java.util.Collections.synchronizedList;
+import static java.util.Objects.nonNull;
+import static org.citrusframework.spi.PropertiesLoader.loadProperties;
+import static org.citrusframework.util.ObjectHelper.assertNotNull;
 
 /**
  * Type resolver resolves references via resource path lookup. Provided resource paths should point
@@ -72,14 +74,11 @@ import org.slf4j.LoggerFactory;
  */
 public class ResourcePathTypeResolver implements TypeResolver {
 
-    public static final URL ROOT = ResourcePathTypeResolver.class
+    public static final @Nullable URL ROOT = ResourcePathTypeResolver.class
         .getProtectionDomain()
         .getCodeSource()
         .getLocation();
-    public static final boolean ROOT_IS_CITRUS_API = ROOT.toString()
-        .replace("\\", "/")
-        .matches(".*/citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar");
-    public static final boolean ROOT_IS_JAR = ROOT.toString().matches(".*jar(!/)?");
+
     private static FileSystem rootFs = null;
 
     /**
@@ -120,8 +119,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
     static {
         if (rootIsNotCitrusApiJar()) {
             try {
-                rootFs = newFileSystem(
-                    new File(ROOT.toString().substring("file:".length())).toPath());
+                rootFs = newFileSystem(new File(ROOT.toString().substring("file:".length())).toPath());
             } catch (IOException e) {
                 logger.debug("Failed to create File system from jar '{}'", ROOT, e);
             }
@@ -129,7 +127,9 @@ public class ResourcePathTypeResolver implements TypeResolver {
     }
 
     private static boolean rootIsNotCitrusApiJar() {
-        return ROOT_IS_JAR && !ROOT_IS_CITRUS_API;
+        return nonNull(ROOT)
+                && ROOT.toString().matches(".*jar(!/)?")
+                && !(ROOT.toString().replace("\\", "/").matches(".*/citrus-api-\\d+\\.\\d+\\.\\d+(-.*)?\\.jar"));
     }
 
     /**
