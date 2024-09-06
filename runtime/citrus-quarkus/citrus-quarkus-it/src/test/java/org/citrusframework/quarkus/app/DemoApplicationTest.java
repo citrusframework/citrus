@@ -32,16 +32,17 @@ import org.citrusframework.quarkus.CitrusSupport;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.DefaultTextEqualsMessageValidator;
 import org.citrusframework.validation.MessageValidator;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.citrusframework.actions.CreateVariablesAction.Builder.createVariables;
 import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
 import static org.citrusframework.actions.SendMessageAction.Builder.send;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 @CitrusSupport
-public class DemoApplicationTest {
+class DemoApplicationTest {
 
     @CitrusFramework
     private Citrus citrus;
@@ -50,9 +51,7 @@ public class DemoApplicationTest {
     private final MessageQueue messageQueue = new DefaultMessageQueue("messages");
 
     @CitrusEndpoint
-    @DirectEndpointConfig(
-        queue = "messageQueue"
-    )
+    @DirectEndpointConfig(queue = "messageQueue")
     private DirectEndpoint messages;
 
     @BindToRegistry
@@ -61,7 +60,7 @@ public class DemoApplicationTest {
             .build();
 
     @CitrusResource
-    private TestCaseRunner t;
+    private TestCaseRunner testCaseRunner;
 
     @BindToRegistry
     private final DefaultTextEqualsMessageValidator textEqualsMessageValidator = new DefaultTextEqualsMessageValidator();
@@ -71,45 +70,45 @@ public class DemoApplicationTest {
 
     @Test
     void shouldInjectCitrusResources() {
-        Assertions.assertNotNull(citrus);
-        Assertions.assertNotNull(context);
-        Assertions.assertNotNull(t);
-        Assertions.assertNotNull(messages);
-        Assertions.assertNotNull(moreMessages);
-        Assertions.assertEquals(context.getReferenceResolver().resolve("textEqualsMessageValidator", MessageValidator.class), textEqualsMessageValidator);
+        assertNotNull(citrus);
+        assertNotNull(context);
+        assertNotNull(testCaseRunner);
+        assertNotNull(messages);
+        assertNotNull(moreMessages);
+        assertEquals(context.getReferenceResolver().resolve("textEqualsMessageValidator", MessageValidator.class), textEqualsMessageValidator);
 
-        t.variable("greeting", "Hello!");
+        testCaseRunner.variable("greeting", "Hello!");
 
-        t.given(
-            createVariables().variable("text", "Citrus rocks!")
+        testCaseRunner.given(
+                createVariables().variable("text", "Citrus rocks!")
         );
 
-        t.when(
-            send()
-                .endpoint(messages)
-                .message()
-                .body("${text}")
+        testCaseRunner.when(
+                send()
+                        .endpoint(messages)
+                        .message()
+                        .body("${text}")
         );
 
-        t.when(
-            receive()
-                .endpoint(messages)
-                .message()
-                .body("${text}")
+        testCaseRunner.then(
+                receive()
+                        .endpoint(messages)
+                        .message()
+                        .body("${text}")
         );
 
-        t.when(
-            send()
-                .endpoint(moreMessages)
-                .message()
-                .body("${greeting}")
+        testCaseRunner.when(
+                send()
+                        .endpoint(moreMessages)
+                        .message()
+                        .body("${greeting}")
         );
 
-        t.when(
-            receive()
-                .endpoint(moreMessages)
-                .message()
-                .body("${greeting}")
+        testCaseRunner.then(
+                receive()
+                        .endpoint(moreMessages)
+                        .message()
+                        .body("${greeting}")
         );
     }
 }
