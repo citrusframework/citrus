@@ -209,7 +209,7 @@
     <ftpserver.version>1.2.0</ftpserver.version>
     <groovy.version>3.0.22</groovy.version>
     <greenmail.version>2.0.1</greenmail.version>
-    <hamcrest.version>2.2</hamcrest.version>
+    <hamcrest.version>3.0</hamcrest.version>
     <htmlunit.version>4.13.0</htmlunit.version>
     <httpclient.version>5.3.1</httpclient.version>
     <hsqldb.version>2.7.3</hsqldb.version>
