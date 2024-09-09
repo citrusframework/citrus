@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
 
-public class RemoveRoutes implements CamelRouteActionBuilderWrapper<RemoveCamelRouteAction.Builder> {
+public class RemoveRoutes implements CamelActionBuilderWrapper<RemoveCamelRouteAction.Builder> {
     private final RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder();
 
     public void setRoutes(List<String> routeIds) {

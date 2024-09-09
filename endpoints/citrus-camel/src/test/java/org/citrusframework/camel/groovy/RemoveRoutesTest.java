@@ -21,6 +21,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
 import org.citrusframework.groovy.GroovyTestLoader;
 import org.testng.Assert;
@@ -58,7 +59,7 @@ public class RemoveRoutesTest extends AbstractGroovyActionDslTest {
 
         citrusCamelContext.start();
 
-        context.getReferenceResolver().bind("citrusCamelContext", citrusCamelContext);
+        context.getReferenceResolver().bind(CamelSettings.getContextName(), citrusCamelContext);
         context.getReferenceResolver().bind("camelContext", citrusCamelContext);
 
         testLoader.load();
@@ -75,7 +76,7 @@ public class RemoveRoutesTest extends AbstractGroovyActionDslTest {
 
         RemoveCamelRouteAction action = (RemoveCamelRouteAction) result.getTestAction(actionIndex++);
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("citrusCamelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
         Assert.assertEquals(action.getRouteIds().size(), 1);
 
         action = (RemoveCamelRouteAction) result.getTestAction(actionIndex);

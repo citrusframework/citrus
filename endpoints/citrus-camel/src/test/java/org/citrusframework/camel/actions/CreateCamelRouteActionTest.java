@@ -58,7 +58,7 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
                 .context(camelContext)
-                .routeContext("""
+                .route("""
                         <routeContext xmlns="http://camel.apache.org/schema/spring">
                             <route id="route_1">
                                 <from uri="direct:test1"/>
@@ -94,7 +94,7 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
                 .context(camelContext)
-                .routeContext("""
+                .route("""
                         <routeContext xmlns="http://camel.apache.org/schema/spring">
                             <route id="${routeId}">
                                 <from uri="direct:${endpointUri}"/>

@@ -88,14 +88,14 @@ public class CamelRouteActionBuilder extends AbstractReferenceResolverAwareTestA
     }
 
     /**
-     * Creates new Camel routes from route context XML.
-     * @param routeContext
+     * Creates new Camel routes from route specification using one of the supported languages.
+     * @param routeSpec
      * @return
      */
-    public CreateCamelRouteAction.Builder create(String routeContext) {
+    public CreateCamelRouteAction.Builder create(String routeSpec) {
         CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder()
                 .context(camelContext)
-                .routeContext(routeContext);
+                .route(routeSpec);
 
         this.delegate = builder;
         return builder;

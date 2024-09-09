@@ -21,6 +21,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelControlBusAction;
 import org.citrusframework.groovy.GroovyTestLoader;
 import org.testng.Assert;
@@ -56,7 +57,7 @@ public class ControlBusTest extends AbstractGroovyActionDslTest {
 
         citrusCamelContext.start();
 
-        context.getReferenceResolver().bind("citrusCamelContext", citrusCamelContext);
+        context.getReferenceResolver().bind(CamelSettings.getContextName(), citrusCamelContext);
         context.getReferenceResolver().bind("camelContext", citrusCamelContext);
 
         testLoader.load();
@@ -73,7 +74,7 @@ public class ControlBusTest extends AbstractGroovyActionDslTest {
 
         CamelControlBusAction action = (CamelControlBusAction) result.getTestAction(actionIndex++);
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("citrusCamelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
         Assert.assertEquals(action.getRouteId(), "route_1");
         Assert.assertEquals(action.getAction(), "start");
         Assert.assertNull(action.getResult());
@@ -94,7 +95,7 @@ public class ControlBusTest extends AbstractGroovyActionDslTest {
 
         action = (CamelControlBusAction) result.getTestAction(actionIndex++);
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("citrusCamelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
         Assert.assertEquals(action.getLanguageType(), "simple");
         Assert.assertEquals(action.getLanguageExpression(), "${camelContext.stop()}");
         Assert.assertNull(action.getResult());

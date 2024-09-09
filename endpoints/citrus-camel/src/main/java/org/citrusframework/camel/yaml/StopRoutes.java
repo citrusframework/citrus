@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.citrusframework.camel.actions.StopCamelRouteAction;
 
-public class StopRoutes implements CamelRouteActionBuilderWrapper<StopCamelRouteAction.Builder> {
+public class StopRoutes implements CamelActionBuilderWrapper<StopCamelRouteAction.Builder> {
     private final StopCamelRouteAction.Builder builder = new StopCamelRouteAction.Builder();
 
     public void setRoutes(List<String> routeIds) {

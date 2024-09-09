@@ -21,6 +21,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.StopCamelRouteAction;
 import org.citrusframework.xml.XmlTestLoader;
 import org.testng.Assert;
@@ -55,7 +56,7 @@ public class StopRoutesTest extends AbstractXmlActionTest {
 
         citrusCamelContext.start();
 
-        context.getReferenceResolver().bind("citrusCamelContext", citrusCamelContext);
+        context.getReferenceResolver().bind(CamelSettings.getContextName(), citrusCamelContext);
         context.getReferenceResolver().bind("camelContext", citrusCamelContext);
 
         testLoader.load();
@@ -72,7 +73,7 @@ public class StopRoutesTest extends AbstractXmlActionTest {
 
         StopCamelRouteAction action = (StopCamelRouteAction) result.getTestAction(actionIndex++);
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("citrusCamelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
         Assert.assertEquals(action.getRouteIds().size(), 1);
 
         action = (StopCamelRouteAction) result.getTestAction(actionIndex);

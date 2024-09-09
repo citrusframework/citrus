@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.actions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,10 @@ import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.context.TestContext;
 import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.groovy.dsl.GroovySupport;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.util.FileUtils;
+import org.citrusframework.util.IsXmlPredicate;
 import org.citrusframework.util.StringUtils;
 import org.citrusframework.xml.StringSource;
 import org.slf4j.Logger;
@@ -43,8 +48,11 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
     /** Camel route */
     private final List<RouteDefinition> routes;
 
-    /** Route context as XML */
-    private final String routeContext;
+    /** Route id */
+    private final String routeId;
+
+    /** Route specification using one of the supported languages XML or Groovy */
+    private final String routeSpec;
 
     /**
      * Default constructor.
@@ -53,46 +61,101 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
         super("create-routes", builder);
 
         this.routes = builder.routes;
-        this.routeContext = builder.routeContext;
+        this.routeId = builder.routeId;
+        this.routeSpec = builder.routeSpec;
     }
 
     @Override
     public void doExecute(TestContext context) {
-        final List<RouteDefinition> routesToUse;
+        final List<RouteDefinition> routesToUse = new ArrayList<>();
+        RouteBuilder routeBuilder = null;
 
-        if (StringUtils.hasText(routeContext)) {
-            // now let's parse the routes with JAXB
-            try {
-                Object value = CamelUtils.getJaxbContext().createUnmarshaller().unmarshal(new StringSource(context.replaceDynamicContentInString(routeContext)));
-                if (value instanceof CamelRouteContextFactoryBean factoryBean) {
-                    routesToUse = factoryBean.getRoutes();
-                } else {
-                    throw new CitrusRuntimeException(String.format("Failed to parse routes from given route context - expected %s but found %s",
-                            CamelRouteContextFactoryBean.class, value.getClass()));
+        if (StringUtils.hasText(routeSpec)) {
+            if (IsXmlPredicate.getInstance().test(routeSpec)) {
+                String routeContext = createRouteContext(routeId, context.replaceDynamicContentInString(routeSpec.trim()));
+
+                // now let's parse the routes with JAXB
+                try {
+                    Object value = CamelUtils.getJaxbContext().createUnmarshaller().unmarshal(new StringSource(routeContext));
+                    if (value instanceof CamelRouteContextFactoryBean factoryBean) {
+                        routesToUse.addAll(factoryBean.getRoutes());
+                    } else {
+                        throw new CitrusRuntimeException(String.format("Failed to parse routes from given route context - expected %s but found %s",
+                                CamelRouteContextFactoryBean.class, value.getClass()));
+                    }
+                } catch (JAXBException e) {
+                    throw new CitrusRuntimeException("Failed to create the JAXB unmarshaller", e);
                 }
-            } catch (JAXBException e) {
-                throw new CitrusRuntimeException("Failed to create the JAXB unmarshaller", e);
+            } else {
+                routeBuilder = new RouteBuilder(camelContext) {
+                    @Override
+                    public void configure() throws Exception {
+                        new GroovySupport()
+                                .withTestContext(context)
+                                .withDelegate(this)
+                                .load(routeSpec, "org.apache.camel.*");
+                    }
+
+                    @Override
+                    protected void configureRoute(RouteDefinition route) {
+                        if (routeId != null) {
+                            route.routeId(routeId);
+                        }
+                    }
+                };
+
             }
-        } else {
-            routesToUse = routes;
+        }
+
+        if (routes != null) {
+            routesToUse.addAll(routes);
         }
 
         try {
-            camelContext.addRoutes(new RouteBuilder(camelContext) {
-                @Override
-                public void configure() throws Exception {
-                    for (RouteDefinition routeDefinition : routesToUse) {
-                        try {
-                            getRouteCollection().getRoutes().add(routeDefinition);
-                            logger.info(String.format("Created new Camel route '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()));
-                        } catch (Exception e) {
-                            throw new CitrusRuntimeException(String.format("Failed to create route definition '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()), e);
+            if (routeBuilder != null) {
+                camelContext.addRoutes(routeBuilder);
+            }
+
+            if (!routesToUse.isEmpty()) {
+                camelContext.addRoutes(new RouteBuilder(camelContext) {
+                    @Override
+                    public void configure() throws Exception {
+                        for (RouteDefinition routeDefinition : routesToUse) {
+                            try {
+                                getRouteCollection().getRoutes().add(routeDefinition);
+                                logger.info(String.format("Created new Camel route '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()));
+                            } catch (Exception e) {
+                                throw new CitrusRuntimeException(String.format("Failed to create route definition '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()), e);
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         } catch (Exception e) {
             throw new CitrusRuntimeException(String.format("Failed to create route definitions in context '%s'", camelContext.getName()), e);
+        }
+    }
+
+    private String createRouteContext(String routeId, String routeSpec) {
+        final String routeContextElement = "<routeContext xmlns=\"http://camel.apache.org/schema/spring\">%s</routeContext>";
+
+        if (routeSpec.startsWith("<?xml")) {
+            // cut off XML declaration and rerun the method logic
+            return createRouteContext(routeId, routeSpec.substring(routeSpec.indexOf("?>") + 2).trim());
+        } else if (routeSpec.startsWith("<route id=")) {
+            return String.format(routeContextElement, routeSpec);
+        } else if (routeSpec.startsWith("<route>") && routeId != null) {
+            return String.format(routeContextElement, String.format("<route id=\"%s\">", routeId) + routeSpec.substring("<route>".length()));
+        } else if (routeSpec.startsWith("<route>")) {
+            return String.format(routeContextElement, routeSpec);
+        } else if (routeSpec.startsWith("<routeContext>")) {
+            return String.format(routeContextElement, routeSpec.substring("<routeContext>".length(), routeSpec.length() - "</routeContext>".length()));
+        } else if (routeSpec.startsWith("<routeContext")) {
+            return routeSpec;
+        } else if (routeId != null) {
+            return String.format(routeContextElement, String.format("<route id=\"%s\">", routeId) + routeSpec + "</route>");
+        } else {
+            return String.format(routeContextElement, "<route>" + routeSpec + "</route>");
         }
     }
 
@@ -105,12 +168,11 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
     }
 
     /**
-     * Gets the routeContext.
-     *
+     * Gets the routeSpec.
      * @return
      */
-    public String getRouteContext() {
-        return routeContext;
+    public String getRouteSpec() {
+        return routeSpec;
     }
 
     /**
@@ -119,7 +181,8 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
     public static final class Builder extends AbstractCamelRouteAction.Builder<CreateCamelRouteAction, Builder> {
 
         private final List<RouteDefinition> routes = new ArrayList<>();
-        private String routeContext;
+        private String routeId;
+        private String routeSpec;
 
         public Builder route(RouteBuilder routeBuilder) {
             try {
@@ -139,12 +202,71 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
         }
 
         /**
-         * Adds route definitions from route context XML.
-         * @param routeContext
+         * Adds route using one of the supported languages XML or Groovy.
+         * @param routeSpec
          * @return
          */
-        public Builder routeContext(String routeContext) {
-            this.routeContext = routeContext;
+        @Deprecated
+        public Builder routeContext(String routeSpec) {
+            this.routeSpec = routeSpec;
+            return this;
+        }
+
+        /**
+         * Adds route using one of the supported languages XML or Groovy.
+         * @param routeSpec
+         * @return
+         */
+        public Builder route(String routeSpec) {
+            this.routeSpec = routeSpec;
+            return this;
+        }
+
+        /**
+         * Adds route using the content of the given resource.
+         * The file name is used as a route id.
+         * @param routeResource
+         * @return
+         */
+        public Builder route(Resource routeResource) {
+            try {
+                this.routeSpec = FileUtils.readToString(routeResource);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read Camel route from file resource", e);
+            }
+            this.routeId = FileUtils.getBaseName(FileUtils.getFileName(routeResource.getLocation()));
+            return this;
+        }
+
+        /**
+         * Adds route definition.
+         * @param route
+         * @return
+         */
+        public Builder route(RouteDefinition route) {
+            this.routes.add(route);
+            return this;
+        }
+
+        /**
+         * Adds route using one of the supported languages XML or Groovy.
+         * @param routeId
+         * @param routeSpec
+         * @return
+         */
+        public Builder route(String routeId, String routeSpec) {
+            this.routeId = routeId;
+            this.routeSpec = routeSpec;
+            return this;
+        }
+
+        /**
+         * Sets the route id.
+         * @param id
+         * @return
+         */
+        public Builder routeId(String id) {
+            this.routeId = id;
             return this;
         }
 

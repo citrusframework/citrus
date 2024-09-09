@@ -33,8 +33,13 @@ public class CreateCamelRouteActionParser extends AbstractCamelRouteActionParser
 
     @Override
     public void parse(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext) {
-        beanDefinition.addPropertyValue("routeContext",
-                PayloadElementParser.parseMessagePayload(DomUtils.getChildElementByTagName(element, "routeContext")));
+        if (DomUtils.getChildElementByTagName(element, "routeContext") != null) {
+            beanDefinition.addPropertyValue("route",
+                    PayloadElementParser.parseMessagePayload(DomUtils.getChildElementByTagName(element, "routeContext")));
+        } else {
+            beanDefinition.addPropertyValue("route",
+                    PayloadElementParser.parseMessagePayload(DomUtils.getChildElementByTagName(element, "route")));
+        }
     }
 
     @Override
@@ -51,11 +56,19 @@ public class CreateCamelRouteActionParser extends AbstractCamelRouteActionParser
 
         /**
          * Sets the routeContext.
-         *
          * @param routeContext
          */
+        @Deprecated
         public void setRouteContext(String routeContext) {
-            builder.routeContext(routeContext);
+            builder.route(routeContext);
+        }
+
+        /**
+         * Sets the route specification.
+         * @param routeSpec
+         */
+        public void setRoute(String routeSpec) {
+            builder.route(routeSpec);
         }
 
         @Override

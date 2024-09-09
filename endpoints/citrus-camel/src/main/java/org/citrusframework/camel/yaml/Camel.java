@@ -20,7 +20,7 @@ import org.apache.camel.CamelContext;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
-import org.citrusframework.camel.actions.AbstractCamelRouteAction;
+import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
@@ -30,7 +30,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
  */
 public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
-    private CamelRouteActionBuilderWrapper<?> delegate;
+    private CamelActionBuilderWrapper<?> delegate;
 
     private String description;
     private String actor;
@@ -52,6 +52,18 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
     }
 
     public void setControlBus(ControlBus builder) {
+        this.delegate = builder;
+    }
+
+    public void setCreateContext(CreateContext builder) {
+        this.delegate = builder;
+    }
+
+    public void setStartContext(StartContext builder) {
+        this.delegate = builder;
+    }
+
+    public void setStopContext(StopContext builder) {
         this.delegate = builder;
     }
 
@@ -77,7 +89,7 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             throw new CitrusRuntimeException("Missing Camel action - please provide proper action details");
         }
 
-        AbstractCamelRouteAction.Builder<?, ?> builder = delegate.getBuilder();
+        AbstractCamelAction.Builder<?, ?> builder = delegate.getBuilder();
 
         builder.setReferenceResolver(referenceResolver);
         builder.description(description);

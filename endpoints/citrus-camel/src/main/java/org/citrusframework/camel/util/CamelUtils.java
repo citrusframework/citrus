@@ -37,7 +37,7 @@ public class CamelUtils {
                 context = JAXBContext.newInstance("org.apache.camel:org.apache.camel.model:org.apache.camel.model.cloud:" +
                         "org.apache.camel.model.config:org.apache.camel.model.dataformat:org.apache.camel.model.language:" +
                         "org.apache.camel.model.loadbalancer:org.apache.camel.model.rest:org.apache.camel.model.transformer:" +
-                        "org.apache.camel.model.validator:org.apache.camel.core.xml:org.apache.camel.spring.xml", CamelUtils.class.getClassLoader());
+                        "org.apache.camel.model.validator:org.apache.camel.core.xml:org.apache.camel.spring.xml:org.apache.camel.model", CamelUtils.class.getClassLoader());
             }
         }
 

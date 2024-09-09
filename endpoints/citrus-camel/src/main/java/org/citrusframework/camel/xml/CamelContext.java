@@ -18,23 +18,33 @@ package org.citrusframework.camel.xml;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAnyElement;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "routeSpec"
+        "name"
 })
-public class CreateRoutes {
+public class CamelContext {
+    @XmlAttribute(required = true)
+    protected String name;
 
-    @XmlAnyElement(lax = true)
-    protected org.w3c.dom.Element routeSpec;
+    @XmlAttribute()
+    protected boolean autoStart = true;
 
-    public org.w3c.dom.Element getRouteSpec() {
-        return routeSpec;
+    public String getName() {
+        return name;
     }
 
-    public void setRouteSpec(org.w3c.dom.Element routeSpec) {
-        this.routeSpec = routeSpec;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isAutoStart() {
+        return autoStart;
+    }
+
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
     }
 }

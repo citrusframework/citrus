@@ -21,7 +21,7 @@ import org.citrusframework.camel.actions.CamelControlBusAction;
 /**
  * @author Christoph Deppisch
  */
-public class ControlBus implements CamelRouteActionBuilderWrapper<CamelControlBusAction.Builder> {
+public class ControlBus implements CamelActionBuilderWrapper<CamelControlBusAction.Builder> {
 
     private final CamelControlBusAction.Builder builder = new CamelControlBusAction.Builder();
 

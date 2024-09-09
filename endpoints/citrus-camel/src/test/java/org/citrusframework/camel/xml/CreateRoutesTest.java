@@ -20,6 +20,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.xml.XmlTestLoader;
 import org.testng.Assert;
@@ -37,7 +38,7 @@ public class CreateRoutesTest extends AbstractXmlActionTest {
         CamelContext citrusCamelContext = new DefaultCamelContext();
         citrusCamelContext.start();
 
-        context.getReferenceResolver().bind("citrusCamelContext", citrusCamelContext);
+        context.getReferenceResolver().bind(CamelSettings.getContextName(), citrusCamelContext);
         context.getReferenceResolver().bind("camelContext", citrusCamelContext);
 
         testLoader.load();
@@ -54,8 +55,8 @@ public class CreateRoutesTest extends AbstractXmlActionTest {
 
         CreateCamelRouteAction action = (CreateCamelRouteAction) result.getTestAction(actionIndex++);
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("citrusCamelContext", CamelContext.class));
-        Assert.assertNull(action.getRouteContext());
+        Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve(CamelSettings.getContextName(), CamelContext.class));
+        Assert.assertNull(action.getRouteSpec());
         Assert.assertNotNull(action.getRoutes());
         Assert.assertEquals(action.getRoutes().size(), 2L);
         Assert.assertEquals(action.getRoutes().get(0).getRouteId(), "route_1");
@@ -64,7 +65,7 @@ public class CreateRoutesTest extends AbstractXmlActionTest {
         action = (CreateCamelRouteAction) result.getTestAction(actionIndex);
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), context.getReferenceResolver().resolve("camelContext", CamelContext.class));
-        Assert.assertNull(action.getRouteContext());
+        Assert.assertNull(action.getRouteSpec());
         Assert.assertNotNull(action.getRoutes());
         Assert.assertEquals(action.getRoutes().size(), 1L);
         Assert.assertEquals(action.getRoutes().get(0).getEndpointUrl(), "direct:test3");

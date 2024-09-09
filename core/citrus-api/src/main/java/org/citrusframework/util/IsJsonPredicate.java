@@ -36,11 +36,10 @@ public class IsJsonPredicate implements Predicate<String> {
 
     @Override
     public boolean test(String toTest) {
-
-        if (toTest != null) {
-            toTest = toTest.trim();
+        if (toTest == null) {
+            return false;
         }
 
-        return toTest != null && (toTest.length() == 0 || toTest.startsWith("{") || toTest.startsWith("["));
+        return toTest.trim().isEmpty() || toTest.trim().startsWith("{") || toTest.trim().startsWith("[");
     }
 }

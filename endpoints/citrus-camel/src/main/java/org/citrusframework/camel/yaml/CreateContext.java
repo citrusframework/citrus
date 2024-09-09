@@ -16,21 +16,21 @@
 
 package org.citrusframework.camel.yaml;
 
-import org.citrusframework.camel.actions.CreateCamelRouteAction;
+import org.citrusframework.camel.actions.CreateCamelContextAction;
 
-public class CreateRoutes implements CamelActionBuilderWrapper<CreateCamelRouteAction.Builder> {
-    private final CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder();
+public class CreateContext implements CamelActionBuilderWrapper<CreateCamelContextAction.Builder> {
+    private final CreateCamelContextAction.Builder builder = new CreateCamelContextAction.Builder();
 
-    public void setRouteContext(String routeContext) {
-        builder.route(routeContext);
+    public void setName(String contextName) {
+        builder.contextName(contextName);
     }
 
-    public void setRoute(String routeSpec) {
-        builder.route(routeSpec);
+    public void setAutStart(boolean autoStart) {
+        builder.autoStart(autoStart);
     }
 
     @Override
-    public CreateCamelRouteAction.Builder getBuilder() {
+    public CreateCamelContextAction.Builder getBuilder() {
         return builder;
     }
 }
