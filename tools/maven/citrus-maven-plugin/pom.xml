@@ -74,7 +74,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-interactivity-api</artifactId>
-      <version>1.0-alpha-6</version>
+      <version>1.3</version>
     </dependency>
   </dependencies>
 
