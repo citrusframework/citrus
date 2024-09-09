@@ -61,7 +61,7 @@
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
       <scope>provided</scope>
-      <version>3.1.0</version>
+      <version>4.0.1</version>
     </dependency>
 
     <dependency>
