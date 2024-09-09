@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.config.xml;
 
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.apache.camel.CamelContext;
@@ -31,7 +32,7 @@ public class RemoveCamelRouteActionParserTest extends AbstractActionParserTest<R
 
         RemoveCamelRouteAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
         Assert.assertEquals(action.getRouteIds().size(), 1);
 
         action = getNextTestActionFromTest();

@@ -26,6 +26,43 @@
 
   <xs:element name="description" type="xs:string"/>
 
+  <xs:element name="create-context">
+    <xs:annotation>
+      <xs:documentation>Creates new Camel context on the fly</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+        <xs:element ref="camel:camelContext"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="start-context">
+    <xs:annotation>
+      <xs:documentation>Starts Camel context</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="stop-context">
+    <xs:annotation>
+      <xs:documentation>Stops Camel context</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="create-routes">
     <xs:annotation>
       <xs:documentation>Creates new Camel routes on the fly</xs:documentation>
@@ -33,7 +70,8 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description" minOccurs="0"/>
-        <xs:element ref="camel:routeContext"/>
+        <xs:element ref="camel:routeContext" minOccurs="0"/>
+        <xs:element ref="camel:route" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="camel-context" type="xs:string"/>
     </xs:complexType>
@@ -58,7 +96,7 @@
 
   <xs:element name="stop-routes">
     <xs:annotation>
-      <xs:documentation>Start Camel routes on context</xs:documentation>
+      <xs:documentation>Stop Camel routes on context</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>

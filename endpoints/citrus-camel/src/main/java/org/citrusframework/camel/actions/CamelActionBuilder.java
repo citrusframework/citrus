@@ -51,6 +51,39 @@ public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActio
     }
 
     /**
+     * Static entrance for all Camel related Java DSL functionalities.
+     * @return
+     */
+    public CamelContextActionBuilder camelContext() {
+        CamelContextActionBuilder builder = new CamelContextActionBuilder();
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Binds given component to the Camel context.
+     * @return
+     */
+    public CreateCamelComponentAction.Builder bind(String name, Object component) {
+        CreateCamelComponentAction.Builder builder = CreateCamelComponentAction.Builder.bind()
+                .context(camelContext)
+                .component(name, component);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
+     * Binds a component to the Camel context.
+     * @return
+     */
+    public CreateCamelComponentAction.Builder bind() {
+        CreateCamelComponentAction.Builder builder = CreateCamelComponentAction.Builder.bind()
+                .context(camelContext);
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
      * Creates new control bus test action builder and sets the Camel context.
      * @return
      */

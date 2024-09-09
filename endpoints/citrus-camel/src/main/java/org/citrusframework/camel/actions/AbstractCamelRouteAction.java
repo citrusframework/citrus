@@ -21,21 +21,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.model.ModelCamelContext;
-import org.citrusframework.AbstractTestActionBuilder;
-import org.citrusframework.actions.AbstractTestAction;
-import org.citrusframework.spi.ReferenceResolver;
-import org.citrusframework.spi.ReferenceResolverAware;
-import org.citrusframework.util.ObjectHelper;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public abstract class AbstractCamelRouteAction extends AbstractTestAction {
-
-    /** Target Camel context */
-    protected final CamelContext camelContext;
+public abstract class AbstractCamelRouteAction extends AbstractCamelAction {
 
     /** The Camel route to start */
     protected final List<String> routeIds;
@@ -43,7 +34,6 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
     protected AbstractCamelRouteAction(String name, Builder<?, ?> builder) {
         super(name, builder);
 
-        this.camelContext = builder.camelContext;
         this.routeIds = builder.routeIds;
     }
 
@@ -66,21 +56,9 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static abstract class Builder<T extends AbstractCamelRouteAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
+    public static abstract class Builder<T extends AbstractCamelRouteAction, B extends Builder<T, B>> extends AbstractCamelAction.Builder<T, B> {
 
-        protected ReferenceResolver referenceResolver;
-        protected CamelContext camelContext;
         protected List<String> routeIds = new ArrayList<>();
-
-        /**
-         * Sets the Camel context.
-         * @param camelContext
-         * @return
-         */
-        public B context(CamelContext camelContext) {
-            this.camelContext = camelContext;
-            return self;
-        }
 
         /**
          * Adds route ids.
@@ -99,32 +77,6 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
         public B routeIds(List<String> routeIds) {
             this.routeIds.addAll(routeIds);
             return self;
-        }
-
-        @Override
-        public final T build() {
-            if (camelContext == null) {
-                ObjectHelper.assertNotNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-
-                if (referenceResolver.isResolvable("citrusCamelContext")) {
-                    camelContext = referenceResolver.resolve("citrusCamelContext", ModelCamelContext.class);
-                } else {
-                    camelContext = referenceResolver.resolve(ModelCamelContext.class);
-                }
-            }
-
-            return doBuild();
-        }
-
-        /**
-         * Subclass builds action.
-         * @return
-         */
-        protected abstract T doBuild();
-
-        @Override
-        public void setReferenceResolver(ReferenceResolver referenceResolver) {
-            this.referenceResolver = referenceResolver;
         }
     }
 }

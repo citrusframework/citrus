@@ -665,7 +665,7 @@ public class CamelRouteActionIT extends TestNGCitrusSpringSupport {
 In the example above we have used the *camel:create-route* test action that will create new Camel routes at runtime in the Camel context.
 The target Camel context is referenced with an automatic context lookup.
 
-NOTE: The default Camel context name in this lookup is "_citrusCamelContext_".
+NOTE: The default Camel context name in this lookup is "_citrusCamelContext_". You can set this default context name via environment variables (_CITRUS_CAMEL_CONTEXT_NAME_) or system properties (_citrus.camel.context.name_).
 
 If no specific settings are set Citrus will automatically try to look up the Camel context with name "_citrusCamelContext_" in the Spring bean configuration.
 All route operations will target this Camel context then.

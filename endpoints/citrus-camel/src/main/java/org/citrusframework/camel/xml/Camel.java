@@ -22,16 +22,19 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import org.apache.camel.CamelContext;
+import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
-import org.citrusframework.camel.actions.AbstractCamelRouteAction;
+import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.camel.actions.CamelControlBusAction;
+import org.citrusframework.camel.actions.CreateCamelContextAction;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
+import org.citrusframework.camel.actions.StartCamelContextAction;
 import org.citrusframework.camel.actions.StartCamelRouteAction;
+import org.citrusframework.camel.actions.StopCamelContextAction;
 import org.citrusframework.camel.actions.StopCamelRouteAction;
 import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -44,7 +47,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 @XmlRootElement(name = "camel")
 public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
-    private AbstractCamelRouteAction.Builder<?, ?> builder;
+    private AbstractCamelAction.Builder<?, ?> builder;
 
     private String description;
     private String actor;
@@ -87,16 +90,50 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         return this;
     }
 
+    @XmlElement(name = "create-context")
+    public Camel setCreateContext(CamelContext createContext) {
+        CreateCamelContextAction.Builder builder = new CreateCamelContextAction.Builder();
+
+        builder.autoStart(createContext.isAutoStart());
+        builder.contextName(createContext.getName());
+
+        this.builder = builder;
+        return this;
+    }
+
+    @XmlElement(name = "start-context")
+    public Camel setStartContext(CamelContext startContext) {
+        StartCamelContextAction.Builder builder = new StartCamelContextAction.Builder();
+        builder.contextName(startContext.getName());
+
+        this.builder = builder;
+        return this;
+    }
+
+    @XmlElement(name = "stop-context")
+    public Camel setStopContext(CamelContext stopContext) {
+        StopCamelContextAction.Builder builder = new StopCamelContextAction.Builder();
+        builder.contextName(stopContext.getName());
+
+        this.builder = builder;
+        return this;
+    }
+
     @XmlElement(name = "create-routes")
     public Camel setCreateRoutes(CreateRoutes createRoutes) {
         CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder();
 
-        if (createRoutes.routeContext != null) {
+        if (createRoutes.routeSpec != null) {
             try {
-                CamelRouteContextFactoryBean factoryBean = (CamelRouteContextFactoryBean) CamelUtils.getJaxbContext().createUnmarshaller().unmarshal(createRoutes.routeContext);
+                CamelRouteContextFactoryBean factoryBean = (CamelRouteContextFactoryBean) CamelUtils.getJaxbContext().createUnmarshaller().unmarshal(createRoutes.routeSpec);
                 builder.routes(factoryBean.getRoutes());
-            } catch (JAXBException e) {
-                throw new CitrusRuntimeException("Failed to parse routes from given route context", e);
+            } catch (JAXBException | ClassCastException e) {
+                try {
+                    RouteDefinition rd = (RouteDefinition) CamelUtils.getJaxbContext().createUnmarshaller().unmarshal(createRoutes.routeSpec);
+                    builder.route(rd);
+                } catch (JAXBException | ClassCastException ex) {
+                    throw new CitrusRuntimeException("Failed to parse routes from given route specification", ex);
+                }
             }
         }
 
@@ -149,7 +186,7 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             }
 
             if (camelContext != null) {
-                builder.context(referenceResolver.resolve(camelContext, CamelContext.class));
+                builder.context(referenceResolver.resolve(camelContext, org.apache.camel.CamelContext.class));
             }
         }
 

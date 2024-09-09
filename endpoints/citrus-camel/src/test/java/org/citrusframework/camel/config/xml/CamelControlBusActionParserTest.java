@@ -16,6 +16,7 @@
 
 package org.citrusframework.camel.config.xml;
 
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelControlBusAction;
 import org.citrusframework.testng.AbstractActionParserTest;
 import org.apache.camel.CamelContext;
@@ -31,7 +32,7 @@ public class CamelControlBusActionParserTest extends AbstractActionParserTest<Ca
 
         CamelControlBusAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
         Assert.assertEquals(action.getRouteId(), "route_1");
         Assert.assertEquals(action.getAction(), "start");
         Assert.assertNull(action.getResult());
@@ -45,7 +46,7 @@ public class CamelControlBusActionParserTest extends AbstractActionParserTest<Ca
 
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
-        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
+        Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean(CamelSettings.getContextName(), CamelContext.class));
         Assert.assertEquals(action.getLanguageType(), "simple");
         Assert.assertEquals(action.getLanguageExpression(), "${camelContext.stop()}");
         Assert.assertNull(action.getResult());

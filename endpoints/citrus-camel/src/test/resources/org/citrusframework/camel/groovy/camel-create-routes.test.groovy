@@ -44,11 +44,9 @@ actions {
         .camelContext(camelContext)
         .route()
         .create("""
-          <routeContext xmlns="http://camel.apache.org/schema/spring">
-            <route>
-              <from uri="direct:test3"/>
-              <to uri="mock:test3"/>
-            </route>
-          </routeContext>
+          <route>
+            <from uri="direct:test3"/>
+            <to uri="mock:test3"/>
+          </route>
         """))
 }

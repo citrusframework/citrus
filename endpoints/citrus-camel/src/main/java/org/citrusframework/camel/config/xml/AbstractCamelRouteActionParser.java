@@ -18,6 +18,7 @@ package org.citrusframework.camel.config.xml;
 
 import java.util.List;
 
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.AbstractCamelRouteAction;
 import org.citrusframework.config.util.BeanDefinitionParserUtils;
 import org.citrusframework.config.xml.AbstractTestActionFactoryBean;
@@ -43,7 +44,7 @@ public abstract class AbstractCamelRouteActionParser implements BeanDefinitionPa
         DescriptionElementParser.doParse(element, beanDefinition);
 
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition,
-                element.getAttribute("camel-context"), "camelContext", "citrusCamelContext");
+                element.getAttribute("camel-context"), "camelContext", CamelSettings.getContextName());
         parse(beanDefinition, element, parserContext);
 
         return beanDefinition.getBeanDefinition();

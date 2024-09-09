@@ -38,12 +38,10 @@
 
     <camel camel-context="camelContext">
       <create-routes>
-        <routeContext xmlns="http://camel.apache.org/schema/spring">
-          <route>
-            <from uri="direct:test3"/>
-            <to uri="mock:test3"/>
-          </route>
-        </routeContext>
+        <route xmlns="http://camel.apache.org/schema/spring">
+          <from uri="direct:test3"/>
+          <to uri="mock:test3"/>
+        </route>
       </create-routes>
     </camel>
   </actions>

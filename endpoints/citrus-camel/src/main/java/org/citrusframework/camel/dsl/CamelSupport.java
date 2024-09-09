@@ -24,11 +24,17 @@ import org.apache.camel.builder.DataFormatClause;
 import org.apache.camel.builder.ExpressionClauseSupport;
 import org.apache.camel.model.OutputDefinition;
 import org.apache.camel.model.ProcessorDefinition;
+import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelActionBuilder;
+import org.citrusframework.camel.actions.CamelContextActionBuilder;
 import org.citrusframework.camel.actions.CamelControlBusAction;
 import org.citrusframework.camel.actions.CamelRouteActionBuilder;
+import org.citrusframework.camel.actions.CreateCamelComponentAction;
 import org.citrusframework.camel.endpoint.CamelEndpoint;
 import org.citrusframework.camel.endpoint.CamelEndpointBuilder;
+import org.citrusframework.camel.endpoint.CamelEndpointConfiguration;
+import org.citrusframework.camel.endpoint.CamelSyncEndpoint;
+import org.citrusframework.camel.endpoint.CamelSyncEndpointConfiguration;
 import org.citrusframework.camel.message.CamelDataFormatMessageProcessor;
 import org.citrusframework.camel.message.CamelMessageProcessor;
 import org.citrusframework.camel.message.CamelRouteProcessor;
@@ -70,6 +76,14 @@ public class CamelSupport {
     }
 
     /**
+     * Static entrance for all Camel related Java DSL functionalities.
+     * @return
+     */
+    public CamelContextActionBuilder camelContext() {
+        return new CamelContextActionBuilder();
+    }
+
+    /**
      * Constructs proper endpoint uri from endpoint uri builder.
      * @return
      */
@@ -85,10 +99,29 @@ public class CamelSupport {
      * @return
      */
     public CamelEndpoint endpoint(String endpointUri) {
-        return new CamelEndpointBuilder()
-                .camelContext(camelContext)
-                .endpoint(() -> endpointUri)
-                .build();
+        return endpoint(endpointUri, false);
+    }
+
+    /**
+     * Constructs proper endpoint uri from endpoint uri builder.
+     * @return
+     */
+    public CamelEndpoint endpoint(String endpointUri, boolean inOut) {
+        if (inOut) {
+            CamelSyncEndpointConfiguration endpointConfiguration = new CamelSyncEndpointConfiguration();
+            endpointConfiguration.setCamelContext(camelContext);
+            endpointConfiguration.setEndpointUri(endpointUri);
+            endpointConfiguration.setTimeout(CamelSettings.getTimeout());
+
+            return new CamelSyncEndpoint(endpointConfiguration);
+        } else {
+            CamelEndpointConfiguration endpointConfiguration = new CamelEndpointConfiguration();
+            endpointConfiguration.setCamelContext(camelContext);
+            endpointConfiguration.setEndpointUri(endpointUri);
+            endpointConfiguration.setTimeout(CamelSettings.getTimeout());
+
+            return new CamelEndpoint(endpointConfiguration);
+        }
     }
 
     /**
@@ -105,6 +138,26 @@ public class CamelSupport {
      */
     public EndpointBuilderFactorySupport endpoints() {
         return new EndpointBuilderFactorySupport();
+    }
+
+    /**
+     * Binds given component to the Camel context.
+     * @return
+     */
+    public CreateCamelComponentAction.Builder bind(String name, Object component) {
+        return new CamelActionBuilder()
+                .camelContext(camelContext)
+                .bind(name, component);
+    }
+
+    /**
+     * Binds a component to the Camel context.
+     * @return
+     */
+    public CreateCamelComponentAction.Builder bind() {
+        return new CamelActionBuilder()
+                .camelContext(camelContext)
+                .bind();
     }
 
     /**

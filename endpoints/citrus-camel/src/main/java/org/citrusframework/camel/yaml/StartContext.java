@@ -16,18 +16,17 @@
 
 package org.citrusframework.camel.yaml;
 
-import org.citrusframework.camel.actions.AbstractCamelRouteAction;
+import org.citrusframework.camel.actions.StartCamelContextAction;
 
-/**
- * Special wrapper holding a Camel route action builder for future reference.
- * @param <B>
- */
-public interface CamelRouteActionBuilderWrapper<B extends AbstractCamelRouteAction.Builder<?, ?>> {
+public class StartContext implements CamelActionBuilderWrapper<StartCamelContextAction.Builder> {
+    private final StartCamelContextAction.Builder builder = new StartCamelContextAction.Builder();
 
-    /**
-     * Gets the wrapped Camel route action builder.
-     * @return
-     */
-    B getBuilder();
+    public void setName(String contextName) {
+        builder.contextName(contextName);
+    }
 
+    @Override
+    public StartCamelContextAction.Builder getBuilder() {
+        return builder;
+    }
 }
