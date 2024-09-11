@@ -1,0 +1,25 @@
+name: "JBangTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - jbang:
+      command: "version"
+      args:
+        - value: "--verbose"
+  - jbang:
+      file: "classpath:org/citrusframework/jbang/hello.java"
+      args:
+        - value: "Citrus"
+      saveOutput: "out"
+      savePid: "pid"
+  - jbang:
+      file: "classpath:org/citrusframework/jbang/hello.java"
+      printOutput: false
+      exitCode: "0"
+      systemProperties:
+        - name: "foo"
+          value: "bar"
+      args:
+        - value: "Citrus"
+      output: Hello Citrus

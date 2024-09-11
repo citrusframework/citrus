@@ -56,4 +56,13 @@ jobs:
           java -version
           ./mvnw -version
       - name: Build Citrus
-        run: ./mvnw --no-transfer-progress -T1C install
+        run: |
+          echo "Install JBang via SDKMAN"
+
+          curl -s "https://get.sdkman.io" | bash 
+          source "/home/runner/.sdkman/bin/sdkman-init.sh"
+          sdk install jbang
+          
+          jbang --version
+          
+          ./mvnw --no-transfer-progress -T1C install

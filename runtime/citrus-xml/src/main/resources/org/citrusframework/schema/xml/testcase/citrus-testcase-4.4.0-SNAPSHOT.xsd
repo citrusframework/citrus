@@ -727,6 +727,7 @@
   <xs:element name="soap" type="tns:Soap"/>
   <xs:element name="camel" type="tns:Camel"/>
   <xs:element name="selenium" type="tns:Selenium"/>
+  <xs:element name="jbang" type="tns:JBang"/>
 
   <xs:complexType name="Plsql">
     <xs:sequence>
@@ -1280,6 +1281,45 @@
     <xs:attribute name="actor" type="xs:string"/>
     <xs:attribute name="client" type="xs:string"/>
     <xs:attribute name="server" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="JBang">
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="system-properties" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="system-property" minOccurs="1" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:attribute name="name" use="required" type="xs:string"/>
+                <xs:attribute name="value" use="required" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="args" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="arg" minOccurs="1" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:attribute name="name" type="xs:string"/>
+                <xs:attribute name="value" use="required" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="output" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="app" type="xs:string"/>
+    <xs:attribute name="command" type="xs:string"/>
+    <xs:attribute name="file" type="xs:string"/>
+    <xs:attribute name="args" type="xs:string"/>
+    <xs:attribute name="exit-code" type="xs:string"/>
+    <xs:attribute name="print-output" type="xs:boolean"/>
+    <xs:attribute name="save-pid" type="xs:string"/>
+    <xs:attribute name="save-output" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="Selenium">

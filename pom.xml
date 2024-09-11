@@ -54,8 +54,8 @@
     <module>utils</module>
     <module>runtime</module>
     <module>validation</module>
-    <module>endpoints</module>
     <module>connectors</module>
+    <module>endpoints</module>
     <module>tools</module>
     <module>catalog</module>
   </modules>
@@ -194,6 +194,7 @@
     <apicurio.data-models.version>1.1.27</apicurio.data-models.version>
     <ascii-table-version>1.8.0</ascii-table-version>
     <assertj.version>3.25.1</assertj.version>
+    <awaitility.version>4.2.1</awaitility.version>
     <bouncycastle.version>1.78.1</bouncycastle.version>
     <byte.buddy.version>1.15.1</byte.buddy.version>
     <commons.dbcp2.version>2.12.0</commons.dbcp2.version>
@@ -579,6 +580,12 @@
         <groupId>io.apicurio</groupId>
         <artifactId>apicurio-data-models</artifactId>
         <version>${apicurio.data-models.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${awaitility.version}</version>
       </dependency>
 
       <!-- Jetty -->
