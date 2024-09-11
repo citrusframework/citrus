@@ -41,7 +41,7 @@ public class EchoAction extends AbstractTestAction {
      * Default constructor using the builder.
      * @param builder
      */
-    private EchoAction(EchoAction.Builder builder) {
+    private EchoAction(Builder builder) {
         super("echo", builder);
 
         this.message = builder.message;

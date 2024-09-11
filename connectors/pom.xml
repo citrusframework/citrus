@@ -20,6 +20,7 @@
     <module>citrus-kubernetes</module>
     <module>citrus-selenium</module>
     <module>citrus-sql</module>
+    <module>citrus-jbang-connector</module>
   </modules>
 
 </project>

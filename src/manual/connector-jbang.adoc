@@ -1,0 +1,89 @@
+[[jbang]]
+== JBang support
+
+With https://jbang.dev/[JBang] you can run your `.java` files directly in your shell - instantly without tedious setup.
+
+NOTE: The JBang support in Citrus get enabled by adding a separate Maven module as dependency to your project
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.citrusframework</groupId>
+  <artifactId>citrus-jbang-connector</artifactId>
+  <version>${citrus.version}</version>
+</dependency>
+----
+
+NOTE: You may wonder why is there another module named `citrus-jbang`! What is the difference compared to the `citrus-jbang-connector` module? The `citrus-jbang` module represents the Citrus JBang app that you can use in JBang to run Citrus tests without any prior setup. The `citrus-jbang-connector` module provides the JBang support to use JBang as part of a test case, for instance in the form of a test action that runs JBang scripts.
+
+[[jbang-action]]
+=== JBang action
+
+The JBang test action runs a script or JBang application with a spawned process.
+You can call any JBang CLI command and run your JBang app.
+JBang is called with the Java process API so the JBang CLI binary is executed and the command output is saved for later reference.
+You can verify the command output with an expected output and you can also verify the exit code of the spawned process.
+
+.Java
+[source,java,indent=0,role="primary"]
+----
+@CitrusTest
+public void jBangScriptTest() {
+    when(jbang()
+            .app("myApp")
+            .command("getUsers")
+            .arg("--username", "FooUser"));
+}
+----
+
+.XML
+[source,xml,indent=0,role="secondary"]
+----
+<test name="JBangScriptTest" xmlns="http://citrusframework.org/schema/xml/testcase">
+    <actions>
+        <jbang app="myApp" command="getUsers">
+          <args>
+            <arg name="--username" value="FooUser"/>
+          </args>
+        </jbang>
+    </actions>
+</test>
+----
+
+.YAML
+[source,yaml,indent=0,role="secondary"]
+----
+name: JBangScriptTest
+actions:
+  - jbang:
+      app: "myApp"
+      command: "getUsers"
+      args:
+        - name: "--username"
+          value: "FooUser"
+----
+
+.Spring XML
+[source,xml,indent=0,role="secondary"]
+----
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans">
+    <!-- NOT SUPPORTED -->
+</spring:beans>
+----
+
+The test above calls the JBang app `myApp` with the `getUsers` command.
+The call is similar to a command line statement like this:
+
+[source,text]
+----
+$ jbang myApp getUsers --username=FooUser
+----
+
+The app `myApp` represents a JBang application that has been installed previously in JBang (for instance from a GitHub repository that holds a `jbang-catalog.json`):
+
+[source,text]
+----
+$ jbang app install myApp@github-user/repository
+----
+
