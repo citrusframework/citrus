@@ -252,7 +252,7 @@
     <slf4j.version>2.0.11</slf4j.version>
     <snappy.version>1.1.10.6</snappy.version>
     <snakeyaml.version>2.3</snakeyaml.version>
-    <spring.version>6.1.12</spring.version>
+    <spring.version>6.1.13</spring.version>
     <spring.ws.version>4.0.11</spring.ws.version>
     <spring.integration.version>6.3.3</spring.integration.version>
     <spring.restdocs.version>3.0.1</spring.restdocs.version>
