@@ -85,7 +85,7 @@ public class YamlTestCase {
     }
 
     public void setFinally(List<TestActions> actions) {
-        actions.forEach(action -> delegate.addTestAction(action.get()));
+        actions.forEach(action -> delegate.addFinalAction(action.get()));
     }
 
     public static class Variable {
