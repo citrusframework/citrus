@@ -16,13 +16,13 @@
 
 package org.citrusframework.camel.yaml;
 
-import org.citrusframework.camel.actions.AbstractCamelAction;
+import org.citrusframework.AbstractTestActionBuilder;
 
 /**
  * Special wrapper holding a Camel action builder for future reference.
  * @param <B>
  */
-public interface CamelActionBuilderWrapper<B extends AbstractCamelAction.Builder<?, ?>> {
+public interface CamelActionBuilderWrapper<B extends AbstractTestActionBuilder<?, ?>> {
 
     /**
      * Gets the wrapped Camel action builder.

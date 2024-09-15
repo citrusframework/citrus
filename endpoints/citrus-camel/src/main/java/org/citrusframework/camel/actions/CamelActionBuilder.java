@@ -106,6 +106,16 @@ public class CamelActionBuilder implements TestActionBuilder.DelegatingTestActio
     }
 
     /**
+     * Perform actions with Camel JBang.
+     * @return
+     */
+    public CamelJBangActionBuilder jbang() {
+        CamelJBangActionBuilder builder = new CamelJBangActionBuilder();
+        this.delegate = builder;
+        return builder;
+    }
+
+    /**
      * Sets the bean reference resolver.
      * @param referenceResolver
      */

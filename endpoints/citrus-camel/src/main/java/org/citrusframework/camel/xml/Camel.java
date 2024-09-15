@@ -24,11 +24,15 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.xml.CamelRouteContextFactoryBean;
+import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
 import org.citrusframework.camel.actions.AbstractCamelAction;
 import org.citrusframework.camel.actions.CamelControlBusAction;
+import org.citrusframework.camel.actions.CamelRunIntegrationAction;
+import org.citrusframework.camel.actions.CamelStopIntegrationAction;
+import org.citrusframework.camel.actions.CamelVerifyIntegrationAction;
 import org.citrusframework.camel.actions.CreateCamelContextAction;
 import org.citrusframework.camel.actions.CreateCamelRouteAction;
 import org.citrusframework.camel.actions.RemoveCamelRouteAction;
@@ -40,6 +44,7 @@ import org.citrusframework.camel.util.CamelUtils;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.spi.ReferenceResolverAware;
+import org.citrusframework.spi.Resources;
 
 /**
  * @author Christoph Deppisch
@@ -47,7 +52,7 @@ import org.citrusframework.spi.ReferenceResolverAware;
 @XmlRootElement(name = "camel")
 public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAware {
 
-    private AbstractCamelAction.Builder<?, ?> builder;
+    private AbstractTestActionBuilder<?, ?> builder;
 
     private String description;
     private String actor;
@@ -141,6 +146,47 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         return this;
     }
 
+    @XmlElement(name = "jbang")
+    public Camel setJBang(JBang jbang) {
+        if (jbang.getRun() != null) {
+            CamelRunIntegrationAction.Builder builder = new CamelRunIntegrationAction.Builder()
+                    .integrationName(jbang.getRun().getIntegration().getName());
+
+            if (jbang.getRun().getIntegration().getSourceCode() != null) {
+                builder.integration(jbang.getRun().getIntegration().getSourceCode());
+            }
+
+            if (jbang.getRun().getIntegration().getFile() != null) {
+                builder.integration(Resources.create(jbang.getRun().getIntegration().getFile()));
+            }
+
+            this.builder = builder;
+        } else if (jbang.getStop() != null) {
+            CamelStopIntegrationAction.Builder builder = new CamelStopIntegrationAction.Builder()
+                    .integrationName(jbang.getStop().getIntegration());
+            this.builder = builder;
+        } else if (jbang.getVerify() != null) {
+            CamelVerifyIntegrationAction.Builder builder = new CamelVerifyIntegrationAction.Builder()
+                    .integrationName(jbang.getVerify().getIntegration())
+                    .isInPhase(jbang.getVerify().getPhase())
+                    .stopOnErrorStatus(jbang.getVerify().isStopOnErrorStatus())
+                    .printLogs(jbang.getVerify().isPrintLogs())
+                    .maxAttempts(jbang.getVerify().getMaxAttempts())
+                    .delayBetweenAttempts(jbang.getVerify().getDelayBetweenAttempts());
+
+            if (jbang.getVerify().getLogMessage() != null) {
+                builder.waitForLogMessage(jbang.getVerify().getLogMessage());
+            }
+
+            builder.camelVersion(jbang.getCamelVersion());
+            builder.kameletsVersion(jbang.getKameletsVersion());
+
+            this.builder = builder;
+        }
+
+        return this;
+    }
+
     @XmlElement(name = "start-routes")
     public Camel setStartRoutes(Routes startRoutes) {
         StartCamelRouteAction.Builder builder = new StartCamelRouteAction.Builder();
@@ -177,7 +223,10 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
             throw new CitrusRuntimeException("Missing Camel action - please provide proper action details");
         }
 
-        builder.setReferenceResolver(referenceResolver);
+        if (builder instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(referenceResolver);
+        }
+
         builder.description(description);
 
         if (referenceResolver != null) {
@@ -185,8 +234,8 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 builder.actor(referenceResolver.resolve(actor, TestActor.class));
             }
 
-            if (camelContext != null) {
-                builder.context(referenceResolver.resolve(camelContext, org.apache.camel.CamelContext.class));
+            if (camelContext != null && builder instanceof AbstractCamelAction.Builder<?, ?> camelActionBuilder) {
+                camelActionBuilder.context(referenceResolver.resolve(camelContext, org.apache.camel.CamelContext.class));
             }
         }
 
