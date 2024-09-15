@@ -28,6 +28,7 @@ import org.citrusframework.camel.CamelSettings;
 import org.citrusframework.camel.actions.CamelActionBuilder;
 import org.citrusframework.camel.actions.CamelContextActionBuilder;
 import org.citrusframework.camel.actions.CamelControlBusAction;
+import org.citrusframework.camel.actions.CamelJBangActionBuilder;
 import org.citrusframework.camel.actions.CamelRouteActionBuilder;
 import org.citrusframework.camel.actions.CreateCamelComponentAction;
 import org.citrusframework.camel.endpoint.CamelEndpoint;
@@ -188,6 +189,16 @@ public class CamelSupport {
         return new CamelActionBuilder()
                 .camelContext(camelContext)
                 .route();
+    }
+
+    /**
+     * Perform actions with Camel JBang.
+     * @return
+     */
+    public CamelJBangActionBuilder jbang() {
+        return new CamelActionBuilder()
+                .camelContext(camelContext)
+                .jbang();
     }
 
     /**

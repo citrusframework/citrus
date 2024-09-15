@@ -32,6 +32,18 @@ public final class CamelSettings {
     private static final String TIMEOUT_ENV = CAMEL_ENV_PREFIX + "TIMEOUT";
     private static final long TIMEOUT_DEFAULT = TimeUnit.SECONDS.toMillis(5);
 
+    private static final String MAX_ATTEMPTS_PROPERTY = CAMEL_PROPERTY_PREFIX + "max.attempts";
+    private static final String MAX_ATTEMPTS_ENV = CAMEL_ENV_PREFIX + "MAX_ATTEMPTS";
+    private static final String MAX_ATTEMPTS_DEFAULT = "60";
+
+    private static final String DELAY_BETWEEN_ATTEMPTS_PROPERTY = CAMEL_PROPERTY_PREFIX + "delay.between.attempts";
+    private static final String DELAY_BETWEEN_ATTEMPTS_ENV = CAMEL_ENV_PREFIX + "DELAY_BETWEEN_ATTEMPTS";
+    private static final String DELAY_BETWEEN_ATTEMPTS_DEFAULT = "2000";
+
+    private static final String PRINT_LOGS_PROPERTY = CAMEL_PROPERTY_PREFIX + "print.logs";
+    private static final String PRINT_LOGS_ENV = CAMEL_ENV_PREFIX + "PRINT_LOGS";
+    private static final String PRINT_LOGS_DEFAULT = "true";
+
     private CamelSettings() {
         // prevent instantiation of utility class
     }
@@ -53,5 +65,32 @@ public final class CamelSettings {
     public static String getContextName() {
         return System.getProperty(CONTEXT_NAME_PROPERTY,
                 System.getenv(CONTEXT_NAME_ENV) != null ? System.getenv(CONTEXT_NAME_ENV) : CONTEXT_NAME_DEFAULT);
+    }
+
+    /**
+     * Maximum number of attempts when polling for running state and log messages.
+     * @return
+     */
+    public static int getMaxAttempts() {
+        return Integer.parseInt(System.getProperty(MAX_ATTEMPTS_PROPERTY,
+                System.getenv(MAX_ATTEMPTS_ENV) != null ? System.getenv(MAX_ATTEMPTS_ENV) : MAX_ATTEMPTS_DEFAULT));
+    }
+
+    /**
+     * Delay in milliseconds to wait after polling attempt.
+     * @return
+     */
+    public static long getDelayBetweenAttempts() {
+        return Long.parseLong(System.getProperty(DELAY_BETWEEN_ATTEMPTS_PROPERTY,
+                System.getenv(DELAY_BETWEEN_ATTEMPTS_ENV) != null ? System.getenv(DELAY_BETWEEN_ATTEMPTS_ENV) : DELAY_BETWEEN_ATTEMPTS_DEFAULT));
+    }
+
+    /**
+     * When set to true test will print Camel JBang route logs e.g. while waiting for a log message.
+     * @return
+     */
+    public static boolean isPrintLogs() {
+        return Boolean.parseBoolean(System.getProperty(PRINT_LOGS_PROPERTY,
+                System.getenv(PRINT_LOGS_ENV) != null ? System.getenv(PRINT_LOGS_ENV) : PRINT_LOGS_DEFAULT));
     }
 }

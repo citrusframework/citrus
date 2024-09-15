@@ -1,0 +1,11 @@
+- from:
+    uri: "timer:tick"
+    parameters:
+      period: "1000"
+      includeMetadata: true
+    steps:
+      - setBody:
+          simple: "Hello Camel #${header.CamelTimerCounter}"
+      - transform:
+          simple: "${body.toUpperCase()}"
+      - to: "log:info"

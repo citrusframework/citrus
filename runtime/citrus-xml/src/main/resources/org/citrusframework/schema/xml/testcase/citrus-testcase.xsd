@@ -979,6 +979,60 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="jbang">
+          <xs:annotation>
+            <xs:documentation>Creates new Camel JBang action</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:choice>
+              <xs:element name="run">
+                <xs:annotation>
+                  <xs:documentation>Runs a Camel integration via JBang</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="integration">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="name" type="xs:string"/>
+                            <xs:attribute name="file" type="xs:string"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="stop">
+                <xs:annotation>
+                  <xs:documentation>Stops a Camel integration identified by its name</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence/>
+                  <xs:attribute name="integration" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="verify">
+                <xs:annotation>
+                  <xs:documentation>Verifies a Camel integration, for instance its status or the presence of a log message</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence/>
+                  <xs:attribute name="integration" type="xs:string"/>
+                  <xs:attribute name="log-message" type="xs:string"/>
+                  <xs:attribute name="phase" type="xs:string"/>
+                  <xs:attribute name="max-attempts" type="xs:int"/>
+                  <xs:attribute name="delay-between-attempts" type="xs:int"/>
+                  <xs:attribute name="print-logs" type="xs:boolean"/>
+                  <xs:attribute name="stop-on-error-status" type="xs:boolean"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+            <xs:attribute name="camel-version" type="xs:string"/>
+            <xs:attribute name="kamelets-version" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="camel-context" type="xs:string"/>
@@ -1314,6 +1368,9 @@
   </xs:complexType>
 
   <xs:complexType name="JBang">
+    <xs:annotation>
+      <xs:documentation>Connect with JBang to run scripts as spawned processes</xs:documentation>
+    </xs:annotation>
     <xs:sequence>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="system-properties" minOccurs="0">

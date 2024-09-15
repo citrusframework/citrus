@@ -17,3 +17,6 @@ logs/
 .externalToolBuilders/
 maven-eclipse.xml
 .mvn/wrapper/maven-wrapper.jar
+
+.citrus-jbang/
+.camel-jbang/

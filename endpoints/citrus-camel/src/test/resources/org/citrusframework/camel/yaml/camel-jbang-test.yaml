@@ -1,0 +1,20 @@
+name: "CamelJBangTest"
+author: "Christoph"
+status: "FINAL"
+actions:
+  - camel:
+      jbang:
+        run:
+          integration:
+            name: "hello-yaml"
+            file: "classpath:org/citrusframework/camel/integration/route.yaml"
+  - camel:
+      jbang:
+        verify:
+          integration: "hello-yaml"
+          logMessage: "HELLO CAMEL #10"
+finally:
+  - camel:
+      jbang:
+        stop:
+          integration: "hello-yaml"

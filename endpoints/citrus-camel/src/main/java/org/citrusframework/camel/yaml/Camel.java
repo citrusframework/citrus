@@ -17,6 +17,7 @@
 package org.citrusframework.camel.yaml;
 
 import org.apache.camel.CamelContext;
+import org.citrusframework.AbstractTestActionBuilder;
 import org.citrusframework.TestAction;
 import org.citrusframework.TestActionBuilder;
 import org.citrusframework.TestActor;
@@ -83,15 +84,22 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
         this.delegate = builder;
     }
 
+    public void setJbang(JBang builder) {
+        this.delegate = builder;
+    }
+
     @Override
     public TestAction build() {
         if (delegate == null) {
             throw new CitrusRuntimeException("Missing Camel action - please provide proper action details");
         }
 
-        AbstractCamelAction.Builder<?, ?> builder = delegate.getBuilder();
+        AbstractTestActionBuilder<?, ?> builder = delegate.getBuilder();
 
-        builder.setReferenceResolver(referenceResolver);
+        if (builder instanceof ReferenceResolverAware referenceResolverAware) {
+            referenceResolverAware.setReferenceResolver(referenceResolver);
+        }
+
         builder.description(description);
 
         if (referenceResolver != null) {
@@ -99,8 +107,8 @@ public class Camel implements TestActionBuilder<TestAction>, ReferenceResolverAw
                 builder.actor(referenceResolver.resolve(actor, TestActor.class));
             }
 
-            if (camelContext != null) {
-                builder.context(referenceResolver.resolve(camelContext, CamelContext.class));
+            if (camelContext != null && builder instanceof AbstractCamelAction.Builder<?, ?> camelActionBuilder) {
+                camelActionBuilder.context(referenceResolver.resolve(camelContext, CamelContext.class));
             }
         }
 
