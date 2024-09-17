@@ -1,0 +1,14 @@
+name: "CreateLabelsTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      createLabels:
+        type: "POD"
+        resource: "my-pod"
+        labels:
+          - name: "test"
+            value: "citrus"

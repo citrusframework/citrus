@@ -1,0 +1,11 @@
+name: "DeleteCustomResourceTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      deleteCustomResource:
+        name: "my-foo"
+        type: "org.citrusframework.kubernetes.integration.Foo"

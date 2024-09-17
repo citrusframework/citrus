@@ -1,0 +1,2 @@
+type=org.citrusframework.kubernetes.xml.Kubernetes
+ns=http://citrusframework.org/schema/xml/testcase
