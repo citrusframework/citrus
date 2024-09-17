@@ -1,0 +1,19 @@
+name: "CreateCustomResourceTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      createCustomResource:
+        type: "org.citrusframework.kubernetes.integration.Foo"
+        data: |
+          apiVersion: citrus.dev/v1
+          kind: Foo
+          metadata:
+            name: my-foo
+            labels:
+              test: citrus
+          spec:
+            message: Hello

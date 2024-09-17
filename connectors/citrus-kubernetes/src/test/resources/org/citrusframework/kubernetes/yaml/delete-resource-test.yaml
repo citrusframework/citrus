@@ -1,0 +1,10 @@
+name: "DeleteResourceTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      deleteResource:
+        file: "classpath:org/citrusframework/kubernetes/integration/pod.yaml"

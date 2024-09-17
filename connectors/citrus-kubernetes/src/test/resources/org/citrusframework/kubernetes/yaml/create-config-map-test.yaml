@@ -1,0 +1,20 @@
+name: "CreateConfigMapTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      createConfigMap:
+        name: "my-config-map-1"
+        properties:
+          - name: foo
+            value: bar
+
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      createConfigMap:
+        name: "my-config-map-2"
+        file: "classpath:org/citrusframework/kubernetes/integration/configMap.properties"

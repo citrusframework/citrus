@@ -1,0 +1,28 @@
+name: "CreateResourceTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      createResource:
+        data: |
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: my-pod-1
+            labels:
+              test: citrus
+          spec:
+            containers:
+              - name: nginx
+                image: nginx
+            ports:
+              - containerPort: 80
+
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      createResource:
+        file: "classpath:org/citrusframework/kubernetes/integration/pod.yaml"

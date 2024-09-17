@@ -1,0 +1,14 @@
+name: "CreateAnnotationsTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      createAnnotations:
+        type: "POD"
+        resource: "my-pod"
+        annotations:
+          - name: "test"
+            value: "citrus"

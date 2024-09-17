@@ -1,0 +1,20 @@
+name: "VerifyCustomResourceTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      verifyCustomResource:
+        name: "my-foo"
+        condition: "Ready"
+        type: "org.citrusframework.kubernetes.integration.Foo"
+
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      verifyCustomResource:
+        label: "test=citrus"
+        condition: "Ready"
+        type: "org.citrusframework.kubernetes.integration.Foo"

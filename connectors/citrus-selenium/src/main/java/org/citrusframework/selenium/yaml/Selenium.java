@@ -212,7 +212,7 @@ public class Selenium implements TestActionBuilder<SeleniumAction>, ReferenceRes
     @Override
     public SeleniumAction build() {
         if (builder == null) {
-            throw new CitrusRuntimeException("Missing client or server Soap action - please provide proper action details");
+            throw new CitrusRuntimeException("Missing Selenium action - please provide proper action details");
         }
 
         if (builder instanceof TestActionContainerBuilder<?,?>) {

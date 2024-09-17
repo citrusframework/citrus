@@ -1,0 +1,27 @@
+name: "VerifyPodTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      verifyPod:
+        name: "my-pod"
+        phase: "Running"
+
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      verifyPod:
+        label: "test=citrus"
+        phase: "Running"
+
+  - kubernetes:
+      client: "k8sClient"
+      namespace: "test"
+      verifyPod:
+        phase: "Running"
+        labels:
+          - name: "test"
+            value: "citrus"

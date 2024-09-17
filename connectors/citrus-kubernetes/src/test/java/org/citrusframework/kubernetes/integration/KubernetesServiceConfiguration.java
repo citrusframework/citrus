@@ -40,6 +40,8 @@ public class KubernetesServiceConfiguration {
     private final KubernetesMockServer k8sServer = new KubernetesMockServer(new Context(), new MockWebServer(),
             new HashMap<>(), new KubernetesCrudDispatcher(), false);
 
+    private io.fabric8.kubernetes.client.KubernetesClient kubernetesClient;
+
     @Bean(initMethod = "init", destroyMethod = "destroy")
     public KubernetesMockServer k8sMockServer() {
         return k8sServer;
@@ -48,8 +50,12 @@ public class KubernetesServiceConfiguration {
     @Bean
     @DependsOn("k8sMockServer")
     public KubernetesClient k8sClient() {
+        if (kubernetesClient == null) {
+            kubernetesClient = k8sServer.createClient();
+        }
+
         return new KubernetesClientBuilder()
-                .client(k8sServer.createClient())
+                .client(kubernetesClient)
                 .build();
     }
 
