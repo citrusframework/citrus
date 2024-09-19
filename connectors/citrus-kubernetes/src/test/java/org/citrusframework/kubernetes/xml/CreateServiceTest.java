@@ -19,8 +19,10 @@ package org.citrusframework.kubernetes.xml;
 import io.fabric8.kubernetes.api.model.Service;
 import org.citrusframework.TestCase;
 import org.citrusframework.TestCaseMetaInfo;
+import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.actions.CreateServiceAction;
 import org.citrusframework.xml.XmlTestLoader;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,6 +30,8 @@ public class CreateServiceTest extends AbstractXmlActionTest {
 
     @Test
     public void shouldLoadKubernetesActions() {
+        context.getReferenceResolver().bind("myServer", Mockito.mock(HttpServer.class));
+
         XmlTestLoader testLoader = createTestLoader("classpath:org/citrusframework/kubernetes/xml/create-service-test.xml");
 
         testLoader.load();

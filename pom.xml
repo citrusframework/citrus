@@ -242,6 +242,7 @@
     <k8s.client.version>6.13.3</k8s.client.version>
     <k8s.model.version>6.13.3</k8s.model.version>
     <kafka.version>3.8.0</kafka.version>
+    <knative-client.version>6.13.3</knative-client.version>
     <log4j2.version>2.22.1</log4j2.version>
     <mockito.version>5.13.0</mockito.version>
     <mockftpserver.version>3.2.0</mockftpserver.version>
@@ -1037,6 +1038,12 @@
         <groupId>jakarta.validation</groupId>
         <artifactId>jakarta.validation-api</artifactId>
         <version>${jakarta.validation.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>knative-client</artifactId>
+        <version>${knative-client.version}</version>
       </dependency>
 
       <dependency>

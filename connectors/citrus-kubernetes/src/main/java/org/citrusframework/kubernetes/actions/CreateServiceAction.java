@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.Service;
@@ -30,8 +31,12 @@ import io.fabric8.kubernetes.api.model.ServicePortBuilder;
 import io.fabric8.kubernetes.client.dsl.Updatable;
 import org.citrusframework.CitrusSettings;
 import org.citrusframework.context.TestContext;
+import org.citrusframework.http.server.HttpServer;
+import org.citrusframework.http.server.HttpServerBuilder;
 import org.citrusframework.kubernetes.KubernetesSettings;
 import org.citrusframework.kubernetes.KubernetesVariableNames;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 
 public class CreateServiceAction extends AbstractKubernetesAction {
 
@@ -95,13 +100,17 @@ public class CreateServiceAction extends AbstractKubernetesAction {
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractKubernetesAction.Builder<CreateServiceAction, Builder> {
+    public static class Builder extends AbstractKubernetesAction.Builder<CreateServiceAction, Builder> implements ReferenceResolverAware {
 
-        private String serviceName;
+        private String serviceName = KubernetesSettings.getServiceName();
         private final List<String> ports = new ArrayList<>();
         private final List<String> targetPorts = new ArrayList<>();
         private String protocol = "TCP";
         private final Map<String, String> podSelector = new HashMap<>();
+        private HttpServer httpServer;
+        private String httpServerName;
+        private boolean autoCreateServerBinding = KubernetesSettings.isAutoCreateServerBinding();
+        private ReferenceResolver referenceResolver;
 
         public Builder service(String serviceName) {
             this.serviceName = serviceName;
@@ -180,23 +189,71 @@ public class CreateServiceAction extends AbstractKubernetesAction {
             return this;
         }
 
+        public Builder server(HttpServer httpServer) {
+            this.httpServer = httpServer;
+            return this;
+        }
+
+        public Builder server(String httpServerName) {
+            this.httpServerName = httpServerName;
+            return this;
+        }
+
+        public Builder autoCreateServerBinding(boolean enabled) {
+            this.autoCreateServerBinding = enabled;
+            return this;
+        }
+
+        public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+            return this;
+        }
+
         @Override
         public CreateServiceAction doBuild() {
-            if (ports.isEmpty()) {
-                ports.add("80");
-            }
-
-            if (targetPorts.isEmpty()) {
-                targetPorts.add("8080");
-            }
-
             if (podSelector.isEmpty()) {
                 // Add default selector to the very specific Pod that is running the test right now.
                 // This way the service will route all traffic to the currently running test
                 podSelector.put("citrusframework.org/test-id", "${%s}".formatted(CitrusSettings.TEST_NAME_VARIABLE));
             }
 
+            String serverName = Optional.ofNullable(httpServerName).orElse(serviceName);
+            if (httpServer == null) {
+                if (referenceResolver != null && referenceResolver.isResolvable(serverName, HttpServer.class)) {
+                    httpServer = referenceResolver.resolve(serverName, HttpServer.class);
+                } else if (autoCreateServerBinding) {
+                    httpServer = new HttpServerBuilder()
+                            .autoStart(true)
+                            .port(KubernetesSettings.getServicePort())
+                            .name(serverName)
+                            .build();
+
+                    httpServer.initialize();
+                }
+            }
+
+            if (ports.isEmpty()) {
+                ports.add("80");
+            }
+
+            if (targetPorts.isEmpty()) {
+                if (httpServer != null) {
+                    targetPorts.add(String.valueOf(httpServer.getPort()));
+                } else {
+                    targetPorts.add(String.valueOf(KubernetesSettings.getServicePort()));
+                }
+            }
+
+            if (referenceResolver != null && !referenceResolver.isResolvable(serverName, HttpServer.class)) {
+                referenceResolver.bind(serverName, httpServer);
+            }
+
             return new CreateServiceAction(this);
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
         }
     }
 }

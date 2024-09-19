@@ -20,11 +20,11 @@
   <description>Sample test in XML</description>
   <actions>
     <kubernetes client="k8sClient" namespace="test">
-      <create-service name="my-service-1"/>
+      <create-service name="my-service-1" auto-create-server-binding="false"/>
     </kubernetes>
 
     <kubernetes client="k8sClient" namespace="test">
-      <create-service name="my-service-2">
+      <create-service name="my-service-2" server="myServer">
         <ports>
           <port-mapping port="80" target-port="8888"/>
         </ports>

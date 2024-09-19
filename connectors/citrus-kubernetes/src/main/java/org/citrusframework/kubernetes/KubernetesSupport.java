@@ -226,4 +226,22 @@ public final class KubernetesSupport {
 
         return Optional.empty();
     }
+
+    /**
+     * Create K8s conform name using lowercase RFC 1123 rules.
+     * @param name
+     * @return
+     */
+    public static String sanitize(String name) {
+        String sanitized;
+
+        if (name.contains(".")) {
+            sanitized = name.substring(0, name.indexOf("."));
+        } else {
+            sanitized = name;
+        }
+
+        sanitized = sanitized.replaceAll("([a-z])([A-Z]+)", "$1-$2").toLowerCase();
+        return sanitized.replaceAll("[^a-z0-9-]", "");
+    }
 }

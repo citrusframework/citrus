@@ -8,12 +8,14 @@ actions:
       namespace: "test"
       createService:
         name: "my-service-1"
+        autoCreateServerBinding: false
 
   - kubernetes:
       client: "k8sClient"
       namespace: "test"
       createService:
         name: "my-service-2"
+        server: "myServer"
         ports:
           - port: "80"
             targetPort: "8888"

@@ -1,0 +1,26 @@
+name: "SendReceiveEventTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      sendEvent:
+        broker: "my-broker"
+        fork: true
+        event:
+          data: Hello Knative broker
+          attributes:
+            - name: ce-type
+              value: "org.citrusframework.knative.event"
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      receiveEvent:
+        service: "my-service"
+        event:
+          data:
+          attributes:
+            - name: ce-type
+              value: "org.citrusframework.knative.event"

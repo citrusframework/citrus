@@ -1,0 +1,10 @@
+name: "DeleteBrokerTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      deleteBroker:
+        name: "my-broker"

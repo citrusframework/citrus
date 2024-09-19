@@ -1,0 +1,92 @@
+/*
+ * Copyright the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.citrusframework.knative.xml;
+
+import io.fabric8.knative.client.KnativeClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import org.citrusframework.TestActor;
+import org.citrusframework.knative.actions.AbstractKnativeAction;
+import org.citrusframework.knative.actions.messaging.CreateSubscriptionAction;
+import org.citrusframework.spi.ReferenceResolver;
+
+@XmlRootElement(name = "create-subscription")
+public class CreateSubscription extends AbstractKnativeAction.Builder<CreateSubscriptionAction, CreateSubscription> {
+
+    private final CreateSubscriptionAction.Builder delegate = new CreateSubscriptionAction.Builder();
+
+    @XmlAttribute(required = true)
+    public void setName(String name) {
+        this.delegate.subscription(name);
+    }
+
+    @XmlAttribute(required = true)
+    public void setChannel(String name) {
+        this.delegate.channel(name);
+    }
+
+    @XmlAttribute(required = true)
+    public void setService(String name) {
+        this.delegate.service(name);
+    }
+
+    @Override
+    public CreateSubscription description(String description) {
+        delegate.description(description);
+        return this;
+    }
+
+    @Override
+    public CreateSubscription actor(TestActor actor) {
+        delegate.actor(actor);
+        return this;
+    }
+
+    @Override
+    public CreateSubscription client(KubernetesClient client) {
+        delegate.client(client);
+        return this;
+    }
+
+    @Override
+    public CreateSubscription client(KnativeClient client) {
+        delegate.client(client);
+        return this;
+    }
+
+    @Override
+    public CreateSubscription inNamespace(String namespace) {
+        this.delegate.inNamespace(namespace);
+        return this;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.delegate.setReferenceResolver(referenceResolver);
+    }
+
+    @Override
+    public CreateSubscriptionAction build() {
+        return delegate.build();
+    }
+
+    @Override
+    protected CreateSubscriptionAction doBuild() {
+        return this.delegate.doBuild();
+    }
+}
