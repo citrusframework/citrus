@@ -19,13 +19,13 @@ package org.citrusframework.kubernetes;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 public class KubernetesSettings {
 
@@ -43,6 +43,18 @@ public class KubernetesSettings {
     private static final String ENABLED_ENV = KUBERNETES_ENV_PREFIX + "ENABLED";
     private static final String ENABLED_DEFAULT = "true";
 
+    private static final String AUTO_CREATE_SERVER_BINDING_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "auto.create.server.binding";
+    private static final String AUTO_CREATE_SERVER_BINDING_ENV = KUBERNETES_ENV_PREFIX + "AUTO_CREATE_SERVER_BINDING";
+    private static final String AUTO_CREATE_SERVER_BINDING_DEFAULT = "true";
+
+    private static final String CLUSTER_TYPE_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "cluster.type";
+    private static final String CLUSTER_TYPE_ENV = KUBERNETES_ENV_PREFIX + "CLUSTER_TYPE";
+    private static final String CLUSTER_TYPE_DEFAULT = ClusterType.KUBERNETES.name();
+
+    private static final String CLUSTER_WILDCARD_DOMAIN_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "cluster.wildcard.domain";
+    private static final String CLUSTER_WILDCARD_DOMAIN_ENV = KUBERNETES_ENV_PREFIX + "CLUSTER_WILDCARD_DOMAIN";
+    public static final String DEFAULT_DOMAIN_SUFFIX = "svc.cluster.local";
+
     private static final String SERVICE_TIMEOUT_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "service.timeout";
     private static final String SERVICE_TIMEOUT_ENV = KUBERNETES_ENV_PREFIX + "SERVICE_TIMEOUT";
     private static final String SERVICE_TIMEOUT_DEFAULT = "2000";
@@ -54,6 +66,10 @@ public class KubernetesSettings {
     private static final String NAMESPACE_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "namespace";
     private static final String NAMESPACE_ENV = KUBERNETES_ENV_PREFIX + "NAMESPACE";
     private static final String NAMESPACE_DEFAULT = "default";
+
+    private static final String TEST_ID_LABEL_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "test.id.label";
+    private static final String TEST_ID_LABEL_ENV = KUBERNETES_ENV_PREFIX + "TEST_ID_LABEL";
+    private static final String TEST_ID_LABEL_DEFAULT = "citrusframework.org/test-id";
 
     private static final String API_VERSION_PROPERTY = KUBERNETES_PROPERTY_PREFIX + "api.version";
     private static final String API_VERSION_ENV = KUBERNETES_ENV_PREFIX + "API_VERSION";
@@ -133,6 +149,24 @@ public class KubernetesSettings {
     }
 
     /**
+     * Cluster wildcard domain or default if non is set.
+     * @return
+     */
+    public static String getClusterWildcardDomain() {
+        return System.getProperty(CLUSTER_WILDCARD_DOMAIN_PROPERTY,
+                System.getenv(CLUSTER_WILDCARD_DOMAIN_ENV) != null ? System.getenv(CLUSTER_WILDCARD_DOMAIN_ENV) : getNamespace() + "." + DEFAULT_DOMAIN_SUFFIX);
+    }
+
+    /**
+     * Cluster type that YAKS is running on.
+     * @return
+     */
+    public static ClusterType getClusterType() {
+        return ClusterType.valueOf(System.getProperty(CLUSTER_TYPE_PROPERTY,
+                System.getenv(CLUSTER_TYPE_ENV) != null ? System.getenv(CLUSTER_TYPE_ENV) : CLUSTER_TYPE_DEFAULT).toUpperCase(Locale.US));
+    }
+
+    /**
      * Api version for current Kubernetes installation.
      * @return
      */
@@ -154,9 +188,9 @@ public class KubernetesSettings {
      * Service port used when consuming cloud events via Http.
      * @return
      */
-    public static String getServicePort() {
-        return System.getProperty(SERVICE_PORT_PROPERTY,
-                System.getenv(SERVICE_PORT_ENV) != null ? System.getenv(SERVICE_PORT_ENV) : SERVICE_PORT_DEFAULT);
+    public static int getServicePort() {
+        return Integer.parseInt(System.getProperty(SERVICE_PORT_PROPERTY,
+                System.getenv(SERVICE_PORT_ENV) != null ? System.getenv(SERVICE_PORT_ENV) : SERVICE_PORT_DEFAULT));
     }
 
     /**
@@ -168,10 +202,20 @@ public class KubernetesSettings {
         String labelsConfig = System.getProperty(DEFAULT_LABELS_PROPERTY,
                 System.getenv(DEFAULT_LABELS_ENV) != null ? System.getenv(DEFAULT_LABELS_ENV) : DEFAULT_LABELS_DEFAULT);
 
-        return Stream.of(StringUtils.commaDelimitedListToStringArray(labelsConfig))
-                    .map(item -> StringUtils.delimitedListToStringArray(item, "="))
-                    .filter(keyValue -> keyValue.length == 2)
-                    .collect(Collectors.toMap(item -> item[0], item -> item[1]));
+        return Stream.of(labelsConfig.split(","))
+                .map(item -> item.split("=", 2))
+                .filter(keyValue -> keyValue.length == 2)
+                .collect(Collectors.toMap(item -> item[0], item -> item[1]));
+    }
+
+    /**
+     * Should bind each Kubernetes service created to a local Http server instance.
+     * @return
+     */
+    public static boolean isAutoCreateServerBinding() {
+        return Boolean.parseBoolean(System.getProperty(AUTO_CREATE_SERVER_BINDING_PROPERTY,
+                System.getenv(AUTO_CREATE_SERVER_BINDING_ENV) != null ? System.getenv(AUTO_CREATE_SERVER_BINDING_ENV) :
+                        AUTO_CREATE_SERVER_BINDING_DEFAULT));
     }
 
     /**
@@ -227,5 +271,42 @@ public class KubernetesSettings {
     public static long getWatchLogsTimeout() {
         return Long.parseLong(System.getProperty(WATCH_LOGS_TIMEOUT_PROPERTY,
                 System.getenv(WATCH_LOGS_TIMEOUT_ENV) != null ? System.getenv(WATCH_LOGS_TIMEOUT_ENV) : WATCH_LOGS_TIMEOUT_DEFAULT));
+    }
+
+    /**
+     * True when running on localhost.
+     * @return
+     */
+    public static boolean isLocal() {
+        return isLocal(getClusterType());
+    }
+
+    /**
+     * True when running on localhost.
+     * @return
+     */
+    public static boolean isLocal(ClusterType clusterType) {
+        return ClusterType.LOCAL.equals(clusterType);
+    }
+
+    /**
+     * True when running on Openshift.
+     * @return
+     */
+    public static boolean isOpenshiftCluster() {
+        return ClusterType.OPENSHIFT.equals(getClusterType());
+    }
+
+    /**
+     * True when running on Kubernetes.
+     * @return
+     */
+    public static boolean isKubernetesCluster() {
+        return ClusterType.KUBERNETES.equals(getClusterType());
+    }
+
+    public static String getTestIdLabel() {
+        return System.getProperty(TEST_ID_LABEL_PROPERTY,
+                System.getenv(TEST_ID_LABEL_ENV) != null ? System.getenv(TEST_ID_LABEL_ENV) : TEST_ID_LABEL_DEFAULT);
     }
 }

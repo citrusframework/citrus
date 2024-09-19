@@ -1,0 +1,10 @@
+name: "VerifyBrokerTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      verifyBroker:
+        name: "my-broker"

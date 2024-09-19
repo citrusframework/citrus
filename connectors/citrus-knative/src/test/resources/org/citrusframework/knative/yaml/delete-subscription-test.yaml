@@ -1,0 +1,10 @@
+name: "DeleteSubscriptionTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      deleteSubscription:
+        name: "my-subscription"

@@ -729,6 +729,7 @@
   <xs:element name="selenium" type="tns:Selenium"/>
   <xs:element name="jbang" type="tns:JBang"/>
   <xs:element name="kubernetes" type="tns:Kubernetes"/>
+  <xs:element name="knative" type="tns:Knative"/>
 
   <xs:complexType name="Plsql">
     <xs:sequence>
@@ -1445,6 +1446,8 @@
               </xs:element>
             </xs:sequence>
             <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="server" type="xs:string"/>
+            <xs:attribute name="auto-create-server-binding" type="xs:boolean"/>
             <xs:attribute name="protocol" type="xs:string"/>
           </xs:complexType>
         </xs:element>
@@ -1662,6 +1665,148 @@
         </xs:element>
       </xs:choice>
     </xs:sequence>
+    <xs:attribute name="client" type="xs:string"/>
+    <xs:attribute name="namespace" type="xs:string"/>
+    <xs:attribute name="actor" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Knative">
+    <xs:annotation>
+      <xs:documentation>Connect with Knative to manage resources on the cluster</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:choice>
+        <xs:element name="create-broker">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="delete-broker">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="verify-broker">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="create-trigger">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="filter" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="attribute" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="name" use="required" type="xs:string"/>
+                        <xs:attribute name="value" use="required" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="broker" use="required" type="xs:string"/>
+            <xs:attribute name="channel" type="xs:string"/>
+            <xs:attribute name="service" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="delete-trigger">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="create-channel">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="delete-channel">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="create-subscription">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+            <xs:attribute name="channel" use="required" type="xs:string"/>
+            <xs:attribute name="service" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="delete-subscription">
+          <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="send-event">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="event">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ce-attributes" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="ce-attribute" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="data" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="broker" use="required" type="xs:string"/>
+            <xs:attribute name="fork" type="xs:boolean"/>
+            <xs:attribute name="timeout" type="xs:int"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="receive-event">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="event">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ce-attributes" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="ce-attribute" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" use="required" type="xs:string"/>
+                              <xs:attribute name="value" use="required" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="data" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="service" use="required" type="xs:string"/>
+            <xs:attribute name="port" type="xs:int"/>
+            <xs:attribute name="timeout" type="xs:int"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="delete-resource">
+          <xs:complexType>
+            <xs:attribute name="component" use="required" type="xs:string"/>
+            <xs:attribute name="kind" use="required" type="xs:string"/>
+            <xs:attribute name="name" use="required" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="kubernetes-client" type="xs:string"/>
     <xs:attribute name="client" type="xs:string"/>
     <xs:attribute name="namespace" type="xs:string"/>
     <xs:attribute name="actor" type="xs:string"/>

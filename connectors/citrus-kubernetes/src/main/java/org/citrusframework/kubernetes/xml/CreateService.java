@@ -29,15 +29,27 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateServiceAction;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 
 @XmlRootElement(name = "create-service")
-public class CreateService extends AbstractKubernetesAction.Builder<CreateServiceAction, CreateService> {
+public class CreateService extends AbstractKubernetesAction.Builder<CreateServiceAction, CreateService> implements ReferenceResolverAware {
 
     private final CreateServiceAction.Builder delegate = new CreateServiceAction.Builder();
 
     @XmlAttribute(required = true)
     public void setName(String name) {
         this.delegate.service(name);
+    }
+
+    @XmlAttribute
+    public void setServer(String serverName) {
+        this.delegate.server(serverName);
+    }
+
+    @XmlAttribute(name = "auto-create-server-binding")
+    public void setAutoCreateServerBinding(boolean enabled) {
+        this.delegate.autoCreateServerBinding(enabled);
     }
 
     @XmlElement
@@ -80,6 +92,11 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
     public CreateService inNamespace(String namespace) {
         this.delegate.inNamespace(namespace);
         return this;
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.delegate.setReferenceResolver(referenceResolver);
     }
 
     @Override

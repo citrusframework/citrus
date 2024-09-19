@@ -23,13 +23,23 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.citrusframework.TestActor;
 import org.citrusframework.kubernetes.actions.AbstractKubernetesAction;
 import org.citrusframework.kubernetes.actions.CreateServiceAction;
+import org.citrusframework.spi.ReferenceResolver;
+import org.citrusframework.spi.ReferenceResolverAware;
 
-public class CreateService extends AbstractKubernetesAction.Builder<CreateServiceAction, CreateService> {
+public class CreateService extends AbstractKubernetesAction.Builder<CreateServiceAction, CreateService> implements ReferenceResolverAware {
 
     private final CreateServiceAction.Builder delegate = new CreateServiceAction.Builder();
 
     public void setName(String name) {
         this.delegate.service(name);
+    }
+
+    public void setServer(String serverName) {
+        this.delegate.server(serverName);
+    }
+
+    public void setAutoCreateServerBinding(boolean enabled) {
+        this.delegate.autoCreateServerBinding(enabled);
     }
 
     public void setPorts(List<PortMapping> portMappings) {
@@ -45,6 +55,11 @@ public class CreateService extends AbstractKubernetesAction.Builder<CreateServic
         selector.getLabels().forEach(
                 label -> this.delegate.label(label.getName(), label.getValue()));
 
+    }
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.delegate.setReferenceResolver(referenceResolver);
     }
 
     @Override

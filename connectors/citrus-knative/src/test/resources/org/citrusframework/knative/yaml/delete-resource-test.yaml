@@ -1,0 +1,12 @@
+name: "DeleteResourceTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      deleteResource:
+        component: "messaging"
+        kind: "subscriptions"
+        name: "my-subscription"

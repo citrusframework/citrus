@@ -20,7 +20,9 @@ import java.util.Collections;
 
 import io.fabric8.kubernetes.api.model.Service;
 import org.citrusframework.annotations.CitrusTest;
+import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.kubernetes.client.KubernetesClient;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,6 +34,9 @@ public class KubernetesCreateServiceIT extends AbstractKubernetesIT {
     @Autowired
     private KubernetesClient k8sClient;
 
+    @Mock
+    private HttpServer service;
+
     private final String namespace = "test";
 
     @Test
@@ -41,6 +46,7 @@ public class KubernetesCreateServiceIT extends AbstractKubernetesIT {
                 .client(k8sClient.getClient())
                 .services()
                 .create("my-service")
+                .server(service)
                 .inNamespace(namespace));
 
         then(context -> {
@@ -67,6 +73,7 @@ public class KubernetesCreateServiceIT extends AbstractKubernetesIT {
                 .client(k8sClient.getClient())
                 .services()
                 .create("my-service")
+                .server(service)
                 .portMapping(80, 8888)
                 .withPodSelector(Collections.singletonMap("test", "citrus"))
                 .inNamespace(namespace));

@@ -1,0 +1,12 @@
+name: "CreateSubscriptionTest"
+author: "Christoph"
+status: "FINAL"
+description: Sample test in XML
+actions:
+  - knative:
+      client: "knativeClient"
+      namespace: "test"
+      createSubscription:
+        name: "my-subscription"
+        channel: "my-channel"
+        service: "my-service"

@@ -1,0 +1,2 @@
+type=org.citrusframework.knative.xml.Knative
+ns=http://citrusframework.org/schema/xml/testcase
