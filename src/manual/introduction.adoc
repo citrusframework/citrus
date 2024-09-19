@@ -5,7 +5,9 @@ Citrus provides automated integration tests for message-based enterprise applica
 supports various messaging transports (Http REST, SOAP, JMS, Kafka, TCP/IP, FTP, ...) and data formats (XML, Json, plaintext, binary).
 
 The Citrus tests use well-known unit test frameworks (JUnit, TestNG, Cucumber) for execution and integrates with build
-tools like Maven or Gradle. In addition, Citrus leverages standard libraries like Spring Framework and Apache Camel.
+tools like Maven or Gradle. In addition, Citrus leverages standard libraries like Quarkus, the Spring Framework or Apache Camel.
+
+It is also good to know that Citrus is written purely in Java. Thus, it is also fully compatible with Kotlin.
 
 [[overview]]
 == Overview
