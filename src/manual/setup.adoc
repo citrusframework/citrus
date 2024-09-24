@@ -158,7 +158,7 @@ As Citrus tests are nothing but normal JUnit or TestNG tests the integration to 
 the source files to a folder in your project. With the Gradle task execution for integration tests you are able to execute
 the Citrus tests like you would do with normal unit tests.
 
-The Gradle build configuration goees to the **build.gradle** and **settings.gradle** files. The files define the project name
+The Gradle build configuration goes to the **build.gradle** and **settings.gradle** files. The files define the project name
 and the project version.
 
 .Gradle project configuration
