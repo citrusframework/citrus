@@ -1,7 +1,10 @@
 [[reporting-and-test-results]]
-= Reporting and test results
+= Reporting and Test Results
 
-The framework generates different reports and results after a test run for you. These report and result pages will help you to get an overview of the test cases that were executed and which one were failing.
+The framework generates different reports and results after a test run for you.
+These report and result pages will help you to get an overview of the test cases that were executed and which one were failing.
+They're being generated into `target/citrus-reports` by default, but that can be changed by setting the `citrus.report.directory` property to the desired location.
+E.g. it could be set to `citrus.report.directory=build/citrus-reports` for <<setup-gradle,Gradle>> builds.
 
 In the following chapters, we'll provide an overview of the three standard loggers available in Citrus. It's important to note that in Spring, you have the flexibility to replace these standard loggers with your own implementations. This can be achieved by registering custom implementations, as demonstrated in the following code snippet:
 
@@ -27,7 +30,8 @@ public static class OverrideReporterConfiguration {
 }
 ----
 
-Note that you need to allow spring bean overriding to load this configuration as such. It's worth noting that bean overriding is not recommended by spring. Thus the following properties are provided to deactivate standard reporters as needed.
+Note that you need to allow spring bean overriding to load this configuration as such. It's worth noting that bean overriding is not recommended by Spring.
+Thus the following properties are provided to deactivate standard reporters as needed.
 
 [source,properties]
 ----
