@@ -27,8 +27,6 @@ public class StringUtils {
 
     /**
      * Helper method checks for non-null and non-blank String.
-     * @param str
-     * @return
      */
     public static boolean hasText(String str) {
         return str != null && !str.isBlank();
@@ -36,8 +34,6 @@ public class StringUtils {
 
     /**
      * String helper checking for isEmpty String and adds null check on given parameter.
-     * @param str
-     * @return
      */
     public static boolean isEmpty(String str) {
         return str == null || str.isEmpty();
