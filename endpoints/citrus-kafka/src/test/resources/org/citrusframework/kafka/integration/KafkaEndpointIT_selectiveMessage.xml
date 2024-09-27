@@ -7,27 +7,33 @@
                                   http://www.citrusframework.org/schema/testcase 
                                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
-  <testcase name="KafkaEndpointIT">
+  <testcase name="KafkaEndpointIT_selectiveMessage">
     <meta-info>
-      <author>Christoph Deppisch</author>
-      <creationdate>2018-09-10</creationdate>
+      <author>bbortt</author>
+      <creationdate>2024-09-30</creationdate>
       <status>FINAL</status>
-      <last-updated-by>Christoph Deppisch</last-updated-by>
-      <last-updated-on>2018-09-10T00:00:00</last-updated-on>
+      <last-updated-by>bbortt</last-updated-by>
+      <last-updated-on>2014-09-30T00:00:00</last-updated-on>
     </meta-info>
 
-    <description>Test sends and receives messages on Kafka topic endpoint.</description>
+    <description>Test sends and receives a specific message identified by header key and value on Kafka topic endpoint.</description>
 
     <variables>
       <variable name="correlationId" value="citrus:randomNumber(10)"/>
       <variable name="messageId" value="citrus:randomNumber(10)"/>
-      <variable name="user" value="Christoph"/>
+      <variable name="traceId" value="citrus:randomString(32)"/>
+      <variable name="spanId" value="citrus:randomString(16)"/>
+      <variable name="user" value="bbortt"/>
     </variables>
 
     <actions>
       <echo>
-        <message>Test 1: Send Kafka message and receive that message on the same topic (inline CDATA payload)</message>
+        <message>Test 1: Send Kafka message and receive that message based on header equality</message>
       </echo>
+
+      <purge-endpoint>
+        <endpoint name="helloKafkaEndpoint"/>
+      </purge-endpoint>
 
       <send endpoint="helloKafkaEndpoint">
         <description>Send Kafka request: Citrus -> Kafka broker</description>
@@ -40,16 +46,23 @@
                  <User>${user}</User>
                  <Text>Hello Citrus</Text>
                </HelloRequest>								
-						]]>
+            ]]>
           </data>
         </message>
         <header>
+          <element name="traceparent" value="01-${traceId}-${spanId}-00"/>
           <element name="Operation" value="sayHello"/>
         </header>
       </send>
 
       <receive endpoint="helloKafkaEndpoint">
         <description>Receive Kafka request: Kafka broker -> Citrus</description>
+        <selector>
+          <element name="header-filter-key" value="traceparent"/>
+          <element name="header-filter-value" value="${traceId}"/>
+          <element name="header-filter-comparator" value="CONTAINS"/>
+          <element name="event-lookback-window" value="PT1S"/>
+        </selector>
         <message>
           <data>
             <![CDATA[

@@ -16,8 +16,6 @@
 
 package org.citrusframework.kafka.config.annotation;
 
-import java.util.Map;
-
 import org.citrusframework.TestActor;
 import org.citrusframework.config.annotation.AnnotationConfigParser;
 import org.citrusframework.exceptions.CitrusRuntimeException;
@@ -27,6 +25,8 @@ import org.citrusframework.kafka.message.KafkaMessageConverter;
 import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
 import org.citrusframework.spi.ReferenceResolver;
 import org.citrusframework.util.StringUtils;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch

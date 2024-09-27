@@ -16,7 +16,7 @@
 
 package org.citrusframework.kafka.config.xml;
 
-import org.citrusframework.config.util.BeanDefinitionParserUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.citrusframework.config.xml.AbstractEndpointParser;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointConfiguration;
@@ -26,10 +26,14 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
+import static java.lang.Boolean.parseBoolean;
+import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyReference;
+import static org.citrusframework.config.util.BeanDefinitionParserUtils.setPropertyValue;
+import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
+
 /**
  * Bean definition parser for Kafka endpoint component.
  *
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class KafkaEndpointParser extends AbstractEndpointParser {
@@ -38,25 +42,30 @@ public class KafkaEndpointParser extends AbstractEndpointParser {
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
         super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("client-id"), "clientId");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("server"), "server");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("topic"), "topic");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("partition"), "partition");
+        setPropertyValue(endpointConfiguration, element.getAttribute("client-id"), "clientId");
+        setPropertyValue(endpointConfiguration, element.getAttribute("server"), "server");
+        setPropertyValue(endpointConfiguration, element.getAttribute("topic"), "topic");
+        setPropertyValue(endpointConfiguration, element.getAttribute("partition"), "partition");
 
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("header-mapper"), "headerMapper");
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("producer-properties"), "producerProperties");
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("consumer-properties"), "consumerProperties");
+        setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
+        setPropertyReference(endpointConfiguration, element.getAttribute("header-mapper"), "headerMapper");
+        setPropertyReference(endpointConfiguration, element.getAttribute("producer-properties"), "producerProperties");
+        setPropertyReference(endpointConfiguration, element.getAttribute("consumer-properties"), "consumerProperties");
 
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-commit"), "autoCommit");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-commit-interval"), "autoCommitInterval");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("offset-reset"), "offsetReset");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("consumer-group"), "consumerGroup");
+        setPropertyValue(endpointConfiguration, element.getAttribute("auto-commit"), "autoCommit");
+        setPropertyValue(endpointConfiguration, element.getAttribute("auto-commit-interval"), "autoCommitInterval");
+        setPropertyValue(endpointConfiguration, element.getAttribute("offset-reset"), "offsetReset");
 
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("key-serializer"), "keySerializer");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("key-deserializer"), "keyDeserializer");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("value-serializer"), "valueSerializer");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("value-deserializer"), "valueDeserializer");
+        if (parseBoolean(element.getAttribute("random-consumer-group"))) {
+            setPropertyValue(endpointConfiguration, KAFKA_PREFIX + RandomStringUtils.insecure().nextAlphabetic(10).toLowerCase(), "consumerGroup");
+        }else {
+            setPropertyValue(endpointConfiguration, element.getAttribute("consumer-group"), "consumerGroup");
+        }
+
+        setPropertyValue(endpointConfiguration, element.getAttribute("key-serializer"), "keySerializer");
+        setPropertyValue(endpointConfiguration, element.getAttribute("key-deserializer"), "keyDeserializer");
+        setPropertyValue(endpointConfiguration, element.getAttribute("value-serializer"), "valueSerializer");
+        setPropertyValue(endpointConfiguration, element.getAttribute("value-deserializer"), "valueDeserializer");
     }
 
     @Override
