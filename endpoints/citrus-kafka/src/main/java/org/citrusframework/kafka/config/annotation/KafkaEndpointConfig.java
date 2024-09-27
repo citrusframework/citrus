@@ -16,17 +16,17 @@
 
 package org.citrusframework.kafka.config.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.citrusframework.annotations.CitrusEndpointConfig;
-import org.citrusframework.kafka.message.KafkaMessageHeaders;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.citrusframework.annotations.CitrusEndpointConfig;
+import org.citrusframework.kafka.message.KafkaMessageHeaders;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Christoph Deppisch

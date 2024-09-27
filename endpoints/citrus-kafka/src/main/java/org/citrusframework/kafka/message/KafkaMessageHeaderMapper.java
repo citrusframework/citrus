@@ -16,13 +16,13 @@
 
 package org.citrusframework.kafka.message;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.citrusframework.context.TestContext;
-import org.citrusframework.message.MessageHeaders;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;
+import org.citrusframework.context.TestContext;
+import org.citrusframework.message.MessageHeaders;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Citrus Kafka header mapper translates internal message headers to Spring integration message headers and

@@ -45,6 +45,7 @@
       <xs:attribute name="id" type="xs:ID"/>
       <xs:attribute name="client-id" type="xs:string"/>
       <xs:attribute name="consumer-group" type="xs:string"/>
+      <xs:attribute name="random-consumer-group" type="xs:boolean" default="false"/>
       <xs:attribute name="auto-commit" type="xs:string"/>
       <xs:attribute name="auto-commit-interval" type="xs:int"/>
       <xs:attribute name="server" type="xs:string"/>

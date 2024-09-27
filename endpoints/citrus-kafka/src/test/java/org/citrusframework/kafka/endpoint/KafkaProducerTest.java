@@ -16,14 +16,6 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import java.util.Collections;
-import java.util.concurrent.Future;
-
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.kafka.message.KafkaMessage;
-import org.citrusframework.message.Message;
-import org.citrusframework.testng.AbstractTestNGUnitTest;
-import org.citrusframework.util.SocketUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -32,10 +24,18 @@ import org.apache.kafka.clients.producer.internals.FutureRecordMetadata;
 import org.apache.kafka.clients.producer.internals.ProduceRequestResult;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.utils.Time;
+import org.citrusframework.exceptions.CitrusRuntimeException;
+import org.citrusframework.kafka.message.KafkaMessage;
+import org.citrusframework.message.Message;
+import org.citrusframework.testng.AbstractTestNGUnitTest;
+import org.citrusframework.util.SocketUtils;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Collections;
+import java.util.concurrent.Future;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;

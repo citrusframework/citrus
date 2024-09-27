@@ -16,11 +16,11 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.AbstractEndpointComponent;
 import org.citrusframework.endpoint.Endpoint;
+
+import java.util.Map;
 
 /**
  * Kafka endpoint component is able to create kafka endpoint from endpoint uri with parameters. Depending on uri creates a

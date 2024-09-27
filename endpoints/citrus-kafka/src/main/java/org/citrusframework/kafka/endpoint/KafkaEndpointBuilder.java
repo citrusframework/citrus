@@ -16,11 +16,11 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import org.apache.kafka.common.serialization.Deserializer;
+import org.apache.kafka.common.serialization.Serializer;
 import org.citrusframework.endpoint.AbstractEndpointBuilder;
 import org.citrusframework.kafka.message.KafkaMessageConverter;
 import org.citrusframework.kafka.message.KafkaMessageHeaderMapper;
-import org.apache.kafka.common.serialization.Deserializer;
-import org.apache.kafka.common.serialization.Serializer;
 
 import java.util.Map;
 

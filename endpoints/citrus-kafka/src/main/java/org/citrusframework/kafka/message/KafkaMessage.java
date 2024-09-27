@@ -16,13 +16,14 @@
 
 package org.citrusframework.kafka.message;
 
-import java.util.Map;
-
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.citrusframework.message.DefaultMessage;
 
+import java.util.Map;
+
+import static java.lang.String.format;
+
 /**
- * @author Christoph Deppisch
  * @since 2.8
  */
 public class KafkaMessage extends DefaultMessage {
@@ -36,8 +37,6 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Default constructor using payload and headers.
-     * @param payload
-     * @param headers
      */
     public KafkaMessage(Object payload, Map<String, Object> headers) {
         super(payload, headers);
@@ -45,7 +44,6 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Default constructor using message payload.
-     * @param payload
      */
     public KafkaMessage(Object payload) {
         super(payload);
@@ -53,7 +51,6 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Sets the Kafka partition id header.
-     * @param partition
      */
     public KafkaMessage partition(int partition) {
         setHeader(KafkaMessageHeaders.PARTITION, partition);
@@ -62,7 +59,6 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Sets the Kafka timestamp header.
-     * @param timestamp
      */
     public KafkaMessage timestamp(Long timestamp) {
         setHeader(KafkaMessageHeaders.TIMESTAMP, timestamp);
@@ -71,7 +67,6 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Sets the Kafka offset header.
-     * @param offset
      */
     public KafkaMessage offset(long offset) {
         setHeader(KafkaMessageHeaders.OFFSET, offset);
@@ -80,7 +75,6 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Sets the Kafka message key header.
-     * @param key
      */
     public KafkaMessage messageKey(Object key) {
         setHeader(KafkaMessageHeaders.MESSAGE_KEY, key);
@@ -89,7 +83,6 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Sets the Kafka topic key header.
-     * @param topic
      */
     public KafkaMessage topic(String topic) {
         setHeader(KafkaMessageHeaders.TOPIC, topic);
@@ -98,19 +91,18 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Gets the Kafka partition header.
-     * @return
      */
     public Integer getPartition() {
         Object partition = getHeader(KafkaMessageHeaders.PARTITION);
 
         if (partition != null) {
-            if (partition instanceof Integer) {
-                return (Integer) partition;
-            } else if (partition instanceof String) {
-                return Integer.parseInt((String) partition);
+            if (partition instanceof Integer partitionInteger) {
+                return partitionInteger;
+            } else if (partition instanceof String partitionString) {
+                return Integer.parseInt(partitionString);
             }
 
-            throw new CitrusRuntimeException(String.format("Failed to convert partition header to proper Integer value: %s", partition.getClass()));
+            throw new CitrusRuntimeException(format("Failed to convert partition header to proper Integer value: %s", partition.getClass()));
         }
 
         return null;
@@ -118,7 +110,6 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Gets the Kafka timestamp header.
-     * @return
      */
     public Long getTimestamp() {
         Object timestamp = getHeader(KafkaMessageHeaders.TIMESTAMP);
@@ -132,19 +123,18 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Gets the Kafka offset header.
-     * @return
      */
     public Long getOffset() {
         Object offset = getHeader(KafkaMessageHeaders.OFFSET);
 
         if (offset != null) {
-            if (offset instanceof Long) {
-                return (Long) offset;
-            } else if (offset instanceof String) {
-                return Long.parseLong((String) offset);
+            if (offset instanceof Long longOffset) {
+                return longOffset;
+            } else if (offset instanceof String stringOffset) {
+                return Long.parseLong(stringOffset);
             }
 
-            throw new CitrusRuntimeException(String.format("Failed to convert partition header to proper Long value: %s", offset.getClass()));
+            throw new CitrusRuntimeException(format("Failed to convert partition header to proper Long value: %s", offset.getClass()));
         }
 
         return 0L;
@@ -152,21 +142,13 @@ public class KafkaMessage extends DefaultMessage {
 
     /**
      * Gets the Kafka message key header.
-     * @return
      */
     public Object getMessageKey() {
-        Object key = getHeader(KafkaMessageHeaders.MESSAGE_KEY);
-
-        if (key != null) {
-            return key;
-        }
-
-        return null;
+        return getHeader(KafkaMessageHeaders.MESSAGE_KEY);
     }
 
     /**
      * Gets the Kafka topic header.
-     * @return
      */
     public String getTopic() {
         Object topic = getHeader(KafkaMessageHeaders.TOPIC);

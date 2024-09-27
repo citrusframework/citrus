@@ -16,21 +16,40 @@
 
 package org.citrusframework.kafka.endpoint;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+import lombok.Builder;
+import lombok.Getter;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.citrusframework.actions.ReceiveMessageAction;
 import org.citrusframework.common.ShutdownPhase;
 import org.citrusframework.endpoint.AbstractEndpoint;
 
+import java.time.Duration;
+
+import static java.lang.Boolean.TRUE;
+import static java.util.Objects.nonNull;
+import static lombok.AccessLevel.PACKAGE;
+import static org.citrusframework.actions.ReceiveMessageAction.Builder.receive;
+import static org.citrusframework.kafka.endpoint.selector.KafkaMessageByHeaderSelector.kafkaHeaderEquals;
+import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
+import static org.citrusframework.util.StringUtils.hasText;
+
 /**
- * Kafka message endpoint capable of sending/receiving messages from Kafka message destination. Either uses a Kafka connection factory or
- * a Spring Kafka template to connect with Kafka destinations.
+ * Kafka message endpoint capable of sending/receiving messages from Kafka message destination.
+ * Either uses a Kafka connection factory or a Spring Kafka template to connect with Kafka
+ * destinations.
  *
- * @author Christoph Deppisch
  * @since 2.8
  */
+@Getter(PACKAGE)
 public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
 
-    /** Cached producer or consumer */
-    private KafkaProducer kafkaProducer;
-    private KafkaConsumer kafkaConsumer;
+    /**
+     * Cached producer or consumer
+     */
+    private @Nullable KafkaProducer kafkaProducer;
+    private @Nullable KafkaConsumer kafkaConsumer;
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -41,10 +60,45 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
 
     /**
      * Constructor with endpoint configuration.
-     * @param endpointConfiguration
      */
     public KafkaEndpoint(KafkaEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
+    }
+
+    @Builder
+    public static @Nonnull KafkaEndpoint newKafkaEndpoint(
+            @Nullable org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> kafkaConsumer,
+            @Nullable org.apache.kafka.clients.producer.KafkaProducer<Object, Object> kafkaProducer,
+            @Nullable Boolean randomConsumerGroup,
+            @Nullable String server,
+            @Nullable Long timeout,
+            @Nullable String topic
+    ) {
+        var kafkaEndpoint = new KafkaEndpoint();
+
+        if (TRUE.equals(randomConsumerGroup)) {
+            kafkaEndpoint.getEndpointConfiguration()
+                .setConsumerGroup(KAFKA_PREFIX + RandomStringUtils.insecure().nextAlphabetic(10).toLowerCase());
+        }
+        if (hasText(server)) {
+            kafkaEndpoint.getEndpointConfiguration().setServer(server);
+        }
+        if (nonNull(timeout)) {
+            kafkaEndpoint.getEndpointConfiguration().setTimeout(timeout);
+        }
+        if (hasText(topic)) {
+            kafkaEndpoint.getEndpointConfiguration().setTopic(topic);
+        }
+
+        // Make sure these come at the end, so endpoint configuration is already initialized
+        if (nonNull(kafkaConsumer)) {
+            kafkaEndpoint.createConsumer().setConsumer(kafkaConsumer);
+        }
+        if (nonNull(kafkaProducer)) {
+            kafkaEndpoint.createProducer().setProducer(kafkaProducer);
+        }
+
+        return kafkaEndpoint;
     }
 
     @Override
@@ -75,5 +129,16 @@ public class KafkaEndpoint extends AbstractEndpoint implements ShutdownPhase {
         if (kafkaConsumer != null) {
             kafkaConsumer.stop();
         }
+    }
+
+    public ReceiveMessageAction.ReceiveMessageActionBuilderSupport findKafkaEventHeaderEquals(Duration lookbackWindow, String key, String value) {
+        return receive(this)
+                .selector(
+                        KafkaMessageFilter.kafkaMessageFilter()
+                                .eventLookbackWindow(lookbackWindow)
+                                .kafkaMessageSelector(kafkaHeaderEquals(key, value))
+                                .build()
+                )
+                .getMessageBuilderSupport();
     }
 }

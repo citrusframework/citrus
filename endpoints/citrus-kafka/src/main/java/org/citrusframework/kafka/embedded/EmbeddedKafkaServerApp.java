@@ -17,7 +17,9 @@
 package org.citrusframework.kafka.embedded;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * Standalone application provides a main cli entry for running an embedded Kafka server with embedded Zookeeper.

@@ -36,6 +36,9 @@
                                producer-properties="producerProps"
                                actor="testActor"/>
 
+  <citrus-kafka:endpoint id="kafkaEndpoint4"
+                               random-consumer-group="true" />
+
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <util:map id="producerProps">

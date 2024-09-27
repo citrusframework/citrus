@@ -16,12 +16,12 @@
 
 package org.citrusframework.kafka.endpoint.builder;
 
-import java.util.Map;
-
 import org.citrusframework.endpoint.EndpointBuilder;
 import org.citrusframework.kafka.endpoint.KafkaEndpointBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch

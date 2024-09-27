@@ -16,8 +16,6 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import java.util.Map;
-
 import org.citrusframework.context.TestContext;
 import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.endpoint.EndpointComponent;
@@ -25,6 +23,8 @@ import org.citrusframework.endpoint.direct.DirectEndpointComponent;
 import org.citrusframework.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch

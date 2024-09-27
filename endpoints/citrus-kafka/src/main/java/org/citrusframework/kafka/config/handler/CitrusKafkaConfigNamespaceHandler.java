@@ -16,7 +16,8 @@
 
 package org.citrusframework.kafka.config.handler;
 
-import org.citrusframework.kafka.config.xml.*;
+import org.citrusframework.kafka.config.xml.KafkaEmbeddedServerParser;
+import org.citrusframework.kafka.config.xml.KafkaEndpointParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**

@@ -16,82 +16,70 @@
 
 package org.citrusframework.kafka.endpoint;
 
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
+import lombok.Getter;
+import lombok.Setter;
 import org.citrusframework.context.TestContext;
-import org.citrusframework.exceptions.CitrusRuntimeException;
-import org.citrusframework.exceptions.MessageTimeoutException;
-import org.citrusframework.kafka.message.KafkaMessageHeaders;
 import org.citrusframework.message.Message;
-import org.citrusframework.messaging.AbstractMessageConsumer;
+import org.citrusframework.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- * @since 2.8
- */
-public class KafkaConsumer extends AbstractMessageConsumer {
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-    /** Logger */
+import static java.util.UUID.randomUUID;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.CLIENT_ID_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.MAX_POLL_RECORDS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
+import static org.citrusframework.kafka.message.KafkaMessageHeaders.KAFKA_PREFIX;
+
+@Setter
+@Getter
+public class KafkaConsumer extends AbstractSelectiveMessageConsumer {
+
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
 
-    /** Endpoint configuration */
-    protected final KafkaEndpointConfiguration endpointConfiguration;
-
-    /** Kafka consumer */
     private org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer;
 
     /**
      * Default constructor using endpoint.
-     * @param name
-     * @param endpointConfiguration
      */
     public KafkaConsumer(String name, KafkaEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
-        this.endpointConfiguration = endpointConfiguration;
         this.consumer = createConsumer();
     }
 
     @Override
-    public Message receive(TestContext context, long timeout) {
-        String topic = context.replaceDynamicContentInString(Optional.ofNullable(endpointConfiguration.getTopic())
-                                                                     .orElseThrow(() -> new CitrusRuntimeException("Missing Kafka topic to receive messages from - add topic to endpoint configuration")));
+    public Message receive(TestContext testContext, long timeout) {
+        logger.debug("Receiving single message");
+        return KafkaMessageSingleConsumer.builder()
+                .consumer(consumer)
+                .endpointConfiguration(getEndpointConfiguration())
+                .build()
+                .receive(testContext, timeout);
+    }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Receiving Kafka message on topic: '" + topic);
-        }
+    @Override
+    public Message receive(String selector, TestContext testContext, long timeout) {
+        logger.debug("Receiving selected message: {}", selector);
+        return KafkaMessageFilteringConsumer.builder()
+                .consumer(consumer)
+                .endpointConfiguration(getEndpointConfiguration())
+                .build()
+                .receive(selector, testContext, timeout);
+    }
 
-        if (consumer.subscription() == null || consumer.subscription().isEmpty()) {
-            consumer.subscribe(Arrays.stream(topic.split(",")).collect(Collectors.toList()));
-        }
-
-        ConsumerRecords<Object, Object> records = consumer.poll(Duration.ofMillis(timeout));
-
-        if (records.isEmpty()) {
-            throw new MessageTimeoutException(timeout, topic);
-        }
-
-        if (logger.isDebugEnabled()) {
-            records.forEach(record -> logger.debug("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.offset()));
-        }
-
-        Message received = endpointConfiguration.getMessageConverter()
-                                                .convertInbound(records.iterator().next(), endpointConfiguration, context);
-        context.onInboundMessage(received);
-
-        consumer.commitSync(Duration.ofMillis(endpointConfiguration.getTimeout()));
-
-        logger.info("Received Kafka message on topic: '" + topic);
-        return received;
+    @Override
+    protected KafkaEndpointConfiguration getEndpointConfiguration() {
+        return (KafkaEndpointConfiguration) super.getEndpointConfiguration();
     }
 
     /**
@@ -109,31 +97,21 @@ public class KafkaConsumer extends AbstractMessageConsumer {
 
     /**
      * Create new Kafka consumer with given endpoint configuration.
-     * @return
      */
     private org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> createConsumer() {
         Map<String, Object> consumerProps = new HashMap<>();
-        consumerProps.put(ConsumerConfig.CLIENT_ID_CONFIG, Optional.ofNullable(endpointConfiguration.getClientId()).orElseGet(()  -> KafkaMessageHeaders.KAFKA_PREFIX + "consumer_" + UUID.randomUUID().toString()));
-        consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, endpointConfiguration.getConsumerGroup());
-        consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, Optional.ofNullable(endpointConfiguration.getServer()).orElse("localhost:9092"));
-        consumerProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
-        consumerProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, endpointConfiguration.isAutoCommit());
-        consumerProps.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, endpointConfiguration.getAutoCommitInterval());
-        consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, endpointConfiguration.getOffsetReset());
-        consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, endpointConfiguration.getKeyDeserializer());
-        consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, endpointConfiguration.getValueDeserializer());
+        consumerProps.put(CLIENT_ID_CONFIG, Optional.ofNullable(getEndpointConfiguration().getClientId()).orElseGet(() -> KAFKA_PREFIX + "consumer_" + randomUUID()));
+        consumerProps.put(GROUP_ID_CONFIG, getEndpointConfiguration().getConsumerGroup());
+        consumerProps.put(BOOTSTRAP_SERVERS_CONFIG, Optional.ofNullable(getEndpointConfiguration().getServer()).orElse("localhost:9092"));
+        consumerProps.put(MAX_POLL_RECORDS_CONFIG, 1);
+        consumerProps.put(ENABLE_AUTO_COMMIT_CONFIG, getEndpointConfiguration().isAutoCommit());
+        consumerProps.put(AUTO_COMMIT_INTERVAL_MS_CONFIG, getEndpointConfiguration().getAutoCommitInterval());
+        consumerProps.put(AUTO_OFFSET_RESET_CONFIG, getEndpointConfiguration().getOffsetReset());
+        consumerProps.put(KEY_DESERIALIZER_CLASS_CONFIG, getEndpointConfiguration().getKeyDeserializer());
+        consumerProps.put(VALUE_DESERIALIZER_CLASS_CONFIG, getEndpointConfiguration().getValueDeserializer());
 
-        consumerProps.putAll(endpointConfiguration.getConsumerProperties());
+        consumerProps.putAll(getEndpointConfiguration().getConsumerProperties());
 
         return new org.apache.kafka.clients.consumer.KafkaConsumer<>(consumerProps);
-    }
-
-    /**
-     * Sets the consumer.
-     *
-     * @param consumer
-     */
-    public void setConsumer(org.apache.kafka.clients.consumer.KafkaConsumer<Object, Object> consumer) {
-        this.consumer = consumer;
     }
 }

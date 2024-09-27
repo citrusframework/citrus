@@ -34,8 +34,6 @@ public abstract class AbstractMessageConsumer implements Consumer {
 
     /**
      * Default constructor using receive timeout setting.
-     * @param name
-     * @param endpointConfiguration
      */
     public AbstractMessageConsumer(String name, EndpointConfiguration endpointConfiguration) {
         this.name = name;
@@ -47,7 +45,12 @@ public abstract class AbstractMessageConsumer implements Consumer {
         return name;
     }
 
+    @Override
     public Message receive(TestContext context) {
         return receive(context, endpointConfiguration.getTimeout());
+    }
+
+    protected EndpointConfiguration getEndpointConfiguration() {
+        return endpointConfiguration;
     }
 }
