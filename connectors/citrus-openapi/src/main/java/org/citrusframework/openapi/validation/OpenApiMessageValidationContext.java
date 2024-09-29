@@ -14,7 +14,7 @@ import org.citrusframework.validation.context.ValidationContext;
 public class OpenApiMessageValidationContext extends DefaultValidationContext implements
     SchemaValidationContext {
 
-       /**
+    /**
      * Should message be validated with its schema definition. This is enabled with respect to
      * global settings, which are true by default. as only messages processed by open api actions
      * will be processed and validation information will be derived from open api spec.
@@ -22,8 +22,7 @@ public class OpenApiMessageValidationContext extends DefaultValidationContext im
      * <p>Note that the default registered validation context is used for received messages. This is
      * why the schema validation is initialized with response validation enabled globally.
      */
-    private boolean schemaValidation = OpenApiSettings.isResponseValidationEnabledGlobally();
-
+    private final boolean schemaValidation;
 
     public OpenApiMessageValidationContext(Builder builder) {
         super();

@@ -33,6 +33,7 @@ import org.citrusframework.http.server.HttpServer;
 import org.citrusframework.message.DefaultMessageQueue;
 import org.citrusframework.message.MessageHeaders;
 import org.citrusframework.message.MessageQueue;
+import org.citrusframework.openapi.validation.OpenApiMessageValidationContext;
 import org.citrusframework.spi.BindToRegistry;
 import org.citrusframework.validation.context.HeaderValidationContext;
 import org.citrusframework.validation.json.JsonMessageValidationContext;
@@ -127,10 +128,11 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         int actionIndex = 0;
 
         ReceiveMessageAction receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
+        assertEquals(receiveMessageAction.getValidationContexts().size(), 4);
         assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
         assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
         assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        assertTrue(receiveMessageAction.getValidationContexts().get(3) instanceof OpenApiMessageValidationContext);
         assertEquals(receiveMessageAction.getReceiveTimeout(), 0L);
 
         assertTrue(receiveMessageAction.getMessageBuilder() instanceof HttpMessageBuilder);
@@ -165,10 +167,11 @@ public class OpenApiServerTest extends AbstractGroovyActionDslTest {
         assertEquals(sendMessageAction.getMessageProcessors().size(), 1);
 
         receiveMessageAction = (ReceiveMessageAction) result.getTestAction(actionIndex++);
-        assertEquals(receiveMessageAction.getValidationContexts().size(), 3);
+        assertEquals(receiveMessageAction.getValidationContexts().size(), 4);
         assertTrue(receiveMessageAction.getValidationContexts().get(0) instanceof HeaderValidationContext);
         assertTrue(receiveMessageAction.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
         assertTrue(receiveMessageAction.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
+        assertTrue(receiveMessageAction.getValidationContexts().get(3) instanceof OpenApiMessageValidationContext);
         assertEquals(receiveMessageAction.getReceiveTimeout(), 2000L);
 
         httpMessageBuilder = ((HttpMessageBuilder)receiveMessageAction.getMessageBuilder());

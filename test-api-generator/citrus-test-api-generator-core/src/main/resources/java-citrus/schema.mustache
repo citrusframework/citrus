@@ -1,78 +1,123 @@
+{{!
+
+  Copyright the original author or authors.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+}}
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright the original author or authors.
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns="{{{targetXmlnsNamespace}}}"
+   xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+   targetNamespace="{{{targetXmlnsNamespace}}}"
+   elementFormDefault="qualified">
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="{{{targetXmlnsNamespace}}}"
-           targetNamespace="{{{targetXmlnsNamespace}}}"
-           elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:import
+        namespace="http://www.citrusframework.org/schema/http/testcase"
+        schemaLocation="http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd"
+    />
 
-    <xs:complexType name="AbstractTestRequestType">
+    <xs:complexType name="AbstractTestApiSendRequestWithoutBodyType">
         <xs:sequence>
-            <xs:element name="cookie" minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="param" minOccurs="0" maxOccurs="unbounded" type="http:ParamType"/>
+            <xs:element name="headers" minOccurs="0" type="http:RequestHeadersType"/>
+            <xs:element name="extract" minOccurs="0">
                 <xs:complexType>
-                    <xs:attribute name="name" type="xs:string" use="required"/>
-                    <xs:attribute name="value" type="xs:string" use="required"/>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
-                <xs:complexType>
-                    <xs:attribute name="name" type="xs:string" use="required"/>
-                    <xs:attribute name="value" type="xs:string" use="required"/>
+                    <xs:sequence>
+                        <xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="variable" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute name="resource" type="xs:string"/>
-        <xs:attribute name="schema" type="xs:string" use="optional" default="oas3"/>
-        <xs:attribute name="schema-validation" type="xs:boolean" default="true"/>
-        <xs:attribute name="script" type="xs:string"/>
-        <xs:attribute name="type" default="groovy">
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="groovy"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute name="client" type="xs:string"/>
+        <xs:attribute name="uri" type="xs:string"/>
+        <xs:attribute name="actor" type="xs:string"/>
+        <xs:attribute name="fork" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="AbstractTestApiReceiveResponseType">
+        <xs:complexContent>
+            <xs:extension base="http:ClientReceiveResponseType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="AbstractTestApiSendRequestWithBodyType">
+        <xs:complexContent>
+            <xs:extension base="AbstractTestApiSendRequestWithoutBodyType">
+                <xs:sequence>
+                    {{^isMultipart}}
+                    <xs:element ref="abstract-body" minOccurs="{{#required}}1{{/required}}{{^required}}0{{/required}}">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <b>{{^required}}Optional {{/required}}Body - {{summary}}</b>{{#description}}
+                                <p>{{description}}</p>{{/description}}
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    {{/isMultipart}}
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:element name="abstract-body" abstract="true" />
     <xs:element name="body" substitutionGroup="abstract-body">
         <xs:complexType>
-            <xs:attribute name="content-type" type="xs:string" default="application/json"/>
-            <xs:attribute name="file" type="xs:string" use="required"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="bodyLiteral" substitutionGroup="abstract-body">
-        <xs:complexType>
-            <xs:simpleContent>
-                <xs:extension base="xs:string">
-                    <xs:attribute name="content-type" type="xs:string" default="application/json"/>
-                </xs:extension>
-            </xs:simpleContent>
+            <xs:sequence>
+                <xs:choice>
+                    <xs:element name="payload">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="data" type="xs:string"/>
+                    <xs:element name="resource">
+                        <xs:complexType>
+                            <xs:attribute name="file" type="xs:string" use="required"/>
+                            <xs:attribute name="charset" type="xs:string"/>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="path" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="schema-validation" type="xs:boolean" default="true"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="type" default="xml" type="xs:string"/>
+            <xs:attribute name="data-dictionary" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 
     <xs:complexType name="ResponseOutputType">
         <xs:sequence minOccurs="0">
             <xs:choice minOccurs="0">
-                <xs:element name="resource" maxOccurs="1">
+                <xs:element name="resource">
                     <xs:complexType>
                         <xs:attribute name="file" type="xs:string" use="required"/>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="script" maxOccurs="1">
+                <xs:element name="script">
                     <xs:complexType mixed="true">
                         <xs:attribute name="type" type="xs:string"/>
                     </xs:complexType>
@@ -111,28 +156,12 @@
     {{#operations}}
     {{#operation}}
 
-    {{#isMultipart}}
-    <xs:complexType name="{{operationId}}MultipartBodyType">
-        <xs:sequence>
-            {{#formParams}}
-            <xs:element name="{{paramName}}" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>
-                        <b>{{^required}}Optional {{/required}}{{#required}}Required{{/required}} - must either be set as attribute or element: </b>{{#description}}
-                        <p>{{description}}</p>{{/description}}
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            {{/formParams}}
-        </xs:sequence>
-    </xs:complexType>
-    {{/isMultipart}}
-
-    <xs:complexType name="{{operationId}}RequestType">
+    <xs:complexType name="{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}RequestType">
         <xs:annotation>
             <xs:documentation>
+                {{notes}}
                 <b>{{operationId}}</b>
-                <p>{{httpMethod}} {{httpPathPrefix}}{{{path}}}</p>
+                <p>{{httpMethod}} {{{path}}}</p>
                 <ul>
                 {{#queryParams}}
                     <li><emph>{{paramName}}</emph> {{description}}</li>
@@ -143,10 +172,18 @@
                 {{#bodyParams}}
                     <li><emph>Body:</emph> {{description}}</li>
                 {{/bodyParams}}
-                {{#authMethods}}{{#isBasic}}
-                    <li><emph>basicUsername</emph> http basic authentication username</li>
-                    <li><emph>basicPassword</emph> http basic authentication password</li>
-                {{/isBasic}}{{/authMethods}}
+                {{#authMethods}}
+                    {{#isBasicBasic}}
+                    <li><emph>basicAuthUsername</emph> http basic authentication username</li>
+                    <li><emph>basicAuthPassword</emph> http basic authentication password</li>
+                    {{/isBasicBasic}}
+                    {{#isBasicBearer}}
+                    <li><emph>basicAuthBearer</emph> http basic authentication bearer token</li>
+                    {{/isBasicBearer}}
+                    {{#isApiKey}}
+                    <li><emph>{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}</emph> {{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}} authentication token</li>
+                    {{/isApiKey}}
+                {{/authMethods}}
                 {{#isMultipart}}
                 {{#formParams}}
                     <li><emph>{{paramName}}</emph> {{description}}</li>
@@ -156,65 +193,210 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="AbstractTestRequestType">
+            <xs:extension base="{{#bodyParam}}AbstractTestApiSendRequestWithBodyType{{/bodyParam}}{{^bodyParam}}AbstractTestApiSendRequestWithoutBodyType{{/bodyParam}}">
                 <xs:sequence>
-                    {{#isMultipart}}
-                    <xs:element name="multipartBody" type="{{operationId}}MultipartBodyType" minOccurs="0" maxOccurs="1"/>
-                    {{/isMultipart}}
-                    {{^isMultipart}}
-                    {{#bodyParams}}
-                    <xs:element ref="abstract-body" minOccurs="{{#required}}1{{/required}}{{^required}}0{{/required}}">
-                        <xs:annotation>
-                            <xs:documentation>
-                                <b>{{^required}}Optional {{/required}}Body - {{summary}}</b>{{#description}}
-                                <p>{{description}}</p>{{/description}}
-                            </xs:documentation>
-                        </xs:annotation>
+                    {{#queryParams}}
+                        {{#isArray}}
+                    <xs:element name="{{paramName}}" type="xs:string"{{^required}} minOccurs="0"{{/required}} maxOccurs="unbounded">
+                        {{#description}}
+                            <xs:annotation>
+                                <xs:documentation>{{description}}</xs:documentation>
+                            </xs:annotation>
+                        {{/description}}
                     </xs:element>
-                    {{/bodyParams}}
-                    {{/isMultipart}}
-                    <xs:element name="response" minOccurs="0" maxOccurs="1" type="ResponseOutputType" />
+                        {{/isArray}}
+                    {{/queryParams}}
+                    {{#headerParams}}
+                        {{#isArray}}
+                    <xs:element name="{{paramName}}" type="xs:string"{{^required}} minOccurs="0"{{/required}} maxOccurs="unbounded">
+                        {{#description}}
+                            <xs:annotation>
+                                <xs:documentation>{{description}}</xs:documentation>
+                            </xs:annotation>
+                        {{/description}}
+                    </xs:element>
+                        {{/isArray}}
+                    {{/headerParams}}
+                    {{#pathParams}}
+                        {{#isArray}}
+                    <xs:element name="{{paramName}}" type="xs:string"{{^required}} minOccurs="0"{{/required}} maxOccurs="unbounded">
+                        {{#description}}
+                            <xs:annotation>
+                                <xs:documentation>{{description}}</xs:documentation>
+                            </xs:annotation>
+                        {{/description}}
+                    </xs:element>
+                        {{/isArray}}
+                    {{/pathParams}}
+                    {{#formParams}}
+                        {{#isArray}}
+                    <xs:element name="{{paramName}}" type="xs:string"{{^required}} minOccurs="0"{{/required}} maxOccurs="unbounded">
+                        {{#description}}
+                            <xs:annotation>
+                                <xs:documentation>{{description}}</xs:documentation>
+                            </xs:annotation>
+                        {{/description}}
+                    </xs:element>
+                        {{/isArray}}
+                    {{/formParams}}
+                    {{#cookieParams}}
+                        {{#isArray}}
+                            <xs:element name="{{paramName}}" type="xs:string"{{^required}} minOccurs="0"{{/required}} maxOccurs="unbounded">
+                                {{#description}}
+                                    <xs:annotation>
+                                        <xs:documentation>{{description}}</xs:documentation>
+                                    </xs:annotation>
+                                {{/description}}
+                            </xs:element>
+                        {{/isArray}}
+                    {{/cookieParams}}
+                   <xs:element name="receive" minOccurs="0" type="{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}ResponseType"/>
                 </xs:sequence>
                 {{#queryParams}}
-                <xs:attribute name="{{paramName}}" type="xs:string"
-                              use="{{#required}}required{{/required}}{{^required}}optional{{/required}}">
+                    {{^isArray}}
+                <xs:attribute name="{{paramName}}" type="xs:string"{{#required}} use="required"{{/required}}>
+                    {{#description}}
                     <xs:annotation>
                         <xs:documentation>{{description}}</xs:documentation>
                     </xs:annotation>
+                    {{/description}}
                 </xs:attribute>
+                    {{/isArray}}
                 {{/queryParams}}
+                {{#headerParams}}
+                    {{^isArray}}
+                <xs:attribute name="{{paramName}}" type="xs:string"{{#required}} use="required"{{/required}}>
+                    {{#description}}
+                        <xs:annotation>
+                            <xs:documentation>{{description}}</xs:documentation>
+                        </xs:annotation>
+                    {{/description}}
+                </xs:attribute>
+                    {{/isArray}}
+                {{/headerParams}}
                 {{#pathParams}}
-                <xs:attribute name="{{paramName}}" type="xs:string"
-                    use="{{#required}}required{{/required}}{{^required}}optional{{/required}}">
+                    {{^isArray}}
+                <xs:attribute name="{{paramName}}" type="xs:string"{{#required}} use="required"{{/required}}>
+                    {{#description}}
                     <xs:annotation>
                         <xs:documentation>{{description}}</xs:documentation>
                     </xs:annotation>
+                    {{/description}}
                 </xs:attribute>
+                    {{/isArray}}
                 {{/pathParams}}
-                {{#isMultipart}}
                 {{#formParams}}
-<!--            Note we explicitly do set set the required attribute, to allow for an extra xml element with name "paramName".
-                So attribute or element can both be used, thus we cannot check the 'required' attribute.
- -->
-                <xs:attribute name="{{paramName}}" type="xs:string">
+                    {{^isArray}}
+                <xs:attribute name="{{paramName}}" type="xs:string"{{#required}} use="required"{{/required}}>
+                    {{#description}}
                     <xs:annotation>
-                        <xs:documentation>The filename of the {{paramName}} to upload</xs:documentation>
+                        <xs:documentation>{{description}}</xs:documentation>
                     </xs:annotation>
+                    {{/description}}
                 </xs:attribute>
+                    {{/isArray}}
                 {{/formParams}}
-                {{/isMultipart}}
-                {{#authMethods}}{{#isBasic}}
-                <xs:attribute name="basicUsername" type="xs:string">
+                {{#cookieParams}}
+                    {{^isArray}}
+                        <xs:attribute name="{{paramName}}" type="xs:string"{{#required}} use="required"{{/required}}>
+                            {{#description}}
+                            <xs:annotation>
+                                <xs:documentation>{{description}}</xs:documentation>
+                            </xs:annotation>
+                            {{/description}}
+                        </xs:attribute>
+                    {{/isArray}}
+                {{/cookieParams}}
+                {{#authMethods}}
+                    {{#isBasicBasic}}
+                <xs:attribute name="basicAuthUsername" type="xs:string">
                     <xs:annotation>
                         <xs:documentation>http basic authentication username</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="basicPassword" type="xs:string">
+                <xs:attribute name="basicAuthPassword" type="xs:string">
                     <xs:annotation>
                         <xs:documentation>http basic authentication password</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                {{/isBasic}}{{/authMethods}}
+                    {{/isBasicBasic}}
+                    {{#isBasicBearer}}
+                <xs:attribute name="basicAuthBearer" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>http basic authentication bearer token</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                    {{/isBasicBearer}}
+                    {{#isApiKey}}
+                <xs:attribute name="{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}" type="xs:string">
+                    {{#description}}
+                    <xs:annotation>
+                        <xs:documentation>{{description}}</xs:documentation>
+                    </xs:annotation>
+                    {{/description}}
+                </xs:attribute>
+                    {{/isApiKey}}
+                {{/authMethods}}
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}ResponseType">
+        <xs:annotation>
+            <xs:documentation>
+                {{notes}}
+                <b>{{operationId}}</b>
+                <p>{{httpMethod}} {{{path}}}</p>
+                <ul>
+                    {{#queryParams}}
+                    <li><emph>{{paramName}}</emph> {{description}}</li>
+                    {{/queryParams}}
+                    {{#pathParams}}
+                    <li><emph>{{baseName}}</emph> {{description}}</li>
+                    {{/pathParams}}
+                    {{#bodyParams}}
+                    <li><emph>Body:</emph> {{description}}</li>
+                    {{/bodyParams}}
+                    {{#isMultipart}}
+                        {{#formParams}}
+                    <li><emph>{{paramName}}</emph> {{description}}</li>
+                        {{/formParams}}
+                    {{/isMultipart}}
+                </ul>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="AbstractTestApiReceiveResponseType">
+                {{#responses}}
+                    {{#-first}}
+                <xs:attribute name="responseCode">
+                    <xs:annotation>
+                        <xs:documentation>
+                            An enumeration of all specified API response codes.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                        {{/-first}}
+                            <xs:enumeration value="{{code}}">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        {{#message}}
+                                        Message: {{message}}<br/>
+                                        {{/message}}
+                                        {{#dataType}}
+                                        Datatype: {{dataType}}<br/>
+                                        {{/dataType}}
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:enumeration>
+                        {{#-last}}
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                    {{/-last}}
+                {{/responses}}
+
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -225,7 +407,8 @@
     {{#operations}}
     {{#operation}}
 
-    <xs:element name="{{operationId}}Request" type="{{operationId}}RequestType"/>
+    <xs:element name="send-{{#lambda.kebabcase}}{{operationId}}{{/lambda.kebabcase}}" type="{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}RequestType"/>
+    <xs:element name="receive-{{#lambda.kebabcase}}{{operationId}}{{/lambda.kebabcase}}" type="{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}ResponseType"/>
     {{/operation}}
     {{/operations}}
     {{/apis}}

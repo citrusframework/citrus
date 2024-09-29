@@ -1,84 +1,615 @@
-{{>licenseInfo}}
+{{!
 
+  Copyright the original author or authors.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+}}
 package {{package}};
 
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static org.citrusframework.util.StringUtils.isEmpty;
+import static org.citrusframework.util.StringUtils.isNotEmpty;
+
+import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import org.citrusframework.http.client.HttpClient;
+import java.util.List;
+import org.citrusframework.actions.ReceiveMessageAction;
+import org.citrusframework.actions.SendMessageAction;
+import org.citrusframework.endpoint.Endpoint;
 import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.openapi.generator.TestApiClientRequestActionBuilder;
-import org.citrusframework.openapi.generator.rest.petstore.model.Pet;
-import org.citrusframework.testapi.GeneratedApi;
+import org.citrusframework.openapi.testapi.ApiActionBuilderCustomizer;
+import org.citrusframework.openapi.testapi.ParameterStyle;
+import {{requestBuilderClass}};
+import {{responseBuilderClass}};
+import org.citrusframework.openapi.testapi.TestApiUtils;
+import org.citrusframework.spi.Resource;
+import org.citrusframework.openapi.testapi.GeneratedApi;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 
-import {{invokerPackage}}.citrus.{{prefix}}AbstractSendAction;
+import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}};
+{{#isRest}}import {{modelPackage}}.*;{{/isRest}}
 
+@SuppressWarnings("unused")
 {{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
 public class {{classname}} implements GeneratedApi
 {
 
-    public static final {{classname}} INSTANCE = new {{classname}}();
+    @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.base64-encode-api-key:#{false}}")
+    private boolean base64EncodeApiKey;
+    {{#authMethods}}
+        {{#isBasicBasic}}
 
-    private OpenApiSpecification openApiSpecification = null;
+    @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.basic.username:#{null}}")
+    private String basicUsername;
 
+    @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.basic.password:#{null}}")
+    private String basicPassword;
+        {{/isBasicBasic}}
+        {{#isBasicBearer}}
+
+    @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.bearer.token:#{null}}")
+    private String basicAuthBearer;
+        {{/isBasicBearer}}
+        {{#isApiKey}}
+
+    @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.{{#lambda.kebabcase}}{{keyParamName}}{{/lambda.kebabcase}}:#{null}}")
+    private String default{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}};
+        {{/isApiKey}}
+    {{/authMethods}}
+
+    private final List<ApiActionBuilderCustomizer> customizers;
+
+    private final Endpoint endpoint;
+
+    private final OpenApiSpecification openApiSpecification;
+
+    public {{classname}}(Endpoint endpoint)  {
+        this(endpoint, emptyList());
+    }
+
+    public {{classname}}(Endpoint endpoint, List<ApiActionBuilderCustomizer> customizers)  {
+        this.endpoint = endpoint;
+        this.customizers = customizers;
+
+        URL resource = {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}.class.getResource("{{prefix}}_openApi.yaml");
+        if (resource == null) {
+            throw new IllegalStateException(format("Cannot find resource '%s'. This resource is typically created during API generation and should therefore be present. Check API generation.", "{{prefix}}_openApi.yaml"));
+        }
+        openApiSpecification = OpenApiSpecification.from(resource);
+    }
+
+    public static {{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}(Endpoint endpoint) {
+        return new {{classname}}(endpoint);
+    }
+
+    @Override
     public String getApiTitle() {
-    return "{{appName}}";
+        return "{{appName}}";
     }
 
+    @Override
     public String getApiVersion() {
-    return "{{appVersion}}";
+        return "{{appVersion}}";
     }
 
+    @Override
     public String getApiPrefix() {
-    return "{{prefix}}";
+        return "{{prefix}}";
     }
 
-    public Map<String,String> getApiInfoExtensions() {
+    @Override
+    public Map<String, String> getApiInfoExtensions() {
+    {{#infoExtensions}}
         Map<String, String> infoExtensionMap = new HashMap<>();
-        {{#infoExtensions}}
-            {{#entrySet}}
+        {{#entrySet}}
             infoExtensionMap.put("{{key}}", "{{value}}");
-            {{/entrySet}}
-        {{/infoExtensions}}
+        {{/entrySet}}
         return infoExtensionMap;
+    {{/infoExtensions}}
+    {{^infoExtensions}}
+        return emptyMap();
+    {{/infoExtensions}}
+    }
+
+    @Override
+    public Endpoint getEndpoint() {
+        return endpoint;
+    }
+
+    @Override
+    public List<ApiActionBuilderCustomizer> getCustomizers() {
+        return customizers;
     }
 
 {{#operations}}
     {{#operation}}
-        public {{operationIdCamelCase}}ActionBuilder {{operationId}}()  {
-        return new {{operationIdCamelCase}}ActionBuilder();
-        }
+    /**
+     * Builder with type safe required parameters.
+     */
+    public {{operationIdCamelCase}}SendActionBuilder send{{operationIdCamelCase}}({{#requiredNonBodyParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/requiredNonBodyParams}})   {
+        {{#authWithParameters}}
+            {{operationIdCamelCase}}SendActionBuilder builder =  new {{operationIdCamelCase}}SendActionBuilder(this, openApiSpecification{{#requiredNonBodyParams}}, {{paramName}}{{/requiredNonBodyParams}});
+                {{#hasApiKeyAuth}}
+            builder.setBase64EncodeApiKey(base64EncodeApiKey);
+                {{/hasApiKeyAuth}}
+                {{#isBasicBasic}}
+            builder.setBasicAuthUsername(basicUsername);
+            builder.setBasicAuthPassword(basicPassword);
+                {{/isBasicBasic}}
+                {{#isBasicBearer}}
+            builder.setBasicAuthBearer(basicAuthBearer);
+                {{/isBasicBearer}}
+                {{#isApiKey}}
+            builder.set{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}}(default{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}});
+                {{/isApiKey}}
+            return builder;
+        {{/authWithParameters}}
+        {{^authWithParameters}}
+            return new {{operationIdCamelCase}}SendActionBuilder(this, openApiSpecification{{#requiredNonBodyParams}}, {{paramName}}{{/requiredNonBodyParams}});
+        {{/authWithParameters}}
+    }
+    {{#needsConstructorWithAllStringParameter}}
+
+    /**
+     * Builder with required parameters as string to allow for dynamic content.
+     */
+    public {{operationIdCamelCase}}SendActionBuilder send{{operationIdCamelCase}}$({{#requiredNonBodyParams}}{{^isArray}}String {{paramName}}Expression{{/isArray}}{{#isArray}}List<String> {{paramName}}Expression{{/isArray}}{{^-last}}, {{/-last}} {{/requiredNonBodyParams}})   {
+        {{#authWithParameters}}
+            {{operationIdCamelCase}}SendActionBuilder builder =  new {{operationIdCamelCase}}SendActionBuilder(openApiSpecification, this{{#requiredNonBodyParams}}, {{paramName}}Expression{{/requiredNonBodyParams}});
+            {{#hasApiKeyAuth}}
+            builder.setBase64EncodeApiKey(base64EncodeApiKey);
+            {{/hasApiKeyAuth}}
+            {{#authMethods}}
+                {{#isBasicBasic}}
+            builder.setBasicAuthUsername(basicUsername);
+            builder.setBasicAuthPassword(basicPassword);
+                {{/isBasicBasic}}
+                {{#isBasicBearer}}
+            builder.setBasicAuthBearer(basicAuthBearer);
+                {{/isBasicBearer}}
+                {{#isApiKey}}
+            builder.set{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}}(default{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}});
+                {{/isApiKey}}
+            {{/authMethods}}
+            return builder;
+        {{/authWithParameters}}
+        {{^authWithParameters}}
+            return new {{operationIdCamelCase}}SendActionBuilder(openApiSpecification, this{{#requiredNonBodyParams}}, {{paramName}}Expression{{/requiredNonBodyParams}});
+        {{/authWithParameters}}
+    }
+    {{/needsConstructorWithAllStringParameter}}
+
+    public {{operationIdCamelCase}}ReceiveActionBuilder receive{{operationIdCamelCase}}(@NotNull HttpStatus statusCode)   {
+        return new {{operationIdCamelCase}}ReceiveActionBuilder(this, openApiSpecification, Integer.toString(statusCode.value()));
+    }
+
+    public {{operationIdCamelCase}}ReceiveActionBuilder receive{{operationIdCamelCase}}(@NotNull String statusCode)   {
+        return new {{operationIdCamelCase}}ReceiveActionBuilder(this, openApiSpecification,  statusCode);
+    }
 
     {{/operation}}
 {{/operations}}
-
 {{#operations}}
     {{#operation}}
-    public class {{operationIdCamelCase}}ActionBuilder extends TestApiClientRequestActionBuilder {
+    public static class {{operationIdCamelCase}}SendActionBuilder extends
+                {{requestBuilderClassName}} {
 
-    private static final String METHOD = "{{httpMethod}}";
+        private static final String METHOD = "{{httpMethod}}";
 
-    private static final String ENDPOINT = "{{path}}";
+        private static final String ENDPOINT = "{{basePath}}{{path}}";
 
-    private static final String OPERATION_NAME = "{{operationId}}";
+        private static final String OPERATION_NAME = "{{operationId}}";
+        {{#hasApiKeyAuth}}
 
-    public AddPetActionBuilder() {
-        super(openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+        @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.base64-encode-api-key:#{false}}")
+        private boolean base64EncodeApiKey;
+        {{/hasApiKeyAuth}}
+        {{#authMethods}}
+            {{#isBasicBasic}}
+
+        @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.basic.username:#{null}}")
+        private String defaultBasicUsername;
+
+        private String basicUsername;
+
+        @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.basic.password:#{null}}")
+        private String defaultBasicPassword;
+
+        private String basicPassword;
+            {{/isBasicBasic}}
+            {{#isBasicBearer}}
+
+        @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.bearer.token:#{null}}")
+        private String defaultBasicAuthBearer;
+
+        private String basicAuthBearer;
+            {{/isBasicBearer}}
+            {{#isApiKey}}
+
+        @Value("${" + "{{#lambda.lowercase}}{{prefix}}{{/lambda.lowercase}}.{{#lambda.kebabcase}}{{keyParamName}}{{/lambda.kebabcase}}:#{null}}")
+        private String default{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}};
+
+        private String {{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}};
+            {{/isApiKey}}
+        {{/authMethods}}
+
+        /**
+         * Constructor with type safe required parameters.
+         */
+        public {{operationIdCamelCase}}SendActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, OpenApiSpecification openApiSpecification{{#requiredNonBodyParams}}, {{{dataType}}} {{paramName}}{{/requiredNonBodyParams}}) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME);
+            {{#requiredNonBodyParams}}
+            {{#isQueryParam}}
+            queryParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isQueryParam}}
+            {{#isPathParam}}
+            pathParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isPathParam}}
+            {{#isHeaderParam}}
+            headerParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isHeaderParam}}
+            {{#isFormParam}}
+            formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}){{/isBinary}} {{^isBinary}}{{paramName}}{{/isBinary}});
+            {{/isFormParam}}
+            {{#isCookieParam}}
+            cookieParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isCookieParam}}
+            {{/requiredNonBodyParams}}
+        }
+        {{#needsConstructorWithAllStringParameter}}
+
+        /**
+         * Constructor with required parameters as string to allow for dynamic content.
+         */
+            {{!
+               Note that the change in the order of parameters is intentional to be able to differentiate
+               constructors with Collections parameters which would otherwise have the same erasure type.
+            }}
+            public {{operationIdCamelCase}}SendActionBuilder(OpenApiSpecification openApiSpecification, {{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}{{#requiredNonBodyParams}}, {{^isArray}}String {{paramName}}Expression{{/isArray}}{{#isArray}}List<String> {{paramName}}Expression{{/isArray}}{{/requiredNonBodyParams}}) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification,  METHOD, ENDPOINT, OPERATION_NAME);
+        {{#requiredNonBodyParams}}
+            {{#isQueryParam}}
+            queryParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isQueryParam}}
+            {{#isPathParam}}
+            pathParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isPathParam}}
+            {{#isHeaderParam}}
+            headerParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isHeaderParam}}
+            {{#isFormParam}}
+            formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}Expression){{/isBinary}} {{^isBinary}}{{paramName}}Expression{{/isBinary}});
+            {{/isFormParam}}
+            {{#isCookieParam}}
+            cookieParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isCookieParam}}
+        {{/requiredNonBodyParams}}
+        }
+        {{/needsConstructorWithAllStringParameter}}
+
+        {{#requiredNonBodyParams}}
+            {{#-first}}
+        /**
+         * Constructor with required parameters as string to allow for dynamic content.
+         */
+            {{/-first}}
+        {{/requiredNonBodyParams}}
+        public {{operationIdCamelCase}}SendActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, OpenApiSpecification openApiSpecification, TestApiClientRequestMessageBuilder messageBuilder{{#requiredNonBodyParams}}, {{^isArray}}String {{paramName}}Expression{{/isArray}}{{#isArray}}List<String> {{paramName}}{{/isArray}}{{/requiredNonBodyParams}}) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+        {{#requiredNonBodyParams}}
+            {{#isQueryParam}}
+            queryParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isQueryParam}}
+            {{#isPathParam}}
+            pathParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isPathParam}}
+            {{#isHeaderParam}}
+            headerParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isHeaderParam}}
+            {{#isFormParam}}
+            formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}{{^isArray}}Expression{{/isArray}}){{/isBinary}} {{^isBinary}}{{paramName}}{{^isArray}}Expression{{/isArray}}{{/isBinary}});
+            {{/isFormParam}}
+            {{#isCookieParam}}
+            cookieParameter("{{baseName}}", {{paramName}}{{^isArray}}Expression{{/isArray}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isCookieParam}}
+        {{/requiredNonBodyParams}}
+        }
+        {{#requiredNonBodyParams}}
+
+        {{!
+           Type safe setting of parameter, using builder pattern.
+        }}
+        public {{operationIdCamelCase}}SendActionBuilder {{paramName}}({{#isArray}}{{baseType}}...{{/isArray}}{{^isArray}}{{dataType}} {{/isArray}}{{paramName}}) {
+            {{#isQueryParam}}
+            queryParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isQueryParam}}
+            {{#isPathParam}}
+            pathParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isPathParam}}
+            {{#isHeaderParam}}
+            headerParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isHeaderParam}}
+            {{#isFormParam}}
+            formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}){{/isBinary}} {{^isBinary}}{{paramName}}{{/isBinary}});
+            {{/isFormParam}}
+            {{#isCookieParam}}
+            cookieParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isCookieParam}}
+            return this;
+        }
+        {{^isBaseTypeString}}
+
+        {{!
+           Non type safe setting of parameter, using builder pattern.
+        }}
+        public {{operationIdCamelCase}}SendActionBuilder {{paramName}}(String{{#isArray}}...{{/isArray}}{{^isArray}} {{/isArray}}{{paramName}}Expression) {
+            {{#isQueryParam}}
+            queryParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isQueryParam}}
+            {{#isPathParam}}
+            pathParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isPathParam}}
+            {{#isHeaderParam}}
+            headerParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isHeaderParam}}
+            {{#isFormParam}}
+            formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}Expression){{/isBinary}} {{^isBinary}}{{paramName}}Expression{{/isBinary}});
+            {{/isFormParam}}
+            {{#isCookieParam}}
+            cookieParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isCookieParam}}
+                return this;
+        }
+        {{/isBaseTypeString}}
+        {{/requiredNonBodyParams}}
+        {{#optionalParams}}
+
+        {{!
+          Type safe setting of the parameter value.
+          Depending on the parameter type (query, path, header, form, or cookie),
+          the appropriate method is invoked to set the parameter.
+        }}
+        public {{operationIdCamelCase}}SendActionBuilder {{paramName}}({{#isArray}}{{baseType}}...{{/isArray}}{{^isArray}}{{dataType}} {{/isArray}}{{paramName}}) {
+        {{#isQueryParam}}
+            queryParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+        {{/isQueryParam}}
+        {{#isPathParam}}
+            pathParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+        {{/isPathParam}}
+        {{#isHeaderParam}}
+            headerParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+        {{/isHeaderParam}}
+        {{#isFormParam}}
+            formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}){{/isBinary}} {{^isBinary}}{{paramName}}{{/isBinary}});
+        {{/isFormParam}}
+        {{#isCookieParam}}
+            cookieParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+        {{/isCookieParam}}
+            return this;
+        }
+
+        {{!
+          Type safe setting of the parameter value.
+          These setters are used by SendApiRequestActionParser and ReceiveApiResponseActionParser
+          to inject attributes into the request or response.
+          Depending on the parameter type (query, path, header, form, or cookie),
+          the appropriate method is invoked to set the parameter.
+        }}
+        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{#isArray}}{{baseType}}...{{/isArray}}{{^isArray}}{{dataType}} {{/isArray}}{{paramName}}) {
+        {{#isQueryParam}}
+            queryParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+        {{/isQueryParam}}
+        {{#isPathParam}}
+            pathParameter("{{baseName}}", {{paramName}});
+        {{/isPathParam}}
+        {{#isHeaderParam}}
+            headerParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+        {{/isHeaderParam}}
+        {{#isFormParam}}
+            formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}){{/isBinary}} {{^isBinary}}{{paramName}}{{/isBinary}});
+        {{/isFormParam}}
+        {{#isCookieParam}}
+            cookieParameter("{{baseName}}", {{paramName}}, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+        {{/isCookieParam}}
+        }
+        {{^isBaseTypeString}}
+
+        {{!
+            Configures a request action by setting the value of a parameter
+            (query, path, header, form, or cookie) as a dynamic string expression,
+            supporting citrus variables. This method handles different parameter types
+            based on the context and updates the respective parameter accordingly.
+            Supports arrays if the parameter is marked as such.
+        }}
+        public {{operationIdCamelCase}}SendActionBuilder {{paramName}}(String{{#isArray}}...{{/isArray}}{{^isArray}} {{/isArray}}{{paramName}}Expression) {
+            {{#isQueryParam}}
+            queryParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isQueryParam}}
+            {{#isPathParam}}
+            pathParameter("{{baseName}}", {{paramName}}Expression);
+            {{/isPathParam}}
+            {{#isHeaderParam}}
+            headerParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isHeaderParam}}
+            {{#isFormParam}}
+            formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}Expression){{/isBinary}} {{^isBinary}}{{paramName}}Expression{{/isBinary}});
+            {{/isFormParam}}
+            {{#isCookieParam}}
+            cookieParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isCookieParam}}
+            return this;
+        }
+
+        {{!
+            Sets the value of the parameter as a string expression.
+            These setters are used by SendApiRequestActionParser and ReceiveApiResponseActionParser
+            to inject attributes into the request or response.
+            Depending on the parameter type (query, path, header, form, or cookie),
+            the appropriate method is invoked to set the parameter.
+            If the parameter is marked as an array, multiple values are supported.
+        }}
+        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(String{{#isArray}}...{{/isArray}}{{^isArray}} {{/isArray}}{{paramName}}Expression) {
+            {{#isQueryParam}}
+            queryParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isQueryParam}}
+            {{#isPathParam}}
+            pathParameter("{{baseName}}", {{paramName}}Expression);
+            {{/isPathParam}}
+            {{#isHeaderParam}}
+            headerParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isHeaderParam}}
+            {{#isFormParam}}
+            formParameter("{{baseName}}", {{#isBinary}}toBinary({{paramName}}Expression){{/isBinary}} {{^isBinary}}{{paramName}}Expression{{/isBinary}});
+            {{/isFormParam}}
+            {{#isCookieParam}}
+            cookieParameter("{{baseName}}", {{paramName}}Expression, ParameterStyle.{{#lambda.uppercase}}{{style}}{{/lambda.uppercase}}, {{isExplode}}, {{schema.isModel}});
+            {{/isCookieParam}}
+        }
+        {{/isBaseTypeString}}
+        {{/optionalParams}}
+        {{#hasApiKeyAuth}}
+
+        public void setBase64EncodeApiKey(boolean encode) {
+            this.base64EncodeApiKey = encode;
+        }
+        {{/hasApiKeyAuth}}
+        {{#authMethods}}
+            {{#isBasicBasic}}
+
+        public {{operationIdCamelCase}}SendActionBuilder basicAuthUsername(String basicUsername) {
+            this.basicUsername = basicUsername;
+            return this;
+        }
+
+        public void setBasicAuthUsername(String basicUsername) {
+            this.basicUsername = basicUsername;
+        }
+
+        public {{operationIdCamelCase}}SendActionBuilder basicAuthPassword(String password) {
+            this.basicPassword = password;
+            return this;
+        }
+
+        public void setBasicAuthPassword(String password) {
+            this.basicPassword = password;
+        }
+
+        protected void addBasicAuthHeader(String basicUsername, String basicPassword,
+            HttpMessageBuilderSupport messageBuilderSupport) {
+            TestApiUtils.addBasicAuthHeader(
+                isNotEmpty(basicUsername) ? basicUsername : defaultBasicUsername,
+                isNotEmpty(basicPassword) ? basicPassword : defaultBasicPassword,
+                messageBuilderSupport);
+        }
+            {{/isBasicBasic}}
+            {{#isBasicBearer}}
+
+        public {{operationIdCamelCase}}SendActionBuilder basicAuthBearer(String basicAuthBearer) {
+            this.basicAuthBearer = basicAuthBearer;
+            return this;
+        }
+
+        public void setBasicAuthBearer(String basicAuthBearer) {
+            this.basicAuthBearer = basicAuthBearer;
+        }
+            {{/isBasicBearer}}
+            {{#isApiKey}}
+
+        public {{operationIdCamelCase}}SendActionBuilder {{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}(String {{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}) {
+            this.{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}} = {{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}};
+            return this;
+        }
+
+        public void set{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}}(String {{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}) {
+            this.{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}} = {{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}};
+        }
+            {{/isApiKey}}
+        {{/authMethods}}
+
+        @Override
+        public SendMessageAction doBuild() {
+        {{#authMethods}}
+            {{#isBasicBasic}}
+            addBasicAuthHeader(basicUsername, basicPassword, getMessageBuilderSupport());
+            {{/isBasicBasic}}
+            {{#isBasicBearer}}
+            if (!isEmpty(basicAuthBearer) || !isEmpty(defaultBasicAuthBearer)) {
+                headerParameter("Authorization", "Bearer " +getOrDefault(basicAuthBearer, defaultBasicAuthBearer, true));
+            }
+            {{/isBasicBearer}}
+        {{/authMethods}}
+        {{#authMethods}}
+            {{#isApiKey}}
+                {{#isKeyInHeader}}
+            headerParameter("{{keyParamName}}", getOrDefault({{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}, default{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}}, base64EncodeApiKey));
+                {{/isKeyInHeader}}
+                {{#isKeyInQuery}}
+            queryParameter("{{keyParamName}}", getOrDefault({{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}, default{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}}, base64EncodeApiKey));
+                {{/isKeyInQuery}}
+                {{#isKeyInCookie}}
+            cookieParameter("{{keyParamName}}", getOrDefault({{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}, default{{#lambda.titlecase}}{{#lambda.camelcase}}{{keyParamName}}{{/lambda.camelcase}}{{/lambda.titlecase}}, base64EncodeApiKey));
+                {{/isKeyInCookie}}
+            {{/isApiKey}}
+        {{/authMethods}}
+
+            if (getCustomizers() != null) {
+                getCustomizers().forEach(customizer -> customizer.customizeRequestBuilder(getGeneratedApi(), this));
+            }
+
+            return super.doBuild();
+        }
     }
 
-    {{#queryParams}}
-    public {{operationIdCamelCase}}ActionBuilder with{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(String {{paramName}}) {
-        queryParam("{{paramName}}", {{paramName}});
-        return this;
-    }
-    {{/queryParams}}
+    public static class {{operationIdCamelCase}}ReceiveActionBuilder extends
+                        {{responseBuilderClassName}} {
 
-    //        public AddPetActionBuilder withPet(Pet pet) {
-    //        // TODO: fix this
-    //        getMessageBuilderSupport().body(pet.toString());
-    //        return this;
-    //        }
+        private static final String METHOD = "{{httpMethod}}";
+
+        private static final String ENDPOINT = "{{basePath}}{{path}}";
+
+        private static final String OPERATION_NAME = "{{operationId}}";
+
+        public {{operationIdCamelCase}}ReceiveActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, OpenApiSpecification openApiSpecification,  String statusCode) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification, METHOD, ENDPOINT, OPERATION_NAME, statusCode);
+        }
+
+        public {{operationIdCamelCase}}ReceiveActionBuilder({{classname}} {{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, OpenApiSpecification openApiSpecification, OpenApiClientResponseMessageBuilder messageBuilder) {
+            super({{#lambda.camelcase}}{{classname}}{{/lambda.camelcase}}, openApiSpecification, messageBuilder, messageBuilder.getMessage(), METHOD, ENDPOINT, OPERATION_NAME);
+        }
+
+        @Override
+        public ReceiveMessageAction doBuild() {
+
+            if (getCustomizers() != null) {
+                getCustomizers().forEach(customizer -> customizer.customizeResponseBuilder(getGeneratedApi(), this));
+            }
+
+            return super.doBuild();
+        }
 
     }
+    {{^-last}}
+
+    {{/-last}}
     {{/operation}}
 {{/operations}}
 }

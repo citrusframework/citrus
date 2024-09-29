@@ -19,7 +19,6 @@ package org.citrusframework.openapi.validation;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -42,7 +41,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatusCode;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -53,7 +51,7 @@ public class OpenApiResponseValidatorTest {
     private OpenApiSpecification openApiSpecificationMock;
 
     @Mock
-    private SwaggerOpenApiValidationContext swaggerOpenApiValidationContextMock;
+    private OpenApiValidationContext openApiValidationContextMock;
 
     @Mock
     private OpenApiInteractionValidator openApiInteractionValidatorMock;
@@ -79,8 +77,8 @@ public class OpenApiResponseValidatorTest {
     public void beforeMethod() {
         mockCloseable = MockitoAnnotations.openMocks(this);
 
-        doReturn(swaggerOpenApiValidationContextMock).when(openApiSpecificationMock).getSwaggerOpenApiValidationContext();
-        doReturn(openApiInteractionValidatorMock).when(swaggerOpenApiValidationContextMock).getOpenApiInteractionValidator();
+        doReturn(openApiValidationContextMock).when(openApiSpecificationMock).getOpenApiValidationContext();
+        doReturn(openApiInteractionValidatorMock).when(openApiValidationContextMock).getOpenApiInteractionValidator();
 
         openApiResponseValidator = new OpenApiResponseValidator(openApiSpecificationMock);
     }
@@ -90,21 +88,10 @@ public class OpenApiResponseValidatorTest {
         mockCloseable.close();
     }
 
-    @Test
-    public void shouldNotValidateWhenDisabled() {
-        // Given
-        openApiResponseValidator.setEnabled(false);
-        // When
-        openApiResponseValidator.validateResponse(operationPathAdapterMock, httpMessageMock);
-        // Then
-        Assert.assertFalse(openApiResponseValidator.isEnabled());
-        verify(openApiInteractionValidatorMock, never()).validateResponse(anyString(), any(Method.class), any(Response.class));
-    }
 
     @Test
     public void shouldValidateWithNoErrors() {
         // Given
-        openApiResponseValidator.setEnabled(true);
         when(openApiInteractionValidatorMock.validateResponse(anyString(), any(Method.class), any(Response.class)))
             .thenReturn(validationReportMock);
         when(validationReportMock.hasErrors()).thenReturn(false);
@@ -125,7 +112,6 @@ public class OpenApiResponseValidatorTest {
     @Test(expectedExceptions = ValidationException.class)
     public void shouldValidateWithErrors() {
         // Given
-        openApiResponseValidator.setEnabled(true);
         when(openApiInteractionValidatorMock.validateResponse(anyString(), any(Method.class), any(Response.class)))
             .thenReturn(validationReportMock);
         when(validationReportMock.hasErrors()).thenReturn(true);

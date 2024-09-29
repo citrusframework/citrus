@@ -1,18 +1,47 @@
-{{>licenseInfo}}
+{{!
 
-package {{invokerPackage}}.citrus.extension;
+  Copyright the original author or authors.
 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+}}
+package {{invokerPackage}}.spring;
+
+import org.citrusframework.openapi.OpenApiSpecification;
+import org.citrusframework.openapi.testapi.RestApiSendMessageActionBuilder;
+import org.citrusframework.openapi.testapi.RestApiReceiveMessageActionBuilder;
 {{#apiInfo}}
 {{#apis}}
 import {{package}}.{{classname}};
 {{/apis}}
 {{/apiInfo}}
-import {{invokerPackage}}.citrus.{{prefix}}BeanDefinitionParser;
-
+import org.citrusframework.openapi.testapi.spring.RestApiReceiveMessageActionParser;
+import org.citrusframework.openapi.testapi.spring.RestApiSendMessageActionParser;
+import {{invokerPackage}}.{{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}};
+import org.citrusframework.openapi.testapi.GeneratedApi;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 {{>additionalModelTypeAnnotations}}{{>generatedAnnotation}}{{#discriminator}}{{>typeInfoAnnotation}}{{/discriminator}}{{>xmlAnnotation}}
-public class {{prefix}}NamespaceHandler extends NamespaceHandlerSupport {
+public class {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}NamespaceHandler extends NamespaceHandlerSupport {
+
+    {{#apiInfo}}
+        {{#apis}}
+            {{#-first}}
+    private final OpenApiSpecification openApiSpecification = OpenApiSpecification.from(
+        {{#lambda.titlecase}}{{prefix}}{{/lambda.titlecase}}.{{#lambda.camelcase}}{{prefix}}{{/lambda.camelcase}}Api());
+            {{/-first}}
+        {{/apis}}
+    {{/apiInfo}}
 
     @Override
     public void init() {
@@ -20,10 +49,37 @@ public class {{prefix}}NamespaceHandler extends NamespaceHandlerSupport {
         {{#apis}}
         {{#operations}}
         {{#operation}}
-        registerBeanDefinitionParser("{{operationId}}Request", new {{prefix}}BeanDefinitionParser({{classname}}.{{operationIdCamelCase}}Request.class));
+
+            registerOperationParsers({{classname}}.class,"{{#lambda.kebabcase}}{{operationId}}{{/lambda.kebabcase}}", "{{operationId}}", "{{path}}",
+                {{classname}}.{{operationIdCamelCase}}SendActionBuilder.class,
+                {{classname}}.{{operationIdCamelCase}}ReceiveActionBuilder.class,
+                new String[]{ {{#requiredNonBodyParams}}"{{paramName}}{{^isString}}{{/isString}}"{{^-last}}, {{/-last}}{{/requiredNonBodyParams}} },
+            new String[]{ {{#optionalAndAuthParameterNames}}"{{.}}"{{^-last}}, {{/-last}}{{/optionalAndAuthParameterNames}} });
         {{/operation}}
         {{/operations}}
         {{/apis}}
         {{/apiInfo}}
     }
+
+    private void registerOperationParsers(Class<? extends GeneratedApi> apiClass, String elementName, String operationName, String path,
+        Class<? extends RestApiSendMessageActionBuilder> sendBeanClass,
+        Class<? extends RestApiReceiveMessageActionBuilder> receiveBeanClass,
+        String[] constructorParameters,
+        String[] nonConstructorParameters) {
+
+        RestApiSendMessageActionParser sendParser = new RestApiSendMessageActionParser(openApiSpecification, operationName,
+            path,
+            apiClass,
+            sendBeanClass,
+            receiveBeanClass,
+            "{{apiEndpoint}}");
+        sendParser.setConstructorParameters(constructorParameters);
+        sendParser.setNonConstructorParameters(nonConstructorParameters);
+        registerBeanDefinitionParser("send-"+elementName, sendParser);
+
+        RestApiReceiveMessageActionParser receiveParser = new RestApiReceiveMessageActionParser(openApiSpecification,
+        operationName, apiClass, receiveBeanClass, "{{apiEndpoint}}");
+        registerBeanDefinitionParser("receive-"+elementName, receiveParser);
+    }
+
 }

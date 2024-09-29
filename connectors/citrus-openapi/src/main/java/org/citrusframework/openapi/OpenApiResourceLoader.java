@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.models.OasDocument;
+import java.io.InputStream;
+import java.net.URLConnection;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.hc.core5.http.HttpHeaders;
@@ -109,24 +111,31 @@ public final class OpenApiResourceLoader {
     }
 
     private static <T> T fromWebResource(URL url, Resolver<T> resolver) {
-        HttpURLConnection con = null;
+        URLConnection con = null;
         try {
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod(HttpMethod.GET.name());
-            con.setRequestProperty(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+            con = url.openConnection();
 
-            int status = con.getResponseCode();
-            if (status > 299) {
-                throw new IllegalStateException("Failed to retrieve Open API specification: " + url,
-                    new IOException(FileUtils.readToString(con.getErrorStream())));
-            } else {
-                return resolve(FileUtils.readToString(con.getInputStream()), resolver);
+            if (con instanceof HttpURLConnection httpURLConnection) {
+                httpURLConnection.setRequestMethod(HttpMethod.GET.name());
+                con.setRequestProperty(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+
+                int status = httpURLConnection.getResponseCode();
+                if (status > 299) {
+                    throw new IllegalStateException(
+                        "Failed to retrieve Open API specification: " + url,
+                        new IOException(FileUtils.readToString(httpURLConnection.getErrorStream())));
+                }
             }
+
+            try (InputStream inputStream = con.getInputStream()) {
+                return resolve(FileUtils.readToString(inputStream), resolver);
+            }
+
         } catch (IOException e) {
             throw new IllegalStateException("Failed to retrieve Open API specification: " + url, e);
         } finally {
-            if (con != null) {
-                con.disconnect();
+            if (con instanceof HttpURLConnection httpURLConnection) {
+                httpURLConnection.disconnect();
             }
         }
     }

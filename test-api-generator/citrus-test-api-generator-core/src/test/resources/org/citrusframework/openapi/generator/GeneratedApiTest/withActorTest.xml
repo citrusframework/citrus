@@ -1,0 +1,34 @@
+<spring:beans
+    xmlns="http://www.citrusframework.org/schema/testcase"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+    xmlns:petstore="http://www.citrusframework.org/citrus-test-schema/petstore-api"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/http/testcase
+    http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd
+    http://www.citrusframework.org/citrus-test-schema/petstore-api
+    http://www.citrusframework.org/citrus-test-schema/petstore-api/petstore-api.xsd"
+>
+    <testcase name="withActorTest">
+        <actions>
+            <create-variables>
+                <variable name="petId" value="1234"/>
+            </create-variables>
+
+            <petstore:send-get-pet-by-id petId="${petId}" actor="petStoreActor" fork="true"/>
+
+            <assert exception="org.citrusframework.exceptions.MessageTimeoutException" message="Action timeout after 5000 milliseconds. Failed to receive message on endpoint: 'httpServer.inbound'">
+                <when>
+                    <http:receive-request server="httpServer">
+                        <http:GET path="/api/v3/pet/1234"/>
+                    </http:receive-request>
+                </when>
+            </assert>
+
+        </actions>
+    </testcase>
+</spring:beans>

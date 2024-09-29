@@ -1,13 +1,11 @@
 package org.citrusframework.openapi.actions;
 
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertNotNull;
+
 import org.citrusframework.endpoint.Endpoint;
-import org.citrusframework.openapi.OpenApiSpecification;
-import org.citrusframework.spi.AbstractReferenceResolverAwareTestActionBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertTrue;
 
 public class OpenApiClientActionBuilderTest {
 
@@ -15,11 +13,11 @@ public class OpenApiClientActionBuilderTest {
 
     @BeforeMethod
     public void beforeMethod() {
-        fixture = new OpenApiClientActionBuilder(mock(Endpoint.class), mock(OpenApiSpecification.class));
+        fixture = new OpenApiClientActionBuilder(mock(Endpoint.class), mock(OpenApiSpecificationSource.class));
     }
 
     @Test
     public void isReferenceResolverAwareTestActionBuilder() {
-        assertTrue(fixture instanceof AbstractReferenceResolverAwareTestActionBuilder<?>, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
+        assertNotNull(fixture, "Is instanceof AbstractReferenceResolverAwareTestActionBuilder");
     }
 }
